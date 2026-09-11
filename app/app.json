@@ -1,0 +1,57 @@
+{
+  "id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+  "name": "Bifrost Inventory",
+  "publisher": "Origo",
+  "version": "28.0.0.0",
+  "brief": "Bifrost Inventory - item attribute message types",
+  "description": "Bifrost Inventory: first-class Item Attribute Get/Create/Update and Item AttributeDefinition Create message types on top of Bifrost Foundation.",
+  "url": "https://www.origo.is/",
+  "help": "https://businesscentralal.github.io/bifrost/en-us/inventory/",
+  "privacyStatement": "https://www.origo.is/um-origo/stefnur/personuverndarstefna",
+  "EULA": "https://www.origo.is/skilmalar-og-oryggismal",
+  "logo": "assets/Logo250x250.png",
+  "applicationInsightsConnectionString": "InstrumentationKey=88bcc7d2-0aff-4328-a849-0c48ed2756e2;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=02701c94-c962-4825-92c7-ef9f70311a2b",
+  "contextSensitiveHelpUrl": "https://businesscentralal.github.io/bifrost/{0}/help/inventory/",
+  "supportedLocales": [
+    "en-US",
+    "is-IS"
+  ],
+  "dependencies": [
+    {
+      "id": "7505e808-6e52-4b96-a328-82573391297a",
+      "name": "Bifrost Foundation",
+      "publisher": "Origo",
+      "version": "28.0.0.87"
+    }
+  ],
+  "screenshots": [],
+  "application": "28.0.0.0",
+  "platform": "28.0.0.0",
+  "internalsVisibleTo": [
+    {
+      "id": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "name": "Bifrost Inventory - Tests",
+      "publisher": "Origo"
+    }
+  ],
+  "idRanges": [
+    {
+      "from": 10036885,
+      "to": 10036934
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "target": "Cloud",
+  "features": [
+    "NoImplicitWith",
+    "TranslationFile"
+  ],
+  "runtime": "17.0",
+  "suppressWarnings": [
+    "AS0081"
+  ]
+}
