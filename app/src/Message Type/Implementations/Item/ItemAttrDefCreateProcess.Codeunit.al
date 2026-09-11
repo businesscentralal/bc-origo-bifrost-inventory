@@ -5,7 +5,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Isolated write process for Item.AttributeDefinition.Create.
 /// </summary>
-codeunit 10036907 "Item AttributeDefinition Create Process ori"
+codeunit 10036907 "Item AttrDef Create Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

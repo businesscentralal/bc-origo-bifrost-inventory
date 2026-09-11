@@ -8,7 +8,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Unit tests for Item.AttributeDefinition.Create.
 /// </summary>
-codeunit 96901 "Item AttributeDefinition Tests ori"
+codeunit 96901 "Item AttrDef Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;
@@ -20,14 +20,12 @@ codeunit 96901 "Item AttributeDefinition Tests ori"
     [Test]
     procedure DefinitionCreate_Option_CreatesValues()
     var
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item AttributeDefinition Create Impl ori";
         RequestJson: JsonObject;
         OptionValues: JsonArray;
         ResponseJson: JsonObject;
         UniqueName: Text;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-7 creates definition + option values
         Library.Initialize();
         UniqueName := 'Finish' + Format(CreateGuid(), 0, 4);
         RequestJson.Add('name', UniqueName);
@@ -36,10 +34,7 @@ codeunit 96901 "Item AttributeDefinition Tests ori"
         OptionValues.Add('Gloss');
         RequestJson.Add('optionValues', OptionValues);
 
-        Library.CreateArgument('', RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Contains('attributeId'), 'attributeId');
         Assert.IsTrue(ResponseJson.Contains('createdValues'), 'createdValues');
@@ -51,21 +46,17 @@ codeunit 96901 "Item AttributeDefinition Tests ori"
         ItemAttribute: Record "Item Attribute";
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item AttributeDefinition Create Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-7 duplicate name → Error
         Library.Initialize();
         Library.CreateOptionAttribute('Dup', ItemAttribute, ValueA, ValueB);
 
         RequestJson.Add('name', ItemAttribute.Name);
         RequestJson.Add('type', 'Option');
 
-        Library.CreateArgument('', RequestJson, Argument);
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 }

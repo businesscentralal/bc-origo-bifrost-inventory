@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 /// <summary>
 /// Help markdown for Item.AttributeDefinition.Create.
 /// </summary>
-codeunit 10036904 "Item AttributeDefinition Create Help ori"
+codeunit 10036904 "Item AttrDef Create Help ori"
 {
     Access = Internal;
 

@@ -6,7 +6,7 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Implementation of the Item.Attribute.Create message type (Inbound).
-/// Writes run through <c>Item Attribute Create Process ori</c> for error isolation.
+/// Writes run through <c>Item Attr. Create Process ori</c> for error isolation.
 /// </summary>
 codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori"
 {
@@ -47,9 +47,9 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
         Argument.AssertVersion1();
 
         if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Item Attribute Create Process ori", Argument)
+            Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument)
         else
-            if not Codeunit.Run(Codeunit::"Item Attribute Create Process ori", Argument) then begin
+            if not Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument) then begin
                 Argument.RespondWithLastError();
                 exit;
             end;

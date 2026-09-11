@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// Refuses generic <c>Data.Records.Set</c> against Item Attribute tables so callers use the
 /// dedicated <c>Item.Attribute.*</c> message types. Reads via <c>Data.Records.Get</c> stay allowed.
 /// </summary>
-codeunit 10036911 "Item Attribute Data Restrict ori"
+codeunit 10036911 "Item Attr. Data Restrict ori"
 {
     Access = Internal;
 

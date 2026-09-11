@@ -30,6 +30,6 @@ enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10036896; "Item.AttributeDefinition.Create")
     {
         Caption = 'Item.AttributeDefinition.Create', Locked = true;
-        Implementation = "Msg Interface ori" = "Item AttributeDefinition Create Impl ori";
+        Implementation = "Msg Interface ori" = "Item AttrDef Create Impl ori";
     }
 }

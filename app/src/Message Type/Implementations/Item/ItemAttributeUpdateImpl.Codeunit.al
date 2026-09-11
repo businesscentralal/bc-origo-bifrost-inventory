@@ -46,9 +46,9 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
         Argument.AssertVersion1();
 
         if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Item Attribute Update Process ori", Argument)
+            Codeunit.Run(Codeunit::"Item Attr. Update Process ori", Argument)
         else
-            if not Codeunit.Run(Codeunit::"Item Attribute Update Process ori", Argument) then begin
+            if not Codeunit.Run(Codeunit::"Item Attr. Update Process ori", Argument) then begin
                 Argument.RespondWithLastError();
                 exit;
             end;

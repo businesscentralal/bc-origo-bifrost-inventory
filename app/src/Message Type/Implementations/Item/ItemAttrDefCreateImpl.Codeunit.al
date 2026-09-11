@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Implementation of the Item.AttributeDefinition.Create message type (Inbound).
 /// </summary>
-codeunit 10036900 "Item AttributeDefinition Create Impl ori" implements "Msg Interface ori"
+codeunit 10036900 "Item AttrDef Create Impl ori" implements "Msg Interface ori"
 {
     Access = Internal;
 
@@ -34,7 +34,7 @@ codeunit 10036900 "Item AttributeDefinition Create Impl ori" implements "Msg Int
 
     procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
     var
-        HelpCodeunit: Codeunit "Item AttributeDefinition Create Help ori";
+        HelpCodeunit: Codeunit "Item AttrDef Create Help ori";
     begin
         Argument.SetResponseMarkdown(HelpCodeunit.GetHelpText());
     end;
@@ -45,9 +45,9 @@ codeunit 10036900 "Item AttributeDefinition Create Impl ori" implements "Msg Int
         Argument.AssertVersion1();
 
         if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Item AttributeDefinition Create Process ori", Argument)
+            Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument)
         else
-            if not Codeunit.Run(Codeunit::"Item AttributeDefinition Create Process ori", Argument) then begin
+            if not Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument) then begin
                 Argument.RespondWithLastError();
                 exit;
             end;

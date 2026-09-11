@@ -25,15 +25,23 @@ codeunit 96902 "Inventory Test Library ori"
         IsInitialized := true;
     end;
 
-    /// <summary>Creates a licensed Message Argument with subject and request JSON.</summary>
-    procedure CreateArgument(Subject: Text; RequestJson: JsonObject; var Argument: Record "Message Argument ori")
+    /// <summary>Dispatches a message type via Foundation Dispatcher and returns the response JSON.</summary>
+    procedure ExecuteType(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; OmitCommit: Boolean) ResponseJson: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        ResponseContentType: Text[50];
+        MessageVersion: Enum "Message Version ori";
+        RequestText: Text;
+        ResponseText: Text;
     begin
-        Argument.Init();
-        Argument.SetLicensed(true);
-        Argument.Insert(true);
-        Argument.Subject := CopyStr(Subject, 1, MaxStrLen(Argument.Subject));
-        if RequestJson.Keys().Count() > 0 then
-            Argument.SetRequestJson(RequestJson);
+        RequestJson.WriteTo(RequestText);
+        RequestContent.AddText(RequestText);
+        Dispatcher.Execute(MessageType, MessageVersion::"1.0", Subject, '', 'application/json', RequestContent, ResponseContent, ResponseContentType, OmitCommit);
+        ResponseContent.GetSubText(ResponseText, 1);
+        if ResponseText <> '' then
+            ResponseJson.ReadFrom(ResponseText);
     end;
 
     /// <summary>Creates a unique Option attribute with two option values.</summary>

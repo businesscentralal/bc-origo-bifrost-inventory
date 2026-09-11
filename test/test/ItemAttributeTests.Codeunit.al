@@ -26,14 +26,12 @@ codeunit 96900 "Item Attribute Tests ori"
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
         Mapping: Record "Item Attribute Value Mapping";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Get Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         ItemsToken: JsonToken;
         ItemsArray: JsonArray;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-1 Get by No. returns attributes
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -44,9 +42,7 @@ codeunit 96900 "Item Attribute Tests ori"
         Mapping.Validate("Item Attribute Value ID", ValueA.ID);
         Mapping.Insert(true);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('items', ItemsToken), 'items missing');
         ItemsArray := ItemsToken.AsArray();
@@ -56,16 +52,12 @@ codeunit 96900 "Item Attribute Tests ori"
     [Test]
     procedure Get_MissingItem_ReturnsError()
     var
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Get Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-2 missing item → structured Error
         Library.Initialize();
-        Library.CreateArgument('NO-SUCH-ITEM-ZZZ', RequestJson, Argument);
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", 'NO-SUCH-ITEM-ZZZ', RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -76,8 +68,6 @@ codeunit 96900 "Item Attribute Tests ori"
         ItemAttribute: Record "Item Attribute";
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Create Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
@@ -87,8 +77,8 @@ codeunit 96900 "Item Attribute Tests ori"
         ResultObj: JsonObject;
         ChangedToken: JsonToken;
         ResultToken: JsonToken;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-3 Create then repeat → changed:false
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -100,17 +90,10 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
 
-        Clear(Argument);
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -128,14 +111,12 @@ codeunit 96900 "Item Attribute Tests ori"
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
         Mapping: Record "Item Attribute Value Mapping";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Create Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-4 conflict without overwrite → Error
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -152,9 +133,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -166,14 +145,12 @@ codeunit 96900 "Item Attribute Tests ori"
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
         Mapping: Record "Item Attribute Value Mapping";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Create Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-4 conflict with overwrite → Success
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -190,10 +167,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 
@@ -205,8 +179,6 @@ codeunit 96900 "Item Attribute Tests ori"
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
         Mapping: Record "Item Attribute Value Mapping";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Update Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
@@ -215,8 +187,8 @@ codeunit 96900 "Item Attribute Tests ori"
         ResultsArray: JsonArray;
         ResultToken: JsonToken;
         ResultObj: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-5 Update returns before/after
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -232,10 +204,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -252,14 +221,12 @@ codeunit 96900 "Item Attribute Tests ori"
         ItemAttribute: Record "Item Attribute";
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Update Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-5 Update without mapping → Error
         Library.Initialize();
         Library.EnsureInventoryItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -269,9 +236,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -282,14 +247,12 @@ codeunit 96900 "Item Attribute Tests ori"
         ItemAttribute: Record "Item Attribute";
         ValueA: Record "Item Attribute Value";
         ValueB: Record "Item Attribute Value";
-        Argument: Record "Message Argument ori";
-        Impl: Codeunit "Item Attribute Create Impl ori";
         RequestJson: JsonObject;
         AttrArray: JsonArray;
         AttrObj: JsonObject;
         ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
     begin
-        // [SCENARIO] AC-6 Service-type item accepted
         Library.Initialize();
         Library.EnsureServiceItem(Item);
         Library.CreateOptionAttribute('Color', ItemAttribute, ValueA, ValueB);
@@ -300,10 +263,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        Library.CreateArgument(Item."No.", RequestJson, Argument);
-        Argument."Omit Commit" := true;
-        Impl.ExecuteBifrostTask(Argument);
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 
@@ -313,7 +273,6 @@ codeunit 96900 "Item Attribute Tests ori"
         MessageType: Enum "Message Type ori";
         MsgInterface: Interface "Msg Interface ori";
     begin
-        // [SCENARIO] AC-8 enum values resolve
         MessageType := MessageType::"Item.Attribute.Get";
         MsgInterface := MessageType;
         Assert.AreNotEqual('', MsgInterface.GetDescription(), 'Get description');
@@ -336,7 +295,6 @@ codeunit 96900 "Item Attribute Tests ori"
     var
         Argument: Record "Message Argument ori";
     begin
-        // [SCENARIO] AC-9 / TC-9 write restrict on 7500/7501/7504/7505; not on Item 27
         Library.Initialize();
         Argument.Init();
         Argument.Insert(true);
