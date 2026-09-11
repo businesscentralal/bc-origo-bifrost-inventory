@@ -295,8 +295,10 @@ codeunit 10036908 "Item Attribute Resolve ori"
                         exit;
                     if not CreateValueIfMissing then
                         Error(OptionValueMissingErr, ValueText, ItemAttribute.Name);
+                    Clear(ItemAttributeValue);
                     ItemAttributeValue.Init();
                     ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+                    ItemAttributeValue.ID := 0;
                     ItemAttributeValue.Validate(Value, CopyStr(ValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
                     ItemAttributeValue.Insert(true);
                 end;
@@ -341,8 +343,10 @@ codeunit 10036908 "Item Attribute Resolve ori"
         ItemAttributeValue.SetRange(Value, CopyStr(ValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
         if ItemAttributeValue.FindFirst() then
             exit;
+        Clear(ItemAttributeValue);
         ItemAttributeValue.Init();
         ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+        ItemAttributeValue.ID := 0;
         ItemAttributeValue.Validate(Value, CopyStr(ValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
         ItemAttributeValue.Insert(true);
     end;
@@ -355,8 +359,10 @@ codeunit 10036908 "Item Attribute Resolve ori"
         ItemAttributeValue.SetRange("Numeric Value", NumericValue);
         if ItemAttributeValue.FindFirst() then
             exit;
+        Clear(ItemAttributeValue);
         ItemAttributeValue.Init();
         ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+        ItemAttributeValue.ID := 0;
         ItemAttributeValue.Validate("Numeric Value", NumericValue);
         ItemAttributeValue.Insert(true);
     end;
@@ -369,8 +375,10 @@ codeunit 10036908 "Item Attribute Resolve ori"
         ItemAttributeValue.SetRange("Date Value", DateValue);
         if ItemAttributeValue.FindFirst() then
             exit;
+        Clear(ItemAttributeValue);
         ItemAttributeValue.Init();
         ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+        ItemAttributeValue.ID := 0;
         ItemAttributeValue.Validate("Date Value", DateValue);
         ItemAttributeValue.Insert(true);
     end;
@@ -489,8 +497,10 @@ codeunit 10036908 "Item Attribute Resolve ori"
                 OptionArray.Get(i, OptionValueToken);
                 if OptionValueToken.IsValue() then begin
                     OptionValueText := OptionValueToken.AsValue().AsText();
+                    Clear(ItemAttributeValue);
                     ItemAttributeValue.Init();
                     ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+                    ItemAttributeValue.ID := 0;
                     ItemAttributeValue.Validate(Value, CopyStr(OptionValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
                     ItemAttributeValue.Insert(true);
                     Clear(CreatedValueJson);

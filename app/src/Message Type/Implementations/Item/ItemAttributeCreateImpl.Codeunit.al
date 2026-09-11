@@ -46,12 +46,9 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument)
-        else
-            if not Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument) then begin
-                Argument.RespondWithLastError();
-                exit;
-            end;
+        if not Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument) then begin
+            Argument.RespondWithLastError();
+            exit;
+        end;
     end;
 }

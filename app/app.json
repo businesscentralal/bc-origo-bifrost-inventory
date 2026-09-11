@@ -2,7 +2,7 @@
   "id": "02701c94-c962-4825-92c7-ef9f70311a2b",
   "name": "Bifrost Inventory",
   "publisher": "Origo",
-  "version": "28.0.0.0",
+  "version": "28.0.0.1",
   "brief": "Bifrost Inventory - item attribute message types",
   "description": "Bifrost Inventory: first-class Item Attribute Get/Create/Update and Item AttributeDefinition Create message types on top of Bifrost Foundation.",
   "url": "https://www.origo.is/",

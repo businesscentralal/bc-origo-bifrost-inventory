@@ -42,7 +42,7 @@ codeunit 96900 "Item Attribute Tests ori"
         Mapping.Validate("Item Attribute Value ID", ValueA.ID);
         Mapping.Insert(true);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('items', ItemsToken), 'items missing');
         ItemsArray := ItemsToken.AsArray();
@@ -57,7 +57,7 @@ codeunit 96900 "Item Attribute Tests ori"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", 'NO-SUCH-ITEM-ZZZ', RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", 'NO-SUCH-ITEM-ZZZ', RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -90,10 +90,10 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -133,7 +133,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -167,7 +167,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 
@@ -204,7 +204,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -236,7 +236,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -263,7 +263,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 

@@ -44,12 +44,9 @@ codeunit 10036900 "Item AttrDef Create Impl ori" implements "Msg Interface ori"
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument)
-        else
-            if not Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument) then begin
-                Argument.RespondWithLastError();
-                exit;
-            end;
+        if not Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument) then begin
+            Argument.RespondWithLastError();
+            exit;
+        end;
     end;
 }

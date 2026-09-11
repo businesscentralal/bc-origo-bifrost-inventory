@@ -34,7 +34,7 @@ codeunit 96901 "Item AttrDef Tests ori"
         OptionValues.Add('Gloss');
         RequestJson.Add('optionValues', OptionValues);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Contains('attributeId'), 'attributeId');
         Assert.IsTrue(ResponseJson.Contains('createdValues'), 'createdValues');
@@ -56,7 +56,7 @@ codeunit 96901 "Item AttrDef Tests ori"
         RequestJson.Add('name', ItemAttribute.Name);
         RequestJson.Add('type', 'Option');
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, true);
+        ResponseJson := Library.ExecuteType(MessageType::"Item.AttributeDefinition.Create", '', RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 }
