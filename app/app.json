@@ -10,7 +10,7 @@
   "privacyStatement": "https://www.origo.is/um-origo/stefnur/personuverndarstefna",
   "EULA": "https://www.origo.is/skilmalar-og-oryggismal",
   "logo": "assets/Logo250x250.png",
-  "applicationInsightsConnectionString": "InstrumentationKey=88bcc7d2-0aff-4328-a849-0c48ed2756e2;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=02701c94-c962-4825-92c7-ef9f70311a2b",
+  "applicationInsightsConnectionString": "InstrumentationKey=de2696a4-c2e7-44a0-b106-1403911d4d5f;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=bc19c0f6-f8d6-4111-81df-116729b42e76",
   "contextSensitiveHelpUrl": "https://businesscentralal.github.io/bifrost/{0}/help/inventory/",
   "supportedLocales": [
     "en-US",
