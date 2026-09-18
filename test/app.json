@@ -5,7 +5,7 @@
   "version": "28.0.0.0",
   "brief": "Bifrost Inventory - Tests",
   "description": "Bifrost Inventory - Tests",
-  "applicationInsightsConnectionString": "InstrumentationKey=88bcc7d2-0aff-4328-a849-0c48ed2756e2;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=02701c94-c962-4825-92c7-ef9f70311a2b",
+  "applicationInsightsConnectionString": "InstrumentationKey=de2696a4-c2e7-44a0-b106-1403911d4d5f;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=bc19c0f6-f8d6-4111-81df-116729b42e76",
   "privacyStatement": "https://www.origo.is/um-origo/stefnur/personuverndarstefna",
   "EULA": "https://www.origo.is/skilmalar-og-oryggismal",
   "help": "https://www.origo.is/",
@@ -16,7 +16,7 @@
       "id": "7505e808-6e52-4b96-a328-82573391297a",
       "name": "Bifrost Foundation",
       "publisher": "Origo",
-      "version": "28.0.0.87"
+      "version": "28.0.0.100"
     },
     {
       "id": "02701c94-c962-4825-92c7-ef9f70311a2b",

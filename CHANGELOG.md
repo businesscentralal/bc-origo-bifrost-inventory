@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed (2026-09-17) - Bifrost Foundation Exact pin 28.0.0.100 (no float)
+
+- App/test Bifrost Foundation dependency set to Exact `28.0.0.100`.
+- AL-Go `appDependencyProbingPaths` for bc-origo-bifrost-core: `release_status: latestBuild`, `version: 1.0.0.100`.
+- `nuGetFeedSelectMode: Exact` so NuGet does not resolve `[28.0.0.100,)` upward to colliding `.107`.
+
+
 ## Bifrost Inventory 28.0.0.0
 
 ### Added
