@@ -8,6 +8,10 @@
 - AL-Go `appDependencyProbingPaths` for bc-origo-bifrost-core: `release_status: latestBuild`, `version: 1.0.0.100`.
 - `nuGetFeedSelectMode: Exact` so NuGet does not resolve `[28.0.0.100,)` upward to colliding `.107`.
 
+### Changed
+
+- App logo: new Bifröst wordmark with "Powered by origo." tagline; app-name line unchanged.
+
 
 ## Bifrost Inventory 28.0.0.0
 
