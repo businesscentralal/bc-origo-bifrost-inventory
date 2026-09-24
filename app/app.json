@@ -7,10 +7,10 @@
   "description": "Bifrost Inventory: first-class Item Attribute Get/Create/Update and Item AttributeDefinition Create message types on top of Bifrost Foundation.",
   "url": "https://www.origo.is/",
   "help": "https://businesscentralal.github.io/bifrost/en-us/inventory/",
-  "privacyStatement": "https://www.origo.is/um-origo/stefnur/personuverndarstefna",
-  "EULA": "https://www.origo.is/skilmalar-og-oryggismal",
+  "privacyStatement": "https://businesscentralal.github.io/bifrost/en-us/foundation/privacy/",
+  "EULA": "https://businesscentralal.github.io/bifrost/en-us/foundation/eula/",
   "logo": "assets/Logo250x250.png",
-  "applicationInsightsConnectionString": "InstrumentationKey=de2696a4-c2e7-44a0-b106-1403911d4d5f;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=bc19c0f6-f8d6-4111-81df-116729b42e76",
+  "applicationInsightsConnectionString": "InstrumentationKey=71e55012-b22f-4ff7-a6e4-7b50d83f8cc2;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=d917dc45-172a-44ac-a0ba-85fd4ec5a725",
   "contextSensitiveHelpUrl": "https://businesscentralal.github.io/bifrost/{0}/help/inventory/",
   "supportedLocales": [
     "en-US",
