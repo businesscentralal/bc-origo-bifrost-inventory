@@ -10,6 +10,7 @@
 
 ### Changed
 
+- App manifest: privacy statement and EULA URLs now point at the published Bifröst Foundation pages; Application Insights connection string updated to the shared bc-cosmos-shared telemetry resource. Help and publisher URL unchanged.
 - App logo: new Bifröst wordmark with "Powered by origo." tagline; app-name line unchanged.
 
 
