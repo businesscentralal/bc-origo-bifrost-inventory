@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Changed (2026-09-25) - Latest Foundation CI build (floor 28.0.0.0)
+
+- The app builds against the latest Foundation CI build with a Foundation floor of `28.0.0.0`.
+- App and test Bifrost Foundation dependency version set to `28.0.0.0`.
+- AL-Go `appDependencyProbingPaths` for bc-origo-bifrost-core: `release_status: latestBuild`, `version: latest`. GetArtifacts matches a specific version exactly; only `latest` uses the last successful CICD run.
+
 ### Fixed (2026-09-25) - Deploy to Bifrost sandbox rejected as a version downgrade
 
 - CI/CD run [36029236028](https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/36029236028) failed at Deploy to Bifrost: `Cannot install the extension Bifrost Inventory by Origo 28.0.0.12 because a newer version 28.0.10.0 was already installed.`
