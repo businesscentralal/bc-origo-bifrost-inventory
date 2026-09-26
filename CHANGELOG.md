@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Security
+
+- Default (release) builds no longer ship the test app's internalsVisibleTo grant; the strip moved to PipelineInitialize.ps1 because Alpaca never ran PreCompileApp.ps1 (core#129).
+
 ### Fixed (2026-09-25) - Deploy to Bifrost sandbox rejected as a version downgrade
 
 - CI/CD run [36029236028](https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/36029236028) failed at Deploy to Bifrost: `Cannot install the extension Bifrost Inventory by Origo 28.0.0.12 because a newer version 28.0.10.0 was already installed.`
