@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed (2026-09-25) - Latest Foundation CI build (floor 28.0.0.0)
+
+- The app builds against the latest Foundation CI build with a Foundation floor of `28.0.0.0`.
+- App and test Bifrost Foundation dependency version set to `28.0.0.0`.
+- AL-Go `appDependencyProbingPaths` for bc-origo-bifrost-core: `release_status: latestBuild`, `version: latest`. GetArtifacts matches a specific version exactly; only `latest` uses the last successful CICD run.
 ### Security
 
 - Default (release) builds no longer ship the test app's internalsVisibleTo grant; the strip moved to PipelineInitialize.ps1 because Alpaca never ran PreCompileApp.ps1 (core#129).
