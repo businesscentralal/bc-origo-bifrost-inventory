@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Inventory.TransferOrder.* and Inventory.AssemblyOrder.* message types now live in Bifrost Inventory (moved from Foundation).
+
 ### Changed (2026-09-25) - Latest Foundation CI build (floor 28.0.0.0)
 
 - The app builds against the latest Foundation CI build with a Foundation floor of `28.0.0.0`.

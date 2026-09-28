@@ -19,5 +19,9 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Item Attr. Data Restrict ori" = X,
         codeunit "Inventory Registration ori" = X,
         codeunit "Inventory Install ori" = X,
-        codeunit "Inventory Upgrade ori" = X;
+        codeunit "Inventory Upgrade ori" = X,
+        codeunit "Transfer Order Stats Impl ori" = X,
+        codeunit "Transfer Order Stats Help ori" = X,
+        codeunit "Asm. Order Statistics Impl ori" = X,
+        codeunit "Asm. Order Statistics Help ori" = X;
 }
