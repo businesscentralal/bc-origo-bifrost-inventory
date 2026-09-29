@@ -57,7 +57,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
-        FieldRestrictionMgt: Codeunit "Field Access ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
@@ -93,7 +93,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Required: quantity. A missing or non-positive value keeps the quantity error; a bad decimal is a format error.
-        if not Argument.TryReadDecimal(RequestJson, 'quantity', false, Quantity) then
+        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
             exit;
         if Quantity <= 0 then begin
             Argument.RespondWithError(MissingQuantityErr);
@@ -101,7 +101,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Enforce field-level write restriction on the principal Item No. field
-        if FieldRestrictionMgt.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
+        if Dispatcher.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo));
             exit;
         end;
@@ -119,20 +119,20 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
             Description := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Description));
         // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
-        if not Argument.TryReadDate(RequestJson, 'postingDate', false, PostingDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
-        if not Argument.TryReadDate(RequestJson, 'dueDate', false, DueDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'dueDate', false, DueDate) then
             ReadOk := false;
-        if not Argument.TryReadDate(RequestJson, 'startingDate', false, StartingDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'startingDate', false, StartingDate) then
             ReadOk := false;
-        if not Argument.TryReadDate(RequestJson, 'endingDate', false, EndingDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'endingDate', false, EndingDate) then
             ReadOk := false;
-        if not Argument.TryReadDecimal(RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
             ReadOk := false;
         if not ReadOk then
             exit;
         RefreshLines := true; // default: refresh BOM lines
-        if not Argument.TryReadBoolean(RequestJson, 'refreshLines', false, RefreshLines) then
+        if not Dispatcher.TryReadBoolean(Argument, RequestJson, 'refreshLines', false, RefreshLines) then
             exit;
 
         if PostingDate = 0D then

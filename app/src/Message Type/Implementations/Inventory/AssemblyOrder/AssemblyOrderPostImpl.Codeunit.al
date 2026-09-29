@@ -64,6 +64,7 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
         PostedAsmHeader: Record "Posted Assembly Header";
         AssemblyPost: Codeunit "Assembly-Post";
         PostingGate: Codeunit "Posting Gate ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PostingDate: Date;
@@ -84,12 +85,12 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
             exit;
 
         // Optional: posting date override
-        if not Argument.TryReadDate(RequestJson, 'postingDate', false, PostingDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             exit;
         ReplacePostingDate := PostingDate <> 0D;
 
         // Optional: quantity to assemble override
-        if not Argument.TryReadDecimal(RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
             exit;
         if QuantityToAssemble > 0 then begin
             AssemblyHeader.SetHideValidationDialog(true);

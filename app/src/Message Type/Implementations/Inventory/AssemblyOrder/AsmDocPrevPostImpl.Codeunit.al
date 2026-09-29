@@ -65,7 +65,7 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         GLSetup: Record "General Ledger Setup";
         TempDocumentEntry: Record "Document Entry" temporary;
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
-        PreviewHelper: Codeunit "Preview Helper ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         ResponseJson: JsonObject;
         TotalsJson: JsonObject;
         PredictedJson: JsonObject;
@@ -103,28 +103,28 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         if not PreviewAssemblyOrder(AssemblyHeader, PostingPreviewEventHandler, PreviewErrorText) then begin
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
-            PreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
+            Dispatcher.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
             exit;
         end;
 
-        PreviewHelper.GetPreviewFieldNames(PreviewFieldNames);
+        Dispatcher.GetPreviewFieldNames(PreviewFieldNames);
 
         PostingPreviewEventHandler.FillDocumentEntry(TempDocumentEntry);
         if TempDocumentEntry.FindSet() then
             repeat
-                PreviewHelper.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
+                Dispatcher.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
             until TempDocumentEntry.Next() = 0;
 
-        if not PreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
+        if not Dispatcher.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
 
             exit;
 
         BuildPredictedNumbers(PredictedJson, PostingPreviewEventHandler);
 
-        Summary := BuildSummary(DocumentNo, AssemblyHeader."Item No.", PreviewArray, PreviewHelper.GLStatusSentence(GLEntryCount, Balanced));
+        Summary := BuildSummary(DocumentNo, AssemblyHeader."Item No.", PreviewArray, Dispatcher.GLStatusSentence(GLEntryCount, Balanced));
 
         ResponseJson.Add('status', 'Success');
-        PreviewHelper.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
+        Dispatcher.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
         ResponseJson.Add('rollback', true);
         ResponseJson.Add('summary', Summary);
         ResponseJson.Add('documentNo', DocumentNo);
@@ -163,11 +163,11 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
 
     local procedure BuildSummary(DocumentNo: Code[20]; ItemNo: Code[20]; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
-        PreviewHelper: Codeunit "Preview Helper ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         Summary: Text;
         SummaryTok: Label 'Assembly Order %1 (Item %2) preview produced %3 entries. %4', Comment = '%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence', Locked = true;
     begin
-        Summary := StrSubstNo(SummaryTok, DocumentNo, ItemNo, PreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText);
+        Summary := StrSubstNo(SummaryTok, DocumentNo, ItemNo, Dispatcher.CountPreviewEntries(PreviewArray), GLStatusText);
         exit(Summary);
     end;
 

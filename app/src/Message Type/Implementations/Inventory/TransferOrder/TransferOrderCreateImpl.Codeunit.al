@@ -57,8 +57,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferHeader: Record "Transfer Header";
-        FieldRestrictionMgt: Codeunit "Field Access ori";
-        CreateLineOrder: Codeunit "Create Line Order ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Lines: JsonArray;
@@ -99,17 +98,17 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Enforce field-level write restriction on the principal location fields
-        if FieldRestrictionMgt.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
+        if Dispatcher.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode));
             exit;
         end;
-        if FieldRestrictionMgt.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
+        if Dispatcher.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode));
             exit;
         end;
 
         // Optional: directTransfer
-        if not Argument.TryReadBoolean(RequestJson, 'directTransfer', false, DirectTransfer) then
+        if not Dispatcher.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer) then
             exit;
 
         // Optional: inTransitCode (required when not direct transfer â€” validated by BC during Release,
@@ -124,11 +123,11 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         // Optional: posting/shipment/receipt dates
         // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
-        if not Argument.TryReadDate(RequestJson, 'postingDate', false, PostingDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
-        if not Argument.TryReadDate(RequestJson, 'shipmentDate', false, ShipmentDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'shipmentDate', false, ShipmentDate) then
             ReadOk := false;
-        if not Argument.TryReadDate(RequestJson, 'receiptDate', false, ReceiptDate) then
+        if not Dispatcher.TryReadDate(Argument, RequestJson, 'receiptDate', false, ReceiptDate) then
             ReadOk := false;
         if not ReadOk then
             exit;
@@ -139,10 +138,10 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         if RequestJson.Get('externalDocumentNo', Token) then
             ExternalDocNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ExternalDocNo));
 
-        if not CreateLineOrder.TryReadLines(RequestJson, Lines, HasLines, Argument) then
+        if not Dispatcher.TryReadLines(RequestJson, Lines, HasLines, Argument) then
             exit;
         if HasLines then
-            if not CreateLineOrder.PrecheckTransferLines(Lines, Argument) then
+            if not Dispatcher.PrecheckTransferLines(Lines, Argument) then
                 exit;
 
         // Build the Transfer Header. Use Insert(true) to fire OnInsert which assigns the No. from the series.
@@ -181,7 +180,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     local procedure InsertTransferLines(TransferHeader: Record "Transfer Header"; Lines: JsonArray; var Argument: Record "Message Argument ori")
     var
         TransferLine: Record "Transfer Line";
-        CreateLineOrder: Codeunit "Create Line Order ori";
+        Dispatcher: Codeunit "Dispatcher ori";
         LineToken: JsonToken;
         LineJson: JsonObject;
         LineIndex: Integer;
@@ -195,7 +194,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             TransferLine."Document No." := TransferHeader."No.";
             TransferLine."Line No." := NextLineNo;
             TransferLine.Insert(true);
-            CreateLineOrder.ValidateTransferLine(TransferLine, LineJson, LineIndex, Argument);
+            Dispatcher.ValidateTransferLine(TransferLine, LineJson, LineIndex, Argument);
             TransferLine.Modify(true);
             NextLineNo += 10000;
         end;
