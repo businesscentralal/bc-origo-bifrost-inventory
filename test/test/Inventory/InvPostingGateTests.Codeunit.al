@@ -8,7 +8,7 @@ using System.TestLibraries.Utilities;
 
 /// <summary>
 /// Deny path for the inventory posting gate.
-/// The session is lowered to BIFROST Full ori and BIFROST InvWrite ori, with document-table
+/// The session is lowered to BIFROST Full ori, which already carries InvWrite, plus document-table
 /// write, and without BIFROST InvPost ori. Both Post implementations are then disabled and
 /// AssertCanPost names BIFROST InvPost ori. PreviewPost stays enabled.
 /// </summary>
@@ -111,7 +111,6 @@ codeunit 96918 "Inv. Posting Gate Tests"
     begin
         // Restrictive tests start as D365 Full Access until this library replaces that set.
         LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
-        LibraryLowerPermissions.AddPermissionSet('BIFROST InvWrite ori');
         LibraryLowerPermissions.AddPermissionSet('Inv Post Gate Test');
     end;
 

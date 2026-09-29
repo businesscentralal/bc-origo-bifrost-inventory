@@ -76,7 +76,6 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     begin
         // Restrictive tests start as D365 Full Access until this library replaces that set.
         LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
-        LibraryLowerPermissions.AddPermissionSet('BIFROST InvWrite ori');
         LibraryLowerPermissions.AddPermissionSet('Inv Post Gate Test');
         LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
     end;
