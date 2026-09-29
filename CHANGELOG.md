@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-09-29) - Transfer and assembly order message types (#20)
+
+- Inventory.TransferOrder.* and Inventory.AssemblyOrder.* message types now live in Bifrost Inventory (moved from Foundation). Field-write checks, transfer-line handling, preview shaping, and typed date, decimal, and boolean reads go through public Dispatcher ori. PreviewPost no longer checks posting permission. Anyone who posts transfer or assembly orders through Bifrost now needs BIFROST InvPost ori, because BIFROST ItemPost ori no longer covers Inventory.TransferOrder.Post or Inventory.AssemblyOrder.Post. Foundation TakeOver does not assign BIFROST InvPost ori, so admins must grant it manually. Transfer and Assembly PreviewPost help matches the Success answer: every Success answer carries entryCount and glEntryCount, balanced is omitted when glEntryCount is 0, and Business Central posting errors come back verbatim with no code.
+
 ### Changed (2026-09-25) - Latest Foundation CI build (floor 28.0.0.0)
 
 - The app builds against the latest Foundation CI build with a Foundation floor of `28.0.0.0`.

@@ -1,0 +1,107 @@
+namespace Origo.Bifrost.Inventory;
+
+codeunit 70013436 "Asm. Order Statistics Help ori"
+{
+    Access = Internal;
+
+    internal procedure GetHelpText() HelpText: Text
+    var
+        HelpBuilder: TextBuilder;
+    begin
+        HelpBuilder.AppendLine('# Inventory.AssemblyOrder.Statistics - Help');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Overview');
+        HelpBuilder.AppendLine('Returns header / line / cost statistics for an Assembly Order. Mirrors what BC Page 904 "Assembly Order Statistics" displays - including expected vs actual costs broken down by material, resource, capacity, capacity overhead, and manufacturing overhead.');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('**Direction**: Inbound (read-only)  **Content-Type**: `text/json`');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Idempotency / Safety');
+        HelpBuilder.AppendLine('Safe and idempotent. Computes via `CalcFields` + `Assembly Header.CalcActualCosts`; no writes occur.');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Order Identification');
+        HelpBuilder.AppendLine('Standard `Assembly Header` identification:');
+        HelpBuilder.AppendLine('1. `subject` parsed as GUID -> header `SystemId`.');
+        HelpBuilder.AppendLine('2. `subject` as text -> header `No.` (with `Document Type = Order`).');
+        HelpBuilder.AppendLine('3. Request JSON keys (every key supplied is tried; identifiers that point to different records are refused): `systemId`, `recordSystemId`, `id`, `documentNo`, `assemblyOrderNo`, `no`.');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Request Parameters');
+        HelpBuilder.AppendLine('None beyond identification.');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Request Examples');
+        HelpBuilder.AppendLine('```json');
+        HelpBuilder.AppendLine('{ "type": "Inventory.AssemblyOrder.Statistics", "subject": "AO000123" }');
+        HelpBuilder.AppendLine('```');
+        HelpBuilder.AppendLine('```json');
+        HelpBuilder.AppendLine('{');
+        HelpBuilder.AppendLine('  "type": "Inventory.AssemblyOrder.Statistics",');
+        HelpBuilder.AppendLine('  "data": { "documentNo": "AO000123" }');
+        HelpBuilder.AppendLine('}');
+        HelpBuilder.AppendLine('```');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Response Shape');
+        HelpBuilder.AppendLine('```json');
+        HelpBuilder.AppendLine('{');
+        HelpBuilder.AppendLine('  "status": "Success",');
+        HelpBuilder.AppendLine('  "documentNo": "AO000123",');
+        HelpBuilder.AppendLine('  "systemId": "00000000-0000-0000-0000-000000000000",');
+        HelpBuilder.AppendLine('  "itemNo": "BICYCLE",');
+        HelpBuilder.AppendLine('  "variantCode": "",');
+        HelpBuilder.AppendLine('  "description": "Bicycle",');
+        HelpBuilder.AppendLine('  "locationCode": "BLUE",');
+        HelpBuilder.AppendLine('  "unitOfMeasureCode": "PCS",');
+        HelpBuilder.AppendLine('  "quantity": 5,');
+        HelpBuilder.AppendLine('  "quantityToAssemble": 5,');
+        HelpBuilder.AppendLine('  "assembledQuantity": 0,');
+        HelpBuilder.AppendLine('  "remainingQuantity": 5,');
+        HelpBuilder.AppendLine('  "reservedQuantity": 0,');
+        HelpBuilder.AppendLine('  "assembleToOrder": false,');
+        HelpBuilder.AppendLine('  "status_": "Open",');
+        HelpBuilder.AppendLine('  "postingDate": "2026-04-15",');
+        HelpBuilder.AppendLine('  "dueDate": "2026-05-30",');
+        HelpBuilder.AppendLine('  "startingDate": "2026-04-15",');
+        HelpBuilder.AppendLine('  "endingDate": "2026-05-30",');
+        HelpBuilder.AppendLine('  "lines": { "total": 3, "item": 2, "resource": 1, "text": 0 },');
+        HelpBuilder.AppendLine('  "costs": {');
+        HelpBuilder.AppendLine('    "totalExpectedCost": 1250,');
+        HelpBuilder.AppendLine('    "totalActualCost": 0,');
+        HelpBuilder.AppendLine('    "actualMaterialCost": 0,');
+        HelpBuilder.AppendLine('    "actualResourceCost": 0,');
+        HelpBuilder.AppendLine('    "actualCapacityCost": 0,');
+        HelpBuilder.AppendLine('    "actualCapacityOverhead": 0,');
+        HelpBuilder.AppendLine('    "actualMfgOverhead": 0,');
+        HelpBuilder.AppendLine('    "unitCost": 250,');
+        HelpBuilder.AppendLine('    "indirectCostPercent": 0,');
+        HelpBuilder.AppendLine('    "overheadRate": 0');
+        HelpBuilder.AppendLine('  }');
+        HelpBuilder.AppendLine('}');
+        HelpBuilder.AppendLine('```');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('| Property | Description |');
+        HelpBuilder.AppendLine('|----------|-------------|');
+        HelpBuilder.AppendLine('| status | `Success`. Lookup failures use the error envelope. |');
+        HelpBuilder.AppendLine('| documentNo / systemId / itemNo / variantCode / description / locationCode / unitOfMeasureCode | Header echo. `systemId` uses Format `0,4`. |');
+        HelpBuilder.AppendLine('| quantity / quantityToAssemble / assembledQuantity / remainingQuantity / reservedQuantity | Header quantities. `reservedQuantity` comes from `CalcFields("Reserved Quantity")`. |');
+        HelpBuilder.AppendLine('| assembleToOrder | Header `Assemble to Order` flag. |');
+        HelpBuilder.AppendLine('| status_ | `Open` or `Released`. Suffix `_` because `status` is reserved for the response envelope. |');
+        HelpBuilder.AppendLine('| postingDate / dueDate / startingDate / endingDate | Format `0,9`. |');
+        HelpBuilder.AppendLine('| lines.total / .item / .resource / .text | Counts of `Assembly Line` rows by `Type` (`Item`, `Resource`, `""`/Text). |');
+        HelpBuilder.AppendLine('| costs.totalExpectedCost | Header `Cost Amount`. |');
+        HelpBuilder.AppendLine('| costs.totalActualCost | Sum of the five actual-cost components below. |');
+        HelpBuilder.AppendLine('| costs.actualMaterialCost / .actualResourceCost / .actualCapacityCost / .actualCapacityOverhead / .actualMfgOverhead | Five-element array returned by `Assembly Header.CalcActualCosts` (positions 1..5). Zero before posting. |');
+        HelpBuilder.AppendLine('| costs.unitCost / .indirectCostPercent / .overheadRate | Header costing fields. |');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Errors');
+        HelpBuilder.AppendLine('| Error | Cause |');
+        HelpBuilder.AppendLine('|-------|-------|');
+        HelpBuilder.AppendLine('| `Assembly Header identifier is missing. Pass it as the subject, or as one of: systemId, recordSystemId, id, documentNo, assemblyOrderNo, no.` (`MissingParameter`) | No identifier in `subject` or the request JSON. |');
+        HelpBuilder.AppendLine('| `Assembly Header "{value}" was not found (from {subject or key}).` (`RecordNotFound`) | An identifier was given but matches no record; `parameter` and `received` name it. Every identifier supplied is tried. |');
+        HelpBuilder.AppendLine('| `The identifiers in {a} and {b} point to different records.` (`ConflictingIdentifiers`) | Two identifiers were given that resolve to different records. |');
+        HelpBuilder.AppendLine('| `"{value}" is not a valid GUID` / `integer` `(from {key}).` (`InvalidParameterFormat`) | A SystemId or entry number that cannot be read. |');
+        HelpBuilder.AppendLine('');
+        HelpBuilder.AppendLine('## Related Message Types');
+        HelpBuilder.AppendLine('- `Inventory.AssemblyOrder.PreviewPost` - see predicted ledger entries.');
+        HelpBuilder.AppendLine('- `Inventory.AssemblyOrder.Post` - post the order.');
+
+        HelpText := HelpBuilder.ToText();
+    end;
+}
