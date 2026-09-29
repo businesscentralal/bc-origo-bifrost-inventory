@@ -53,9 +53,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         ResponseJson: JsonObject;
+        CodeToken: JsonToken;
         ErrorToken: JsonToken;
     begin
-        // [SCENARIO] Denial names BIFROST InvPost ori and does not mention BIFROST ItemPost ori.
+        // [SCENARIO] Denial names BIFROST InvPost ori, carries PermissionDenied, and does not mention BIFROST ItemPost ori.
         LowerToInvWrite(LibraryLowerPermissions);
         Argument.Init();
         Argument.Version := "Message Version ori"::"1.0";
@@ -65,6 +66,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Assert.IsFalse(PostingGate.HasPostingPermission(), 'HasPostingPermission should be false without the token');
 
         ResponseJson := Argument.GetResponseJson();
+        Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
+        Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('error', ErrorToken), 'error missing');
         Assert.AreNotEqual(0, StrPos(ErrorToken.AsValue().AsText(), 'BIFROST InvPost ori'), ErrorToken.AsValue().AsText());
         Assert.AreEqual(0, StrPos(ErrorToken.AsValue().AsText(), 'BIFROST ItemPost ori'), ErrorToken.AsValue().AsText());

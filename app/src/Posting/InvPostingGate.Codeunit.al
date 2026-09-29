@@ -22,7 +22,10 @@ codeunit 70013443 "Inv. Posting Gate ori"
         if HasPostingPermission() then
             exit(true);
 
-        Argument.RespondWithError(StrSubstNo(PostingDeniedErr, PermissionSetNameTok));
+        Argument.RespondWithError(
+            "Bifrost Error Code ori"::PermissionDenied,
+            StrSubstNo(PostingDeniedErr, PermissionSetNameTok),
+            '', '', '', '');
         exit(false);
     end;
 
