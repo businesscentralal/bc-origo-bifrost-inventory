@@ -17,11 +17,11 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     procedure IsEnabled(): Boolean
     var
         AssemblyHeader: Record "Assembly Header";
-        PostingGate: Codeunit "Posting Gate ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
     begin
         if not AssemblyHeader.WritePermission() then
             exit(false);
-        exit(PostingGate.HasPostingPermission(Enum::"Posting Type ori"::Item));
+        exit(PostingGate.HasPostingPermission());
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -63,7 +63,7 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
         AssemblyHeader: Record "Assembly Header";
         PostedAsmHeader: Record "Posted Assembly Header";
         AssemblyPost: Codeunit "Assembly-Post";
-        PostingGate: Codeunit "Posting Gate ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
         Dispatcher: Codeunit "Dispatcher ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -77,7 +77,7 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not PostingGate.AssertCanPost(Argument, Enum::"Posting Type ori"::Item) then
+        if not PostingGate.AssertCanPost(Argument) then
             exit;
         RequestJson := Argument.GetRequestJson();
 

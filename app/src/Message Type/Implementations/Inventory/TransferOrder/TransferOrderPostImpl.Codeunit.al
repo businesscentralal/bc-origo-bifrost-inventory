@@ -19,11 +19,11 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure IsEnabled(): Boolean
     var
         TransferHeader: Record "Transfer Header";
-        PostingGate: Codeunit "Posting Gate ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
     begin
         if not TransferHeader.WritePermission() then
             exit(false);
-        exit(PostingGate.HasPostingPermission(Enum::"Posting Type ori"::Item));
+        exit(PostingGate.HasPostingPermission());
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -65,7 +65,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         TransferHeader: Record "Transfer Header";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
-        PostingGate: Codeunit "Posting Gate ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
@@ -82,7 +82,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not PostingGate.AssertCanPost(Argument, Enum::"Posting Type ori"::Item) then
+        if not PostingGate.AssertCanPost(Argument) then
             exit;
 
         if not Argument.FindTransferHeader(TransferHeader) then

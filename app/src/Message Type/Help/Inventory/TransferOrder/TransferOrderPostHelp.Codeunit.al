@@ -70,12 +70,12 @@ codeunit 70013431 "Transfer Order Post Help ori"
         HelpBuilder.AppendLine('| postingDate | Posting Date on the header after posting (Format `0,9`). |');
         HelpBuilder.AppendLine('');
         HelpBuilder.AppendLine('## Posting Gate');
-        HelpBuilder.AppendLine('Calling this message type requires the `BIFROST ItemPost ori` permission set in addition to `BIFROST API ori`. Without it the request returns: `Posting denied: missing ''BIFROST ItemPost ori'' permission set.`');
+        HelpBuilder.AppendLine('Calling this message type requires the `BIFROST InvPost ori` permission set in addition to `BIFROST API ori`. `BIFROST ItemPost ori` no longer covers this message type. Without `BIFROST InvPost ori` the request returns: `Posting denied: missing ''BIFROST InvPost ori'' permission set.`');
         HelpBuilder.AppendLine('');
         HelpBuilder.AppendLine('## Errors');
         HelpBuilder.AppendLine('| Error | Cause |');
         HelpBuilder.AppendLine('|-------|-------|');
-        HelpBuilder.AppendLine('| `Posting denied: missing ''BIFROST ItemPost ori'' permission set.` | Caller lacks the `BIFROST ItemPost ori` permission set. |');
+        HelpBuilder.AppendLine('| `Posting denied: missing ''BIFROST InvPost ori'' permission set.` | Caller lacks the `BIFROST InvPost ori` permission set. `BIFROST ItemPost ori` does not grant it. |');
         HelpBuilder.AppendLine('| `Transfer Header identifier is missing. Pass it as the subject, or as one of: systemId, recordSystemId, id, documentNo, transferOrderNo, no.` (`MissingParameter`) | No identifier in `subject` or the request JSON. |');
         HelpBuilder.AppendLine('| `Transfer Header "{value}" was not found (from {subject or key}).` (`RecordNotFound`) | An identifier was given but matches no record; `parameter` and `received` name it. Every identifier supplied is tried. |');
         HelpBuilder.AppendLine('| `The identifiers in {a} and {b} point to different records.` (`ConflictingIdentifiers`) | Two identifiers were given that resolve to different records. |');
