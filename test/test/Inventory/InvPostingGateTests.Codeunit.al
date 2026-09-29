@@ -7,23 +7,15 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
-/// Deny path for the inventory posting gate. Restrictive permissions omit Inv. Posting ori,
-/// so both Post implementations are disabled and AssertCanPost names BIFROST InvPost ori.
-/// PreviewPost stays enabled and does not answer with the posting-denied error.
+/// Deny path for the inventory posting gate.
+/// The session is lowered to BIFROST Full ori and BIFROST InvWrite ori, with document-table
+/// write, and without BIFROST InvPost ori. Both Post implementations are then disabled and
+/// AssertCanPost names BIFROST InvPost ori. PreviewPost stays enabled.
 /// </summary>
 codeunit 96918 "Inv. Posting Gate Tests"
 {
     Subtype = Test;
     TestPermissions = Restrictive;
-    Permissions =
-        tabledata "Message Argument ori" = RIMD,
-        tabledata "Transfer Header" = RIMD,
-        tabledata "Assembly Header" = RIMD,
-        codeunit "Transfer Order Post Impl ori" = X,
-        codeunit "Assembly Order Post Impl ori" = X,
-        codeunit "Transf Doc Prev. Post Impl ori" = X,
-        codeunit "Asm. Doc Prev. Post Impl ori" = X,
-        codeunit "Inv. Posting Gate ori" = X;
 
     var
         Assert: Codeunit "Library Assert";
@@ -31,18 +23,26 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPost_WithoutInvPost_IsDisabled()
     var
+        TransferHeader: Record "Transfer Header";
         PostImpl: Codeunit "Transfer Order Post Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] TransferOrder.Post is disabled when the caller cannot write the inventory posting token.
+        LowerToInvWrite(LibraryLowerPermissions);
+        Assert.IsTrue(TransferHeader.WritePermission(), 'Transfer Header write must be present so IsEnabled tests the gate');
         Assert.IsFalse(PostImpl.IsEnabled(), 'Transfer post should be disabled without BIFROST InvPost ori');
     end;
 
     [Test]
     procedure AssemblyPost_WithoutInvPost_IsDisabled()
     var
+        AssemblyHeader: Record "Assembly Header";
         PostImpl: Codeunit "Assembly Order Post Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] AssemblyOrder.Post is disabled when the caller cannot write the inventory posting token.
+        LowerToInvWrite(LibraryLowerPermissions);
+        Assert.IsTrue(AssemblyHeader.WritePermission(), 'Assembly Header write must be present so IsEnabled tests the gate');
         Assert.IsFalse(PostImpl.IsEnabled(), 'Assembly post should be disabled without BIFROST InvPost ori');
     end;
 
@@ -51,10 +51,12 @@ codeunit 96918 "Inv. Posting Gate Tests"
     var
         Argument: Record "Message Argument ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         ResponseJson: JsonObject;
         ErrorToken: JsonToken;
     begin
         // [SCENARIO] Denial names BIFROST InvPost ori and does not mention BIFROST ItemPost ori.
+        LowerToInvWrite(LibraryLowerPermissions);
         Argument.Init();
         Argument.Version := "Message Version ori"::"1.0";
         Argument.Insert(true);
@@ -73,8 +75,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
     var
         Argument: Record "Message Argument ori";
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] TransferOrder.PreviewPost stays enabled and does not return the posting-denied error.
+        LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Transfer preview should stay enabled without BIFROST InvPost ori');
 
         PrepareUnlicensedArgument(Argument);
@@ -88,14 +92,24 @@ codeunit 96918 "Inv. Posting Gate Tests"
     var
         Argument: Record "Message Argument ori";
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] AssemblyOrder.PreviewPost stays enabled and does not return the posting-denied error.
+        LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Assembly preview should stay enabled without BIFROST InvPost ori');
 
         PrepareUnlicensedArgument(Argument);
         asserterror PreviewImpl.ExecuteBifrostTask(Argument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check, not a posting-gate denial');
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
+    end;
+
+    local procedure LowerToInvWrite(var LibraryLowerPermissions: Codeunit "Library - Lower Permissions")
+    begin
+        // Restrictive tests start as D365 Full Access until this library replaces that set.
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvWrite ori');
+        LibraryLowerPermissions.AddPermissionSet('Inv Post Gate Test');
     end;
 
     local procedure PrepareUnlicensedArgument(var Argument: Record "Message Argument ori")
