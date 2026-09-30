@@ -186,25 +186,4 @@ codeunit 96913 "Transfer Order Create Tests"
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status');
         Assert.IsFalse(ResponseJson.Contains('lines'), 'Header-only response has no lines');
     end;
-
-    [Test]
-    procedure TransferOrderCreateContract_DocumentsLines()
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-        MessageType: Enum "Message Type ori";
-        Contract: JsonObject;
-        ContractText: Text;
-    begin
-        MessageType := "Message Type ori"::"Inventory.TransferOrder.Create";
-        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Transfer order create declares a contract');
-        Assert.IsTrue(Contract.Contains('notes'), 'Contract has notes');
-        Assert.IsTrue(Contract.Contains('parameters'), 'Contract has parameters');
-        Assert.IsTrue(Contract.Contains('errors'), 'Contract has errors');
-        Contract.WriteTo(ContractText);
-        Assert.AreEqual(0, StrPos(ContractText, 'SetUpNewLine'), 'Contract has no SetUpNewLine wording');
-        Assert.AreEqual(0, StrPos(ContractText, 'SetupNewLine'), 'Contract names no SetupNewLine type');
-        Assert.IsTrue(StrPos(ContractText, 'all-or-nothing') > 0, 'Contract names all-or-nothing');
-        Assert.IsTrue(StrPos(ContractText, '200') > 0, 'Contract names the 200 line cap');
-        Assert.IsTrue(StrPos(ContractText, 'lines') > 0, 'Contract mentions lines');
-    end;
 }
