@@ -188,25 +188,23 @@ codeunit 96913 "Transfer Order Create Tests"
     end;
 
     [Test]
-    procedure TransferOrderCreateHelp_DocumentsLinesContract()
+    procedure TransferOrderCreateContract_DocumentsLines()
     var
-        Help: Codeunit "Transfer Order Create Help ori";
-        HelpText: Text;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        ContractText: Text;
     begin
-        HelpText := Help.GetHelpText();
-        Assert.AreEqual(0, StrPos(HelpText, 'SetUpNewLine'), 'Help has no SetUpNewLine wording (#141 R-AC1)');
-        Assert.AreEqual(0, StrPos(HelpText, 'SetupNewLine'), 'Help names no SetupNewLine type (#141 R-AC2)');
-        Assert.IsTrue(StrPos(HelpText, '## With lines') > 0, 'Help has a With lines section');
-        Assert.IsTrue(StrPos(HelpText, '## Without lines') > 0, 'Help has a Without lines section');
-        Assert.IsTrue(StrPos(HelpText, '## With lines') < StrPos(HelpText, '## Related Message Types'), 'The lines sections are part of the document, before Related Message Types');
-        Assert.IsTrue(StrPos(HelpText, 'LimitExceeded') > 0, 'Help names the cap error code');
-        Assert.IsTrue(StrPos(HelpText, '| itemNo | Text | Yes |') > 0, 'Help states the required field as the pre-check does: | itemNo | Text | Yes |');
-        Assert.IsTrue(StrPos(HelpText, '| quantity | Decimal | Yes |') > 0, 'Help states the required field as the pre-check does: | quantity | Decimal | Yes |');
-        Assert.IsTrue(StrPos(HelpText, 'lines') > 0, 'Help mentions lines');
-        Assert.IsTrue(StrPos(HelpText, '200') > 0, 'Help names the 200 line cap');
-        Assert.IsTrue(StrPos(HelpText, 'all-or-nothing') > 0, 'Help names all-or-nothing');
-        Assert.IsTrue(StrPos(HelpText, 'Item No.') > 0, 'Help names the validation order');
-        Assert.IsTrue(StrPos(HelpText, 'itemNo') > 0, 'Help names the line fields');
-        Assert.IsTrue(StrPos(HelpText, '"lines"') > 0, 'Help has a lines request example');
+        MessageType := "Message Type ori"::"Inventory.TransferOrder.Create";
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Transfer order create declares a contract');
+        Assert.IsTrue(Contract.Contains('notes'), 'Contract has notes');
+        Assert.IsTrue(Contract.Contains('parameters'), 'Contract has parameters');
+        Assert.IsTrue(Contract.Contains('errors'), 'Contract has errors');
+        Contract.WriteTo(ContractText);
+        Assert.AreEqual(0, StrPos(ContractText, 'SetUpNewLine'), 'Contract has no SetUpNewLine wording');
+        Assert.AreEqual(0, StrPos(ContractText, 'SetupNewLine'), 'Contract names no SetupNewLine type');
+        Assert.IsTrue(StrPos(ContractText, 'all-or-nothing') > 0, 'Contract names all-or-nothing');
+        Assert.IsTrue(StrPos(ContractText, '200') > 0, 'Contract names the 200 line cap');
+        Assert.IsTrue(StrPos(ContractText, 'lines') > 0, 'Contract mentions lines');
     end;
 }
