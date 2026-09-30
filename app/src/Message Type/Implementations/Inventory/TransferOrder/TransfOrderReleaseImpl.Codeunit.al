@@ -8,7 +8,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
-codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori"
+codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
     procedure IsEnabled(): Boolean
@@ -36,8 +36,80 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Releases an open transfer order so it can be posted; use Reopen to edit a released order.', Comment = 'is-IS=Leyfir opna millifærslupöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.';
     begin
-        exit(GetDescription());
+        exit(SelectionDescriptionLbl);
+    end;
+
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Envelope := Parts.GetEnvelope('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Target := Parts.GetTarget('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        exit(false);
+    end;
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Response := Parts.GetResponse('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Errors := Parts.GetErrors('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Effect := Parts.GetEffect('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Related := Parts.GetRelated('Inventory.TransferOrder.Release');
+        exit(true);
+    end;
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        exit(false);
+    end;
+    procedure GetOverview(var Overview: Text): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Overview := Parts.GetOverview('Inventory.TransferOrder.Release');
+        exit(Overview <> '');
+    end;
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        exit(false);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
@@ -46,10 +118,8 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
-    var
-        HelpCodeunit: Codeunit "Transf. Order Release Help ori";
     begin
-        Argument.SetResponseMarkdown(HelpCodeunit.GetHelpText());
+        Argument.SetResponseMarkdown('');
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")

@@ -11,7 +11,7 @@ using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Origo.Bifrost;
 
-codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori"
+codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
     procedure IsEnabled(): Boolean
@@ -42,9 +42,42 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Posts an assembly order and consumes components; use PreviewPost to inspect predicted entries first.', Comment = 'is-IS=Bókar samsetningarpöntun og notar íhluti; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.';
     begin
-        exit(GetDescription());
+        exit(SelectionDescriptionLbl);
     end;
+
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Envelope := Parts.GetEnvelope('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Target := Parts.GetTarget('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Parameters := Parts.GetParameters('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Response := Parts.GetResponse('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Errors := Parts.GetErrors('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Effect := Parts.GetEffect('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetMetering(var Metering: JsonObject): Boolean begin exit(false); end;
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Related := Parts.GetRelated('Inventory.AssemblyOrder.Post'); exit(true); end;
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean begin exit(false); end;
+    procedure GetExamples(var Examples: JsonArray): Boolean begin exit(false); end;
+    procedure GetOverview(var Overview: Text): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Overview := Parts.GetOverview('Inventory.AssemblyOrder.Post'); exit(Overview <> ''); end;
+    procedure GetNotes(var Notes: Text): Boolean
+    var Parts: Codeunit "Inventory Contract Parts ori";
+    begin Notes := Parts.GetNotes('Inventory.AssemblyOrder.Post'); exit(Notes <> ''); end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
@@ -52,10 +85,8 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
-    var
-        HelpCodeunit: Codeunit "Assembly Order Post Help ori";
     begin
-        Argument.SetResponseMarkdown(HelpCodeunit.GetHelpText());
+        Argument.SetResponseMarkdown('');
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
