@@ -21,7 +21,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapter: Text;
     begin
         foreach TypeName in InventoryTypes() do begin
-            MessageType := Enum::"Message Type ori"::FromInteger(OrdinalOf(TypeName));
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             LibraryAssert.IsTrue(ContractMgt.GetContract(MessageType, Contract), TypeName + ' must declare a contract.');
             foreach Chapter in RequiredChapters(TypeName) do
                 LibraryAssert.IsTrue(Contract.Contains(Chapter), TypeName + ' must declare chapter ' + Chapter + '.');
@@ -36,7 +36,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeName: Text;
     begin
         foreach TypeName in InventoryTypes() do begin
-            MessageType := Enum::"Message Type ori"::FromInteger(OrdinalOf(TypeName));
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             Discovery := MessageType;
             LibraryAssert.IsFalse(Discovery.GetKeywords() = '', TypeName + ' must have discovery keywords.');
             LibraryAssert.IsFalse(Discovery.GetSelectionDescription() = '', TypeName + ' must have a selection description.');
@@ -73,7 +73,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Effect: JsonObject;
         EffectToken: JsonToken;
     begin
-        MessageType := Enum::"Message Type ori"::FromInteger(OrdinalOf(TypeName));
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
         ContractMgt.GetContract(MessageType, Contract);
         Contract.Get('effect', EffectToken);
         Effect := EffectToken.AsObject();
