@@ -70,7 +70,7 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     begin Related := Parts.GetRelated('Inventory.AssemblyOrder.PreviewPost'); exit(true); end;
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.PreviewPost'); exit(Workflow.Count() > 0); end;
+    begin Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.PreviewPost'); exit(Workflow.Keys().Count() > 0); end;
     procedure GetExamples(var Examples: JsonArray): Boolean begin exit(false); end;
     procedure GetOverview(var Overview: Text): Boolean
     var Parts: Codeunit "Inventory Contract Parts ori";

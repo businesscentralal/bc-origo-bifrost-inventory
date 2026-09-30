@@ -102,7 +102,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Parts: Codeunit "Inventory Contract Parts ori";
     begin
         Workflow := Parts.GetWorkflow('Inventory.TransferOrder.Create');
-        exit(Workflow.Count() > 0);
+        exit(Workflow.Keys().Count() > 0);
     end;
     procedure GetExamples(var Examples: JsonArray): Boolean
     var

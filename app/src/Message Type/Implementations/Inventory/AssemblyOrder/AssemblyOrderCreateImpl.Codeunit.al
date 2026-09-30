@@ -68,7 +68,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     begin Related := Parts.GetRelated('Inventory.AssemblyOrder.Create'); exit(true); end;
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Create'); exit(Workflow.Count() > 0); end;
+    begin Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Create'); exit(Workflow.Keys().Count() > 0); end;
     procedure GetExamples(var Examples: JsonArray): Boolean
     var Parts: Codeunit "Inventory Contract Parts ori";
     begin Examples := Parts.GetExamples('Inventory.AssemblyOrder.Create'); exit(Examples.Count() > 0); end;

@@ -2,12 +2,12 @@
 
 ## [Unreleased]
 
-### Added (2026-09-29) - Inventory message contracts (#22)
+### Added (2026-09-30) - Inventory message contracts (#24)
 
 - All 17 Inventory message types now implement `Msg Contract ori` and expose envelope, target, parameters, response, errors, effect, related, workflow, examples, overview, and notes chapters where applicable.
 - All 17 message types expose distinct English and Icelandic discovery keywords and selection descriptions.
 - Per-type markdown help codeunits were removed after their content moved into contract chapters; the legacy markdown interface method remains as an empty compatibility shim for issue #23.
-- The app and test projects now pin Bifrost Foundation `28.0.1.0`; contract conformance, effect, and discovery tests cover the full batch.
+- The app and test projects now pin Bifrost Foundation `28.0.0.166`; contract conformance, effect, and discovery tests cover the full batch.
 
 ### Added (2026-09-29) - Transfer and assembly order message types (#20)
 

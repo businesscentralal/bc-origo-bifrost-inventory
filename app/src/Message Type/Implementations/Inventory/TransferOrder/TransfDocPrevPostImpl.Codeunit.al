@@ -106,7 +106,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Parts: Codeunit "Inventory Contract Parts ori";
     begin
         Workflow := Parts.GetWorkflow('Inventory.TransferOrder.PreviewPost');
-        exit(Workflow.Count() > 0);
+        exit(Workflow.Keys().Count() > 0);
     end;
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
