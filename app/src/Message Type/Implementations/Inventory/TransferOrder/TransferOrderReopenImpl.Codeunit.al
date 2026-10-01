@@ -109,17 +109,13 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
     end;
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Notes := '';
         exit(false);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
         exit(enum::"Msg Direction ori"::Inbound);
-    end;
-
-    procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
-    begin
-        Argument.SetResponseMarkdown('');
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
