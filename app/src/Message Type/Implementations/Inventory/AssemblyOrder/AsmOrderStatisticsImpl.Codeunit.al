@@ -76,11 +76,6 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         exit(enum::"Msg Direction ori"::Inbound);
     end;
 
-    procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
-    begin
-        Argument.SetResponseMarkdown('');
-    end;
-
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";

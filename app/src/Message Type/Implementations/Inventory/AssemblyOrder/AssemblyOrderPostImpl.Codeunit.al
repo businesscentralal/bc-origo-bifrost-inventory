@@ -84,11 +84,6 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
         exit(enum::"Msg Direction ori"::Inbound);
     end;
 
-    procedure GetMessageHelpAsMarkdownDocument(var Argument: Record "Message Argument ori")
-    begin
-        Argument.SetResponseMarkdown('');
-    end;
-
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
