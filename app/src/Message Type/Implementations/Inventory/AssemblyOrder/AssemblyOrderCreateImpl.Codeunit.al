@@ -20,6 +20,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         RecRef.Open(GetFilterTableNo());
         exit(RecRef.WritePermission());
     end;
+
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
         exit(Database::"Assembly Header");
@@ -45,39 +46,97 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Envelope := Parts.GetEnvelope('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Envelope := Parts.GetEnvelope('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Target := Parts.GetTarget('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Target := Parts.GetTarget('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Parameters := Parts.GetParameters('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Parameters := Parts.GetParameters('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Response := Parts.GetResponse('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Response := Parts.GetResponse('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Errors := Parts.GetErrors('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Errors := Parts.GetErrors('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Effect := Parts.GetEffect('Inventory.AssemblyOrder.Create'); exit(true); end;
-    procedure GetMetering(var Metering: JsonObject): Boolean begin exit(false); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Effect := Parts.GetEffect('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Related := Parts.GetRelated('Inventory.AssemblyOrder.Create'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Related := Parts.GetRelated('Inventory.AssemblyOrder.Create');
+        exit(true);
+    end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Create'); exit(Workflow.Keys().Count() > 0); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Create');
+        exit(Workflow.Keys().Count() > 0);
+    end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Examples := Parts.GetExamples('Inventory.AssemblyOrder.Create'); exit(Examples.Count() > 0); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Examples := Parts.GetExamples('Inventory.AssemblyOrder.Create');
+        exit(Examples.Count() > 0);
+    end;
+
     procedure GetOverview(var Overview: Text): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Overview := Parts.GetOverview('Inventory.AssemblyOrder.Create'); exit(Overview <> ''); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Overview := Parts.GetOverview('Inventory.AssemblyOrder.Create');
+        exit(Overview <> '');
+    end;
+
     procedure GetNotes(var Notes: Text): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Notes := Parts.GetNotes('Inventory.AssemblyOrder.Create'); exit(Notes <> ''); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Notes := Parts.GetNotes('Inventory.AssemblyOrder.Create');
+        exit(Notes <> '');
+    end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin

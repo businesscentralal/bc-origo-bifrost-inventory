@@ -122,6 +122,7 @@ codeunit 10036900 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Notes := '';
         exit(false);
     end;
 

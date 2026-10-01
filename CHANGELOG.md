@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed (2026-10-01) - code style of the message contracts
+
+- The contract procedures of all 17 message type codeunits are written one statement per line (84 CodeCop AA0018 warnings), empty `GetNotes` stubs clear their `var` parameter (AA0150), and three file names match their object names (AA0215). No behaviour change.
+
 ### Removed (2026-10-01) - markdown help procedure (#23)
 
 - Every Inventory message type codeunit drops `GetMessageHelpAsMarkdownDocument`, the empty compatibility shim. Foundation removed it from `Msg Interface ori` (core#198); help is the contract chapters that `Help.Implementation.Get` returns. No chapter changed.

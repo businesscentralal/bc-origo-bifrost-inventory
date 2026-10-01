@@ -20,6 +20,7 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         RecRef.Open(GetFilterTableNo());
         exit(RecRef.ReadPermission());
     end;
+
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
         exit(Database::"Assembly Header");
@@ -45,31 +46,86 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Envelope := Parts.GetEnvelope('Inventory.AssemblyOrder.Statistics'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Envelope := Parts.GetEnvelope('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Target := Parts.GetTarget('Inventory.AssemblyOrder.Statistics'); exit(true); end;
-    procedure GetParameters(var Parameters: JsonArray): Boolean begin exit(false); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Target := Parts.GetTarget('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        exit(false);
+    end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Response := Parts.GetResponse('Inventory.AssemblyOrder.Statistics'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Response := Parts.GetResponse('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Errors := Parts.GetErrors('Inventory.AssemblyOrder.Statistics'); exit(true); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Errors := Parts.GetErrors('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Effect := Parts.GetEffect('Inventory.AssemblyOrder.Statistics'); exit(true); end;
-    procedure GetMetering(var Metering: JsonObject): Boolean begin exit(false); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Effect := Parts.GetEffect('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Related := Parts.GetRelated('Inventory.AssemblyOrder.Statistics'); exit(true); end;
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean begin exit(false); end;
-    procedure GetExamples(var Examples: JsonArray): Boolean begin exit(false); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Related := Parts.GetRelated('Inventory.AssemblyOrder.Statistics');
+        exit(true);
+    end;
+
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        exit(false);
+    end;
+
     procedure GetOverview(var Overview: Text): Boolean
-    var Parts: Codeunit "Inventory Contract Parts ori";
-    begin Overview := Parts.GetOverview('Inventory.AssemblyOrder.Statistics'); exit(Overview <> ''); end;
-    procedure GetNotes(var Notes: Text): Boolean begin exit(false); end;
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        Overview := Parts.GetOverview('Inventory.AssemblyOrder.Statistics');
+        exit(Overview <> '');
+    end;
+
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := '';
+        exit(false);
+    end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin

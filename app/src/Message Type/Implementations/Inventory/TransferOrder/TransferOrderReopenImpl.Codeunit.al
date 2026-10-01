@@ -109,6 +109,7 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
     end;
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Notes := '';
         exit(false);
     end;
 

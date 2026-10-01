@@ -109,6 +109,7 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     end;
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Notes := '';
         exit(false);
     end;
 
