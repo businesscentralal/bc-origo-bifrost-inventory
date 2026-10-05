@@ -33,7 +33,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'assembly order, assemble, kit, build a product, bill of materials, bom, make to order, bundle', Comment = 'is-IS=samsetningarpöntun, setja saman, vörusett, smíða vöru, uppskrift, íhlutalisti, framleiða eftir pöntun';
+        KeywordsLbl: Label 'assembly order, assemble, kit, build a product, bill of materials, bom, make to order, bundle', Comment = 'is-IS=samsetningarpöntun, setja saman, vörusett, smíða vöru, uppskrift, íhlutalisti, framleiða eftir pöntun, viðbót1';
     begin
         exit(KeywordsLbl);
     end;

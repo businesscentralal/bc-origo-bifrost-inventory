@@ -36,7 +36,7 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'post assembly, finish assembly, assembled, output the kit, consume components', Comment = 'is-IS=bóka samsetningu, ljúka samsetningu, samsett, nota íhluti';
+        KeywordsLbl: Label 'post assembly, finish assembly, assembled, output the kit, consume components', Comment = 'is-IS=bóka samsetningu, ljúka samsetningu, samsett, nota íhluti, viðbót1';
     begin
         exit(KeywordsLbl);
     end;

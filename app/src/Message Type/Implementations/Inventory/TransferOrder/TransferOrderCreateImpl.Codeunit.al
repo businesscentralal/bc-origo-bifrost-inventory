@@ -32,7 +32,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory', Comment = 'is-IS=millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur';
+        KeywordsLbl: Label 'transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory', Comment = 'is-IS=millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, viðbót1';
     begin
         exit(KeywordsLbl);
     end;
