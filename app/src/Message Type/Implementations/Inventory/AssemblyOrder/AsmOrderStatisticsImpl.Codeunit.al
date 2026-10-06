@@ -1,24 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.Statistics message type.
-/// Returns header information, line counts, quantities and cost breakdown
-/// (material, resource, capacity, overhead) for an assembly order.
-/// Mirrors page 901 "Assembly Order Statistics" by calling CalcActualCosts.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.ReadPermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -134,6 +127,7 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
         DocumentLookup: Codeunit "Document Lookup ori";
@@ -148,13 +142,14 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         TotalCostExpected: Decimal;
         TotalCostActual: Decimal;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
         if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
 
-        // Count lines by type
         AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
         AssemblyLine.SetRange("Document No.", AssemblyHeader."No.");
         TotalLineCount := AssemblyLine.Count();
@@ -167,11 +162,9 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         TextLineCount := AssemblyLine.Count();
         AssemblyLine.SetRange(Type);
 
-        // Calculate actual costs (indexed 1..5: Material, Resource, Capacity, CapacityOverhead, MfgOverhead)
         AssemblyHeader.CalcActualCosts(ActualCost);
         TotalCostActual := ActualCost[1] + ActualCost[2] + ActualCost[3] + ActualCost[4] + ActualCost[5];
 
-        // Expected cost is summed from assembly lines (Page 920 pattern).
         AssemblyLine.CalcSums("Cost Amount");
         TotalCostExpected := AssemblyLine."Cost Amount";
 
