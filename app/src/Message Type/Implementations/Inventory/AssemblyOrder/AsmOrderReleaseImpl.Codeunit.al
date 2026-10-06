@@ -1,23 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.Release message type.
-/// Releases an open assembly order (status Open -> Released) via codeunit 414 Release Assembly Document.
-/// Idempotent: returns Success without action when already Released.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -128,36 +122,33 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         DocumentLookup: Codeunit "Document Lookup ori";
         ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;
         StatusBefore: Text;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
-
         StatusBefore := StatusToText(AssemblyHeader.Status);
-
-        // Idempotent: already Released -> just respond success
         if AssemblyHeader.Status = AssemblyHeader.Status::Released then begin
             BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
             Argument.SetResponseJson(ResponseJson);
             Argument."Content Type" := Argument.GetContentTypeJson();
             exit;
         end;
-
         ReleaseAssemblyDoc.Run(AssemblyHeader);
         AssemblyHeader.Find();
-
         BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
