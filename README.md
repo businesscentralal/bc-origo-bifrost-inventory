@@ -24,6 +24,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
 | `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run Adjust Cost - Item Entries, report 795, with item filters |
+| `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.CostToGL.Post` | Inbound | Post inventory cost to G/L, report 1002, with item filters |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
 | `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
@@ -47,6 +48,9 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
 | `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation entry |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
+| `Inventory.PhysInventory.Record` | Inbound | Record the counted quantity on a physical inventory journal line |
+| `Inventory.PhysInventory.Check` | Outbound | Read quantity differences on a physical inventory journal |
+| `Inventory.PhysInventory.Preview` | Outbound | Preview physical inventory count differences without posting |
 | `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
 
 Update this table in the same change as any new or renamed message type.
