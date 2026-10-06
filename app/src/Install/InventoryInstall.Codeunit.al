@@ -13,6 +13,14 @@ codeunit 10036909 "Inventory Install ori"
     trigger OnInstallAppPerCompany()
     begin
         SetUpgradeTags();
+        InsertSetup();
+    end;
+
+    local procedure InsertSetup()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        InventorySetup.InsertIfNotExists();
     end;
 
     local procedure SetUpgradeTags()
@@ -23,8 +31,6 @@ codeunit 10036909 "Inventory Install ori"
             UpgradeTag.SetUpgradeTag(GetInitialReleaseTag());
     end;
 
-    /// <summary>Returns the per-company upgrade tag for the initial Inventory release.</summary>
-    /// <returns>The initial-release upgrade tag.</returns>
     procedure GetInitialReleaseTag(): Code[250]
     begin
         exit('Origo.Bifrost.Inventory-Initial-20260911');
