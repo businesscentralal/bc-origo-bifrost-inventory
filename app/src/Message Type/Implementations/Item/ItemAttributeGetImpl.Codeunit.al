@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>
-/// Implementation of the Item.Attribute.Get message type (Outbound).
+/// Implementation of Inventory.Attribute.Get.
 /// </summary>
 codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -12,10 +12,9 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.ReadPermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Attributes, GetFilterTableNo(), false, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -37,7 +36,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Reads item attributes and assigned values without changing the item; use Item.Attribute.Create to assign a value.', Comment = 'is-IS=Les eiginleika vöru og úthlutuð gildi án þess að breyta vörunni; notaðu Item.Attribute.Create til að úthluta gildi.';
+        SelectionDescriptionLbl: Label 'Reads item attributes and assigned values without changing the item; use Inventory.Attribute.Create to assign a value.', Comment = 'is-IS=Les eiginleika vöru og úthlutuð gildi án þess að breyta vörunni; notaðu Inventory.Attribute.Create til að úthluta gildi.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -46,7 +45,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Envelope := ContractParts.GetEnvelope('Item.Attribute.Get');
+        Envelope := ContractParts.GetEnvelope('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -54,7 +53,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Target := ContractParts.GetTarget('Item.Attribute.Get');
+        Target := ContractParts.GetTarget('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -62,7 +61,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Parameters := ContractParts.GetParameters('Item.Attribute.Get');
+        Parameters := ContractParts.GetParameters('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -70,7 +69,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Response := ContractParts.GetResponse('Item.Attribute.Get');
+        Response := ContractParts.GetResponse('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -78,7 +77,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Errors := ContractParts.GetErrors('Item.Attribute.Get');
+        Errors := ContractParts.GetErrors('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -86,7 +85,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Effect := ContractParts.GetEffect('Item.Attribute.Get');
+        Effect := ContractParts.GetEffect('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -99,7 +98,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Related := ContractParts.GetRelated('Item.Attribute.Get');
+        Related := ContractParts.GetRelated('Inventory.Attribute.Get');
         exit(true);
     end;
 
@@ -112,7 +111,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Examples := ContractParts.GetExamples('Item.Attribute.Get');
+        Examples := ContractParts.GetExamples('Inventory.Attribute.Get');
         exit(Examples.Count() > 0);
     end;
 
@@ -120,7 +119,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Overview := ContractParts.GetOverview('Item.Attribute.Get');
+        Overview := ContractParts.GetOverview('Inventory.Attribute.Get');
         exit(Overview <> '');
     end;
 
@@ -128,7 +127,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Notes := ContractParts.GetNotes('Item.Attribute.Get');
+        Notes := ContractParts.GetNotes('Inventory.Attribute.Get');
         exit(Notes <> '');
     end;
 
@@ -139,6 +138,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
         DocumentLookup: Codeunit "Document Lookup ori";
         Resolve: Codeunit "Item Attribute Resolve ori";
@@ -151,6 +151,8 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
         IdFilter: List of [Integer];
         IncludeUnassigned: Boolean;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, GetFilterTableNo(), false, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
