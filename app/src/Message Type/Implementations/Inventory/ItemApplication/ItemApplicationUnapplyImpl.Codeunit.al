@@ -1,12 +1,9 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.ItemApplication.Unapply. Removes an application entry and marks the item for adjustment.
-/// </summary>
 codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -25,47 +22,68 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Unapplies an item application entry and marks the item for adjustment.');
+        exit('Unapplies an item application entry through Item Jnl.-Post Line.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('unapply item, item application');
+        exit('unapply item application, undo application');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Unapplies an item application entry. Adjust Cost stays a separate type.');
+        exit('Unapplies one item application entry by entry number.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.ItemApplication.Unapply');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('codeunit', 'Item Jnl.-Post Line');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'entryNo');
+        ParameterJson.Add('type', 'integer');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('entryNo', 0);
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'entryNo was not found');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', 'Item Application Entry');
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -75,7 +93,9 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
-        exit(false);
+        Related.Add('Inventory.ItemApplication.Get');
+        Related.Add('Inventory.ItemApplication.Reapply');
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -90,15 +110,17 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Unapplies one item application entry through the standard posting line codeunit.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Calls Item Jnl.-Post Line.UnApply. It does not delete table 339 directly.';
+        exit(true);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
@@ -106,14 +128,12 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemApplicationEntry: Record "Item Application Entry";
-        Item: Record Item;
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         EntryNo: Integer;
-        MissingEntryErr: Label 'entryNo is required.', Locked = true;
-        NotFoundErr: Label 'Item application entry %1 was not found.', Comment = '%1 = entry no.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
@@ -121,23 +141,20 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'entryNo', '', '', '');
+            Argument.RespondWithError('entryNo is required.');
             exit;
         end;
         EntryNo := Token.AsValue().AsInteger();
         if not ItemApplicationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', '', '', '');
+            Argument.RespondWithError('Item application entry ' + Format(EntryNo) + ' was not found.');
             exit;
         end;
-        if Item.Get(ItemApplicationEntry."Item No.") then
-            if Item."Cost is Adjusted" then begin
-                Item."Cost is Adjusted" := false;
-                Item.Modify(true);
-            end;
-        ItemApplicationEntry.Delete(true);
+
+        ItemJnlPostLine.UnApply(ItemApplicationEntry);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemNo', ItemApplicationEntry."Item No.");
+        ResponseJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
+        ResponseJson.Add('inboundItemEntryNo', ItemApplicationEntry."Inbound Item Entry No.");
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

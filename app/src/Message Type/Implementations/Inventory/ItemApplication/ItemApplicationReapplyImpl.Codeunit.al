@@ -1,12 +1,9 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.ItemApplication.Reapply. Links an outbound item ledger entry to an inbound entry.
-/// </summary>
 codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -25,47 +22,73 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Reapplies an outbound item ledger entry to an inbound entry.');
+        exit('Reapplies an item ledger entry through Item Jnl.-Post Line.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('reapply item, item application');
+        exit('reapply item application, apply item ledger entry');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reapplies quantity in base units. Adjust Cost stays a separate type.');
+        exit('Reapplies an outbound item ledger entry to an inbound entry.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.ItemApplication.Reapply');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('codeunit', 'Item Jnl.-Post Line');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'itemLedgerEntryNo');
+        ParameterJson.Add('type', 'integer');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'applyToEntryNo');
+        ParameterJson.Add('type', 'integer');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('itemLedgerEntryNo', 0);
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'either item ledger entry was not found');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', 'Item Application Entry');
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -75,7 +98,9 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
-        exit(false);
+        Related.Add('Inventory.ItemApplication.Unapply');
+        Related.Add('Inventory.ItemApplication.Get');
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -90,74 +115,61 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Reapplies an item ledger entry through the standard posting line codeunit.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Calls Item Jnl.-Post Line. It does not insert table 339 directly.';
+        exit(true);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemApplicationEntry: Record "Item Application Entry";
         ItemLedgerEntry: Record "Item Ledger Entry";
-        Item: Record Item;
+        ApplyToItemLedgerEntry: Record "Item Ledger Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
-        OutboundEntryNo: Integer;
-        InboundEntryNo: Integer;
-        Quantity: Decimal;
-        MissingOutboundErr: Label 'outboundItemEntryNo is required.', Locked = true;
-        MissingInboundErr: Label 'inboundItemEntryNo is required.', Locked = true;
-        NotFoundErr: Label 'Item ledger entry %1 was not found.', Comment = '%1 = entry no.', Locked = true;
+        ItemLedgerEntryNo: Integer;
+        ApplyToEntryNo: Integer;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('outboundItemEntryNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingOutboundErr, 'outboundItemEntryNo', '', '', '');
+        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
+            Argument.RespondWithError('itemLedgerEntryNo is required.');
             exit;
         end;
-        OutboundEntryNo := Token.AsValue().AsInteger();
-        if not RequestJson.Get('inboundItemEntryNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingInboundErr, 'inboundItemEntryNo', '', '', '');
+        ItemLedgerEntryNo := Token.AsValue().AsInteger();
+        if not RequestJson.Get('applyToEntryNo', Token) then begin
+            Argument.RespondWithError('applyToEntryNo is required.');
             exit;
         end;
-        InboundEntryNo := Token.AsValue().AsInteger();
-        if not ItemLedgerEntry.Get(OutboundEntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, OutboundEntryNo), 'outboundItemEntryNo', '', '', '');
+        ApplyToEntryNo := Token.AsValue().AsInteger();
+        if not ItemLedgerEntry.Get(ItemLedgerEntryNo) then begin
+            Argument.RespondWithError('Item ledger entry ' + Format(ItemLedgerEntryNo) + ' was not found.');
             exit;
         end;
-        Quantity := Abs(ItemLedgerEntry.Quantity);
-        if RequestJson.Get('quantity', Token) then
-            Quantity := Token.AsValue().AsDecimal();
-        ItemApplicationEntry.Init();
-        ItemApplicationEntry."Item Ledger Entry No." := OutboundEntryNo;
-        ItemApplicationEntry."Inbound Item Entry No." := InboundEntryNo;
-        ItemApplicationEntry."Outbound Item Entry No." := OutboundEntryNo;
-        ItemApplicationEntry.Quantity := Quantity;
-        ItemApplicationEntry."Posting Date" := ItemLedgerEntry."Posting Date";
-        ItemApplicationEntry.Insert(true);
-        if Item.Get(ItemLedgerEntry."Item No.") then
-            if Item."Cost is Adjusted" then begin
-                Item."Cost is Adjusted" := false;
-                Item.Modify(true);
-            end;
+        if not ApplyToItemLedgerEntry.Get(ApplyToEntryNo) then begin
+            Argument.RespondWithError('Item ledger entry ' + Format(ApplyToEntryNo) + ' was not found.');
+            exit;
+        end;
+
+        ItemJnlPostLine.ReApply(ItemLedgerEntry, ApplyToEntryNo);
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', ItemApplicationEntry."Entry No.");
-        ResponseJson.Add('outboundItemEntryNo', OutboundEntryNo);
-        ResponseJson.Add('inboundItemEntryNo', InboundEntryNo);
-        ResponseJson.Add('quantity', Quantity);
+        ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo);
+        ResponseJson.Add('applyToEntryNo', ApplyToEntryNo);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
