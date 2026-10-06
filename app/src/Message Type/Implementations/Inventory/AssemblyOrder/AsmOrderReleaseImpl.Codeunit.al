@@ -14,10 +14,9 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
     Access = Internal;
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::AssemblyOrders, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -135,10 +134,13 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
     var
         AssemblyHeader: Record "Assembly Header";
         DocumentLookup: Codeunit "Document Lookup ori";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;
         StatusBefore: Text;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::AssemblyOrders, Database::"Assembly Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
@@ -147,7 +149,6 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
 
         StatusBefore := StatusToText(AssemblyHeader.Status);
 
-        // Idempotent: already Released -> just respond success
         if AssemblyHeader.Status = AssemblyHeader.Status::Released then begin
             BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
             Argument.SetResponseJson(ResponseJson);
