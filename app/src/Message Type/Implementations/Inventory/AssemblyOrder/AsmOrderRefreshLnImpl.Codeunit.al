@@ -1,23 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.RefreshLines message type.
-/// Refreshes the component lines of an assembly order from the parent item's BOM
-/// by calling Assembly Header.RefreshBOM().
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -133,6 +127,7 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
         DocumentLookup: Codeunit "Document Lookup ori";
@@ -140,6 +135,8 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
         LinesBefore: Integer;
         LinesAfter: Integer;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
