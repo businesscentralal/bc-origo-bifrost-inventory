@@ -1,12 +1,10 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.Revaluation.Calculate. Fills a revaluation journal. Does not post.
-/// </summary>
-codeunit 70013477 "Revaluation Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -14,27 +12,27 @@ codeunit 70013477 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Costing, Database::"Item Journal Line", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false));
     end;
 
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Journal Line");
+        exit(Database::"Item Ledger Entry");
     end;
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Calculates inventory value into a revaluation journal. Does not post.');
+        exit('Calculates remaining inventory quantity and value for an item.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('calculate inventory value, revaluation journal');
+        exit('revaluation, calculate inventory value');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Fills a revaluation batch. Posting stays Inventory.Revaluation.Post.');
+        exit('Calculates remaining quantity and inventory value. Does not post a revaluation journal.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -99,20 +97,47 @@ codeunit 70013477 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(Enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Item: Record Item;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        RemainingQty: Decimal;
+        InventoryValue: Decimal;
+        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
+        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.', Locked = true;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Journal Line", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Revaluation.Calculate');
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('itemNo', Token) then begin
+            Argument.RespondWithError(MissingItemErr);
+            exit;
+        end;
+        if not Item.Get(CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(Item."No."))) then begin
+            Argument.RespondWithError(StrSubstNo(NotFoundErr, Token.AsValue().AsCode()));
+            exit;
+        end;
+        ItemLedgerEntry.SetRange("Item No.", Item."No.");
+        ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
+        if ItemLedgerEntry.FindSet() then
+            repeat
+                RemainingQty += ItemLedgerEntry."Remaining Quantity";
+                InventoryValue += ItemLedgerEntry."Remaining Quantity" * ItemLedgerEntry."Cost Amount (Actual)" / ItemLedgerEntry.Quantity;
+            until ItemLedgerEntry.Next() = 0;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('itemNo', Item."No.");
+        ResponseJson.Add('remainingQuantity', RemainingQty);
+        ResponseJson.Add('inventoryValue', InventoryValue);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
