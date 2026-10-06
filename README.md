@@ -1,15 +1,54 @@
 # Bifrost Inventory
 
-Bifrost feature app for Item Attribute message types on top of Bifrost Foundation.
+Bifrost feature app for inventory message types that are not covered by Bifrost Foundation. Each company can turn domains on or off in Inventory Setup. `IsEnabled` checks the domain flag and the matching permission. Message types use the `Inventory.*.*` pattern. Inventory Setup is not exposed as a main-app message type and is protected from `Data.Records.Set`.
 
 ## Message types
 
 | Type | Direction | Purpose |
 |------|-----------|---------|
-| `Item.Attribute.Get` | Outbound | Read attributes/values for items |
-| `Item.Attribute.Create` | Inbound | Assign attribute value to an item |
-| `Item.Attribute.Update` | Inbound | Change an existing mapping |
-| `Item.AttributeDefinition.Create` | Inbound | Create attribute definition (+ options) |
+| `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
+| `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
+| `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
+| `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
+| `Inventory.TransferOrder.Create` | Inbound | Create a transfer order |
+| `Inventory.TransferOrder.Release` | Inbound | Release a transfer order |
+| `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
+| `Inventory.TransferOrder.Post` | Inbound | Post a transfer order |
+| `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
+| `Inventory.TransferOrder.Statistics` | Outbound | Read transfer order statistics |
+| `Inventory.AssemblyOrder.Create` | Inbound | Create an assembly order |
+| `Inventory.AssemblyOrder.RefreshLines` | Inbound | Refresh assembly order lines |
+| `Inventory.AssemblyOrder.Release` | Inbound | Release an assembly order |
+| `Inventory.AssemblyOrder.Reopen` | Inbound | Reopen an assembly order |
+| `Inventory.AssemblyOrder.Post` | Inbound | Post an assembly order |
+| `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
+| `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
+| `Inventory.AdjustCost.Run` | Inbound | Run Adjust Cost - Item Entries, report 795, with item filters |
+| `Inventory.CostToGL.Post` | Inbound | Post inventory cost to G/L, report 1002, with item filters |
+| `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
+| `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
+| `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
+| `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
+| `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
+| `Inventory.ItemApplication.Get` | Outbound | Read item application entries |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application entry |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry |
+| `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
+| `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
+| `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
+| `Inventory.Period.Get` | Outbound | Read inventory periods |
+| `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
+| `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
+| `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
+| `Inventory.Reservation.Get` | Outbound | Read reservation entries |
+| `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
+| `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation entry |
+| `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
+| `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
+
+Update this table in the same change as any new or renamed message type.
 
 ## Ranges
 
