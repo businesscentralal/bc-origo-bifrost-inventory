@@ -37,4 +37,29 @@ enumextension 70013476 "MsgType.EnumExt Gaps ori" extends "Message Type ori"
         Caption = 'Inventory.ItemApplication.Reapply', Locked = true;
         Implementation = "Msg Interface ori" = "Item Appl. Reapply Impl ori", "Msg Discovery ori" = "Item Appl. Reapply Impl ori", "Msg Contract ori" = "Item Appl. Reapply Impl ori";
     }
+    value(70013431; "Inventory.Reclassification.Post")
+    {
+        Caption = 'Inventory.Reclassification.Post', Locked = true;
+        Implementation = "Msg Interface ori" = "Reclass Post Impl ori", "Msg Discovery ori" = "Reclass Post Impl ori", "Msg Contract ori" = "Reclass Post Impl ori";
+    }
+    value(70013432; "Inventory.Period.Close")
+    {
+        Caption = 'Inventory.Period.Close', Locked = true;
+        Implementation = "Msg Interface ori" = "Period Close Impl ori", "Msg Discovery ori" = "Period Close Impl ori", "Msg Contract ori" = "Period Close Impl ori";
+    }
+    value(70013433; "Inventory.Period.Get")
+    {
+        Caption = 'Inventory.Period.Get', Locked = true;
+        Implementation = "Msg Interface ori" = "Period Get Impl ori", "Msg Discovery ori" = "Period Get Impl ori", "Msg Contract ori" = "Period Get Impl ori";
+    }
+    value(70013434; "Inventory.Period.Reopen")
+    {
+        Caption = 'Inventory.Period.Reopen', Locked = true;
+        Implementation = "Msg Interface ori" = "Period Reopen Impl ori", "Msg Discovery ori" = "Period Reopen Impl ori", "Msg Contract ori" = "Period Reopen Impl ori";
+    }
+    value(70013435; "Inventory.Price.Update")
+    {
+        Caption = 'Inventory.Price.Update', Locked = true;
+        Implementation = "Msg Interface ori" = "Price Update Impl ori", "Msg Discovery ori" = "Price Update Impl ori", "Msg Contract ori" = "Price Update Impl ori";
+    }
 }
