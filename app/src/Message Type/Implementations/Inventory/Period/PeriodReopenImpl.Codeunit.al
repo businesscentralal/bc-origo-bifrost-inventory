@@ -4,7 +4,7 @@ using Microsoft.Inventory.Costing;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Reopen. Reopens a closed inventory period.
+/// Inventory.Period.Reopen. Reopens a closed inventory period through the standard Closed validation.
 /// </summary>
 codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -105,14 +105,44 @@ codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        InventoryPeriod: Record "Inventory Period";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        EndingDate: Date;
+        MissingEndingDateErr: Label 'endingDate is required.', Locked = true;
+        InvalidEndingDateErr: Label 'endingDate must be an XML date.', Locked = true;
+        PeriodNotFoundErr: Label 'Inventory period %1 was not found.', Comment = '%1 = ending date', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
+
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('endingDate', Token) then begin
+            Argument.RespondWithError(MissingEndingDateErr);
+            exit;
+        end;
+        if not Evaluate(EndingDate, Token.AsValue().AsText(), 9) then begin
+            Argument.RespondWithError(InvalidEndingDateErr);
+            exit;
+        end;
+        if not InventoryPeriod.Get(EndingDate) then begin
+            Argument.RespondWithError(StrSubstNo(PeriodNotFoundErr, EndingDate));
+            exit;
+        end;
+
+        if InventoryPeriod.Closed then begin
+            InventoryPeriod.Validate(Closed, false);
+            InventoryPeriod.Modify(true);
+        end;
+
+        ResponseJson.Add('status', 'Success');
         ResponseJson.Add('messageType', 'Inventory.Period.Reopen');
+        ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
+        ResponseJson.Add('name', InventoryPeriod.Name);
+        ResponseJson.Add('closed', InventoryPeriod.Closed);
         Argument.SetResponseJson(ResponseJson);
     end;
 }
