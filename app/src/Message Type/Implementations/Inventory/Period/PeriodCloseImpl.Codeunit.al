@@ -4,7 +4,7 @@ using Microsoft.Inventory.Costing;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Close. Closes an inventory period. Refuses an unadjusted period.
+/// Inventory.Period.Close. Closes an inventory period through the Inventory Period record.
 /// </summary>
 codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -24,17 +24,17 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Closes an inventory period.');
+        exit('Closes inventory periods through an ending date, matching the inventory period close action.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('close inventory period');
+        exit('close inventory period, lock inventory period');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Closes an inventory period. Refuses a period that is not adjusted.');
+        exit('Closes an inventory period. An already closed period returns success.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -97,22 +97,45 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         exit(false);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        InventoryPeriod: Record "Inventory Period";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        EndingDate: Date;
+        MissingDateErr: Label 'endingDate is required.', Locked = true;
+        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Period.Close');
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('endingDate', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDateErr, 'endingDate', '', '', '');
+            exit;
+        end;
+        EndingDate := Token.AsValue().AsDate();
+        if not InventoryPeriod.Get(EndingDate) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EndingDate), 'endingDate', '', '', '');
+            exit;
+        end;
+        if not InventoryPeriod.Closed then begin
+            InventoryPeriod.Validate(Closed, true);
+            InventoryPeriod.Modify(true);
+        end;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
+        ResponseJson.Add('name', InventoryPeriod.Name);
+        ResponseJson.Add('closed', InventoryPeriod.Closed);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }

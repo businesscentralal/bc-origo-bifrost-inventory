@@ -1,17 +1,12 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.Release message type.
-/// Releases an open assembly order (status Open -> Released) via codeunit 414 Release Assembly Document.
-/// Idempotent: returns Success without action when already Released.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -127,11 +122,12 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         DocumentLookup: Codeunit "Document Lookup ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -143,10 +139,8 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
-
         StatusBefore := StatusToText(AssemblyHeader.Status);
 
         if AssemblyHeader.Status = AssemblyHeader.Status::Released then begin
@@ -155,10 +149,8 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
             Argument."Content Type" := Argument.GetContentTypeJson();
             exit;
         end;
-
         ReleaseAssemblyDoc.Run(AssemblyHeader);
         AssemblyHeader.Find();
-
         BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
