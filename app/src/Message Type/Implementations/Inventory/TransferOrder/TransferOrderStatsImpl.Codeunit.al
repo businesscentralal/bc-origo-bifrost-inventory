@@ -1,24 +1,19 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.TransferOrder.Statistics message type.
-/// Returns transfer order line totals (Quantity, Parcels, Net Weight, Gross Weight, Volume)
-/// and the reservation state. Calculation mirrors Page 5755 "Transfer Statistics".
-/// </summary>
-
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
 codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.ReadPermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, false));
     end;
+
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
         exit(Database::"Transfer Header");
@@ -50,6 +45,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Envelope := Parts.GetEnvelope('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -57,10 +53,12 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Target := Parts.GetTarget('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -68,6 +66,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Response := Parts.GetResponse('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -75,6 +74,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Errors := Parts.GetErrors('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -82,10 +82,12 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Effect := Parts.GetEffect('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -93,14 +95,17 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Related := Parts.GetRelated('Inventory.TransferOrder.Statistics');
         exit(true);
     end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetOverview(var Overview: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -108,6 +113,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Overview := Parts.GetOverview('Inventory.TransferOrder.Statistics');
         exit(Overview <> '');
     end;
+
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := '';
@@ -116,11 +122,12 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
         DocumentLookup: Codeunit "Document Lookup ori";
@@ -133,13 +140,12 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         TotalVolume: Decimal;
         LineCount: Integer;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
-
-        // Replicates Page 5755 "Transfer Statistics".CalculateTotals
         TransferLine.SetRange("Document No.", TransferHeader."No.");
         TransferLine.SetRange("Derived From Line No.", 0);
         if TransferLine.FindSet() then
@@ -152,14 +158,12 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
                 if TransferLine."Units per Parcel" > 0 then
                     TotalParcels += Round(TransferLine.Quantity / TransferLine."Units per Parcel", 1, '>');
             until TransferLine.Next() = 0;
-
         TotalsJson.Add('lineCount', LineCount);
         TotalsJson.Add('quantity', LineQty);
         TotalsJson.Add('parcels', TotalParcels);
         TotalsJson.Add('netWeight', TotalNetWeight);
         TotalsJson.Add('grossWeight', TotalGrossWeight);
         TotalsJson.Add('volume', TotalVolume);
-
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', TransferHeader."No.");
         ResponseJson.Add('transferFromCode', TransferHeader."Transfer-from Code");
@@ -170,7 +174,6 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         ResponseJson.Add('shipmentDate', Format(TransferHeader."Shipment Date", 0, 9));
         ResponseJson.Add('receiptDate', Format(TransferHeader."Receipt Date", 0, 9));
         ResponseJson.Add('totals', TotalsJson);
-
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

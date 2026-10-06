@@ -1,23 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.Reopen message type.
-/// Reopens a released assembly order (status Released -> Open) via codeunit 414 Release Assembly Document.
-/// Wraps the BC call in Codeunit.Run for clean transactional error handling.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013427 "Assembly Order Reopen Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -133,11 +127,14 @@ codeunit 70013427 "Assembly Order Reopen Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         StatusBefore: Text;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
@@ -146,7 +143,6 @@ codeunit 70013427 "Assembly Order Reopen Impl ori" implements "Msg Interface ori
 
         StatusBefore := StatusToText(AssemblyHeader.Status);
 
-        // Idempotent: already Open -> respond success
         if AssemblyHeader.Status = AssemblyHeader.Status::Open then begin
             BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
             Argument.SetResponseJson(ResponseJson);

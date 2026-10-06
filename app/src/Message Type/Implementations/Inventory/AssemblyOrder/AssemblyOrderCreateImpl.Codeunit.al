@@ -1,24 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.Create message type.
-/// Creates a new Assembly Order header (Assembly Header with Document Type = Order)
-/// for a parent item with optional posting/due dates, location, variant, dimensions,
-/// and refreshes the component lines from the item's BOM when requested.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Origo.Bifrost;
 
 codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -140,11 +133,12 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
@@ -163,39 +157,32 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         Quantity: Decimal;
         QuantityToAssemble: Decimal;
         RefreshLines: Boolean;
-        DecimalValue: Decimal;
         MissingItemErr: Label 'itemNo must be specified in the request JSON.', Locked = true;
         MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Locked = true;
         FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
         ReadOk: Boolean;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-
-        // Required: itemNo
         if RequestJson.Get('itemNo', Token) then
             ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo))
         else begin
             Argument.RespondWithError(MissingItemErr);
             exit;
         end;
-
-        // Required: quantity. A missing or non-positive value keeps the quantity error; a bad decimal is a format error.
         if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
             exit;
         if Quantity <= 0 then begin
             Argument.RespondWithError(MissingQuantityErr);
             exit;
         end;
-
-        // Enforce field-level write restriction on the principal Item No. field
         if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo));
             exit;
         end;
-
-        // Optional fields
         if RequestJson.Get('variantCode', Token) then
             VariantCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(VariantCode));
         if RequestJson.Get('locationCode', Token) then
@@ -206,7 +193,6 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
             UnitOfMeasureCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(UnitOfMeasureCode));
         if RequestJson.Get('description', Token) then
             Description := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Description));
-        // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
@@ -220,19 +206,15 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
             ReadOk := false;
         if not ReadOk then
             exit;
-        RefreshLines := true; // default: refresh BOM lines
+        RefreshLines := true;
         if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'refreshLines', false, RefreshLines) then
             exit;
-
         if PostingDate = 0D then
             PostingDate := WorkDate();
-
-        // Initialize the Assembly Header. Use Insert(true) to fire OnInsert and assign the No. from series.
         AssemblyHeader.Init();
         AssemblyHeader."Document Type" := AssemblyHeader."Document Type"::Order;
         AssemblyHeader."No." := '';
         AssemblyHeader.Insert(true);
-
         AssemblyHeader.SetHideValidationDialog(true);
         AssemblyHeader.Validate("Posting Date", PostingDate);
         AssemblyHeader.Validate("Item No.", ItemNo);
@@ -253,18 +235,14 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
             AssemblyHeader.Validate("Bin Code", BinCode);
         if Description <> '' then
             AssemblyHeader.Validate(Description, Description);
-        DecimalValue := QuantityToAssemble;
-        if DecimalValue > 0 then
-            AssemblyHeader.Validate("Quantity to Assemble", DecimalValue);
+        if QuantityToAssemble > 0 then
+            AssemblyHeader.Validate("Quantity to Assemble", QuantityToAssemble);
         AssemblyHeader.Modify(true);
-
         if RefreshLines then begin
             AssemblyHeader.Validate("Item No.", AssemblyHeader."Item No.");
             AssemblyHeader.Modify(true);
         end;
-
         AssemblyHeader.Find();
-
         BuildSuccessResponse(AssemblyHeader, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
@@ -276,7 +254,6 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     begin
         AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
         AssemblyLine.SetRange("Document No.", AssemblyHeader."No.");
-
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', AssemblyHeader."No.");
         ResponseJson.Add('systemId', Format(AssemblyHeader.SystemId, 0, 4));

@@ -5,7 +5,7 @@ using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
 
 /// <summary>
-/// Implementation of the Item.Attribute.Update message type (Inbound).
+/// Implementation of Inventory.Attribute.Update.
 /// </summary>
 codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -13,9 +13,9 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
 
     procedure IsEnabled(): Boolean
     var
-        Mapping: Record "Item Attribute Value Mapping";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(Mapping.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -37,7 +37,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Updates an existing item attribute mapping and returns before and after values; use Item.Attribute.Create when no mapping exists.', Comment = 'is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Item.Attribute.Create þegar tenging er ekki til.';
+        SelectionDescriptionLbl: Label 'Updates an existing item attribute mapping and returns before and after values; use Inventory.Attribute.Create when no mapping exists.', Comment = 'is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -46,7 +46,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Envelope := ContractParts.GetEnvelope('Item.Attribute.Update');
+        Envelope := ContractParts.GetEnvelope('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -54,7 +54,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Target := ContractParts.GetTarget('Item.Attribute.Update');
+        Target := ContractParts.GetTarget('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -62,7 +62,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Parameters := ContractParts.GetParameters('Item.Attribute.Update');
+        Parameters := ContractParts.GetParameters('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -70,7 +70,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Response := ContractParts.GetResponse('Item.Attribute.Update');
+        Response := ContractParts.GetResponse('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -78,7 +78,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Errors := ContractParts.GetErrors('Item.Attribute.Update');
+        Errors := ContractParts.GetErrors('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -86,7 +86,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Effect := ContractParts.GetEffect('Item.Attribute.Update');
+        Effect := ContractParts.GetEffect('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -99,7 +99,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Related := ContractParts.GetRelated('Item.Attribute.Update');
+        Related := ContractParts.GetRelated('Inventory.Attribute.Update');
         exit(true);
     end;
 
@@ -117,7 +117,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Overview := ContractParts.GetOverview('Item.Attribute.Update');
+        Overview := ContractParts.GetOverview('Inventory.Attribute.Update');
         exit(Overview <> '');
     end;
 
@@ -125,7 +125,7 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Notes := ContractParts.GetNotes('Item.Attribute.Update');
+        Notes := ContractParts.GetNotes('Inventory.Attribute.Update');
         exit(Notes <> '');
     end;
 
@@ -135,7 +135,11 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 

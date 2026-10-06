@@ -13,10 +13,9 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     Access = Internal;
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false));
     end;
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
@@ -122,9 +121,12 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     var
         TransferHeader: Record "Transfer Header";
         DocumentLookup: Codeunit "Document Lookup ori";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         ResponseJson: JsonObject;
         StatusBefore: Option Open,Released;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 

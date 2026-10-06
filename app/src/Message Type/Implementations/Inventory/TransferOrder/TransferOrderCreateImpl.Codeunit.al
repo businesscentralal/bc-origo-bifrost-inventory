@@ -1,25 +1,22 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.TransferOrder.Create message type.
-/// Creates a new transfer order header (Transfer Header) with from/to locations,
-/// posting date, shipment/receipt dates and an optional Direct Transfer flag.
-/// Optional lines are created in the same call. Without lines, only the header is created.
-/// </summary>
-
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
+/// <summary>
+/// Implementation of Inventory.TransferOrder.Create.
+/// </summary>
 codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false));
     end;
+
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
         exit(Database::"Transfer Header");
@@ -51,6 +48,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Envelope := Parts.GetEnvelope('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -58,6 +56,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Target := Parts.GetTarget('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -65,6 +64,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Parameters := Parts.GetParameters('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -72,6 +72,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Response := Parts.GetResponse('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -79,6 +80,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Errors := Parts.GetErrors('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -86,10 +88,12 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Effect := Parts.GetEffect('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -97,6 +101,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Related := Parts.GetRelated('Inventory.TransferOrder.Create');
         exit(true);
     end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -104,6 +109,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Workflow := Parts.GetWorkflow('Inventory.TransferOrder.Create');
         exit(Workflow.Keys().Count() > 0);
     end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -111,6 +117,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Examples := Parts.GetExamples('Inventory.TransferOrder.Create');
         exit(Examples.Count() > 0);
     end;
+
     procedure GetOverview(var Overview: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -118,6 +125,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Overview := Parts.GetOverview('Inventory.TransferOrder.Create');
         exit(Overview <> '');
     end;
+
     procedure GetNotes(var Notes: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -128,11 +136,12 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
@@ -154,11 +163,12 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
         ReadOk: Boolean;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
 
-        // Required: transferFromCode
         if RequestJson.Get('transferFromCode', Token) then
             TransferFromCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TransferFromCode))
         else begin
@@ -166,7 +176,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             exit;
         end;
 
-        // Required: transferToCode
         if RequestJson.Get('transferToCode', Token) then
             TransferToCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TransferToCode))
         else begin
@@ -174,7 +183,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             exit;
         end;
 
-        // Enforce field-level write restriction on the principal location fields
         if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode));
             exit;
@@ -184,12 +192,9 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             exit;
         end;
 
-        // Optional: directTransfer
         if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer) then
             exit;
 
-        // Optional: inTransitCode (required when not direct transfer â€” validated by BC during Release,
-        // but we surface a friendlier error up front when both flags say it's needed)
         if RequestJson.Get('inTransitCode', Token) then
             InTransitCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(InTransitCode));
         if (not DirectTransfer) and (InTransitCode = '') then begin
@@ -197,8 +202,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             exit;
         end;
 
-        // Optional: posting/shipment/receipt dates
-        // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
@@ -211,7 +214,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         if PostingDate = 0D then
             PostingDate := WorkDate();
 
-        // Optional: externalDocumentNo
         if RequestJson.Get('externalDocumentNo', Token) then
             ExternalDocNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ExternalDocNo));
 
@@ -221,7 +223,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             if not RequestValueReader.PrecheckTransferLines(Lines, Argument) then
                 exit;
 
-        // Build the Transfer Header. Use Insert(true) to fire OnInsert which assigns the No. from the series.
         TransferHeader.Init();
         TransferHeader."No." := '';
         TransferHeader.Insert(true);
@@ -244,7 +245,6 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         if HasLines then
             InsertTransferLines(TransferHeader, Lines, Argument);
 
-        // Refresh after modification (Validate triggers may have changed other fields)
         TransferHeader.Find();
 
         BuildSuccessResponse(TransferHeader, ResponseJson);

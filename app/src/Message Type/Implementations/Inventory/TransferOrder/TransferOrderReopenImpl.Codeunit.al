@@ -1,23 +1,19 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.TransferOrder.Reopen message type.
-/// Reopens a released transfer order so it can be edited again.
-/// </summary>
-
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
 codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        RecRef: RecordRef;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        RecRef.Open(GetFilterTableNo());
-        exit(RecRef.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false));
     end;
+
     procedure GetFilterTableNo() FilterTableId: Integer
     begin
         exit(Database::"Transfer Header");
@@ -49,6 +45,7 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Envelope := Parts.GetEnvelope('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -56,10 +53,12 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Target := Parts.GetTarget('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -67,6 +66,7 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Response := Parts.GetResponse('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -74,6 +74,7 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Errors := Parts.GetErrors('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -81,10 +82,12 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Effect := Parts.GetEffect('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -92,14 +95,17 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Related := Parts.GetRelated('Inventory.TransferOrder.Reopen');
         exit(true);
     end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetOverview(var Overview: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -107,6 +113,7 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
         Overview := Parts.GetOverview('Inventory.TransferOrder.Reopen');
         exit(Overview <> '');
     end;
+
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := '';
@@ -120,11 +127,14 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         StatusBefore: Option Open,Released;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
