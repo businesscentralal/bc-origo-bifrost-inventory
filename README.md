@@ -1,6 +1,6 @@
 # Bifrost Inventory
 
-Bifrost feature app for inventory message types that are not covered by Bifrost Foundation. Each company can turn domains on or off in Inventory Setup. `IsEnabled` checks the domain flag and the matching permission. Message types use the `Inventory.*.*` pattern. Inventory Setup is not exposed as a main-app message type and is protected from `Data.Records.Set`.
+Bifrost feature app for inventory message types that are not covered by Bifrost Foundation. Each company can turn domains on or off in Inventory Setup. `IsEnabled` checks the domain flag and the matching permission. Message types use the `Inventory.*.*` pattern. Inventory Setup is not exposed as a main-app message type and is protected from `Data.Records.Set`. Tracking Specification and Reservation Entry are also blocked from `Data.Records.Set`.
 
 ## Message types
 
@@ -28,6 +28,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
 | `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
 | `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
