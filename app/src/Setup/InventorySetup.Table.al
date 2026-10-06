@@ -1,86 +1,74 @@
 namespace Origo.Bifrost.Inventory;
 
 /// <summary>
-/// Per-company switches for inventory domains. A missing row means every domain is on.
+/// Per-company switches for Bifrost Inventory domains. A missing row counts as every domain on.
 /// </summary>
 table 70013451 "Inventory Setup ori"
 {
-    Caption = 'Inventory Setup', Locked = true;
+    Access = Internal;
+    Caption = 'Inventory Setup', Comment = 'is-IS=Uppsetning birgða';
     DataClassification = CustomerContent;
     Extensible = false;
-    Access = Internal;
 
     fields
     {
         field(1; "Primary Key"; Code[10])
         {
-            Caption = 'Primary Key', Locked = true;
+            Caption = 'Primary Key', Comment = 'is-IS=Aðallykill';
             DataClassification = SystemMetadata;
         }
-        field(10; "Attributes Enabled"; Boolean)
+        field(10; Attributes; Boolean)
         {
             Caption = 'Attributes', Comment = 'is-IS=Eiginleikar';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(11; "Transfer Orders Enabled"; Boolean)
+        field(11; "Transfer Orders"; Boolean)
         {
             Caption = 'Transfer Orders', Comment = 'is-IS=Flutningspantanir';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(12; "Assembly Enabled"; Boolean)
+        field(12; Assembly; Boolean)
         {
             Caption = 'Assembly', Comment = 'is-IS=Samsetning';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(13; "Reservations Enabled"; Boolean)
+        field(13; Reservations; Boolean)
         {
             Caption = 'Reservations', Comment = 'is-IS=Frátektir';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(14; "Item Tracking Enabled"; Boolean)
+        field(14; "Item Tracking"; Boolean)
         {
             Caption = 'Item Tracking', Comment = 'is-IS=Vörurakning';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(15; "Phys. Inventory Enabled"; Boolean)
+        field(15; "Phys. Inventory"; Boolean)
         {
             Caption = 'Physical Inventory', Comment = 'is-IS=Birgðatalning';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(16; "Costing Enabled"; Boolean)
+        field(16; Costing; Boolean)
         {
             Caption = 'Costing', Comment = 'is-IS=Kostnaður';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(17; "Reclassification Enabled"; Boolean)
+        field(17; Reclassification; Boolean)
         {
             Caption = 'Reclassification', Comment = 'is-IS=Endurflokkun';
-            DataClassification = CustomerContent;
-            InitValue = true;
         }
-        field(18; "Item Application Enabled"; Boolean)
+        field(18; "Item Application"; Boolean)
         {
             Caption = 'Item Application', Comment = 'is-IS=Vörujöfnun';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(19; "Inventory Period Enabled"; Boolean)
+        field(19; "Inventory Period"; Boolean)
         {
             Caption = 'Inventory Period', Comment = 'is-IS=Birgðatímabil';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
-        field(20; "Item Price Enabled"; Boolean)
+        field(20; "Item Price"; Boolean)
         {
             Caption = 'Item Price', Comment = 'is-IS=Vöruverð';
-            DataClassification = CustomerContent;
             InitValue = true;
         }
     }
@@ -93,36 +81,41 @@ table 70013451 "Inventory Setup ori"
         }
     }
 
-    /// <summary>
-    /// True when the domain is on. A missing setup row counts as on.
-    /// </summary>
+    procedure InsertIfNotExists()
+    begin
+        if Get() then
+            exit;
+        Init();
+        Insert(true);
+    end;
+
     procedure IsDomainEnabled(Domain: Enum "Inventory Domain ori"): Boolean
     begin
         if not Get() then
             exit(true);
         case Domain of
             Domain::Attributes:
-                exit("Attributes Enabled");
+                exit(Attributes);
             Domain::TransferOrders:
-                exit("Transfer Orders Enabled");
+                exit("Transfer Orders");
             Domain::Assembly:
-                exit("Assembly Enabled");
+                exit(Assembly);
             Domain::Reservations:
-                exit("Reservations Enabled");
+                exit(Reservations);
             Domain::ItemTracking:
-                exit("Item Tracking Enabled");
+                exit("Item Tracking");
             Domain::PhysInventory:
-                exit("Phys. Inventory Enabled");
+                exit("Phys. Inventory");
             Domain::Costing:
-                exit("Costing Enabled");
+                exit(Costing);
             Domain::Reclassification:
-                exit("Reclassification Enabled");
+                exit(Reclassification);
             Domain::ItemApplication:
-                exit("Item Application Enabled");
+                exit("Item Application");
             Domain::InventoryPeriod:
-                exit("Inventory Period Enabled");
+                exit("Inventory Period");
             Domain::ItemPrice:
-                exit("Item Price Enabled");
+                exit("Item Price");
         end;
         exit(true);
     end;
