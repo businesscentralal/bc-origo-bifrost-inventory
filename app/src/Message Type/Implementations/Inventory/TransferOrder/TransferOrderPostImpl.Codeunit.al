@@ -134,6 +134,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferHeader: Record "Transfer Header";
+        DocumentLookup: Codeunit "Document Lookup ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
@@ -156,7 +157,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         if not PostingGate.AssertCanPost(Argument) then
             exit;
 
-        if not Argument.FindTransferHeader(TransferHeader) then
+        if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
 
         DocumentNo := TransferHeader."No.";

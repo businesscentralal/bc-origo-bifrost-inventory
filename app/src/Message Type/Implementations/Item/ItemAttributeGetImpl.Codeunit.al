@@ -140,6 +140,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Item: Record Item;
+        DocumentLookup: Codeunit "Document Lookup ori";
         Resolve: Codeunit "Item Attribute Resolve ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -155,7 +156,7 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
         Item.Reset();
         Item.SetLoadFields("No.", SystemId, Blocked, Type);
-        if not Argument.FindItemRange(Item) then
+        if not DocumentLookup.FindItemRange(Argument, Item) then
             exit;
 
         RequestJson := Argument.GetRequestJson();

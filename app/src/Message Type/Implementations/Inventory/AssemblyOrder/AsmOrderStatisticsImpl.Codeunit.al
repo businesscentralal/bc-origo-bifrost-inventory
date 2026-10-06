@@ -136,6 +136,7 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
     var
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
+        DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         CostsJson: JsonObject;
         LinesJson: JsonObject;
@@ -150,7 +151,7 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindAssemblyHeader(AssemblyHeader) then
+        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
 
         // Count lines by type

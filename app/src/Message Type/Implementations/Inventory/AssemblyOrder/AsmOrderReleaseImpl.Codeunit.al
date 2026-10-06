@@ -134,6 +134,7 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
+        DocumentLookup: Codeunit "Document Lookup ori";
         ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;
         StatusBefore: Text;
@@ -141,7 +142,7 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindAssemblyHeader(AssemblyHeader) then
+        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
 
         StatusBefore := StatusToText(AssemblyHeader.Status);

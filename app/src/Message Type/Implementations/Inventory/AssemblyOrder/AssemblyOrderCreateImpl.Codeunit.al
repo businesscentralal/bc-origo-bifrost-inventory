@@ -33,7 +33,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'assembly order, assemble, kit, build a product, bill of materials, bom, make to order, bundle', Comment = 'is-IS=samsetningarpöntun, setja saman, vörusett, smíða vöru, uppskrift, íhlutalisti, framleiða eftir pöntun, viðbót1';
+        KeywordsLbl: Label 'assembly order, assemble, kit, build a product, bill of materials, bom, make to order, bundle', Comment = 'is-IS=samsetningarpöntun, setja saman, vörusett, smíða vöru, uppskrift, íhlutalisti, framleiða eftir pöntun, vöruknippi';
     begin
         exit(KeywordsLbl);
     end;
@@ -146,7 +146,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
-        Dispatcher: Codeunit "Dispatcher ori";
+        RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
@@ -182,7 +182,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Required: quantity. A missing or non-positive value keeps the quantity error; a bad decimal is a format error.
-        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
             exit;
         if Quantity <= 0 then begin
             Argument.RespondWithError(MissingQuantityErr);
@@ -190,7 +190,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Enforce field-level write restriction on the principal Item No. field
-        if Dispatcher.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo));
             exit;
         end;
@@ -208,20 +208,20 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
             Description := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Description));
         // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'dueDate', false, DueDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'dueDate', false, DueDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'startingDate', false, StartingDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'startingDate', false, StartingDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'endingDate', false, EndingDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'endingDate', false, EndingDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
             ReadOk := false;
         if not ReadOk then
             exit;
         RefreshLines := true; // default: refresh BOM lines
-        if not Dispatcher.TryReadBoolean(Argument, RequestJson, 'refreshLines', false, RefreshLines) then
+        if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'refreshLines', false, RefreshLines) then
             exit;
 
         if PostingDate = 0D then

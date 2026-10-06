@@ -32,7 +32,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory', Comment = 'is-IS=millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, viðbót1';
+        KeywordsLbl: Label 'transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory', Comment = 'is-IS=millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, færa birgðir til';
     begin
         exit(KeywordsLbl);
     end;
@@ -134,7 +134,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferHeader: Record "Transfer Header";
-        Dispatcher: Codeunit "Dispatcher ori";
+        RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Lines: JsonArray;
@@ -175,17 +175,17 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         end;
 
         // Enforce field-level write restriction on the principal location fields
-        if Dispatcher.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode));
             exit;
         end;
-        if Dispatcher.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
             Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode));
             exit;
         end;
 
         // Optional: directTransfer
-        if not Dispatcher.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer) then
+        if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer) then
             exit;
 
         // Optional: inTransitCode (required when not direct transfer â€” validated by BC during Release,
@@ -200,11 +200,11 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         // Optional: posting/shipment/receipt dates
         // Every typed value is read before stopping, so all bad ones are reported together (#136).
         ReadOk := true;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'shipmentDate', false, ShipmentDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'shipmentDate', false, ShipmentDate) then
             ReadOk := false;
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'receiptDate', false, ReceiptDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'receiptDate', false, ReceiptDate) then
             ReadOk := false;
         if not ReadOk then
             exit;
@@ -215,10 +215,10 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         if RequestJson.Get('externalDocumentNo', Token) then
             ExternalDocNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ExternalDocNo));
 
-        if not Dispatcher.TryReadLines(RequestJson, Lines, HasLines, Argument) then
+        if not RequestValueReader.TryReadLines(RequestJson, Lines, HasLines, Argument) then
             exit;
         if HasLines then
-            if not Dispatcher.PrecheckTransferLines(Lines, Argument) then
+            if not RequestValueReader.PrecheckTransferLines(Lines, Argument) then
                 exit;
 
         // Build the Transfer Header. Use Insert(true) to fire OnInsert which assigns the No. from the series.
@@ -257,7 +257,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     local procedure InsertTransferLines(TransferHeader: Record "Transfer Header"; Lines: JsonArray; var Argument: Record "Message Argument ori")
     var
         TransferLine: Record "Transfer Line";
-        Dispatcher: Codeunit "Dispatcher ori";
+        RequestValueReader: Codeunit "Request Value Reader ori";
         LineToken: JsonToken;
         LineJson: JsonObject;
         LineIndex: Integer;
@@ -271,7 +271,7 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
             TransferLine."Document No." := TransferHeader."No.";
             TransferLine."Line No." := NextLineNo;
             TransferLine.Insert(true);
-            Dispatcher.ValidateTransferLine(TransferLine, LineJson, LineIndex, Argument);
+            RequestValueReader.ValidateTransferLine(TransferLine, LineJson, LineIndex, Argument);
             TransferLine.Modify(true);
             NextLineNo += 10000;
         end;

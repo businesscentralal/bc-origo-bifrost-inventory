@@ -138,8 +138,9 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         TransferLine: Record "Transfer Line";
         GLSetup: Record "General Ledger Setup";
         TempDocumentEntry: Record "Document Entry" temporary;
+        DocumentLookup: Codeunit "Document Lookup ori";
+        PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
-        Dispatcher: Codeunit "Dispatcher ori";
         ResponseJson: JsonObject;
         TotalsJson: JsonObject;
         PredictedJson: JsonObject;
@@ -169,7 +170,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindTransferHeader(TransferHeader) then
+        if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
 
         TransferLine.SetRange("Document No.", TransferHeader."No.");
@@ -215,28 +216,28 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         if not PreviewTransferOrder(TransferHeader, PostShipment, PostReceipt, PostTransfer, PostingPreviewEventHandler, PreviewErrorText) then begin
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
-            Dispatcher.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
+            PostingPreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
             exit;
         end;
 
-        Dispatcher.GetPreviewFieldNames(PreviewFieldNames);
+        PostingPreviewHelper.GetPreviewFieldNames(PreviewFieldNames);
 
         PostingPreviewEventHandler.FillDocumentEntry(TempDocumentEntry);
         if TempDocumentEntry.FindSet() then
             repeat
-                Dispatcher.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
+                PostingPreviewHelper.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
             until TempDocumentEntry.Next() = 0;
 
-        if not Dispatcher.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
+        if not PostingPreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
 
             exit;
 
         BuildPredictedNumbers(PredictedJson, PostingPreviewEventHandler, DirectTransfer, PostingType);
 
-        Summary := BuildSummary(DocumentNo, TransferHeader."Transfer-from Code", TransferHeader."Transfer-to Code", PostingTypeText, PreviewArray, Dispatcher.GLStatusSentence(GLEntryCount, Balanced));
+        Summary := BuildSummary(DocumentNo, TransferHeader."Transfer-from Code", TransferHeader."Transfer-to Code", PostingTypeText, PreviewArray, PostingPreviewHelper.GLStatusSentence(GLEntryCount, Balanced));
 
         ResponseJson.Add('status', 'Success');
-        Dispatcher.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
+        PostingPreviewHelper.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
         ResponseJson.Add('rollback', true);
         ResponseJson.Add('summary', Summary);
         ResponseJson.Add('documentNo', DocumentNo);
@@ -298,11 +299,11 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
 
     local procedure BuildSummary(DocumentNo: Code[20]; FromCode: Code[10]; ToCode: Code[10]; PostingTypeText: Text; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
-        Dispatcher: Codeunit "Dispatcher ori";
+        PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
         Summary: Text;
         SummaryTok: Label 'Transfer Order %1 (%2 -> %3) %4 preview produced %5 entries. %6', Comment = '%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence', Locked = true;
     begin
-        Summary := StrSubstNo(SummaryTok, DocumentNo, FromCode, ToCode, PostingTypeText, Dispatcher.CountPreviewEntries(PreviewArray), GLStatusText);
+        Summary := StrSubstNo(SummaryTok, DocumentNo, FromCode, ToCode, PostingTypeText, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText);
         exit(Summary);
     end;
 
