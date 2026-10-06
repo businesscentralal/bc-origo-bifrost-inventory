@@ -5,8 +5,9 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Inventory.Reclassification.Post. Posts a reclassification journal through codeunit 23.
+/// Object id is not 70013476. That id is the gaps enum extension.
 /// </summary>
-codeunit 70013476 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
