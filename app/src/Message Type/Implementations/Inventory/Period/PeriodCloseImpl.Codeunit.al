@@ -24,12 +24,12 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Closes an inventory period.');
+        exit('Closes inventory periods through an ending date, matching the inventory period close action.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('close inventory period');
+        exit('close inventory period, lock inventory period');
     end;
 
     procedure GetSelectionDescription(): Text
@@ -97,7 +97,7 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         exit(false);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
