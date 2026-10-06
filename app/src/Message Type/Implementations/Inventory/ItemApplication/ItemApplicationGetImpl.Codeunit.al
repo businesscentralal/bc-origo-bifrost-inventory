@@ -4,7 +4,7 @@ using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.ItemApplication.Get. Reads Item Application Entry. Closes #40.
+/// Inventory.ItemApplication.Get. Reads Item Application Entry.
 /// </summary>
 codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -104,15 +104,41 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        ItemApplicationEntry: Record "Item Application Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Entries: JsonArray;
+        EntryJson: JsonObject;
+        Token: JsonToken;
+        ItemLedgerEntryNo: Integer;
+        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.ItemApplication.Get');
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'itemLedgerEntryNo', '', '', '');
+            exit;
+        end;
+        ItemLedgerEntryNo := Token.AsValue().AsInteger();
+        ItemApplicationEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
+        if ItemApplicationEntry.FindSet() then
+            repeat
+                Clear(EntryJson);
+                EntryJson.Add('entryNo', ItemApplicationEntry."Entry No.");
+                EntryJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
+                EntryJson.Add('inboundItemEntryNo', ItemApplicationEntry."Inbound Item Entry No.");
+                EntryJson.Add('outboundItemEntryNo', ItemApplicationEntry."Outbound Item Entry No.");
+                EntryJson.Add('quantity', ItemApplicationEntry.Quantity);
+                Entries.Add(EntryJson);
+            until ItemApplicationEntry.Next() = 0;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo);
+        ResponseJson.Add('entries', Entries);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
