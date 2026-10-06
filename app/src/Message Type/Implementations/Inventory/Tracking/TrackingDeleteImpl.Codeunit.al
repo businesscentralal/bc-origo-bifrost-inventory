@@ -3,9 +3,6 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.Tracking.Delete. Removes an unposted tracking specification.
-/// </summary>
 codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -24,47 +21,68 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Deletes an unposted item tracking specification.');
+        exit('Deletes an item tracking specification through Item Tracking Management.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('delete lot, delete serial, delete package');
+        exit('delete tracking, delete lot, delete serial, delete package');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Deletes an unposted tracking specification. Posted item ledger entries are not deleted.');
+        exit('Deletes one tracking specification by entry number.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.Tracking.Delete');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('codeunit', 'Item Tracking Management');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'entryNo');
+        ParameterJson.Add('type', 'integer');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('entryNo', 0);
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'entryNo was not found');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', 'Tracking Specification');
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -74,7 +92,9 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
-        exit(false);
+        Related.Add('Inventory.Tracking.Assign');
+        Related.Add('Inventory.TrackingAvailability.Get');
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -89,15 +109,17 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Deletes one tracking specification after registering the pointer with Item Tracking Management.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Calls codeunit 6500 before delete. Package number is returned when present.';
+        exit(true);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
@@ -106,12 +128,11 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         TrackingSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemTrackingManagement: Codeunit "Item Tracking Management";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         EntryNo: Integer;
-        MissingEntryErr: Label 'entryNo is required.', Locked = true;
-        NotFoundErr: Label 'Tracking specification %1 was not found. Posted item ledger entries cannot be deleted here.', Comment = '%1 = entry no.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
             exit;
@@ -119,21 +140,23 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'entryNo', '', '', '');
+            Argument.RespondWithError('entryNo is required.');
             exit;
         end;
         EntryNo := Token.AsValue().AsInteger();
         if not TrackingSpecification.Get(EntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', '', '', '');
+            Argument.RespondWithError('Tracking specification ' + Format(EntryNo) + ' was not found.');
             exit;
         end;
-        TrackingSpecification.Delete(true);
+
+        ItemTrackingManagement.SetPointerFilter(TrackingSpecification);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
         ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
-        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
         ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
+        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
         ResponseJson.Add('packageNo', TrackingSpecification."Package No.");
+        TrackingSpecification.Delete(true);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
