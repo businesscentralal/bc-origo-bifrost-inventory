@@ -3,6 +3,9 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Costing;
 using Origo.Bifrost;
 
+/// <summary>
+/// Inventory.Period.Close. Closes an inventory period through the Inventory Period record.
+/// </summary>
 codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -31,7 +34,7 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Closes open inventory periods through the requested ending date.');
+        exit('Closes an inventory period. An already closed period returns success.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -105,45 +108,33 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        ClosedPeriods: JsonArray;
-        PeriodJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
-        ClosedCount: Integer;
+        MissingDateErr: Label 'endingDate is required.', Locked = true;
+        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('endingDate', Token) then begin
-            Argument.RespondWithError('endingDate is required.');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDateErr, 'endingDate', '', '', '');
             exit;
         end;
-        if not Evaluate(EndingDate, Token.AsValue().AsText()) then begin
-            Argument.RespondWithError('endingDate is not a date.');
+        EndingDate := Token.AsValue().AsDate();
+        if not InventoryPeriod.Get(EndingDate) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EndingDate), 'endingDate', '', '', '');
             exit;
         end;
-
-        InventoryPeriod.SetFilter("Ending Date", '..%1', EndingDate);
-        InventoryPeriod.SetRange(Closed, false);
-        if InventoryPeriod.FindSet(true) then
-            repeat
-                InventoryPeriod.Closed := true;
-                InventoryPeriod.Modify(true);
-                Clear(PeriodJson);
-                PeriodJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
-                PeriodJson.Add('name', InventoryPeriod.Name);
-                PeriodJson.Add('closed', InventoryPeriod.Closed);
-                ClosedPeriods.Add(PeriodJson);
-                ClosedCount += 1;
-            until InventoryPeriod.Next() = 0;
-
+        if not InventoryPeriod.Closed then begin
+            InventoryPeriod.Validate(Closed, true);
+            InventoryPeriod.Modify(true);
+        end;
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('endingDate', Format(EndingDate, 0, 9));
-        ResponseJson.Add('closedCount', ClosedCount);
-        ResponseJson.Add('periods', ClosedPeriods);
+        ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
+        ResponseJson.Add('name', InventoryPeriod.Name);
+        ResponseJson.Add('closed', InventoryPeriod.Closed);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
