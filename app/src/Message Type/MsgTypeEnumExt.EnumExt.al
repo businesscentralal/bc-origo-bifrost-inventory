@@ -2,6 +2,10 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
+/// <summary>
+/// Extends Bifrost Foundation Message Type ori with inventory message types.
+/// Captions are Locked because message identifiers are part of the public wire contract.
+/// </summary>
 enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
 {
     value(10036893; "Inventory.Attribute.Get")
@@ -29,6 +33,66 @@ enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
         Caption = 'Inventory.TransferOrder.Create', Locked = true;
         Implementation = "Msg Interface ori" = "Transfer Order Create Impl ori", "Msg Discovery ori" = "Transfer Order Create Impl ori", "Msg Contract ori" = "Transfer Order Create Impl ori";
     }
+    value(70013401; "Inventory.TransferOrder.Release")
+    {
+        Caption = 'Inventory.TransferOrder.Release', Locked = true;
+        Implementation = "Msg Interface ori" = "Transf. Order Release Impl ori", "Msg Discovery ori" = "Transf. Order Release Impl ori", "Msg Contract ori" = "Transf. Order Release Impl ori";
+    }
+    value(70013402; "Inventory.TransferOrder.Reopen")
+    {
+        Caption = 'Inventory.TransferOrder.Reopen', Locked = true;
+        Implementation = "Msg Interface ori" = "Transfer Order Reopen Impl ori", "Msg Discovery ori" = "Transfer Order Reopen Impl ori", "Msg Contract ori" = "Transfer Order Reopen Impl ori";
+    }
+    value(70013403; "Inventory.TransferOrder.Post")
+    {
+        Caption = 'Inventory.TransferOrder.Post', Locked = true;
+        Implementation = "Msg Interface ori" = "Transfer Order Post Impl ori", "Msg Discovery ori" = "Transfer Order Post Impl ori", "Msg Contract ori" = "Transfer Order Post Impl ori";
+    }
+    value(70013404; "Inventory.TransferOrder.PreviewPost")
+    {
+        Caption = 'Inventory.TransferOrder.PreviewPost', Locked = true;
+        Implementation = "Msg Interface ori" = "Transf Doc Prev. Post Impl ori", "Msg Discovery ori" = "Transf Doc Prev. Post Impl ori", "Msg Contract ori" = "Transf Doc Prev. Post Impl ori";
+    }
+    value(70013405; "Inventory.TransferOrder.Statistics")
+    {
+        Caption = 'Inventory.TransferOrder.Statistics', Locked = true;
+        Implementation = "Msg Interface ori" = "Transfer Order Stats Impl ori", "Msg Discovery ori" = "Transfer Order Stats Impl ori", "Msg Contract ori" = "Transfer Order Stats Impl ori";
+    }
+    value(70013406; "Inventory.AssemblyOrder.Create")
+    {
+        Caption = 'Inventory.AssemblyOrder.Create', Locked = true;
+        Implementation = "Msg Interface ori" = "Assembly Order Create Impl ori", "Msg Discovery ori" = "Assembly Order Create Impl ori", "Msg Contract ori" = "Assembly Order Create Impl ori";
+    }
+    value(70013407; "Inventory.AssemblyOrder.RefreshLines")
+    {
+        Caption = 'Inventory.AssemblyOrder.RefreshLines', Locked = true;
+        Implementation = "Msg Interface ori" = "Asm. Order RefreshLn Impl ori", "Msg Discovery ori" = "Asm. Order RefreshLn Impl ori", "Msg Contract ori" = "Asm. Order RefreshLn Impl ori";
+    }
+    value(70013408; "Inventory.AssemblyOrder.Release")
+    {
+        Caption = 'Inventory.AssemblyOrder.Release', Locked = true;
+        Implementation = "Msg Interface ori" = "Asm. Order Release Impl ori", "Msg Discovery ori" = "Asm. Order Release Impl ori", "Msg Contract ori" = "Asm. Order Release Impl ori";
+    }
+    value(70013409; "Inventory.AssemblyOrder.Reopen")
+    {
+        Caption = 'Inventory.AssemblyOrder.Reopen', Locked = true;
+        Implementation = "Msg Interface ori" = "Assembly Order Reopen Impl ori", "Msg Discovery ori" = "Assembly Order Reopen Impl ori", "Msg Contract ori" = "Assembly Order Reopen Impl ori";
+    }
+    value(70013410; "Inventory.AssemblyOrder.Post")
+    {
+        Caption = 'Inventory.AssemblyOrder.Post', Locked = true;
+        Implementation = "Msg Interface ori" = "Assembly Order Post Impl ori", "Msg Discovery ori" = "Assembly Order Post Impl ori", "Msg Contract ori" = "Assembly Order Post Impl ori";
+    }
+    value(70013411; "Inventory.AssemblyOrder.PreviewPost")
+    {
+        Caption = 'Inventory.AssemblyOrder.PreviewPost', Locked = true;
+        Implementation = "Msg Interface ori" = "Asm. Doc Prev. Post Impl ori", "Msg Discovery ori" = "Asm. Doc Prev. Post Impl ori", "Msg Contract ori" = "Asm. Doc Prev. Post Impl ori";
+    }
+    value(70013412; "Inventory.AssemblyOrder.Statistics")
+    {
+        Caption = 'Inventory.AssemblyOrder.Statistics', Locked = true;
+        Implementation = "Msg Interface ori" = "Asm. Order Statistics Impl ori", "Msg Discovery ori" = "Asm. Order Statistics Impl ori", "Msg Contract ori" = "Asm. Order Statistics Impl ori";
+    }
     value(70013420; "Inventory.AdjustCost.Run")
     {
         Caption = 'Inventory.AdjustCost.Run', Locked = true;
@@ -44,30 +108,30 @@ enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
         Caption = 'Inventory.Tracking.Assign', Locked = true;
         Implementation = "Msg Interface ori" = "Tracking Assign Impl ori", "Msg Discovery ori" = "Tracking Assign Impl ori", "Msg Contract ori" = "Tracking Assign Impl ori";
     }
-    value(70013425; "Inventory.Tracking.Delete")
-    {
-        Caption = 'Inventory.Tracking.Delete', Locked = true;
-        Implementation = "Msg Interface ori" = "Tracking Delete Impl ori", "Msg Discovery ori" = "Tracking Delete Impl ori", "Msg Contract ori" = "Tracking Delete Impl ori";
-    }
     value(70013423; "Inventory.Transfer.UndoShipment")
     {
         Caption = 'Inventory.Transfer.UndoShipment', Locked = true;
         Implementation = "Msg Interface ori" = "Transfer Undo Shpt Impl ori", "Msg Discovery ori" = "Transfer Undo Shpt Impl ori", "Msg Contract ori" = "Transfer Undo Shpt Impl ori";
     }
-    value(70013427; "Inventory.Transfer.UndoReceipt")
-    {
-        Caption = 'Inventory.Transfer.UndoReceipt', Locked = true;
-        Implementation = "Msg Interface ori" = "Transf Undo Rcpt Impl ori", "Msg Discovery ori" = "Transf Undo Rcpt Impl ori", "Msg Contract ori" = "Transf Undo Rcpt Impl ori";
-    }
-    value(70013430; "Inventory.Assembly.UndoPost")
-    {
-        Caption = 'Inventory.Assembly.UndoPost', Locked = true;
-        Implementation = "Msg Interface ori" = "Assembly Undo Post Impl ori", "Msg Discovery ori" = "Assembly Undo Post Impl ori", "Msg Contract ori" = "Assembly Undo Post Impl ori";
-    }
     value(70013424; "Inventory.ItemApplication.Get")
     {
         Caption = 'Inventory.ItemApplication.Get', Locked = true;
         Implementation = "Msg Interface ori" = "Item Appl. Get Impl ori", "Msg Discovery ori" = "Item Appl. Get Impl ori", "Msg Contract ori" = "Item Appl. Get Impl ori";
+    }
+    value(70013425; "Inventory.Tracking.Delete")
+    {
+        Caption = 'Inventory.Tracking.Delete', Locked = true;
+        Implementation = "Msg Interface ori" = "Tracking Delete Impl ori", "Msg Discovery ori" = "Tracking Delete Impl ori", "Msg Contract ori" = "Tracking Delete Impl ori";
+    }
+    value(70013426; "Inventory.Reclassification.Check")
+    {
+        Caption = 'Inventory.Reclassification.Check', Locked = true;
+        Implementation = "Msg Interface ori" = "Reclass Check Impl ori", "Msg Discovery ori" = "Reclass Check Impl ori", "Msg Contract ori" = "Reclass Check Impl ori";
+    }
+    value(70013427; "Inventory.Transfer.UndoReceipt")
+    {
+        Caption = 'Inventory.Transfer.UndoReceipt', Locked = true;
+        Implementation = "Msg Interface ori" = "Transf Undo Rcpt Impl ori", "Msg Discovery ori" = "Transf Undo Rcpt Impl ori", "Msg Contract ori" = "Transf Undo Rcpt Impl ori";
     }
     value(70013428; "Inventory.ItemApplication.Unapply")
     {
@@ -79,10 +143,10 @@ enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
         Caption = 'Inventory.ItemApplication.Reapply', Locked = true;
         Implementation = "Msg Interface ori" = "Item Appl. Reapply Impl ori", "Msg Discovery ori" = "Item Appl. Reapply Impl ori", "Msg Contract ori" = "Item Appl. Reapply Impl ori";
     }
-    value(70013426; "Inventory.Reclassification.Check")
+    value(70013430; "Inventory.Assembly.UndoPost")
     {
-        Caption = 'Inventory.Reclassification.Check', Locked = true;
-        Implementation = "Msg Interface ori" = "Reclass Check Impl ori", "Msg Discovery ori" = "Reclass Check Impl ori", "Msg Contract ori" = "Reclass Check Impl ori";
+        Caption = 'Inventory.Assembly.UndoPost', Locked = true;
+        Implementation = "Msg Interface ori" = "Assembly Undo Post Impl ori", "Msg Discovery ori" = "Assembly Undo Post Impl ori", "Msg Contract ori" = "Assembly Undo Post Impl ori";
     }
     value(70013431; "Inventory.Reclassification.Post")
     {
