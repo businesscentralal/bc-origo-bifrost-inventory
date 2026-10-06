@@ -5,7 +5,7 @@ using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
 
 /// <summary>
-/// Implementation of the Inventory.Attribute.Update message type (Inbound).
+/// Implementation of Inventory.Attribute.Update.
 /// </summary>
 codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
