@@ -105,14 +105,26 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        InventoryPeriod: Record "Inventory Period";
         ResponseJson: JsonObject;
+        Periods: JsonArray;
+        PeriodJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Period.Get');
+        if InventoryPeriod.FindSet() then
+            repeat
+                Clear(PeriodJson);
+                PeriodJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
+                PeriodJson.Add('name', InventoryPeriod.Name);
+                PeriodJson.Add('closed', InventoryPeriod.Closed);
+                Periods.Add(PeriodJson);
+            until InventoryPeriod.Next() = 0;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('periods', Periods);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
