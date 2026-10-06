@@ -4,7 +4,7 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Registers Bifrost Inventory with Foundation's application registry.
-/// No setup page in v1 — SetupPageId is 0.
+/// Registers the Inventory Setup page as the app setup page.
 /// </summary>
 codeunit 10036912 "Inventory Registration ori"
 {
@@ -17,6 +17,6 @@ codeunit 10036912 "Inventory Registration ori"
         AppInfo: ModuleInfo;
     begin
         NavApp.GetCurrentModuleInfo(AppInfo);
-        AppRegistry.AddApp(Apps, AppInfo.Id(), CopyStr(AppInfo.Name(), 1, 250), 0);
+        AppRegistry.AddApp(Apps, AppInfo.Id(), CopyStr(AppInfo.Name(), 1, 250), Page::"Inventory Setup ori");
     end;
 }
