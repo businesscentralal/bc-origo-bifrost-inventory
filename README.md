@@ -33,9 +33,9 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
-| `Inventory.ItemApplication.Get` | Outbound | Read item application entries |
-| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application entry |
-| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry |
+| `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
 | `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
 | `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
 | `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
@@ -46,14 +46,20 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
 | `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
-| `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation entry |
+| `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation through Reservation Management |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
-| `Inventory.PhysInventory.Record` | Inbound | Record the counted quantity on a physical inventory journal line |
-| `Inventory.PhysInventory.Check` | Outbound | Read quantity differences on a physical inventory journal |
-| `Inventory.PhysInventory.Preview` | Outbound | Preview physical inventory count differences without posting |
+| `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on a physical inventory line |
+| `Inventory.PhysInventory.Check` | Outbound | Read quantity differences before posting |
+| `Inventory.PhysInventory.Preview` | Outbound | Preview a physical inventory batch without posting |
 | `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
 
 Update this table in the same change as any new or renamed message type.
+
+## Source guards
+
+- #32 Icelandic translation: `app/Translations/Bifrost Inventory.is-IS.xlf` is the committed file. After a compile, run `tools/Update-IcelandicXlf.ps1` and commit the generated file. The guard stays unwired until that generated file matches the build.
+- #33 Mixed language labels: user-facing labels need an `is-IS=` comment. Locked wire names stay Locked and are not translated.
+- #31 Help links: the external documentation site still needs a `help/inventory` topic. This app cannot create that page.
 
 ## Ranges
 
