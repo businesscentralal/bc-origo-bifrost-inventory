@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Price.Update. Validates Item.Unit Price. This is not Inventory.Cost.Update.
+/// Inventory.Price.Update. Validates Item.Unit Price. This is not a cost update.
 /// </summary>
 codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -24,7 +24,7 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Updates an item unit price or a price list line unit price.');
+        exit('Updates an item unit price.');
     end;
 
     procedure GetKeywords(): Text
@@ -105,14 +105,35 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Item: Record Item;
+        DocumentLookup: Codeunit "Document Lookup ori";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        UnitPrice: Decimal;
+        MissingPriceErr: Label 'unitPrice is required.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemPrice, Database::Item, true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
+
+        if not DocumentLookup.FindItem(Argument, Item) then
+            exit;
+
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('unitPrice', Token) then begin
+            Argument.RespondWithError(MissingPriceErr);
+            exit;
+        end;
+        UnitPrice := Token.AsValue().AsDecimal();
+        Item.Validate("Unit Price", UnitPrice);
+        Item.Modify(true);
+
+        ResponseJson.Add('status', 'Success');
         ResponseJson.Add('messageType', 'Inventory.Price.Update');
+        ResponseJson.Add('itemNo', Item."No.");
+        ResponseJson.Add('unitPrice', Item."Unit Price");
         Argument.SetResponseJson(ResponseJson);
     end;
 }
