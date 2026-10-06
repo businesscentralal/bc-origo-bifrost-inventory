@@ -1,13 +1,5 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.TransferOrder.PreviewPost message type.
-/// Simulates posting a transfer order and returns the captured ledger entries
-/// (Item Ledger, Value Entry, G/L Entry where applicable) without committing changes.
-/// The transaction is rolled back after capturing the simulated entries via the
-/// Posting Preview Event Handler.
-/// </summary>
-
 using Microsoft.Finance.GeneralLedger.Preview;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Foundation.Navigate;
@@ -19,9 +11,12 @@ using Origo.Bifrost;
 codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
+    var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(true);
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -55,6 +50,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Envelope := Parts.GetEnvelope('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -62,6 +58,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Target := Parts.GetTarget('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -69,6 +66,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Parameters := Parts.GetParameters('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -76,6 +74,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Response := Parts.GetResponse('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -83,6 +82,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Errors := Parts.GetErrors('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -90,10 +90,12 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Effect := Parts.GetEffect('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -101,6 +103,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Related := Parts.GetRelated('Inventory.TransferOrder.PreviewPost');
         exit(true);
     end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -108,10 +111,12 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Workflow := Parts.GetWorkflow('Inventory.TransferOrder.PreviewPost');
         exit(Workflow.Keys().Count() > 0);
     end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetOverview(var Overview: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -119,6 +124,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Overview := Parts.GetOverview('Inventory.TransferOrder.PreviewPost');
         exit(Overview <> '');
     end;
+
     procedure GetNotes(var Notes: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -129,11 +135,12 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
         GLSetup: Record "General Ledger Setup";
@@ -167,21 +174,19 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value', Locked = true;
         NothingToPostNextStepTok: Label 'No line has a quantity to ship or receive. Review with Inventory.TransferOrder.Statistics.', Comment = 'is-IS=Engin lína hefur magn til að senda eða móttaka. Skoðið með Inventory.TransferOrder.Statistics.';
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
-
         TransferLine.SetRange("Document No.", TransferHeader."No.");
         if TransferLine.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::NothingToPreview, StrSubstNo(NoLinesToPostErr, TransferHeader."No."), '', '', '', NothingToPostNextStepTok);
             exit;
         end;
-
         DocumentNo := TransferHeader."No.";
         DirectTransfer := TransferHeader."Direct Transfer";
-
         RequestJson := Argument.GetRequestJson();
         if DirectTransfer then begin
             ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
@@ -209,33 +214,24 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
                 Argument.RespondWithError(MissingPostingTypeErr);
                 exit;
             end;
-
         GLSetup.Get();
         LCYCode := GLSetup."LCY Code";
-
         if not PreviewTransferOrder(TransferHeader, PostShipment, PostReceipt, PostTransfer, PostingPreviewEventHandler, PreviewErrorText) then begin
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
             PostingPreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
             exit;
         end;
-
         PostingPreviewHelper.GetPreviewFieldNames(PreviewFieldNames);
-
         PostingPreviewEventHandler.FillDocumentEntry(TempDocumentEntry);
         if TempDocumentEntry.FindSet() then
             repeat
                 PostingPreviewHelper.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
             until TempDocumentEntry.Next() = 0;
-
         if not PostingPreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
-
             exit;
-
         BuildPredictedNumbers(PredictedJson, PostingPreviewEventHandler, DirectTransfer, PostingType);
-
         Summary := BuildSummary(DocumentNo, TransferHeader."Transfer-from Code", TransferHeader."Transfer-to Code", PostingTypeText, PreviewArray, PostingPreviewHelper.GLStatusSentence(GLEntryCount, Balanced));
-
         ResponseJson.Add('status', 'Success');
         PostingPreviewHelper.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
         ResponseJson.Add('rollback', true);
@@ -249,7 +245,6 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         ResponseJson.Add('predictedNumbers', PredictedJson);
         ResponseJson.Add('totals', TotalsJson);
         ResponseJson.Add('preview', PreviewArray);
-
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -285,7 +280,6 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
                 end;
             until TempRecRef.Next() = 0;
         TempRecRef.Close();
-
         if DirectTransfer then
             PredictedJson.Add('postedDirectTransferNo', DirectTransferNo)
         else
@@ -300,20 +294,11 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     local procedure BuildSummary(DocumentNo: Code[20]; FromCode: Code[10]; ToCode: Code[10]; PostingTypeText: Text; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
-        Summary: Text;
         SummaryTok: Label 'Transfer Order %1 (%2 -> %3) %4 preview produced %5 entries. %6', Comment = '%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence', Locked = true;
     begin
-        Summary := StrSubstNo(SummaryTok, DocumentNo, FromCode, ToCode, PostingTypeText, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText);
-        exit(Summary);
+        exit(StrSubstNo(SummaryTok, DocumentNo, FromCode, ToCode, PostingTypeText, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
     end;
 
-    /// <summary>
-    /// Runs the BC built-in posting preview for a transfer order and returns the
-    /// Posting Preview Event Handler containing the captured (rolled-back) ledger entries.
-    /// Mirrors codeunit 5706 "TransferOrder-Post (Yes/No)".Preview, but uses Gen. Jnl.-Post
-    /// Preview's headless SetContext+Run() entry point so the caller can consume the
-    /// captured entries instead of presenting them in the standard preview pages.
-    /// </summary>
     local procedure PreviewTransferOrder(var TransferHeader: Record "Transfer Header"; PostShipment: Boolean; PostReceipt: Boolean; PostTransfer: Boolean; var PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler"; var ErrorText: Text): Boolean
     var
         GenJnlPostPreview: Codeunit "Gen. Jnl.-Post Preview";
@@ -325,23 +310,17 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         BindSubscription(TransferPostSubscriber);
         BindSubscription(TransferOrderPostYesNo);
         GenJnlPostPreview.SetContext(TransferOrderPostYesNo, TransferHeader);
-        if GenJnlPostPreview.Run() then; // expected to throw Error('') after capturing entries
+        if GenJnlPostPreview.Run() then;
         UnbindSubscription(TransferOrderPostYesNo);
         UnbindSubscription(TransferPostSubscriber);
-
         if not GenJnlPostPreview.IsSuccess() then begin
             ErrorText := GetLastErrorText();
             exit(false);
         end;
-
         GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
         exit(true);
     end;
 
-    /// <summary>
-    /// For direct transfers, reads Inventory Setup "Direct Transfer Posting" and sets the
-    /// posting flags accordingly.
-    /// </summary>
     local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
         InventorySetup: Record "Inventory Setup";
