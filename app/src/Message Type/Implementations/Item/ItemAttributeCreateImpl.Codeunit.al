@@ -5,8 +5,7 @@ using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
 
 /// <summary>
-/// Implementation of the Item.Attribute.Create message type (Inbound).
-/// Writes run through <c>Item Attr. Create Process ori</c> for error isolation.
+/// Implementation of Inventory.Attribute.Create.
 /// </summary>
 codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -14,9 +13,9 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
 
     procedure IsEnabled(): Boolean
     var
-        Mapping: Record "Item Attribute Value Mapping";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(Mapping.WritePermission());
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -38,7 +37,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Assigns attribute values to an item and may create missing option values; use Item.Attribute.Update for an existing mapping.', Comment = 'is-IS=Úthlutar eiginleikagildum á vöru og getur búið til valkosti sem vantar; notaðu Item.Attribute.Update fyrir núverandi vörutengingu.';
+        SelectionDescriptionLbl: Label 'Assigns attribute values to an item and may create missing option values; use Inventory.Attribute.Update for an existing mapping.', Comment = 'is-IS=Úthlutar eiginleikagildum á vöru og getur búið til valkosti sem vantar; notaðu Inventory.Attribute.Update fyrir núverandi vörutengingu.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -47,7 +46,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Envelope := ContractParts.GetEnvelope('Item.Attribute.Create');
+        Envelope := ContractParts.GetEnvelope('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -55,7 +54,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Target := ContractParts.GetTarget('Item.Attribute.Create');
+        Target := ContractParts.GetTarget('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -63,7 +62,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Parameters := ContractParts.GetParameters('Item.Attribute.Create');
+        Parameters := ContractParts.GetParameters('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -71,7 +70,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Response := ContractParts.GetResponse('Item.Attribute.Create');
+        Response := ContractParts.GetResponse('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -79,7 +78,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Errors := ContractParts.GetErrors('Item.Attribute.Create');
+        Errors := ContractParts.GetErrors('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -87,7 +86,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Effect := ContractParts.GetEffect('Item.Attribute.Create');
+        Effect := ContractParts.GetEffect('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -100,7 +99,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Related := ContractParts.GetRelated('Item.Attribute.Create');
+        Related := ContractParts.GetRelated('Inventory.Attribute.Create');
         exit(true);
     end;
 
@@ -118,7 +117,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Overview := ContractParts.GetOverview('Item.Attribute.Create');
+        Overview := ContractParts.GetOverview('Inventory.Attribute.Create');
         exit(Overview <> '');
     end;
 
@@ -126,7 +125,7 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     var
         ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        Notes := ContractParts.GetNotes('Item.Attribute.Create');
+        Notes := ContractParts.GetNotes('Inventory.Attribute.Create');
         exit(Notes <> '');
     end;
 
@@ -136,7 +135,11 @@ codeunit 10036898 "Item Attribute Create Impl ori" implements "Msg Interface ori
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
