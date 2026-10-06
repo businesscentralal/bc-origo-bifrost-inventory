@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
@@ -20,17 +21,17 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Creates a reservation entry for an item through Reservation Management.');
+        exit('Creates a reservation through Reservation Management.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('create reservation, reserve item, reserve quantity');
+        exit('create reservation, auto reserve, reserve item');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Creates a surplus reservation entry for an item, location, and quantity.');
+        exit('Reserves quantity for an item through Reservation Management.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -44,7 +45,7 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
     var
         TargetJson: JsonObject;
     begin
-        TargetJson.Add('table', 'Reservation Entry');
+        TargetJson.Add('codeunit', 'Reservation Management');
         Target.Add(TargetJson);
         exit(true);
     end;
@@ -73,9 +74,7 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entryNo', 0);
-        Response.Add('itemNo', '');
-        Response.Add('quantity', 0);
+        Response.Add('reserved', true);
         exit(true);
     end;
 
@@ -120,13 +119,13 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Creates a reservation entry for the requested item and quantity.';
+        Overview := 'Calls Reservation Management.AutoReserveOneLineReserve for the requested item quantity.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Uses Reservation Entry. The compiler pass should confirm Reservation Management.AutoReserve if source document fields are supplied.';
+        Notes := 'Source document fields can be added by the compiler pass if AutoReserve needs a source record.';
         exit(true);
     end;
 
@@ -139,12 +138,14 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
     var
         ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ReservationManagement: Codeunit "Reservation Management";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         ItemNo: Code[20];
         LocationCode: Code[10];
         Quantity: Decimal;
+        FullAutoReservation: Boolean;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
             exit;
@@ -170,13 +171,13 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ReservationEntry.Quantity := Quantity;
         ReservationEntry."Quantity (Base)" := Quantity;
         ReservationEntry.Positive := Quantity > 0;
-        ReservationEntry."Reservation Status" := ReservationEntry."Reservation Status"::Surplus;
-        ReservationEntry.Insert(true);
+        ReservationManagement.SetReservSource(ReservationEntry);
+        ReservationManagement.AutoReserveOneLineReserve(FullAutoReservation, ItemNo, WorkDate(), Quantity, Quantity);
 
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', ReservationEntry."Entry No.");
         ResponseJson.Add('itemNo', ItemNo);
         ResponseJson.Add('quantity', Quantity);
+        ResponseJson.Add('fullAutoReservation', FullAutoReservation);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

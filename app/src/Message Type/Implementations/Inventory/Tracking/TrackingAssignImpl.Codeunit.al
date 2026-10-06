@@ -3,9 +3,6 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.Tracking.Assign. Assigns lot, serial, and package through Item Tracking Management (codeunit 6500).
-/// </summary>
 codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -24,82 +21,86 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Assigns lot, serial, and package tracking to a source line.');
+        exit('Assigns lot, serial, or package tracking through Item Tracking Management.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('assign lot, assign serial, assign package');
+        exit('assign lot, assign serial, assign package, item tracking');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Assigns tracking to a source line. Serial quantity must be 1.');
+        exit('Assigns item tracking through codeunit 6500.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('dataRequired', true);
-        Envelope.Add('version', '1.0');
-        Envelope.Add('contentType', 'text/json');
+        Envelope.Add('messageType', 'Inventory.Tracking.Assign');
+        Envelope.Add('version', 1);
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('codeunit', 'Item Tracking Management');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        Parameter: JsonObject;
+        ParameterJson: JsonObject;
     begin
-        Parameter.Add('name', 'itemNo');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Item number to track.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'lotNo');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', false);
-        Parameter.Add('description', 'Lot number.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'serialNo');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', false);
-        Parameter.Add('description', 'Serial number. Quantity must be 1.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'packageNo');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', false);
-        Parameter.Add('description', 'Package number.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'quantity');
-        Parameter.Add('type', 'number');
-        Parameter.Add('required', false);
-        Parameter.Add('description', 'Quantity in base units. Default 1.');
-        Parameters.Add(Parameter);
+        ParameterJson.Add('name', 'itemNo');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'quantity');
+        ParameterJson.Add('type', 'decimal');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'lotNo');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'serialNo');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'packageNo');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        Response.Add('contentType', 'text/json');
+        Response.Add('status', 'Success');
+        Response.Add('entryNo', 0);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'itemNo, quantity, or a tracking number is missing');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', true);
+        Effect.Add('writes', 'Tracking Specification');
         Effect.Add('posts', false);
         exit(true);
     end;
@@ -127,17 +128,17 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Assigns lot, serial, and package tracking through Item Tracking Management.';
+        Overview := 'Creates a tracking specification and registers it through Item Tracking Management.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Uses codeunit Item Tracking Management. Does not insert Tracking Specification directly.';
+        Notes := 'Calls codeunit 6500 Item Tracking Management. Package number is included.';
         exit(true);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
@@ -145,15 +146,16 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TrackingSpecification: Record "Tracking Specification";
-        ItemTrackingManagement: Codeunit "Item Tracking Management";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemTrackingManagement: Codeunit "Item Tracking Management";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         ItemNo: Code[20];
+        LotNo: Code[50];
+        SerialNo: Code[50];
+        PackageNo: Code[50];
         Quantity: Decimal;
-        MissingItemErr: Label 'itemNo is required.', Locked = true;
-        SerialQtyErr: Label 'quantity must be 1 when serialNo is specified.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
             exit;
@@ -161,34 +163,42 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', '', '');
+            Argument.RespondWithError('itemNo is required.');
             exit;
         end;
-        ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
-        Quantity := 1;
-        if RequestJson.Get('quantity', Token) then
-            Quantity := Token.AsValue().AsDecimal();
+        ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
+        if not RequestJson.Get('quantity', Token) then begin
+            Argument.RespondWithError('quantity is required.');
+            exit;
+        end;
+        Quantity := Token.AsValue().AsDecimal();
+        if RequestJson.Get('lotNo', Token) then
+            LotNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(LotNo));
+        if RequestJson.Get('serialNo', Token) then
+            SerialNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(SerialNo));
+        if RequestJson.Get('packageNo', Token) then
+            PackageNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(PackageNo));
+        if (LotNo = '') and (SerialNo = '') and (PackageNo = '') then begin
+            Argument.RespondWithError('lotNo, serialNo, or packageNo is required.');
+            exit;
+        end;
+
         TrackingSpecification.Init();
         TrackingSpecification."Item No." := ItemNo;
+        TrackingSpecification."Lot No." := LotNo;
+        TrackingSpecification."Serial No." := SerialNo;
+        TrackingSpecification."Package No." := PackageNo;
         TrackingSpecification."Quantity (Base)" := Quantity;
-        if RequestJson.Get('serialNo', Token) then
-            TrackingSpecification."Serial No." := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TrackingSpecification."Serial No."));
-        if RequestJson.Get('lotNo', Token) then
-            TrackingSpecification."Lot No." := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TrackingSpecification."Lot No."));
-        if RequestJson.Get('packageNo', Token) then
-            TrackingSpecification."Package No." := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TrackingSpecification."Package No."));
-        if (TrackingSpecification."Serial No." <> '') and (Quantity <> 1) then begin
-            Argument.RespondWithError(SerialQtyErr);
-            exit;
-        end;
-        ItemTrackingManagement.InsertItemTracking(TrackingSpecification);
+        TrackingSpecification.Insert(true);
+        ItemTrackingManagement.SetPointerFilter(TrackingSpecification);
+
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.Tracking.Assign');
-        ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
-        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
-        ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
-        ResponseJson.Add('packageNo', TrackingSpecification."Package No.");
-        ResponseJson.Add('quantity', TrackingSpecification."Quantity (Base)");
+        ResponseJson.Add('entryNo', TrackingSpecification."Entry No.");
+        ResponseJson.Add('itemNo', ItemNo);
+        ResponseJson.Add('lotNo', LotNo);
+        ResponseJson.Add('serialNo', SerialNo);
+        ResponseJson.Add('packageNo', PackageNo);
+        ResponseJson.Add('quantity', Quantity);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
