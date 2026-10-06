@@ -5,7 +5,6 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Inventory.Transfer.UndoShipment. Runs codeunit 5815 Undo Transfer Shipment.
-/// Does not delete the posted shipment. Part of #39.
 /// </summary>
 codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -110,12 +109,38 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        TransferShipmentHeader: Record "Transfer Shipment Header";
         Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
+        MissingDocErr: Label 'documentNo is required.', Locked = true;
+        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no.', Locked = true;
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
             exit;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('documentNo', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, 'documentNo', '', '', '');
+            exit;
+        end;
+        DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
+        if not TransferShipmentHeader.Get(DocumentNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
+            exit;
+        end;
         UndoShipment.SetHideDialog(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, 'documentNo is required.', '', '', '', 'Pass the posted transfer shipment number.');
+        if not UndoShipment.Run(TransferShipmentHeader) then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('documentNo', DocumentNo);
+        Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
