@@ -1,13 +1,5 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.AssemblyOrder.PreviewPost message type.
-/// Simulates posting an assembly order and returns the captured ledger entries
-/// (Item Ledger, Value Entry, G/L Entry, Resource Ledger where applicable) without
-/// committing changes. The transaction is rolled back after capturing the simulated
-/// entries via the Posting Preview Event Handler.
-/// </summary>
-
 using Microsoft.Assembly.Document;
 using Microsoft.Assembly.Posting;
 using Microsoft.Finance.GeneralLedger.Preview;
@@ -19,9 +11,12 @@ using Origo.Bifrost;
 codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
+    var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(true);
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -137,11 +132,12 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
         GLSetup: Record "General Ledger Setup";
@@ -165,47 +161,37 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         PreviewFailedErr: Label 'Posting preview failed and no entries were captured. The assembly order cannot be posted in its current state.', Comment = 'is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Samsetningarpöntunin getur ekki verið bókuð í núverandi stöðu.';
         NothingToPostNextStepTok: Label 'Quantity to Assemble is 0. Review with Inventory.AssemblyOrder.Statistics.', Comment = 'is-IS=Magn til samsetningar er 0. Skoðið með Inventory.AssemblyOrder.Statistics.';
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
-
         AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
         AssemblyLine.SetRange("Document No.", AssemblyHeader."No.");
         if AssemblyLine.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::NothingToPreview, StrSubstNo(NoLinesToPostErr, AssemblyHeader."No."), '', '', '', NothingToPostNextStepTok);
             exit;
         end;
-
         DocumentNo := AssemblyHeader."No.";
-
         GLSetup.Get();
         LCYCode := GLSetup."LCY Code";
-
         if not PreviewAssemblyOrder(AssemblyHeader, PostingPreviewEventHandler, PreviewErrorText) then begin
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
             PostingPreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
             exit;
         end;
-
         PostingPreviewHelper.GetPreviewFieldNames(PreviewFieldNames);
-
         PostingPreviewEventHandler.FillDocumentEntry(TempDocumentEntry);
         if TempDocumentEntry.FindSet() then
             repeat
                 PostingPreviewHelper.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
             until TempDocumentEntry.Next() = 0;
-
         if not PostingPreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
-
             exit;
-
         BuildPredictedNumbers(PredictedJson, PostingPreviewEventHandler);
-
         Summary := BuildSummary(DocumentNo, AssemblyHeader."Item No.", PreviewArray, PostingPreviewHelper.GLStatusSentence(GLEntryCount, Balanced));
-
         ResponseJson.Add('status', 'Success');
         PostingPreviewHelper.AddEntryCounts(ResponseJson, EntryCount, GLEntryCount);
         ResponseJson.Add('rollback', true);
@@ -218,7 +204,6 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('predictedNumbers', PredictedJson);
         ResponseJson.Add('totals', TotalsJson);
         ResponseJson.Add('preview', PreviewArray);
-
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -240,27 +225,17 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
                         PostedAssemblyNo := ItemLedgerEntry."Document No.";
             until TempRecRef.Next() = 0;
         TempRecRef.Close();
-
         PredictedJson.Add('postedAssemblyNo', PostedAssemblyNo);
     end;
 
     local procedure BuildSummary(DocumentNo: Code[20]; ItemNo: Code[20]; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
-        Summary: Text;
         SummaryTok: Label 'Assembly Order %1 (Item %2) preview produced %3 entries. %4', Comment = '%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence', Locked = true;
     begin
-        Summary := StrSubstNo(SummaryTok, DocumentNo, ItemNo, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText);
-        exit(Summary);
+        exit(StrSubstNo(SummaryTok, DocumentNo, ItemNo, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
     end;
 
-    /// <summary>
-    /// Runs the BC built-in posting preview for an assembly order and returns the
-    /// Posting Preview Event Handler containing the captured (rolled-back) ledger entries.
-    /// Uses Gen. Jnl.-Post Preview's headless SetContext+Run() entry point so the caller
-    /// can consume the captured entries instead of presenting them in the standard
-    /// preview pages.
-    /// </summary>
     local procedure PreviewAssemblyOrder(var AssemblyHeader: Record "Assembly Header"; var PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler"; var ErrorText: Text): Boolean
     var
         GenJnlPostPreview: Codeunit "Gen. Jnl.-Post Preview";
@@ -269,14 +244,12 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         AssemblyHeader.SetHideValidationDialog(true);
         BindSubscription(AssemblyPostYesNo);
         GenJnlPostPreview.SetContext(AssemblyPostYesNo, AssemblyHeader);
-        if GenJnlPostPreview.Run() then; // expected to throw Error('') after capturing entries
+        if GenJnlPostPreview.Run() then;
         UnbindSubscription(AssemblyPostYesNo);
-
         if not GenJnlPostPreview.IsSuccess() then begin
             ErrorText := GetLastErrorText();
             exit(false);
         end;
-
         GenJnlPostPreview.GetPreviewHandler(PostingPreviewEventHandler);
         exit(true);
     end;
