@@ -4,7 +4,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Tracking.Delete. Removes tracking on a source line. Does not delete posted entries.
+/// Inventory.Tracking.Delete. Removes an unposted tracking specification. Posted ledger entries are not deleted.
 /// </summary>
 codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -24,7 +24,7 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Deletes item tracking on a source line.');
+        exit('Deletes an unposted item tracking specification.');
     end;
 
     procedure GetKeywords(): Text
@@ -34,7 +34,7 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Deletes tracking on a source line. Posted entries cannot be deleted.');
+        exit('Deletes an unposted tracking specification. Posted item ledger entries are not deleted.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -104,15 +104,37 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        TrackingSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+        MissingEntryErr: Label 'entryNo is required.', Locked = true;
+        NotFoundErr: Label 'Tracking specification %1 was not found. Posted item ledger entries cannot be deleted here.', Comment = '%1 = entry no.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Tracking.Delete');
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('entryNo', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'entryNo', '', '', '');
+            exit;
+        end;
+        EntryNo := Token.AsValue().AsInteger();
+        if not TrackingSpecification.Get(EntryNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', '', '', '');
+            exit;
+        end;
+        TrackingSpecification.Delete(true);
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('entryNo', EntryNo);
+        ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
+        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
+        ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
+        ResponseJson.Add('packageNo', TrackingSpecification."Package No.");
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
