@@ -27,4 +27,14 @@ enumextension 70013476 "MsgType.EnumExt Gaps ori" extends "Message Type ori"
         Caption = 'Inventory.Assembly.UndoPost', Locked = true;
         Implementation = "Msg Interface ori" = "Assembly Undo Post Impl ori", "Msg Discovery ori" = "Assembly Undo Post Impl ori", "Msg Contract ori" = "Assembly Undo Post Impl ori";
     }
+    value(70013429; "Inventory.ItemApplication.Unapply")
+    {
+        Caption = 'Inventory.ItemApplication.Unapply', Locked = true;
+        Implementation = "Msg Interface ori" = "Item Appl. Unapply Impl ori", "Msg Discovery ori" = "Item Appl. Unapply Impl ori", "Msg Contract ori" = "Item Appl. Unapply Impl ori";
+    }
+    value(70013430; "Inventory.ItemApplication.Reapply")
+    {
+        Caption = 'Inventory.ItemApplication.Reapply', Locked = true;
+        Implementation = "Msg Interface ori" = "Item Appl. Reapply Impl ori", "Msg Discovery ori" = "Item Appl. Reapply Impl ori", "Msg Contract ori" = "Item Appl. Reapply Impl ori";
+    }
 }
