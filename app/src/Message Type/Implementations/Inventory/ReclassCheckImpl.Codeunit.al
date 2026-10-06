@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Reclassification.Check. Validates a reclassification journal line. Does not post.
+/// Inventory.Reclassification.Check. Validates a reclassification journal. Does not post.
 /// </summary>
 codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -24,7 +24,7 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Checks a reclassification journal line. Does not post.');
+        exit('Checks a reclassification journal. Does not post.');
     end;
 
     procedure GetKeywords(): Text
@@ -36,14 +36,17 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionLbl: Label 'Validates a reclassification journal line. Posting is a separate type.', Comment = 'is-IS=Staðfestir endurflokkunarlinu. Bókun er sérstök tegund.';
+        SelectionLbl: Label 'Validates a reclassification journal. Posting is a separate type.', Comment = 'is-IS=Staðfestir endurflokkun. Bókun er sérstök tegund.';
     begin
         exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
@@ -52,13 +55,27 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        Parameter: JsonObject;
     begin
-        exit(false);
+        Parameter.Add('name', 'templateName');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', true);
+        Parameter.Add('description', 'Item journal template. journalTemplateName is also accepted.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'batchName');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', true);
+        Parameter.Add('description', 'Item journal batch. journalBatchName is also accepted.');
+        Parameters.Add(Parameter);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('contentType', 'text/json');
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
@@ -68,7 +85,9 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -78,7 +97,9 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
-        exit(false);
+        Related.Add('Inventory.Reclassification.PreviewPost');
+        Related.Add('Inventory.Reclassification.Post');
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -93,12 +114,14 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Checks a reclassification journal. Refuses templates that are not Transfer.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'This is not a transfer order.';
+        exit(true);
     end;
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"
@@ -109,13 +132,17 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemJournalTemplate: Record "Item Journal Template";
         ItemJournalLine: Record "Item Journal Line";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
-        JournalTemplateName: Code[10];
-        JournalBatchName: Code[10];
-        LineNo: Integer;
+        TemplateName: Code[10];
+        BatchName: Code[10];
+        LineCount: Integer;
+        MissingBatchErr: Label 'templateName and batchName are required.', Locked = true;
+        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name', Locked = true;
+        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name', Locked = true;
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
@@ -123,25 +150,38 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
             exit;
 
         RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('journalTemplateName', Token) and Token.IsValue() then
-            JournalTemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(JournalTemplateName));
-        if RequestJson.Get('journalBatchName', Token) and Token.IsValue() then
-            JournalBatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(JournalBatchName));
-        if RequestJson.Get('lineNo', Token) and Token.IsValue() then
-            LineNo := Token.AsValue().AsInteger();
-        if not ItemJournalLine.Get(JournalTemplateName, JournalBatchName, LineNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, 'Reclassification journal line was not found.', 'lineNo', Format(LineNo), '', '');
+        if RequestJson.Get('templateName', Token) and Token.IsValue() then
+            TemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TemplateName))
+        else
+            if RequestJson.Get('journalTemplateName', Token) and Token.IsValue() then
+                TemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TemplateName));
+        if RequestJson.Get('batchName', Token) and Token.IsValue() then
+            BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName))
+        else
+            if RequestJson.Get('journalBatchName', Token) and Token.IsValue() then
+                BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName));
+        if (TemplateName = '') or (BatchName = '') then begin
+            Argument.RespondWithError(MissingBatchErr);
             exit;
         end;
-        if ItemJournalLine."Entry Type" <> ItemJournalLine."Entry Type"::Transfer then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, 'Line is not a reclassification journal line.', 'entryType', Format(ItemJournalLine."Entry Type"), '', '');
+        if not ItemJournalTemplate.Get(TemplateName) then begin
+            Argument.RespondWithError(StrSubstNo(TemplateNotFoundErr, TemplateName));
+            exit;
+        end;
+        if ItemJournalTemplate.Type <> ItemJournalTemplate.Type::Transfer then begin
+            Argument.RespondWithError(StrSubstNo(NotTransferErr, TemplateName));
             exit;
         end;
 
-        ItemJournalLine.TestField("Item No.");
-        ItemJournalLine.TestField(Quantity);
+        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
+        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::Transfer);
+        LineCount := ItemJournalLine.Count();
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('lineNo', LineNo);
+        ResponseJson.Add('messageType', 'Inventory.Reclassification.Check');
+        ResponseJson.Add('templateName', TemplateName);
+        ResponseJson.Add('batchName', BatchName);
+        ResponseJson.Add('postedLineCount', LineCount);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
