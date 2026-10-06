@@ -1,14 +1,5 @@
 namespace Origo.Bifrost.Inventory;
 
-/// <summary>
-/// Implementation of the Inventory.TransferOrder.Post message type.
-/// Posts a transfer order (ship and/or receive) via codeunit 5706 "TransferOrder-Post (Yes/No)".
-/// Posting type:
-///   * Non-direct transfer: caller must specify postingType = "Ship" or "Receive".
-///   * Direct transfer: postingType is ignored — BC reads "Direct Transfer Posting" from
-///     Inventory Setup and decides between Receipt+Shipment or single Direct Transfer.
-/// </summary>
-
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
@@ -16,12 +7,13 @@ using Origo.Bifrost;
 codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
     procedure IsEnabled(): Boolean
     var
-        TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
     begin
-        if not TransferHeader.WritePermission() then
+        if not DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
             exit(false);
         exit(PostingGate.HasPostingPermission());
     end;
@@ -57,6 +49,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Envelope := Parts.GetEnvelope('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -64,6 +57,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Target := Parts.GetTarget('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -71,6 +65,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Parameters := Parts.GetParameters('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -78,6 +73,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Response := Parts.GetResponse('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -85,6 +81,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Errors := Parts.GetErrors('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -92,10 +89,12 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Effect := Parts.GetEffect('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -103,14 +102,17 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Related := Parts.GetRelated('Inventory.TransferOrder.Post');
         exit(true);
     end;
+
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
+
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
+
     procedure GetOverview(var Overview: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -118,6 +120,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Overview := Parts.GetOverview('Inventory.TransferOrder.Post');
         exit(Overview <> '');
     end;
+
     procedure GetNotes(var Notes: Text): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -128,11 +131,12 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         DocumentLookup: Codeunit "Document Lookup ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
@@ -152,11 +156,12 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Locked = true;
         InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value', Locked = true;
     begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         if not PostingGate.AssertCanPost(Argument) then
             exit;
-
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
 
@@ -164,12 +169,9 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         DirectTransfer := TransferHeader."Direct Transfer";
         xLastShipmentNo := TransferHeader."Last Shipment No.";
         xLastReceiptNo := TransferHeader."Last Receipt No.";
-
         RequestJson := Argument.GetRequestJson();
 
         if DirectTransfer then begin
-            // For direct transfers, BC decides ship+receive vs single Direct Transfer
-            // based on Inventory Setup "Direct Transfer Posting".
             ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
@@ -182,8 +184,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
                         PostReceipt := true;
                     'shipreceive', 'ship+receive':
                         begin
-                            // For non-direct transfers, ShipReceive isn't a native option.
-                            // Caller should run Ship first, then Receive once goods arrive.
                             Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
                             exit;
                         end;
@@ -197,9 +197,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
                 exit;
             end;
 
-        // Configure and invoke the post codeunit. The subscriber overrides
-        // OnBeforeGetPostingOptions to inject our PostShipment/PostReceipt/PostTransfer choices
-        // and suppress the StrMenu prompt that GetPostingOptions otherwise raises.
         TransferHeader.SetHideValidationDialog(true);
         TransferPostSubscriber.SetChoices(PostShipment, PostReceipt, PostTransfer);
         BindSubscription(TransferPostSubscriber);
@@ -212,17 +209,11 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         UnbindSubscription(TransferPostSubscriber);
 
         TransferHeader.Find();
-
         BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    /// <summary>
-    /// For direct transfers, reads Inventory Setup "Direct Transfer Posting" and sets the
-    /// posting flags accordingly: Receipt and Shipment yields both ship and receive; Direct Transfer
-    /// yields the single-step transfer posting.
-    /// </summary>
     local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
         InventorySetup: Record "Inventory Setup";
@@ -248,7 +239,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             PostedShipmentNo := TransferHeader."Last Shipment No.";
         if TransferHeader."Last Receipt No." <> xLastReceiptNo then
             PostedReceiptNo := TransferHeader."Last Receipt No.";
-
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('postingType', PostingTypeText);
