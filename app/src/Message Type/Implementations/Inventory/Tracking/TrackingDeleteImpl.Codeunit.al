@@ -4,7 +4,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Tracking.Delete. Removes an unposted tracking specification. Posted ledger entries are not deleted.
+/// Inventory.Tracking.Delete. Removes an unposted tracking specification.
 /// </summary>
 codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {

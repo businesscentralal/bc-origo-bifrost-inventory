@@ -104,15 +104,38 @@ codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        InventoryPeriod: Record "Inventory Period";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        EndingDate: Date;
+        MissingDateErr: Label 'endingDate is required.', Locked = true;
+        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Period.Reopen');
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('endingDate', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDateErr, 'endingDate', '', '', '');
+            exit;
+        end;
+        EndingDate := Token.AsValue().AsDate();
+        if not InventoryPeriod.Get(EndingDate) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EndingDate), 'endingDate', '', '', '');
+            exit;
+        end;
+        if InventoryPeriod.Closed then begin
+            InventoryPeriod.Validate(Closed, false);
+            InventoryPeriod.Modify(true);
+        end;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
+        ResponseJson.Add('name', InventoryPeriod.Name);
+        ResponseJson.Add('closed', InventoryPeriod.Closed);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }

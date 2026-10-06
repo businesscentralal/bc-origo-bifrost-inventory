@@ -3,9 +3,6 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Assembly.History;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.Assembly.UndoPost. Calls Assembly-Post.Undo. Does not delete the posted assembly order.
-/// </summary>
 codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -14,7 +11,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", false, true));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::AssemblyOrders, Database::"Posted Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -24,17 +21,17 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Undoes a posted assembly order by writing corrective item ledger entries.');
+        exit('Undoes a posted assembly document through the standard posted assembly undo.');
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('undo assembly, reverse assembly');
+        exit('undo assembly, reverse posted assembly');
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Undoes a posted assembly order. Optional recreateOrder asks standard to recreate the order.');
+        exit('Undoes a posted assembly by document number.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -97,22 +94,43 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         exit(false);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        PostedAssemblyHeader: Record "Posted Assembly Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        UndoAssembly: Codeunit "Pstd. Assembly - Undo";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::AssemblyOrders, Database::"Posted Assembly Header", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
-        ResponseJson.Add('messageType', 'Inventory.Assembly.UndoPost');
+
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('documentNo', Token) then begin
+            Argument.RespondWithError('documentNo is required.');
+            exit;
+        end;
+        DocumentNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(DocumentNo));
+        if not PostedAssemblyHeader.Get(DocumentNo) then begin
+            Argument.RespondWithError('Posted assembly ' + DocumentNo + ' was not found.');
+            exit;
+        end;
+
+        UndoAssembly.SetHideDialog(true);
+        UndoAssembly.Run(PostedAssemblyHeader);
+
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('documentNo', DocumentNo);
         Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }
