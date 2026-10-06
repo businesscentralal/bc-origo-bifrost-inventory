@@ -123,6 +123,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
     var
         TransferHeader: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
+        DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         TotalsJson: JsonObject;
         LineQty: Decimal;
@@ -135,7 +136,7 @@ codeunit 70013419 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindTransferHeader(TransferHeader) then
+        if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
 
         // Replicates Page 5755 "Transfer Statistics".CalculateTotals

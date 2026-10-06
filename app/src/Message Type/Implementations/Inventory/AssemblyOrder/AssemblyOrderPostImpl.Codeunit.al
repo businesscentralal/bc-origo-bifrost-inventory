@@ -36,7 +36,7 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'post assembly, finish assembly, assembled, output the kit, consume components', Comment = 'is-IS=bóka samsetningu, ljúka samsetningu, samsett, nota íhluti';
+        KeywordsLbl: Label 'post assembly, finish assembly, assembled, output the kit, consume components', Comment = 'is-IS=bóka samsetningu, ljúka samsetningu, samsett, skila vörusetti, nota íhluti';
     begin
         exit(KeywordsLbl);
     end;
@@ -144,9 +144,10 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     var
         AssemblyHeader: Record "Assembly Header";
         PostedAsmHeader: Record "Posted Assembly Header";
+        DocumentLookup: Codeunit "Document Lookup ori";
+        RequestValueReader: Codeunit "Request Value Reader ori";
         AssemblyPost: Codeunit "Assembly-Post";
         PostingGate: Codeunit "Inv. Posting Gate ori";
-        Dispatcher: Codeunit "Dispatcher ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PostingDate: Date;
@@ -163,16 +164,16 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
             exit;
         RequestJson := Argument.GetRequestJson();
 
-        if not Argument.FindAssemblyHeader(AssemblyHeader) then
+        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
 
         // Optional: posting date override
-        if not Dispatcher.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             exit;
         ReplacePostingDate := PostingDate <> 0D;
 
         // Optional: quantity to assemble override
-        if not Dispatcher.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
             exit;
         if QuantityToAssemble > 0 then begin
             AssemblyHeader.SetHideValidationDialog(true);

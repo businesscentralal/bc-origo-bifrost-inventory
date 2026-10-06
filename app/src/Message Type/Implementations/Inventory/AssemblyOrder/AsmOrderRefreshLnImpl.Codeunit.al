@@ -135,6 +135,7 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
     var
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
+        DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         LinesBefore: Integer;
         LinesAfter: Integer;
@@ -142,7 +143,7 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindAssemblyHeader(AssemblyHeader) then
+        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
             exit;
 
         AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");

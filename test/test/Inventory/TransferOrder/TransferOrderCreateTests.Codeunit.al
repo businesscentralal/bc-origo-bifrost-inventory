@@ -207,4 +207,39 @@ codeunit 96913 "Transfer Order Create Tests"
         Assert.IsTrue(StrPos(ContractText, '200') > 0, 'Contract names the 200 line cap');
         Assert.IsTrue(StrPos(ContractText, 'lines') > 0, 'Contract mentions lines');
     end;
+
+    /// <summary>Typed reader migration refuses a malformed Boolean before creating a document.</summary>
+    [Test]
+    procedure Create_InvalidBoolean_ReturnsErrorWithoutHeader()
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+        HeaderCount: Integer;
+    begin
+        // PR #29 B2 | Time: WorkDate defaults; no date input | Risk: None
+        // [GIVEN] A valid route with a malformed typed option. The public surface is message dispatch.
+        Initialize();
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 0);
+        TransferHeader.SetRange("Transfer-from Code", FromLocation.Code);
+        HeaderCount := TransferHeader.Count();
+        RequestJson.Add('transferFromCode', FromLocation.Code);
+        RequestJson.Add('transferToCode', ToLocation.Code);
+        RequestJson.Add('inTransitCode', InTransitLocation.Code);
+        RequestJson.Add('directTransfer', 'not-a-boolean');
+        // [WHEN] Dispatch through the migrated production reader.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Create", RequestJson, ResponseJson);
+        // [THEN] The typed error names the input and leaves no header behind.
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'Malformed Boolean must fail');
+        Assert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
+        Assert.AreEqual('directTransfer', Token.AsValue().AsText(), 'Malformed input must be named');
+        Assert.AreEqual(HeaderCount, TransferHeader.Count(), 'Rejected input must not create a header');
+    end;
+
 }

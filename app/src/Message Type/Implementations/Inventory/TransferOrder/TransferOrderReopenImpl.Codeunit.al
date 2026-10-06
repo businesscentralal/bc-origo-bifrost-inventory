@@ -121,13 +121,14 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferHeader: Record "Transfer Header";
+        DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         StatusBefore: Option Open,Released;
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not Argument.FindTransferHeader(TransferHeader) then
+        if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
 
         StatusBefore := TransferHeader.Status;

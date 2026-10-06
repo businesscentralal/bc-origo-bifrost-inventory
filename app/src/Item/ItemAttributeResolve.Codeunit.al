@@ -185,10 +185,12 @@ codeunit 10036908 "Item Attribute Resolve ori"
 
     /// <summary>Resolves a single item for Create/Update (subject / data keys). Errors if none.</summary>
     procedure ResolveSingleItem(var Argument: Record "Message Argument ori"; var Item: Record Item): Boolean
+    var
+        DocumentLookup: Codeunit "Document Lookup ori";
     begin
         Item.Reset();
         Item.SetLoadFields("No.", SystemId, Blocked, Type);
-        if not Argument.FindItemRange(Item) then
+        if not DocumentLookup.FindItemRange(Argument, Item) then
             exit(false);
         if not Item.FindFirst() then begin
             Argument.RespondWithError('No items found matching the specified criteria.');
