@@ -1,10 +1,11 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.ItemApplication.Reapply. Uses the application worksheet, not an insert of table 339.
+/// Inventory.ItemApplication.Reapply. Calls Item Jnl.-Post Line.ReApply.
 /// </summary>
 codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -105,14 +106,44 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
+        RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
+        OutboundEntryNo: Integer;
+        InboundEntryNo: Integer;
+        MissingOutboundErr: Label 'outboundItemLedgerEntryNo is required.', Locked = true;
+        MissingInboundErr: Label 'inboundItemLedgerEntryNo is required.', Locked = true;
+        EntryNotFoundErr: Label 'Item ledger entry %1 was not found.', Comment = '%1 = entry no.', Locked = true;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Ledger Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        ResponseJson.Add('status', 'Accepted');
+
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('outboundItemLedgerEntryNo', Token) then begin
+            Argument.RespondWithError(MissingOutboundErr);
+            exit;
+        end;
+        OutboundEntryNo := Token.AsValue().AsInteger();
+        if not RequestJson.Get('inboundItemLedgerEntryNo', Token) then begin
+            Argument.RespondWithError(MissingInboundErr);
+            exit;
+        end;
+        InboundEntryNo := Token.AsValue().AsInteger();
+        if not ItemLedgerEntry.Get(OutboundEntryNo) then begin
+            Argument.RespondWithError(StrSubstNo(EntryNotFoundErr, OutboundEntryNo));
+            exit;
+        end;
+
+        ItemJnlPostLine.ReApply(ItemLedgerEntry, InboundEntryNo);
+
+        ResponseJson.Add('status', 'Success');
         ResponseJson.Add('messageType', 'Inventory.ItemApplication.Reapply');
+        ResponseJson.Add('outboundItemLedgerEntryNo', OutboundEntryNo);
+        ResponseJson.Add('inboundItemLedgerEntryNo', InboundEntryNo);
         Argument.SetResponseJson(ResponseJson);
     end;
 }
