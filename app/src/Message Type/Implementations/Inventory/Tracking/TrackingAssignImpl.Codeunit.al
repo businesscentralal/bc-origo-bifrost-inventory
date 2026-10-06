@@ -4,7 +4,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Tracking.Assign. Creates an unposted tracking specification for a source line.
+/// Inventory.Tracking.Assign. Assigns lot, serial, and package through Item Tracking Management (codeunit 6500).
 /// </summary>
 codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -39,7 +39,10 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
@@ -48,13 +51,45 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        Parameter: JsonObject;
     begin
-        exit(false);
+        Parameter.Add('name', 'itemNo');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', true);
+        Parameter.Add('description', 'Item number to track.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'lotNo');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Lot number.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'serialNo');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Serial number. Quantity must be 1.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'packageNo');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Package number.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'quantity');
+        Parameter.Add('type', 'number');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Quantity in base units. Default 1.');
+        Parameters.Add(Parameter);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('contentType', 'text/json');
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
@@ -64,7 +99,9 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', true);
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -74,7 +111,8 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
-        exit(false);
+        Related.Add('Inventory.Tracking.Delete');
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -89,12 +127,14 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Assigns lot, serial, and package tracking through Item Tracking Management.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Uses codeunit Item Tracking Management. Does not insert Tracking Specification directly.';
+        exit(true);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
@@ -105,6 +145,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TrackingSpecification: Record "Tracking Specification";
+        ItemTrackingManagement: Codeunit "Item Tracking Management";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -140,9 +181,9 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
             Argument.RespondWithError(SerialQtyErr);
             exit;
         end;
-        TrackingSpecification.Insert(true);
+        ItemTrackingManagement.InsertItemTracking(TrackingSpecification);
         ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', TrackingSpecification."Entry No.");
+        ResponseJson.Add('messageType', 'Inventory.Tracking.Assign');
         ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
         ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
         ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
