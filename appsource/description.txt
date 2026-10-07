@@ -1,0 +1,21 @@
+Keep item attributes up to date from other systems and assistants.
+
+Bifrost Inventory lets another system or an AI assistant read and maintain item attributes in Business Central. The results show on the item, under the standard item attributes; the app has no pages of its own. It is an add-on to Bifrost Foundation.
+
+Who it is for
+Companies that keep product information in more than one place, and teams that want an assistant to help enrich and clean item data.
+
+What it does
+- Shows an item's attributes in one go, including the ones that have no value yet.
+- Gives an item an attribute value safely: setting the same value again changes nothing, and replacing a value happens only when asked.
+- Changes a value and shows it before and after.
+- Defines a new attribute, with its option values, before any item uses it.
+- Feeds catalogue sync, product information enrichment and master-data work by an assistant.
+
+Requirements and pricing
+- Microsoft Dynamics 365 Business Central 28.0 or later, Essentials or Premium.
+- Bifrost Foundation, available separately on AppSource.
+- For prices, contact Origo (https://www.origo.is/) or your Business Central partner.
+- If you are a partner, contact The App Channel (https://www.theappchannel.com/).
+
+Bifrost Inventory does not replace Business Central or its extensions. It makes their data and business logic available to the people, routines and AI platforms your organisation already uses.
