@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>

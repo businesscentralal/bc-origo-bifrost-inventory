@@ -1,7 +1,8 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Counting.Journal;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
 codeunit 70013534 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"

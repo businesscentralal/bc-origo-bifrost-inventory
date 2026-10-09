@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
 /// <summary>
