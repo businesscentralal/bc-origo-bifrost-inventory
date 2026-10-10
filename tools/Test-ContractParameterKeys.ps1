@@ -6,7 +6,10 @@
     A contract lists the parameter names a caller may send under data (the "parameters" chapter). Nothing used to
     compare that list with the keys the implementation reads, so a key renamed in the contract only, or read in the
     code and never documented, stayed unnoticed. This guard reads the AL source under app/src and, for every message
-    type that has a contract:
+    type that has a contract. Declarations include ContractMgt.Parameter calls and direct
+    literal JSON arrays read into GetParameters' var JsonArray output. Literal JSON must be
+    an array of objects with nonempty string names. Unrelated receivers, comments and response
+    examples do not declare keys. Dynamic JSON construction is outside this literal reader:
 
       declared-not-read  A parameter the contract declares, whose name appears as a string literal nowhere in the code
                          the implementation reaches (its own procedures, the codeunits it calls and the procedures
@@ -405,6 +408,34 @@ function Get-PrunedObjects($Objects, $FalseFlags) {
     return $pruned
 }
 
+# Literal JSON chapters are also declarations. Bind the receiver to GetParameters' output,
+# rather than treating unrelated JSON examples or response fields as request parameters.
+function Add-LiteralParameterKeys([string]$Body, $Keys) {
+    # Preserve AL string literals while removing both comment forms.
+    $Body = [regex]::Replace($Body, "(?s)'(?:[^']|'')*'|//[^\r\n]*|/\*.*?\*/", {
+        param($match)
+        if ($match.Value.StartsWith('/')) { return ' ' }
+        return $match.Value
+    })
+    $signature = [regex]::Match($Body, '(?im)^\s*procedure\s+GetParameters\s*\(\s*var\s+(\w+)\s*:\s*JsonArray\s*\)')
+    if (-not $signature.Success) { return }
+    $receiver = [regex]::Escape($signature.Groups[1].Value)
+    $pattern = '(?im)^\s*' + $receiver + '\.ReadFrom\(\s*''((?:[^'']|'''')*)''\s*\)\s*;'
+    foreach ($literal in [regex]::Matches($Body, $pattern)) {
+        $json = $literal.Groups[1].Value.Replace("''", "'")
+        try { $chapter = ConvertFrom-Json -InputObject $json -AsHashtable -NoEnumerate -ErrorAction Stop }
+        catch { throw "Invalid literal GetParameters JSON: $($_.Exception.Message)" }
+        if ($chapter -isnot [array]) { throw 'Literal GetParameters chapter must be a JSON array.' }
+        foreach ($parameter in $chapter) {
+            if ($parameter -isnot [System.Collections.IDictionary] -or
+                $parameter['name'] -isnot [string] -or [string]::IsNullOrWhiteSpace($parameter['name'])) {
+                throw 'Each literal GetParameters entry must have a nonempty string name.'
+            }
+            [void]$Keys.Add($parameter['name'])
+        }
+    }
+}
+
 function Get-DeclaredKeys($Objects, [string]$ContractCodeunit) {
     $keys = New-Object 'System.Collections.Generic.HashSet[string]'
     $seen = @{}
@@ -420,6 +451,7 @@ function Get-DeclaredKeys($Objects, [string]$ContractCodeunit) {
         $parts = $entry -split '::', 2
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
             foreach ($m in $parameterLiteral.Matches($body)) { [void]$keys.Add($m.Groups[1].Value) }
+            Add-LiteralParameterKeys $body $keys
             # A parameter declared in a loop over a literal list: AdjustNames.AddRange('a', 'b') ... Parameter(AdjustNames.Get(i), ...)
             foreach ($loop in [regex]::Matches($body, '\.Parameter\(\s*(\w+)\.Get\(')) {
                 $listName = [regex]::Escape($loop.Groups[1].Value)
@@ -1366,9 +1398,74 @@ codeunit $id "Veto $name Impl ori"
     }
 }
 
+function Invoke-SelfTestLiteralParameters {
+    $root = Join-Path ([System.IO.Path]::GetTempPath()) ("contract-json-" + [guid]::NewGuid().ToString('N'))
+    $src = Join-Path $root 'app/src'
+    New-Item -ItemType Directory -Path $src -Force | Out-Null
+    try {
+        @'
+namespace Origo.Bifrost;
+enum 1 "Message Type ori"
+{
+    value(1; "Literal.Thing.Get")
+    {
+        Implementation = "Msg Interface ori" = "Literal Impl ori", "Msg Contract ori" = "Literal Impl ori";
+    }
+}
+codeunit 1 "Literal Impl ori" implements "Msg Interface ori", "Msg Contract ori"
+{
+    procedure GetParameters(var Chapter: JsonArray): Boolean
+    var
+        Other: JsonArray;
+    begin
+        // Chapter.ReadFrom('[{"name":"commentOnly"}]');
+        /*
+        Chapter.ReadFrom('[{"name":"blockCommentOnly"}]');
+        */
+        Other.ReadFrom('[{"name":"missing"},{"name":"unrelated"}]');
+        Chapter.ReadFrom('[{"name":"used","description":"caller''s key"},{"name":"unused"}]');
+        exit(true);
+    end;
+    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        RequestJson: JsonObject;
+        Token: JsonToken;
+    begin
+        RequestJson := Argument.GetRequestJson();
+        RequestJson.Get('used', Token);
+        RequestJson.Get('missing', Token);
+    end;
+}
+'@ | Set-Content -LiteralPath (Join-Path $src 'literal.al') -Encoding UTF8
+        # One AL object per file, matching Read-Source's existing object index.
+        $fixture = Get-Content -LiteralPath (Join-Path $src 'literal.al') -Raw
+        $start = $fixture.IndexOf('codeunit 1')
+        $fixture.Substring(0, $start) | Set-Content -LiteralPath (Join-Path $src 'literal.al') -Encoding UTF8
+        ("namespace Origo.Bifrost;`n" + $fixture.Substring($start)) | Set-Content -LiteralPath (Join-Path $src 'implementation.al') -Encoding UTF8
+        $found = Find-Offenders (Join-Path $root 'app')
+        $expected = @('Literal.Thing.Get|declared-not-read|unused', 'Literal.Thing.Get|read-not-declared|missing')
+        if ($found.Count -ne $expected.Count -or @($expected | Where-Object { -not $found.Contains($_) }).Count -gt 0) {
+            throw "Literal parameter SelfTest failed: $($found -join '; ')"
+        }
+        foreach ($invalid in @('{}', 'null', '[{"name":false}]', '[{"name":""}]', '[null]', '[broken')) {
+            $body = "procedure GetParameters(var Chapter: JsonArray): Boolean`nbegin`nChapter.ReadFrom('$invalid');`nend;"
+            $keys = New-Object 'System.Collections.Generic.HashSet[string]'
+            $rejected = $false
+            try { Add-LiteralParameterKeys $body $keys } catch { $rejected = $true }
+            if (-not $rejected) { throw "Literal parameter SelfTest accepted invalid chapter: $invalid" }
+        }
+        $keys = New-Object 'System.Collections.Generic.HashSet[string]'
+        Add-LiteralParameterKeys "procedure GetParameters(var Chapter: JsonArray): Boolean`nbegin`nChapter.ReadFrom('[]');`nend;" $keys
+        if ($keys.Count -ne 0) { throw 'Empty literal parameter array declared a key.' }
+        Write-Host 'SelfTest (literal parameters: mismatch, receiver, comments, escaping, six invalid chapters, empty array) passed.'
+    }
+    finally { Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue }
+}
+
 if ($SelfTest) {
     Invoke-SelfTest
     Invoke-SelfTestConditionalParameters
+    Invoke-SelfTestLiteralParameters
     exit 0
 }
 
