@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 
 /// <summary>Verifies the Msg Contract and Msg Discovery rollout for all Inventory message types.</summary>
 codeunit 96921 "Inventory Contract Batch Tests"
@@ -46,10 +47,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure InventoryEffects_MatchOperation()
     begin
-        AssertEffect('Item.Attribute.Get', 'read');
-        AssertEffect('Item.Attribute.Create', 'write');
-        AssertEffect('Item.Attribute.Update', 'write');
-        AssertEffect('Item.AttributeDefinition.Create', 'write');
+        AssertEffect('Inventory.Attribute.Get', 'read');
+        AssertEffect('Inventory.Attribute.Create', 'write');
+        AssertEffect('Inventory.Attribute.Update', 'write');
+        AssertEffect('Inventory.AttributeDefinition.Create', 'write');
         AssertEffect('Inventory.TransferOrder.Create', 'write');
         AssertEffect('Inventory.TransferOrder.Release', 'write');
         AssertEffect('Inventory.TransferOrder.Reopen', 'write');
@@ -83,10 +84,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure InventoryTypes() Types: List of [Text]
     begin
-        Types.Add('Item.Attribute.Get');
-        Types.Add('Item.Attribute.Create');
-        Types.Add('Item.Attribute.Update');
-        Types.Add('Item.AttributeDefinition.Create');
+        Types.Add('Inventory.Attribute.Get');
+        Types.Add('Inventory.Attribute.Create');
+        Types.Add('Inventory.Attribute.Update');
+        Types.Add('Inventory.AttributeDefinition.Create');
         Types.Add('Inventory.TransferOrder.Create');
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');
@@ -110,13 +111,13 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('effect');
         Chapters.Add('metering');
         Chapters.Add('related');
-        if TypeName <> 'Item.AttributeDefinition.Create' then
+        if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Item.Attribute.Get', 'Item.Attribute.Create', 'Item.Attribute.Update', 'Item.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');
-        if TypeName in ['Item.Attribute.Get', 'Item.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.AssemblyOrder.Create'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.AssemblyOrder.Create'] then
             Chapters.Add('examples');
         Chapters.Add('overview');
     end;
@@ -129,7 +130,257 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Names := MessageType.Names();
         Ordinals := MessageType.Ordinals();
+        LibraryAssert.IsTrue(Names.Contains(TypeName), 'Message catalogue does not register ' + TypeName + '.');
         exit(Ordinals.Get(Names.IndexOf(TypeName)));
+    end;
+
+    /// <summary>Resolves the real Get catalogue entry and checks its existing read chapters.</summary>
+    [Test]
+    procedure AttributeGet_RegisteredContract_DeclaresReadChapters()
+    begin
+        AssertAttributeContract('Inventory.Attribute.Get', 10036893,
+            'includeUnassigned:boolean:false,attributeNames:array:false,attributeIds:array:false',
+            'status:string,items:array', 'read', true, 5, 3, 1,
+            'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', '');
+    end;
+
+    /// <summary>Resolves the real Create catalogue entry and checks required mapping inputs.</summary>
+    [Test]
+    procedure AttributeCreate_RegisteredContract_DeclaresWriteChapters()
+    begin
+        AssertAttributeContract('Inventory.Attribute.Create', 10036894,
+            'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
+            'write', false, 7, 2, 0,
+            'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.',
+            'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.');
+    end;
+
+    /// <summary>Resolves the real Update catalogue entry and preserves existing mapping errors.</summary>
+    [Test]
+    procedure AttributeUpdate_RegisteredContract_DeclaresWriteChapters()
+    begin
+        AssertAttributeContract('Inventory.Attribute.Update', 10036895,
+            'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
+            'write', false, 6, 2, 0,
+            'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.',
+            'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.');
+    end;
+
+    /// <summary>Resolves the real Definition catalogue entry without an Item or document target.</summary>
+    [Test]
+    procedure AttributeDefinition_RegisteredContract_HasNoTarget()
+    begin
+        AssertAttributeContract('Inventory.AttributeDefinition.Create', 10036896,
+            'name:string:true,type:string:true,unitOfMeasure:string:false,optionValues:array:false',
+            'status:string,attributeId:integer,attributeName:string,type:string,createdValues:array',
+            'write', false, 4, 2, 1,
+            'Creates an Item Attribute definition and optional Option values independently of an Item.', '');
+    end;
+
+    local procedure AssertAttributeContract(TypeName: Text; ExpectedOrdinal: Integer; ParameterSpec: Text; ResponseSpec: Text; ExpectedEffect: Text; Idempotent: Boolean; ErrorCount: Integer; RelatedCount: Integer; ExampleCount: Integer; ExpectedOverview: Text; ExpectedNotes: Text)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        ContractInterface: Interface "Msg Contract ori";
+        Contract: JsonObject;
+        Envelope: JsonObject;
+        Response: JsonObject;
+        Effect: JsonObject;
+        Workflow: JsonObject;
+        Metering: JsonObject;
+        Parameters: JsonArray;
+        Target: JsonArray;
+        Errors: JsonArray;
+        Related: JsonArray;
+        Examples: JsonArray;
+        Token: JsonToken;
+        Overview: Text;
+        Notes: Text;
+    begin
+        LibraryAssert.AreEqual(ExpectedOrdinal, OrdinalOf(TypeName), 'Exact registered Attribute ordinal.');
+        MessageType := Enum::"Message Type ori".FromInteger(ExpectedOrdinal);
+        ContractInterface := MessageType;
+        LibraryAssert.IsTrue(ContractInterface.GetParameters(Parameters), 'Attribute parameters chapter is present.');
+        AssertAttributeParameters(Parameters, ParameterSpec);
+        LibraryAssert.IsTrue(ContractInterface.GetResponse(Response), 'Attribute response chapter is present.');
+        AssertJsonText(Response, 'contentType', 'text/json');
+        Response.Get('fields', Token);
+        AssertAttributeFields(Token.AsArray(), ResponseSpec);
+        LibraryAssert.IsTrue(ContractInterface.GetEffect(Effect), 'Attribute effect chapter is present.');
+        AssertJsonText(Effect, 'effect', ExpectedEffect);
+        Effect.Get('idempotent', Token);
+        LibraryAssert.AreEqual(Idempotent, Token.AsValue().AsBoolean(), 'Exact idempotence declaration.');
+        LibraryAssert.IsTrue(ContractInterface.GetEnvelope(Envelope), 'Attribute envelope chapter is present.');
+        AssertAttributeTarget(ContractInterface, Envelope, TypeName, Target);
+        LibraryAssert.IsTrue(ContractInterface.GetErrors(Errors), 'Existing error chapter is present.');
+        LibraryAssert.AreEqual(ErrorCount, Errors.Count(), 'Exact existing error count.');
+        AssertAttributeError(Errors, TypeName);
+        LibraryAssert.IsTrue(ContractInterface.GetRelated(Related), 'Existing related chapter is present.');
+        LibraryAssert.AreEqual(RelatedCount, Related.Count(), 'Exact existing related count.');
+        // Item related names remain existing payloads; no new public Item aliases are registered here.
+        LibraryAssert.AreEqual(ExampleCount > 0, ContractInterface.GetExamples(Examples), 'Exact example chapter presence.');
+        LibraryAssert.AreEqual(ExampleCount, Examples.Count(), 'Exact existing example count.');
+        LibraryAssert.IsTrue(ContractInterface.GetOverview(Overview), 'Overview is present.');
+        LibraryAssert.AreEqual(ExpectedOverview, Overview, 'Exact existing overview.');
+        LibraryAssert.AreEqual(ExpectedNotes <> '', ContractInterface.GetNotes(Notes), 'Exact notes chapter presence.');
+        LibraryAssert.AreEqual(ExpectedNotes, Notes, 'Exact existing notes.');
+        LibraryAssert.IsFalse(ContractInterface.GetWorkflow(Workflow), 'Attribute workflow is absent.');
+        LibraryAssert.IsFalse(ContractInterface.GetMetering(Metering), 'Attribute app adds no metering chapter.');
+        LibraryAssert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Real contract reader resolves the catalogue interface.');
+        LibraryAssert.IsFalse(Contract.Contains('workflow'), 'Reader must omit workflow.');
+        LibraryAssert.AreEqual(ExpectedNotes <> '', Contract.Contains('notes'), 'Reader notes presence.');
+        LibraryAssert.IsTrue(Contract.Contains('metering'), 'Foundation composes metering even without app additions.');
+        AssertAttributeLegacyPayloads(TypeName, Contract);
+    end;
+
+    local procedure AssertAttributeParameters(Parameters: JsonArray; Spec: Text)
+    var
+        Specs: List of [Text];
+        Parts: List of [Text];
+        Entry: JsonObject;
+        Token: JsonToken;
+        Expected: Text;
+        Index: Integer;
+    begin
+        Specs := Spec.Split(',');
+        LibraryAssert.AreEqual(Specs.Count(), Parameters.Count(), 'Exact parameter count; other chapters cannot donate fields.');
+        foreach Expected in Specs do begin
+            Parts := Expected.Split(':');
+            Parameters.Get(Index, Token);
+            Entry := Token.AsObject();
+            AssertJsonText(Entry, 'name', Parts.Get(1));
+            AssertJsonText(Entry, 'type', Parts.Get(2));
+            Entry.Get('required', Token);
+            LibraryAssert.AreEqual(Parts.Get(3) = 'true', Token.AsValue().AsBoolean(), 'Exact required flag.');
+            LibraryAssert.IsFalse(Entry.Contains('default'), 'Existing helper has no typed default field; preserve the schema.');
+            if Parts.Get(1) in ['includeUnassigned', 'allowBlocked'] then begin
+                Entry.Get('description', Token);
+                LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Default false.'), 'Existing false default description is preserved.');
+            end;
+            Index += 1;
+        end;
+    end;
+
+    local procedure AssertAttributeFields(Fields: JsonArray; Spec: Text)
+    var
+        Specs: List of [Text];
+        Parts: List of [Text];
+        Entry: JsonObject;
+        Token: JsonToken;
+        Expected: Text;
+        Index: Integer;
+    begin
+        Specs := Spec.Split(',');
+        LibraryAssert.AreEqual(Specs.Count(), Fields.Count(), 'Exact response field count.');
+        foreach Expected in Specs do begin
+            Parts := Expected.Split(':');
+            Fields.Get(Index, Token);
+            Entry := Token.AsObject();
+            AssertJsonText(Entry, 'name', Parts.Get(1));
+            AssertJsonText(Entry, 'type', Parts.Get(2));
+            Index += 1;
+        end;
+    end;
+
+    local procedure AssertAttributeTarget(ContractInterface: Interface "Msg Contract ori"; Envelope: JsonObject; TypeName: Text; var Target: JsonArray)
+    var
+        Subject: JsonObject;
+        Entry: JsonObject;
+        Token: JsonToken;
+        Sources: List of [Text];
+        Source: Text;
+        Index: Integer;
+    begin
+        Envelope.Get('subject', Token);
+        Subject := Token.AsObject();
+        if TypeName = 'Inventory.AttributeDefinition.Create' then begin
+            AssertJsonText(Subject, 'use', 'notUsed');
+            Subject.Get('forms', Token);
+            LibraryAssert.AreEqual(0, Token.AsArray().Count(), 'Definition has no subject forms.');
+            LibraryAssert.IsFalse(ContractInterface.GetTarget(Target), 'Definition target is absent.');
+            LibraryAssert.AreEqual(0, Target.Count(), 'Definition does not fall back to document identifiers.');
+            exit;
+        end;
+        AssertJsonText(Subject, 'use', 'optional');
+        LibraryAssert.IsTrue(ContractInterface.GetTarget(Target), 'Item target is present.');
+        LibraryAssert.AreEqual(5, Target.Count(), 'Exact Item target count.');
+        Sources.Add('subject');
+        Sources.Add('subject');
+        Sources.Add('data.itemNo');
+        Sources.Add('data.itemId, data.id, data.systemId, data.recordSystemId');
+        Sources.Add('data.tableView');
+        foreach Source in Sources do begin
+            Target.Get(Index, Token);
+            Entry := Token.AsObject();
+            AssertJsonText(Entry, 'source', Source);
+            Entry.Get('description', Token);
+            LibraryAssert.IsFalse(Token.AsValue().AsText().Contains('document header'), 'Item has no document fallback.');
+            Index += 1;
+        end;
+    end;
+
+    local procedure AssertAttributeError(Errors: JsonArray; TypeName: Text)
+    var
+        Token: JsonToken;
+        Entry: JsonObject;
+        Index: Integer;
+        Expected: Text;
+    begin
+        case TypeName of
+            'Inventory.Attribute.Get': begin
+                Index := 4;
+                Expected := 'No items found matching the specified criteria.';
+            end;
+            'Inventory.Attribute.Create': begin
+                Index := 5;
+                Expected := 'Item "%1" already has attribute "%2" with a different value.';
+            end;
+            'Inventory.Attribute.Update': begin
+                Index := 5;
+                Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
+            end;
+            'Inventory.AttributeDefinition.Create': begin
+                Index := 3;
+                Expected := 'Item attribute "%1" already exists.';
+            end;
+        end;
+        Errors.Get(Index, Token);
+        Entry := Token.AsObject();
+        AssertJsonText(Entry, 'error', Expected);
+    end;
+
+    local procedure AssertAttributeLegacyPayloads(TypeName: Text; Contract: JsonObject)
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Legacy: Text;
+    begin
+        Legacy := 'Item.' + TypeName.Substring(11);
+        AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
+        AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
+        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        AssertChapterJson(Contract, 'errors', Parts.GetErrors(Legacy).AsToken());
+        AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
+        AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
+        if TypeName <> 'Inventory.AttributeDefinition.Create' then
+            AssertChapterJson(Contract, 'target', Parts.GetTarget(Legacy).AsToken())
+        else
+            LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create'] then
+            AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken())
+        else
+            LibraryAssert.IsFalse(Contract.Contains('examples'), 'Create and Update examples remain absent.');
+    end;
+
+    local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
+    var
+        Actual: JsonToken;
+        ActualJson: Text;
+        ExpectedJson: Text;
+    begin
+        LibraryAssert.IsTrue(Contract.Get(Chapter, Actual), 'Missing chapter ' + Chapter + '.');
+        Actual.WriteTo(ActualJson);
+        Expected.WriteTo(ExpectedJson);
+        LibraryAssert.AreEqual(ExpectedJson, ActualJson, 'Inventory and legacy Item helper chapter payloads match: ' + Chapter + '.');
     end;
 
     /// <summary>Checks published costing parameter defaults through the contract reader.</summary>
