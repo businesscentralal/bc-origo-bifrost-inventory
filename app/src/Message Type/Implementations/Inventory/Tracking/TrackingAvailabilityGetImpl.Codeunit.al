@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 

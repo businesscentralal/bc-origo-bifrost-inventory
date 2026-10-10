@@ -7,13 +7,14 @@ codeunit 70013445 "Inventory Contract Parts ori"
 {
     Access = Internal;
 
+    /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEnvelope(MessageType: Text): JsonObject
     var
         Subject: JsonObject;
         Forms: JsonArray;
         Envelope: JsonObject;
     begin
-        if MessageType in ['Item.AttributeDefinition.Create'] then begin
+        if MessageType in ['Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create'] then begin
             Subject.Add('use', 'notUsed');
             Subject.Add('forms', Forms);
             Subject.Add('description', 'The attribute definition is created from data; no subject record is used.');
@@ -31,13 +32,14 @@ codeunit 70013445 "Inventory Contract Parts ori"
         exit(Envelope);
     end;
 
+    /// <summary>Builds the existing target chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetTarget(MessageType: Text) Target: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        if MessageType = 'Item.AttributeDefinition.Create' then
+        if MessageType in ['Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create'] then
             exit;
-        if MessageType in ['Item.Attribute.Get', 'Item.Attribute.Create', 'Item.Attribute.Update'] then begin
+        if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then begin
             Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item.'));
             Target.Add(ContractMgt.TargetEntry('subject', 'item no.', 'The No. of the Item.'));
             Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The Item No. to read or change.'));
@@ -54,28 +56,29 @@ codeunit 70013445 "Inventory Contract Parts ori"
             Target.Add(ContractMgt.TargetEntry('data.documentNo, data.assemblyOrderNo, data.no', 'document no.', 'The Assembly Order No.'));
     end;
 
+    /// <summary>Builds the existing parameters chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetParameters(MessageType: Text) Parameters: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 begin
                     Parameters.Add(ContractMgt.Parameter('includeUnassigned', 'boolean', false, 'Include defined attributes with no value assigned to the item. Default false.'));
                     Parameters.Add(ContractMgt.Parameter('attributeNames', 'array', false, 'Filter attributes by name.'));
                     Parameters.Add(ContractMgt.Parameter('attributeIds', 'array', false, 'Filter attributes by numeric attribute id.'));
                 end;
-            'Item.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
                     Parameters.Add(ContractMgt.Parameter('attributes', 'array', true, 'Attribute mapping objects containing name or id, value, and optional type-specific values.'));
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
                 end;
-            'Item.Attribute.Update':
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Parameters.Add(ContractMgt.Parameter('attributes', 'array', true, 'Existing attribute mapping objects containing name or id and the replacement value.'));
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
                 end;
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Parameters.Add(ContractMgt.Parameter('name', 'string', true, 'The new attribute definition name.'));
                     Parameters.Add(ContractMgt.Parameter('type', 'string', true, 'Option, Text, Integer, Decimal or Date.'));
@@ -120,6 +123,7 @@ codeunit 70013445 "Inventory Contract Parts ori"
         end;
     end;
 
+    /// <summary>Builds the existing response chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetResponse(MessageType: Text) Response: JsonObject
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -127,18 +131,18 @@ codeunit 70013445 "Inventory Contract Parts ori"
     begin
         Response.Add('contentType', 'text/json');
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 begin
                     Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when item attributes were read.'));
                     Fields.Add(ContractMgt.ResponseField('items', 'array', 'Items and their attribute values.'));
                 end;
-            'Item.Attribute.Create', 'Item.Attribute.Update':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the mappings were written.'));
                     Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The resolved Item No.'));
                     Fields.Add(ContractMgt.ResponseField('results', 'array', 'The resulting attribute mappings, including changed and value information.'));
                 end;
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the definition was created.'));
                     Fields.Add(ContractMgt.ResponseField('attributeId', 'integer', 'The new attribute id.'));
@@ -248,31 +252,32 @@ codeunit 70013445 "Inventory Contract Parts ori"
         Response.Add('fields', Fields);
     end;
 
+    /// <summary>Builds the existing errors chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetErrors(MessageType: Text) Errors: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        if MessageType in ['Item.Attribute.Get', 'Item.Attribute.Create', 'Item.Attribute.Update'] then
+        if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then
             AddLookupErrors(Errors, 'Item');
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
             AddLookupErrors(Errors, 'Transfer Header');
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
             AddLookupErrors(Errors, 'Assembly Header');
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
-            'Item.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" already has attribute "%2" with a different value.', 'The mapping conflicts and overwrite is false.', 'Set overwrite to true or use Item.Attribute.Update.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
                 end;
-            'Item.Attribute.Update':
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
                 end;
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
@@ -331,43 +336,45 @@ codeunit 70013445 "Inventory Contract Parts ori"
             'A SystemId or document identifier cannot be read.', 'Send a GUID for SystemId keys and text for document numbers.'));
     end;
 
+    /// <summary>Builds the existing effect chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEffect(MessageType: Text) Effect: JsonObject
     begin
         if MessageType in ['Inventory.TransferOrder.Post', 'Inventory.AssemblyOrder.Post'] then
             Effect.Add('effect', 'irreversible')
         else
-            if MessageType in ['Item.Attribute.Create', 'Item.Attribute.Update', 'Item.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen'] then
+            if MessageType in ['Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update', 'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen'] then
                 Effect.Add('effect', 'write')
             else
                 Effect.Add('effect', 'read');
         Effect.Add('changes', 'The operation changes Business Central inventory records only as described by the message type.');
-        Effect.Add('idempotent', MessageType in ['Item.Attribute.Get', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics', 'Inventory.AssemblyOrder.RefreshLines', 'Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen']);
+        Effect.Add('idempotent', MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics', 'Inventory.AssemblyOrder.RefreshLines', 'Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen']);
         Effect.Add('permissionSet', 'BIFROST API ori; BIFROST InvPost ori for posting');
         Effect.Add('preconditions', 'The target record exists, the caller has the required permission and Business Central setup permits the operation.');
     end;
 
+    /// <summary>Builds the existing related chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetRelated(MessageType: Text) Related: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 begin
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Assign a missing attribute value.'));
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Update', 'Replace an existing attribute mapping.'));
                     Related.Add(ContractMgt.RelatedEntry('Item.AttributeDefinition.Create', 'Create a new attribute definition.'));
                 end;
-            'Item.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Update', 'Change an existing mapping instead of creating it.'));
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read assigned and unassigned values.'));
                 end;
-            'Item.Attribute.Update':
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Create a mapping that does not exist.'));
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read the current mapping first.'));
                 end;
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read definitions and values.'));
                     Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Assign the new definition to an item.'));
@@ -425,6 +432,7 @@ codeunit 70013445 "Inventory Contract Parts ori"
         end;
     end;
 
+    /// <summary>Builds the existing workflow chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetWorkflow(MessageType: Text) Workflow: JsonObject
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -461,14 +469,15 @@ codeunit 70013445 "Inventory Contract Parts ori"
         Workflow.Add('steps', Steps);
     end;
 
+    /// <summary>Builds the existing examples chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetExamples(MessageType: Text) Examples: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Examples.Add(ContractMgt.Example('Read item attributes', '{"subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 Examples.Add(ContractMgt.Example('Create an option definition', '{"data":{"name":"Finish","type":"Option","optionValues":["Matte","Gloss"]}}', '{"status":"Success","attributeId":2,"attributeName":"Finish","type":"Option","createdValues":[]}'));
             'Inventory.TransferOrder.Create':
                 Examples.Add(ContractMgt.Example('Create a transfer order', '{"data":{"transferFromCode":"BLUE","transferToCode":"RED","directTransfer":true}}', '{"status":"Success","documentNo":"TO000456","statusAfter":"Open"}'));
@@ -477,16 +486,17 @@ codeunit 70013445 "Inventory Contract Parts ori"
         end;
     end;
 
+    /// <summary>Builds the existing overview chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetOverview(MessageType: Text) Overview: Text
     begin
         case MessageType of
-            'Item.Attribute.Get':
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Overview := 'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.';
-            'Item.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 Overview := 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.';
-            'Item.Attribute.Update':
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 Overview := 'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.';
-            'Item.AttributeDefinition.Create':
+            'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 Overview := 'Creates an Item Attribute definition and optional Option values independently of an Item.';
             'Inventory.TransferOrder.Create':
                 Overview := 'Creates a Transfer Order header and optional lines. The call allocates a new document number and is not idempotent.';
@@ -517,12 +527,13 @@ codeunit 70013445 "Inventory Contract Parts ori"
         end;
     end;
 
+    /// <summary>Builds the existing notes chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetNotes(MessageType: Text) Notes: Text
     begin
         case MessageType of
-            'Item.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 Notes := 'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.';
-            'Item.Attribute.Update':
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 Notes := 'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.';
             'Inventory.TransferOrder.Create':
                 Notes := 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.';
