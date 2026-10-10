@@ -25,7 +25,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run Adjust Cost - Item Entries, report 795, with item filters |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
-| `Inventory.CostToGL.Post` | Inbound | Post inventory cost to G/L, report 1002, with item filters |
+| `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing its Post option; completion does not prove G/L posting |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
 | `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
 | `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |

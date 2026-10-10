@@ -130,7 +130,6 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
         DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         DocumentLookup: Codeunit "Document Lookup ori";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;
         StatusBefore: Text;

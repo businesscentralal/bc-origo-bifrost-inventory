@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 
+### Fixed (2026-10-10) - admitted canonical compiler and contract repairs
+
+- Asm. Order Release Impl ori (70013426) retains one DomainGate local declaration; the existing release gates and execution body are unchanged.
+- Adjust Cost Run Impl ori (70013460) and Cost To GL Post Impl ori (70013462) supply their missing message metadata and contract members. The contracts disclose effective filter limits, report options, error paths and the absence of posting, rollback or safe-retry guarantees; existing executable procedures are unchanged. These are the exact admitted PR #90 source changes.
+- Inventory Contract Batch Tests (96921) retains its three existing tests and adds six metadata regressions for typed defaults, filter preconditions, errors, report options and reused chapter outputs. Runtime verification remains pending.
+
 ### Fixed (2026-10-10) - UAT dependency installation
 
 - UAT feature-app deployment uses the Foundation app already deployed by its own pipeline in Dev scope, avoiding an unauthorized AppSource Foundation installation. `.github/AL-Go-Settings.json`: `DeployToBifrost.DependencyInstallMode = "ignore"`. AppSource delivery is unchanged; no AL objects or IDs change.
