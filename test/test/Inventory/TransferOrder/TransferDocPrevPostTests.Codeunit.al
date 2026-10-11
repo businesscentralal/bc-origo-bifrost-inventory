@@ -97,13 +97,13 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        // [SCENARIO] Receipt and Shipment preview of a direct transfer predicts a transfer shipment, not a direct transfer document.
+        // [SCENARIO] Receipt and Shipment preview of a direct transfer returns the shipment-and-receipt entry count.
         Initialize();
         Helper.SetDirectTransferPosting(false, OriginalSetup);
         Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
         Helper.RestoreDirectTransferPosting(OriginalSetup);
-        AssertPreviewDocument(ResponseJson, 'Transfer Shipment Header', 'Transfer Shipment Header', 'Direct Transfer Header');
+        AssertDirectTransferPreview(ResponseJson, 8);
         Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
     end;
 
@@ -115,29 +115,32 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        // [SCENARIO] Direct Transfer posting preview predicts one direct transfer document and no transfer shipment.
+        // [SCENARIO] Direct Transfer posting preview predicts one direct transfer and fewer entries than shipment and receipt.
         Initialize();
         Helper.SetDirectTransferPosting(true, OriginalSetup);
         Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
         Helper.RestoreDirectTransferPosting(OriginalSetup);
-        AssertPreviewDocument(ResponseJson, 'Direct Transfer Header', 'Direct Trans. Header', 'Transfer Shipment Header');
+        AssertDirectTransferPreview(ResponseJson, 4);
         Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
     end;
 
-    local procedure AssertPreviewDocument(ResponseJson: JsonObject; ExpectedDocument: Text; AlternateExpected: Text; AbsentDocument: Text)
+    local procedure AssertDirectTransferPreview(ResponseJson: JsonObject; ExpectedEntryCount: Integer)
     var
-        StatusToken: JsonToken;
-        ResponseText: Text;
-        FoundExpected: Boolean;
+        Token: JsonToken;
+        Predicted: JsonObject;
     begin
-        ResponseJson.WriteTo(ResponseText);
-        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
-        if StatusToken.AsValue().AsText() <> 'Success' then
-            Assert.AreEqual('Success', CopyStr(ResponseText, 1, 400), 'Status should be Success');
-        FoundExpected := ResponseText.Contains(ExpectedDocument) or ResponseText.Contains(AlternateExpected);
-        if not FoundExpected then
-            Assert.AreEqual(ExpectedDocument, CopyStr(ResponseText, 1, 400), 'Preview should name the posted document');
-        Assert.IsFalse(ResponseText.Contains(AbsentDocument), 'Preview included a document from the other posting method');
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Status should be Success');
+        Assert.IsTrue(ResponseJson.Get('directTransfer', Token), 'directTransfer missing');
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'directTransfer');
+        Assert.IsTrue(ResponseJson.Get('rollback', Token), 'rollback missing');
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'rollback');
+        Assert.IsTrue(ResponseJson.Get('entryCount', Token), 'entryCount missing');
+        Assert.AreEqual(ExpectedEntryCount, Token.AsValue().AsInteger(), 'entryCount');
+        Assert.IsTrue(ResponseJson.Get('predictedNumbers', Token), 'predictedNumbers missing');
+        Predicted := Token.AsObject();
+        Assert.IsTrue(Predicted.Get('postedDirectTransferNo', Token), 'postedDirectTransferNo missing');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'postedDirectTransferNo');
     end;
 }
