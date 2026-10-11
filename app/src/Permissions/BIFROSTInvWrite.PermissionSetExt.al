@@ -13,6 +13,7 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         tabledata "Item Attribute Value" = RIMD,
         tabledata "Item Attribute Value Mapping" = RIMD,
         tabledata "Item Attr. Value Translation" = RIMD,
+        tabledata "Inventory Setup ori" = R,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Create Impl ori" = X,
         codeunit "Item Attr. Create Process ori" = X,

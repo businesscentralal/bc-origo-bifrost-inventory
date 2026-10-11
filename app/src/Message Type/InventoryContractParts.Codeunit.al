@@ -360,24 +360,24 @@ codeunit 70013445 "Inventory Contract Parts ori"
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 begin
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Assign a missing attribute value.'));
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Update', 'Replace an existing attribute mapping.'));
-                    Related.Add(ContractMgt.RelatedEntry('Item.AttributeDefinition.Create', 'Create a new attribute definition.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Create', 'Assign a missing attribute value.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Update', 'Replace an existing attribute mapping.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.AttributeDefinition.Create', 'Create a new attribute definition.'));
                 end;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Update', 'Change an existing mapping instead of creating it.'));
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read assigned and unassigned values.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Update', 'Change an existing mapping instead of creating it.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Get', 'Read assigned and unassigned values.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Create a mapping that does not exist.'));
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read the current mapping first.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Create', 'Create a mapping that does not exist.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Get', 'Read the current mapping first.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Get', 'Read definitions and values.'));
-                    Related.Add(ContractMgt.RelatedEntry('Item.Attribute.Create', 'Assign the new definition to an item.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Get', 'Read definitions and values.'));
+                    Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Create', 'Assign the new definition to an item.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin

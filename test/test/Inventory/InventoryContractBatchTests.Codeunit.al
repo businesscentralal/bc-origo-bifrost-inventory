@@ -217,7 +217,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertAttributeError(Errors, TypeName);
         LibraryAssert.IsTrue(ContractInterface.GetRelated(Related), 'Existing related chapter is present.');
         LibraryAssert.AreEqual(RelatedCount, Related.Count(), 'Exact existing related count.');
-        // Item related names remain existing payloads; no new public Item aliases are registered here.
+        // Related names are the registered Inventory.Attribute message types. Legacy selectors return the same chapter.
         LibraryAssert.AreEqual(ExampleCount > 0, ContractInterface.GetExamples(Examples), 'Exact example chapter presence.');
         LibraryAssert.AreEqual(ExampleCount, Examples.Count(), 'Exact existing example count.');
         LibraryAssert.IsTrue(ContractInterface.GetOverview(Overview), 'Overview is present.');
@@ -440,7 +440,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Error.Get('when', ValueToken);
         LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
-        GetNamedMember(Contract, 'errors', 'code', 'InvalidOperation', Error);
+        GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', Error);
         Error.Get('when', ValueToken);
         LibraryAssert.AreEqual('The standard report Run returns false; response carries GetLastErrorText. This branch precedes response-echo conversion.', ValueToken.AsValue().AsText(), 'Do not describe post-report echo conversion as preflight validation.');
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
