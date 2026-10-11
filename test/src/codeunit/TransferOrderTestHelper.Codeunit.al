@@ -4,6 +4,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
@@ -126,5 +127,54 @@ codeunit 96904 "Transfer Order Test Helper"
             ResponseContent.GetSubText(ResponseText, 1);
             ResponseJson.ReadFrom(ResponseText);
         end;
+    end;
+
+    /// <summary>
+    /// Creates a released direct transfer for the given line quantity, with matching stock at the source location.
+    /// </summary>
+    internal procedure CreateReleasedDirectTransfer(var TransferHeader: Record "Transfer Header"; LineQuantity: Decimal)
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+    begin
+        SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, LineQuantity);
+        CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        TransferHeader.Validate("Direct Transfer", true);
+        CreateTransferLine(TransferHeader, Item."No.", LineQuantity);
+        Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
+        TransferHeader.Get(TransferHeader."No.");
+    end;
+
+    /// <summary>
+    /// Sets Inventory Setup direct-transfer posting and keeps a copy for restore. Fills Posted Direct Trans. Nos. from the shipment series when it is blank.
+    /// </summary>
+    internal procedure SetDirectTransferPosting(PostAsSingleDocument: Boolean; var OriginalSetup: Record "Inventory Setup")
+    var
+        InventorySetup: Record "Inventory Setup";
+    begin
+        OriginalSetup.Get();
+        InventorySetup := OriginalSetup;
+        if InventorySetup."Posted Direct Trans. Nos." = '' then
+            InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
+        if PostAsSingleDocument then
+            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Direct Transfer"
+        else
+            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Receipt and Shipment";
+        InventorySetup.Modify(true);
+    end;
+
+    /// <summary>
+    /// Restores Inventory Setup direct-transfer posting and the posted direct-transfer number series.
+    /// </summary>
+    internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
+    var
+        InventorySetup: Record "Inventory Setup";
+    begin
+        InventorySetup.Get();
+        InventorySetup."Direct Transfer Posting" := OriginalSetup."Direct Transfer Posting";
+        InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
+        InventorySetup.Modify(true);
     end;
 }
