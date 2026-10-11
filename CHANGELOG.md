@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-11) - semantic compile errors on the compile repair
+
+- Cost To GL Post Impl ori and Adjust Cost Run Process ori run reports 1002 and 795 inside a TryFunction, because `Report.Run` returns no value. A failed run is returned with `GetLastErrorText`. Success uses `SetResponseJson`. The costing contract chapters, including the `InvalidOperation` error text, are unchanged.
+- Reclass Post Impl ori returns the empty-batch text through `RespondWithError`, because `Bifrost Error Code ori` has no `NothingToPost` value.
+- Price Update Impl ori looks up the item with `Document Lookup ori.FindItemRange`.
+- Reservation Create Impl ori calls `Reservation Management.AutoReserve`.
+- Phys. Inv. Calc Impl ori runs report `Calculate Inventory` from `Microsoft.Inventory.Counting.Journal` through `SetItemJnlLine`.
+- Transfer Undo Shpt Impl ori runs `Undo Transfer Shipment` on each non-correction shipment line. A failure is returned as an error.
+- Transfer Order Post Impl ori and Transf Doc Prev. Post Impl ori read `Direct Transfer Posting Type`. A blank setup value follows the same shipment-and-receipt path as Business Central.
+
 ### Fixed (2026-10-11) - remaining main compile blockers
 
 - Object IDs that sat outside `[10036885..10036934]` and `[70013400..70013499]`, and the duplicate codeunit IDs 70013490 and 70013491, now use free IDs inside those ranges. Item Appl. Get Impl ori (70013490) and Item Appl. Unapply Impl ori (70013491) keep their IDs. Reservation Get Impl ori is 70013477 and Reservation Cancel Impl ori is 70013478. App and test versions are unchanged.

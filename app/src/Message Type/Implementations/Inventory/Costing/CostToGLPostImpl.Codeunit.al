@@ -24,22 +24,30 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        PostInventoryCost: Report "Post Inventory Cost to G/L";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
         RequestJson := Argument.GetRequestJson();
-        PostInventoryCost.UseRequestPage(false);
-        if not PostInventoryCost.Run() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidOperation, GetLastErrorText(), '', '', '', '');
+        if not TryRunPostInventoryCost() then begin
+            Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemNoFilter', ReadText(RequestJson, 'itemNoFilter'));
         ResponseJson.Add('documentNoFilter', ReadText(RequestJson, 'documentNoFilter'));
-        Argument.RespondWithSuccess(ResponseJson);
+        Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryRunPostInventoryCost()
+    var
+        PostInventoryCost: Report "Post Inventory Cost to G/L";
+    begin
+        PostInventoryCost.UseRequestPage(false);
+        PostInventoryCost.Run();
     end;
 
     /// <summary>Returns the Item table used by the existing selection contract.</summary>

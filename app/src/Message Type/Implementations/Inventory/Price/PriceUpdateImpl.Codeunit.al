@@ -112,14 +112,19 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Token: JsonToken;
         UnitPrice: Decimal;
         MissingPriceErr: Label 'unitPrice is required.', Locked = true;
+        NoItemErr: Label 'No items found matching the specified criteria.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemPrice, Database::Item, true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
 
-        if not DocumentLookup.FindItem(Argument, Item) then
+        if not DocumentLookup.FindItemRange(Argument, Item) then
             exit;
+        if not Item.FindFirst() then begin
+            Argument.RespondWithError(NoItemErr);
+            exit;
+        end;
 
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('unitPrice', Token) then begin

@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
@@ -148,12 +149,25 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         JournalBatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(JournalBatchName));
         ItemJournalLine."Journal Template Name" := JournalTemplateName;
         ItemJournalLine."Journal Batch Name" := JournalBatchName;
-        Report.Run(Report::"Calculate Inventory", false, false, ItemJournalLine);
+        if not TryRunCalculateInventory(ItemJournalLine) then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('messageType', 'Inventory.PhysInventory.Calculate');
         ResponseJson.Add('journalTemplateName', JournalTemplateName);
         ResponseJson.Add('journalBatchName', JournalBatchName);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryRunCalculateInventory(var ItemJournalLine: Record "Item Journal Line")
+    var
+        CalculateInventory: Report "Calculate Inventory";
+    begin
+        CalculateInventory.SetItemJnlLine(ItemJournalLine);
+        CalculateInventory.UseRequestPage(false);
+        CalculateInventory.Run();
     end;
 }
