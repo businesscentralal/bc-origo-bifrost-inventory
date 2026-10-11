@@ -11,6 +11,7 @@
 - Phys. Inv. Calc Impl ori runs report `Calculate Inventory` from `Microsoft.Inventory.Counting.Journal` through `SetItemJnlLine`.
 - Transfer Undo Shpt Impl ori runs `Undo Transfer Shipment` on each shipment line whose `Correction Line` is false. A failure is returned as an error.
 - Transfer Order Post Impl ori and Transf Doc Prev. Post Impl ori read `Direct Transfer Posting Type`. A blank setup value follows the same shipment-and-receipt path as Business Central.
+- Item attribute tests call the registered message types `Inventory.Attribute.Get`, `Inventory.Attribute.Create`, `Inventory.Attribute.Update`, and `Inventory.AttributeDefinition.Create`. Write-restriction checks pass `Force = false`, which Foundation now requires.
 
 ### Fixed (2026-10-11) - remaining main compile blockers
 
