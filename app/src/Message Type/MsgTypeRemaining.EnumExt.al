@@ -2,7 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 70013531 "MsgType.Reserv.Create.Ext ori" extends "Message Type ori"
+enumextension 70013458 "MsgType.Reserv.Create.Ext ori" extends "Message Type ori"
 {
     value(70013442; "Inventory.Reservation.Create")
     {

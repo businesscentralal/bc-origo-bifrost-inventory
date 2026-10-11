@@ -103,14 +103,12 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
         ReceiptHeader: Record "Transfer Receipt Header";
-        ReceiptLine: Record "Transfer Receipt Line";
-        UndoReceipt: Codeunit "Undo Transfer Receipt";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];
         MissingDocErr: Label 'documentNo must be specified.', Locked = true;
         NotFoundErr: Label 'Posted transfer receipt %1 was not found.', Comment = '%1 = document no.', Locked = true;
+        NotSupportedErr: Label 'Posted transfer receipts cannot be undone in this Business Central version.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Receipt Header", false, true) then
             exit;
@@ -126,17 +124,6 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
             Argument.RespondWithError(StrSubstNo(NotFoundErr, DocumentNo));
             exit;
         end;
-        ReceiptLine.SetRange("Document No.", DocumentNo);
-        if ReceiptLine.FindSet() then begin
-            UndoReceipt.SetHideDialog(true);
-            if not UndoReceipt.Run(ReceiptLine) then begin
-                Argument.RespondWithError(GetLastErrorText());
-                exit;
-            end;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('documentNo', DocumentNo);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        Argument.RespondWithError(NotSupportedErr);
     end;
 }

@@ -110,6 +110,8 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferShipmentLine: Record "Transfer Shipment Line";
+        LineToUndo: Record "Transfer Shipment Line";
         Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
         RequestJson: JsonObject;
@@ -118,6 +120,7 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         DocumentNo: Code[20];
         MissingDocErr: Label 'documentNo is required.', Locked = true;
         NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no.', Locked = true;
+        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no.', Locked = true;
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
             exit;
@@ -133,11 +136,20 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
             exit;
         end;
-        UndoShipment.SetHideDialog(true);
-        if not UndoShipment.Run(TransferShipmentHeader) then begin
-            Argument.RespondWithError(GetLastErrorText());
+        TransferShipmentLine.SetRange("Document No.", TransferShipmentHeader."No.");
+        TransferShipmentLine.SetRange("Correction Line", false);
+        if not TransferShipmentLine.FindSet() then begin
+            Argument.RespondWithError(StrSubstNo(NoLinesErr, DocumentNo));
             exit;
         end;
+        repeat
+            LineToUndo := TransferShipmentLine;
+            UndoShipment.SetHideDialog(true);
+            if not UndoShipment.Run(LineToUndo) then begin
+                Argument.RespondWithError(GetLastErrorText());
+                exit;
+            end;
+        until TransferShipmentLine.Next() = 0;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         Argument.SetResponseJson(ResponseJson);

@@ -42,7 +42,7 @@ codeunit 96900 "Item Attribute Tests ori"
         Mapping.Validate("Item Attribute Value ID", ValueA.ID);
         Mapping.Insert(true);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Get", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('items', ItemsToken), 'items missing');
         ItemsArray := ItemsToken.AsArray();
@@ -57,7 +57,7 @@ codeunit 96900 "Item Attribute Tests ori"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Get", 'NO-SUCH-ITEM-ZZZ', RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Get", 'NO-SUCH-ITEM-ZZZ', RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -90,10 +90,10 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -133,7 +133,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -167,7 +167,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 
@@ -204,7 +204,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Update", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
         Assert.IsTrue(ResponseJson.Get('results', ResultsToken), 'results missing');
         ResultsArray := ResultsToken.AsArray();
@@ -236,7 +236,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Update", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Update", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Error');
     end;
 
@@ -263,7 +263,7 @@ codeunit 96900 "Item Attribute Tests ori"
         AttrArray.Add(AttrObj);
         RequestJson.Add('attributes', AttrArray);
 
-        ResponseJson := Library.ExecuteType(MessageType::"Item.Attribute.Create", Item."No.", RequestJson, false);
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.Attribute.Create", Item."No.", RequestJson, false);
         Library.AssertStatus(ResponseJson, 'Success');
     end;
 
@@ -273,19 +273,19 @@ codeunit 96900 "Item Attribute Tests ori"
         MessageType: Enum "Message Type ori";
         MsgInterface: Interface "Msg Interface ori";
     begin
-        MessageType := MessageType::"Item.Attribute.Get";
+        MessageType := MessageType::"Inventory.Attribute.Get";
         MsgInterface := MessageType;
         Assert.AreNotEqual('', MsgInterface.GetDescription(), 'Get description');
 
-        MessageType := MessageType::"Item.Attribute.Create";
+        MessageType := MessageType::"Inventory.Attribute.Create";
         MsgInterface := MessageType;
         Assert.AreNotEqual('', MsgInterface.GetDescription(), 'Create description');
 
-        MessageType := MessageType::"Item.Attribute.Update";
+        MessageType := MessageType::"Inventory.Attribute.Update";
         MsgInterface := MessageType;
         Assert.AreNotEqual('', MsgInterface.GetDescription(), 'Update description');
 
-        MessageType := MessageType::"Item.AttributeDefinition.Create";
+        MessageType := MessageType::"Inventory.AttributeDefinition.Create";
         MsgInterface := MessageType;
         Assert.AreNotEqual('', MsgInterface.GetDescription(), 'Definition description');
     end;
@@ -298,10 +298,10 @@ codeunit 96900 "Item Attribute Tests ori"
         Library.Initialize();
         Argument.Init();
         Argument.Insert(true);
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute"), '7500');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value"), '7501');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attr. Value Translation"), '7504');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping"), '7505');
-        Assert.IsFalse(Argument.IsTableWriteRestrictedForDataRecords(Database::Item), 'Item 27 must not be restricted');
+        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute", false), '7500');
+        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value", false), '7501');
+        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attr. Value Translation", false), '7504');
+        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping", false), '7505');
+        Assert.IsFalse(Argument.IsTableWriteRestrictedForDataRecords(Database::Item, false), 'Item 27 must not be restricted');
     end;
 }

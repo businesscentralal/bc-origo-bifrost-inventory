@@ -2,7 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 70013536 "MsgType.PhysRecord.EnumExt ori" extends "Message Type ori"
+enumextension 70013456 "MsgType.PhysRecord.EnumExt ori" extends "Message Type ori"
 {
     value(70013447; "Inventory.PhysInventory.Record")
     {

@@ -136,6 +136,7 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
         // PR #29 B2 | Time: WorkDate for fixture | Risk: None
         // [GIVEN] Components cannot go negative and no component stock exists.
         Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
+        ComponentItem.Get(ComponentItem."No.");
         ComponentItem.Validate("Prevent Negative Inventory", ComponentItem."Prevent Negative Inventory"::Yes);
         ComponentItem.Modify(true);
         Helper.CreateAssemblyOrder(AssemblyHeader, ParentItem."No.", 1);

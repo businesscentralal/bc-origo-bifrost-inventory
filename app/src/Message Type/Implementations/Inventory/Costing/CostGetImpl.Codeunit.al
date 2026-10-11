@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
-codeunit 70013537 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
