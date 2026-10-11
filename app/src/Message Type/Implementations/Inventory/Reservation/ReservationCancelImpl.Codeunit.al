@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-codeunit 70013491 "Reservation Cancel Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

@@ -18,6 +18,7 @@ permissionset 96920 "Inv Post Gate Test"
         tabledata "Message Argument ori" = RIMD,
         tabledata "Transfer Header" = RIMD,
         tabledata "Assembly Header" = RIMD,
+        tabledata "Inventory Setup ori" = R,
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Transfer Order Post Impl ori" = X,
         codeunit "Assembly Order Post Impl ori" = X,

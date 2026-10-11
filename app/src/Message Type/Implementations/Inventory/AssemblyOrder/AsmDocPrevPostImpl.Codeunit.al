@@ -16,7 +16,7 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -161,7 +161,7 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         PreviewFailedErr: Label 'Posting preview failed and no entries were captured. The assembly order cannot be posted in its current state.', Comment = 'is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Samsetningarpöntunin getur ekki verið bókuð í núverandi stöðu.';
         NothingToPostNextStepTok: Label 'Quantity to Assemble is 0. Review with Inventory.AssemblyOrder.Statistics.', Comment = 'is-IS=Magn til samsetningar er 0. Skoðið með Inventory.AssemblyOrder.Statistics.';
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

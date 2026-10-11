@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
 /// <summary>
@@ -134,7 +135,7 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ItemJournalLine.SetRange("Journal Template Name", TemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", BatchName);
         if not ItemJournalLine.FindFirst() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::NothingToPost, StrSubstNo(EmptyBatchErr, TemplateName, BatchName), 'journalBatchName', '', '', '');
+            Argument.RespondWithError(StrSubstNo(EmptyBatchErr, TemplateName, BatchName));
             exit;
         end;
         if not ItemJnlPostBatch.Run(ItemJournalLine) then begin

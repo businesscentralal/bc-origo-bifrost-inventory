@@ -13,6 +13,7 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         tabledata "Item Attribute Value" = R,
         tabledata "Item Attribute Value Mapping" = R,
         tabledata "Item Attr. Value Translation" = R,
+        tabledata "Inventory Setup ori" = R,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Resolve ori" = X,
         codeunit "Item Attr. Data Restrict ori" = X,

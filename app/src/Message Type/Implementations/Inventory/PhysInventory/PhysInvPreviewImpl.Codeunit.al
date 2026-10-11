@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
-codeunit 70013502 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
