@@ -16,7 +16,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -174,7 +174,7 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value', Locked = true;
         NothingToPostNextStepTok: Label 'No line has a quantity to ship or receive. Review with Inventory.TransferOrder.Statistics.', Comment = 'is-IS=Engin lína hefur magn til að senda eða móttaka. Skoðið með Inventory.TransferOrder.Statistics.';
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
