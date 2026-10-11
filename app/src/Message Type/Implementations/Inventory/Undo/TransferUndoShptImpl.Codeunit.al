@@ -137,7 +137,7 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
             exit;
         end;
         TransferShipmentLine.SetRange("Document No.", TransferShipmentHeader."No.");
-        TransferShipmentLine.SetRange(Correction, false);
+        TransferShipmentLine.SetRange("Correction Line", false);
         if not TransferShipmentLine.FindSet() then begin
             Argument.RespondWithError(StrSubstNo(NoLinesErr, DocumentNo));
             exit;

@@ -9,7 +9,7 @@
 - Price Update Impl ori looks up the item with `Document Lookup ori.FindItemRange`.
 - Reservation Create Impl ori calls `Reservation Management.AutoReserve`.
 - Phys. Inv. Calc Impl ori runs report `Calculate Inventory` from `Microsoft.Inventory.Counting.Journal` through `SetItemJnlLine`.
-- Transfer Undo Shpt Impl ori runs `Undo Transfer Shipment` on each non-correction shipment line. A failure is returned as an error.
+- Transfer Undo Shpt Impl ori runs `Undo Transfer Shipment` on each shipment line whose `Correction Line` is false. A failure is returned as an error.
 - Transfer Order Post Impl ori and Transf Doc Prev. Post Impl ori read `Direct Transfer Posting Type`. A blank setup value follows the same shipment-and-receipt path as Business Central.
 
 ### Fixed (2026-10-11) - remaining main compile blockers
