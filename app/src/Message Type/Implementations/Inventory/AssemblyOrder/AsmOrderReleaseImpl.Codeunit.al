@@ -11,7 +11,7 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::AssemblyOrders, Database::"Assembly Header", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo() FilterTableId: Integer
@@ -134,7 +134,7 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
         ResponseJson: JsonObject;
         StatusBefore: Text;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::AssemblyOrders, Database::"Assembly Header", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

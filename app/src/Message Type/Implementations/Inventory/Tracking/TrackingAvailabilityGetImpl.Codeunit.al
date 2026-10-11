@@ -5,7 +5,7 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-codeunit 70013542 "Tracking Avail. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

@@ -5,7 +5,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
-codeunit 70013534 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -13,7 +13,7 @@ codeunit 70013534 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::PhysicalInventory, Database::"Item Journal Line", true, true));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, true));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -142,7 +142,7 @@ codeunit 70013534 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         BatchName: Code[10];
         LineCount: Integer;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysicalInventory, Database::"Item Journal Line", true, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

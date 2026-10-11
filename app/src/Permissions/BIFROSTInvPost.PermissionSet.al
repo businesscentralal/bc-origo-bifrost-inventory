@@ -11,5 +11,7 @@ permissionset 70013444 "BIFROST InvPost ori"
     Caption = 'Inv. Posting Gate', MaxLength = 30, Comment = 'is-IS=Bókunarhlið birgða';
 
     Permissions =
-        tabledata "Inv. Posting ori" = RIMD;
+        tabledata "Inv. Posting ori" = RIMD,
+        tabledata "Inventory Setup ori" = RIMD,
+        page "Inventory Setup ori" = X;
 }
