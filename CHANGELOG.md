@@ -39,7 +39,7 @@
 ### Fixed (2026-10-10) - costing metadata interface completeness
 
 - Adjust Cost Run Impl ori (70013460) and Cost To GL Post Impl ori (70013462) implement the missing message direction, description and contract chapters with typed defaults, array preconditions and cleared reused outputs. CostToGL metadata discloses report completion without promising G/L posting; existing execution, filters and report options are preserved.
-- Inventory Contract Batch Tests (96921) adds six metadata regressions covering defaults, conflicting-filter preconditions, dispatcher error declarations, report options and reused interface outputs. Runtime verification remains pending while the separate compiler, allocation and access-policy blockers are unresolved.
+- Inventory Contract Batch Tests (96921) adds six metadata regressions covering defaults, conflicting-filter preconditions, dispatcher error declarations, report options and reused interface outputs.
 
 ### Fixed (2026-10-09) - main lexical compile blockers
 
