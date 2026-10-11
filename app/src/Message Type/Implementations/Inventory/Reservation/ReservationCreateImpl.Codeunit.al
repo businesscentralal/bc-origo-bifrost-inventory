@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -119,7 +119,7 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Calls Reservation Management.AutoReserveOneLineReserve for the requested item quantity.';
+        Overview := 'Calls Reservation Management.AutoReserve for the requested item quantity.';
         exit(true);
     end;
 
@@ -172,7 +172,7 @@ codeunit 70013531 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ReservationEntry."Quantity (Base)" := Quantity;
         ReservationEntry.Positive := Quantity > 0;
         ReservationManagement.SetReservSource(ReservationEntry);
-        ReservationManagement.AutoReserveOneLineReserve(FullAutoReservation, ItemNo, WorkDate(), Quantity, Quantity);
+        ReservationManagement.AutoReserve(FullAutoReservation, ItemNo, WorkDate(), Quantity, Quantity);
 
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemNo', ItemNo);

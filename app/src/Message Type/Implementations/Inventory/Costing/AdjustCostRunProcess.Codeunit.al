@@ -13,7 +13,6 @@ codeunit 70013461 "Adjust Cost Run Process ori"
 
     procedure RunAdjustCost(var Argument: Record "Message Argument ori")
     var
-        AdjustCost: Report "Adjust Cost - Item Entries";
         RequestJson: JsonObject;
         ItemNoFilter: Text;
         ItemCategoryFilter: Text;
@@ -24,18 +23,27 @@ codeunit 70013461 "Adjust Cost Run Process ori"
         ItemNoFilter := ReadText(RequestJson, 'itemNoFilter');
         ItemCategoryFilter := ReadText(RequestJson, 'itemCategoryFilter');
         PostToGL := ReadBoolean(RequestJson, 'postToGL');
-        AdjustCost.InitializeRequest(CopyStr(ItemNoFilter, 1, 250), CopyStr(ItemCategoryFilter, 1, 250));
-        AdjustCost.SetPostToGL(PostToGL);
-        AdjustCost.UseRequestPage(false);
-        if not AdjustCost.Run() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidOperation, GetLastErrorText(), '', '', '', '');
+        if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
+            Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemNoFilter', ItemNoFilter);
         ResponseJson.Add('itemCategoryFilter', ItemCategoryFilter);
         ResponseJson.Add('postToGL', PostToGL);
-        Argument.RespondWithSuccess(ResponseJson);
+        Argument.SetResponseJson(ResponseJson);
+        Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryRunAdjustCost(ItemNoFilter: Text; ItemCategoryFilter: Text; PostToGL: Boolean)
+    var
+        AdjustCost: Report "Adjust Cost - Item Entries";
+    begin
+        AdjustCost.InitializeRequest(CopyStr(ItemNoFilter, 1, 250), CopyStr(ItemCategoryFilter, 1, 250));
+        AdjustCost.SetPostToGL(PostToGL);
+        AdjustCost.UseRequestPage(false);
+        AdjustCost.Run();
     end;
 
     local procedure ReadText(RequestJson: JsonObject; Name: Text): Text

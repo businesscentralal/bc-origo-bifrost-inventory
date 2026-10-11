@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Assembly.History;
+using Microsoft.Assembly.Posting;
 using Origo.Bifrost;
 
 codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
@@ -11,7 +12,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::AssemblyOrders, Database::"Posted Assembly Header", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -103,13 +104,12 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         PostedAssemblyHeader: Record "Posted Assembly Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        UndoAssembly: Codeunit "Pstd. Assembly - Undo";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::AssemblyOrders, Database::"Posted Assembly Header", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
@@ -125,12 +125,22 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
             exit;
         end;
 
-        UndoAssembly.SetHideDialog(true);
-        UndoAssembly.Run(PostedAssemblyHeader);
+        if not TryUndoPostedAssembly(PostedAssemblyHeader) then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
 
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryUndoPostedAssembly(var PostedAssemblyHeader: Record "Posted Assembly Header")
+    var
+        AssemblyPost: Codeunit "Assembly-Post";
+    begin
+        AssemblyPost.Undo(PostedAssemblyHeader, false);
     end;
 }
