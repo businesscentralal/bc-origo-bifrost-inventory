@@ -10,6 +10,7 @@
 - Inventory Contract Batch Tests walks every Inventory message type and fails when a related entry is not an object with a non-empty name that exists in the catalogue.
 - Item Appl. Get Impl ori returned false for every contract chapter, so the help reader had no contract for `Inventory.ItemApplication.Get`. It now follows `Inventory.ItemApplication.Unapply`: envelope, Item Application Entry target, required `itemLedgerEntryNo`, the success response, `MissingParameter`, a read-only effect, and related Unapply and Reapply.
 - The other registered Inventory types whose contract chapters also returned false now declare the chapters their implementations already answer: `Inventory.Reservation.Get`, `Inventory.Period.Get`, `Inventory.Period.Close`, `Inventory.Period.Reopen`, `Inventory.Transfer.UndoReceipt`, `Inventory.Assembly.UndoPost`, `Inventory.Reclassification.Post`, `Inventory.Price.Update`, and `Inventory.Revaluation.Calculate`.
+- `Inventory.PhysInventory.Post` named error code `NothingToPost`. `GetContract` rejects that name because `Bifrost Error Code ori` has no such value. The empty-batch error is `InvalidParameter`, the same code the empty reclassification batch uses.
 
 ### Fixed (2026-10-11) - direct transfer posting on BC 28.5
 

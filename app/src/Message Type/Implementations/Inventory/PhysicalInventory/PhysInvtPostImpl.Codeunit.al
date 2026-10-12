@@ -79,7 +79,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     var
         ErrorJson: JsonObject;
     begin
-        ErrorJson.Add('code', 'NothingToPost');
+        ErrorJson.Add('code', 'InvalidParameter');
         ErrorJson.Add('when', 'the batch has no lines');
         Errors.Add(ErrorJson);
         exit(true);
