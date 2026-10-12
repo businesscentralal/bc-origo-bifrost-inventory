@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
@@ -71,5 +72,46 @@ codeunit 96914 "Transfer Order Post Tests"
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
         Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'Status should be Error');
+    end;
+
+    [Test]
+    procedure Post_DirectTransfer_ReceiptAndShipment_ReturnsBothDocuments()
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        StatusToken: JsonToken;
+        ShipmentToken: JsonToken;
+        ReceiptToken: JsonToken;
+        ShipmentNo: Code[20];
+        ReceiptNo: Code[20];
+    begin
+        // [SCENARIO] Receipt and Shipment on a direct transfer posts the shipment and the receipt together.
+        Initialize();
+        Helper.SetDirectTransferPosting(false, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        TransferLine.SetRange("Document No.", TransferHeader."No.");
+        TransferLine.FindFirst();
+        TransferLine.Validate("Qty. to Ship", 4);
+        TransferLine.Modify(true);
+
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success');
+        Assert.IsTrue(ResponseJson.Get('postedShipmentNo', ShipmentToken), 'postedShipmentNo missing');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
+        ShipmentNo := CopyStr(ShipmentToken.AsValue().AsText(), 1, MaxStrLen(ShipmentNo));
+        ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
+        Assert.AreNotEqual('', ShipmentNo, 'postedShipmentNo should be populated');
+        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
+        Assert.IsTrue(TransferShipmentHeader.Get(ShipmentNo), 'Posted transfer shipment should exist');
+        Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'A partial direct transfer should keep the order');
     end;
 }

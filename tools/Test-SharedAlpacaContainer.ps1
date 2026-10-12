@@ -16,7 +16,7 @@ try {
     $defaultSettings = @($settings.conditionalSettings | Where-Object { 'Default' -in $_.buildModes })
     Assert ($testSettings.settings.skipUpgrade -contains $true) 'Test must skip previous-release upgrade validation.'
     Assert (!$settings.skipUpgrade -and !($defaultSettings.settings.skipUpgrade -contains $true)) 'Default upgrade validation was disabled.'
-    foreach ($hookPath in @('tools/Get-SharedAlpacaBuildOrder.ps1','tools/SharedAlpacaContainer.ps1','tools/Test-SharedAlpacaContainer.ps1')) {
+    foreach ($hookPath in @('.AL-Go/settings.json','tools/Get-SharedAlpacaBuildOrder.ps1','tools/SharedAlpacaContainer.ps1','tools/Test-SharedAlpacaContainer.ps1')) {
         Assert (@($settings.fullBuildPatterns | Where-Object { $hookPath -like ($_ -replace '\\','/') }).Count -gt 0) "Changes to $hookPath must trigger a full build."
     }
     $env:GITHUB_OUTPUT = ''; $env:GITHUB_ENV = ''

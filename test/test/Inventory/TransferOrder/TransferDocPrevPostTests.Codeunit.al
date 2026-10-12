@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
@@ -86,5 +87,60 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
         Assert.AreEqual('NothingToPreview', Token.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
         Assert.IsTrue(Token.AsValue().AsText().Contains('Inventory.TransferOrder.Statistics'), 'nextStep names the Statistics type');
+    end;
+
+    [Test]
+    procedure PreviewPost_DirectTransfer_ReceiptAndShipment_PredictsShipment()
+    var
+        TransferHeader: Record "Transfer Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [SCENARIO] Receipt and Shipment preview of a direct transfer returns the shipment-and-receipt entry count.
+        Initialize();
+        Helper.SetDirectTransferPosting(false, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        AssertDirectTransferPreview(ResponseJson, 8);
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
+    end;
+
+    [Test]
+    procedure PreviewPost_DirectTransfer_DirectTransferPosting_PredictsDirectTransfer()
+    var
+        TransferHeader: Record "Transfer Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [SCENARIO] Direct Transfer posting preview predicts one direct transfer and fewer entries than shipment and receipt.
+        Initialize();
+        Helper.SetDirectTransferPosting(true, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        AssertDirectTransferPreview(ResponseJson, 4);
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
+    end;
+
+    local procedure AssertDirectTransferPreview(ResponseJson: JsonObject; ExpectedEntryCount: Integer)
+    var
+        Token: JsonToken;
+        Predicted: JsonObject;
+    begin
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Status should be Success');
+        Assert.IsTrue(ResponseJson.Get('directTransfer', Token), 'directTransfer missing');
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'directTransfer');
+        Assert.IsTrue(ResponseJson.Get('rollback', Token), 'rollback missing');
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'rollback');
+        Assert.IsTrue(ResponseJson.Get('entryCount', Token), 'entryCount missing');
+        Assert.AreEqual(ExpectedEntryCount, Token.AsValue().AsInteger(), 'entryCount');
+        Assert.IsTrue(ResponseJson.Get('predictedNumbers', Token), 'predictedNumbers missing');
+        Predicted := Token.AsObject();
+        Assert.IsTrue(Predicted.Get('postedDirectTransferNo', Token), 'postedDirectTransferNo missing');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'postedDirectTransferNo');
     end;
 }

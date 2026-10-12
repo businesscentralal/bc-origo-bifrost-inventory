@@ -219,14 +219,13 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         InventorySetup: Record "Inventory Setup";
     begin
         InventorySetup.Get();
-        case InventorySetup."Direct Transfer Posting Type" of
-            InventorySetup."Direct Transfer Posting Type"::" ",
-            InventorySetup."Direct Transfer Posting Type"::"Shipment and Receipt":
+        case InventorySetup."Direct Transfer Posting" of
+            InventorySetup."Direct Transfer Posting"::"Receipt and Shipment":
                 begin
                     PostShipment := true;
                     PostReceipt := true;
                 end;
-            InventorySetup."Direct Transfer Posting Type"::"Direct Transfer":
+            InventorySetup."Direct Transfer Posting"::"Direct Transfer":
                 PostTransfer := true;
         end;
     end;
