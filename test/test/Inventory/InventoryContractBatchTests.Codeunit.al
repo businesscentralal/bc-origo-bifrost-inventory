@@ -99,7 +99,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             end;
         // [THEN] Inventory.Cost.Get keeps its two existing related message types.
         LibraryAssert.IsTrue(SawCostGet, 'Inventory.Cost.Get is a registered message type.');
-        LibraryAssert.AreEqual(48, CheckedCount, 'Every Inventory message type is checked.');
+        LibraryAssert.AreEqual(48, CheckedCount, '44 types in this app, plus Foundation Inventory.ItemJournal.Check, Create, Post, and PreviewPost.');
         LibraryAssert.AreEqual(2, CostGetNames.Count(), 'Inventory.Cost.Get names two related message types.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.AdjustCost.Run'), 'Inventory.Cost.Get relates to Inventory.AdjustCost.Run.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.Revaluation.Calculate'), 'Inventory.Cost.Get relates to Inventory.Revaluation.Calculate.');
