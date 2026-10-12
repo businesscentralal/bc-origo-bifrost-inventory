@@ -111,8 +111,10 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.Tracking.Delete');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete an item tracking specification instead of assigning one.'));
         exit(true);
     end;
 

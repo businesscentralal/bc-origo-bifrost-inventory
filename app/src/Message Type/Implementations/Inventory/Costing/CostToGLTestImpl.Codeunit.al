@@ -96,9 +96,11 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.CostToGL.Post');
-        Related.Add('Inventory.AdjustCost.Run');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.CostToGL.Post', 'Post inventory cost to the general ledger after the test.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Adjust item costs before posting them to the general ledger.'));
         exit(true);
     end;
 

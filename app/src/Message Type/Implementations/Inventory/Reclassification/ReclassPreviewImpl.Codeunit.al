@@ -97,9 +97,11 @@ codeunit 70013474 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.Reclassification.Post');
-        Related.Add('Inventory.Reclassification.Check');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Post', 'Post the reclassification journal after the preview is correct.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Check', 'Check the reclassification journal before previewing it.'));
         exit(true);
     end;
 

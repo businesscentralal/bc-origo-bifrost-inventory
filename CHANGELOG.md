@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-12) - related help entries name existing message types
+
+- `Inventory.Cost.Get` added `Inventory.AdjustCost.Run` and `Inventory.Revaluation.Calculate` as plain strings. Foundation reads a string related entry as message type "", so `Help.Implementation.Get` failed and the UAT roster refresh dropped 50 help documents.
+- Every Inventory `GetRelated` that added a string now adds an object with `name` and `useInsteadWhen`. Those names are registered message types.
+- `Inventory.PhysInventory.Check` is not a registered message type. Phys. Inv. Preview Impl ori no longer names it. The preview still names `Inventory.PhysInventory.Post`.
+- Inventory Contract Batch Tests walks every Inventory message type and fails when a related entry is not an object with a non-empty name that exists in the catalogue.
+
 ### Fixed (2026-10-11) - direct transfer posting on BC 28.5
 
 - UAT Base Application 28.5.54151.55799 has no `Inventory Setup."Direct Transfer Posting Type"` (AL0132). That enum is new in BC 29. On BC 28.0 through 28.6 the setup field is still the option `Direct Transfer Posting`, with `Receipt and Shipment` and `Direct Transfer`, which is what codeunit 5706 reads.

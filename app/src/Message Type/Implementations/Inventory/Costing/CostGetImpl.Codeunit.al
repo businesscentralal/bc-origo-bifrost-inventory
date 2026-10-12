@@ -93,9 +93,11 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.AdjustCost.Run');
-        Related.Add('Inventory.Revaluation.Calculate');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Adjust item costs with report 795.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Revaluation.Calculate', 'Write a new cost on the revaluation journal.'));
         exit(true);
     end;
 

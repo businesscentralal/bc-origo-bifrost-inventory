@@ -90,8 +90,10 @@ codeunit 70013497 "Phys. Inv. Post Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.PhysInventory.Calculate');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Calculate', 'Calculate physical inventory quantities before posting.'));
         exit(true);
     end;
 

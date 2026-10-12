@@ -44,6 +44,66 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
     end;
 
+    /// <summary>Fails when an Inventory help contract names an empty or unknown related message type.</summary>
+    [Test]
+    procedure AllInventoryTypes_RelatedNamesExist()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        RelatedToken: JsonToken;
+        EntryToken: JsonToken;
+        RelatedEntries: JsonArray;
+        NameToken: JsonToken;
+        UseToken: JsonToken;
+        Entry: JsonObject;
+        Catalogue: List of [Text];
+        CostGetNames: List of [Text];
+        TypeName: Text;
+        RelatedName: Text;
+        EntryJson: Text;
+        CheckedCount: Integer;
+        SawCostGet: Boolean;
+    begin
+        // [GIVEN] Every registered Inventory message type.
+        // [WHEN] The help contract reader returns the related chapter.
+        Catalogue := MessageType.Names();
+        foreach TypeName in Catalogue do
+            if TypeName.StartsWith('Inventory.') then begin
+                MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+                Clear(Contract);
+                LibraryAssert.IsTrue(ContractMgt.GetContract(MessageType, Contract), TypeName + ' must declare a help contract.');
+                CheckedCount += 1;
+                if TypeName = 'Inventory.Cost.Get' then
+                    SawCostGet := true;
+                if Contract.Get('related', RelatedToken) then begin
+                    LibraryAssert.IsTrue(RelatedToken.IsArray(), TypeName + ' related chapter must be an array.');
+                    RelatedEntries := RelatedToken.AsArray();
+                    foreach EntryToken in RelatedEntries do begin
+                        EntryToken.WriteTo(EntryJson);
+                        LibraryAssert.IsTrue(EntryToken.IsObject(), TypeName + ' related entry must be an object. ' + EntryJson);
+                        Entry := EntryToken.AsObject();
+                        LibraryAssert.IsTrue(Entry.Get('name', NameToken), TypeName + ' related entry must have a name. ' + EntryJson);
+                        LibraryAssert.IsTrue(NameToken.IsValue(), TypeName + ' related name must be text. ' + EntryJson);
+                        RelatedName := NameToken.AsValue().AsText();
+                        LibraryAssert.AreNotEqual('', RelatedName, TypeName + ' related name must not be empty.');
+                        LibraryAssert.IsTrue(Catalogue.Contains(RelatedName), TypeName + ' names related message type ' + RelatedName + ', which does not exist.');
+                        LibraryAssert.IsTrue(Entry.Get('useInsteadWhen', UseToken), TypeName + ' related entry must say when to use ' + RelatedName + '.');
+                        LibraryAssert.IsTrue(UseToken.IsValue(), TypeName + ' useInsteadWhen must be text.');
+                        LibraryAssert.AreNotEqual('', UseToken.AsValue().AsText(), TypeName + ' useInsteadWhen must not be empty.');
+                        if TypeName = 'Inventory.Cost.Get' then
+                            CostGetNames.Add(RelatedName);
+                    end;
+                end;
+            end;
+        // [THEN] Inventory.Cost.Get keeps its two existing related message types.
+        LibraryAssert.IsTrue(SawCostGet, 'Inventory.Cost.Get is a registered message type.');
+        LibraryAssert.IsTrue(CheckedCount > 17, 'Every Inventory message type is checked.');
+        LibraryAssert.AreEqual(2, CostGetNames.Count(), 'Inventory.Cost.Get names two related message types.');
+        LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.AdjustCost.Run'), 'Inventory.Cost.Get relates to Inventory.AdjustCost.Run.');
+        LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.Revaluation.Calculate'), 'Inventory.Cost.Get relates to Inventory.Revaluation.Calculate.');
+    end;
+
     [Test]
     procedure InventoryEffects_MatchOperation()
     begin
