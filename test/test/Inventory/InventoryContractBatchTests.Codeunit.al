@@ -59,8 +59,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
         UseToken: JsonToken;
         Entry: JsonObject;
         Catalogue: List of [Text];
+        Walked: List of [Text];
+        ItemJournalNames: List of [Text];
+        AppTypes: List of [Text];
         CostGetNames: List of [Text];
         TypeName: Text;
+        AppType: Text;
         RelatedName: Text;
         EntryJson: Text;
         CheckedCount: Integer;
@@ -71,6 +75,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Catalogue := MessageType.Names();
         foreach TypeName in Catalogue do
             if TypeName.StartsWith('Inventory.') then begin
+                Walked.Add(TypeName);
+                if TypeName.StartsWith('Inventory.ItemJournal.') then
+                    ItemJournalNames.Add(TypeName);
                 MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
                 Clear(Contract);
                 LibraryAssert.IsTrue(ContractMgt.GetContract(MessageType, Contract), TypeName + ' must declare a help contract.');
@@ -97,9 +104,21 @@ codeunit 96921 "Inventory Contract Batch Tests"
                     end;
                 end;
             end;
-        // [THEN] Inventory.Cost.Get keeps its two existing related message types.
+        // [THEN] Foundation's four item journal types are present, and the other walked names are this app's registered types.
+        LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Check'), 'Inventory.ItemJournal.Check is registered.');
+        LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Create'), 'Inventory.ItemJournal.Create is registered.');
+        LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
+        LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
+        LibraryAssert.AreEqual(4, ItemJournalNames.Count(), 'Exactly four Inventory.ItemJournal types are registered.');
+        LibraryAssert.AreEqual(44, CheckedCount - ItemJournalNames.Count(), 'This app registers 44 Inventory types.');
+        AppTypes := AppRegisteredInventoryTypes();
+        LibraryAssert.AreEqual(44, AppTypes.Count(), 'The registered Inventory type list for this app has 44 names.');
+        foreach AppType in AppTypes do
+            LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
+        foreach TypeName in Walked do
+            if not TypeName.StartsWith('Inventory.ItemJournal.') then
+                LibraryAssert.IsTrue(AppTypes.Contains(TypeName), TypeName + ' is not registered by this app.');
         LibraryAssert.IsTrue(SawCostGet, 'Inventory.Cost.Get is a registered message type.');
-        LibraryAssert.AreEqual(48, CheckedCount, '44 types in this app, plus Foundation Inventory.ItemJournal.Check, Create, Post, and PreviewPost.');
         LibraryAssert.AreEqual(2, CostGetNames.Count(), 'Inventory.Cost.Get names two related message types.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.AdjustCost.Run'), 'Inventory.Cost.Get relates to Inventory.AdjustCost.Run.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.Revaluation.Calculate'), 'Inventory.Cost.Get relates to Inventory.Revaluation.Calculate.');
@@ -198,6 +217,54 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.AssemblyOrder.Post');
         Types.Add('Inventory.AssemblyOrder.PreviewPost');
         Types.Add('Inventory.AssemblyOrder.Statistics');
+    end;
+
+    local procedure AppRegisteredInventoryTypes() Types: List of [Text]
+    begin
+        Types.Add('Inventory.Attribute.Get');
+        Types.Add('Inventory.Attribute.Create');
+        Types.Add('Inventory.Attribute.Update');
+        Types.Add('Inventory.AttributeDefinition.Create');
+        Types.Add('Inventory.TransferOrder.Create');
+        Types.Add('Inventory.TransferOrder.Release');
+        Types.Add('Inventory.TransferOrder.Reopen');
+        Types.Add('Inventory.TransferOrder.Post');
+        Types.Add('Inventory.TransferOrder.PreviewPost');
+        Types.Add('Inventory.TransferOrder.Statistics');
+        Types.Add('Inventory.AssemblyOrder.Create');
+        Types.Add('Inventory.AssemblyOrder.RefreshLines');
+        Types.Add('Inventory.AssemblyOrder.Release');
+        Types.Add('Inventory.AssemblyOrder.Reopen');
+        Types.Add('Inventory.AssemblyOrder.Post');
+        Types.Add('Inventory.AssemblyOrder.PreviewPost');
+        Types.Add('Inventory.AssemblyOrder.Statistics');
+        Types.Add('Inventory.AdjustCost.Run');
+        Types.Add('Inventory.Cost.Get');
+        Types.Add('Inventory.CostToGL.Post');
+        Types.Add('Inventory.CostToGL.Test');
+        Types.Add('Inventory.Tracking.Assign');
+        Types.Add('Inventory.Tracking.Delete');
+        Types.Add('Inventory.TrackingAvailability.Get');
+        Types.Add('Inventory.Transfer.UndoShipment');
+        Types.Add('Inventory.Transfer.UndoReceipt');
+        Types.Add('Inventory.Assembly.UndoPost');
+        Types.Add('Inventory.ItemApplication.Get');
+        Types.Add('Inventory.ItemApplication.Unapply');
+        Types.Add('Inventory.ItemApplication.Reapply');
+        Types.Add('Inventory.Reclassification.Check');
+        Types.Add('Inventory.Reclassification.PreviewPost');
+        Types.Add('Inventory.Reclassification.Post');
+        Types.Add('Inventory.Period.Get');
+        Types.Add('Inventory.Period.Close');
+        Types.Add('Inventory.Period.Reopen');
+        Types.Add('Inventory.Price.Update');
+        Types.Add('Inventory.Revaluation.Calculate');
+        Types.Add('Inventory.Reservation.Get');
+        Types.Add('Inventory.Reservation.Create');
+        Types.Add('Inventory.Reservation.Cancel');
+        Types.Add('Inventory.PhysInventory.Calculate');
+        Types.Add('Inventory.PhysInventory.Record');
+        Types.Add('Inventory.PhysInventory.Post');
     end;
 
     local procedure RequiredChapters(TypeName: Text) Chapters: List of [Text]
