@@ -49,7 +49,6 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation through Reservation Management |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
 | `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on a physical inventory line |
-| `Inventory.PhysInventory.Check` | Outbound | Read quantity differences before posting |
 | `Inventory.PhysInventory.Preview` | Outbound | Preview a physical inventory batch without posting |
 | `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
 

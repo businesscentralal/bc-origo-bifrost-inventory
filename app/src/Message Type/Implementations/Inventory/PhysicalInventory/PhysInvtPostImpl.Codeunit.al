@@ -79,7 +79,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     var
         ErrorJson: JsonObject;
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('code', 'PreconditionFailed');
         ErrorJson.Add('when', 'the batch has no lines');
         Errors.Add(ErrorJson);
         exit(true);
@@ -143,6 +143,9 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         TemplateName: Code[10];
         BatchName: Code[10];
         LineCount: Integer;
+        EmptyBatchErr: Label 'The physical inventory batch has no lines.', Locked = true;
+        EmptyBatchExpectedTok: Label 'at least one journal line', Locked = true;
+        EmptyBatchNextStepTok: Label 'Calculate the physical inventory journal, then post the batch.', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, true) then
             exit;
@@ -163,7 +166,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         ItemJournalLine.SetRange("Journal Batch Name", BatchName);
         LineCount := ItemJournalLine.Count();
         if LineCount = 0 then begin
-            Argument.RespondWithError('The physical inventory batch has no lines.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyBatchErr, 'journalBatchName', EmptyBatchExpectedTok, '0', EmptyBatchNextStepTok);
             exit;
         end;
         ItemJnlPost.Run(ItemJournalLine);

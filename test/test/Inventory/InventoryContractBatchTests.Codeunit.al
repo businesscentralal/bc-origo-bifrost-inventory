@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 
@@ -98,10 +99,46 @@ codeunit 96921 "Inventory Contract Batch Tests"
             end;
         // [THEN] Inventory.Cost.Get keeps its two existing related message types.
         LibraryAssert.IsTrue(SawCostGet, 'Inventory.Cost.Get is a registered message type.');
-        LibraryAssert.IsTrue(CheckedCount > 17, 'Every Inventory message type is checked.');
+        LibraryAssert.AreEqual(44, CheckedCount, 'Every Inventory message type is checked.');
         LibraryAssert.AreEqual(2, CostGetNames.Count(), 'Inventory.Cost.Get names two related message types.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.AdjustCost.Run'), 'Inventory.Cost.Get relates to Inventory.AdjustCost.Run.');
         LibraryAssert.IsTrue(CostGetNames.Contains('Inventory.Revaluation.Calculate'), 'Inventory.Cost.Get relates to Inventory.Revaluation.Calculate.');
+    end;
+
+    /// <summary>An empty physical inventory batch is PreconditionFailed on the contract and at runtime.</summary>
+    [Test]
+    procedure PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Helper: Codeunit "Transfer Order Test Helper";
+        LibraryInventory: Codeunit "Library - Inventory";
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
+        Contract: JsonObject;
+        ErrorEntry: JsonObject;
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] The help contract names PreconditionFailed for an empty batch.
+        LibraryAssert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.Post", Contract), 'Inventory.PhysInventory.Post must declare a contract.');
+        GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', ErrorEntry);
+        // [WHEN] The registered post type runs against a physical inventory batch with no lines.
+        LibraryInventory.SelectItemJournalTemplateName(ItemJournalTemplate, ItemJournalTemplate.Type::"Phys. Inventory");
+        LibraryInventory.SelectItemJournalBatchName(ItemJournalBatch, ItemJournalTemplate.Type::"Phys. Inventory", ItemJournalTemplate.Name);
+        LibraryInventory.ClearItemJournal(ItemJournalTemplate, ItemJournalBatch);
+        RequestJson.Add('journalTemplateName', ItemJournalTemplate.Name);
+        RequestJson.Add('journalBatchName', ItemJournalBatch.Name);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.PhysInventory.Post", RequestJson, ResponseJson);
+        // [THEN] The response carries PreconditionFailed for journalBatchName.
+        LibraryAssert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        LibraryAssert.AreEqual('Error', Token.AsValue().AsText(), 'An empty batch is not posted.');
+        LibraryAssert.IsTrue(ResponseJson.Get('code', Token), 'code missing');
+        LibraryAssert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Empty batch code.');
+        LibraryAssert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
+        LibraryAssert.AreEqual('journalBatchName', Token.AsValue().AsText(), 'parameter');
+        LibraryAssert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
+        LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'nextStep');
     end;
 
     [Test]
