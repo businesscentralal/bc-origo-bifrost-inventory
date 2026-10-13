@@ -99,7 +99,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"False for test; true for completed posting mode, even if the native report leaves entries pending."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"entriesRemaining","type":"integer","description":"Selected pending entries remaining after native posting."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"False for test; true for completed posting mode, even if the native report leaves entries pending."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"entriesRemaining","type":"integer","description":"Selected pending entries remaining after native posting."},{"name":"skippedEntries","type":"array","description":"Value Entry numbers from the native report 1002 skipped-entry dataset."}]}');
         exit(true);
     end;
 

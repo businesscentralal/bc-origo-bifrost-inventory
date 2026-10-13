@@ -299,6 +299,51 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsFalse(OtherItem."Cost is Adjusted", 'Unselected item is unchanged.');
     end;
 
+    /// <summary>The native posting report leaves a blocked posting date pending and reports the skipped entry.</summary>
+    [Test]
+    procedure NativePostReportsSkippedEntry()
+    var
+        Item: Record Item;
+        GLSetup: Record "General Ledger Setup";
+        ValueEntry: Record "Value Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateUnpostedCost(Item);
+        GLSetup.Get();
+        GLSetup."Allow Posting From" := WorkDate() + 1;
+        GLSetup.Modify();
+        Request.Add('itemNo', Item."No.");
+        CostReports.PostCostToGL(Request, Response);
+        Response.Get('skippedEntries', Token);
+        Assert.IsTrue(Token.AsArray().Count() > 0, 'Native report skipped-entry dataset must reach the response.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Blocked date did not post.');
+    end;
+
+    /// <summary>A nonmatching posting-date filter excludes an otherwise eligible self-created value entry.</summary>
+    [Test]
+    procedure NativeTestHonorsPostingDateFilter()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateUnpostedCost(Item);
+        Request.Add('itemNo', Item."No.");
+        Request.Add('postingDate', Format(WorkDate() + 1, 0, 9));
+        CostReports.TestCostToGL(Request, Response);
+        Response.Get('entriesSelected', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'Nonmatching date excludes the pending entry.');
+        Request.Replace('postingDate', Format(WorkDate(), 0, 9));
+        CostReports.TestCostToGL(Request, Response);
+        Response.Get('entriesSelected', Token);
+        Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'Matching date includes the same pending entry.');
+    end;
+
     local procedure CreateUnpostedCost(var Item: Record Item)
     var
         InventorySetup: Record "Inventory Setup";

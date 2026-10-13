@@ -141,6 +141,8 @@ codeunit 70013429 "Inventory Cost Reports ori"
         PostReport: Report "Post Inventory Cost to G/L";
         TempBlob: Codeunit "Temp Blob";
         Output: OutStream;
+        Input: InStream;
+        SkippedEntries: JsonArray;
         DocumentNo: Code[20];
         PerPostingGroup: Boolean;
         SelectedEntries: Integer;
@@ -154,11 +156,34 @@ codeunit 70013429 "Inventory Cost Reports ori"
             PostReport.InitializeRequest(1, DocumentNo, true);
         TempBlob.CreateOutStream(Output);
         PostReport.SaveAs('', ReportFormat::Xml, Output);
+        TempBlob.CreateInStream(Input);
+        ReadSkippedEntries(Input, SkippedEntries);
         Clear(Response);
         Response.Add('status', 'Success');
         Response.Add('posted', true);
         Response.Add('entriesSelected', SelectedEntries);
         Response.Add('entriesRemaining', PendingEntry.Count());
+        Response.Add('skippedEntries', SkippedEntries);
+    end;
+
+    local procedure ReadSkippedEntries(Input: InStream; var SkippedEntries: JsonArray)
+    var
+        Document: XmlDocument;
+        Nodes: XmlNodeList;
+        Node: XmlNode;
+        EntryNo: Integer;
+        SeenEntries: List of [Integer];
+    begin
+        Clear(SkippedEntries);
+        XmlDocument.ReadFrom(Input, Document);
+        Document.SelectNodes('//*[local-name()="Column" and @name="EntryNo_SkippedValueEntry"]', Nodes);
+        foreach Node in Nodes do
+            if Evaluate(EntryNo, Node.AsXmlElement().InnerText(), 9) then
+                if EntryNo <> 0 then
+                    if not SeenEntries.Contains(EntryNo) then begin
+                        SeenEntries.Add(EntryNo);
+                        SkippedEntries.Add(EntryNo);
+                    end;
     end;
 
     local procedure ReadReportErrors(Input: InStream; var Errors: JsonArray)
