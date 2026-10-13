@@ -738,6 +738,19 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertStatus(Response, 'Success');
         Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Selected source reservation was cancelled.');
         Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'The opposite native reservation was cancelled too.');
+        // Recreate the same native pair, then resolve cancellation from its entry number alone.
+        ExecuteReservation(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        EntryNo := Token.AsValue().AsInteger();
+        Clear(CancelRequest);
+        CancelRequest.Add('entryNo', EntryNo);
+
+        ExecuteReservation(CancelRequest, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Entry-only cancellation removes the selected source side.');
+        Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'Entry-only cancellation removes the opposite side too.');
     end;
 
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")

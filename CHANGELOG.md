@@ -12,6 +12,7 @@
 - Exercise production output/component, service, inbound/outbound transfer and posted-ledger reservation sources with real fixtures; verify native adjustment-journal refusal without partial pairs (tests 96926).
 - Cover native tracking assign/delete round trips for sales, purchase, assembly output/components, transfer and item journals, plus deletion after a partial receipt that preserves posted inventory (tests 96925).
 - Exercise sales/purchase return reservation polarity and real partial-shipment availability limits (tests 96926).
+- Recreate each native source pair and verify entry-number-only cancellation removes both sides after source-scoped cancellation (tests 96926).
 - Prove native source read/write separation and reservation read refusals under restricted test permissions (test codeunit 96929; test-only permission sets 96929–96930).
 - Read-only execute grants use the existing read-role extension 10036915; no persistent tracking or reservation table writes. Runtime and licensed MCP acceptance remain separately tracked.
 
