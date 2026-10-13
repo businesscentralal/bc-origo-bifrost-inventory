@@ -170,7 +170,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
                 Row.Add('lotNo', Entry."Lot No.");
                 Row.Add('serialNo', Entry."Serial No.");
                 Row.Add('packageNo', Entry."Package No.");
-                Row.Add('expirationDate', DateText(Entry."Expiration Date"));
+                Row.Add('expirationDate', ExpirationText(Entry."Item No.", Entry."Expiration Date"));
                 Row.Add('reservationStatus', Entry."Reservation Status".Names().Get(Entry."Reservation Status".Ordinals().IndexOf(Entry."Reservation Status".AsInteger())));
                 AddSource(Row, Entry."Source Type", Entry."Source Subtype", Entry."Source ID", Entry."Source Batch Name", Entry."Source Prod. Order Line", Entry."Source Ref. No.");
                 Lines.Add(Row);
@@ -231,7 +231,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
                     KeyParts.Add(Ledger."Serial No.");
                     KeyParts.Add(Ledger."Package No.");
                     KeyParts.WriteTo(GroupKey);
-                    Expiration := DateText(Ledger."Expiration Date");
+                    Expiration := ExpirationText(Ledger."Item No.", Ledger."Expiration Date");
                     if IndexByKey.Get(GroupKey, Index) then begin
                         Rows.Get(Index, Token);
                         Row := Token.AsObject();
@@ -416,7 +416,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Row.Add('locationCode', Location);
         Row.Add('variantCode', Variant);
         Row.Add('quantityBase', Quantity);
-        Row.Add('expirationDate', DateText(ExpirationDate));
+        Row.Add('expirationDate', ExpirationText(ItemNo, ExpirationDate));
     end;
 
     local procedure AddSource(var Row: JsonObject; TableNo: Integer; Subtype: Integer; DocumentNo: Code[20]; Batch: Code[10]; ProdLine: Integer; LineNo: Integer)
@@ -431,6 +431,20 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Row.Add('sourceProdOrderLine', ProdLine);
         Row.Add('sourceRefNo', LineNo);
         Row.Add('lineNo', LineNo);
+    end;
+
+    local procedure ExpirationText(ItemNo: Code[20]; Value: Date): Text
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+    begin
+        if not Item.Get(ItemNo) then
+            exit('');
+        if not TrackingCode.Get(Item."Item Tracking Code") then
+            exit('');
+        if not TrackingCode."Use Expiration Dates" then
+            exit('');
+        exit(DateText(Value));
     end;
 
     local procedure DateText(Value: Date): Text

@@ -28,7 +28,7 @@
 
 ## [Unreleased]
 
-- Honor corrected AC-5 entry fallback even when the master-expiration flag is disabled; blank undated entries and conflicting grouped dates. Master precedence remains pending target-schema reconciliation (codeunit 10036916; tests 96927).
+- Apply Architect AC-5 correction of 13 October: project entry expiration only when Use Expiration Dates is enabled; disabled, undated and conflicting lot/package groups return blank. The nonexistent master-field path is struck, not pending; no table extension (codeunit 10036916; tests 96927).
 - Return the company-disabled refusal before licensing in Reclassification.Check, consistent with the other Inventory types; enabled operations still require licensing (codeunit 70013475; tests 96924).
 
 ### Fixed - native source tracking and manual reservations (work in progress)
