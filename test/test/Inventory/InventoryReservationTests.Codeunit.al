@@ -272,6 +272,86 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.IsTrue(ReservationEntry.IsEmpty(), 'Ambiguous supply never silently chooses one selector.');
     end;
 
+    /// <summary>Omitting explicit supply reserves matching posted inventory through the same native pair path.</summary>
+    [Test]
+    procedure GeneralInventoryCreatesNativePair()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        OppositeEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        Request.Add('source', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 4);
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        ReservationEntry.FindFirst();
+        Assert.AreEqual(-4, ReservationEntry."Quantity (Base)", 'Requested inventory quantity.');
+        OppositeEntry.Get(ReservationEntry."Entry No.", not ReservationEntry.Positive);
+        Assert.AreEqual(ItemLedgerEntry."Entry No.", OppositeEntry."Source Ref. No.", 'Native pair uses posted stock.');
+    end;
+
+    /// <summary>General inventory is preflighted across all required entries before any pair is written.</summary>
+    [Test]
+    procedure InsufficientGeneralInventoryLeavesNoPartialReservation()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        SalesLine.Validate(Quantity, 20);
+        SalesLine.Modify(true);
+        Request.Add('source', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 11);
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Available first ten units are not partially reserved.');
+    end;
+
+    /// <summary>A reservation spanning two posted entries uses deterministic native pairs and exact base totals.</summary>
+    [Test]
+    procedure GeneralInventorySplitsAcrossPostedEntries()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
+        ItemJournalLine: Record "Item Journal Line";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        SalesLine.Validate(Quantity, 20);
+        SalesLine.Modify(true);
+        LibraryInventory.CreateItemJournalTemplate(ItemJournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(ItemJournalBatch, ItemJournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(ItemJournalLine, ItemJournalTemplate.Name, ItemJournalBatch.Name, ItemJournalLine."Entry Type"::"Positive Adjmt.", SalesLine."No.", 5);
+        LibraryInventory.PostItemJournalLine(ItemJournalTemplate.Name, ItemJournalBatch.Name);
+        Request.Add('source', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 12);
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        Assert.AreEqual(2, ReservationEntry.Count(), 'Two source reservations pair with the two receipt entries.');
+        ReservationEntry.CalcSums("Quantity (Base)");
+        Assert.AreEqual(-12, ReservationEntry."Quantity (Base)", 'Exact requested base quantity is reserved.');
+    end;
+
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
     var
         Item: Record Item;

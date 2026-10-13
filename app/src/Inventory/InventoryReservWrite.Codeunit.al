@@ -54,6 +54,10 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Request := Argument.GetRequestJson();
         if not Resolver.ResolveDocument(Argument, Request, true, SourceRef, SourceSpecification, SourceDirection) then
             exit;
+        if not Request.Contains('supply') and not Request.Contains('itemLedgerEntryNo') then begin
+            CreateFromInventory(Argument, Request, SourceRef, SourceSpecification, SourceDirection);
+            exit;
+        end;
         if not ResolveSupply(Argument, Request, SupplyRef, SupplySpecification, SupplyDirection) then
             exit;
         if not Reader.TryReadDecimal(Argument, Request, 'quantity', true, Quantity) then
@@ -108,9 +112,145 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             ReservationManagement.SetTrackingFromReservEntry(SupplyEntry);
             ReservationManagement.CreateReservation(SourceSpecification.Description, ExpectedDate, Quantity, QuantityBase, SupplySpecification);
         end;
+        SourceEntry.SetPointerFilter();
+        SourceEntry.SetRange("Reservation Status", SourceEntry."Reservation Status"::Reservation);
+        if SourceEntry.FindLast() then
+            Response.Add('entryNo', SourceEntry."Entry No.");
         Response.Add('status', 'Success');
         Response.Add('quantity', Quantity);
         Response.Add('quantityBase', QuantityBase);
+        Argument.SetResponseJson(Response);
+        Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure CreateFromInventory(var Argument: Record "Message Argument ori"; Request: JsonObject; SourceRef: RecordRef; Specification: Record "Tracking Specification"; Direction: Enum "Transfer Direction")
+    var
+        Ledger: Record "Item Ledger Entry";
+        SourceEntry: Record "Reservation Entry";
+        ReservationEntry: Record "Reservation Entry";
+        TempPartArgument: Record "Message Argument ori" temporary;
+        Reader: Codeunit "Request Value Reader ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
+        ReservationManagement: Codeunit "Reservation Management";
+        Supplies: JsonArray;
+        Supply: JsonObject;
+        PartRequest: JsonObject;
+        PartResponse: JsonObject;
+        Response: JsonObject;
+        EntryNumbers: JsonArray;
+        Token: JsonToken;
+        StatusToken: JsonToken;
+        Quantity: Decimal;
+        QuantityBase: Decimal;
+        RemainingBase: Decimal;
+        AvailableBase: Decimal;
+        PartBase: Decimal;
+        Lot: Text;
+        Serial: Text;
+        Package: Text;
+        ErrorText: Text;
+        SupplyErr: Label 'The requested quantity is not available in matching inventory for this source.', Comment = 'is-IS=Umbeðið magn er ekki tiltækt í samsvarandi birgðum fyrir þennan uppruna.';
+        PermissionErr: Label 'Permission denied for inventory reservation data.', Comment = 'is-IS=Heimild hafnað fyrir birgðafrátektargögn.';
+    begin
+        if not Ledger.ReadPermission() or not ReservationEntry.ReadPermission() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, '', '', '', '');
+            exit;
+        end;
+        if not Reader.TryReadDecimal(Argument, Request, 'quantity', true, Quantity) then
+            exit;
+        if not Resolver.ReadText(Argument, Request, 'lotNo', false, Lot) or
+           not Resolver.ReadText(Argument, Request, 'serialNo', false, Serial) or
+           not Resolver.ReadText(Argument, Request, 'packageNo', false, Package)
+        then
+            exit;
+        if (StrLen(Lot) > MaxStrLen(Ledger."Lot No.")) or (StrLen(Serial) > MaxStrLen(Ledger."Serial No.")) or (StrLen(Package) > MaxStrLen(Ledger."Package No.")) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, SupplyErr, '', '', '', '');
+            exit;
+        end;
+        Specification.TestField("Qty. per Unit of Measure");
+        QuantityBase := Round(Quantity * Specification."Qty. per Unit of Measure", 0.00001);
+        SourceEntry.TransferFields(Specification);
+        ReservationManagement.SetReservSource(SourceRef, Direction);
+        // Serialize reservation availability reads with the native writer. No direct table writes occur here.
+        ReservationEntry.LockTable();
+        if (Quantity <= 0) or (QuantityBase <= 0) or (QuantityBase > AvailableQuantity(SourceEntry)) or
+           (SourceRef.Number = Database::"Item Ledger Entry") or not ReservationManagement.IsPositive()
+        then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SupplyErr, 'quantity', Format(Quantity, 0, 9), '', '');
+            exit;
+        end;
+        Ledger.SetRange("Item No.", Specification."Item No.");
+        Ledger.SetRange("Variant Code", Specification."Variant Code");
+        Ledger.SetRange("Location Code", Specification."Location Code");
+        Ledger.SetRange(Open, true);
+        Ledger.SetRange(Positive, true);
+        Ledger.SetRange("Drop Shipment", false);
+        Ledger.SetFilter("Remaining Quantity", '>0');
+        if Request.Contains('lotNo') then
+            Ledger.SetRange("Lot No.", Lot);
+        if Request.Contains('serialNo') then
+            Ledger.SetRange("Serial No.", Serial);
+        if Request.Contains('packageNo') then
+            Ledger.SetRange("Package No.", Package);
+        Ledger.SetAutoCalcFields("Reserved Quantity");
+        RemainingBase := QuantityBase;
+        if Ledger.FindSet() then
+            repeat
+                AvailableBase := Ledger."Remaining Quantity" - Abs(Ledger."Reserved Quantity");
+                if (AvailableBase > 0) and (RemainingBase > 0) and
+                   (ReservationManagement.FindUnfinishedSpecialOrderSalesNo(Ledger) = '')
+                then begin
+                    PartBase := AvailableBase;
+                    if PartBase > RemainingBase then
+                        PartBase := RemainingBase;
+                    if (Ledger."Serial No." <> '') and (PartBase <> 1) then begin
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SupplyErr, 'quantity', Format(Quantity, 0, 9), 'one base unit per serial', '');
+                        exit;
+                    end;
+                    Clear(Supply);
+                    Supply.Add('entryNo', Ledger."Entry No.");
+                    Supply.Add('quantityBase', PartBase);
+                    Supplies.Add(Supply);
+                    RemainingBase -= PartBase;
+                end;
+            until (Ledger.Next() = 0) or (RemainingBase = 0);
+        if RemainingBase <> 0 then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SupplyErr, 'quantity', Format(Quantity, 0, 9), '', '');
+            exit;
+        end;
+        // Validate the whole selection before the first native write, then use the explicit-pair path for every allocation.
+        foreach Token in Supplies do begin
+            Supply := Token.AsObject();
+            PartRequest := Request.Clone().AsObject();
+            Supply.Get('entryNo', StatusToken);
+            PartRequest.Add('itemLedgerEntryNo', StatusToken);
+            Supply.Get('quantityBase', StatusToken);
+            PartBase := StatusToken.AsValue().AsDecimal();
+            PartRequest.Replace('quantity', PartBase / Specification."Qty. per Unit of Measure");
+            TempPartArgument.DeleteAll();
+            TempPartArgument.Init();
+            TempPartArgument.Version := Argument.Version;
+            TempPartArgument.Insert(true);
+            TempPartArgument.SetRequestJson(PartRequest);
+            Create(TempPartArgument);
+            PartResponse := TempPartArgument.GetResponseJson();
+            if not PartResponse.Get('status', StatusToken) then
+                Error(SupplyErr);
+            if StatusToken.AsValue().AsText() <> 'Success' then begin
+                PartResponse.WriteTo(ErrorText);
+                Error(ErrorText);
+            end;
+            if PartResponse.Get('entryNo', StatusToken) then
+                EntryNumbers.Add(StatusToken);
+        end;
+        Response.Add('status', 'Success');
+        Response.Add('quantity', Quantity);
+        Response.Add('quantityBase', QuantityBase);
+        Response.Add('entryNos', EntryNumbers);
+        if EntryNumbers.Count() = 1 then begin
+            EntryNumbers.Get(0, Token);
+            Response.Add('entryNo', Token);
+        end;
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

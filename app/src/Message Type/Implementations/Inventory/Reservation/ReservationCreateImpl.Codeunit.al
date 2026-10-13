@@ -65,7 +65,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ParameterJson.Add('name', 'supply');
         ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', false);
-        ParameterJson.Add('description', 'Explicit opposite source type and systemId. No automatic supply selection.');
+        ParameterJson.Add('description', 'Explicit opposite source type and systemId. Otherwise use itemLedgerEntryNo, or matching posted inventory in entry order.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'quantity');
@@ -186,7 +186,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Manually reserves the requested quantity between two explicitly selected native W1 sources.';
+        Overview := 'Manually reserves the requested quantity against explicit supply or matching posted inventory through native W1 adapters.';
         exit(true);
     end;
 

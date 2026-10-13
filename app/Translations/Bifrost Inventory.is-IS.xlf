@@ -237,6 +237,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Frátekið magn verður að vera jákvætt og tiltækt á báðum upprunum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method Create - NamedType InvalidQuantityErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 292814924 - Method 48784676 - NamedType 1248797146" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The requested quantity is not available in matching inventory for this source.</source>
+          <target>Umbeðið magn er ekki tiltækt í samsvarandi birgðum fyrir þennan uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Umbeðið magn er ekki tiltækt í samsvarandi birgðum fyrir þennan uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method CreateFromInventory - NamedType SupplyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 292814924 - Method 48784676 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for inventory reservation data.</source>
+          <target>Heimild hafnað fyrir birgðafrátektargögn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir birgðafrátektargögn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method CreateFromInventory - NamedType PermissionErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 292814924 - Method 3168011113 - NamedType 3442883137" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specify an existing item ledger entry or an explicit supply source.</source>
           <target>Tilgreindu fyrirliggjandi vörufærslu eða skýran framboðsuppruna.</target>

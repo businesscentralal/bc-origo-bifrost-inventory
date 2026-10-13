@@ -105,14 +105,15 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 end;
             end;
         // [THEN] Foundation's four item journal types are present, and the other walked names are this app's registered types.
+        LibraryAssert.IsTrue(Walked.Contains('Inventory.Tracking.Get'), 'Inventory.Tracking.Get is registered and its complete help contract was walked.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Check'), 'Inventory.ItemJournal.Check is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Create'), 'Inventory.ItemJournal.Create is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         LibraryAssert.AreEqual(4, ItemJournalNames.Count(), 'Exactly four Inventory.ItemJournal types are registered.');
-        LibraryAssert.AreEqual(44, CheckedCount - ItemJournalNames.Count(), 'This app registers 44 Inventory types.');
+        LibraryAssert.AreEqual(45, CheckedCount - ItemJournalNames.Count(), 'This app registers 45 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(44, AppTypes.Count(), 'The registered Inventory type list for this app has 44 names.');
+        LibraryAssert.AreEqual(45, AppTypes.Count(), 'The registered Inventory type list for this app has 45 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -242,6 +243,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Cost.Get');
         Types.Add('Inventory.CostToGL.Post');
         Types.Add('Inventory.CostToGL.Test');
+        Types.Add('Inventory.Tracking.Get');
         Types.Add('Inventory.Tracking.Assign');
         Types.Add('Inventory.Tracking.Delete');
         Types.Add('Inventory.TrackingAvailability.Get');
