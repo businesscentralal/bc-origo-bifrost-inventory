@@ -255,6 +255,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method Resolve - NamedType PermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1196884345 - Method 971799876 - NamedType 845101464" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The reservation source is unsupported or no longer exists.</source>
+          <target>Uppruni frátektar er ekki studdur eða er ekki lengur til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni frátektar er ekki studdur eða er ekki lengur til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method ResolveEntry - NamedType MissingSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1196884345 - Method 971799876 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for the reservation source.</source>
+          <target>Heimild hafnað fyrir uppruna frátektar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir uppruna frátektar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method ResolveEntry - NamedType PermissionErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 3921788780" size-unit="char" translate="yes" xml:space="preserve">
           <source>Every entry number must identify tracking on the specified source.</source>
           <target>Hvert færslunúmer verður að vísa í rakningu á tilgreindum uppruna.</target>
