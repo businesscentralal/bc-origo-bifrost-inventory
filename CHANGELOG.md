@@ -8,6 +8,7 @@
 - Support reservation create/cancel document keys and named item-ledger supply; reject conflicting supply selectors and lot/serial/package mismatches before native writes (10036915, 70013476, 70013478; tests 96926).
 - Manually allocate matching posted inventory in entry order when no supply selector is given; preflight the whole quantity before native pair creation, without AutoReserve (10036915). Cover native W1 source pointer/UOM/posting-progress adapters in test codeunit 96928.
 - Add all-45-type company opt-out discovery/execution checks and native reserved-availability, dated-tracking and package-only read regressions (96924, 96927).
+- Prove native source read/write separation and reservation read refusals under restricted test permissions (test codeunit 96929; test-only permission sets 96929–96930).
 - Read-only execute grants use the existing read-role extension 10036915; no persistent tracking or reservation table writes. Runtime and licensed MCP acceptance remain separately tracked.
 
 ## [Unreleased]
