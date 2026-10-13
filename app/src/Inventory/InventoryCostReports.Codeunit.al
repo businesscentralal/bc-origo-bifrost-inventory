@@ -47,10 +47,10 @@ codeunit 70013429 "Inventory Cost Reports ori"
         Root.Add(XmlAttribute.Create('name', 'Adjust Cost - Item Entries'));
         Root.Add(XmlAttribute.Create('id', '795'));
         Options := XmlElement.Create('Options');
-        AddOption(Options, 'FilterItemNo', ItemFilter);
-        AddOption(Options, 'FilterItemCategory', CategoryFilter);
-        AddOption(Options, 'Post', Format(ReadBoolean(Request, 'postToGL'), 0, 9));
-        AddOption(Options, 'Item-by-Item Adjustment', Format(ReadBoolean(Request, 'itemByItem'), 0, 9));
+        AddOption(Options, 'ItemNoFilter', ItemFilter);
+        AddOption(Options, 'ItemCategoryFilter', CategoryFilter);
+        AddOption(Options, 'PostToGL', Format(ReadBoolean(Request, 'postToGL'), 0, 9));
+        AddOption(Options, 'ByItemCommit', Format(ReadBoolean(Request, 'itemByItem'), 0, 9));
         Root.Add(Options);
         Root.Add(XmlElement.Create('DataItems'));
         Document := XmlDocument.Create();

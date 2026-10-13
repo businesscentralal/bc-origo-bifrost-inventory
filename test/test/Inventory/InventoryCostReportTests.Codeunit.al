@@ -7,6 +7,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
+using Microsoft.Purchases.Document;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
@@ -36,11 +37,11 @@ codeunit 96931 "Inventory Cost Report Tests"
         Request.Add('itemByItem', true);
         Parameters := CostReports.PrepareAdjustment(Request, Item);
         XmlDocument.ReadFrom(Parameters, Document);
-        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="FilterItemNo"]', Node);
+        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="ItemNoFilter"]', Node);
         Assert.AreEqual('X*&<>XBAD', Node.AsXmlElement().InnerText(), 'Native filter must survive XML escaping.');
-        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="Post"]', Node);
+        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="PostToGL"]', Node);
         Assert.AreEqual('true', Node.AsXmlElement().InnerText(), 'One native optional G/L pass.');
-        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="Item-by-Item Adjustment"]', Node);
+        Document.SelectSingleNode('/ReportParameters/Options/Field[@name="ByItemCommit"]', Node);
         Assert.AreEqual('true', Node.AsXmlElement().InnerText(), 'Native item-by-item option.');
         Assert.AreEqual('X*&<>XBAD', Item.GetFilter("No."), 'Selection matches report options.');
     end;
@@ -305,7 +306,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsFalse(OtherItem."Cost is Adjusted", 'Unselected item is unchanged.');
     end;
 
-    /// <summary>The native posting report leaves a blocked posting date pending and reports the skipped entry.</summary>
+    /// <summary>The native posting report refuses a blocked posting date without posting the selected entry.</summary>
     [Test]
     procedure NativePostRefusesBlockedPostingDate()
     var
@@ -348,6 +349,38 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'Matching date includes the same pending entry.');
     end;
 
+    /// <summary>Native expected-cost exclusions remain pending and are returned as skipped entry numbers.</summary>
+    [Test]
+    [HandlerFunctions('PostingMessageHandler')]
+    procedure NativePostReturnsExpectedCostExclusion()
+    var
+        Item: Record Item;
+        InventorySetup: Record "Inventory Setup";
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        PendingEntry: Record "Post Value Entry to G/L";
+        LibraryPurchase: Codeunit "Library - Purchase";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateUnpostedCost(Item);
+        InventorySetup.Get();
+        InventorySetup."Expected Cost Posting to G/L" := false;
+        InventorySetup.Modify();
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
+        PurchaseLine.Validate("Direct Unit Cost", 15);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        Request.Add('itemNo', Item."No.");
+        CostReports.PostCostToGL(Request, Response);
+        Response.Get('skippedEntries', Token);
+        Assert.IsTrue(Token.AsArray().Count() > 0, 'Native expected-cost exclusion appears in report output.');
+        PendingEntry.SetRange("Item No.", Item."No.");
+        Assert.IsFalse(PendingEntry.IsEmpty(), 'Expected-cost exclusion stays pending.');
+    end;
+
     /// <summary>Handles the actual native report posting summary without hiding unexpected messages.</summary>
     [MessageHandler]
     procedure PostingMessageHandler(MessageText: Text[1024])
@@ -366,7 +399,7 @@ codeunit 96931 "Inventory Cost Report Tests"
     begin
         Parameters := Report.RunRequestPage(Report::"Adjust Cost - Item Entries");
         XmlDocument.ReadFrom(Parameters, Document);
-        Assert.IsTrue(Document.SelectSingleNode('/ReportParameters/Options/Field[@name="FilterItemNo"]', Node), Parameters);
+        Assert.IsTrue(Document.SelectSingleNode('/ReportParameters/Options/Field[@name="ItemNoFilter"]', Node), Parameters);
         Assert.AreEqual('XITEM', Node.AsXmlElement().InnerText(), Parameters);
     end;
 

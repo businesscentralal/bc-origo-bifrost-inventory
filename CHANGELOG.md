@@ -3,6 +3,7 @@
 ## Unreleased — costing report acceptance (#4, #35)
 
 - Bind report 795 request options and report 1002/1003 pending-entry filters, reject unsupported or malformed selections before execution, and explicitly enable native G/L posting. CostToGL.Test runs report 1003 and returns native warning text instead of counting items (70013429–70013430, 70013460–70013462, 70013467; tests 96931).
+- Serialize report 795 source-expression parameter names verified against its native request page; retain observed-option and unselected-item regressions (test helper 96932).
 - Preserve native report commits and licensing/domain gates; no report 795 dry-run or rollback promise.
 
 
