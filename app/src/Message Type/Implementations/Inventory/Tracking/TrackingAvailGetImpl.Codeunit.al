@@ -5,10 +5,12 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
+/// <summary>Reads tracked stock, reserved quantities and availability by location and variant.</summary>
 codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Provides IsEnabled for Inventory.TrackingAvailability.Get.</summary>
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -16,26 +18,31 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false));
     end;
 
+    /// <summary>Provides GetFilterTableNo for Inventory.TrackingAvailability.Get.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Item Ledger Entry");
     end;
 
+    /// <summary>Provides GetDescription for Inventory.TrackingAvailability.Get.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Reads remaining quantity by lot, serial, and package.');
+        exit('Reads tracked stock, reserved quantities and availability by location and variant.');
     end;
 
+    /// <summary>Provides GetKeywords for Inventory.TrackingAvailability.Get.</summary>
     procedure GetKeywords(): Text
     begin
         exit('tracking availability, lot availability, serial availability, package');
     end;
 
+    /// <summary>Provides GetSelectionDescription for Inventory.TrackingAvailability.Get.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reads open item ledger quantity for an item by tracking number.');
+        exit('Reads tracked stock, reserved quantities and availability by location and variant.');
     end;
 
+    /// <summary>Provides GetEnvelope for Inventory.TrackingAvailability.Get.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Envelope.Add('messageType', 'Inventory.TrackingAvailability.Get');
@@ -43,53 +50,86 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         exit(true);
     end;
 
+    /// <summary>Provides GetTarget for Inventory.TrackingAvailability.Get.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetParameters for Inventory.TrackingAvailability.Get.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'locationCode');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Item number; subject takes precedence.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Item SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Item SystemId, or document line SystemId with documentType.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Item SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('locationFilter', 'string', false, 'Business Central location filter.'));
+        Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, 'Exact location code; intersects locationFilter.'));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant code, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Exact lot number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('serialNo', 'string', false, 'Exact serial number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('packageNo', 'string', false, 'Exact package number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('skip', 'integer', false, 'Number of rows to skip; default 0.'));
+        Parameters.Add(ContractMgt.Parameter('take', 'integer', false, 'Page size 1..10000; default 100.'));
         exit(true);
     end;
 
+    /// <summary>Provides GetResponse for Inventory.TrackingAvailability.Get.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entries', 'array');
+        Response.Add('availability', 'array');
+        Response.Add('noOfLines', 0);
+        Response.Add('totalNoOfLines', 0);
         exit(true);
     end;
 
+    /// <summary>Provides GetErrors for Inventory.TrackingAvailability.Get.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ErrorJson: JsonObject;
     begin
+        Clear(ErrorJson);
         ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemNo is missing');
+        ErrorJson.Add('when', 'A required item or document identifier is absent.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'InvalidParameterFormat');
+        ErrorJson.Add('when', 'An identifier, filter or paging value has the wrong type or range.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'The requested source or document type is unsupported, or the company domain is disabled.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'RecordNotFound');
+        ErrorJson.Add('when', 'No record matches all requested criteria.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'PermissionDenied');
+        ErrorJson.Add('when', 'The caller cannot read a required source table.');
         Errors.Add(ErrorJson);
         exit(true);
     end;
 
+    /// <summary>Provides GetEffect for Inventory.TrackingAvailability.Get.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Effect.Add('writes', false);
         exit(true);
     end;
 
+    /// <summary>Provides GetMetering for Inventory.TrackingAvailability.Get.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetRelated for Inventory.TrackingAvailability.Get.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -99,74 +139,48 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         exit(true);
     end;
 
+    /// <summary>Provides GetWorkflow for Inventory.TrackingAvailability.Get.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetExamples for Inventory.TrackingAvailability.Get.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetOverview for Inventory.TrackingAvailability.Get.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads remaining tracked quantity. Does not assign tracking.';
+        Overview := 'Reads tracked stock, reserved quantities and availability by location and variant.';
         exit(true);
     end;
 
+    /// <summary>Provides GetNotes for Inventory.TrackingAvailability.Get.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Clear(Notes);
-        exit(false);
+        Notes := 'Read only. Quantities are in base units. Entry expiration dates are returned as ISO dates or blank. Each reservation pair has two sides distinguished by positive and the native source pointer.';
+        exit(true);
     end;
 
+    /// <summary>Provides GetMessageDirection for Inventory.TrackingAvailability.Get.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
+    /// <summary>Provides ExecuteBifrostTask for Inventory.TrackingAvailability.Get.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemLedgerEntry: Record "Item Ledger Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Entries: JsonArray;
-        EntryJson: JsonObject;
-        Token: JsonToken;
-        ItemNo: Code[20];
-        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
-            exit;
-        end;
-        ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
-        ItemLedgerEntry.SetRange("Item No.", ItemNo);
-        ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
-        if RequestJson.Get('locationCode', Token) then
-            ItemLedgerEntry.SetRange("Location Code", CopyStr(Token.AsValue().AsCode(), 1, 10));
-        if ItemLedgerEntry.FindSet() then
-            repeat
-                Clear(EntryJson);
-                EntryJson.Add('entryNo', ItemLedgerEntry."Entry No.");
-                EntryJson.Add('lotNo', ItemLedgerEntry."Lot No.");
-                EntryJson.Add('serialNo', ItemLedgerEntry."Serial No.");
-                EntryJson.Add('packageNo', ItemLedgerEntry."Package No.");
-                EntryJson.Add('locationCode', ItemLedgerEntry."Location Code");
-                EntryJson.Add('remainingQuantity', ItemLedgerEntry."Remaining Quantity");
-                Entries.Add(EntryJson);
-            until ItemLedgerEntry.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNo', ItemNo);
-        ResponseJson.Add('entries', Entries);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        TrackingRead.ReadAvailability(Argument);
     end;
 }

@@ -1,13 +1,16 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Foundation.Enums;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
+/// <summary>Reads reservations with source identities and intersected item, source and tracking filters.</summary>
 codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Provides IsEnabled for Inventory.Reservation.Get.</summary>
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -15,26 +18,31 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         exit(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Reservation Entry", false, false));
     end;
 
+    /// <summary>Provides GetFilterTableNo for Inventory.Reservation.Get.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Reservation Entry");
     end;
 
+    /// <summary>Provides GetDescription for Inventory.Reservation.Get.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Reads reservation entries for an item.');
+        exit('Reads reservations with source identities and intersected item, source and tracking filters.');
     end;
 
+    /// <summary>Provides GetKeywords for Inventory.Reservation.Get.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('reservation, reserved quantity');
+        exit('tracking availability, lot availability, serial availability, package');
     end;
 
+    /// <summary>Provides GetSelectionDescription for Inventory.Reservation.Get.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reads reservation entries. Cancel is a separate type.');
+        exit('Reads reservations with source identities and intersected item, source and tracking filters.');
     end;
 
+    /// <summary>Provides GetEnvelope for Inventory.Reservation.Get.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Envelope.Add('messageType', 'Inventory.Reservation.Get');
@@ -42,168 +50,143 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Provides GetTarget for Inventory.Reservation.Get.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
-    begin
-        TargetJson.Add('table', 'Reservation Entry');
-        Target.Add(TargetJson);
-        exit(true);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
-    begin
-        Clear(Parameters);
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'source');
-        ParameterJson.Add('type', 'object');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'entryNo');
-        ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('status', 'Success');
-        Response.Add('entries', 'array');
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         exit(false);
     end;
 
-    procedure GetEffect(var Effect: JsonObject): Boolean
+    /// <summary>Provides GetParameters for Inventory.Reservation.Get.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Item number; subject takes precedence.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Item SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Item SystemId, or document line SystemId with documentType.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Item SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('locationFilter', 'string', false, 'Business Central location filter.'));
+        Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, 'Exact location code; intersects locationFilter.'));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant code, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Exact lot number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('serialNo', 'string', false, 'Exact serial number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('packageNo', 'string', false, 'Exact package number, including blank.'));
+        Parameters.Add(ContractMgt.Parameter('skip', 'integer', false, 'Number of rows to skip; default 0.'));
+        Parameters.Add(ContractMgt.Parameter('take', 'integer', false, 'Page size 1..10000; default 100.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', false, 'Native source type and systemId; transferDirection selects transfer side.'));
+        Parameters.Add(ContractMgt.Parameter('documentType', 'string', false, 'Sales.Order, Sales.Invoice, Sales.CreditMemo, Sales.ReturnOrder, corresponding Purchase types, or Transfer.Order. Unqualified Order means Sales.Order.'));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', false, 'Document number with documentType and lineNo.'));
+        Parameters.Add(ContractMgt.Parameter('lineNo', 'integer', false, 'Positive document line number.'));
+        Parameters.Add(ContractMgt.Parameter('transferDirection', 'string', false, 'Outbound (default) or Inbound for transfers.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'Reservation pair number; source filters select one side.'));
         exit(true);
     end;
 
+    /// <summary>Provides GetResponse for Inventory.Reservation.Get.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    begin
+        Response.Add('status', 'Success');
+        Response.Add('entries', 'array');
+        Response.Add('noOfLines', 0);
+        Response.Add('totalNoOfLines', 0);
+        exit(true);
+    end;
+
+    /// <summary>Provides GetErrors for Inventory.Reservation.Get.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
+    begin
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'MissingParameter');
+        ErrorJson.Add('when', 'A required item or document identifier is absent.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'InvalidParameterFormat');
+        ErrorJson.Add('when', 'An identifier, filter or paging value has the wrong type or range.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'The requested source or document type is unsupported, or the company domain is disabled.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'RecordNotFound');
+        ErrorJson.Add('when', 'No record matches all requested criteria.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'PermissionDenied');
+        ErrorJson.Add('when', 'The caller cannot read a required source table.');
+        Errors.Add(ErrorJson);
+        exit(true);
+    end;
+
+    /// <summary>Provides GetEffect for Inventory.Reservation.Get.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Effect.Add('writes', false);
+        exit(true);
+    end;
+
+    /// <summary>Provides GetMetering for Inventory.Reservation.Get.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetRelated for Inventory.Reservation.Get.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Cancel', 'Cancel a reservation instead of reading it.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Create', 'Create a reservation instead of reading reservations.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Assign item tracking after reading availability.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete an item tracking specification instead of reading availability.'));
         exit(true);
     end;
 
+    /// <summary>Provides GetWorkflow for Inventory.Reservation.Get.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetExamples for Inventory.Reservation.Get.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Provides GetOverview for Inventory.Reservation.Get.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads reservation entries, optionally for one item.';
+        Overview := 'Reads reservations with source identities and intersected item, source and tracking filters.';
         exit(true);
     end;
 
+    /// <summary>Provides GetNotes for Inventory.Reservation.Get.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only. Cancel is a separate message type.';
+        Notes := 'Read only. Quantities are in base units. Entry expiration dates are returned as ISO dates or blank. Each reservation pair has two sides distinguished by positive and the native source pointer.';
         exit(true);
     end;
 
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
+    /// <summary>Provides GetMessageDirection for Inventory.Reservation.Get.</summary>
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
+    /// <summary>Provides ExecuteBifrostTask for Inventory.Reservation.Get.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ReservationEntry: Record "Reservation Entry";
-        SourceSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        Resolver: Codeunit "Inventory Source Resolve ori";
-        Reader: Codeunit "Request Value Reader ori";
-        SourceRef: RecordRef;
-        Direction: Enum "Transfer Direction";
-        EntryNo: Decimal;
-        ItemNoText: Text;
-        MissingEntryErr: Label 'The reservation entry does not exist.', Comment = 'is-IS=Frátektarfærslan er ekki til.';
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Entries: JsonArray;
-        EntryJson: JsonObject;
-        Token: JsonToken;
-        ItemNo: Code[20];
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not Resolver.ReadText(Argument, RequestJson, 'itemNo', false, ItemNoText) then
-            exit;
-        ItemNo := CopyStr(ItemNoText, 1, MaxStrLen(ItemNo));
-        if RequestJson.Get('source', Token) then begin
-            if not Resolver.Resolve(Argument, RequestJson, 'source', false, SourceRef, SourceSpecification, Direction) then
-                exit;
-            ReservationEntry.TransferFields(SourceSpecification);
-            ReservationEntry.SetPointerFilter();
-        end;
-        if RequestJson.Get('entryNo', Token) then begin
-            if not Reader.TryReadDecimal(Argument, RequestJson, 'entryNo', true, EntryNo) then
-                exit;
-            if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, MissingEntryErr, 'entryNo', Format(EntryNo, 0, 9), 'positive integer', '');
-                exit;
-            end;
-            ReservationEntry.SetRange("Entry No.", EntryNo);
-            if ReservationEntry.IsEmpty() then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingEntryErr, 'entryNo', Format(EntryNo, 0, 9), '', '');
-                exit;
-            end;
-        end;
-        if ItemNo <> '' then
-            ReservationEntry.SetRange("Item No.", ItemNo);
-        if ReservationEntry.FindSet() then
-            repeat
-                Clear(EntryJson);
-                EntryJson.Add('entryNo', ReservationEntry."Entry No.");
-                EntryJson.Add('itemNo', ReservationEntry."Item No.");
-                EntryJson.Add('locationCode', ReservationEntry."Location Code");
-                EntryJson.Add('quantity', ReservationEntry.Quantity);
-                EntryJson.Add('reservationStatus', ReservationEntry."Reservation Status".Names().Get(ReservationEntry."Reservation Status".Ordinals().IndexOf(ReservationEntry."Reservation Status".AsInteger())));
-                EntryJson.Add('sourceId', ReservationEntry."Source ID");
-                EntryJson.Add('sourceType', ReservationEntry."Source Type");
-                EntryJson.Add('sourceSubtype', ReservationEntry."Source Subtype");
-                EntryJson.Add('sourceRefNo', ReservationEntry."Source Ref. No.");
-                EntryJson.Add('positive', ReservationEntry.Positive);
-                EntryJson.Add('quantityBase', ReservationEntry."Quantity (Base)");
-                EntryJson.Add('lotNo', ReservationEntry."Lot No.");
-                EntryJson.Add('serialNo', ReservationEntry."Serial No.");
-                EntryJson.Add('packageNo', ReservationEntry."Package No.");
-                EntryJson.Add('expirationDate', ReservationEntry."Expiration Date");
-                Entries.Add(EntryJson);
-            until ReservationEntry.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entries', Entries);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        TrackingRead.ReadReservations(Argument);
     end;
 }

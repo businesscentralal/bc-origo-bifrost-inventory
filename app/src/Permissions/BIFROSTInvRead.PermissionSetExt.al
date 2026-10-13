@@ -23,5 +23,9 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Transfer Order Stats Impl ori" = X,
         codeunit "Asm. Order Statistics Impl ori" = X,
         codeunit "Inventory Contract Parts ori" = X,
-        codeunit "Inventory Source Resolve ori" = X;
+        codeunit "Inventory Source Resolve ori" = X,
+        codeunit "Inventory Tracking Read ori" = X,
+        codeunit "Tracking Get Impl ori" = X,
+        codeunit "Tracking Avail. Get Impl ori" = X,
+        codeunit "Reservation Get Impl ori" = X;
 }

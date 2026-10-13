@@ -84,6 +84,180 @@ codeunit 10036913 "Inventory Source Resolve ori"
         exit(true);
     end;
 
+    /// <summary>Resolves legacy document keys through the same permission-checked native source adapter.</summary>
+    procedure ResolveDocument(var Argument: Record "Message Argument ori"; Request: JsonObject; NeedWrite: Boolean; var SourceRef: RecordRef; var Specification: Record "Tracking Specification"; var Direction: Enum "Transfer Direction"): Boolean
+    var
+        SalesLine: Record "Sales Line";
+        PurchaseLine: Record "Purchase Line";
+        TransferLine: Record "Transfer Line";
+        Reader: Codeunit "Request Value Reader ori";
+        PermissionRef: RecordRef;
+        DocumentType: Text;
+        DocumentNo: Text;
+        IdText: Text;
+        TypeName: Text;
+        Subtype: Integer;
+        LineNo: Decimal;
+        Found: Boolean;
+        Source: JsonObject;
+        SourceRequest: JsonObject;
+        Token: JsonToken;
+        DocumentErr: Label 'Specify a supported document type and an existing item line.', Comment = 'is-IS=Tilgreindu studda skjalategund og fyrirliggjandi vörulínu.';
+        PermissionErr: Label 'Permission denied for the source record.', Comment = 'is-IS=Heimild hafnað fyrir upprunafærsluna.';
+    begin
+        if Request.Contains('source') then
+            exit(Resolve(Argument, Request, 'source', NeedWrite, SourceRef, Specification, Direction));
+        if not ReadText(Argument, Request, 'documentType', true, DocumentType) then
+            exit(false);
+        case DocumentType of
+            'Order', 'Sales.Order': begin
+                TypeName := 'SalesLine';
+                Subtype := SalesLine."Document Type"::Order.AsInteger();
+            end;
+            'Invoice', 'Sales.Invoice': begin
+                TypeName := 'SalesLine';
+                Subtype := SalesLine."Document Type"::Invoice.AsInteger();
+            end;
+            'Credit Memo', 'Sales.CreditMemo': begin
+                TypeName := 'SalesLine';
+                Subtype := SalesLine."Document Type"::"Credit Memo".AsInteger();
+            end;
+            'Return Order', 'Sales.ReturnOrder': begin
+                TypeName := 'SalesLine';
+                Subtype := SalesLine."Document Type"::"Return Order".AsInteger();
+            end;
+            'Purchase.Order': begin
+                TypeName := 'PurchaseLine';
+                Subtype := PurchaseLine."Document Type"::Order.AsInteger();
+            end;
+            'Purchase.Invoice': begin
+                TypeName := 'PurchaseLine';
+                Subtype := PurchaseLine."Document Type"::Invoice.AsInteger();
+            end;
+            'Purchase.CreditMemo': begin
+                TypeName := 'PurchaseLine';
+                Subtype := PurchaseLine."Document Type"::"Credit Memo".AsInteger();
+            end;
+            'Purchase.ReturnOrder': begin
+                TypeName := 'PurchaseLine';
+                Subtype := PurchaseLine."Document Type"::"Return Order".AsInteger();
+            end;
+            'Transfer.Order':
+                TypeName := 'TransferLine';
+            else begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, '', '');
+                exit(false);
+            end;
+        end;
+        Source.Add('type', TypeName);
+        if not ReadText(Argument, Request, 'systemId', false, IdText) then
+            exit(false);
+        if IdText = '' then begin
+            if not ReadText(Argument, Request, 'documentNo', true, DocumentNo) then
+                exit(false);
+            if not Reader.TryReadDecimal(Argument, Request, 'lineNo', true, LineNo) then
+                exit(false);
+            if (StrLen(DocumentNo) > 20) or (LineNo <= 0) or (LineNo > 2147483647) or (LineNo <> Round(LineNo, 1)) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, DocumentErr, 'lineNo', Format(LineNo, 0, 9), 'positive integer; documentNo max 20 characters', '');
+                exit(false);
+            end;
+            PermissionRef.Open(SourceTableNo(TypeName));
+            if not PermissionRef.ReadPermission() or (NeedWrite and not PermissionRef.WritePermission()) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, 'documentType', DocumentType, '', '');
+                exit(false);
+            end;
+            case TypeName of
+                'SalesLine': begin
+                    Found := SalesLine.Get(Subtype, DocumentNo, LineNo);
+                    IdText := Format(SalesLine.SystemId, 0, 4);
+                end;
+                'PurchaseLine': begin
+                    Found := PurchaseLine.Get(Subtype, DocumentNo, LineNo);
+                    IdText := Format(PurchaseLine.SystemId, 0, 4);
+                end;
+                'TransferLine': begin
+                    Found := TransferLine.Get(DocumentNo, LineNo);
+                    IdText := Format(TransferLine.SystemId, 0, 4);
+                end;
+            end;
+            if not Found then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, DocumentErr, 'documentNo', DocumentNo, '', '');
+                exit(false);
+            end;
+        end;
+        Source.Add('systemId', IdText);
+        if Request.Get('transferDirection', Token) then
+            Source.Add('transferDirection', Token);
+        SourceRequest.Add('source', Source);
+        if not Resolve(Argument, SourceRequest, 'source', NeedWrite, SourceRef, Specification, Direction) then
+            exit(false);
+        if (TypeName <> 'TransferLine') and (Specification."Source Subtype" <> Subtype) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, '', '');
+            exit(false);
+        end;
+        exit(true);
+    end;
+
+    /// <summary>Returns stable sales, purchase and transfer document names for wire responses.</summary>
+    procedure DocumentTypeName(TableNo: Integer; Subtype: Integer): Text
+    var
+        Family: Text;
+    begin
+        case TableNo of
+            Database::"Sales Line": Family := 'Sales.';
+            Database::"Purchase Line": Family := 'Purchase.';
+            Database::"Transfer Line": exit('Transfer.Order');
+            else exit('');
+        end;
+        case Subtype of
+            0: exit(Family + 'Quote');
+            1: exit(Family + 'Order');
+            2: exit(Family + 'Invoice');
+            3: exit(Family + 'CreditMemo');
+            4: exit(Family + 'BlanketOrder');
+            5: exit(Family + 'ReturnOrder');
+        end;
+        exit('');
+    end;
+
+    /// <summary>Returns a stable wire name rather than a localized table caption or numeric table ID.</summary>
+    procedure SourceTypeName(TableNo: Integer): Text
+    begin
+        case TableNo of
+            Database::"Sales Line":
+                exit('SalesLine');
+            Database::"Purchase Line":
+                exit('PurchaseLine');
+            Database::"Transfer Line":
+                exit('TransferLine');
+            Database::"Assembly Header":
+                exit('AssemblyHeader');
+            Database::"Assembly Line":
+                exit('AssemblyLine');
+            Database::"Service Line":
+                exit('ServiceLine');
+            Database::"Prod. Order Line":
+                exit('ProdOrderLine');
+            Database::"Prod. Order Component":
+                exit('ProdOrderComponent');
+            Database::"Item Journal Line":
+                exit('ItemJournalLine');
+            Database::"Requisition Line":
+                exit('RequisitionLine');
+            Database::"Planning Component":
+                exit('PlanningComponent');
+            Database::"Job Journal Line":
+                exit('JobJournalLine');
+            Database::"Job Planning Line":
+                exit('JobPlanningLine');
+            Database::"Invt. Document Line":
+                exit('InventoryDocumentLine');
+            Database::"Item Ledger Entry":
+                exit('ItemLedgerEntry');
+        end;
+        exit('Unknown');
+    end;
+
     /// <summary>Resolves an existing reservation pointer using the W1 source keys, then enforces the real source permissions.</summary>
     procedure ResolveEntry(var Argument: Record "Message Argument ori"; Entry: Record "Reservation Entry"; NeedWrite: Boolean; var SourceRef: RecordRef; var Specification: Record "Tracking Specification"; var Direction: Enum "Transfer Direction"): Boolean
     var
