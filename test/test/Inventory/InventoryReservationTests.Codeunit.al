@@ -585,6 +585,74 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertNativeRoundTrip(Request, Database::"Transfer Line", Line."Document No.", '', Line."Line No.", true, 2, 0);
     end;
 
+    /// <summary>Sales return orders provide native supply and retain their return-order source subtype.</summary>
+    [Test]
+    procedure SalesReturnPairsAndCancelsSalesDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Sales Header";
+        ReturnLine: Record "Sales Line";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::"Return Order", '');
+        LibrarySales.CreateSalesLine(ReturnLine, Header, ReturnLine.Type::Item, SalesLine."No.", 10);
+        Request.Add('source', SourceObject('SalesLine', ReturnLine.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Sales Line", ReturnLine."Document No.", '', ReturnLine."Line No.", true, 2, 0);
+    end;
+
+    /// <summary>Purchase returns reserve posted inventory as native demand and cancel their own pair.</summary>
+    [Test]
+    procedure PurchaseReturnPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Purchase Header";
+        ReturnLine: Record "Purchase Line";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::"Return Order", '');
+        LibraryPurchase.CreatePurchaseLine(ReturnLine, Header, ReturnLine.Type::Item, SalesLine."No.", 10);
+        Request.Add('source', SourceObject('PurchaseLine', ReturnLine.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Purchase Line", ReturnLine."Document No.", '', ReturnLine."Line No.", false, 2, 0);
+    end;
+
+    /// <summary>A real partial shipment limits reservation to the unshipped source and remaining posted stock.</summary>
+    [Test]
+    procedure PartialShipmentReservesOnlyRemainingQuantity()
+    var
+        SalesLine: Record "Sales Line";
+        Header: Record "Sales Header";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        SalesLine.Validate("Qty. to Ship", 4);
+        SalesLine.Modify(true);
+        Header.Get(SalesLine."Document Type", SalesLine."Document No.");
+        LibrarySales.PostSalesDocument(Header, true, false);
+        SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        Ledger.Get(Ledger."Entry No.");
+        Assert.AreEqual(6, SalesLine."Outstanding Qty. (Base)", 'The real source is partially posted.');
+        Assert.AreEqual(6, Ledger."Remaining Quantity", 'The posted inventory reflects the real shipment.');
+
+        ExecuteReservation(CreateRequest(SalesLine, Ledger, 7), false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, Entry);
+        Assert.IsTrue(Entry.IsEmpty(), 'Refusal leaves no partial reservation.');
+        AssertNativeRoundTrip(CreateRequest(SalesLine, Ledger, 6), Database::"Sales Line", SalesLine."Document No.", '', SalesLine."Line No.", false, 6, 0);
+    end;
+
     local procedure CreateTransferSources(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry"; var TransferLine: Record "Transfer Line")
     var
         FromLocation: Record Location;
