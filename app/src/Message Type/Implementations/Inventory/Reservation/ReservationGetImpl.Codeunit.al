@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Foundation.Enums;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
@@ -54,8 +55,19 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     var
         ParameterJson: JsonObject;
     begin
+        Clear(Parameters);
         ParameterJson.Add('name', 'itemNo');
         ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'source');
+        ParameterJson.Add('type', 'object');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'entryNo');
+        ParameterJson.Add('type', 'integer');
         ParameterJson.Add('required', false);
         Parameters.Add(ParameterJson);
         exit(true);
@@ -124,7 +136,15 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ReservationEntry: Record "Reservation Entry";
+        SourceSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
+        Reader: Codeunit "Request Value Reader ori";
+        SourceRef: RecordRef;
+        Direction: Enum "Transfer Direction";
+        EntryNo: Decimal;
+        ItemNoText: Text;
+        MissingEntryErr: Label 'The reservation entry does not exist.', Comment = 'is-IS=Frátektarfærslan er ekki til.';
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Entries: JsonArray;
@@ -137,8 +157,28 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('itemNo', Token) then
-            ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
+        if not Resolver.ReadText(Argument, RequestJson, 'itemNo', false, ItemNoText) then
+            exit;
+        ItemNo := CopyStr(ItemNoText, 1, MaxStrLen(ItemNo));
+        if RequestJson.Get('source', Token) then begin
+            if not Resolver.Resolve(Argument, RequestJson, 'source', false, SourceRef, SourceSpecification, Direction) then
+                exit;
+            ReservationEntry.TransferFields(SourceSpecification);
+            ReservationEntry.SetPointerFilter();
+        end;
+        if RequestJson.Get('entryNo', Token) then begin
+            if not Reader.TryReadDecimal(Argument, RequestJson, 'entryNo', true, EntryNo) then
+                exit;
+            if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, MissingEntryErr, 'entryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+                exit;
+            end;
+            ReservationEntry.SetRange("Entry No.", EntryNo);
+            if ReservationEntry.IsEmpty() then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingEntryErr, 'entryNo', Format(EntryNo, 0, 9), '', '');
+                exit;
+            end;
+        end;
         if ItemNo <> '' then
             ReservationEntry.SetRange("Item No.", ItemNo);
         if ReservationEntry.FindSet() then
@@ -148,8 +188,17 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
                 EntryJson.Add('itemNo', ReservationEntry."Item No.");
                 EntryJson.Add('locationCode', ReservationEntry."Location Code");
                 EntryJson.Add('quantity', ReservationEntry.Quantity);
-                EntryJson.Add('reservationStatus', Format(ReservationEntry."Reservation Status"));
+                EntryJson.Add('reservationStatus', ReservationEntry."Reservation Status".Names().Get(ReservationEntry."Reservation Status".Ordinals().IndexOf(ReservationEntry."Reservation Status".AsInteger())));
                 EntryJson.Add('sourceId', ReservationEntry."Source ID");
+                EntryJson.Add('sourceType', ReservationEntry."Source Type");
+                EntryJson.Add('sourceSubtype', ReservationEntry."Source Subtype");
+                EntryJson.Add('sourceRefNo', ReservationEntry."Source Ref. No.");
+                EntryJson.Add('positive', ReservationEntry.Positive);
+                EntryJson.Add('quantityBase', ReservationEntry."Quantity (Base)");
+                EntryJson.Add('lotNo', ReservationEntry."Lot No.");
+                EntryJson.Add('serialNo', ReservationEntry."Serial No.");
+                EntryJson.Add('packageNo', ReservationEntry."Package No.");
+                EntryJson.Add('expirationDate', ReservationEntry."Expiration Date");
                 Entries.Add(EntryJson);
             until ReservationEntry.Next() = 0;
         ResponseJson.Add('status', 'Success');

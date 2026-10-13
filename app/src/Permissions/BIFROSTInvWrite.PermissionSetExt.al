@@ -42,5 +42,12 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Asm. Doc Prev. Post Impl ori" = X,
         codeunit "Asm. Order RefreshLn Impl ori" = X,
         codeunit "Asm. Order Statistics Impl ori" = X,
-        codeunit "Inventory Contract Parts ori" = X;
+        codeunit "Inventory Contract Parts ori" = X,
+        codeunit "Inventory Source Resolve ori" = X,
+        codeunit "Inventory Tracking Write ori" = X,
+        codeunit "Inventory Reserv. Write ori" = X,
+        codeunit "Tracking Assign Impl ori" = X,
+        codeunit "Tracking Delete Impl ori" = X,
+        codeunit "Reservation Create Impl ori" = X,
+        codeunit "Reservation Cancel Impl ori" = X;
 }

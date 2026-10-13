@@ -10,8 +10,9 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Inventory Setup ori", false, false) and Resolver.HasReservationWritePermission());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -54,9 +55,17 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     var
         ParameterJson: JsonObject;
     begin
+        Clear(Parameters);
+        ParameterJson.Add('name', 'source');
+        ParameterJson.Add('type', 'object');
+        ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'W1 reservation source type and systemId; transferDirection selects Outbound or Inbound.');
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
         ParameterJson.Add('name', 'entryNo');
         ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', true);
+        ParameterJson.Add('required', false);
+        ParameterJson.Add('description', 'Selects one reservation on the source; omit to cancel all source reservations.');
         Parameters.Add(ParameterJson);
         exit(true);
     end;
@@ -64,7 +73,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entryNo', 0);
+        Response.Add('entriesCancelled', 0);
         exit(true);
     end;
 
@@ -117,7 +126,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls Reservation Management.SetReservSource before cancel. It does not delete the entry directly.';
+        Notes := 'Cancels only reservations belonging to the specified source through Reservation Management. An unreserved source returns entriesCancelled zero.';
         exit(true);
     end;
 
@@ -128,35 +137,18 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ReservationManagement: Codeunit "Reservation Management";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        EntryNo: Integer;
+        ReservationWrite: Codeunit "Inventory Reserv. Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Inventory Setup ori", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
-            exit;
-        end;
-        EntryNo := Token.AsValue().AsInteger();
-        if not ReservationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError('Reservation entry ' + Format(EntryNo) + ' was not found.');
-            exit;
-        end;
-
-        ReservationManagement.SetReservSource(ReservationEntry);
-        ReservationManagement.DeleteReservEntries(true, 0);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemNo', ReservationEntry."Item No.");
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        ReservationWrite.SetCancelMode();
+        if Argument."Omit Commit" then
+            ReservationWrite.Run(Argument)
+        else
+            if not ReservationWrite.Run(Argument) then
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 }

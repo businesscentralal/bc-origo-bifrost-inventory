@@ -106,6 +106,33 @@ codeunit 10036913 "Inventory Source Resolve ori"
         exit(false);
     end;
 
+    /// <summary>Checks discovery permissions for every supported reservation source.</summary>
+    procedure HasReservationWritePermission(): Boolean
+    var
+        SourceRef: RecordRef;
+        TypeName: Text;
+        Types: List of [Text];
+    begin
+        if HasTrackingWritePermission() then
+            exit(true);
+        Types.Add('ServiceLine');
+        Types.Add('ProdOrderLine');
+        Types.Add('ProdOrderComponent');
+        Types.Add('RequisitionLine');
+        Types.Add('PlanningComponent');
+        Types.Add('JobJournalLine');
+        Types.Add('JobPlanningLine');
+        Types.Add('InventoryDocumentLine');
+        foreach TypeName in Types do begin
+            SourceRef.Open(SourceTableNo(TypeName));
+            if SourceRef.ReadPermission() and SourceRef.WritePermission() then
+                exit(true);
+            SourceRef.Close();
+        end;
+        SourceRef.Open(Database::"Item Ledger Entry");
+        exit(SourceRef.ReadPermission());
+    end;
+
     /// <summary>Reads a JSON string without coercing objects, arrays, null, numbers or booleans.</summary>
     procedure ReadText(var Argument: Record "Message Argument ori"; Request: JsonObject; KeyName: Text; Required: Boolean; var Value: Text): Boolean
     var

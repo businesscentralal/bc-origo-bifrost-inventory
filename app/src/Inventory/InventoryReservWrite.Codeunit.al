@@ -135,6 +135,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Resolver: Codeunit "Inventory Source Resolve ori";
         Reader: Codeunit "Request Value Reader ori";
         ReservationManagement: Codeunit "Reservation Management";
+        ReservationEngine: Codeunit "Reservation Engine Mgt.";
         SourceRef: RecordRef;
         Direction: Enum "Transfer Direction";
         Request: JsonObject;
@@ -176,7 +177,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
                 ReservationEntry.SetRange("Entry No.", TempEntries."Entry No.");
                 ReservationEntry.SetRange(Positive, TempEntries.Positive);
                 ReservationManagement.SetReservSource(SourceRef, Direction);
-                ReservationManagement.DeleteReservEntries(true, 0, ReservationEntry);
+                ReservationEngine.CancelReservation(TempEntries);
                 Count += 1;
             until TempEntries.Next() = 0;
         Response.Add('status', 'Success');

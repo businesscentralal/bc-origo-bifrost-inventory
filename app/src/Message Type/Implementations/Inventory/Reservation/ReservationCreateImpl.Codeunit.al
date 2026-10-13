@@ -10,8 +10,9 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Inventory Setup ori", false, false) and Resolver.HasReservationWritePermission());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -26,7 +27,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetKeywords(): Text
     begin
-        exit('create reservation, auto reserve, reserve item');
+        exit('create manual reservation, explicit supply, reserve item');
     end;
 
     procedure GetSelectionDescription(): Text
@@ -54,18 +55,27 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     var
         ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
+        Clear(Parameters);
+        ParameterJson.Add('name', 'source');
+        ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'W1 reservation source type and systemId; transferDirection selects Outbound or Inbound.');
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'supply');
+        ParameterJson.Add('type', 'object');
+        ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'Explicit opposite source type and systemId. No automatic supply selection.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'quantity');
         ParameterJson.Add('type', 'decimal');
         ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'Positive quantity in the source unit of measure.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
-        ParameterJson.Add('name', 'locationCode');
-        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('name', 'expectedDate');
+        ParameterJson.Add('type', 'date');
         ParameterJson.Add('required', false);
         Parameters.Add(ParameterJson);
         exit(true);
@@ -74,7 +84,8 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('reserved', true);
+        Response.Add('quantity', 0);
+        Response.Add('quantityBase', 0);
         exit(true);
     end;
 
@@ -121,13 +132,13 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Calls Reservation Management.AutoReserve for the requested item quantity.';
+        Overview := 'Manually reserves the requested quantity between two explicitly selected native W1 sources.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Source document fields can be added by the compiler pass if AutoReserve needs a source record.';
+        Notes := 'Uses native source adapters and Create Reserv. Entry. Quantity is in the source unit of measure; pairing and availability checks apply.';
         exit(true);
     end;
 
@@ -138,49 +149,17 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ReservationManagement: Codeunit "Reservation Management";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        ItemNo: Code[20];
-        LocationCode: Code[10];
-        Quantity: Decimal;
-        FullAutoReservation: Boolean;
+        ReservationWrite: Codeunit "Inventory Reserv. Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Inventory Setup ori", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError('itemNo is required.');
-            exit;
-        end;
-        ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
-        if not RequestJson.Get('quantity', Token) then begin
-            Argument.RespondWithError('quantity is required.');
-            exit;
-        end;
-        Quantity := Token.AsValue().AsDecimal();
-        if RequestJson.Get('locationCode', Token) then
-            LocationCode := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(LocationCode));
-
-        ReservationEntry.Init();
-        ReservationEntry."Item No." := ItemNo;
-        ReservationEntry."Location Code" := LocationCode;
-        ReservationEntry.Quantity := Quantity;
-        ReservationEntry."Quantity (Base)" := Quantity;
-        ReservationEntry.Positive := Quantity > 0;
-        ReservationManagement.SetReservSource(ReservationEntry);
-        ReservationManagement.AutoReserve(FullAutoReservation, ItemNo, WorkDate(), Quantity, Quantity);
-
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNo', ItemNo);
-        ResponseJson.Add('quantity', Quantity);
-        ResponseJson.Add('fullAutoReservation', FullAutoReservation);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if Argument."Omit Commit" then
+            ReservationWrite.Run(Argument)
+        else
+            if not ReservationWrite.Run(Argument) then
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 }
