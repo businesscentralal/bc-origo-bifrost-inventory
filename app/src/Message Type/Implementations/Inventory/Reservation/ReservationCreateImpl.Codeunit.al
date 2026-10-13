@@ -101,9 +101,11 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.Reservation.Get');
-        Related.Add('Inventory.Reservation.Cancel');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Get', 'Read reservations before creating one.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Cancel', 'Cancel a reservation instead of creating one.'));
         exit(true);
     end;
 

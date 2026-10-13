@@ -40,32 +40,67 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.Reclassification.Post');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('table', 'Item Journal Line');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'journalTemplateName');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'journalBatchName');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('journalTemplateName', '');
+        Response.Add('journalBatchName', '');
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'MissingParameter');
+        ErrorJson.Add('when', 'journalTemplateName is required.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'MissingParameter');
+        ErrorJson.Add('when', 'journalBatchName is required.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('when', 'the reclassification batch has no lines.');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', true);
+        Effect.Add('posts', true);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -74,8 +109,12 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Check', 'Check the reclassification journal before posting it.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.PreviewPost', 'Preview the reclassification posting without committing it.'));
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -90,12 +129,14 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Posts a reclassification journal batch.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Posts through Item Jnl.-Post Batch. It does not create a transfer order.';
+        exit(true);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"

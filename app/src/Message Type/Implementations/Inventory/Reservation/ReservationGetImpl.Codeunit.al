@@ -36,22 +36,36 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.Reservation.Get');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('table', 'Reservation Entry');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'itemNo');
+        ParameterJson.Add('type', 'code');
+        ParameterJson.Add('required', false);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('entries', 'array');
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
@@ -61,7 +75,9 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -70,8 +86,12 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Cancel', 'Cancel a reservation instead of reading it.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Create', 'Create a reservation instead of reading reservations.'));
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -86,12 +106,14 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Reads reservation entries, optionally for one item.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Read only. Cancel is a separate message type.';
+        exit(true);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"

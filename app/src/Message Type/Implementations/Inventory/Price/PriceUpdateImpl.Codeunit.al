@@ -39,32 +39,58 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.Price.Update');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('table', 'Item');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ParameterJson: JsonObject;
     begin
-        exit(false);
+        ParameterJson.Add('name', 'unitPrice');
+        ParameterJson.Add('type', 'decimal');
+        ParameterJson.Add('required', true);
+        Parameters.Add(ParameterJson);
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('itemNo', '');
+        Response.Add('unitPrice', 0);
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ErrorJson: JsonObject;
     begin
-        exit(false);
+        ErrorJson.Add('code', 'MissingParameter');
+        ErrorJson.Add('when', 'unitPrice is required.');
+        Errors.Add(ErrorJson);
+        Clear(ErrorJson);
+        ErrorJson.Add('code', 'RecordNotFound');
+        ErrorJson.Add('when', 'no item matched the request.');
+        Errors.Add(ErrorJson);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', true);
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -89,12 +115,14 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Updates the unit price of one item.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Writes Item.Unit Price. It does not change item cost.';
+        exit(true);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
