@@ -340,7 +340,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'availableQuantity', 1);
     end;
 
-    /// <summary>Native entry fallback is returned as ISO text; master precedence has separate pending schema acceptance.</summary>
+    /// <summary>Enabled expiration policy returns the native entry date as ISO text.</summary>
     [Test]
     procedure Scenario_AC5_TrackingEntryExpirationIsPreserved()
     var
@@ -389,9 +389,9 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'quantityBase', 2);
     end;
 
-    /// <summary>Disabled master expiration policy falls back to the native pending entry date without changing it.</summary>
+    /// <summary>Disabled expiration policy returns blank without changing the native pending entry date.</summary>
     [Test]
-    procedure Scenario_AC5_DisabledPolicyFallsBackToEntryDate()
+    procedure Scenario_AC5_DisabledPolicyReturnsBlank()
     var
         PurchaseLine: Record "Purchase Line";
         Item: Record Item;
@@ -416,7 +416,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
 
         AssertSuccess(Response);
         Row := SingleRow(Response, 'trackingLines');
-        AssertText(Row, 'expirationDate', '2031-01-01');
+        AssertText(Row, 'expirationDate', '');
         Entry.SetRange("Item No.", PurchaseLine."No.");
         Entry.SetRange("Lot No.", 'READ-DATED-OFF');
         Entry.FindFirst();
@@ -427,16 +427,18 @@ codeunit 96927 "Inventory Tracking Read Tests"
     [Test]
     procedure Scenario_AC5_GroupedDateDisagreementReturnsBlank()
     var
+        Item: Record Item;
         TempLedger: Record "Item Ledger Entry" temporary;
         TrackingRead: Codeunit "Inventory Tracking Read ori";
         Rows: JsonArray;
         Token: JsonToken;
         Row: JsonObject;
     begin
+        CreateAvailabilityItem(Item, true);
         // Defensive projection test: BC normally keeps lot dates consistent. Never corrupt posted ledger data to manufacture this condition.
-        AddTemporaryStock(TempLedger, 1, 20310101D);
-        AddTemporaryStock(TempLedger, 2, 20310201D);
-        AddTemporaryStock(TempLedger, 3, 20310101D);
+        AddTemporaryStock(TempLedger, Item."No.", 1, 20310101D);
+        AddTemporaryStock(TempLedger, Item."No.", 2, 20310201D);
+        AddTemporaryStock(TempLedger, Item."No.", 3, 20310101D);
 
         TrackingRead.AggregateAvailability(TempLedger, Rows);
 
@@ -451,21 +453,23 @@ codeunit 96927 "Inventory Tracking Read Tests"
     [Test]
     procedure Scenario_AC5_GroupedEntryDateAndUndatedFallback()
     var
+        Item: Record Item;
         TempLedger: Record "Item Ledger Entry" temporary;
         TrackingRead: Codeunit "Inventory Tracking Read ori";
         Rows: JsonArray;
         Token: JsonToken;
         Row: JsonObject;
     begin
-        AddTemporaryStock(TempLedger, 1, 20310101D);
-        AddTemporaryStock(TempLedger, 2, 20310101D);
+        CreateAvailabilityItem(Item, true);
+        AddTemporaryStock(TempLedger, Item."No.", 1, 20310101D);
+        AddTemporaryStock(TempLedger, Item."No.", 2, 20310101D);
         TrackingRead.AggregateAvailability(TempLedger, Rows);
         Assert.AreEqual(1, Rows.Count(), 'Matching native positions form one group.');
         Rows.Get(0, Token);
         AssertText(Token.AsObject(), 'expirationDate', '2031-01-01');
         TempLedger.DeleteAll();
-        AddTemporaryStock(TempLedger, 1, 0D);
-        AddTemporaryStock(TempLedger, 2, 0D);
+        AddTemporaryStock(TempLedger, Item."No.", 1, 0D);
+        AddTemporaryStock(TempLedger, Item."No.", 2, 0D);
 
         TrackingRead.AggregateAvailability(TempLedger, Rows);
 
@@ -528,12 +532,78 @@ codeunit 96927 "Inventory Tracking Read Tests"
         until Entry.Next() = 0;
     end;
 
-    local procedure AddTemporaryStock(var TempLedger: Record "Item Ledger Entry" temporary; EntryNo: Integer; ExpirationDate: Date)
+    /// <summary>Package-only disagreement stays blank; disabling the policy blanks even matching dates.</summary>
+    [Test]
+    procedure Scenario_AC5_PackageDisagreementAndDisabledPolicy()
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        TempLedger: Record "Item Ledger Entry" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Rows: JsonArray;
+        Token: JsonToken;
+    begin
+        CreateAvailabilityItem(Item, true);
+        AddTemporaryStock(TempLedger, Item."No.", 1, 20310101D);
+        AddTemporaryStock(TempLedger, Item."No.", 2, 20310201D);
+        TempLedger.ModifyAll("Lot No.", '');
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
+        Assert.AreEqual(1, Rows.Count(), 'Package-only entries stay in one group.');
+        Rows.Get(0, Token);
+        AssertText(Token.AsObject(), 'expirationDate', '');
+        TempLedger.ModifyAll("Expiration Date", 20310101D);
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
+        Rows.Get(0, Token);
+        AssertText(Token.AsObject(), 'expirationDate', '2031-01-01');
+        TrackingCode.Get(Item."Item Tracking Code");
+        TrackingCode.Validate("Use Expiration Dates", false);
+        TrackingCode.Modify(true);
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
+        Rows.Get(0, Token);
+        AssertText(Token.AsObject(), 'expirationDate', '');
+        TempLedger.FindFirst();
+        Assert.AreEqual(20310101D, TempLedger."Expiration Date", 'Projection never changes stored dates.');
+    end;
+
+    /// <summary>An enabled tracking policy cannot manufacture an expiration date for an undated entry.</summary>
+    [Test]
+    procedure Scenario_AC5_EnabledUndatedEntryReturnsBlank()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateTrackedLine(PurchaseLine, 'READ-UNDATED', '', '', 1);
+        Item.Get(PurchaseLine."No.");
+        TrackingCode.Get(Item."Item Tracking Code");
+        TrackingCode.Validate("Use Expiration Dates", true);
+        TrackingCode.Modify(true);
+        Request := DocumentRequest(PurchaseLine);
+        ExecuteRead(Request, 0, Response);
+        AssertSuccess(Response);
+        AssertText(SingleRow(Response, 'trackingLines'), 'expirationDate', '');
+    end;
+
+    local procedure CreateAvailabilityItem(var Item: Record Item; UseExpirationDates: Boolean)
+    var
+        TrackingCode: Record "Item Tracking Code";
+    begin
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode.Validate("Use Expiration Dates", UseExpirationDates);
+        TrackingCode.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Modify(true);
+    end;
+
+    local procedure AddTemporaryStock(var TempLedger: Record "Item Ledger Entry" temporary; ItemNo: Code[20]; EntryNo: Integer; ExpirationDate: Date)
     begin
         Assert.IsTrue(TempLedger.IsTemporary(), 'Defensive inconsistent-date inputs must stay in memory.');
         TempLedger.Init();
         TempLedger."Entry No." := EntryNo;
-        TempLedger."Item No." := 'W8-TEMP';
+        TempLedger."Item No." := ItemNo;
         TempLedger."Lot No." := 'W8-TEMP-LOT';
         TempLedger."Package No." := 'W8-TEMP-PACKAGE';
         TempLedger."Remaining Quantity" := 2;
