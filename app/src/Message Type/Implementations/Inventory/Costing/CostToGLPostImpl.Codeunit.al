@@ -24,30 +24,13 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
-        RequestJson := Argument.GetRequestJson();
-        if not TryRunPostInventoryCost() then begin
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        if not Codeunit.Run(Codeunit::"Inventory Cost Post Proc. ori", Argument) then
             Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNoFilter', ReadText(RequestJson, 'itemNoFilter'));
-        ResponseJson.Add('documentNoFilter', ReadText(RequestJson, 'documentNoFilter'));
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
-    end;
-
-    [TryFunction]
-    local procedure TryRunPostInventoryCost()
-    var
-        PostInventoryCost: Report "Post Inventory Cost to G/L";
-    begin
-        PostInventoryCost.UseRequestPage(false);
-        PostInventoryCost.Run();
     end;
 
     /// <summary>Returns the Item table used by the existing selection contract.</summary>
@@ -59,7 +42,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Post inventory value entries that are not yet posted to the general ledger.');
+        exit('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.');
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
@@ -68,21 +51,10 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         exit('post inventory cost,general ledger,report 1002');
     end;
 
-    local procedure ReadText(RequestJson: JsonObject; Name: Text): Text
-    var
-        Token: JsonToken;
-    begin
-        if not RequestJson.Get(Name, Token) then
-            exit('');
-        if Token.IsValue() then
-            exit(Token.AsValue().AsText());
-        exit('');
-    end;
-
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.');
+        exit('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.');
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>
@@ -97,7 +69,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"Subject is not read by this operation."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject selection."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
@@ -117,7 +89,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNoFilter","type":"string","required":false,"description":"Echoed in the success response only; does not filter report 1002.","default":""},{"name":"documentNoFilter","type":"string","required":false,"description":"Echoed in the success response only; does not filter report 1002.","default":""}]');
+        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native Item No. filter; blank selects all pending entries. Legacy itemNoFilter is accepted only when equal if both are present."},{"name":"postingDate","type":"string","required":false,"description":"Native Posting Date filter on pending value entries. Legacy postingDateFilter is accepted."},{"name":"perPostingGroup","type":"boolean","required":false,"description":"False posts/tests per entry; true summarizes by posting group."},{"name":"documentNo","type":"string","required":false,"description":"Output document number required with perPostingGroup=true; forbidden with per-entry posting. This is not a document filter."}]');
         exit(true);
     end;
 
@@ -127,7 +99,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after the standard report returns successfully and response construction completes; not proof of G/L posting."},{"name":"itemNoFilter","type":"string","description":"Original request value echoed by the current implementation."},{"name":"documentNoFilter","type":"string","description":"Original request value echoed by the current implementation."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"False for test; true for completed posting mode, even if the native report leaves entries pending."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"entriesRemaining","type":"integer","description":"Selected pending entries remaining after native posting."}]}');
         exit(true);
     end;
 
@@ -137,7 +109,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The company Costing domain is disabled.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The existing inventory posting gate denies the caller.","fix":"Have the administrator review the existing inventory posting permission policy."},{"code":"PreconditionFailed","when":"The standard report Run returns false; response carries GetLastErrorText. This branch precedes response-echo conversion.","fix":"Review the standard report error and current ledger state before deciding whether retry is safe."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion failure is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Direct invocation may raise instead; exact scalar/null conversions still require supported-platform runtime verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."}]');
         exit(true);
     end;
 
@@ -147,7 +119,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.","idempotent":false,"preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.","idempotent":false}');
         exit(true);
     end;
 
@@ -185,7 +157,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Run report 1002; filters are response echoes and Success only means completion.","request":{"type":"Inventory.CostToGL.Post","version":"1.0","data":{"itemNoFilter":"1000","documentNoFilter":""}},"response":{"status":"Success","itemNoFilter":"1000","documentNoFilter":""}}]');
+        Examples.ReadFrom('[{"title":"Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.","request":{"type":"Inventory.CostToGL.Post","version":"1.0","data":{"itemNo":"XITEM"}}}]');
         exit(true);
     end;
 
@@ -194,8 +166,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Clear(Overview);
-        Overview := 'Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.';
+        Overview := 'Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.';
         exit(true);
     end;
 
@@ -204,8 +175,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Clear(Notes);
-        Notes := 'Absent or object/array-valued echo fields fall back to empty text in the local text reader. Scalar and null conversion outcomes require exact BC28/BC29 runtime tests. No preview, rollback, idempotence or safe-retry guarantee is declared. Request data is obtained before report execution, but filter echo conversion occurs after report 1002 completes. Malformed echoes are not preflight validation. Request filters do not select records. Post/PostMethod/saved-option/runtime effects remain unverified.';
+        Notes := 'itemNo and postingDate filter Post Value Entry to G/L. documentNo is an output option; nonempty documentNoFilter is refused. Post is explicitly true. Native skips and commits remain in force; posted means posting mode completed, not that every entry posted. entriesRemaining records the selected entries still pending. Native report errors use the structured failure boundary.';
         exit(true);
     end;
 }

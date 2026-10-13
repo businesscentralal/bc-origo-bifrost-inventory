@@ -28,6 +28,8 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
         Process.RunAdjustCost(Argument);
     end;
 
@@ -40,7 +42,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.');
+        exit('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.');
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
@@ -52,7 +54,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Runs report 795 with optional item or category filter and explicit postToGL option.');
+        exit('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.');
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>
@@ -67,7 +69,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"Subject is not read by this operation."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject selection."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
@@ -87,7 +89,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNoFilter","type":"string","required":false,"description":"Optional itemNoFilter passed to report 795 after truncation to 250 characters. Only one effective item/category filter may be nonempty. Original text is echoed.","default":""},{"name":"itemCategoryFilter","type":"string","required":false,"description":"Optional itemCategoryFilter passed to report 795 after truncation to 250 characters. Only one effective item/category filter may be nonempty. Original text is echoed.","default":""},{"name":"postToGL","type":"boolean","required":false,"description":"Optional request to report 795 via SetPostToGL; false when absent or a non-value token. Actual posting depends on standard report/setup state.","default":false}]');
+        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native item filter, at most 250 characters. Legacy itemNoFilter is accepted."},{"name":"itemCategoryCode","type":"string","required":false,"description":"Native category filter, mutually exclusive with itemNo; at most 250 characters. Legacy itemCategoryFilter is accepted."},{"name":"itemByItem","type":"boolean","required":false,"description":"Native item-by-item adjustment option; may commit each item."},{"name":"postToGL","type":"boolean","required":false,"description":"Use the native report 795 G/L option; report 1002 is not additionally run."}]');
         exit(true);
     end;
 
@@ -97,7 +99,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after the standard report returns successfully and response construction completes; not proof of G/L posting."},{"name":"itemNoFilter","type":"string","description":"Original request value echoed by the current implementation."},{"name":"itemCategoryFilter","type":"string","description":"Original request value echoed by the current implementation."},{"name":"postToGL","type":"boolean","description":"Original request value echoed by the current implementation."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"itemsSelected","type":"integer","description":"Pre-run item selection count; not a processed count."},{"name":"postToGL","type":"boolean","description":"Requested native G/L option."},{"name":"itemByItem","type":"boolean","description":"Requested native item-by-item option."}]}');
         exit(true);
     end;
 
@@ -107,7 +109,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The company Costing domain is disabled.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The existing inventory posting gate denies the caller.","fix":"Have the administrator review the existing inventory posting permission policy."},{"code":"PreconditionFailed","when":"The standard report Run returns false; response carries GetLastErrorText. A raised report error is a separate failure path.","fix":"Review the standard report error and current ledger state before deciding whether retry is safe."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Report 795 raises an error when both effective filters are nonempty. Direct invocation may raise instead; scalar/null conversion outcomes require supported-platform verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."}]');
         exit(true);
     end;
 
@@ -117,7 +119,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 795 adjusts item/value-entry costs. postToGL is passed to SetPostToGL; actual G/L changes depend on report/setup state.","idempotent":false,"preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","idempotent":false}');
         exit(true);
     end;
 
@@ -155,7 +157,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Run report 795 without requesting G/L posting.","request":{"type":"Inventory.AdjustCost.Run","version":"1.0","data":{"itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}},"response":{"status":"Success","itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}}]');
+        Examples.ReadFrom('[{"title":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","request":{"type":"Inventory.AdjustCost.Run","version":"1.0","data":{"itemNo":"XITEM"}}}]');
         exit(true);
     end;
 
@@ -164,8 +166,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Clear(Overview);
-        Overview := 'Runs report 795 with optional item or category filter and explicit postToGL option.';
+        Overview := 'Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.';
         exit(true);
     end;
 
@@ -174,8 +175,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Clear(Notes);
-        Notes := 'Absent or object/array-valued fields fall back to empty text or false in local readers. Scalar and null conversion outcomes require exact BC28/BC29 runtime tests. No preview, rollback, idempotence or safe-retry guarantee is declared. Filter selection is truncated to 250 characters, but response echoes full original values. Report 795 rejects both effective filters nonempty.';
+        Notes := 'Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback, retry-safety or actual-items-processed count is promised. itemsSelected is the pre-run selection count.';
         exit(true);
     end;
 }

@@ -21,7 +21,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Tests posting inventory cost to G/L for the requested item filter without posting.');
+        exit('Runs native report 1003 for selected pending inventory costs and returns warnings without posting.');
     end;
 
     procedure GetKeywords(): Text
@@ -31,62 +31,48 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Returns the item filter that the inventory cost to G/L test would use.');
+        exit('Runs native report 1003 for selected pending inventory costs and returns warnings without posting.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('messageType', 'Inventory.CostToGL.Test');
-        Envelope.Add('version', 1);
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject selection."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
     begin
-        TargetJson.Add('report', 'Post Inventory Cost to G/L');
-        Target.Add(TargetJson);
+        Clear(Target);
+        Target.ReadFrom('[]');
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'itemNoFilter');
-        ParameterJson.Add('type', 'text');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'postingDateFilter');
-        ParameterJson.Add('type', 'text');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native Item No. filter; blank selects all pending entries. Legacy itemNoFilter is accepted only when equal if both are present."},{"name":"postingDate","type":"string","required":false,"description":"Native Posting Date filter on pending value entries. Legacy postingDateFilter is accepted."},{"name":"perPostingGroup","type":"boolean","required":false,"description":"False posts/tests per entry; true summarizes by posting group."},{"name":"documentNo","type":"string","required":false,"description":"Output document number required with perPostingGroup=true; forbidden with per-entry posting. This is not a document filter."}]');
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        Response.Add('status', 'Success');
-        Response.Add('posted', false);
+        Clear(Response);
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"False for test; true for completed posting mode, even if the native report leaves entries pending."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"errors","type":"array","description":"Native report 1003 warning objects with message text."}]}');
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ErrorJson: JsonObject;
     begin
-        ErrorJson.Add('code', 'NothingToPreview');
-        ErrorJson.Add('when', 'the item filter matches no item');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."}]');
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
+        Clear(Effect);
+        Effect.ReadFrom('{"effect":"readOnly","writes":false,"posts":false,"changes":"Runs native report 1003 for selected pending inventory costs and returns warnings without posting.","idempotent":true}');
         exit(true);
     end;
 
@@ -111,18 +97,20 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Runs native report 1003 for selected pending inventory costs and returns warnings without posting.","request":{"type":"Inventory.CostToGL.Test","version":"1.0","data":{"itemNo":"XITEM"}}}]');
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Validates the inventory cost to G/L item filter and returns the match count without posting.';
+        Overview := 'Runs native report 1003 for selected pending inventory costs and returns warnings without posting.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Report 1002 test path. The compiler pass should bind the report request page filters if a headless test report exists.';
+        Notes := 'Native report 1003 warnings are returned in errors[]. entriesSelected is the pre-run pending-entry count, not a count of successfully validated entries. No report 795 execution or posting occurs. Journal Templ. Name Mandatory is refused because the native test report otherwise consumes a number. documentNo is an output option, not a filter.';
         exit(true);
     end;
 
@@ -133,28 +121,26 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Item: Record Item;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        ItemNoFilter: Text;
+        Response: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('itemNoFilter', Token) then
-            ItemNoFilter := Token.AsValue().AsText();
-        if ItemNoFilter <> '' then
-            Item.SetFilter("No.", ItemNoFilter);
-
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('posted', false);
-        ResponseJson.Add('itemNoFilter', ItemNoFilter);
-        ResponseJson.Add('itemCount', Item.Count());
-        Argument.SetResponseJson(ResponseJson);
+        if not TryTestCostToGL(Argument.GetRequestJson(), Response) then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
+        Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryTestCostToGL(Request: JsonObject; var Response: JsonObject)
+    var
+        CostReports: Codeunit "Inventory Cost Reports ori";
+    begin
+        CostReports.TestCostToGL(Request, Response);
     end;
 }

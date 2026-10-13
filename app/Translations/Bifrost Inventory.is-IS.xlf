@@ -201,6 +201,48 @@
           <note from="Developer" annotates="general" priority="2">%1 = permission set name, is-IS=Bókun hafnað: vantar '%1' heimildasett.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inv. Posting Gate ori - Method AssertCanPost - NamedType PostingDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 1174431717" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Report 795 accepts either itemNo or itemCategoryCode, not both.</source>
+          <target>Skýrsla 795 samþykkir annaðhvort itemNo eða itemCategoryCode, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skýrsla 795 samþykkir annaðhvort itemNo eða itemCategoryCode, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType AdjustFiltersErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 497792087" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameters %1 and %2 must have the same value when both are supplied.</source>
+          <target>Færibreyturnar %1 og %2 verða að hafa sama gildi þegar báðar eru gefnar upp.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = canonical name, %2 = legacy name; is-IS=Færibreyturnar %1 og %2 verða að hafa sama gildi þegar báðar eru gefnar upp.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType ConflictingAliasErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 783095675" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo is required only with perPostingGroup=true; it is an output document number, not a filter.</source>
+          <target>documentNo er aðeins áskilið með perPostingGroup=true; það er úttaksnúmer fylgiskjals en ekki afmörkun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo er aðeins áskilið með perPostingGroup=true; það er úttaksnúmer fylgiskjals en ekki afmörkun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType DocumentOptionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 3631882373" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must not exceed %2 characters.</source>
+          <target>Færibreytan %1 má ekki vera lengri en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = maximum length; is-IS=Færibreytan %1 má ekki vera lengri en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType FilterTooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 4076095586" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must be %2.</source>
+          <target>Færibreytan %1 verður að vera %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = required type; is-IS=Færibreytan %1 verður að vera %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType InvalidFieldErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 3196857590" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The native test report can consume a document number when journal template names are mandatory. This read-only operation refuses that setup.</source>
+          <target>Innfædda prófunarskýrslan getur notað fylgiskjalsnúmer þegar heiti færslubókarsniðmáta eru áskilin. Þessi lesaðgerð hafnar þeirri uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innfædda prófunarskýrslan getur notað fylgiskjalsnúmer þegar heiti færslubókarsniðmáta eru áskilin. Þessi lesaðgerð hafnar þeirri uppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType JournalTestErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 2632713476" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Report %1 does not support the %2 filter. No report was run.</source>
+          <target>Skýrsla %1 styður ekki afmörkunina %2. Engin skýrsla var keyrð.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = report number, %2 = parameter name; is-IS=Skýrsla %1 styður ekki afmörkunina %2. Engin skýrsla var keyrð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType UnsupportedFilterErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
           <target>%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.</target>

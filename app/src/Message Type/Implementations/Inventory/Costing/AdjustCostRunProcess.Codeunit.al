@@ -1,70 +1,27 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Costing;
 using Origo.Bifrost;
 
-/// <summary>
-/// Runs report 795. itemNoFilter and itemCategoryFilter map to InitializeRequest.
-/// postToGL maps to SetPostToGL and posts the correction in the same run. It does not also run report 1002.
-/// </summary>
+/// <summary>Runs native adjustment behind a codeunit-run failure boundary; report commits remain native.</summary>
 codeunit 70013461 "Adjust Cost Run Process ori"
 {
     Access = Internal;
+    TableNo = "Message Argument ori";
 
+    trigger OnRun()
+    var
+        CostReports: Codeunit "Inventory Cost Reports ori";
+        Response: JsonObject;
+    begin
+        CostReports.AdjustCost(Rec.GetRequestJson(), Response);
+        Rec.SetResponseJson(Response);
+        Rec."Content Type" := Rec.GetContentTypeJson();
+    end;
+
+    /// <summary>Runs the native report and preserves a structured failure without promising rollback of native commits.</summary>
     procedure RunAdjustCost(var Argument: Record "Message Argument ori")
-    var
-        RequestJson: JsonObject;
-        ItemNoFilter: Text;
-        ItemCategoryFilter: Text;
-        PostToGL: Boolean;
-        ResponseJson: JsonObject;
     begin
-        RequestJson := Argument.GetRequestJson();
-        ItemNoFilter := ReadText(RequestJson, 'itemNoFilter');
-        ItemCategoryFilter := ReadText(RequestJson, 'itemCategoryFilter');
-        PostToGL := ReadBoolean(RequestJson, 'postToGL');
-        if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
+        if not Codeunit.Run(Codeunit::"Adjust Cost Run Process ori", Argument) then
             Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNoFilter', ItemNoFilter);
-        ResponseJson.Add('itemCategoryFilter', ItemCategoryFilter);
-        ResponseJson.Add('postToGL', PostToGL);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
-    end;
-
-    [TryFunction]
-    local procedure TryRunAdjustCost(ItemNoFilter: Text; ItemCategoryFilter: Text; PostToGL: Boolean)
-    var
-        AdjustCost: Report "Adjust Cost - Item Entries";
-    begin
-        AdjustCost.InitializeRequest(CopyStr(ItemNoFilter, 1, 250), CopyStr(ItemCategoryFilter, 1, 250));
-        AdjustCost.SetPostToGL(PostToGL);
-        AdjustCost.UseRequestPage(false);
-        AdjustCost.Run();
-    end;
-
-    local procedure ReadText(RequestJson: JsonObject; Name: Text): Text
-    var
-        Token: JsonToken;
-    begin
-        if not RequestJson.Get(Name, Token) then
-            exit('');
-        if Token.IsValue() then
-            exit(Token.AsValue().AsText());
-        exit('');
-    end;
-
-    local procedure ReadBoolean(RequestJson: JsonObject; Name: Text): Boolean
-    var
-        Token: JsonToken;
-    begin
-        if not RequestJson.Get(Name, Token) then
-            exit(false);
-        if Token.IsValue() then
-            exit(Token.AsValue().AsBoolean());
-        exit(false);
     end;
 }
