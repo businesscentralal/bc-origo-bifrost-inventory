@@ -84,6 +84,90 @@ codeunit 10036913 "Inventory Source Resolve ori"
         exit(true);
     end;
 
+    /// <summary>Resolves an existing reservation pointer using the W1 source keys, then enforces the real source permissions.</summary>
+    procedure ResolveEntry(var Argument: Record "Message Argument ori"; Entry: Record "Reservation Entry"; NeedWrite: Boolean; var SourceRef: RecordRef; var Specification: Record "Tracking Specification"; var Direction: Enum "Transfer Direction"): Boolean
+    var
+        SalesLine: Record "Sales Line";
+        PurchaseLine: Record "Purchase Line";
+        TransferLine: Record "Transfer Line";
+        AssemblyHeader: Record "Assembly Header";
+        AssemblyLine: Record "Assembly Line";
+        ServiceLine: Record "Service Line";
+        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrderComponent: Record "Prod. Order Component";
+        ItemJournalLine: Record "Item Journal Line";
+        RequisitionLine: Record "Requisition Line";
+        PlanningComponent: Record "Planning Component";
+        JobJournalLine: Record "Job Journal Line";
+        InventoryDocumentLine: Record "Invt. Document Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        JobPlanningLine: Record "Job Planning Line";
+        MissingSourceErr: Label 'The reservation source is unsupported or no longer exists.', Comment = 'is-IS=Uppruni frátektar er ekki studdur eða er ekki lengur til.';
+        PermissionErr: Label 'Permission denied for the reservation source.', Comment = 'is-IS=Heimild hafnað fyrir uppruna frátektar.';
+    begin
+        case Entry."Source Type" of
+            Database::"Sales Line":
+                if SalesLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(SalesLine);
+            Database::"Purchase Line":
+                if PurchaseLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(PurchaseLine);
+            Database::"Transfer Line":
+                if TransferLine.Get(Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(TransferLine);
+            Database::"Assembly Header":
+                if AssemblyHeader.Get(Entry."Source Subtype", Entry."Source ID") then
+                    SourceRef.GetTable(AssemblyHeader);
+            Database::"Assembly Line":
+                if AssemblyLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(AssemblyLine);
+            Database::"Service Line":
+                if ServiceLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(ServiceLine);
+            Database::"Prod. Order Line":
+                if ProdOrderLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Prod. Order Line") then
+                    SourceRef.GetTable(ProdOrderLine);
+            Database::"Prod. Order Component":
+                if ProdOrderComponent.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Prod. Order Line", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(ProdOrderComponent);
+            Database::"Item Journal Line":
+                if ItemJournalLine.Get(Entry."Source ID", Entry."Source Batch Name", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(ItemJournalLine);
+            Database::"Requisition Line":
+                if RequisitionLine.Get(Entry."Source ID", Entry."Source Batch Name", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(RequisitionLine);
+            Database::"Planning Component":
+                if PlanningComponent.Get(Entry."Source ID", Entry."Source Batch Name", Entry."Source Prod. Order Line", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(PlanningComponent);
+            Database::"Job Journal Line":
+                if JobJournalLine.Get(Entry."Source ID", Entry."Source Batch Name", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(JobJournalLine);
+            Database::"Invt. Document Line":
+                if InventoryDocumentLine.Get(Entry."Source Subtype", Entry."Source ID", Entry."Source Ref. No.") then
+                    SourceRef.GetTable(InventoryDocumentLine);
+            Database::"Item Ledger Entry":
+                if ItemLedgerEntry.Get(Entry."Source Ref. No.") then
+                    SourceRef.GetTable(ItemLedgerEntry);
+            Database::"Job Planning Line":
+                begin
+                    JobPlanningLine.SetRange("Job Contract Entry No.", Entry."Source Ref. No.");
+                    if JobPlanningLine.FindFirst() then
+                        SourceRef.GetTable(JobPlanningLine);
+                end;
+        end;
+        if SourceRef.Number = 0 then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingSourceErr, 'entryNo', Format(Entry."Entry No.", 0, 9), '', '');
+            exit(false);
+        end;
+        if not SourceRef.ReadPermission() or (NeedWrite and (SourceRef.Number <> Database::"Item Ledger Entry") and not SourceRef.WritePermission()) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, 'entryNo', Format(Entry."Entry No.", 0, 9), '', '');
+            exit(false);
+        end;
+        Direction := Entry.GetTransferDirection();
+        InitializeSpecification(SourceRef, Direction, Specification);
+        exit(true);
+    end;
+
     /// <summary>Checks the source permissions used by discovery without granting ledger write access.</summary>
     procedure HasTrackingWritePermission(): Boolean
     var

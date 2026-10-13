@@ -5,6 +5,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Document;
+using Microsoft.Purchases.Document;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -19,6 +20,7 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
         LibrarySales: Codeunit "Library - Sales";
+        LibraryPurchase: Codeunit "Library - Purchase";
 
     /// <summary>A reservation pairs only the selected sales line and the selected posted supply.</summary>
     [Test]
@@ -117,6 +119,82 @@ codeunit 96926 "Inventory Reservation Tests"
 
         AssertStatus(Response, 'Error');
         Assert.AreEqual(1, ReservationEntry.Count(), 'Other source reservation remains unchanged.');
+    end;
+
+    /// <summary>Entry-only cancellation resolves the native demand source and removes its pair.</summary>
+    [Test]
+    procedure CancelByEntryResolvesSource()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        ExecuteReservation(CreateRequest(SalesLine, ItemLedgerEntry, 2), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        ReservationEntry.FindFirst();
+        Request.Add('entryNo', ReservationEntry."Entry No.");
+
+        ExecuteReservation(Request, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Selected demand reservation is removed.');
+        ExecuteReservation(Request, true, Response);
+        AssertStatus(Response, 'Error');
+    end;
+
+    /// <summary>The purchase Reserve source pairs with the explicitly selected sales line.</summary>
+    [Test]
+    procedure PurchaseSourcePairsWithSalesDemand()
+    var
+        SalesLine: Record "Sales Line";
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        OppositeEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, SalesLine."No.", 10);
+        Request.Add('source', SourceObject('PurchaseLine', PurchaseLine.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        ReservationEntry.FindFirst();
+        OppositeEntry.Get(ReservationEntry."Entry No.", not ReservationEntry.Positive);
+        Assert.AreEqual(Database::"Purchase Line", OppositeEntry."Source Type", 'Selected purchase source is paired.');
+        Assert.AreEqual(PurchaseLine."Document No.", OppositeEntry."Source ID", 'No other purchase source is selected.');
+    end;
+
+    /// <summary>Prior reservations reduce both sources' remaining reservable quantity.</summary>
+    [Test]
+    procedure ExistingReservationPreventsOverReservation()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        ExecuteReservation(CreateRequest(SalesLine, ItemLedgerEntry, 6), false, Response);
+        AssertStatus(Response, 'Success');
+
+        ExecuteReservation(CreateRequest(SalesLine, ItemLedgerEntry, 5), false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        ReservationEntry.CalcSums("Quantity (Base)");
+        Assert.AreEqual(-6, ReservationEntry."Quantity (Base)", 'Existing reservation remains unchanged.');
     end;
 
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")

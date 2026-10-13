@@ -146,8 +146,26 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         InvalidEntryErr: Label 'entryNo must identify a reservation on the specified source.', Comment = 'is-IS=entryNo verður að vísa í frátekt á tilgreindum uppruna.';
     begin
         Request := Argument.GetRequestJson();
-        if not Resolver.Resolve(Argument, Request, 'source', true, SourceRef, SourceSpecification, Direction) then
-            exit;
+        // With entry-only cancellation, resolve the demand-side pointer before any native write.
+        if not Request.Contains('source') and Request.Get('entryNo', Token) then begin
+            if not Reader.TryReadDecimal(Argument, Request, 'entryNo', true, EntryNo) then
+                exit;
+            if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+                exit;
+            end;
+            ReservationEntry.SetRange("Entry No.", EntryNo);
+            ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
+            if not ReservationEntry.FindFirst() then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), '', '');
+                exit;
+            end;
+            if not Resolver.ResolveEntry(Argument, ReservationEntry, true, SourceRef, SourceSpecification, Direction) then
+                exit;
+        end else
+            if not Resolver.Resolve(Argument, Request, 'source', true, SourceRef, SourceSpecification, Direction) then
+                exit;
+        ReservationEntry.Reset();
         ReservationEntry.TransferFields(SourceSpecification);
         ReservationEntry.SetPointerFilter();
         ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
