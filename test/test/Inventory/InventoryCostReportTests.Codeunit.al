@@ -306,6 +306,35 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsFalse(OtherItem."Cost is Adjusted", 'Unselected item is unchanged.');
     end;
 
+    /// <summary>Report 795 posts selected costs through its own option without executing a second report 1002.</summary>
+    [Test]
+    procedure NativeAdjustmentPostsToGLOnce()
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        ValueEntry: Record "Value Entry";
+        Observer: Codeunit "Inventory Cost Observer";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateUnpostedCost(Item);
+        CreateUnpostedCost(OtherItem);
+        Request.Add('itemNo', Item."No.");
+        Request.Add('postToGL', true);
+        BindSubscription(Observer);
+        CostReports.AdjustCost(Request, Response);
+        Assert.IsTrue(Observer.PostToGLOption(), 'Native report receives postToGL=true.');
+        Assert.AreEqual(0, Observer.Report1002Runs(), 'No additional report 1002 is run.');
+        UnbindSubscription(Observer);
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L", "Cost Amount (Actual)");
+        Assert.IsTrue(ValueEntry."Cost Amount (Actual)" <> 0, 'Fixture contains actual cost.');
+        Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'Selected actual cost posts exactly once.');
+        ValueEntry.SetRange("Item No.", OtherItem."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Unselected item remains unposted.');
+    end;
+
     /// <summary>The native posting report refuses a blocked posting date without posting the selected entry.</summary>
     [Test]
     procedure NativePostRefusesBlockedPostingDate()
@@ -366,13 +395,18 @@ codeunit 96931 "Inventory Cost Report Tests"
     begin
         CreateUnpostedCost(Item);
         InventorySetup.Get();
-        InventorySetup."Expected Cost Posting to G/L" := false;
+        InventorySetup."Expected Cost Posting to G/L" := true;
         InventorySetup.Modify();
         LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
         LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
         PurchaseLine.Validate("Direct Unit Cost", 15);
         PurchaseLine.Modify(true);
         LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        PendingEntry.SetRange("Item No.", Item."No.");
+        Assert.AreEqual(2, PendingEntry.Count(), 'Fixture has both actual and expected costs pending before configuration changes.');
+        InventorySetup.Get();
+        InventorySetup."Expected Cost Posting to G/L" := false;
+        InventorySetup.Modify();
         Request.Add('itemNo', Item."No.");
         CostReports.PostCostToGL(Request, Response);
         Response.Get('skippedEntries', Token);
