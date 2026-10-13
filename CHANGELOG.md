@@ -5,6 +5,7 @@
 - Add `Inventory.Tracking.Get` with document/source and item lookup, native tracking projection, tracking filters, paging and stable source/document identities (codeunits 10036916, 10036919; enum value 70013450).
 - Group `Inventory.TrackingAvailability.Get` by lot/serial/package, location, variant and entry expiration; return posted inventory, native reserved quantity and available quantity (70013473).
 - Make reservation reads intersect entry/source/item/tracking filters and return source names and complete pointer fields (70013477; shared source resolver 10036913). Add native read regression tests (96927).
+- Support reservation create/cancel document keys and named item-ledger supply; reject conflicting supply selectors and lot/serial/package mismatches before native writes (10036915, 70013478, 70013479; tests 96926).
 - Read-only execute grants use the existing read-role extension 10036915; no persistent tracking or reservation table writes. Runtime and licensed MCP acceptance remain separately tracked.
 
 ## [Unreleased]

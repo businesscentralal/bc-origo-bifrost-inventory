@@ -197,6 +197,81 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.AreEqual(-6, ReservationEntry."Quantity (Base)", 'Existing reservation remains unchanged.');
     end;
 
+    /// <summary>Legacy document keys and a named ledger number reserve exactly the selected supply.</summary>
+    [Test]
+    procedure LegacyDocumentKeysReserveNamedInventory()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        OppositeEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        Request.Add('documentType', 'Order');
+        Request.Add('documentNo', SalesLine."Document No.");
+        Request.Add('lineNo', SalesLine."Line No.");
+        Request.Add('itemLedgerEntryNo', ItemLedgerEntry."Entry No.");
+        Request.Add('quantity', 2);
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        ReservationEntry.FindFirst();
+        Assert.AreEqual(-2, ReservationEntry."Quantity (Base)", 'Legacy keys resolve the source.');
+        OppositeEntry.Get(ReservationEntry."Entry No.", not ReservationEntry.Positive);
+        Assert.AreEqual(ItemLedgerEntry."Entry No.", OppositeEntry."Source Ref. No.", 'Only the named supply is reserved.');
+        Request.Remove('itemLedgerEntryNo');
+        Request.Remove('quantity');
+        ExecuteReservation(Request, true, Response);
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Legacy source cancellation removes the native pair.');
+    end;
+
+    /// <summary>A requested lot cannot silently reserve a differently tracked supply entry.</summary>
+    [Test]
+    procedure RequestedLotMismatchRefusesWithoutReservation()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        Request := CreateRequest(SalesLine, ItemLedgerEntry, 2);
+        Request.Add('lotNo', 'NOT-ON-SUPPLY');
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Tracking mismatch leaves both sources unchanged.');
+    end;
+
+    /// <summary>Conflicting supply selectors are refused before a native reservation is created.</summary>
+    [Test]
+    procedure ConflictingSupplySelectorsRefuseWithoutReservation()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, ItemLedgerEntry);
+        Request := CreateRequest(SalesLine, ItemLedgerEntry, 2);
+        Request.Add('itemLedgerEntryNo', ItemLedgerEntry."Entry No.");
+
+        ExecuteReservation(Request, false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Ambiguous supply never silently chooses one selector.');
+    end;
+
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
     var
         Item: Record Item;

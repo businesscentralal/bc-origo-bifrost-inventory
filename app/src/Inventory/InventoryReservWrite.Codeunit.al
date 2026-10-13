@@ -52,9 +52,9 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         InvalidQuantityErr: Label 'Reservation quantity must be positive and available on both sources.', Comment = 'is-IS=Frátekið magn verður að vera jákvætt og tiltækt á báðum upprunum.';
     begin
         Request := Argument.GetRequestJson();
-        if not Resolver.Resolve(Argument, Request, 'source', true, SourceRef, SourceSpecification, SourceDirection) then
+        if not Resolver.ResolveDocument(Argument, Request, true, SourceRef, SourceSpecification, SourceDirection) then
             exit;
-        if not Resolver.Resolve(Argument, Request, 'supply', false, SupplyRef, SupplySpecification, SupplyDirection) then
+        if not ResolveSupply(Argument, Request, SupplyRef, SupplySpecification, SupplyDirection) then
             exit;
         if not Reader.TryReadDecimal(Argument, Request, 'quantity', true, Quantity) then
             exit;
@@ -74,6 +74,8 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidQuantityErr, 'quantity', Format(Quantity, 0, 9), '>0', '');
             exit;
         end;
+        if not ApplyRequestedTracking(Argument, Request, SourceRef.Number, SupplyRef.Number, SourceSpecification, SupplySpecification, QuantityBase) then
+            exit;
         SourceEntry.TransferFields(SourceSpecification);
         SupplyEntry.TransferFields(SupplySpecification);
         ReservationManagement.SetReservSource(SourceRef, SourceDirection);
@@ -113,6 +115,83 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
+    local procedure ResolveSupply(var Argument: Record "Message Argument ori"; Request: JsonObject; var SupplyRef: RecordRef; var Specification: Record "Tracking Specification"; var Direction: Enum "Transfer Direction"): Boolean
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        Resolver: Codeunit "Inventory Source Resolve ori";
+        Reader: Codeunit "Request Value Reader ori";
+        Supply: JsonObject;
+        EntryNo: Decimal;
+        InvalidSupplyErr: Label 'Specify an existing item ledger entry or an explicit supply source.', Comment = 'is-IS=Tilgreindu fyrirliggjandi vörufærslu eða skýran framboðsuppruna.';
+        PermissionErr: Label 'Permission denied for the supply entry.', Comment = 'is-IS=Heimild hafnað fyrir framboðsfærsluna.';
+    begin
+        if Request.Contains('supply') then begin
+            if Request.Contains('itemLedgerEntryNo') then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidSupplyErr, 'supply', '', 'one supply selector', '');
+                exit(false);
+            end;
+            exit(Resolver.Resolve(Argument, Request, 'supply', false, SupplyRef, Specification, Direction));
+        end;
+        if not Reader.TryReadDecimal(Argument, Request, 'itemLedgerEntryNo', true, EntryNo) then
+            exit(false);
+        if (EntryNo <= 0) or (EntryNo > 2147483647) or (EntryNo <> Round(EntryNo, 1)) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidSupplyErr, 'itemLedgerEntryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+            exit(false);
+        end;
+        if not ItemLedgerEntry.ReadPermission() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, 'itemLedgerEntryNo', '', '', '');
+            exit(false);
+        end;
+        if not ItemLedgerEntry.Get(EntryNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, InvalidSupplyErr, 'itemLedgerEntryNo', Format(EntryNo, 0, 9), '', '');
+            exit(false);
+        end;
+        Supply.Add('type', 'ItemLedgerEntry');
+        Supply.Add('systemId', Format(ItemLedgerEntry.SystemId, 0, 4));
+        Request.Add('supply', Supply);
+        exit(Resolver.Resolve(Argument, Request, 'supply', false, SupplyRef, Specification, Direction));
+    end;
+
+    local procedure ApplyRequestedTracking(var Argument: Record "Message Argument ori"; Request: JsonObject; SourceTable: Integer; SupplyTable: Integer; var Source: Record "Tracking Specification"; var Supply: Record "Tracking Specification"; QuantityBase: Decimal): Boolean
+    var
+        Resolver: Codeunit "Inventory Source Resolve ori";
+        Lot: Text;
+        Serial: Text;
+        Package: Text;
+        TrackingErr: Label 'Requested tracking must match the selected inventory entry; a serial reservation must be one base unit.', Comment = 'is-IS=Umbeðin rakning verður að passa við valda birgðafærslu; raðnúmerafrátekt verður að vera ein grunneining.';
+    begin
+        if not Resolver.ReadText(Argument, Request, 'lotNo', false, Lot) or
+           not Resolver.ReadText(Argument, Request, 'serialNo', false, Serial) or
+           not Resolver.ReadText(Argument, Request, 'packageNo', false, Package)
+        then
+            exit(false);
+        if (StrLen(Lot) > MaxStrLen(Supply."Lot No.")) or (StrLen(Serial) > MaxStrLen(Supply."Serial No.")) or (StrLen(Package) > MaxStrLen(Supply."Package No.")) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, TrackingErr, '', '', '', '');
+            exit(false);
+        end;
+        if ((SupplyTable = Database::"Item Ledger Entry") and not TrackingMatches(Request, Supply, Lot, Serial, Package)) or
+           ((SourceTable = Database::"Item Ledger Entry") and not TrackingMatches(Request, Source, Lot, Serial, Package)) or
+           (((Serial <> '') or (Supply."Serial No." <> '') or (Source."Serial No." <> '')) and (QuantityBase <> 1))
+        then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, TrackingErr, '', '', '', '');
+            exit(false);
+        end;
+        if Request.Contains('lotNo') then
+            Supply."Lot No." := CopyStr(Lot, 1, MaxStrLen(Supply."Lot No."));
+        if Request.Contains('serialNo') then
+            Supply."Serial No." := CopyStr(Serial, 1, MaxStrLen(Supply."Serial No."));
+        if Request.Contains('packageNo') then
+            Supply."Package No." := CopyStr(Package, 1, MaxStrLen(Supply."Package No."));
+        exit(true);
+    end;
+
+    local procedure TrackingMatches(Request: JsonObject; Specification: Record "Tracking Specification"; Lot: Text; Serial: Text; Package: Text): Boolean
+    begin
+        exit((not Request.Contains('lotNo') or (Specification."Lot No." = Lot)) and
+             (not Request.Contains('serialNo') or (Specification."Serial No." = Serial)) and
+             (not Request.Contains('packageNo') or (Specification."Package No." = Package)));
+    end;
+
     local procedure AvailableQuantity(SourceEntry: Record "Reservation Entry"): Decimal
     var
         ReservedEntry: Record "Reservation Entry";
@@ -147,7 +226,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
     begin
         Request := Argument.GetRequestJson();
         // With entry-only cancellation, resolve the demand-side pointer before any native write.
-        if not Request.Contains('source') and Request.Get('entryNo', Token) then begin
+        if not Request.Contains('source') and not Request.Contains('documentType') and Request.Get('entryNo', Token) then begin
             if not Reader.TryReadDecimal(Argument, Request, 'entryNo', true, EntryNo) then
                 exit;
             if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
@@ -163,7 +242,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             if not Resolver.ResolveEntry(Argument, ReservationEntry, true, SourceRef, SourceSpecification, Direction) then
                 exit;
         end else
-            if not Resolver.Resolve(Argument, Request, 'source', true, SourceRef, SourceSpecification, Direction) then
+            if not Resolver.ResolveDocument(Argument, Request, true, SourceRef, SourceSpecification, Direction) then
                 exit;
         ReservationEntry.Reset();
         ReservationEntry.TransferFields(SourceSpecification);
