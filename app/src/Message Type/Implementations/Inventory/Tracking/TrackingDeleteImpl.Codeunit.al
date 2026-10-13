@@ -10,8 +10,9 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Inventory Setup ori", false, false) and Resolver.HasTrackingWritePermission());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -54,9 +55,17 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'entryNo');
-        ParameterJson.Add('type', 'integer');
+        Clear(Parameters);
+        ParameterJson.Add('name', 'source');
+        ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'Source type and systemId; transfers also accept transferDirection (Outbound or Inbound).');
+        Parameters.Add(ParameterJson);
+        Clear(ParameterJson);
+        ParameterJson.Add('name', 'entryNos');
+        ParameterJson.Add('type', 'array');
+        ParameterJson.Add('required', false);
+        ParameterJson.Add('description', 'Reservation entry numbers belonging to this source. Omit to remove all source tracking; an empty array changes nothing.');
         Parameters.Add(ParameterJson);
         exit(true);
     end;
@@ -64,7 +73,7 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entryNo', 0);
+        Response.Add('entriesDeleted', 0);
         exit(true);
     end;
 
@@ -80,7 +89,7 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', 'Tracking Specification');
+        Effect.Add('writes', 'Source tracking through native tracking and reservation APIs');
         Effect.Add('posts', false);
         exit(true);
     end;
@@ -111,13 +120,13 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Deletes one tracking specification after registering the pointer with Item Tracking Management.';
+        Overview := 'Removes tracking only from the specified source through native tracking and reservation APIs.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls codeunit 6500 before delete. Package number is returned when present.';
+        Notes := 'Entry numbers are validated against the source before any change. Native reservation pairing and source validation remain active.';
         exit(true);
     end;
 
@@ -128,38 +137,18 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        TrackingSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemTrackingManagement: Codeunit "Item Tracking Management";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        EntryNo: Integer;
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Inventory Setup ori", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
-            exit;
-        end;
-        EntryNo := Token.AsValue().AsInteger();
-        if not TrackingSpecification.Get(EntryNo) then begin
-            Argument.RespondWithError('Tracking specification ' + Format(EntryNo) + ' was not found.');
-            exit;
-        end;
-
-        ItemTrackingManagement.SetPointerFilter(TrackingSpecification);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
-        ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
-        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
-        ResponseJson.Add('packageNo', TrackingSpecification."Package No.");
-        TrackingSpecification.Delete(true);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        TrackingWrite.SetDeleteMode();
+        if Argument."Omit Commit" then
+            TrackingWrite.Run(Argument)
+        else
+            if not TrackingWrite.Run(Argument) then
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 }

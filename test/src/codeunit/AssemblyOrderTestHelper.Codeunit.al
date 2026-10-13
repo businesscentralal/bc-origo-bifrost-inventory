@@ -88,7 +88,7 @@ codeunit 96903 "Assembly Order Test Helper"
         Dispatcher: Codeunit "Dispatcher ori";
         RequestContent: BigText;
         ResponseContent: BigText;
-        ResponseContentType: Text[50];
+        ResponseContentType: Text[100];
         MessageId: Guid;
         ResponseTime: Duration;
         EmptyTaskId: Guid;

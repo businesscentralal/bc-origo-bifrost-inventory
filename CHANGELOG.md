@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed - preserve enabled Inventory domains when creating setup
+
+- Inventory Setup ori (table 70013451) now defaults Reclassification to enabled, consistently with the other ten domains. Opening setup for the first time no longer disables reclassification. Existing explicit opt-outs are preserved. Inventory Domain Setup Tests (96924) covers missing setup, first creation, and repeated initialization.
+
 ### Fixed (2026-10-12) - related help entries name existing message types
 
 - Cost Get Impl ori (70013468) added `Inventory.AdjustCost.Run` and `Inventory.Revaluation.Calculate` as plain strings. Foundation reads a string related entry as message type "", so `Help.Implementation.Get` failed and the UAT roster refresh dropped 50 help documents.

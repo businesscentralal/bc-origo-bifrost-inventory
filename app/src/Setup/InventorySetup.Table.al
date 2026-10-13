@@ -55,6 +55,7 @@ table 70013451 "Inventory Setup ori"
         field(17; Reclassification; Boolean)
         {
             Caption = 'Reclassification', Comment = 'is-IS=Endurflokkun';
+            InitValue = true;
         }
         field(18; "Item Application"; Boolean)
         {

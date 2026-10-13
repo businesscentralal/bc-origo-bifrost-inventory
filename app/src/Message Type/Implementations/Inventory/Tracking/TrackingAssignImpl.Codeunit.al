@@ -10,8 +10,9 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Inventory Setup ori", false, false) and Resolver.HasTrackingWritePermission());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -54,29 +55,17 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     var
         ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
+        Clear(Parameters);
+        ParameterJson.Add('name', 'source');
+        ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', true);
+        ParameterJson.Add('description', 'Source type and systemId; transfers also accept transferDirection (Outbound or Inbound).');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
-        ParameterJson.Add('name', 'quantity');
-        ParameterJson.Add('type', 'decimal');
+        ParameterJson.Add('name', 'entries');
+        ParameterJson.Add('type', 'array');
         ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'lotNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'serialNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'packageNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', false);
+        ParameterJson.Add('description', '1..200 entries with lotNo, serialNo, packageNo, quantity in base units and optional expirationDate. Serial quantity must be one.');
         Parameters.Add(ParameterJson);
         exit(true);
     end;
@@ -84,7 +73,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entryNo', 0);
+        Response.Add('entriesAssigned', 0);
         exit(true);
     end;
 
@@ -100,7 +89,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', 'Tracking Specification');
+        Effect.Add('writes', 'Source tracking through native tracking and reservation APIs');
         Effect.Add('posts', false);
         exit(true);
     end;
@@ -130,13 +119,13 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Creates a tracking specification and registers it through Item Tracking Management.';
+        Overview := 'Assigns lot, serial and package tracking to a real source through the native Item Tracking Lines registration path.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls codeunit 6500 Item Tracking Management. Package number is included.';
+        Notes := 'Quantities use base units. Native Item Tracking Lines calls Item Tracking Management and Create Reserv. Entry; no protected table is inserted directly.';
         exit(true);
     end;
 
@@ -147,61 +136,17 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        TrackingSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemTrackingManagement: Codeunit "Item Tracking Management";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        ItemNo: Code[20];
-        LotNo: Code[50];
-        SerialNo: Code[50];
-        PackageNo: Code[50];
-        Quantity: Decimal;
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Inventory Setup ori", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError('itemNo is required.');
-            exit;
-        end;
-        ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
-        if not RequestJson.Get('quantity', Token) then begin
-            Argument.RespondWithError('quantity is required.');
-            exit;
-        end;
-        Quantity := Token.AsValue().AsDecimal();
-        if RequestJson.Get('lotNo', Token) then
-            LotNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(LotNo));
-        if RequestJson.Get('serialNo', Token) then
-            SerialNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(SerialNo));
-        if RequestJson.Get('packageNo', Token) then
-            PackageNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(PackageNo));
-        if (LotNo = '') and (SerialNo = '') and (PackageNo = '') then begin
-            Argument.RespondWithError('lotNo, serialNo, or packageNo is required.');
-            exit;
-        end;
-
-        TrackingSpecification.Init();
-        TrackingSpecification."Item No." := ItemNo;
-        TrackingSpecification."Lot No." := LotNo;
-        TrackingSpecification."Serial No." := SerialNo;
-        TrackingSpecification."Package No." := PackageNo;
-        TrackingSpecification."Quantity (Base)" := Quantity;
-        TrackingSpecification.Insert(true);
-        ItemTrackingManagement.SetPointerFilter(TrackingSpecification);
-
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', TrackingSpecification."Entry No.");
-        ResponseJson.Add('itemNo', ItemNo);
-        ResponseJson.Add('lotNo', LotNo);
-        ResponseJson.Add('serialNo', SerialNo);
-        ResponseJson.Add('packageNo', PackageNo);
-        ResponseJson.Add('quantity', Quantity);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if Argument."Omit Commit" then
+            TrackingWrite.Run(Argument)
+        else
+            if not TrackingWrite.Run(Argument) then
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 }

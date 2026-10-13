@@ -49,7 +49,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssertCanPost_WithoutInvPost_NamesInvPostSet()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         ResponseJson: JsonObject;
@@ -58,14 +58,14 @@ codeunit 96918 "Inv. Posting Gate Tests"
     begin
         // [SCENARIO] Denial names BIFROST InvPost ori, carries PermissionDenied, and does not mention BIFROST ItemPost ori.
         LowerToInvWrite(LibraryLowerPermissions);
-        Argument.Init();
-        Argument.Version := "Message Version ori"::"1.0";
-        Argument.Insert(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
 
-        Assert.IsFalse(PostingGate.AssertCanPost(Argument), 'AssertCanPost should deny without the token');
+        Assert.IsFalse(PostingGate.AssertCanPost(TempArgument), 'AssertCanPost should deny without the token');
         Assert.IsFalse(PostingGate.HasPostingPermission(), 'HasPostingPermission should be false without the token');
 
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := TempArgument.GetResponseJson();
         Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
         Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('error', ErrorToken), 'error missing');
@@ -76,7 +76,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPreview_WithoutInvPost_StaysEnabled()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori";
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
@@ -84,8 +84,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Transfer preview should stay enabled without BIFROST InvPost ori');
 
-        PrepareUnlicensedArgument(Argument);
-        asserterror PreviewImpl.ExecuteBifrostTask(Argument);
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror PreviewImpl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check, not a posting-gate denial');
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
     end;
@@ -93,7 +93,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssemblyPreview_WithoutInvPost_StaysEnabled()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori";
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
@@ -101,8 +101,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Assembly preview should stay enabled without BIFROST InvPost ori');
 
-        PrepareUnlicensedArgument(Argument);
-        asserterror PreviewImpl.ExecuteBifrostTask(Argument);
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror PreviewImpl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check, not a posting-gate denial');
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
     end;
@@ -114,10 +114,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LibraryLowerPermissions.AddPermissionSet('Inv Post Gate Test');
     end;
 
-    local procedure PrepareUnlicensedArgument(var Argument: Record "Message Argument ori")
+    local procedure PrepareUnlicensedArgument(var TempArgument: Record "Message Argument ori")
     begin
-        Argument.Init();
-        Argument.Version := "Message Version ori"::"1.0";
-        Argument.Insert(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
     end;
 }

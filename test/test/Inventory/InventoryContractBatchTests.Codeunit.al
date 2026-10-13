@@ -128,11 +128,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed()
     var
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Helper: Codeunit "Transfer Order Test Helper";
         LibraryInventory: Codeunit "Library - Inventory";
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
         Contract: JsonObject;
         ErrorEntry: JsonObject;
         RequestJson: JsonObject;
@@ -408,6 +408,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Parameters.Count(), 'Exact parameter count; other chapters cannot donate fields.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Parameters.Get(Index, Token);
@@ -436,6 +437,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Fields.Count(), 'Exact response field count.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Fields.Get(Index, Token);
@@ -473,6 +475,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Sources.Add('data.itemNo');
         Sources.Add('data.itemId, data.id, data.systemId, data.recordSystemId');
         Sources.Add('data.tableView');
+        Index := 0;
         foreach Source in Sources do begin
             Target.Get(Index, Token);
             Entry := Token.AsObject();
