@@ -4,6 +4,7 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Setup;
 using System.Utilities;
 
 /// <summary>Runs native costing reports with explicit request options and validated selections.</summary>
@@ -12,6 +13,7 @@ codeunit 70013429 "Inventory Cost Reports ori"
     Access = Internal;
 
     var
+        AutoPostErr: Label 'postToGL=true requires Automatic Cost Posting in Inventory Setup, as on report 795. No report was run.', Comment = 'is-IS=postToGL=true krefst sjálfvirkrar kostnaðarbókunar í birgðauppsetningu eins og á skýrslu 795. Engin skýrsla var keyrð.';
         InvalidFieldErr: Label 'Parameter %1 must be %2.', Comment = '%1 = parameter name, %2 = required type; is-IS=Færibreytan %1 verður að vera %2.';
         ConflictingAliasErr: Label 'Parameters %1 and %2 must have the same value when both are supplied.', Comment = '%1 = canonical name, %2 = legacy name; is-IS=Færibreyturnar %1 og %2 verða að hafa sama gildi þegar báðar eru gefnar upp.';
         UnsupportedFilterErr: Label 'Report %1 does not support the %2 filter. No report was run.', Comment = '%1 = report number, %2 = parameter name; is-IS=Skýrsla %1 styður ekki afmörkunina %2. Engin skýrsla var keyrð.';
@@ -63,10 +65,16 @@ codeunit 70013429 "Inventory Cost Reports ori"
     procedure AdjustCost(Request: JsonObject; var Response: JsonObject)
     var
         Item: Record Item;
+        InventorySetup: Record "Inventory Setup";
         Parameters: Text;
         SelectedItems: Integer;
     begin
         Parameters := PrepareAdjustment(Request, Item);
+        if ReadBoolean(Request, 'postToGL') then begin
+            InventorySetup.Get();
+            if not InventorySetup."Automatic Cost Posting" then
+                Error(AutoPostErr);
+        end;
         SelectedItems := Item.Count();
         Report.Execute(Report::"Adjust Cost - Item Entries", Parameters);
         Clear(Response);

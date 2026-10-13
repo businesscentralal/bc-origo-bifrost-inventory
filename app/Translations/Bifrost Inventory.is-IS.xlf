@@ -207,6 +207,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Skýrsla 795 samþykkir annaðhvort itemNo eða itemCategoryCode, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType AdjustFiltersErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4210224724 - NamedType 2525087974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>postToGL=true requires Automatic Cost Posting in Inventory Setup, as on report 795. No report was run.</source>
+          <target>postToGL=true krefst sjálfvirkrar kostnaðarbókunar í birgðauppsetningu eins og á skýrslu 795. Engin skýrsla var keyrð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=postToGL=true krefst sjálfvirkrar kostnaðarbókunar í birgðauppsetningu eins og á skýrslu 795. Engin skýrsla var keyrð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType AutoPostErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4210224724 - NamedType 497792087" size-unit="char" translate="yes" xml:space="preserve">
           <source>Parameters %1 and %2 must have the same value when both are supplied.</source>
           <target>Færibreyturnar %1 og %2 verða að hafa sama gildi þegar báðar eru gefnar upp.</target>

@@ -311,6 +311,7 @@ codeunit 96931 "Inventory Cost Report Tests"
     procedure NativeAdjustmentPostsToGLOnce()
     var
         Item: Record Item;
+        InventorySetup: Record "Inventory Setup";
         OtherItem: Record Item;
         ValueEntry: Record "Value Entry";
         Observer: Codeunit "Inventory Cost Observer";
@@ -319,6 +320,9 @@ codeunit 96931 "Inventory Cost Report Tests"
     begin
         CreateUnpostedCost(Item);
         CreateUnpostedCost(OtherItem);
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := true;
+        InventorySetup.Modify();
         Request.Add('itemNo', Item."No.");
         Request.Add('postToGL', true);
         BindSubscription(Observer);
@@ -333,6 +337,55 @@ codeunit 96931 "Inventory Cost Report Tests"
         ValueEntry.SetRange("Item No.", OtherItem."No.");
         ValueEntry.CalcSums("Cost Posted to G/L");
         Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Unselected item remains unposted.');
+    end;
+
+    /// <summary>A disabled native G/L option refuses before adjustment or ledger writes.</summary>
+    [Test]
+    procedure AdjustmentRefusesUnavailableGLPosting()
+    var
+        Item: Record Item;
+        ValueEntry: Record "Value Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateUnpostedCost(Item);
+        Request.Add('itemNo', Item."No.");
+        Request.Add('postToGL', true);
+        asserterror CostReports.AdjustCost(Request, Response);
+        Assert.ExpectedError('requires Automatic Cost Posting');
+        Item.Get(Item."No.");
+        Assert.IsFalse(Item."Cost is Adjusted", 'Refusal occurs before adjustment.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Refusal never posts to G/L.');
+    end;
+
+    /// <summary>An explicitly disabled G/L option is honored even when automatic posting is enabled.</summary>
+    [Test]
+    procedure NativeAdjustmentHonorsExplicitNoGLPosting()
+    var
+        Item: Record Item;
+        InventorySetup: Record "Inventory Setup";
+        ValueEntry: Record "Value Entry";
+        Observer: Codeunit "Inventory Cost Observer";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateUnpostedCost(Item);
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := true;
+        InventorySetup.Modify();
+        Request.Add('itemNo', Item."No.");
+        Request.Add('postToGL', false);
+        BindSubscription(Observer);
+        CostReports.AdjustCost(Request, Response);
+        Assert.IsFalse(Observer.PostToGLOption(), 'Explicit false overrides the native setup default.');
+        UnbindSubscription(Observer);
+        Item.Get(Item."No.");
+        Assert.IsTrue(Item."Cost is Adjusted", 'Cost adjustment still runs.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'G/L cost remains unposted.');
     end;
 
     /// <summary>The native posting report refuses a blocked posting date without posting the selected entry.</summary>
@@ -384,11 +437,14 @@ codeunit 96931 "Inventory Cost Report Tests"
     procedure NativePostReturnsExpectedCostExclusion()
     var
         Item: Record Item;
+        InventoryPostingSetup: Record "Inventory Posting Setup";
+        GeneralPostingSetup: Record "General Posting Setup";
         InventorySetup: Record "Inventory Setup";
         PurchaseHeader: Record "Purchase Header";
         PurchaseLine: Record "Purchase Line";
         PendingEntry: Record "Post Value Entry to G/L";
         LibraryPurchase: Codeunit "Library - Purchase";
+        LibraryERM: Codeunit "Library - ERM";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -401,6 +457,12 @@ codeunit 96931 "Inventory Cost Report Tests"
         LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
         PurchaseLine.Validate("Direct Unit Cost", 15);
         PurchaseLine.Modify(true);
+        InventoryPostingSetup.Get('', Item."Inventory Posting Group");
+        InventoryPostingSetup.Validate("Inventory Account (Interim)", LibraryERM.CreateGLAccountNo());
+        InventoryPostingSetup.Modify(true);
+        GeneralPostingSetup.Get(PurchaseLine."Gen. Bus. Posting Group", PurchaseLine."Gen. Prod. Posting Group");
+        GeneralPostingSetup.Validate("Invt. Accrual Acc. (Interim)", LibraryERM.CreateGLAccountNo());
+        GeneralPostingSetup.Modify(true);
         LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
         PendingEntry.SetRange("Item No.", Item."No.");
         Assert.AreEqual(2, PendingEntry.Count(), 'Fixture has both actual and expected costs pending before configuration changes.');

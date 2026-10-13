@@ -119,7 +119,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","idempotent":false,"preconditions":["Company Costing and permission gates allow execution.","The native report setup and permissions allow execution.","Only one of itemNo and itemCategoryCode may be nonempty; filters longer than 250 characters are refused."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","idempotent":false,"preconditions":["Company Costing and permission gates allow execution.","The native report setup and permissions allow execution; postToGL=true requires Automatic Cost Posting.","Only one of itemNo and itemCategoryCode may be nonempty; filters longer than 250 characters are refused."]}');
         exit(true);
     end;
 
