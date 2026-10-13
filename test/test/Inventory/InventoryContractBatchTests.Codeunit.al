@@ -566,7 +566,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertBooleanDefault(Contract, 'postToGL', false);
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         AssertStringDefault(Contract, 'itemNoFilter');
-        AssertStringDefault(Contract, 'documentNoFilter');
+        AssertStringDefault(Contract, 'postingDate');
+        AssertBooleanDefault(Contract, 'perPostingGroup', false);
     end;
 
     /// <summary>Checks the report 795 filter constraint and array-shaped preconditions.</summary>
@@ -587,7 +588,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Preconditions := ChapterToken.AsArray();
         LibraryAssert.AreEqual(3, Preconditions.Count(), 'Keep the domain, report and conflicting-filter preconditions.');
         Preconditions.Get(2, ChapterToken);
-        LibraryAssert.AreEqual('Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty.', ChapterToken.AsValue().AsText(), 'Report 795 rejects simultaneous effective filters.');
+        LibraryAssert.AreEqual('Only one of itemNo and itemCategoryCode may be nonempty; filters longer than 250 characters are refused.', ChapterToken.AsValue().AsText(), 'Report 795 rejects simultaneous effective filters.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         Contract.Get('effect', ChapterToken);
         Effect := ChapterToken.AsObject();
@@ -611,7 +612,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', Error);
         Error.Get('when', ValueToken);
-        LibraryAssert.AreEqual('The standard report Run returns false; response carries GetLastErrorText. This branch precedes response-echo conversion.', ValueToken.AsValue().AsText(), 'Do not describe post-report echo conversion as preflight validation.');
+        LibraryAssert.AreEqual('Request validation or the native report fails; no native commit rollback is promised.', ValueToken.AsValue().AsText(), 'Validation precedes native report execution; report commits are preserved.');
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
     end;
 
@@ -628,7 +629,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract.Get('effect', ChapterToken);
         Effect := ChapterToken.AsObject();
         Effect.Get('changes', ChapterToken);
-        LibraryAssert.AreEqual('Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.', ChapterToken.AsValue().AsText(), 'Report invocation does not prove posting or filtered selection.');
+        LibraryAssert.AreEqual('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', ChapterToken.AsValue().AsText(), 'Explicit native posting mode and effective selection are disclosed; runtime tests prove behavior.');
         Effect.Get('idempotent', ChapterToken);
         LibraryAssert.IsFalse(ChapterToken.AsValue().AsBoolean(), 'No safe retry or idempotence guarantee is established.');
     end;
@@ -704,9 +705,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetParameters(ArrayChapter), 'Parameters are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Three supported request keys.')
+                    LibraryAssert.AreEqual(6, ArrayChapter.Count(), 'Four native options and two validated legacy aliases.')
                 else
-                    LibraryAssert.AreEqual(2, ArrayChapter.Count(), 'Two echo keys.');
+                    LibraryAssert.AreEqual(6, ArrayChapter.Count(), 'Four native options and two validated legacy aliases.');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified error branches.');
@@ -810,12 +811,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
     local procedure AssertCostingCatalogue(TypeName: Text; Description: Text; Selection: Text; Keywords: Text)
     begin
         if TypeName = 'Inventory.AdjustCost.Run' then begin
-            LibraryAssert.AreEqual('Runs report 795 with optional item or category filter and explicit postToGL option.', Description, 'Exact AdjustCost description.');
-            LibraryAssert.AreEqual('Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.', Selection, 'Exact AdjustCost selection.');
+            LibraryAssert.AreEqual('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.', Description, 'Exact AdjustCost description.');
+            LibraryAssert.AreEqual('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.', Selection, 'Exact AdjustCost selection.');
             LibraryAssert.AreEqual('adjust cost,item entry correction,post to g/l,report 795', Keywords, 'Exact AdjustCost keywords.');
         end else begin
-            LibraryAssert.AreEqual('Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.', Description, 'Exact CostToGL description.');
-            LibraryAssert.AreEqual('Post inventory value entries that are not yet posted to the general ledger.', Selection, 'Exact CostToGL selection.');
+            LibraryAssert.AreEqual('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', Description, 'Exact CostToGL description.');
+            LibraryAssert.AreEqual('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', Selection, 'Exact CostToGL selection.');
             LibraryAssert.AreEqual('post inventory cost,general ledger,report 1002', Keywords, 'Exact CostToGL keywords.');
         end;
     end;
@@ -830,19 +831,25 @@ codeunit 96921 "Inventory Contract Batch Tests"
         if TypeName = 'Inventory.AdjustCost.Run' then
             LibraryAssert.AreEqual(4, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
         else
-            LibraryAssert.AreEqual(3, Token.AsArray().Count(), 'Exact CostToGL response field count.');
+            LibraryAssert.AreEqual(5, Token.AsArray().Count(), 'Exact CostToGL response field count.');
         GetNamedMember(Response, 'fields', 'name', 'status', Field);
         AssertJsonText(Field, 'type', 'string');
-        GetNamedMember(Response, 'fields', 'name', 'itemNoFilter', Field);
-        AssertJsonText(Field, 'type', 'string');
         if TypeName = 'Inventory.AdjustCost.Run' then begin
-            GetNamedMember(Response, 'fields', 'name', 'itemCategoryFilter', Field);
-            AssertJsonText(Field, 'type', 'string');
+            GetNamedMember(Response, 'fields', 'name', 'itemsSelected', Field);
+            AssertJsonText(Field, 'type', 'integer');
             GetNamedMember(Response, 'fields', 'name', 'postToGL', Field);
             AssertJsonText(Field, 'type', 'boolean');
+            GetNamedMember(Response, 'fields', 'name', 'itemByItem', Field);
+            AssertJsonText(Field, 'type', 'boolean');
         end else begin
-            GetNamedMember(Response, 'fields', 'name', 'documentNoFilter', Field);
-            AssertJsonText(Field, 'type', 'string');
+            GetNamedMember(Response, 'fields', 'name', 'entriesSelected', Field);
+            AssertJsonText(Field, 'type', 'integer');
+            GetNamedMember(Response, 'fields', 'name', 'entriesRemaining', Field);
+            AssertJsonText(Field, 'type', 'integer');
+            GetNamedMember(Response, 'fields', 'name', 'posted', Field);
+            AssertJsonText(Field, 'type', 'boolean');
+            GetNamedMember(Response, 'fields', 'name', 'skippedEntries', Field);
+            AssertJsonText(Field, 'type', 'array');
         end;
     end;
 

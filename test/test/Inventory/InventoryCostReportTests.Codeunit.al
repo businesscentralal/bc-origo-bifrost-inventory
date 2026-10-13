@@ -78,7 +78,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         Request: JsonObject;
         Parameters: Text;
     begin
-        Request.Add('itemNo', PadStr('X', 250, 'X'));
+        Request.Add('itemNo', PadStr('', 125, 'X').Replace('X', 'X|').TrimEnd('|') + '*');
         Parameters := CostReports.PrepareAdjustment(Request, Item);
         Assert.AreEqual(250, StrLen(Item.GetFilter("No.")), 'Boundary remains intact.');
         Assert.IsTrue(Parameters <> '', 'Native request generated.');
@@ -251,6 +251,7 @@ codeunit 96931 "Inventory Cost Report Tests"
 
     /// <summary>Post=true posts real selected costs while another self-created item remains pending.</summary>
     [Test]
+    [HandlerFunctions('PostingMessageHandler')]
     procedure NativePostRespectsItemFilter()
     var
         Item: Record Item;
@@ -280,6 +281,7 @@ codeunit 96931 "Inventory Cost Report Tests"
     var
         Item: Record Item;
         OtherItem: Record Item;
+        Observer: Codeunit "Inventory Cost Observer";
         Request: JsonObject;
         Response: JsonObject;
     begin
@@ -292,7 +294,11 @@ codeunit 96931 "Inventory Cost Report Tests"
         Request.Add('itemNo', Item."No.");
         Request.Add('itemByItem', true);
         Request.Add('postToGL', false);
+        BindSubscription(Observer);
         CostReports.AdjustCost(Request, Response);
+        Assert.AreEqual(Item."No.", Observer.ItemFilter(), 'Native report receives exact selected item.');
+        Assert.IsTrue(Observer.ItemByItem(), 'Native report receives itemByItem=true.');
+        UnbindSubscription(Observer);
         Item.Get(Item."No.");
         OtherItem.Get(OtherItem."No.");
         Assert.IsTrue(Item."Cost is Adjusted", 'Native report adjusted selected item.');
@@ -301,23 +307,21 @@ codeunit 96931 "Inventory Cost Report Tests"
 
     /// <summary>The native posting report leaves a blocked posting date pending and reports the skipped entry.</summary>
     [Test]
-    procedure NativePostReportsSkippedEntry()
+    procedure NativePostRefusesBlockedPostingDate()
     var
         Item: Record Item;
         GLSetup: Record "General Ledger Setup";
         ValueEntry: Record "Value Entry";
         Request: JsonObject;
         Response: JsonObject;
-        Token: JsonToken;
     begin
         CreateUnpostedCost(Item);
         GLSetup.Get();
         GLSetup."Allow Posting From" := WorkDate() + 1;
         GLSetup.Modify();
         Request.Add('itemNo', Item."No.");
-        CostReports.PostCostToGL(Request, Response);
-        Response.Get('skippedEntries', Token);
-        Assert.IsTrue(Token.AsArray().Count() > 0, 'Native report skipped-entry dataset must reach the response.');
+        asserterror CostReports.PostCostToGL(Request, Response);
+        Assert.ExpectedError('Posting Date is not within');
         ValueEntry.SetRange("Item No.", Item."No.");
         ValueEntry.CalcSums("Cost Posted to G/L");
         Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Blocked date did not post.');
@@ -342,6 +346,37 @@ codeunit 96931 "Inventory Cost Report Tests"
         CostReports.TestCostToGL(Request, Response);
         Response.Get('entriesSelected', Token);
         Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'Matching date includes the same pending entry.');
+    end;
+
+    /// <summary>Handles the actual native report posting summary without hiding unexpected messages.</summary>
+    [MessageHandler]
+    procedure PostingMessageHandler(MessageText: Text[1024])
+    begin
+        Assert.IsTrue(MessageText.Contains('value entries have been posted to the general ledger'), 'Expected native posting summary: ' + MessageText);
+    end;
+
+    /// <summary>Checks generated request parameter names against the platform request page itself.</summary>
+    [Test]
+    [HandlerFunctions('AdjustmentRequestHandler')]
+    procedure AdjustmentParametersMatchNativeRequestPage()
+    var
+        Parameters: Text;
+        Document: XmlDocument;
+        Node: XmlNode;
+    begin
+        Parameters := Report.RunRequestPage(Report::"Adjust Cost - Item Entries");
+        XmlDocument.ReadFrom(Parameters, Document);
+        Assert.IsTrue(Document.SelectSingleNode('/ReportParameters/Options/Field[@name="FilterItemNo"]', Node), Parameters);
+        Assert.AreEqual('XITEM', Node.AsXmlElement().InnerText(), Parameters);
+    end;
+
+    /// <summary>Supplies explicit native request options while obtaining the platform XML, without running the report.</summary>
+    [RequestPageHandler]
+    procedure AdjustmentRequestHandler(var RequestPage: TestRequestPage "Adjust Cost - Item Entries")
+    begin
+        RequestPage.FilterItemNo.SetValue('XITEM');
+        RequestPage."Item-by-Item Adjustment".SetValue(true);
+        RequestPage.OK().Invoke();
     end;
 
     local procedure CreateUnpostedCost(var Item: Record Item)

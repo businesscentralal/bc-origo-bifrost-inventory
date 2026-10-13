@@ -89,7 +89,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native item filter, at most 250 characters. Legacy itemNoFilter is accepted."},{"name":"itemCategoryCode","type":"string","required":false,"description":"Native category filter, mutually exclusive with itemNo; at most 250 characters. Legacy itemCategoryFilter is accepted."},{"name":"itemByItem","type":"boolean","required":false,"description":"Native item-by-item adjustment option; may commit each item."},{"name":"postToGL","type":"boolean","required":false,"description":"Use the native report 795 G/L option; report 1002 is not additionally run."}]');
+        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native item filter, at most 250 characters. Legacy itemNoFilter is accepted.","default":""},{"name":"itemCategoryCode","type":"string","required":false,"description":"Native category filter, mutually exclusive with itemNo; at most 250 characters. Legacy itemCategoryFilter is accepted.","default":""},{"name":"itemByItem","type":"boolean","required":false,"description":"Native item-by-item adjustment option; may commit each item.","default":false},{"name":"postToGL","type":"boolean","required":false,"description":"Use the native report 795 G/L option; report 1002 is not additionally run.","default":false},{"name":"itemNoFilter","type":"string","required":false,"default":"","description":"Legacy alias of itemNo; conflicting simultaneous values are refused."},{"name":"itemCategoryFilter","type":"string","required":false,"default":"","description":"Legacy alias of itemCategoryCode; conflicting simultaneous values are refused."}]');
         exit(true);
     end;
 
@@ -109,7 +109,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
         exit(true);
     end;
 
@@ -119,7 +119,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","idempotent":false}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.","idempotent":false,"preconditions":["Company Costing and permission gates allow execution.","The native report setup and permissions allow execution.","Only one of itemNo and itemCategoryCode may be nonempty; filters longer than 250 characters are refused."]}');
         exit(true);
     end;
 
