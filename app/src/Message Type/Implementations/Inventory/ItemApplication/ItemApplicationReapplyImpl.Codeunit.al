@@ -97,9 +97,11 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add('Inventory.ItemApplication.Unapply');
-        Related.Add('Inventory.ItemApplication.Get');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Unapply', 'Unapply the item ledger entry instead of reapplying it.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Get', 'Read the item application before reapplying it.'));
         exit(true);
     end;
 
