@@ -4,11 +4,15 @@ using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Manufacturing.Document;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
-using Origo.Bifrost.Inventory;
+using Microsoft.Service.Document;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Proves explicit manual pairing, availability refusals and source-scoped cancellation.</summary>
@@ -369,7 +373,7 @@ codeunit 96926 "Inventory Reservation Tests"
         Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
         Request.Add('quantity', 2);
 
-        AssertNativeRoundTrip(Request, Database::"Assembly Header", Header."No.", '', 0, true, 2);
+        AssertNativeRoundTrip(Request, Database::"Assembly Header", Header."No.", '', 0, true, 2, 0);
     end;
 
     /// <summary>Assembly components use their line identity when manually reserving posted inventory.</summary>
@@ -392,12 +396,12 @@ codeunit 96926 "Inventory Reservation Tests"
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
 
-        AssertNativeRoundTrip(Request, Database::"Assembly Line", Line."Document No.", '', Line."Line No.", false, 2);
+        AssertNativeRoundTrip(Request, Database::"Assembly Line", Line."Document No.", '', Line."Line No.", false, 2, 0);
     end;
 
     /// <summary>Item journal reservations preserve both template and batch and cancel through the native adapter.</summary>
     [Test]
-    procedure ItemJournalPairsAndCancelsInventory()
+    procedure TransferJournalPairsAndCancelsInventory()
     var
         SalesLine: Record "Sales Line";
         Ledger: Record "Item Ledger Entry";
@@ -409,12 +413,12 @@ codeunit 96926 "Inventory Reservation Tests"
         CreateSources(SalesLine, Ledger);
         LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
         LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
-        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::"Negative Adjmt.", SalesLine."No.", 10);
+        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::Transfer, SalesLine."No.", 10);
         Request.Add('source', SourceObject('ItemJournalLine', Line.SystemId));
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
 
-        AssertNativeRoundTrip(Request, Database::"Item Journal Line", JournalTemplate.Name, Batch.Name, Line."Line No.", false, 2);
+        AssertNativeRoundTrip(Request, Database::"Item Journal Line", JournalTemplate.Name, Batch.Name, Line."Line No.", false, 2, 0);
     end;
 
     /// <summary>Manual source quantity is converted to base units before native pairing, without double conversion.</summary>
@@ -433,10 +437,209 @@ codeunit 96926 "Inventory Reservation Tests"
         SalesLine.Modify(true);
         Request := CreateRequest(SalesLine, Ledger, 2);
 
-        AssertNativeRoundTrip(Request, Database::"Sales Line", SalesLine."Document No.", '', SalesLine."Line No.", false, 6);
+        AssertNativeRoundTrip(Request, Database::"Sales Line", SalesLine."Document No.", '', SalesLine."Line No.", false, 6, 0);
     end;
 
-    local procedure AssertNativeRoundTrip(Request: JsonObject; TableNo: Integer; SourceId: Code[20]; BatchName: Code[10]; RefNo: Integer; Positive: Boolean; BaseQuantity: Decimal)
+    /// <summary>Posted inventory can be the selected source, with the native demand adapter creating its pair.</summary>
+    [Test]
+    procedure PostedInventorySourcePairsAndCancelsDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        Request.Add('source', SourceObject('ItemLedgerEntry', Ledger.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Item Ledger Entry", '', '', Ledger."Entry No.", true, 2, 0);
+    end;
+
+    /// <summary>Production output uses the production-line pointer, not a document reference-line substitute.</summary>
+    [Test]
+    procedure ProductionOutputPairsAndCancelsDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Production Order";
+        Line: Record "Prod. Order Line";
+        LibraryManufacturing: Codeunit "Library - Manufacturing";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryManufacturing.CreateProductionOrder(Header, Header.Status::"Firm Planned", Header."Source Type"::Item, SalesLine."No.", 10);
+        LibraryManufacturing.CreateProdOrderLine(Line, Header.Status, Header."No.", SalesLine."No.", '', '', 10);
+        Line.Validate("Due Date", WorkDate());
+        Line.Modify(true);
+        Request.Add('source', SourceObject('ProdOrderLine', Line.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Prod. Order Line", Header."No.", '', 0, true, 2, Line."Line No.");
+    end;
+
+    /// <summary>Production component reservations preserve both parent production line and component line.</summary>
+    [Test]
+    procedure ProductionComponentPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        ParentItem: Record Item;
+        Header: Record "Production Order";
+        Line: Record "Prod. Order Line";
+        Component: Record "Prod. Order Component";
+        LibraryManufacturing: Codeunit "Library - Manufacturing";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateItem(ParentItem);
+        LibraryManufacturing.CreateProductionOrder(Header, Header.Status::"Firm Planned", Header."Source Type"::Item, ParentItem."No.", 10);
+        LibraryManufacturing.CreateProdOrderLine(Line, Header.Status, Header."No.", ParentItem."No.", '', '', 10);
+        Line.Validate("Due Date", WorkDate());
+        Line.Modify(true);
+        LibraryManufacturing.CreateProductionOrderComponent(Component, Header.Status, Header."No.", Line."Line No.");
+        Component.Validate("Item No.", SalesLine."No.");
+        Component.Validate("Quantity per", 1);
+        Component.Validate("Due Date", WorkDate());
+        Component.Modify(true);
+        Request.Add('source', SourceObject('ProdOrderComponent', Component.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Prod. Order Component", Header."No.", '', Component."Line No.", false, 2, Line."Line No.");
+    end;
+
+    /// <summary>A validated service item line reserves inventory and cancels via Service Line-Reserve.</summary>
+    [Test]
+    procedure ServiceLinePairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Service Header";
+        Line: Record "Service Line";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        Header.Init();
+        Header."Document Type" := Header."Document Type"::Order;
+        Header.Insert(true);
+        Header.Validate("Customer No.", SalesLine."Sell-to Customer No.");
+        Header.Modify(true);
+        Line.Init();
+        Line."Document Type" := Header."Document Type";
+        Line."Document No." := Header."No.";
+        Line."Line No." := 10000;
+        Line.Insert(true);
+        Line.Validate(Type, Line.Type::Item);
+        Line.Validate("No.", SalesLine."No.");
+        Line.Validate(Quantity, 10);
+        Line.Validate("Needed by Date", WorkDate());
+        Line.Modify(true);
+        Request.Add('source', SourceObject('ServiceLine', Line.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Service Line", Header."No.", '', Line."Line No.", false, 2, 0);
+    end;
+
+    /// <summary>Outbound transfer reservation uses the transfer-from location and native outbound direction.</summary>
+    [Test]
+    procedure TransferOutboundPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Line: Record "Transfer Line";
+        Request: JsonObject;
+        Source: JsonObject;
+    begin
+        CreateTransferSources(SalesLine, Ledger, Line);
+        Source := SourceObject('TransferLine', Line.SystemId);
+        Source.Add('transferDirection', 'Outbound');
+        Request.Add('source', Source);
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Transfer Line", Line."Document No.", '', Line."Line No.", false, 2, 0);
+    end;
+
+    /// <summary>Inbound transfer supply pairs with demand at the transfer-to location, independently of outbound stock.</summary>
+    [Test]
+    procedure TransferInboundPairsAndCancelsDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Line: Record "Transfer Line";
+        Request: JsonObject;
+        Source: JsonObject;
+    begin
+        CreateTransferSources(SalesLine, Ledger, Line);
+        SalesLine.Validate("Location Code", Line."Transfer-to Code");
+        SalesLine.Modify(true);
+        Source := SourceObject('TransferLine', Line.SystemId);
+        Source.Add('transferDirection', 'Inbound');
+        Request.Add('source', Source);
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Transfer Line", Line."Document No.", '', Line."Line No.", true, 2, 0);
+    end;
+
+    local procedure CreateTransferSources(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry"; var TransferLine: Record "Transfer Line")
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        TransitLocation: Record Location;
+        Header: Record "Transfer Header";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        JournalLine: Record "Item Journal Line";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryWarehouse.CreateTransferLocations(FromLocation, ToLocation, TransitLocation);
+        LibraryInventory.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, TransitLocation.Code);
+        LibraryInventory.CreateTransferLine(Header, TransferLine, SalesLine."No.", 10);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(JournalLine, JournalTemplate.Name, Batch.Name, JournalLine."Entry Type"::"Positive Adjmt.", SalesLine."No.", 10);
+        JournalLine.Validate("Location Code", FromLocation.Code);
+        JournalLine.Modify(true);
+        LibraryInventory.PostItemJournalLine(JournalTemplate.Name, Batch.Name);
+        Ledger.SetRange("Location Code", FromLocation.Code);
+        Ledger.FindLast();
+    end;
+
+    /// <summary>W1 rejects ordinary adjustment journals as reservation sources without creating a partial pair.</summary>
+    [Test]
+    procedure AdjustmentJournalNativeRefusalLeavesNoReservations()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::"Negative Adjmt.", SalesLine."No.", 10);
+        Request.Add('source', SourceObject('ItemJournalLine', Line.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        asserterror ExecuteReservation(Request, false, Response);
+
+        Assert.ExpectedError('not a true demand or supply');
+        Entry.SetRange("Item No.", SalesLine."No.");
+        Entry.SetRange("Reservation Status", Entry."Reservation Status"::Reservation);
+        Assert.IsTrue(Entry.IsEmpty(), 'Native unsupported-source refusal cannot leave either reservation side.');
+    end;
+
+    local procedure AssertNativeRoundTrip(Request: JsonObject; TableNo: Integer; SourceId: Code[20]; BatchName: Code[10]; RefNo: Integer; Positive: Boolean; BaseQuantity: Decimal; ProdLineNo: Integer)
     var
         Entry: Record "Reservation Entry";
         Opposite: Record "Reservation Entry";
@@ -454,6 +657,7 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.AreEqual(SourceId, Entry."Source ID", 'Native pair has the requested source document/template.');
         Assert.AreEqual(BatchName, Entry."Source Batch Name", 'Native pair has the requested batch.');
         Assert.AreEqual(RefNo, Entry."Source Ref. No.", 'Native pair has the requested source line.');
+        Assert.AreEqual(ProdLineNo, Entry."Source Prod. Order Line", 'Production line identity is preserved independently from reference line.');
         Assert.AreEqual(BaseQuantity, Abs(Entry."Quantity (Base)"), 'Source has exact base quantity.');
         Opposite.Get(EntryNo, not Positive);
         Assert.AreEqual(-Entry."Quantity (Base)", Opposite."Quantity (Base)", 'Native pair balances exactly.');

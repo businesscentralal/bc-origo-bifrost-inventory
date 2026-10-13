@@ -389,9 +389,9 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'quantityBase', 2);
     end;
 
-    /// <summary>Disabled expiration policy hides a native pending tracking date without changing the entry.</summary>
+    /// <summary>Disabled master expiration policy falls back to the native pending entry date without changing it.</summary>
     [Test]
-    procedure Scenario_AC5_DisabledExpirationPolicyReturnsBlank()
+    procedure Scenario_AC5_DisabledPolicyFallsBackToEntryDate()
     var
         PurchaseLine: Record "Purchase Line";
         Item: Record Item;
@@ -416,7 +416,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
 
         AssertSuccess(Response);
         Row := SingleRow(Response, 'trackingLines');
-        AssertText(Row, 'expirationDate', '');
+        AssertText(Row, 'expirationDate', '2031-01-01');
         Entry.SetRange("Item No.", PurchaseLine."No.");
         Entry.SetRange("Lot No.", 'READ-DATED-OFF');
         Entry.FindFirst();
@@ -438,7 +438,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AddTemporaryStock(TempLedger, 2, 20310201D);
         AddTemporaryStock(TempLedger, 3, 20310101D);
 
-        TrackingRead.AggregateAvailability(TempLedger, true, Rows);
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
 
         Assert.AreEqual(1, Rows.Count(), 'Date disagreement must not split a tracking group.');
         Rows.Get(0, Token);
@@ -447,9 +447,9 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'inventory', 6);
     end;
 
-    /// <summary>Matching dates are exposed only when expiration policy is enabled.</summary>
+    /// <summary>Matching entry dates are exposed; undated native stock returns blank, never a zero-date string.</summary>
     [Test]
-    procedure Scenario_AC5_GroupedDateHonorsExpirationPolicy()
+    procedure Scenario_AC5_GroupedEntryDateAndUndatedFallback()
     var
         TempLedger: Record "Item Ledger Entry" temporary;
         TrackingRead: Codeunit "Inventory Tracking Read ori";
@@ -459,12 +459,15 @@ codeunit 96927 "Inventory Tracking Read Tests"
     begin
         AddTemporaryStock(TempLedger, 1, 20310101D);
         AddTemporaryStock(TempLedger, 2, 20310101D);
-        TrackingRead.AggregateAvailability(TempLedger, true, Rows);
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
         Assert.AreEqual(1, Rows.Count(), 'Matching native positions form one group.');
         Rows.Get(0, Token);
         AssertText(Token.AsObject(), 'expirationDate', '2031-01-01');
+        TempLedger.DeleteAll();
+        AddTemporaryStock(TempLedger, 1, 0D);
+        AddTemporaryStock(TempLedger, 2, 0D);
 
-        TrackingRead.AggregateAvailability(TempLedger, false, Rows);
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
 
         Rows.Get(0, Token);
         Row := Token.AsObject();

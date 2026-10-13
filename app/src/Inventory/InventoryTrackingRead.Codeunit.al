@@ -170,7 +170,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
                 Row.Add('lotNo', Entry."Lot No.");
                 Row.Add('serialNo', Entry."Serial No.");
                 Row.Add('packageNo', Entry."Package No.");
-                Row.Add('expirationDate', DateText(VisibleExpirationDate(Entry."Item No.", Entry."Expiration Date")));
+                Row.Add('expirationDate', DateText(Entry."Expiration Date"));
                 Row.Add('reservationStatus', Entry."Reservation Status".Names().Get(Entry."Reservation Status".Ordinals().IndexOf(Entry."Reservation Status".AsInteger())));
                 AddSource(Row, Entry."Source Type", Entry."Source Subtype", Entry."Source ID", Entry."Source Batch Name", Entry."Source Prod. Order Line", Entry."Source Ref. No.");
                 Lines.Add(Row);
@@ -202,13 +202,13 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Ledger.SetFilter("Remaining Quantity", '>0');
         FilterLedger(Ledger, Request);
         Ledger.SetAutoCalcFields("Reserved Quantity");
-        AggregateAvailability(Ledger, UsesExpirationDates(Item."No."), Rows);
+        AggregateAvailability(Ledger, Rows);
         Response.Add('itemNo', Item."No.");
         RespondPage(Argument, Response, 'availability', Rows);
     end;
 
     /// <summary>Projects filtered native stock, blanking grouped dates on disagreement; temporary records support impossible-state defensive tests.</summary>
-    procedure AggregateAvailability(var Ledger: Record "Item Ledger Entry"; UseExpirationDates: Boolean; var Rows: JsonArray)
+    procedure AggregateAvailability(var Ledger: Record "Item Ledger Entry"; var Rows: JsonArray)
     var
         Row: JsonObject;
         KeyParts: JsonArray;
@@ -231,9 +231,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
                     KeyParts.Add(Ledger."Serial No.");
                     KeyParts.Add(Ledger."Package No.");
                     KeyParts.WriteTo(GroupKey);
-                    Expiration := '';
-                    if UseExpirationDates then
-                        Expiration := DateText(Ledger."Expiration Date");
+                    Expiration := DateText(Ledger."Expiration Date");
                     if IndexByKey.Get(GroupKey, Index) then begin
                         Rows.Get(Index, Token);
                         Row := Token.AsObject();
@@ -266,25 +264,6 @@ codeunit 10036916 "Inventory Tracking Read ori"
                     end;
                 end;
             until Ledger.Next() = 0;
-    end;
-
-    local procedure UsesExpirationDates(ItemNo: Code[20]): Boolean
-    var
-        Item: Record Item;
-        TrackingCode: Record "Item Tracking Code";
-    begin
-        if not Item.Get(ItemNo) then
-            exit(false);
-        if not TrackingCode.Get(Item."Item Tracking Code") then
-            exit(false);
-        exit(TrackingCode."Use Expiration Dates");
-    end;
-
-    local procedure VisibleExpirationDate(ItemNo: Code[20]; ExpirationDate: Date): Date
-    begin
-        if UsesExpirationDates(ItemNo) then
-            exit(ExpirationDate);
-        exit(0D);
     end;
 
     local procedure AddSubjectSource(Argument: Record "Message Argument ori"; var Request: JsonObject)
@@ -437,7 +416,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Row.Add('locationCode', Location);
         Row.Add('variantCode', Variant);
         Row.Add('quantityBase', Quantity);
-        Row.Add('expirationDate', DateText(VisibleExpirationDate(ItemNo, ExpirationDate)));
+        Row.Add('expirationDate', DateText(ExpirationDate));
     end;
 
     local procedure AddSource(var Row: JsonObject; TableNo: Integer; Subtype: Integer; DocumentNo: Code[20]; Batch: Code[10]; ProdLine: Integer; LineNo: Integer)
