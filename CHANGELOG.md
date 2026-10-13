@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-13) - contract source guard recognizes Inventory chapters
+
+- `Test-ContractParameterKeys.ps1` follows a literal shared-chapter selector, literal JSON parameter arrays, attached parameter objects and the typed request readers in Foundation Request Value Reader ori. Unresolved selectors and malformed arrays fail with explicit diagnostics; undeclared and unread keys still fail. Regression fixtures cover valid chapters, mismatches, unrelated objects, cleared objects and dynamic calls. No AL object or message implementation changes.
+
 ### Fixed (2026-10-12) - related help entries name existing message types
 
 - Cost Get Impl ori (70013468) added `Inventory.AdjustCost.Run` and `Inventory.Revaluation.Calculate` as plain strings. Foundation reads a string related entry as message type "", so `Help.Implementation.Get` failed and the UAT roster refresh dropped 50 help documents.
