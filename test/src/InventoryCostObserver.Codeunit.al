@@ -52,9 +52,12 @@ codeunit 96932 "Inventory Cost Observer"
         ObservedPostToGL := PostToGL;
     end;
 
-    [EventSubscriber(ObjectType::Report, Report::"Adjust Cost - Item Entries", OnAfterSetCostAdjustmentParameter, '', false, false)]
-    local procedure ObserveParameters(var CostAdjustmentParameter: Record "Cost Adjustment Parameter")
+    [EventSubscriber(ObjectType::Report, Report::"Adjust Cost - Item Entries", OnAfterSetCostAdjustmentParameterOnAfterSetParameters, '', false, false)]
+    local procedure ObserveParameters(var CostAdjustmentParamMgt: Codeunit "Cost Adjustment Params Mgt.")
+    var
+        TempCostAdjustmentParameter: Record "Cost Adjustment Parameter";
     begin
-        ObservedItemByItem := CostAdjustmentParameter."Item-By-Item Commit";
+        CostAdjustmentParamMgt.GetParameters(TempCostAdjustmentParameter);
+        ObservedItemByItem := TempCostAdjustmentParameter."Item-By-Item Commit";
     end;
 }

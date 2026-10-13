@@ -1,5 +1,7 @@
 # Changelog
 
+- Use native report795 InitializeRequest/SetPostToGL with its request page disabled so defaults cannot overwrite explicit options; bind native item-by-item parameter for that run only (70013429/70013431). Test G/L posting of real receipt/invoice/outbound cost adjustments (96931/96932).
+
 - Refuse report795 postToGL=true when the native Automatic Cost Posting prerequisite is disabled, before any adjustment (70013429); verify real selected G/L posting and explicit false (96931/96932).
 
 ## Unreleased — costing report acceptance (#4, #35)

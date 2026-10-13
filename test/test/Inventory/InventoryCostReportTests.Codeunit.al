@@ -8,6 +8,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Document;
+using Microsoft.Sales.Document;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
@@ -318,7 +319,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         Request: JsonObject;
         Response: JsonObject;
     begin
-        CreateUnpostedCost(Item);
+        CreateCostAdjustmentChain(Item);
         CreateUnpostedCost(OtherItem);
         InventorySetup.Get();
         InventorySetup."Automatic Cost Posting" := true;
@@ -331,9 +332,11 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.AreEqual(0, Observer.Report1002Runs(), 'No additional report 1002 is run.');
         UnbindSubscription(Observer);
         ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.SetRange(Adjustment, true);
         ValueEntry.CalcSums("Cost Posted to G/L", "Cost Amount (Actual)");
-        Assert.IsTrue(ValueEntry."Cost Amount (Actual)" <> 0, 'Fixture contains actual cost.');
-        Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'Selected actual cost posts exactly once.');
+        Assert.IsTrue(ValueEntry."Cost Amount (Actual)" <> 0, 'Native adjustment generated a real cost change.');
+        Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'New adjustment cost posts exactly once.');
+        ValueEntry.SetRange(Adjustment);
         ValueEntry.SetRange("Item No.", OtherItem."No.");
         ValueEntry.CalcSums("Cost Posted to G/L");
         Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Unselected item remains unposted.');
@@ -506,6 +509,37 @@ codeunit 96931 "Inventory Cost Report Tests"
         RequestPage.FilterItemNo.SetValue('XITEM');
         RequestPage."Item-by-Item Adjustment".SetValue(true);
         RequestPage.OK().Invoke();
+    end;
+
+    local procedure CreateCostAdjustmentChain(var Item: Record Item)
+    var
+        SetupItem: Record Item;
+        InventorySetup: Record "Inventory Setup";
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        LibraryPurchase: Codeunit "Library - Purchase";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreateUnpostedCost(SetupItem);
+        InventorySetup.Get();
+        InventorySetup."Expected Cost Posting to G/L" := false;
+        InventorySetup.Modify();
+        LibraryInventory.CreateItem(Item);
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
+        PurchaseLine.Validate("Direct Unit Cost", 10);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 1);
+        LibrarySales.PostSalesDocument(SalesHeader, true, true);
+        PurchaseHeader.Get(PurchaseHeader."Document Type", PurchaseHeader."No.");
+        PurchaseLine.Get(PurchaseLine."Document Type", PurchaseLine."Document No.", PurchaseLine."Line No.");
+        PurchaseLine.Validate("Direct Unit Cost", 20);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, false, true);
     end;
 
     local procedure CreateUnpostedCost(var Item: Record Item)

@@ -66,17 +66,24 @@ codeunit 70013429 "Inventory Cost Reports ori"
     var
         Item: Record Item;
         InventorySetup: Record "Inventory Setup";
-        Parameters: Text;
+        Adjustment: Report "Adjust Cost - Item Entries";
+        Options: Codeunit "Inventory Cost Options ori";
         SelectedItems: Integer;
     begin
-        Parameters := PrepareAdjustment(Request, Item);
+        PrepareAdjustment(Request, Item);
         if ReadBoolean(Request, 'postToGL') then begin
             InventorySetup.Get();
             if not InventorySetup."Automatic Cost Posting" then
                 Error(AutoPostErr);
         end;
         SelectedItems := Item.Count();
-        Report.Execute(Report::"Adjust Cost - Item Entries", Parameters);
+        Adjustment.InitializeRequest(CopyStr(Item.GetFilter("No."), 1, 250), CopyStr(Item.GetFilter("Item Category Code"), 1, 250));
+        Adjustment.SetPostToGL(ReadBoolean(Request, 'postToGL'));
+        Adjustment.UseRequestPage(false);
+        Options.SetItemByItem(ReadBoolean(Request, 'itemByItem'));
+        BindSubscription(Options);
+        Adjustment.RunModal();
+        UnbindSubscription(Options);
         Clear(Response);
         Response.Add('status', 'Success');
         Response.Add('itemsSelected', SelectedItems);

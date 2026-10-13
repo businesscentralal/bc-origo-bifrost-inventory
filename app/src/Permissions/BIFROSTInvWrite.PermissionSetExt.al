@@ -51,5 +51,6 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Reservation Create Impl ori" = X,
         codeunit "Reservation Cancel Impl ori" = X,
         codeunit "Inventory Cost Reports ori" = X,
+        codeunit "Inventory Cost Options ori" = X,
         codeunit "Inventory Cost Post Proc. ori" = X;
 }
