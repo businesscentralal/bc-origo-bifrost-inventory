@@ -1,8 +1,10 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Purchases.Document;
+using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -291,6 +293,102 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(Row, 'expirationDate', '');
     end;
 
+    /// <summary>Availability subtracts the native reserved quantity only from the matching posted tracking position.</summary>
+    [Test]
+    procedure Scenario_AC4_AvailabilitySubtractsNativeReservation()
+    var
+        PurchaseLine: Record "Purchase Line";
+        PurchaseHeader: Record "Purchase Header";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibrarySales: Codeunit "Library - Sales";
+        ReservationWrite: Codeunit "Inventory Reserv. Write ori";
+        Request: JsonObject;
+        Source: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+    begin
+        CreateTrackedLine(PurchaseLine, 'READ-RESERVED', '', '', 2);
+        PurchaseHeader.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        PurchaseLine.Validate("Qty. to Receive", 2);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        Ledger.SetRange("Item No.", PurchaseLine."No.");
+        Ledger.FindLast();
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, PurchaseLine."No.", 2);
+        Source.Add('type', 'SalesLine');
+        Source.Add('systemId', Format(SalesLine.SystemId, 0, 4));
+        Request.Add('source', Source);
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 1);
+        InitArgument(TempArgument, Request);
+        ReservationWrite.Run(TempArgument);
+        AssertSuccess(TempArgument.GetResponseJson());
+        Clear(Request);
+        Request.Add('itemNo', PurchaseLine."No.");
+        Request.Add('lotNo', 'READ-RESERVED');
+
+        ExecuteRead(Request, 2, Response);
+
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'availability');
+        AssertDecimal(Row, 'inventory', 2);
+        AssertDecimal(Row, 'qtyReserved', 1);
+        AssertDecimal(Row, 'availableQuantity', 1);
+    end;
+
+    /// <summary>Native entry expiration is returned as ISO text; no nonexistent master-data field is assumed.</summary>
+    [Test]
+    procedure Scenario_AC5_TrackingEntryExpirationIsPreserved()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+    begin
+        CreateTrackedLine(PurchaseLine, 'READ-NODATE', '', '', 1);
+        Item.Get(PurchaseLine."No.");
+        TrackingCode.Get(Item."Item Tracking Code");
+        TrackingCode.Validate("Use Expiration Dates", true);
+        TrackingCode.Modify(true);
+        AssignTrackingWithExpiration(PurchaseLine, 'READ-DATED', '', '', 1, 20310101D);
+        Request := DocumentRequest(PurchaseLine);
+        Request.Add('lotNo', 'READ-DATED');
+
+        ExecuteRead(Request, 0, Response);
+
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'expirationDate', '2031-01-01');
+    end;
+
+    /// <summary>A package-only source does not need a fabricated lot or serial to be returned.</summary>
+    [Test]
+    procedure Scenario_AC2_PackageOnlyTrackingIsVisible()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+    begin
+        CreateTrackedLine(PurchaseLine, '', '', 'READ-PACKAGE-ONLY', 2);
+        Request := DocumentRequest(PurchaseLine);
+
+        ExecuteRead(Request, 0, Response);
+
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'lotNo', '');
+        AssertText(Row, 'serialNo', '');
+        AssertText(Row, 'packageNo', 'READ-PACKAGE-ONLY');
+        AssertDecimal(Row, 'quantityBase', 2);
+    end;
+
     local procedure CreateTrackedLine(var PurchaseLine: Record "Purchase Line"; Lot: Text; Serial: Text; Package: Text; Quantity: Decimal)
     var
         Item: Record Item;
@@ -311,6 +409,11 @@ codeunit 96927 "Inventory Tracking Read Tests"
     end;
 
     local procedure AssignTracking(PurchaseLine: Record "Purchase Line"; Lot: Text; Serial: Text; Package: Text; Quantity: Decimal)
+    begin
+        AssignTrackingWithExpiration(PurchaseLine, Lot, Serial, Package, Quantity, 0D);
+    end;
+
+    local procedure AssignTrackingWithExpiration(PurchaseLine: Record "Purchase Line"; Lot: Text; Serial: Text; Package: Text; Quantity: Decimal; ExpirationDate: Date)
     var
         TempArgument: Record "Message Argument ori" temporary;
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
@@ -326,6 +429,8 @@ codeunit 96927 "Inventory Tracking Read Tests"
         Entry.Add('serialNo', Serial);
         Entry.Add('packageNo', Package);
         Entry.Add('quantity', Quantity);
+        if ExpirationDate <> 0D then
+            Entry.Add('expirationDate', ExpirationDate);
         Entries.Add(Entry);
         Request.Add('entries', Entries);
         InitArgument(TempArgument, Request);
