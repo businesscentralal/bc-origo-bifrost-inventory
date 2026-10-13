@@ -83,6 +83,25 @@ codeunit 96929 "Inventory Source Perm. Tests"
         AssertPermissionDenied(TempArgument);
     end;
 
+    /// <summary>Unreadable company setup makes discovery false and execution a structured permission refusal.</summary>
+    [Test]
+    procedure UnreadableSetupRefusesWithoutLeakingDomainState()
+    var
+        Setup: Record "Inventory Setup ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        InitArgument(TempArgument);
+        LowerPermissions.PushPermissionSetWithoutDefaults('Inv Source Deny Test');
+        Assert.IsFalse(Setup.ReadPermission(), 'The caller really lacks company-setup read permission.');
+
+        Assert.IsFalse(DomainGate.IsEnabled("Inventory Domain ori"::Reservations, Database::"Sales Line", false, false), 'Discovery must not throw or disclose an unreadable domain.');
+        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Reservations, Database::"Sales Line", false, false), 'Execution must refuse before accessing setup.');
+
+        AssertPermissionDenied(TempArgument);
+    end;
+
     local procedure SourceRequest() Request: JsonObject
     var
         Source: JsonObject;

@@ -13,9 +13,11 @@ permissionset 96929 "Inv Source Deny Test"
 
     Permissions =
         tabledata "Message Argument ori" = RIMD,
+        table "Inventory Setup ori" = X,
         table "Sales Line" = X,
         table "Reservation Entry" = X,
         table "Tracking Specification" = X,
+        codeunit "Inventory Domain Gate ori" = X,
         codeunit "Inventory Source Resolve ori" = X,
         codeunit "Inventory Tracking Read ori" = X,
         codeunit "Request Value Reader ori" = X;

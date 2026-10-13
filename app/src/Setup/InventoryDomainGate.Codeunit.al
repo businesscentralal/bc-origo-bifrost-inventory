@@ -16,6 +16,8 @@ codeunit 70013453 "Inventory Domain Gate ori"
         PostingGate: Codeunit "Inv. Posting Gate ori";
         RecRef: RecordRef;
     begin
+        if not InventorySetup.ReadPermission() then
+            exit(false);
         if not InventorySetup.IsDomainEnabled(Domain) then
             exit(false);
         if NeedPost then
@@ -32,6 +34,10 @@ codeunit 70013453 "Inventory Domain Gate ori"
         DomainDisabledErr: Label 'The %1 domain is turned off for this company. Turn it on from Inventory Setup.', Comment = '%1 = domain, is-IS=%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
     begin
+        if not InventorySetup.ReadPermission() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', '');
+            exit(false);
+        end;
         if not InventorySetup.IsDomainEnabled(Domain) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', 'Turn the domain on from the Inventory Setup page.');
             exit(false);
