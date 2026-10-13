@@ -3,7 +3,7 @@
 ## Unreleased — native tracking read acceptance (#5, #7)
 
 - Add `Inventory.Tracking.Get` with document/source and item lookup, native tracking projection, tracking filters, paging and stable source/document identities (codeunits 10036916, 10036919; enum value 70013450).
-- Group `Inventory.TrackingAvailability.Get` by lot/serial/package, location, variant and entry expiration; return posted inventory, native reserved quantity and available quantity (70013473).
+- Group `Inventory.TrackingAvailability.Get` by lot/serial/package, location and variant; return posted inventory, native reserved quantity and available quantity (70013473).
 - Make reservation reads intersect entry/source/item/tracking filters and return source names and complete pointer fields (70013477; shared source resolver 10036913). Add native read regression tests (96927).
 - Support reservation create/cancel document keys and named item-ledger supply; reject conflicting supply selectors and lot/serial/package mismatches before native writes (10036915, 70013476, 70013478; tests 96926).
 - Manually allocate matching posted inventory in entry order when no supply selector is given; preflight the whole quantity before native pair creation, without AutoReserve (10036915). Cover native W1 source pointer/UOM/posting-progress adapters in test codeunit 96928.
@@ -12,6 +12,9 @@
 - Read-only execute grants use the existing read-role extension 10036915; no persistent tracking or reservation table writes. Runtime and licensed MCP acceptance remain separately tracked.
 
 ## [Unreleased]
+
+- Honor the accepted native expiration policy in tracking reads: blank when disabled and blank for conflicting dates within one on-hand group (codeunit 10036916; tests 96927).
+- Return the company-disabled refusal before licensing in Reclassification.Check, consistent with the other Inventory types; enabled operations still require licensing (codeunit 70013475; tests 96924).
 
 ### Fixed - native source tracking and manual reservations (work in progress)
 

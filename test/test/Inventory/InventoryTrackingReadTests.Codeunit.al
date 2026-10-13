@@ -389,6 +389,104 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'quantityBase', 2);
     end;
 
+    /// <summary>Disabled expiration policy hides a native pending tracking date without changing the entry.</summary>
+    [Test]
+    procedure Scenario_AC5_DisabledExpirationPolicyReturnsBlank()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+    begin
+        CreateTrackedLine(PurchaseLine, 'READ-NODATE-OFF', '', '', 1);
+        Item.Get(PurchaseLine."No.");
+        TrackingCode.Get(Item."Item Tracking Code");
+        TrackingCode.Validate("Use Expiration Dates", true);
+        TrackingCode.Modify(true);
+        AssignTrackingWithExpiration(PurchaseLine, 'READ-DATED-OFF', '', '', 1, 20310101D);
+        TrackingCode.Validate("Use Expiration Dates", false);
+        TrackingCode.Modify(true);
+        Request := DocumentRequest(PurchaseLine);
+        Request.Add('lotNo', 'READ-DATED-OFF');
+
+        ExecuteRead(Request, 0, Response);
+
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'expirationDate', '');
+        Entry.SetRange("Item No.", PurchaseLine."No.");
+        Entry.SetRange("Lot No.", 'READ-DATED-OFF');
+        Entry.FindFirst();
+        Assert.AreEqual(20310101D, Entry."Expiration Date", 'Projection must not erase the native date.');
+    end;
+
+    /// <summary>A conflicting native lot/package date is blanked in one group and never guessed or split into date groups.</summary>
+    [Test]
+    procedure Scenario_AC5_GroupedDateDisagreementReturnsBlank()
+    var
+        TempLedger: Record "Item Ledger Entry" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Rows: JsonArray;
+        Token: JsonToken;
+        Row: JsonObject;
+    begin
+        // Defensive projection test: BC normally keeps lot dates consistent. Never corrupt posted ledger data to manufacture this condition.
+        AddTemporaryStock(TempLedger, 1, 20310101D);
+        AddTemporaryStock(TempLedger, 2, 20310201D);
+        AddTemporaryStock(TempLedger, 3, 20310101D);
+
+        TrackingRead.AggregateAvailability(TempLedger, true, Rows);
+
+        Assert.AreEqual(1, Rows.Count(), 'Date disagreement must not split a tracking group.');
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        AssertText(Row, 'expirationDate', '');
+        AssertDecimal(Row, 'inventory', 6);
+    end;
+
+    /// <summary>Matching dates are exposed only when expiration policy is enabled.</summary>
+    [Test]
+    procedure Scenario_AC5_GroupedDateHonorsExpirationPolicy()
+    var
+        TempLedger: Record "Item Ledger Entry" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Rows: JsonArray;
+        Token: JsonToken;
+        Row: JsonObject;
+    begin
+        AddTemporaryStock(TempLedger, 1, 20310101D);
+        AddTemporaryStock(TempLedger, 2, 20310101D);
+        TrackingRead.AggregateAvailability(TempLedger, true, Rows);
+        Assert.AreEqual(1, Rows.Count(), 'Matching native positions form one group.');
+        Rows.Get(0, Token);
+        AssertText(Token.AsObject(), 'expirationDate', '2031-01-01');
+
+        TrackingRead.AggregateAvailability(TempLedger, false, Rows);
+
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        AssertText(Row, 'expirationDate', '');
+        AssertDecimal(Row, 'inventory', 4);
+    end;
+
+    local procedure AddTemporaryStock(var TempLedger: Record "Item Ledger Entry" temporary; EntryNo: Integer; ExpirationDate: Date)
+    begin
+        Assert.IsTrue(TempLedger.IsTemporary(), 'Defensive inconsistent-date inputs must stay in memory.');
+        TempLedger.Init();
+        TempLedger."Entry No." := EntryNo;
+        TempLedger."Item No." := 'W8-TEMP';
+        TempLedger."Lot No." := 'W8-TEMP-LOT';
+        TempLedger."Package No." := 'W8-TEMP-PACKAGE';
+        TempLedger."Remaining Quantity" := 2;
+        TempLedger.Open := true;
+        TempLedger.Positive := true;
+        TempLedger."Expiration Date" := ExpirationDate;
+        TempLedger.Insert();
+    end;
+
     local procedure CreateTrackedLine(var PurchaseLine: Record "Purchase Line"; Lot: Text; Serial: Text; Package: Text; Quantity: Decimal)
     var
         Item: Record Item;

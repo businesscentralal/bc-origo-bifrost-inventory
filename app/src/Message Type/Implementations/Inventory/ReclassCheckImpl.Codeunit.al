@@ -146,10 +146,10 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name', Locked = true;
         NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name', Locked = true;
     begin
-        Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", true, false) then
             exit;
+        Argument.AssertIsLicensed();
 
         RequestJson := Argument.GetRequestJson();
         if RequestJson.Get('templateName', Token) and Token.IsValue() then

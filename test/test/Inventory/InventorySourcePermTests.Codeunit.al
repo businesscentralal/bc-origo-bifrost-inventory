@@ -99,7 +99,7 @@ codeunit 96929 "Inventory Source Perm. Tests"
         Argument.Insert(true);
     end;
 
-    local procedure AssertPermissionDenied(Argument: Record "Message Argument ori")
+    local procedure AssertPermissionDenied(var Argument: Record "Message Argument ori")
     var
         Response: JsonObject;
         Token: JsonToken;
