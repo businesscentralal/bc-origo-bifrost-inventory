@@ -1,13 +1,14 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
-using Microsoft.Sales.Document;
 using Microsoft.Purchases.Document;
-using Origo.Bifrost;
+using Microsoft.Sales.Document;
 using Origo.Bifrost.Inventory;
+using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
 /// <summary>Proves explicit manual pairing, availability refusals and source-scoped cancellation.</summary>
@@ -350,6 +351,121 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.AreEqual(2, ReservationEntry.Count(), 'Two source reservations pair with the two receipt entries.');
         ReservationEntry.CalcSums("Quantity (Base)");
         Assert.AreEqual(-12, ReservationEntry."Quantity (Base)", 'Exact requested base quantity is reserved.');
+    end;
+
+    /// <summary>Assembly output reserves against a selected sales demand and cancels both native sides.</summary>
+    [Test]
+    procedure AssemblyOutputPairsAndCancelsSalesDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Assembly Header";
+        LibraryAssembly: Codeunit "Library - Assembly";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), SalesLine."No.", '', 10, '');
+        Request.Add('source', SourceObject('AssemblyHeader', Header.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Assembly Header", Header."No.", '', 0, true, 2);
+    end;
+
+    /// <summary>Assembly components use their line identity when manually reserving posted inventory.</summary>
+    [Test]
+    procedure AssemblyComponentPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        ParentItem: Record Item;
+        Header: Record "Assembly Header";
+        Line: Record "Assembly Line";
+        LibraryAssembly: Codeunit "Library - Assembly";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateItem(ParentItem);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), ParentItem."No.", '', 10, '');
+        LibraryAssembly.CreateAssemblyLine(Header, Line, Line.Type::Item, SalesLine."No.", SalesLine."Unit of Measure Code", 10, 1, '');
+        Request.Add('source', SourceObject('AssemblyLine', Line.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Assembly Line", Line."Document No.", '', Line."Line No.", false, 2);
+    end;
+
+    /// <summary>Item journal reservations preserve both template and batch and cancel through the native adapter.</summary>
+    [Test]
+    procedure ItemJournalPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::"Negative Adjmt.", SalesLine."No.", 10);
+        Request.Add('source', SourceObject('ItemJournalLine', Line.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        AssertNativeRoundTrip(Request, Database::"Item Journal Line", JournalTemplate.Name, Batch.Name, Line."Line No.", false, 2);
+    end;
+
+    /// <summary>Manual source quantity is converted to base units before native pairing, without double conversion.</summary>
+    [Test]
+    procedure NonBaseSalesUnitReservesExactBaseQuantity()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        ItemUnit: Record "Item Unit of Measure";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateItemUnitOfMeasureCode(ItemUnit, SalesLine."No.", 3);
+        SalesLine.Validate("Unit of Measure Code", ItemUnit.Code);
+        SalesLine.Validate(Quantity, 3);
+        SalesLine.Modify(true);
+        Request := CreateRequest(SalesLine, Ledger, 2);
+
+        AssertNativeRoundTrip(Request, Database::"Sales Line", SalesLine."Document No.", '', SalesLine."Line No.", false, 6);
+    end;
+
+    local procedure AssertNativeRoundTrip(Request: JsonObject; TableNo: Integer; SourceId: Code[20]; BatchName: Code[10]; RefNo: Integer; Positive: Boolean; BaseQuantity: Decimal)
+    var
+        Entry: Record "Reservation Entry";
+        Opposite: Record "Reservation Entry";
+        Response: JsonObject;
+        CancelRequest: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+    begin
+        ExecuteReservation(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        EntryNo := Token.AsValue().AsInteger();
+        Entry.Get(EntryNo, Positive);
+        Assert.AreEqual(TableNo, Entry."Source Type", 'Native pair has the requested source table.');
+        Assert.AreEqual(SourceId, Entry."Source ID", 'Native pair has the requested source document/template.');
+        Assert.AreEqual(BatchName, Entry."Source Batch Name", 'Native pair has the requested batch.');
+        Assert.AreEqual(RefNo, Entry."Source Ref. No.", 'Native pair has the requested source line.');
+        Assert.AreEqual(BaseQuantity, Abs(Entry."Quantity (Base)"), 'Source has exact base quantity.');
+        Opposite.Get(EntryNo, not Positive);
+        Assert.AreEqual(-Entry."Quantity (Base)", Opposite."Quantity (Base)", 'Native pair balances exactly.');
+        Request.Get('source', Token);
+        CancelRequest.Add('source', Token);
+        CancelRequest.Add('entryNo', EntryNo);
+
+        ExecuteReservation(CancelRequest, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Selected source reservation was cancelled.');
+        Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'The opposite native reservation was cancelled too.');
     end;
 
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
