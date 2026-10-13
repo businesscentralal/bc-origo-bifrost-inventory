@@ -104,6 +104,9 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     begin
         Response.Add('status', 'Success');
         Response.Add('entriesCancelled', 0);
+        Response.Add('itemNo', '');
+        Response.Add('quantityUnreserved', 0);
+        Response.Add('quantityBaseUnreserved', 0);
         exit(true);
     end;
 
@@ -156,7 +159,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Cancels only reservations belonging to the specified source through Reservation Management. An unreserved source returns entriesCancelled zero.';
+        Notes := 'Cancels only reservations belonging to the specified source through Reservation Management. An open unreserved source returns entriesCancelled zero. Closed sources are refused. Returns the item and unreserved quantities in source and base units.';
         exit(true);
     end;
 

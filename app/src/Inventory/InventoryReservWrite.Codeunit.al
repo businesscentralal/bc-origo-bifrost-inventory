@@ -54,6 +54,8 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Request := Argument.GetRequestJson();
         if not Resolver.ResolveDocument(Argument, Request, true, SourceRef, SourceSpecification, SourceDirection) then
             exit;
+        if not CheckOpenSource(Argument, SourceSpecification) then
+            exit;
         if not Request.Contains('supply') and not Request.Contains('itemLedgerEntryNo') then begin
             CreateFromInventory(Argument, Request, SourceRef, SourceSpecification, SourceDirection);
             exit;
@@ -346,6 +348,19 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         exit(Abs(SourceQuantity) - Abs(ReservedEntry."Quantity (Base)"));
     end;
 
+    local procedure CheckOpenSource(var Argument: Record "Message Argument ori"; Specification: Record "Tracking Specification"): Boolean
+    var
+        Entry: Record "Reservation Entry";
+        ReservationManagement: Codeunit "Reservation Management";
+        ClosedSourceErr: Label 'The reservation source has no outstanding quantity.', Comment = 'is-IS=Uppruni frátektar hefur ekkert útistandandi magn.';
+    begin
+        Entry.TransferFields(Specification);
+        if ReservationManagement.SourceQuantity(Entry, false) <> 0 then
+            exit(true);
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, ClosedSourceErr, 'source', '', 'source with outstanding quantity', '');
+        exit(false);
+    end;
+
     local procedure Cancel(var Argument: Record "Message Argument ori")
     var
         SourceSpecification: Record "Tracking Specification";
@@ -361,6 +376,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Response: JsonObject;
         Token: JsonToken;
         EntryNo: Decimal;
+        UnreservedBase: Decimal;
         Count: Integer;
         InvalidEntryErr: Label 'entryNo must identify a reservation on the specified source.', Comment = 'is-IS=entryNo verður að vísa í frátekt á tilgreindum uppruna.';
     begin
@@ -384,6 +400,8 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         end else
             if not Resolver.ResolveDocument(Argument, Request, true, SourceRef, SourceSpecification, Direction) then
                 exit;
+        if not CheckOpenSource(Argument, SourceSpecification) then
+            exit;
         ReservationEntry.Reset();
         ReservationEntry.TransferFields(SourceSpecification);
         ReservationEntry.SetPointerFilter();
@@ -414,11 +432,16 @@ codeunit 10036915 "Inventory Reserv. Write ori"
                 ReservationEntry.SetRange("Entry No.", TempEntries."Entry No.");
                 ReservationEntry.SetRange(Positive, TempEntries.Positive);
                 ReservationManagement.SetReservSource(SourceRef, Direction);
+                UnreservedBase += Abs(TempEntries."Quantity (Base)");
                 ReservationEngine.CancelReservation(TempEntries);
                 Count += 1;
             until TempEntries.Next() = 0;
         Response.Add('status', 'Success');
         Response.Add('entriesCancelled', Count);
+        Response.Add('itemNo', SourceSpecification."Item No.");
+        Response.Add('quantityBaseUnreserved', UnreservedBase);
+        SourceSpecification.TestField("Qty. per Unit of Measure");
+        Response.Add('quantityUnreserved', UnreservedBase / SourceSpecification."Qty. per Unit of Measure");
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

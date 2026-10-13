@@ -13,6 +13,8 @@
 - Cover native tracking assign/delete round trips for sales, purchase, assembly output/components, transfer and item journals, plus deletion after a partial receipt that preserves posted inventory (tests 96925).
 - Exercise sales/purchase return reservation polarity and real partial-shipment availability limits (tests 96926).
 - Recreate each native source pair and verify entry-number-only cancellation removes both sides after source-scoped cancellation (tests 96926).
+- Refuse closed reservation sources for Create and Cancel before writes; return actual item and unreserved source/base quantities (10036915, 70013478; tests 96926).
+- Verify requested serial/package identity on both reservation sides using self-posted tracked stock (tests 96927).
 - Prove native source read/write separation and reservation read refusals under restricted test permissions (test codeunit 96929; test-only permission sets 96929–96930).
 - Read-only execute grants use the existing read-role extension 10036915; no persistent tracking or reservation table writes. Runtime and licensed MCP acceptance remain separately tracked.
 

@@ -90,6 +90,10 @@ codeunit 96926 "Inventory Reservation Tests"
         ExecuteReservation(Request, true, Response);
 
         AssertStatus(Response, 'Success');
+        Response.Get('itemNo', Token);
+        Assert.AreEqual(SalesLine."No.", Token.AsValue().AsText(), 'Cancellation identifies the actual item.');
+        Response.Get('quantityUnreserved', Token);
+        Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Cancellation returns the actual source quantity released.');
         ReservationEntry.SetRange("Item No.", SalesLine."No.");
         ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
         Assert.IsTrue(ReservationEntry.IsEmpty(), 'Both paired reservation rows are removed.');
@@ -653,6 +657,54 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertNativeRoundTrip(CreateRequest(SalesLine, Ledger, 6), Database::"Sales Line", SalesLine."Document No.", '', SalesLine."Line No.", false, 6, 0);
     end;
 
+    /// <summary>A fully shipped source refuses new reservations before looking at closed supply.</summary>
+    [Test]
+    procedure FullyShippedSourceRefusesCreate()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Response: JsonObject;
+    begin
+        CreateFullyShippedSource(SalesLine, Ledger);
+
+        ExecuteReservation(CreateRequest(SalesLine, Ledger, 1), false, Response);
+
+        AssertStatus(Response, 'Error');
+        FilterSalesReservations(SalesLine, Entry);
+        Assert.IsTrue(Entry.IsEmpty(), 'Closed source creates no reservations.');
+    end;
+
+    /// <summary>Closed-source cancellation is a structured refusal, distinct from an open unreserved source no-op.</summary>
+    [Test]
+    procedure FullyShippedSourceRefusesCancel()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreateFullyShippedSource(SalesLine, Ledger);
+        Request.Add('source', SourceObject('SalesLine', SalesLine.SystemId));
+
+        ExecuteReservation(Request, true, Response);
+
+        AssertStatus(Response, 'Error');
+        SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        Assert.AreEqual(10, SalesLine."Quantity Shipped", 'Refusal preserves the real posted source.');
+    end;
+
+    local procedure CreateFullyShippedSource(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry")
+    var
+        Header: Record "Sales Header";
+    begin
+        CreateSources(SalesLine, Ledger);
+        Header.Get(SalesLine."Document Type", SalesLine."Document No.");
+        LibrarySales.PostSalesDocument(Header, true, false);
+        SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        Assert.AreEqual(0, SalesLine."Outstanding Qty. (Base)", 'Fixture is fully shipped, not merely zeroed by a test.');
+    end;
+
     local procedure CreateTransferSources(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry"; var TransferLine: Record "Transfer Line")
     var
         FromLocation: Record Location;
@@ -715,7 +767,10 @@ codeunit 96926 "Inventory Reservation Tests"
         CancelRequest: JsonObject;
         Token: JsonToken;
         EntryNo: Integer;
+        SourceQuantity: Decimal;
     begin
+        Request.Get('quantity', Token);
+        SourceQuantity := Token.AsValue().AsDecimal();
         ExecuteReservation(Request, false, Response);
         AssertStatus(Response, 'Success');
         Response.Get('entryNo', Token);
@@ -736,6 +791,10 @@ codeunit 96926 "Inventory Reservation Tests"
         ExecuteReservation(CancelRequest, true, Response);
 
         AssertStatus(Response, 'Success');
+        Response.Get('quantityUnreserved', Token);
+        Assert.AreEqual(SourceQuantity, Token.AsValue().AsDecimal(), 'Cancelled quantity uses the selected source UOM.');
+        Response.Get('quantityBaseUnreserved', Token);
+        Assert.AreEqual(BaseQuantity, Token.AsValue().AsDecimal(), 'Cancelled base quantity is exact.');
         Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Selected source reservation was cancelled.');
         Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'The opposite native reservation was cancelled too.');
         // Recreate the same native pair, then resolve cancellation from its entry number alone.

@@ -340,7 +340,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'availableQuantity', 1);
     end;
 
-    /// <summary>Native entry expiration is returned as ISO text; no nonexistent master-data field is assumed.</summary>
+    /// <summary>Native entry fallback is returned as ISO text; master precedence has separate pending schema acceptance.</summary>
     [Test]
     procedure Scenario_AC5_TrackingEntryExpirationIsPreserved()
     var
@@ -473,6 +473,59 @@ codeunit 96927 "Inventory Tracking Read Tests"
         Row := Token.AsObject();
         AssertText(Row, 'expirationDate', '');
         AssertDecimal(Row, 'inventory', 4);
+    end;
+
+    /// <summary>Explicit serial/package selection survives native posted supply and both reservation sides.</summary>
+    [Test]
+    procedure Scenario_AC4_ReservationCarriesSerialAndPackage()
+    var
+        PurchaseLine: Record "Purchase Line";
+        PurchaseHeader: Record "Purchase Header";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibrarySales: Codeunit "Library - Sales";
+        ReservationWrite: Codeunit "Inventory Reserv. Write ori";
+        Request: JsonObject;
+        Source: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateTrackedLine(PurchaseLine, '', 'RES-SERIAL', 'RES-PACKAGE', 1);
+        PurchaseHeader.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        PurchaseLine.Validate("Qty. to Receive", 1);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        Ledger.SetRange("Item No.", PurchaseLine."No.");
+        Ledger.FindLast();
+        Assert.AreEqual('RES-SERIAL', Ledger."Serial No.", 'Fixture uses genuinely posted serial supply.');
+        Assert.AreEqual('RES-PACKAGE', Ledger."Package No.", 'Fixture uses genuinely posted package supply.');
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, PurchaseLine."No.", 1);
+        Source.Add('type', 'SalesLine');
+        Source.Add('systemId', Format(SalesLine.SystemId, 0, 4));
+        Request.Add('source', Source);
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 1);
+        Request.Add('serialNo', 'RES-SERIAL');
+        Request.Add('packageNo', 'RES-PACKAGE');
+        InitArgument(TempArgument, Request);
+
+        ReservationWrite.Run(TempArgument);
+
+        Response := TempArgument.GetResponseJson();
+        AssertSuccess(Response);
+        Response.Get('entryNo', Token);
+        Entry.SetRange("Entry No.", Token.AsValue().AsInteger());
+        Assert.AreEqual(2, Entry.Count(), 'Both native reservation sides exist.');
+        Entry.FindSet();
+        repeat
+            Assert.AreEqual('RES-SERIAL', Entry."Serial No.", 'Requested serial is preserved on both sides.');
+            Assert.AreEqual('RES-PACKAGE', Entry."Package No.", 'Requested package is preserved on both sides.');
+            Assert.AreEqual(1, Abs(Entry."Quantity (Base)"), 'Exactly one base unit is reserved for the serial.');
+        until Entry.Next() = 0;
     end;
 
     local procedure AddTemporaryStock(var TempLedger: Record "Item Ledger Entry" temporary; EntryNo: Integer; ExpirationDate: Date)

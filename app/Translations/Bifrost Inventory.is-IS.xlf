@@ -225,6 +225,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=entryNo verður að vísa í frátekt á tilgreindum uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method Cancel - NamedType InvalidEntryErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 292814924 - Method 3130492361 - NamedType 3579752398" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The reservation source has no outstanding quantity.</source>
+          <target>Engin útistandandi magn er á uppruna frátektar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin útistandandi magn er á uppruna frátektar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method CheckOpenSource - NamedType ClosedSourceErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 292814924 - Method 710972128 - NamedType 3339915146" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select distinct, opposite reservation sources for the same item, variant and location.</source>
           <target>Veldu aðskilda, gagnstæða frátektaruppruna fyrir sömu vöru, afbrigði og birgðageymslu.</target>
