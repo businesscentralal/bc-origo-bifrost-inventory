@@ -40,12 +40,18 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        exit(false);
+        Envelope.Add('messageType', 'Inventory.Period.Get');
+        Envelope.Add('version', 1);
+        exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        TargetJson: JsonObject;
     begin
-        exit(false);
+        TargetJson.Add('table', 'Inventory Period');
+        Target.Add(TargetJson);
+        exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
@@ -55,7 +61,9 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        exit(false);
+        Response.Add('status', 'Success');
+        Response.Add('periods', 'array');
+        exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
@@ -65,7 +73,9 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        exit(false);
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -74,8 +84,12 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Close', 'Close an inventory period instead of only reading it.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Reopen', 'Reopen a closed inventory period instead of only reading it.'));
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -90,12 +104,14 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        exit(false);
+        Overview := 'Reads inventory periods.';
+        exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        exit(false);
+        Notes := 'Read only. Close and reopen are separate message types.';
+        exit(true);
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
