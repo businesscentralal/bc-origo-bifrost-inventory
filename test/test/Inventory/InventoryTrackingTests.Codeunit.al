@@ -1,8 +1,14 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
+using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -168,6 +174,184 @@ codeunit 96925 "Inventory Tracking Tests"
         AssertStatus(Response, 'Success');
         FilterSourceEntries(PurchaseLine, ReservationEntry);
         Assert.AreEqual(1, ReservationEntry.Count(), 'An empty selection does not remove tracking.');
+    end;
+
+    /// <summary>Native assembly output tracking is assigned and removed on its own source.</summary>
+    [Test]
+    procedure AssemblyOutputTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Assembly Header";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), PurchaseLine."No.", '', 10, '');
+
+        AssertTrackingRoundTrip(GenericSource('AssemblyHeader', Header.SystemId), Database::"Assembly Header", Header."No.", 0, true);
+    end;
+
+    /// <summary>Journal tracking stages native pending tracking without writing persistent Tracking Specification rows.</summary>
+    [Test]
+    procedure ItemJournalTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::"Positive Adjmt.", PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('ItemJournalLine', Line.SystemId), Database::"Item Journal Line", JournalTemplate.Name, Line."Line No.", true);
+    end;
+
+    /// <summary>Sales tracking uses a self-posted lot and deletes only pending demand tracking.</summary>
+    [Test]
+    procedure SalesTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Sales Header";
+        Line: Record "Sales Line";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('SalesLine', Line.SystemId), Database::"Sales Line", Line."Document No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Assembly component tracking belongs to the component line and preserves posted supply.</summary>
+    [Test]
+    procedure AssemblyComponentTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        ParentItem: Record Item;
+        Header: Record "Assembly Header";
+        Line: Record "Assembly Line";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateItem(ParentItem);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), ParentItem."No.", '', 10, '');
+        LibraryAssembly.CreateAssemblyLine(Header, Line, Line.Type::Item, PurchaseLine."No.", PurchaseLine."Unit of Measure Code", 10, 1, '');
+
+        AssertTrackingRoundTrip(GenericSource('AssemblyLine', Line.SystemId), Database::"Assembly Line", Line."Document No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Transfer tracking uses real locations and self-posted stock through the native transfer run mode.</summary>
+    [Test]
+    procedure TransferTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        TransitLocation: Record Location;
+        Header: Record "Transfer Header";
+        Line: Record "Transfer Line";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+        Source: JsonObject;
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryWarehouse.CreateTransferLocations(FromLocation, ToLocation, TransitLocation);
+        PurchaseLine.Validate("Location Code", FromLocation.Code);
+        PurchaseLine.Modify(true);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, TransitLocation.Code);
+        LibraryInventory.CreateTransferLine(Header, Line, PurchaseLine."No.", 10);
+        Source := GenericSource('TransferLine', Line.SystemId);
+        Source.Add('transferDirection', 'Outbound');
+
+        AssertTrackingRoundTrip(Source, Database::"Transfer Line", Line."Document No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Removing unposted purchase tracking after a partial receipt cannot undo the posted lot quantity.</summary>
+    [Test]
+    procedure PartialReceiptDeletePreservesPostedLedger()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 4);
+        Request.Add('source', SourceObject(PurchaseLine));
+        Ledger.SetRange("Item No.", PurchaseLine."No.");
+        Ledger.SetRange("Lot No.", 'ROUND-LOT');
+        Ledger.CalcSums(Quantity);
+        Assert.AreEqual(4, Ledger.Quantity, 'Fixture really posted a partial receipt.');
+        FilterSourceEntries(PurchaseLine, Entry);
+        Entry.CalcSums("Quantity (Base)");
+        Assert.AreEqual(6, Entry."Quantity (Base)", 'Six tracked units remain pending.');
+
+        ExecuteTracking(Request, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(Entry.IsEmpty(), 'Only pending purchase tracking was removed.');
+        Ledger.CalcSums(Quantity);
+        Assert.AreEqual(4, Ledger.Quantity, 'Deleting pending tracking cannot change posted inventory.');
+    end;
+
+    local procedure PostTrackedReceipt(var PurchaseLine: Record "Purchase Line"; ReceiveQuantity: Decimal)
+    var
+        Header: Record "Purchase Header";
+        Response: JsonObject;
+    begin
+        ExecuteTracking(AssignmentRequest(PurchaseLine, 'ROUND-LOT', '', 10), false, Response);
+        AssertStatus(Response, 'Success');
+        PurchaseLine.Validate("Qty. to Receive", ReceiveQuantity);
+        PurchaseLine.Modify(true);
+        Header.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        LibraryPurchase.PostPurchaseDocument(Header, true, false);
+        PurchaseLine.Get(PurchaseLine."Document Type", PurchaseLine."Document No.", PurchaseLine."Line No.");
+    end;
+
+    local procedure GenericSource(TypeName: Text; SystemId: Guid) Source: JsonObject
+    begin
+        Source.Add('type', TypeName);
+        Source.Add('systemId', Format(SystemId, 0, 4));
+    end;
+
+    local procedure AssertTrackingRoundTrip(Source: JsonObject; SourceTable: Integer; SourceId: Code[20]; RefNo: Integer; Positive: Boolean)
+    var
+        Entry: Record "Reservation Entry";
+        Specification: Record "Tracking Specification";
+        Request: JsonObject;
+        DeleteRequest: JsonObject;
+        Tracking: JsonObject;
+        Entries: JsonArray;
+        Response: JsonObject;
+        BeforeSpecifications: Integer;
+    begin
+        BeforeSpecifications := Specification.Count();
+        Request.Add('source', Source);
+        Tracking.Add('lotNo', 'ROUND-LOT');
+        Tracking.Add('quantity', 2);
+        Entries.Add(Tracking);
+        Request.Add('entries', Entries);
+        ExecuteTracking(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        Entry.SetRange("Source Type", SourceTable);
+        Entry.SetRange("Source ID", SourceId);
+        Entry.SetRange("Source Ref. No.", RefNo);
+        Entry.SetRange(Positive, Positive);
+        Entry.SetRange("Lot No.", 'ROUND-LOT');
+        Assert.AreEqual(1, Entry.Count(), 'One selected native source tracking row.');
+        Entry.FindFirst();
+        Assert.AreEqual(2, Abs(Entry."Quantity (Base)"), 'Tracking has the requested base quantity.');
+        Assert.AreEqual(BeforeSpecifications, Specification.Count(), 'Assignment did not create persistent tracking specification rows.');
+        DeleteRequest.Add('source', Source);
+
+        ExecuteTracking(DeleteRequest, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(Entry.IsEmpty(), 'Pending tracking was removed on the selected source.');
     end;
 
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
