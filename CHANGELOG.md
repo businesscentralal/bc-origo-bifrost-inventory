@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed - native source tracking and manual reservations (work in progress)
+
+- Tracking Assign/Delete (70013470–70013471) now resolve an existing document or journal source and invoke the native Item Tracking Lines and reservation APIs. The new internal helpers (10036913–10036914) stage temporary tracking data, reject invalid serial quantities and foreign entry selections, and preserve other tracking entries on scoped deletion. Tests 96925 cover atomic refusal and scoped changes.
+- Reservation Create/Cancel (70013476, 70013478) use an explicit source/supply pair through native Reserve adapters instead of unsourced AutoReserve. The internal process (10036915) checks remaining quantity and supports source or entry cancellation. Tests 96926 cover manual pairs, quantity refusals, cancellation and purchase-source pairing. Remaining request-format and W1-source acceptance work is tracked under #7; this checkpoint does not close that issue.
+- Regenerated Icelandic translations from source comments and repaired existing CodeCop variable/file naming and truncation warnings. Existing foreign attribute permission grants remain pending their Foundation-owner migration; no warning suppression or access reduction was introduced.
+
 ### Fixed - preserve enabled Inventory domains when creating setup
 
 - Inventory Setup ori (table 70013451) now defaults Reclassification to enabled, consistently with the other ten domains. Opening setup for the first time no longer disables reclassification. Existing explicit opt-outs are preserved. Inventory Domain Setup Tests (96924) covers missing setup, first creation, and repeated initialization.
