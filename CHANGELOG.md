@@ -2,7 +2,7 @@
 
 - Verify Inventory.Cost.Update refuses a real read-only caller before licensing and allows discovery with native Item writes without conferring an Inventory posting token (test codeunit 96933; issue #4).
 
-- Extend native tracking coverage to sales/purchase returns, negative-adjustment journals and inbound transfers, including source-filtered read-back of signed quantities; verify source-only reservation cancellation and repeat no-op alongside entry-selected modes for every shared W1 lifecycle fixture (test codeunits 96925/96926; issues #5/#7/#37).
+- Extend native tracking coverage to sales/purchase returns, invoices and credit memos, negative-adjustment journals and inbound transfers, including source and composite-document read-back of signed quantities; verify source-only reservation cancellation and repeat no-op alongside entry-selected modes for every shared W1 lifecycle fixture (test codeunits 96925/96926; issues #5/#7/#37).
 
 - Preserve native requisition/planning order-to-order binding refusals with real persisted source identities and unchanged-supply assertions; require owned inventory-document locations, native Allow Invt. Doc. Reservation setup, and explicit read-only costing ledger permissions in fixtures (codeunit 70013476; tests 96926/96933, permission set 96934; issues #4/#7).
 

@@ -302,6 +302,70 @@ codeunit 96925 "Inventory Tracking Tests"
         AssertTrackingRoundTrip(GenericSource('PurchaseLine', Line.SystemId), Database::"Purchase Line", Line."Document No.", Line."Line No.", false);
     end;
 
+    /// <summary>Sales invoice tracking keeps the native direction through assignment, read and deletion.</summary>
+    [Test]
+    procedure SalesInvoiceTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Sales Header";
+        Line: Record "Sales Line";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::Invoice, '');
+        LibrarySales.CreateSalesLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('SalesLine', Line.SystemId), Database::"Sales Line", Line."Document No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Sales credit memo tracking keeps the native direction through assignment, read and deletion.</summary>
+    [Test]
+    procedure SalesCreditMemoTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Sales Header";
+        Line: Record "Sales Line";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::"Credit Memo", '');
+        LibrarySales.CreateSalesLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('SalesLine', Line.SystemId), Database::"Sales Line", Line."Document No.", Line."Line No.", true);
+    end;
+
+    /// <summary>Purchase invoice tracking keeps the native direction through assignment, read and deletion.</summary>
+    [Test]
+    procedure PurchaseInvoiceTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::Invoice, '');
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('PurchaseLine', Line.SystemId), Database::"Purchase Line", Line."Document No.", Line."Line No.", true);
+    end;
+
+    /// <summary>Purchase credit memo tracking keeps the native direction through assignment, read and deletion.</summary>
+    [Test]
+    procedure PurchaseCreditMemoTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::"Credit Memo", '');
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('PurchaseLine', Line.SystemId), Database::"Purchase Line", Line."Document No.", Line."Line No.", false);
+    end;
+
     /// <summary>Negative adjustments retain posted stock while pending tracking is assigned and removed.</summary>
     [Test]
     procedure NegativeAdjustmentTrackingRoundTrip()
@@ -401,6 +465,7 @@ codeunit 96925 "Inventory Tracking Tests"
         Specification: Record "Tracking Specification";
         TempArgument: Record "Message Argument ori" temporary;
         TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Resolver: Codeunit "Inventory Source Resolve ori";
         Request: JsonObject;
         DeleteRequest: JsonObject;
         Tracking: JsonObject;
@@ -448,6 +513,25 @@ codeunit 96925 "Inventory Tracking Tests"
         Row.Get('quantityBase', Token);
         Assert.AreEqual(Entry."Quantity (Base)", Token.AsValue().AsDecimal(), 'Source read retains signed base quantity.');
         Assert.IsTrue(Entry.Get(EntryNo, Positive), 'Reading the source cannot remove its pending entry.');
+        if SourceTable in [Database::"Sales Line", Database::"Purchase Line", Database::"Transfer Line"] then begin
+            Clear(Request);
+            Request.Add('documentType', Resolver.DocumentTypeName(SourceTable, Entry."Source Subtype"));
+            Request.Add('documentNo', SourceId);
+            Request.Add('lineNo', RefNo);
+            if Source.Get('transferDirection', Token) then
+                Request.Add('transferDirection', Token);
+            TempArgument.SetRequestJson(Request);
+            TrackingRead.ReadTracking(TempArgument);
+            Response := TempArgument.GetResponseJson();
+            AssertStatus(Response, 'Success');
+            Response.Get('trackingLines', Token);
+            Rows := Token.AsArray();
+            Assert.AreEqual(1, Rows.Count(), 'Composite document keys isolate the same source side.');
+            Rows.Get(0, Token);
+            Row := Token.AsObject();
+            Row.Get('quantityBase', Token);
+            Assert.AreEqual(Entry."Quantity (Base)", Token.AsValue().AsDecimal(), 'Composite keys preserve signed quantity.');
+        end;
 
         ExecuteTracking(DeleteRequest, true, Response);
 
