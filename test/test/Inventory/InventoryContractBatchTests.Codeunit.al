@@ -1467,7 +1467,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Entry := Token.AsObject();
         AssertJsonText(Entry, 'error', Expected);
         if TypeName = 'Inventory.Attribute.Create' then
-            AssertJsonText(Entry, 'nextStep', 'Set overwrite to true or use Inventory.Attribute.Update.');
+            AssertJsonText(Entry, 'fix', 'Set overwrite to true or use Inventory.Attribute.Update.');
     end;
 
     local procedure AssertAttributeLegacyPayloads(TypeName: Text; Contract: JsonObject)

@@ -27,11 +27,11 @@ codeunit 96933 "Inventory Cost Perm. Tests"
     procedure CostGet_ReadOnlyCaller_ReturnsSnapshotWithoutWriteRights()
     var
         Item: Record Item;
+        PendingEntry: Record "Post Value Entry to G/L";
         TempArgument: Record "Message Argument ori" temporary;
         ReadCosts: Codeunit "Inventory Cost Read ori";
         ReadImpl: Codeunit "Cost Get Impl ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
-        LibraryInventory: Codeunit "Library - Inventory";
         LowerPermissions: Codeunit "Library - Lower Permissions";
         Request: JsonObject;
         Response: JsonObject;
@@ -39,11 +39,14 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Token: JsonToken;
         Rows: JsonArray;
         ModifiedAt: DateTime;
+        PendingCount: Integer;
     begin
         // Story #4 AC01/AC02 | Time: independent | Risk: a semantic read accidentally requires native writes.
-        LibraryInventory.CreateItem(Item);
-        Item.Validate("Unit Cost", 12);
-        Item.Modify(true);
+        CreateOwnedPendingCost(Item);
+        Item.Get(Item."No.");
+        PendingEntry.SetRange("Item No.", Item."No.");
+        PendingCount := PendingEntry.Count();
+        Assert.IsTrue(PendingCount > 0, 'Read permission is exercised with actual owned pending cost entries.');
         ModifiedAt := Item.SystemModifiedAt;
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
@@ -53,7 +56,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         LowerPermissions.AddPermissionSet('Inv Cost Read Test');
         Assert.IsTrue(Item.ReadPermission(), 'Caller has actual native Item read access.');
-        Assert.IsFalse(Item.WritePermission(), 'Caller cannot change Item records.');
+        Assert.IsFalse(Item.WritePermission() or PendingEntry.WritePermission(), 'Caller cannot change Item or pending-cost records.');
+        Assert.IsTrue(PendingEntry.ReadPermission(), 'Cost-is-posted FlowField requires native pending-cost read access.');
         Assert.IsFalse(PostingGate.HasPostingPermission(), 'Cost reads do not gain posting rights.');
         Assert.IsTrue(ReadImpl.IsEnabled(), 'Semantic cost reads are discoverable for this read-only caller.');
         Assert.AreEqual("Msg Direction ori"::Outbound, ReadImpl.GetMessageDirection(), 'Cost reads are Outbound.');
@@ -71,7 +75,10 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Row.Get('unitCost', Token);
         Assert.AreEqual(12, Token.AsValue().AsDecimal(), 'Native cost reaches the caller unchanged.');
         Row.Get('inventory', Token);
-        Assert.AreEqual(0, Token.AsValue().AsDecimal(), 'Stock FlowField can be read without posting.');
+        Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Owned posted stock can be read without posting rights.');
+        Row.Get('costIsPostedToGL', Token);
+        Assert.IsFalse(Token.AsValue().AsBoolean(), 'Owned pending cost is truthfully reported as not posted to G/L.');
+        Assert.AreEqual(PendingCount, PendingEntry.Count(), 'Read leaves owned costs pending.');
         Item.Get(Item."No.");
         Assert.AreEqual(ModifiedAt, Item.SystemModifiedAt, 'The read did not modify the item.');
     end;

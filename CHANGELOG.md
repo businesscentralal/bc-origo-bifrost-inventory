@@ -1,5 +1,7 @@
 # Changelog
 
+- Exercise restrictive cost reads against self-posted stock with pending G/L costs; grant the test caller native pending-cost read access only and assert unchanged pending rows, no writes and no posting token (test codeunit 96933, permission set 96934; issues #4/#35).
+
 - Point attribute mapping conflict and missing-mapping errors to the registered Inventory.Attribute.Update/Create types in English, Icelandic and public Help; verify the actionable contract hint (codeunits 10036908/70013445, test 96921; issues #38/#30/#32/#33).
 
 - Verify the accepted mandatory-template report 1003 refusal under a real read-only caller, preserving an owned number series, pending costs and G/L/value entry counts; full mandatory-template support remains pending (test codeunit 96933; issues #4/#35).
