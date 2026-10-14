@@ -4,7 +4,7 @@ using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Transfer.UndoShipment. Runs codeunit 5815 Undo Transfer Shipment.
+/// Inventory.Transfer.UndoShipment. Runs codeunit 9030 Undo Transfer Shipment.
 /// </summary>
 codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -14,7 +14,7 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     var
         Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(Gate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -52,6 +52,7 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     begin
+        Parameters.ReadFrom('[{"name":"documentNo","type":"string","required":true},{"name":"lineNos","type":"array","required":false}]');
         exit(true);
     end;
 
@@ -107,52 +108,19 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         exit("Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Checks company, posting, native write and license permissions before isolated native undo.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        TransferShipmentHeader: Record "Transfer Shipment Header";
-        TransferShipmentLine: Record "Transfer Shipment Line";
-        LineToUndo: Record "Transfer Shipment Line";
         Gate: Codeunit "Inventory Domain Gate ori";
-        UndoShipment: Codeunit "Undo Transfer Shipment";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        DocumentNo: Code[20];
-        MissingDocErr: Label 'documentNo is required.', Locked = true;
-        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no.', Locked = true;
-        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no.', Locked = true;
     begin
-        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, 'documentNo', '', '', '');
-            exit;
-        end;
-        DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
-        if not TransferShipmentHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
-            exit;
-        end;
-        TransferShipmentLine.SetRange("Document No.", TransferShipmentHeader."No.");
-        TransferShipmentLine.SetRange("Correction Line", false);
-        if not TransferShipmentLine.FindSet() then begin
-            Argument.RespondWithError(StrSubstNo(NoLinesErr, DocumentNo));
-            exit;
-        end;
-        repeat
-            LineToUndo := TransferShipmentLine;
-            UndoShipment.SetHideDialog(true);
-            if not UndoShipment.Run(LineToUndo) then begin
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv Native Undo Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv Native Undo Process ori", Argument) then
                 Argument.RespondWithError(GetLastErrorText());
-                exit;
-            end;
-        until TransferShipmentLine.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('documentNo', DocumentNo);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 }

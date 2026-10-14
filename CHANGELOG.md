@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — native undo and application acceptance (#39, #40)
+
+- Run transfer-shipment and assembly undo through isolated native processes with posting gates, validated line selection and recreateOrder support (70013480/70013482/70013487/70013489; tests 96980–96981). Preserve the unsupported native transfer-receipt undo limitation pending platform disposition.
+
 ## Unreleased — native journal acceptance (#6, #34)
 
 - Add registered physical Check, PreviewPost and batched RecordCount. Use native report 790 with explicit options and empty-batch protection, Validate counted quantities atomically, preserve legacy Record input, and return both native ledger ranges on Post. Use the public Foundation ItemJournal.Post permission interface (70013463/70013465/70013466/70013469/70013472/70013479/70013496; enum 70013459 values 70013460–70013462; tests 96962–96964).

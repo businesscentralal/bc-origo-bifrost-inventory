@@ -387,6 +387,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3688567441 - NamedType 4122250990" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo must be nonempty text of at most 20 characters.</source>
+          <target>documentNo verður að vera texti sem er ekki tómur og er að hámarki 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo verður að vera texti sem er ekki tómur og er að hámarki 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Undo ori - NamedType DocumentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3688567441 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The shipment has no remaining lines to undo.</source>
+          <target>Afhendingin hefur engar línur eftir til að afturkalla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afhendingin hefur engar línur eftir til að afturkalla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Undo ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3688567441 - NamedType 2450061972" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos must be a nonempty array of distinct positive line numbers on this shipment.</source>
+          <target>lineNos verður að vera fylki sem er ekki tómt með aðgreindum jákvæðum línunúmerum í þessari afhendingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að vera fylki sem er ekki tómt með aðgreindum jákvæðum línunúmerum í þessari afhendingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Undo ori - NamedType LinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3688567441 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported undo parameter %1.</source>
+          <target>Færibreytan %1 fyrir afturköllun er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Færibreytan %1 fyrir afturköllun er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Undo ori - NamedType ParameterErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2249393538 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
           <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>

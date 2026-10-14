@@ -12,7 +12,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, true));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -52,13 +52,8 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'documentNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Parameters.ReadFrom('[{"name":"documentNo","type":"string","required":true},{"name":"recreateOrder","type":"boolean","required":false}]');
         exit(true);
     end;
 
@@ -130,47 +125,19 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Checks company, posting, native write and license permissions before isolated native undo.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        PostedAssemblyHeader: Record "Posted Assembly Header";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        DocumentNo: Code[20];
+        Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError('documentNo is required.');
-            exit;
-        end;
-        DocumentNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(DocumentNo));
-        if not PostedAssemblyHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError('Posted assembly ' + DocumentNo + ' was not found.');
-            exit;
-        end;
-
-        if not TryUndoPostedAssembly(PostedAssemblyHeader) then begin
-            Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
-
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('documentNo', DocumentNo);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
-    end;
-
-    [TryFunction]
-    local procedure TryUndoPostedAssembly(var PostedAssemblyHeader: Record "Posted Assembly Header")
-    var
-        AssemblyPost: Codeunit "Assembly-Post";
-    begin
-        AssemblyPost.Undo(PostedAssemblyHeader, false);
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv Native Undo Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv Native Undo Process ori", Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 }
