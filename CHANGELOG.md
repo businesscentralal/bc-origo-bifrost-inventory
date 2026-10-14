@@ -1,5 +1,9 @@
 # Changelog
 
+- Document native Average revaluation prerequisites in English and Icelandic and verify location/variant selection in entry and item modes (codeunit 70013488; tests 96941/96921; issues #4/#30/#32).
+
+- Verify native LIFO, Average and Standard revaluation calculation, preview rollback and exact posted value delta without changing standard cost (test codeunit 96941; issue #4).
+
 - Serialize manual reservation availability against the shared native item and reservation lock before either source is consumed, including initially empty reservation sets (codeunit 10036915; issue #7). Independent-session acceptance exposed two successful reservations against the same two units.
 
 - Verify native CostToGL.Post date inclusion/exclusion and posting-group output document numbers while preserving other pending costs (test codeunit 96931; issues #4/#35).

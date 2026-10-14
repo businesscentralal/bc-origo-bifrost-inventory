@@ -389,6 +389,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         GetNamedMember(Contract, 'parameters', 'name', 'calculatePer', Parameter);
         Parameter.Get('description', Token);
         LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Item Ledger Entry (default)'), 'Native default is documented.');
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Average costing requires Item'), 'Native Average costing mode constraint is documented.');
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('average-cost period'), 'Native Average valuation date constraint is documented.');
         GetNamedMember(Contract, 'parameters', 'name', 'batchId', Parameter);
         Parameter.Get('description', Token);
         LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('only one SystemId alias'), 'Alias exclusivity is documented.');

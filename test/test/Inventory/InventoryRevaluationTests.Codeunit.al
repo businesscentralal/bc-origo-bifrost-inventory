@@ -5,6 +5,7 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -20,6 +21,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert: Codeunit "Library Assert";
         ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
         Revaluation: Codeunit "Inventory Revaluation ori";
 
     /// <summary>Published Calculate Help data executes against owned stock and leaves excluded stock and ledgers unchanged.</summary>
@@ -395,6 +397,167 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert.IsTrue(Line.IsEmpty(), 'Rejected option combination cannot create proposals.');
     end;
 
+    /// <summary>LIFO revaluation preserves native preview rollback and posts the exact owned value delta.</summary>
+    [Test]
+    procedure Revaluation_LIFO_NativePreviewAndPost()
+    begin
+        VerifyCostingMethod("Costing Method"::LIFO);
+    end;
+
+    /// <summary>Average revaluation preserves native preview rollback and posts the exact owned value delta.</summary>
+    [Test]
+    procedure Revaluation_Average_NativePreviewAndPost()
+    begin
+        VerifyCostingMethod("Costing Method"::Average);
+    end;
+
+    /// <summary>Standard revaluation preserves native preview rollback and posts the exact owned value delta.</summary>
+    [Test]
+    procedure Revaluation_Standard_NativePreviewAndPost()
+    begin
+        VerifyCostingMethod("Costing Method"::Standard);
+    end;
+
+    /// <summary>Native location and variant filters exclude other stock of the same item in entry mode.</summary>
+    [Test]
+    procedure Calculate_LocationVariant_EntryModePreservesOtherStock()
+    begin
+        VerifyLocationVariantFilter(false);
+    end;
+
+    /// <summary>Native per-item grouping retains the selected location and variant without including other stock.</summary>
+    [Test]
+    procedure Calculate_LocationVariant_ItemModePreservesOtherStock()
+    begin
+        VerifyLocationVariantFilter(true);
+    end;
+
+    local procedure VerifyLocationVariantFilter(PerItem: Boolean)
+    var
+        Item: Record Item;
+        Variant: Record "Item Variant";
+        Location: Record Location;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        ReceiptTemplate: Record "Item Journal Template";
+        ReceiptBatch: Record "Item Journal Batch";
+        ReceiptLine: Record "Item Journal Line";
+        Ledger: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        LedgersBefore: Integer;
+        ValuesBefore: Integer;
+    begin
+        CreateStock(Item);
+        LibraryInventory.CreateItemVariant(Variant, Item."No.");
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
+        LibraryInventory.CreateItemJournalTemplate(ReceiptTemplate);
+        LibraryInventory.CreateItemJournalBatch(ReceiptBatch, ReceiptTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(ReceiptLine, ReceiptTemplate.Name, ReceiptBatch.Name, ReceiptLine."Entry Type"::"Positive Adjmt.", Item."No.", 3);
+        ReceiptLine.Validate("Location Code", Location.Code);
+        ReceiptLine.Validate("Variant Code", Variant.Code);
+        ReceiptLine.Validate("Posting Date", WorkDate());
+        ReceiptLine.Validate("Unit Amount", 15);
+        ReceiptLine.Modify(true);
+        LibraryInventory.PostItemJournalLine(ReceiptTemplate.Name, ReceiptBatch.Name);
+        LedgersBefore := Ledger.Count();
+        ValuesBefore := ValueEntry.Count();
+        CreateBatch(Batch, Batch."Template Type"::Revaluation);
+        CalculationRequest(Request, Item."No.");
+        Request.Add('locationCode', Location.Code);
+        Request.Add('variantCode', Variant.Code);
+        if PerItem then begin
+            Request.Add('calculatePer', 'Item');
+            Request.Add('byLocation', true);
+            Request.Add('byVariant', true);
+        end;
+        InitArgument(TempArgument, Batch, Request);
+        Revaluation.Calculate(TempArgument);
+        FilterLines(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'Only the selected stock is proposed.');
+        Line.FindFirst();
+        Assert.AreEqual(Location.Code, Line."Location Code", 'Native selected location is retained.');
+        Assert.AreEqual(Variant.Code, Line."Variant Code", 'Native selected variant is retained.');
+        Assert.AreEqual(3, Line.Quantity, 'The two blank-location/variant units remain excluded.');
+        Assert.AreEqual(45, Line."Inventory Value (Calculated)", 'Only selected posted value is calculated.');
+        if PerItem then
+            Assert.AreEqual(0, Line."Applies-to Entry", 'Per-item mode uses native grouped valuation.')
+        else begin
+            Ledger.Get(Line."Applies-to Entry");
+            Assert.AreEqual(Location.Code, Ledger."Location Code", 'Entry mode binds selected native entry.');
+            Assert.AreEqual(Variant.Code, Ledger."Variant Code", 'Entry mode binds selected variant.');
+        end;
+        Assert.AreEqual(LedgersBefore, Ledger.Count(), 'Calculation does not change item entries.');
+        Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'Calculation does not change value entries.');
+        Ledger.Reset();
+        Ledger.SetRange("Item No.", Item."No.");
+        Ledger.SetRange("Location Code", '');
+        Ledger.SetRange("Variant Code", '');
+        Ledger.CalcSums("Remaining Quantity");
+        Assert.AreEqual(2, Ledger."Remaining Quantity", 'Excluded native stock is unchanged.');
+    end;
+
+    local procedure VerifyCostingMethod(Method: Enum "Costing Method")
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        ValueEntry: Record "Value Entry";
+        Ledger: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ValuesBefore: Integer;
+        LedgersBefore: Integer;
+    begin
+        CreateStockWithMethod(Item, Method);
+        CreateBatch(Batch, Batch."Template Type"::Revaluation);
+        CalculationRequest(Request, Item."No.");
+        if Method = Method::Average then
+            Request.Add('calculatePer', 'Item');
+        InitArgument(TempArgument, Batch, Request);
+        Revaluation.Calculate(TempArgument);
+        FilterLines(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'One native proposal for the self-posted item.');
+        Line.FindFirst();
+        Assert.AreEqual(24, Line."Inventory Value (Calculated)", 'Native cost before revaluation.');
+        Assert.AreEqual(2, Line.Quantity, 'Native remaining quantity.');
+        Assert.IsFalse(Line."Update Standard Cost", 'Calculation does not opt into changing the standard cost.');
+        Line.Validate("Inventory Value (Revalued)", 40);
+        Line.Modify(true);
+        ValuesBefore := ValueEntry.Count();
+        LedgersBefore := Ledger.Count();
+        Clear(Request);
+        InitArgument(TempArgument, Batch, Request);
+        Commit();
+        Revaluation.Preview(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native preview succeeds for the costing method.');
+        Response.Get('preview', Token);
+        Assert.IsTrue(Token.AsArray().Count() > 0, 'Preview contains predicted entries.');
+        Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'Preview commits no value entry.');
+        Assert.AreEqual(LedgersBefore, Ledger.Count(), 'Preview commits no item entry.');
+        FilterLines(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'Preview preserves the proposed journal line.');
+        InitArgument(TempArgument, Batch, Request);
+        Commit();
+        Assert.IsTrue(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), GetLastErrorText());
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.SetRange("Entry Type", ValueEntry."Entry Type"::Revaluation);
+        ValueEntry.CalcSums("Cost Amount (Actual)");
+        Assert.AreEqual(16, ValueEntry."Cost Amount (Actual)", 'Native posting adds exactly the proposed delta.');
+        Assert.AreEqual(LedgersBefore, Ledger.Count(), 'Revaluation creates no quantity movements.');
+        Item.Get(Item."No.");
+        if Method = Method::Standard then
+            Assert.AreEqual(12, Item."Standard Cost", 'Revaluation without update option preserves the standard cost.');
+        FilterLines(Batch, Line);
+        Line.SetRange("Item No.", Item."No.");
+        Assert.IsTrue(Line.IsEmpty(), 'The posted proposal is removed.');
+    end;
+
     local procedure CreateProposal(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")
     var
         TempArgument: Record "Message Argument ori" temporary;
@@ -412,6 +575,11 @@ codeunit 96941 "Inventory Revaluation Tests"
     end;
 
     local procedure CreateStock(var Item: Record Item)
+    begin
+        CreateStockWithMethod(Item, "Costing Method"::FIFO);
+    end;
+
+    local procedure CreateStockWithMethod(var Item: Record Item; Method: Enum "Costing Method")
     var
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
@@ -427,8 +595,14 @@ codeunit 96941 "Inventory Revaluation Tests"
         InventorySetup.Get();
         InventorySetup."Automatic Cost Posting" := false;
         InventorySetup."Automatic Cost Adjustment" := InventorySetup."Automatic Cost Adjustment"::Never;
+        InventorySetup."Average Cost Period" := InventorySetup."Average Cost Period"::Day;
+        InventorySetup."Average Cost Calc. Type" := InventorySetup."Average Cost Calc. Type"::Item;
         InventorySetup.Modify();
         LibraryInventory.CreateItem(Item);
+        Item.Validate("Costing Method", Method);
+        if Method = Method::Standard then
+            Item.Validate("Standard Cost", 12);
+        Item.Modify(true);
         LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
         LibraryInventory.CreateItemJournalBatch(JournalBatch, JournalTemplate.Name);
         LibraryInventory.CreateItemJournalLine(JournalLine, JournalTemplate.Name, JournalBatch.Name, JournalLine."Entry Type"::"Positive Adjmt.", Item."No.", 2);
