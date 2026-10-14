@@ -8,6 +8,13 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Updates current Item costs through native validation; refuses Standard-costed items.', Comment = 'is-IS=Uppfærir núverandi vörukostnað með innbyggðri sannprófun; hafnar vörum með staðlað kostnaðarverð.';
+        SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
+        KeywordsLbl: Label 'item cost, unit cost, last direct cost, standard cost, intentional cost update', Comment = 'is-IS=vörukostnaður,kostnaðarverð,síðasta beina kostnaðarverð,staðlað kostnaðarverð,kostnaðaruppfærsla';
+        OverviewLbl: Label 'Writes current Item card costs through Validate. It does not revalue inventory or post ledger entries.', Comment = 'is-IS=Skráir núverandi kostnað á vöruspjald með Validate. Endurmetur ekki birgðir og bókar engar fjárhagsfærslur.';
+        NotesLbl: Label 'Standard-costed items always refuse with a revaluation instruction. Native field restrictions, blocked-item opt-in and expectedCostingMethod are checked before any validation. Missing or multi-item selections refuse. Failures use the Codeunit.Run boundary; direct internal invocation can raise.', Comment = 'is-IS=Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.';
+
     /// <summary>Requires native Item write permission and the company Costing flag.</summary>
     procedure IsEnabled(): Boolean
     var
@@ -44,19 +51,19 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     /// <summary>Describes guarded card-cost changes.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Updates current Item costs through native validation; refuses Standard-costed items.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Selects exactly one item using the Foundation subject, identifier or tableView rules.');
+        exit(SelectionLbl);
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('item cost, unit cost, last direct cost, standard cost, intentional cost update');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Returns the envelope contract for guarded cost writes.</summary>
@@ -105,9 +112,14 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
 
     /// <summary>Returns the errors contract for guarded cost writes.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"RecordNotFound","when":"Item selection finds nothing.","fix":"Supply an existing item."},{"code":"PermissionDenied","when":"Company/native write gate refuses caller.","fix":"Review permissions and company setup."},{"code":"PreconditionFailed","when":"Standard-costed or blocked Item, method mismatch, field restriction, ambiguous selection or native validation failure.","fix":"Use native revaluation for Standard-costed items; otherwise correct the request."},{"code":"InvalidParameter","when":"Company Costing is disabled or request parameters are malformed.","fix":"Enable the domain or correct the request."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item selection finds nothing.', 'Supply an existing item.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Company/native write gate refuses caller.', 'Review permissions and company setup.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Standard-costed or blocked Item, method mismatch, field restriction, ambiguous selection or native validation failure. The direct native call may raise; the process wrapper returns text without a typed code.','Use native revaluation for Standard-costed items; otherwise correct the request.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or request parameters are malformed.', 'Enable the domain or correct the request.'));
         exit(true);
     end;
 
@@ -152,14 +164,14 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     /// <summary>Explains intentional cost-write behavior.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Writes current Item card costs through Validate. It does not revalue inventory or post ledger entries.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     /// <summary>Explains intentional cost-write behavior.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Standard-costed items always refuse with a revaluation instruction. Native field restrictions, blocked-item opt-in and expectedCostingMethod are checked before any validation. Missing or multi-item selections refuse. Failures use the Codeunit.Run boundary; direct internal invocation can raise.';
+        Notes := NotesLbl;
         exit(true);
     end;
 }

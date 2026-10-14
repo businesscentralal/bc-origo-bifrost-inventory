@@ -2,6 +2,8 @@
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
+- Localize registered costing, price and revaluation discovery/Help in Icelandic; document native revaluation selection and grouping, actual text refusal paths and JSON response media types. Correct Cost.Get multi-item overview and add a read example (70013403/70013404/70013435/70013460/70013467/70013468/70013462/70013486/70013488; regression tests 96921/96941).
+
 - Describe native journal selectors, required calculation/count inputs, legacy Record alternatives, actual error shapes and line results; supply complete examples and Icelandic discovery (70013465/70013466/70013474/70013475/70013479/70013493/70013496/70013472; tests 96921/96962).
 
 - Fill empty shipment undo Help and correct adjacent undo/application schemas, actual text versus typed error shapes, conditional legacy selectors and repeated-output behavior (70013480–70013482/70013490–70013492; tests 96921/96980/96982/96983). Preserve receipt undo refusal and native posting behavior.

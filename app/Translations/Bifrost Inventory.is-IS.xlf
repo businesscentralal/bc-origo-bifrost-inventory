@@ -93,6 +93,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Flutningspantanir</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Transfer Orders - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.</source>
+          <target>Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>adjust cost,item entry correction,post to g/l,report 795</source>
+          <target>leiðrétta kostnað,vörufærslur,bóka í fjárhag,keyrsla 795</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=leiðrétta kostnað,vörufærslur,bóka í fjárhag,keyrsla 795</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback or retry-safety is promised. itemsSelected is the pre-run selection count; itemsProcessed counts distinct completed native item adjustments during this run. reportCompleted is false on the native early exit before adjustment. errors is empty on success; failures use the structured process error boundary, and may follow native commits.</source>
+          <target>Keyrsla 795 hefur engar postingDate eða inventoryPostingGroup síur í BC28.5; gildum sem eru ekki tóm er hafnað fyrir keyrslu. Vöru- og vöruflokkssíur eru aldrei styttar. Innbyggð staðfesting breytinga helst þótt hluti keyrslu mistakist; engin forskoðun, bakfærsla eða örugg endurtekning er tryggð. itemsSelected er fjöldi valinna vara fyrir keyrslu; itemsProcessed telur aðgreindar vörur sem luku innbyggðri kostnaðarleiðréttingu í keyrslunni. reportCompleted er false ef innbyggða keyrslan stöðvast áður en leiðrétting hefst. errors er tómt við árangur; villur fara um skilgreinda villumeðhöndlun og geta komið eftir staðfestar breytingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrsla 795 hefur engar postingDate eða inventoryPostingGroup síur í BC28.5; gildum sem eru ekki tóm er hafnað fyrir keyrslu. Vöru- og vöruflokkssíur eru aldrei styttar. Innbyggð staðfesting breytinga helst þótt hluti keyrslu mistakist; engin forskoðun, bakfærsla eða örugg endurtekning er tryggð. itemsSelected er fjöldi valinna vara fyrir keyrslu; itemsProcessed telur aðgreindar vörur sem luku innbyggðri kostnaðarleiðréttingu í keyrslunni. reportCompleted er false ef innbyggða keyrslan stöðvast áður en leiðrétting hefst. errors er tómt við árangur; villur fara um skilgreinda villumeðhöndlun og geta komið eftir staðfestar breytingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.</source>
+          <target>Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.</source>
+          <target>Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly order %1 has no lines to post.</source>
           <target>Samsetningarpöntun %1 hefur engar línur til að bóka.</target>
@@ -242,6 +272,126 @@
           <target>Afturkallar bókaða samsetningu eftir skjalnúmeri; getur endurstofnað pöntunina.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri; getur endurstofnað pöntunina.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads item cost fields that are not exposed by the foundation app.</source>
+          <target>Les kostnaðarreiti vöru sem grunnforritið birtir ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>read item cost, unit cost, inventory value</source>
+          <target>lesa vörukostnað,kostnaðarverð,birgðavirði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lesa vörukostnað,kostnaðarverð,birgðavirði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.</source>
+          <target>Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads current item costs and filtered inventory for one or more items.</source>
+          <target>Les núverandi vörukostnað og síað birgðamagn fyrir eina eða fleiri vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les núverandi vörukostnað og síað birgðamagn fyrir eina eða fleiri vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns current costing fields and native filtered inventory for one or more items.</source>
+          <target>Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.</source>
+          <target>Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>post inventory cost,general ledger,report 1002</source>
+          <target>bóka birgðakostnað,fjárhagur,keyrsla 1002</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðakostnað,fjárhagur,keyrsla 1002</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo and postingDate filter Post Value Entry to G/L. documentNo is an output option; nonempty documentNoFilter is refused. Post is explicitly true. Native skips and commits remain in force; posted means posting mode completed, not that every entry posted. entriesRemaining records the selected entries still pending. Native report errors use the structured failure boundary.</source>
+          <target>itemNo og postingDate sía óbókaðar virðisfærslur til fjárhags. documentNo er úttaksvalkostur; documentNoFilter sem er ekki tómt er hafnað. Post er sérstaklega true. Innbyggð slepping færslna og staðfesting breytinga gilda áfram; posted merkir að bókunarhamur lauk, ekki að allar færslur hafi verið bókaðar. entriesRemaining sýnir valdar færslur sem enn bíða bókunar. Innbyggðar keyrsluvillur fara um skilgreinda villumeðhöndlun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo og postingDate sía óbókaðar virðisfærslur til fjárhags. documentNo er úttaksvalkostur; documentNoFilter sem er ekki tómt er hafnað. Post er sérstaklega true. Innbyggð slepping færslna og staðfesting breytinga gilda áfram; posted merkir að bókunarhamur lauk, ekki að allar færslur hafi verið bókaðar. entriesRemaining sýnir valdar færslur sem enn bíða bókunar. Innbyggðar keyrsluvillur fara um skilgreinda villumeðhöndlun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.</source>
+          <target>Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.</source>
+          <target>Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2524329771 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 1003 for selected pending inventory costs and returns warnings without posting.</source>
+          <target>Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2524329771 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>test post inventory cost to gl, cost to gl test</source>
+          <target>prófa birgðakostnað í fjárhag,kostnaðarbókunarprófun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=prófa birgðakostnað í fjárhag,kostnaðarbókunarprófun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2524329771 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native report 1003 warnings are returned in errors[]. entriesSelected is the pre-run pending-entry count, not a count of successfully validated entries. No report 795 execution or posting occurs. Journal Templ. Name Mandatory is refused because the native test report otherwise consumes a number. documentNo is an output option, not a filter.</source>
+          <target>Viðvaranir úr innbyggðri keyrslu 1003 birtast í errors[]. entriesSelected er fjöldi valinna óbókaðra færslna fyrir keyrslu, ekki fjöldi færslna sem stóðust prófun. Hvorki keyrsla 795 né bókun fer fram. Journal Templ. Name Mandatory er hafnað því innbyggða prófunarskýrslan myndi annars nota númer úr númeraröð. documentNo er úttaksvalkostur en ekki sía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Viðvaranir úr innbyggðri keyrslu 1003 birtast í errors[]. entriesSelected er fjöldi valinna óbókaðra færslna fyrir keyrslu, ekki fjöldi færslna sem stóðust prófun. Hvorki keyrsla 795 né bókun fer fram. Journal Templ. Name Mandatory er hafnað því innbyggða prófunarskýrslan myndi annars nota númer úr númeraröð. documentNo er úttaksvalkostur en ekki sía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2524329771 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 1003 for selected pending inventory costs and returns warnings without posting.</source>
+          <target>Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2524329771 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native report 1003 for selected pending inventory costs and returns warnings without posting.</source>
+          <target>Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updates current Item costs through native validation; refuses Standard-costed items.</source>
+          <target>Uppfærir núverandi vörukostnað með innbyggðri sannprófun; hafnar vörum með staðlað kostnaðarverð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi vörukostnað með innbyggðri sannprófun; hafnar vörum með staðlað kostnaðarverð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item cost, unit cost, last direct cost, standard cost, intentional cost update</source>
+          <target>vörukostnaður,kostnaðarverð,síðasta beina kostnaðarverð,staðlað kostnaðarverð,kostnaðaruppfærsla</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörukostnaður,kostnaðarverð,síðasta beina kostnaðarverð,staðlað kostnaðarverð,kostnaðaruppfærsla</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard-costed items always refuse with a revaluation instruction. Native field restrictions, blocked-item opt-in and expectedCostingMethod are checked before any validation. Missing or multi-item selections refuse. Failures use the Codeunit.Run boundary; direct internal invocation can raise.</source>
+          <target>Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Writes current Item card costs through Validate. It does not revalue inventory or post ledger entries.</source>
+          <target>Skráir núverandi kostnað á vöruspjald með Validate. Endurmetur ekki birgðir og bókar engar fjárhagsfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir núverandi kostnað á vöruspjald með Validate. Endurmetur ekki birgðir og bókar engar fjárhagsfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selects exactly one item using the Foundation subject, identifier or tableView rules.</source>
+          <target>Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3400197598 - NamedType 876571053" size-unit="char" translate="yes" xml:space="preserve">
           <source>The native worksheet did not apply exactly the requested base quantity.</source>
@@ -1167,6 +1317,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2602827820 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updates an item unit price.</source>
+          <target>Uppfærir einingarverð vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir einingarverð vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2602827820 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>update item price, unit price</source>
+          <target>uppfæra vöruverð,einingarverð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=uppfæra vöruverð,einingarverð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2602827820 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requires one explicit item selection, native Item and Unit Price field access, and unitPrice. Unsupported fields refuse. Uses Validate and Modify in a Codeunit.Run boundary. Writes no price list or inventory revaluation. Normal licensing and company setup apply.</source>
+          <target>Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2602827820 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updates the unit price of one item.</source>
+          <target>Uppfærir einingarverð einnar vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir einingarverð einnar vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2602827820 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selects exactly one item using the Foundation subject, identifier or tableView rules.</source>
+          <target>Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Checks selected Transfer journal lines with native Item Jnl.-Check Line.</source>
           <target>Athugar línur endurflokkunarbókar með innbyggðri sannprófun.</target>
@@ -1238,6 +1418,96 @@
           <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4169907518 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native revaluation posting preview and returns captured entries without committing.</source>
+          <target>Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4169907518 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory,revaluation,inventory value,calculate,preview,post</source>
+          <target>birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4169907518 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>PreviewPost requires native revaluation lines and posting permission. Preview entries are rolled back; journal lines remain unchanged. Normal licensing and company domain gates apply.</source>
+          <target>PreviewPost krefst innbyggðra endurmatslína og bókunarheimildar. Forskoðunarfærslur eru bakfærðar; bókarlínur haldast óbreyttar. Venjulegar leyfis- og fyrirtækisheimildir gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=PreviewPost krefst innbyggðra endurmatslína og bókunarheimildar. Forskoðunarfærslur eru bakfærðar; bókarlínur haldast óbreyttar. Venjulegar leyfis- og fyrirtækisheimildir gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4169907518 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs native revaluation posting preview and returns captured entries without committing. Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4169907518 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2228006919 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Populates an empty revaluation journal using native Calculate Inventory Value report 5899.</source>
+          <target>Fyllir tóma endurmatsbók með innbyggðri keyrslu 5899 til útreiknings birgðavirðis.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyllir tóma endurmatsbók með innbyggðri keyrslu 5899 til útreiknings birgðavirðis.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2228006919 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory,revaluation,inventory value,calculate,preview,post</source>
+          <target>birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2228006919 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculate requires postingDate and documentNo and refuses a nonempty batch. calculatePer defaults to Item Ledger Entry; byLocation/byVariant require Item. Calculation never updates Standard Cost or posts entries. Normal licensing and company domain gates apply.</source>
+          <target>Útreikningur krefst postingDate og documentNo og hafnar keyrslu sem er ekki tóm. calculatePer er sjálfgefið Item Ledger Entry; byLocation/byVariant krefjast Item. Útreikningur uppfærir aldrei staðlað kostnaðarverð og bókar engar færslur. Venjulegar leyfis- og fyrirtækisheimildir gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útreikningur krefst postingDate og documentNo og hafnar keyrslu sem er ekki tóm. calculatePer er sjálfgefið Item Ledger Entry; byLocation/byVariant krefjast Item. Útreikningur uppfærir aldrei staðlað kostnaðarverð og bókar engar færslur. Venjulegar leyfis- og fyrirtækisheimildir gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2228006919 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Populates an empty revaluation journal using native Calculate Inventory Value report 5899. Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Fyllir tóma endurmatsbók með innbyggðri keyrslu 5899 til útreiknings birgðavirðis. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyllir tóma endurmatsbók með innbyggðri keyrslu 5899 til útreiknings birgðavirðis. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2228006919 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2505414460 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts a revaluation journal through native Item Jnl.-Post Batch.</source>
+          <target>Bókar endurmatsbók með innbyggðri vörubókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurmatsbók með innbyggðri vörubókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2505414460 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory,revaluation,inventory value,calculate,preview,post</source>
+          <target>birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir,endurmat,birgðavirði,reikna,forskoða,bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2505414460 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post requires native revaluation lines and posting permission. The whole batch is posted atomically; no line subset is supported. Normal licensing and company domain gates apply.</source>
+          <target>Post krefst innbyggðra endurmatslína og bókunarheimildar. Öll keyrslan er bókuð sem ein heild; ekki er hægt að velja hluta línanna. Venjulegar leyfis- og fyrirtækisheimildir gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Post krefst innbyggðra endurmatslína og bókunarheimildar. Öll keyrslan er bókuð sem ein heild; ekki er hægt að velja hluta línanna. Venjulegar leyfis- og fyrirtækisheimildir gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2505414460 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts a revaluation journal through native Item Jnl.-Post Batch. Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Bókar endurmatsbók með innbyggðri vörubókun. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurmatsbók með innbyggðri vörubókun. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2505414460 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
+          <target>Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>

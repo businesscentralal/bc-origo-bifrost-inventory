@@ -7,6 +7,13 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.';
+        SelectionLbl: Label 'Returns current costing fields and native filtered inventory for one or more items.', Comment = 'is-IS=Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.';
+        KeywordsLbl: Label 'read item cost, unit cost, inventory value', Comment = 'is-IS=lesa vörukostnað,kostnaðarverð,birgðavirði';
+        OverviewLbl: Label 'Reads current item costs and filtered inventory for one or more items.', Comment = 'is-IS=Les núverandi vörukostnað og síað birgðamagn fyrir eina eða fleiri vörur.';
+        NotesLbl: Label 'Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.', Comment = 'is-IS=Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -21,17 +28,17 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Reads item cost fields that are not exposed by the foundation app.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('read item cost, unit cost, inventory value');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Returns current costing fields and native filtered inventory for one or more items.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -73,9 +80,15 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"RecordNotFound","when":"No Item matches Foundation selection.","fix":"Use an existing identifier or tableView."},{"code":"InvalidParameter","when":"Invalid optional text parameter.","fix":"Send text filters."},{"code":"InvalidParameterFormat","when":"Invalid date or identifier.","fix":"Use ISO date and valid identifiers."},{"code":"PermissionDenied","when":"Native Item read permission is absent.","fix":"Assign the appropriate read role."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Item matches Foundation selection.', 'Use an existing identifier or tableView.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Invalid optional text parameter.', 'Send text filters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'Invalid date or identifier.', 'Use ISO date and valid identifiers.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item read permission is absent.', 'Assign the appropriate read role.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native inventory filter error.','A location or inventory filter cannot be applied.','Correct the native filter syntax.'));
         exit(true);
     end;
 
@@ -107,18 +120,20 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Read current cost and filtered inventory for one item","request":{"type":"Inventory.Cost.Get","subject":"OWNED-ITEM","data":{"asOfDate":"2026-10-14"}}}]');
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads item cost and inventory for one item.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

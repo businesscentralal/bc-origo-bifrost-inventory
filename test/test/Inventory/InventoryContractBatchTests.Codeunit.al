@@ -13,6 +13,187 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure AdjustCost_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.AdjustCost.Run', 'status:string,itemsProcessed:integer,reportCompleted:boolean,errors:array,itemsSelected:integer,postToGL:boolean,itemByItem:boolean', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure CostRead_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Cost.Get', 'status:string,items:array', 5);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure CostWrite_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Cost.Update', 'status:string,itemNo:string,itemId:string,costingMethod:string,before:object,after:object,warnings:array', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure CostGLTest_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.CostToGL.Test', 'status:string,posted:boolean,entriesSelected:integer,errors:array', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure CostGLPost_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.CostToGL.Post', 'status:string,posted:boolean,entriesSelected:integer,entriesRemaining:integer,skippedEntries:array', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure PriceWrite_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Price.Update', 'status:string,messageType:string,itemNo:string,itemId:string,previousUnitPrice:decimal,unitPrice:decimal', 5);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure RevalCalculate_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Revaluation.Calculate', 'status:string,templateName:string,batchName:string,linesCreated:integer,totalQuantity:decimal,calculatedValue:decimal,revaluedValue:decimal,posted:boolean', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure RevalPreview_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Revaluation.PreviewPost', 'status:string,templateName:string,batchName:string,linesToPost:integer,rollback:boolean,preview:array,totals:object,entryCount:integer,glEntryCount:integer', 4);
+    end;
+
+    /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
+    [Test]
+    procedure RevalPost_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
+        AssertNativeHelp('Inventory.Revaluation.Post', 'status:string,templateName:string,batchName:string,linesPosted:integer,totalQuantity:decimal,totalAmount:decimal,itemRegisterNo:integer,fromEntryNo:integer,toEntryNo:integer,fromValueEntryNo:integer,toValueEntryNo:integer', 3);
+    end;
+
+    /// <summary>Every costing/price operation switches its discovery and explanatory Help to Icelandic.</summary>
+    [Test]
+    procedure CostingHelp_AllRegisteredTypes_LocalizesDiscoveryAndNotes()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageInterface: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        EnglishContract: JsonObject;
+        Token: JsonToken;
+        EnglishToken: JsonToken;
+        Parameter: JsonObject;
+        Names: List of [Text];
+        Name: Text;
+        Chapter: Text;
+        Chapters: List of [Text];
+        EnglishDescription: Text;
+        EnglishSelection: Text;
+        EnglishKeywords: Text;
+        IcelandicDescription: Text;
+        IcelandicSelection: Text;
+        IcelandicKeywords: Text;
+        PreviousLanguage: Integer;
+    begin
+        // Issues #32/#33 | Time: independent | Risk: compile-only localization misses registered Help.
+        Names.Add('Inventory.AdjustCost.Run');
+        Names.Add('Inventory.Cost.Get');
+        Names.Add('Inventory.Cost.Update');
+        Names.Add('Inventory.CostToGL.Test');
+        Names.Add('Inventory.CostToGL.Post');
+        Names.Add('Inventory.Price.Update');
+        Names.Add('Inventory.Revaluation.Calculate');
+        Names.Add('Inventory.Revaluation.PreviewPost');
+        Names.Add('Inventory.Revaluation.Post');
+        Chapters.Add('overview');
+        Chapters.Add('notes');
+        PreviousLanguage := GlobalLanguage();
+        foreach Name in Names do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(Name));
+            MessageInterface := MessageType;
+            Discovery := MessageType;
+            GlobalLanguage(1033);
+            EnglishDescription := MessageInterface.GetDescription();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            ContractMgt.GetContract(MessageType, EnglishContract);
+            GlobalLanguage(1039);
+            IcelandicDescription := MessageInterface.GetDescription();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            IcelandicKeywords := Discovery.GetKeywords();
+            ContractMgt.GetContract(MessageType, Contract);
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, Name + ' description changes language.');
+            LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, Name + ' selection changes language.');
+            LibraryAssert.AreNotEqual(EnglishKeywords, IcelandicKeywords, Name + ' keywords change language.');
+            foreach Chapter in Chapters do begin
+                LibraryAssert.IsTrue(EnglishContract.Get(Chapter, EnglishToken), Name + ' English Help chapter.');
+                LibraryAssert.IsTrue(Contract.Get(Chapter, Token), Name + ' Icelandic Help chapter.');
+                LibraryAssert.AreNotEqual(EnglishToken.AsValue().AsText(), Token.AsValue().AsText(), Name + ' ' + Chapter + ' changes language.');
+            end;
+            Contract.Get('parameters', Token);
+            foreach Token in Token.AsArray() do begin
+                Parameter := Token.AsObject();
+                LibraryAssert.IsTrue(Parameter.Get('description', Token), Name + ' parameter description.');
+                LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), Name + ' parameter is explained.');
+            end;
+        end;
+    end;
+
+    /// <summary>Revaluation Help describes real selection precedence and the native grouping constraints.</summary>
+    [Test]
+    procedure RevaluationHelp_SelectionAndGrouping_DeclareNativeConstraints()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Envelope: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Data: JsonObject;
+        Token: JsonToken;
+    begin
+        // Issue #35/#30 | Time: illustrative example | Risk: Help promises unsupported line selection or grouping.
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Revaluation.Calculate", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'byLocation', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('calculatePer=Item'), 'Grouping constraint is documented.');
+        GetNamedMember(Contract, 'parameters', 'name', 'calculatePer', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Item Ledger Entry (default)'), 'Native default is documented.');
+        GetNamedMember(Contract, 'parameters', 'name', 'batchId', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('only one SystemId alias'), 'Alias exclusivity is documented.');
+        Contract.Get('envelope', Token);
+        Envelope := Token.AsObject();
+        Envelope.Get('dataRequired', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Calculate requires data.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Data := Token.AsObject();
+        LibraryAssert.IsTrue(Data.Contains('postingDate'), 'Example supplies native accounting date.');
+        LibraryAssert.IsTrue(Data.Contains('documentNo'), 'Example supplies native document number.');
+    end;
+
     /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
     [Test]
     procedure PhysCalculate_PublicHelp_DeclaresNativeFieldsAndErrors()

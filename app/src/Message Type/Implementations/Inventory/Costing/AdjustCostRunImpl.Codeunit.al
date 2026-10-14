@@ -11,6 +11,13 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.';
+        SelectionLbl: Label 'Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.';
+        KeywordsLbl: Label 'adjust cost,item entry correction,post to g/l,report 795', Comment = 'is-IS=leiðrétta kostnað,vörufærslur,bóka í fjárhag,keyrsla 795';
+        OverviewLbl: Label 'Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 795 fyrir vöru- eða vöruflokksval, kostnaðarleiðréttingu hverrar vöru og valfrjálsa fjárhagsbókun.';
+        NotesLbl: Label 'Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback or retry-safety is promised. itemsSelected is the pre-run selection count; itemsProcessed counts distinct completed native item adjustments during this run. reportCompleted is false on the native early exit before adjustment. errors is empty on success; failures use the structured process error boundary, and may follow native commits.', Comment = 'is-IS=Keyrsla 795 hefur engar postingDate eða inventoryPostingGroup síur í BC28.5; gildum sem eru ekki tóm er hafnað fyrir keyrslu. Vöru- og vöruflokkssíur eru aldrei styttar. Innbyggð staðfesting breytinga helst þótt hluti keyrslu mistakist; engin forskoðun, bakfærsla eða örugg endurtekning er tryggð. itemsSelected er fjöldi valinna vara fyrir keyrslu; itemsProcessed telur aðgreindar vörur sem luku innbyggðri kostnaðarleiðréttingu í keyrslunni. reportCompleted er false ef innbyggða keyrslan stöðvast áður en leiðrétting hefst. errors er tómt við árangur; villur fara um skilgreinda villumeðhöndlun og geta komið eftir staðfestar breytingar.';
+
     /// <summary>Checks whether the existing costing domain and Item write gates are enabled.</summary>
     procedure IsEnabled(): Boolean
     var
@@ -42,19 +49,19 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.');
+        exit(SelectionLbl);
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('adjust cost,item entry correction,post to g/l,report 795');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>
@@ -127,9 +134,14 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Errors">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing domain is disabled.', 'Enable Costing in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The existing domain/posting gate refuses the caller.', 'Review permissions.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Request validation or the native report fails; no native commit rollback is promised. The direct native call may raise; the process wrapper returns text without a typed code.','Review the returned error and actual ledger state.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.', 'Review the native error and current ledger state before retrying.'));
         exit(true);
     end;
 
@@ -186,7 +198,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Runs native report 795 with item or category selection, item-by-item adjustment and optional G/L posting.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
@@ -195,7 +207,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback or retry-safety is promised. itemsSelected is the pre-run selection count; itemsProcessed counts distinct completed native item adjustments during this run. reportCompleted is false on the native early exit before adjustment. errors is empty on success; failures use the structured process error boundary, and may follow native commits.';
+        Notes := NotesLbl;
         exit(true);
     end;
 }

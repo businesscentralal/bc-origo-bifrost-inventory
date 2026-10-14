@@ -22,6 +22,57 @@ codeunit 96941 "Inventory Revaluation Tests"
         LibraryInventory: Codeunit "Library - Inventory";
         Revaluation: Codeunit "Inventory Revaluation ori";
 
+    /// <summary>Published Calculate Help data executes against owned stock and leaves excluded stock and ledgers unchanged.</summary>
+    [Test]
+    procedure Calculate_HelpExample_CreatesOnlyOwnedJournalLines()
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        ValueEntry: Record "Value Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Example: JsonObject;
+        Envelope: JsonObject;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ValueCount: Integer;
+    begin
+        // Accepted Calculate scope | Time: WorkDate | Risk: native report must create journal, not an estimate or ledger write.
+        CreateStock(Item);
+        CreateStock(OtherItem);
+        CreateBatch(Batch, Batch."Template Type"::Revaluation);
+        ValueCount := ValueEntry.Count();
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Revaluation.Calculate", Contract);
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Envelope := Token.AsObject();
+        Envelope.Get('data', Token);
+        Request := Token.AsObject();
+        Request.Replace('itemNo', Item."No.");
+        Request.Replace('postingDate', Format(WorkDate(), 0, 9));
+        InitArgument(TempArgument, Batch, Request);
+        Revaluation.Calculate(TempArgument);
+        FilterLines(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'One self-created receipt produces one native revaluation line.');
+        Line.FindFirst();
+        Assert.AreEqual(Item."No.", Line."Item No.", 'Native item filter excludes other stock.');
+        Assert.AreEqual(Line."Value Entry Type"::Revaluation, Line."Value Entry Type", 'Native revaluation line type.');
+        Assert.IsTrue(Line."Applies-to Entry" > 0, 'Native source ledger entry is recorded.');
+        Assert.AreEqual(2, Line.Quantity, 'Native remaining quantity.');
+        Assert.AreEqual(24, Line."Inventory Value (Calculated)", 'Actual posted value.');
+        Assert.AreEqual(ValueCount, ValueEntry.Count(), 'Calculate creates no ledger values.');
+        Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.Calculate", Response);
+        Response.Get('linesCreated', Token);
+        Assert.AreEqual(Line.Count(), Token.AsValue().AsInteger(), 'Truthful created count.');
+    end;
+
     /// <summary>Report5899 fills only the selected item and leaves ledgers and the excluded item untouched.</summary>
     [Test]
     procedure Calculate_SelectedItem_CreatesNativeJournalOnly()

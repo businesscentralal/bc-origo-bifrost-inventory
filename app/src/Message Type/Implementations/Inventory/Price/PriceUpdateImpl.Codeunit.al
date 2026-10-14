@@ -10,6 +10,13 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Updates an item unit price.', Comment = 'is-IS=Uppfærir einingarverð vöru.';
+        SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
+        KeywordsLbl: Label 'update item price, unit price', Comment = 'is-IS=uppfæra vöruverð,einingarverð';
+        OverviewLbl: Label 'Updates the unit price of one item.', Comment = 'is-IS=Uppfærir einingarverð einnar vöru.';
+        NotesLbl: Label 'Requires one explicit item selection, native Item and Unit Price field access, and unitPrice. Unsupported fields refuse. Uses Validate and Modify in a Codeunit.Run boundary. Writes no price list or inventory revaluation. Normal licensing and company setup apply.', Comment = 'is-IS=Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.';
+
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure IsEnabled(): Boolean
     var
@@ -27,19 +34,19 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Updates an item unit price.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('update item price, unit price');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Updates a sales price. Cost updates stay Inventory.Cost.Update.');
+        exit(SelectionLbl);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
@@ -90,15 +97,22 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Fields.Add(ContractMgt.ResponseField('itemId', 'string', 'The resolved Item SystemId.'));
         Fields.Add(ContractMgt.ResponseField('previousUnitPrice', 'decimal', 'Unit Price before native validation.'));
         Fields.Add(ContractMgt.ResponseField('unitPrice', 'decimal', 'Unit Price after native validation.'));
+        Response.Add('contentType', 'text/json');
         Response.Add('fields', Fields);
         exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"MissingParameter","when":"unitPrice is absent."},{"code":"InvalidParameter","when":"Malformed or unsupported parameter."},{"code":"RecordNotFound","when":"Item selection finds nothing."},{"code":"PermissionDenied","when":"Native Item or Unit Price field permission refuses the caller."},{"code":"PreconditionFailed","when":"Selection is ambiguous, item is blocked without opt-in or native validation fails."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitPrice is absent.', 'Supply the required value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or a typed value is invalid; unsupported keys raise a native text error.', 'Enable the company domain or correct the request value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item selection finds nothing.', 'Select an existing record.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item or Unit Price field permission refuses the caller.', 'Request the required native permission from an administrator.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Selection is ambiguous, item is blocked without opt-in or native validation fails. The direct native call may raise; the process wrapper returns text without a typed code.','Correct the selected batch, input or native validation error before retrying.'));
         exit(true);
     end;
 
@@ -139,14 +153,14 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Updates the unit price of one item.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Requires one explicit item selection, native Item and Unit Price field access, and unitPrice. Unsupported fields refuse. Uses Validate and Modify in a Codeunit.Run boundary. Writes no price list or inventory revaluation. Normal licensing and company setup apply.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

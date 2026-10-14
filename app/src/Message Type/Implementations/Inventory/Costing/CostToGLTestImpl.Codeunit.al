@@ -7,6 +7,13 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Runs native report 1003 for selected pending inventory costs and returns warnings without posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.';
+        SelectionLbl: Label 'Runs native report 1003 for selected pending inventory costs and returns warnings without posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.';
+        KeywordsLbl: Label 'test post inventory cost to gl, cost to gl test', Comment = 'is-IS=prófa birgðakostnað í fjárhag,kostnaðarbókunarprófun';
+        OverviewLbl: Label 'Runs native report 1003 for selected pending inventory costs and returns warnings without posting.', Comment = 'is-IS=Keyrir innbyggða keyrslu 1003 fyrir valinn óbókaðan birgðakostnað og skilar viðvörunum án bókunar.';
+        NotesLbl: Label 'Native report 1003 warnings are returned in errors[]. entriesSelected is the pre-run pending-entry count, not a count of successfully validated entries. No report 795 execution or posting occurs. Journal Templ. Name Mandatory is refused because the native test report otherwise consumes a number. documentNo is an output option, not a filter.', Comment = 'is-IS=Viðvaranir úr innbyggðri keyrslu 1003 birtast í errors[]. entriesSelected er fjöldi valinna óbókaðra færslna fyrir keyrslu, ekki fjöldi færslna sem stóðust prófun. Hvorki keyrsla 795 né bókun fer fram. Journal Templ. Name Mandatory er hafnað því innbyggða prófunarskýrslan myndi annars nota númer úr númeraröð. documentNo er úttaksvalkostur en ekki sía.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -21,17 +28,17 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Runs native report 1003 for selected pending inventory costs and returns warnings without posting.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('test post inventory cost to gl, cost to gl test');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Runs native report 1003 for selected pending inventory costs and returns warnings without posting.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -78,14 +85,19 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"False for test; true for completed posting mode, even if the native report leaves entries pending."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"errors","type":"array","description":"Native report 1003 warning objects with message text."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"posted","type":"boolean","description":"Always false; report 1003 does not post."},{"name":"entriesSelected","type":"integer","description":"Selected pending-entry count before execution."},{"name":"errors","type":"array","description":"Native report 1003 warning objects with message text."}]}');
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The domain or Item read permission gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing domain is disabled.', 'Enable Costing in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The domain or Item read permission gate refuses the caller.', 'Review permissions.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Request validation or the native report fails; no native commit rollback is promised. The direct native call may raise; the process wrapper returns text without a typed code.','Review the returned error and actual ledger state.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.', 'Review the native error and current ledger state before retrying.'));
         exit(true);
     end;
 
@@ -124,13 +136,13 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Runs native report 1003 for selected pending inventory costs and returns warnings without posting.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Native report 1003 warnings are returned in errors[]. entriesSelected is the pre-run pending-entry count, not a count of successfully validated entries. No report 795 execution or posting occurs. Journal Templ. Name Mandatory is refused because the native test report otherwise consumes a number. documentNo is an output option, not a filter.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

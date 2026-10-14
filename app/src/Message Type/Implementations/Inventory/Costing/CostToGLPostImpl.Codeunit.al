@@ -11,6 +11,13 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.';
+        SelectionLbl: Label 'Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.';
+        KeywordsLbl: Label 'post inventory cost,general ledger,report 1002', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,keyrsla 1002';
+        OverviewLbl: Label 'Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað í fjárhag með innbyggðri keyrslu 1002 og virku Post.';
+        NotesLbl: Label 'itemNo and postingDate filter Post Value Entry to G/L. documentNo is an output option; nonempty documentNoFilter is refused. Post is explicitly true. Native skips and commits remain in force; posted means posting mode completed, not that every entry posted. entriesRemaining records the selected entries still pending. Native report errors use the structured failure boundary.', Comment = 'is-IS=itemNo og postingDate sía óbókaðar virðisfærslur til fjárhags. documentNo er úttaksvalkostur; documentNoFilter sem er ekki tómt er hafnað. Post er sérstaklega true. Innbyggð slepping færslna og staðfesting breytinga gilda áfram; posted merkir að bókunarhamur lauk, ekki að allar færslur hafi verið bókaðar. entriesRemaining sýnir valdar færslur sem enn bíða bókunar. Innbyggðar keyrsluvillur fara um skilgreinda villumeðhöndlun.';
+
     /// <summary>Checks whether the existing costing domain and Item write gates are enabled.</summary>
     procedure IsEnabled(): Boolean
     var
@@ -42,19 +49,19 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.');
+        exit(SelectionLbl);
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('post inventory cost,general ledger,report 1002');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>
@@ -127,9 +134,14 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Errors">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing domain is disabled.', 'Enable Costing in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The existing domain/posting gate refuses the caller.', 'Review permissions.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Request validation or the native report fails; no native commit rollback is promised. The direct native call may raise; the process wrapper returns text without a typed code.','Review the returned error and actual ledger state.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.', 'Review the native error and current ledger state before retrying.'));
         exit(true);
     end;
 
@@ -186,7 +198,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Posts the selected pending inventory costs to G/L using native report 1002 with Post enabled.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
@@ -195,7 +207,7 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'itemNo and postingDate filter Post Value Entry to G/L. documentNo is an output option; nonempty documentNoFilter is refused. Post is explicitly true. Native skips and commits remain in force; posted means posting mode completed, not that every entry posted. entriesRemaining records the selected entries still pending. Native report errors use the structured failure boundary.';
+        Notes := NotesLbl;
         exit(true);
     end;
 }
