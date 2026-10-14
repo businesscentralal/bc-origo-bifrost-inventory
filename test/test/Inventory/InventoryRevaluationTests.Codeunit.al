@@ -7,6 +7,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -432,6 +433,13 @@ codeunit 96941 "Inventory Revaluation Tests"
         VerifyLocationVariantFilter(true);
     end;
 
+    /// <summary>Specific costing revalues the exact two serial-number entries through native preview and posting.</summary>
+    [Test]
+    procedure Revaluation_Specific_NativeSerialPreviewAndPost()
+    begin
+        VerifyCostingMethod("Costing Method"::Specific);
+    end;
+
     local procedure VerifyLocationVariantFilter(PerItem: Boolean)
     var
         Item: Record Item;
@@ -520,13 +528,25 @@ codeunit 96941 "Inventory Revaluation Tests"
         InitArgument(TempArgument, Batch, Request);
         Revaluation.Calculate(TempArgument);
         FilterLines(Batch, Line);
-        Assert.AreEqual(1, Line.Count(), 'One native proposal for the self-posted item.');
-        Line.FindFirst();
+        if Method = Method::Specific then
+            Assert.AreEqual(2, Line.Count(), 'Each native serial entry has its own proposal.')
+        else
+            Assert.AreEqual(1, Line.Count(), 'One native proposal for the self-posted item.');
+        Line.CalcSums(Quantity, "Inventory Value (Calculated)");
         Assert.AreEqual(24, Line."Inventory Value (Calculated)", 'Native cost before revaluation.');
         Assert.AreEqual(2, Line.Quantity, 'Native remaining quantity.');
-        Assert.IsFalse(Line."Update Standard Cost", 'Calculation does not opt into changing the standard cost.');
-        Line.Validate("Inventory Value (Revalued)", 40);
-        Line.Modify(true);
+        Line.FindSet();
+        repeat
+            Assert.IsFalse(Line."Update Standard Cost", 'Calculation does not opt into changing the standard cost.');
+            if Method = Method::Specific then begin
+                Ledger.Get(Line."Applies-to Entry");
+                Assert.IsTrue(Ledger."Serial No." in ['RV-SERIAL-1', 'RV-SERIAL-2'], 'Proposal binds one self-posted native serial.');
+                Assert.AreEqual(1, Line.Quantity, 'One unit per serial entry.');
+                Line.Validate("Inventory Value (Revalued)", 20);
+            end else
+                Line.Validate("Inventory Value (Revalued)", 40);
+            Line.Modify(true);
+        until Line.Next() = 0;
         ValuesBefore := ValueEntry.Count();
         LedgersBefore := Ledger.Count();
         Clear(Request);
@@ -541,7 +561,10 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'Preview commits no value entry.');
         Assert.AreEqual(LedgersBefore, Ledger.Count(), 'Preview commits no item entry.');
         FilterLines(Batch, Line);
-        Assert.AreEqual(1, Line.Count(), 'Preview preserves the proposed journal line.');
+        if Method = Method::Specific then
+            Assert.AreEqual(2, Line.Count(), 'Preview preserves both serial proposals.')
+        else
+            Assert.AreEqual(1, Line.Count(), 'Preview preserves the proposed journal line.');
         InitArgument(TempArgument, Batch, Request);
         Commit();
         Assert.IsTrue(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), GetLastErrorText());
@@ -581,6 +604,7 @@ codeunit 96941 "Inventory Revaluation Tests"
 
     local procedure CreateStockWithMethod(var Item: Record Item; Method: Enum "Costing Method")
     var
+        TrackingCode: Record "Item Tracking Code";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
         JournalTemplate: Record "Item Journal Template";
@@ -599,6 +623,12 @@ codeunit 96941 "Inventory Revaluation Tests"
         InventorySetup."Average Cost Calc. Type" := InventorySetup."Average Cost Calc. Type"::Item;
         InventorySetup.Modify();
         LibraryInventory.CreateItem(Item);
+        if Method = Method::Specific then begin
+            LibraryInventory.CreateItemTrackingCode(TrackingCode);
+            TrackingCode.Validate("SN Specific Tracking", true);
+            TrackingCode.Modify(true);
+            Item.Validate("Item Tracking Code", TrackingCode.Code);
+        end;
         Item.Validate("Costing Method", Method);
         if Method = Method::Standard then
             Item.Validate("Standard Cost", 12);
@@ -609,7 +639,29 @@ codeunit 96941 "Inventory Revaluation Tests"
         JournalLine.Validate("Posting Date", WorkDate());
         JournalLine.Validate("Unit Amount", 12);
         JournalLine.Modify(true);
+        if Method = Method::Specific then
+            AssignNativeSerials(JournalLine);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+    end;
+
+    local procedure AssignNativeSerials(Line: Record "Item Journal Line")
+    var
+        Source: Record "Tracking Specification";
+        TempTracking: Record "Tracking Specification" temporary;
+        Reserve: Codeunit "Item Jnl. Line-Reserve";
+        TrackingLines: Page "Item Tracking Lines";
+        SerialIndex: Integer;
+    begin
+        Reserve.InitFromItemJnlLine(Source, Line);
+        for SerialIndex := 1 to 2 do begin
+            TempTracking := Source;
+            TempTracking."Entry No." := SerialIndex;
+            TempTracking."Quantity (Base)" := 1;
+            TempTracking."Serial No." := CopyStr('RV-SERIAL-' + Format(SerialIndex), 1, 50);
+            TempTracking.Insert();
+        end;
+        TrackingLines.SetBlockCommit(true);
+        TrackingLines.RegisterItemTrackingLines(Source, WorkDate(), TempTracking);
     end;
 
     local procedure CreateBatch(var Batch: Record "Item Journal Batch"; JournalType: Enum "Item Journal Template Type")
