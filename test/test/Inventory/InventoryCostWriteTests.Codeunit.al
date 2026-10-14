@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -71,6 +72,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         PreviousCost := Item."Last Direct Cost";
         Request.Add('lastDirectCost', 99);
         InitArgument(TempArgument, Item."No.", Request);
+        Commit(); // Preserve the owned fixture across the expected transaction rollback.
         asserterror CostWrite.UpdateCost(TempArgument);
         Assert.ExpectedError('Inventory.Revaluation.Post');
         Item.Get(Item."No.");
@@ -93,6 +95,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         Item.Modify(true);
         Request.Add('unitCost', 18);
         InitArgument(TempArgument, Item."No.", Request);
+        Commit(); // Preserve the owned fixture across the expected transaction rollback.
         asserterror CostWrite.UpdateCost(TempArgument);
         Assert.ExpectedError('blocked');
         Item.Get(Item."No.");
@@ -119,6 +122,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('unitCost', 99);
         Request.Add('expectedCostingMethod', 'Average');
         InitArgument(TempArgument, Item."No.", Request);
+        Commit(); // Preserve the owned fixture across the expected transaction rollback.
         asserterror CostWrite.UpdateCost(TempArgument);
         Assert.ExpectedError('expectedCostingMethod');
         Item.Get(Item."No.");
@@ -148,6 +152,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('unitCost', 99);
         Request.Add('lastDirectCost', 88);
         InitArgument(TempArgument, Item."No.", Request);
+        Commit(); // Preserve the owned fixture across the expected transaction rollback.
         asserterror CostWrite.UpdateCost(TempArgument);
         Assert.ExpectedError('Permission denied');
         Item.Get(Item."No.");
@@ -171,6 +176,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         // Story #4 write safety | Time: independent | Risk: no broad default for writes.
         Request.Add('unitCost', 1);
         InitArgument(TempArgument, '', Request);
+        Commit(); // Preserve the owned fixture across the expected transaction rollback.
         asserterror CostWrite.UpdateCost(TempArgument);
         Assert.ExpectedError('exactly one item');
     end;
@@ -281,8 +287,16 @@ codeunit 96937 "Inventory Cost Write Tests"
     end;
 
     local procedure CreateItem(var Item: Record Item; Method: Enum "Costing Method")
+    var
+        TrackingCode: Record "Item Tracking Code";
     begin
         LibraryInventory.CreateItem(Item);
+        if Method = Method::Specific then begin
+            LibraryInventory.CreateItemTrackingCode(TrackingCode);
+            TrackingCode.Validate("SN Specific Tracking", true);
+            TrackingCode.Modify(true);
+            Item.Validate("Item Tracking Code", TrackingCode.Code);
+        end;
         Item.Validate("Costing Method", Method);
         Item.Validate("Unit Cost", 10);
         Item.Modify(true);

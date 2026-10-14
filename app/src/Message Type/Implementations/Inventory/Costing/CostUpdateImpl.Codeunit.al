@@ -111,7 +111,7 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
         Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.Cost.Get","useInsteadWhen":"Read current costs without writing."},{"name":"Inventory.Revaluation.Post","useInsteadWhen":"Change Standard inventory value through native revaluation."}]');
+        Related.ReadFrom('[{"name":"Inventory.Cost.Get","useInsteadWhen":"Read current costs without writing."}]');
         exit(true);
     end;
 

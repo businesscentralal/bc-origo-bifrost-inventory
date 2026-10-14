@@ -80,7 +80,7 @@ codeunit 70013432 "Inventory Cost Read ori"
             until Item.Next() = 0;
     end;
 
-    local procedure InventoryAtDate(Item: Record Item; AsOfDate: Date): Decimal
+    local procedure InventoryAtDate(var Item: Record Item; AsOfDate: Date): Decimal
     var
         Ledger: Record "Item Ledger Entry";
     begin
