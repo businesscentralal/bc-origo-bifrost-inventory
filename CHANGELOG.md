@@ -2,6 +2,8 @@
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
+- Describe native journal selectors, required calculation/count inputs, legacy Record alternatives, actual error shapes and line results; supply complete examples and Icelandic discovery (70013465/70013466/70013474/70013475/70013479/70013493/70013496/70013472; tests 96921/96962).
+
 - Fill empty shipment undo Help and correct adjacent undo/application schemas, actual text versus typed error shapes, conditional legacy selectors and repeated-output behavior (70013480–70013482/70013490–70013492; tests 96921/96980/96982/96983). Preserve receipt undo refusal and native posting behavior.
 
 - Replace sample-only native journal/revaluation/price response chapters with typed fields matching actual outputs, and express parameters through the canonical contract builder while preserving typed defaults (native implementation objects; tests 96902/96939/96941/96960/96962).

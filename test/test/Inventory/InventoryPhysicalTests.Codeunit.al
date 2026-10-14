@@ -355,6 +355,119 @@ codeunit 96962 "Inventory Physical Tests"
         Assert.AreEqual(0, Line.Quantity, 'Native delta write rolled back.');
     end;
 
+    /// <summary>The public calculation example runs natively after substituting owned identifiers and accounting date.</summary>
+    [Test]
+    procedure Scenario_AC01_HelpCalculateExample_CreatesOnlyOwnedLines()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        BeforeEntries: Integer;
+    begin
+        // Issue #6 AC01 / #27 | Time: WorkDate replaces illustrative date | Risk: Help example omits input.
+        CreateStock(Item);
+        CreateBatch(Batch, "Item Journal Template Type"::"Phys. Inventory");
+        Request := HelpExampleData("Message Type ori"::"Inventory.PhysInventory.Calculate", 0);
+        Request.Replace('itemNo', Item."No.");
+        Request.Replace('postingDate', Format(WorkDate(), 0, 9));
+        InitArgument(TempArgument, Batch, Request);
+        BeforeEntries := Entries.Count();
+        Journal.Calculate(TempArgument);
+        FilterBatch(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'Published calculation example creates one selected native line.');
+        Line.FindFirst();
+        Assert.AreEqual(Item."No.", Line."Item No.", 'Only the owned item is selected.');
+        Assert.AreEqual(10, Line."Qty. (Calculated)", 'Native report reads actual owned stock.');
+        Assert.AreEqual('COUNT-001', Line."Document No.", 'Example document option reaches native calculation.');
+        Assert.AreEqual(BeforeEntries, Entries.Count(), 'Example does not post ledger entries.');
+    end;
+
+    /// <summary>The public batched count example writes explicit zero through native validation.</summary>
+    [Test]
+    procedure Scenario_AC02_HelpRecordCountExample_WritesZeroWithoutPosting()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Count: JsonObject;
+        Counts: JsonArray;
+        Token: JsonToken;
+        BeforeEntries: Integer;
+    begin
+        // Issue #6 AC02 / #27 | Time: native owned stock uses WorkDate | Risk: example drops explicit zero.
+        CreatePhysical(Item, Batch, Line);
+        Request := HelpExampleData("Message Type ori"::"Inventory.PhysInventory.RecordCount", 0);
+        Request.Get('counts', Token);
+        Counts := Token.AsArray();
+        Counts.Get(0, Token);
+        Count := Token.AsObject();
+        Count.Replace('lineNo', Line."Line No.");
+        Counts.Set(0, Count);
+        Request.Replace('counts', Counts);
+        InitArgument(TempArgument, Batch, Request);
+        TempArgument.Type := "Message Type ori"::"Inventory.PhysInventory.RecordCount";
+        BeforeEntries := Entries.Count();
+        Journal.RecordCount(TempArgument);
+        Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
+        Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Explicit example zero is written.');
+        Assert.AreEqual(10, Line.Quantity, 'Native validation calculates shortage.');
+        Assert.AreEqual(Line."Entry Type"::"Negative Adjmt.", Line."Entry Type", 'Native shortage has negative adjustment type.');
+        Assert.AreEqual(BeforeEntries, Entries.Count(), 'Count example does not post ledger entries.');
+    end;
+
+    /// <summary>The legacy example remains distinct from the canonical type and retains zero semantics.</summary>
+    [Test]
+    procedure Scenario_AC02_HelpLegacyRecordExample_RefusesCanonicalType()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        BeforeEntries: Integer;
+        BeforeCount: Decimal;
+    begin
+        // Issue #6 AC02 / #27 | Time: WorkDate | Risk: union Help silently broadens canonical input.
+        CreatePhysical(Item, Batch, Line);
+        Request := HelpExampleData("Message Type ori"::"Inventory.PhysInventory.Record", 1);
+        Request.Replace('lineNo', Line."Line No.");
+        InitArgument(TempArgument, Batch, Request);
+        TempArgument.Type := "Message Type ori"::"Inventory.PhysInventory.RecordCount";
+        BeforeCount := Line."Qty. (Phys. Inventory)";
+        BeforeEntries := Entries.Count();
+        Commit();
+        asserterror Journal.RecordCount(TempArgument);
+        Assert.ExpectedError('Unsupported journal parameter');
+        Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
+        Assert.AreEqual(BeforeCount, Line."Qty. (Phys. Inventory)", 'Wrong message type does not modify the count.');
+        TempArgument.Type := "Message Type ori"::"Inventory.PhysInventory.Record";
+        Journal.RecordCount(TempArgument);
+        Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
+        Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Legacy example zero is retained.');
+        Assert.AreEqual(BeforeEntries, Entries.Count(), 'Neither refusal nor count posts ledger entries.');
+    end;
+
+    local procedure HelpExampleData(MessageType: Enum "Message Type ori"; Index: Integer) Data: JsonObject
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Token: JsonToken;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Registered public Help exists.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(Index, Token);
+        Token.AsObject().Get('request', Token);
+        Token.AsObject().Get('data', Token);
+        Data := Token.AsObject();
+    end;
+
     local procedure CreatePhysical(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")
     var
         TempArgument: Record "Message Argument ori" temporary;

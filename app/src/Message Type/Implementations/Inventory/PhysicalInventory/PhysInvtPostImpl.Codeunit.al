@@ -8,7 +8,13 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
 {
     Access = Internal;
 
-    /// <summary>Requires company Reclassification, native journal writes and a posting token.</summary>
+    var
+        DescriptionLbl: Label 'Posts native physical-inventory lines and returns item and physical inventory ledger ranges.', Comment = 'is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna.';
+        SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
+        KeywordsLbl: Label 'inventory journal physical count calculate check preview post', Comment = 'is-IS=birgðir bók talning reikna athuga forskoða bóka';
+        OverviewLbl: Label 'Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Only selected lines are posted; native failure rolls back the operation. Licensed dispatch and company domain gates apply.', Comment = 'is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.';
+
+    /// <summary>Checks the company domain and the native permissions required by this operation.</summary>
     procedure IsEnabled(): Boolean
     var
         Gate: Codeunit "Inventory Domain Gate ori";
@@ -50,7 +56,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
                 Argument.RespondWithError(GetLastErrorText());
     end;
 
-    /// <summary>Returns the native reclassification envelope contract.</summary>
+    /// <summary>Returns the native journal envelope contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
@@ -58,7 +64,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification target contract.</summary>
+    /// <summary>Returns the native journal target contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     begin
         Clear(Target);
@@ -66,21 +72,21 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification parameters contract.</summary>
+    /// <summary>Returns the native journal parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, ''));
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Existing journal template name, at most 10 characters. Supply with batchName unless subject identifies the same batch.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Existing journal batch name, at most 10 characters. All supplied selectors must agree.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Legacy alias for templateName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Legacy alias for batchName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct line SystemIds in the selected batch. Omit to select the whole batch.'));
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification response contract.</summary>
+    /// <summary>Returns the native journal response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -94,22 +100,27 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Fields.Add(ContractMgt.ResponseField('toEntryNo', 'integer', 'Last item ledger entry number in the native register.'));
         Fields.Add(ContractMgt.ResponseField('fromPhysInventoryEntryNo', 'integer', 'First physical inventory ledger entry in the native register; may be zero for nonphysical journals.'));
         Fields.Add(ContractMgt.ResponseField('toPhysInventoryEntryNo', 'integer', 'Last physical inventory ledger entry in the native register; may be zero for nonphysical journals.'));
-        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected line results; RecordCount includes before/after counts and counted state.'));
+        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
         Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification errors contract.</summary>
+    /// <summary>Returns the native journal errors contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"PreconditionFailed","when":"Wrong journal type, recurring or invalid batch, or native calculation/posting failure."},{"code":"PermissionDenied","when":"Company/native permission or posting gate refuses caller."},{"code":"InvalidParameter","when":"Parameters are malformed or unsupported."}]');
+        Errors.Add(ContractMgt.TextErrorEntry('Native journal selection or validation error.', 'Missing or conflicting batch selectors, invalid template, recurring batch, malformed line selection, unsupported parameters or native validation failure.', 'Select an existing batch of the required template type and correct the native error before retrying.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, native table or item-posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company domain is disabled or a typed request value is invalid.', 'Enable the domain or correct the indicated request value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected journal contains no lines.', 'Select a nonempty journal batch or valid line subset.'));
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification effect contract.</summary>
+    /// <summary>Returns the native journal effect contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
@@ -117,7 +128,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification related contract.</summary>
+    /// <summary>Returns the native journal related contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
         Clear(Related);
@@ -125,11 +136,11 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification examples contract.</summary>
+    /// <summary>Returns the native journal examples contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Posts native physical-inventory lines and returns item and physical inventory ledger ranges.","request":{"type":"Inventory.PhysInventory.Post","subject":"PHYS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Post","subject":"PHYS|OWNED"}}]');
         exit(true);
     end;
 
@@ -147,35 +158,35 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         exit(false);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Posts native physical-inventory lines and returns item and physical inventory ledger ranges.');
+        exit(DescriptionLbl);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Posts native physical-inventory lines and returns item and physical inventory ledger ranges.');
+        exit(SelectionLbl);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('Posts native physical-inventory lines and returns item and physical inventory ledger ranges.');
+        exit(KeywordsLbl);
     end;
 
-    /// <summary>Explains native reclassification constraints.</summary>
+    /// <summary>Explains native journal constraints.</summary>
     procedure GetOverview(var Value: Text): Boolean
     begin
-        Value := 'Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Existing nonrecurring Phys. Inventory template batch required. Calculate requires an empty batch, postingDate and documentNo. RecordCount accepts counts with lineNo or systemId and optional qtyCounted; every supplied count is atomic. Check/Post/PreviewPost support lineSystemIds. Native uncounted quantities are not given invented state fields. Normal licensed dispatch applies.';
+        Value := OverviewLbl;
         exit(true);
     end;
 
-    /// <summary>Explains native reclassification constraints.</summary>
+    /// <summary>Explains native journal constraints.</summary>
     procedure GetNotes(var Value: Text): Boolean
     begin
-        Value := 'Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Existing nonrecurring Phys. Inventory template batch required. Calculate requires an empty batch, postingDate and documentNo. RecordCount accepts counts with lineNo or systemId and optional qtyCounted; every supplied count is atomic. Check/Post/PreviewPost support lineSystemIds. Native uncounted quantities are not given invented state fields. Normal licensed dispatch applies.';
+        Value := OverviewLbl;
         exit(true);
     end;
 }

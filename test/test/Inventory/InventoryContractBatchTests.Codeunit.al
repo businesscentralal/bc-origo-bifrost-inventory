@@ -13,6 +13,176 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure PhysCalculate_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.PhysInventory.Calculate', 'status:string,templateName:string,batchName:string,linesCreated:integer,posted:boolean', 3);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure PhysRecordCount_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.PhysInventory.RecordCount', 'status:string,templateName:string,batchName:string,result:array,lineNo:integer,quantity:decimal,quantityCalculated:decimal', 3);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure PhysCheck_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.PhysInventory.Check', 'status:string,templateName:string,batchName:string,validationResult:string,lineCount:integer,errorCount:integer,warningCount:integer,errors:array,warnings:array', 3);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure PhysPreview_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.PhysInventory.PreviewPost', 'status:string,templateName:string,batchName:string,linesToPost:integer,rollback:boolean,preview:array,totals:object,result:array,entryCount:integer,glEntryCount:integer', 5);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure PhysPost_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.PhysInventory.Post', 'status:string,templateName:string,batchName:string,postedLineCount:integer,itemRegisterNo:integer,fromEntryNo:integer,toEntryNo:integer,fromPhysInventoryEntryNo:integer,toPhysInventoryEntryNo:integer,result:array', 4);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure ReclassCheck_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.Reclassification.Check', 'status:string,templateName:string,batchName:string,validationResult:string,lineCount:integer,errorCount:integer,warningCount:integer,errors:array,warnings:array', 3);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure ReclassPreview_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.Reclassification.PreviewPost', 'status:string,templateName:string,batchName:string,linesToPost:integer,rollback:boolean,preview:array,totals:object,result:array,entryCount:integer,glEntryCount:integer', 5);
+    end;
+
+    /// <summary>Registered journal Help declares exact native response fields and actionable error shapes.</summary>
+    [Test]
+    procedure ReclassPost_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #6/#34/#27/#30 | Time: independent | Risk: registered Help drift.
+        AssertNativeHelp('Inventory.Reclassification.Post', 'status:string,templateName:string,batchName:string,postedLineCount:integer,itemRegisterNo:integer,fromEntryNo:integer,toEntryNo:integer,fromPhysInventoryEntryNo:integer,toPhysInventoryEntryNo:integer,result:array', 4);
+    end;
+
+    /// <summary>Public Help explains conditional legacy input and provides complete native write examples.</summary>
+    [Test]
+    procedure JournalHelp_ParametersAndExamples_DescribeRequiredData()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Data: JsonObject;
+        Token: JsonToken;
+    begin
+        // Issues #6/#27/#30 | Time: example date is illustrative | Risk: example cannot execute.
+        ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.Calculate", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'postingDate', Parameter);
+        Parameter.Get('required', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Calculation requires postingDate.');
+        GetNamedMember(Contract, 'parameters', 'name', 'documentNo', Parameter);
+        Parameter.Get('required', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Calculation requires documentNo.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Data := Token.AsObject();
+        LibraryAssert.IsTrue(Data.Contains('postingDate'), 'Published example supplies postingDate.');
+        LibraryAssert.IsTrue(Data.Contains('documentNo'), 'Published example supplies documentNo.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.RecordCount", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'counts', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Required for RecordCount'), 'Canonical required array is documented.');
+        GetNamedMember(Contract, 'parameters', 'name', 'quantity', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Not accepted by RecordCount'), 'Legacy selector is not advertised for the canonical type.');
+        Contract.Get('examples', Token);
+        LibraryAssert.AreEqual(2, Token.AsArray().Count(), 'Canonical and legacy examples are distinct.');
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Data := Token.AsObject();
+        LibraryAssert.IsTrue(Data.Contains('counts'), 'Canonical example supplies counts.');
+    end;
+
+    /// <summary>Every registered journal contract explains selectors and exposes translated discovery.</summary>
+    [Test]
+    procedure JournalHelp_AllRegisteredTypes_DescribeSelectorsInBothLocales()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Discovery: Interface "Msg Discovery ori";
+        MessageInterface: Interface "Msg Interface ori";
+        MessageType: Enum "Message Type ori";
+        Names: List of [Text];
+        Name: Text;
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Token: JsonToken;
+        Value: JsonToken;
+        EnglishDescription: Text;
+        EnglishSelection: Text;
+        EnglishKeywords: Text;
+        IcelandicDescription: Text;
+        IcelandicSelection: Text;
+        IcelandicKeywords: Text;
+        PreviousLanguage: Integer;
+    begin
+        // Issues #6/#34/#32/#33 | Time: independent | Risk: labels compile but do not change language.
+        Names.Add('Inventory.PhysInventory.Calculate');
+        Names.Add('Inventory.PhysInventory.RecordCount');
+        Names.Add('Inventory.PhysInventory.Check');
+        Names.Add('Inventory.PhysInventory.PreviewPost');
+        Names.Add('Inventory.PhysInventory.Post');
+        Names.Add('Inventory.Reclassification.Check');
+        Names.Add('Inventory.Reclassification.PreviewPost');
+        Names.Add('Inventory.Reclassification.Post');
+        Names.Add('Inventory.PhysInventory.Record');
+        PreviousLanguage := GlobalLanguage();
+        foreach Name in Names do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(Name));
+            ContractMgt.GetContract(MessageType, Contract);
+            Contract.Get('parameters', Token);
+            foreach Token in Token.AsArray() do begin
+                Parameter := Token.AsObject();
+                LibraryAssert.IsTrue(Parameter.Get('description', Value), Name + ' parameter has a description.');
+                LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), Name + ' parameter describes selection or value semantics.');
+            end;
+            Discovery := MessageType;
+            MessageInterface := MessageType;
+            GlobalLanguage(1033);
+            EnglishDescription := MessageInterface.GetDescription();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            GlobalLanguage(1039);
+            IcelandicDescription := MessageInterface.GetDescription();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            IcelandicKeywords := Discovery.GetKeywords();
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, Name + ' description changes language.');
+            LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, Name + ' selection changes language.');
+            LibraryAssert.AreNotEqual(EnglishKeywords, IcelandicKeywords, Name + ' keywords change language.');
+        end;
+    end;
+
     /// <summary>Shipping Help resolves meaningful UndoShipment schemas and errors through the registered contract reader.</summary>
     [Test]
     procedure UndoShipment_PublicHelp_DeclaresNativeFieldsAndErrors()

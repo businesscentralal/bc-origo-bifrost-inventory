@@ -8,7 +8,13 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 {
     Access = Internal;
 
-    /// <summary>Requires company Reclassification, native journal writes and a posting token.</summary>
+    var
+        DescriptionLbl: Label 'Checks selected Transfer journal lines with native Item Jnl.-Check Line.', Comment = 'is-IS=Athugar línur endurflokkunarbókar með innbyggðri sannprófun.';
+        SelectionLbl: Label 'Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
+        KeywordsLbl: Label 'inventory journal reclassification transfer check preview post', Comment = 'is-IS=birgðir bók endurflokkun millifærsla athuga forskoða bóka';
+        OverviewLbl: Label 'Checks selected Transfer journal lines with native Item Jnl.-Check Line. Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Checks selected lines without writes. Invalid lines return NotReady with errors; future dates can return ReadyWithWarnings. Licensed dispatch and company domain gates apply.', Comment = 'is-IS=Athugar línur endurflokkunarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.';
+
+    /// <summary>Checks the company domain and the native permissions required by this operation.</summary>
     procedure IsEnabled(): Boolean
     var
         Gate: Codeunit "Inventory Domain Gate ori";
@@ -41,7 +47,7 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Journal.Check(Argument, "Item Journal Template Type"::Transfer);
     end;
 
-    /// <summary>Returns the native reclassification envelope contract.</summary>
+    /// <summary>Returns the native journal envelope contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
@@ -49,7 +55,7 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification target contract.</summary>
+    /// <summary>Returns the native journal target contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     begin
         Clear(Target);
@@ -57,21 +63,21 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification parameters contract.</summary>
+    /// <summary>Returns the native journal parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, ''));
-        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, ''));
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Existing journal template name, at most 10 characters. Supply with batchName unless subject identifies the same batch.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Existing journal batch name, at most 10 characters. All supplied selectors must agree.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Legacy alias for templateName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Legacy alias for batchName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct line SystemIds in the selected batch. Omit to select the whole batch.'));
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification response contract.</summary>
+    /// <summary>Returns the native journal response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -91,15 +97,19 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification errors contract.</summary>
+    /// <summary>Returns the native journal errors contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"PreconditionFailed","when":"Wrong journal type, recurring or invalid batch, or native calculation/posting failure."},{"code":"PermissionDenied","when":"Company/native permission or posting gate refuses caller."},{"code":"InvalidParameter","when":"Parameters are malformed or unsupported."}]');
+        Errors.Add(ContractMgt.TextErrorEntry('Native journal selection or validation error.', 'Missing or conflicting batch selectors, invalid template, recurring batch, malformed line selection, unsupported parameters or native validation failure.', 'Select an existing batch of the required template type and correct the native error before retrying.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, native table or item-posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company domain is disabled or a typed request value is invalid.', 'Enable the domain or correct the indicated request value.'));
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification effect contract.</summary>
+    /// <summary>Returns the native journal effect contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
@@ -107,7 +117,7 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification related contract.</summary>
+    /// <summary>Returns the native journal related contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     begin
         Clear(Related);
@@ -115,11 +125,11 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>Returns the native reclassification examples contract.</summary>
+    /// <summary>Returns the native journal examples contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Check selected Transfer journal lines","request":{"type":"Inventory.Reclassification.Check","subject":"RECLASS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.Reclassification.Check","subject":"RECLASS|OWNED"}}]');
         exit(true);
     end;
 
@@ -137,35 +147,35 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         exit(false);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+        exit(DescriptionLbl);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+        exit(SelectionLbl);
     end;
 
-    /// <summary>Describes native reclassification behavior.</summary>
+    /// <summary>Describes native journal behavior.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+        exit(KeywordsLbl);
     end;
 
-    /// <summary>Explains native reclassification constraints.</summary>
+    /// <summary>Explains native journal constraints.</summary>
     procedure GetOverview(var Value: Text): Boolean
     begin
-        Value := 'Checks selected Transfer journal lines with native Item Jnl.-Check Line. Existing nonrecurring Transfer template batch required. Optional lineSystemIds selects distinct lines from that batch only. Native line validation, rollback preview and batch posting retain the subset. No transfer order is created. Normal licensed dispatch applies.';
+        Value := OverviewLbl;
         exit(true);
     end;
 
-    /// <summary>Explains native reclassification constraints.</summary>
+    /// <summary>Explains native journal constraints.</summary>
     procedure GetNotes(var Value: Text): Boolean
     begin
-        Value := 'Checks selected Transfer journal lines with native Item Jnl.-Check Line. Existing nonrecurring Transfer template batch required. Optional lineSystemIds selects distinct lines from that batch only. Native line validation, rollback preview and batch posting retain the subset. No transfer order is created. Normal licensed dispatch applies.';
+        Value := OverviewLbl;
         exit(true);
     end;
 }

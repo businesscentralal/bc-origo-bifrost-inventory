@@ -1035,6 +1035,78 @@
           <note from="Developer" annotates="general" priority="2">%1 = ending date||is-IS=Birgðatímabil sem lýkur %1 fannst ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</source>
+          <target>Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 177427374 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal physical count calculate check preview post</source>
+          <target>birgðir bók talning reikna athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 177427374 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires an empty batch, postingDate and documentNo. Calculation writes journal lines without posting. Licensed dispatch and company domain gates apply.</source>
+          <target>Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst tómrar keyrslu, postingDate og documentNo. Útreikningur stofnar bókarlínur án bókunar. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst tómrar keyrslu, postingDate og documentNo. Útreikningur stofnar bókarlínur án bókunar. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 177427374 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 449648083 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Checks physical-inventory journal lines through native Item Jnl.-Check Line.</source>
+          <target>Athugar línur talningarbókar með innbyggðri sannprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur talningarbókar með innbyggðri sannprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 449648083 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal physical count calculate check preview post</source>
+          <target>birgðir bók talning reikna athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 449648083 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Checks physical-inventory journal lines through native Item Jnl.-Check Line. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Checks selected lines without writes. Invalid lines return NotReady with errors; future dates can return ReadyWithWarnings. Licensed dispatch and company domain gates apply.</source>
+          <target>Athugar línur talningarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur talningarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 449648083 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1026798855 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previews native physical-inventory posting with rollback and captured ledger entries.</source>
+          <target>Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1026798855 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal physical count calculate check preview post</source>
+          <target>birgðir bók talning reikna athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1026798855 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previews native physical-inventory posting with rollback and captured ledger entries. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Preview entries are rolled back; selected journal lines remain unchanged. Licensed dispatch and company domain gates apply.</source>
+          <target>Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1026798855 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1357197818 - NamedType 3832473495" size-unit="char" translate="yes" xml:space="preserve">
           <source>journalBatchName is required.</source>
           <target>journalBatchName er nauðsynlegt.</target>
@@ -1046,6 +1118,126 @@
           <target>journalTemplateName er nauðsynlegt.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=journalTemplateName er nauðsynlegt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Calc Impl ori - NamedType MissingTemplateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts native physical-inventory lines and returns item and physical inventory ledger ranges.</source>
+          <target>Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal physical count calculate check preview post</source>
+          <target>birgðir bók talning reikna athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Only selected lines are posted; native failure rolls back the operation. Licensed dispatch and company domain gates apply.</source>
+          <target>Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1628414762 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero.</source>
+          <target>Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1628414762 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal physical count calculate check preview post</source>
+          <target>birgðir bók talning reikna athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1628414762 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. RecordCount requires counts. The legacy Record type also accepts lineNo and quantity when counts is absent. Each supplied count uses native validation and the operation is atomic. Licensed dispatch and company domain gates apply.</source>
+          <target>Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. RecordCount krefst counts. Eldri gerðin Record tekur einnig við lineNo og quantity þegar counts vantar. Innbyggð sannprófun gildir um hverja talningu og aðgerðin er óskipt. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. RecordCount krefst counts. Eldri gerðin Record tekur einnig við lineNo og quantity þegar counts vantar. Innbyggð sannprófun gildir um hverja talningu og aðgerðin er óskipt. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1628414762 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Checks selected Transfer journal lines with native Item Jnl.-Check Line.</source>
+          <target>Athugar línur endurflokkunarbókar með innbyggðri sannprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur endurflokkunarbókar með innbyggðri sannprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal reclassification transfer check preview post</source>
+          <target>birgðir bók endurflokkun millifærsla athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók endurflokkun millifærsla athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Checks selected Transfer journal lines with native Item Jnl.-Check Line. Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Checks selected lines without writes. Invalid lines return NotReady with errors; future dates can return ReadyWithWarnings. Licensed dispatch and company domain gates apply.</source>
+          <target>Athugar línur endurflokkunarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur endurflokkunarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts selected Transfer journal lines through native Item Jnl.-Post Batch.</source>
+          <target>Bókar valdar línur endurflokkunarbókar með innbyggðri vörubókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valdar línur endurflokkunarbókar með innbyggðri vörubókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal reclassification transfer check preview post</source>
+          <target>birgðir bók endurflokkun millifærsla athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók endurflokkun millifærsla athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts selected Transfer journal lines through native Item Jnl.-Post Batch. Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Only selected lines are posted; native failure rolls back the operation. Licensed dispatch and company domain gates apply.</source>
+          <target>Bókar valdar línur endurflokkunarbókar með innbyggðri vörubókun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valdar línur endurflokkunarbókar með innbyggðri vörubókun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previews selected Transfer journal lines through native posting rollback.</source>
+          <target>Forskoðar bókun endurflokkunarbókar án þess að varðveita bókaðar færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun endurflokkunarbókar án þess að varðveita bókaðar færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory journal reclassification transfer check preview post</source>
+          <target>birgðir bók endurflokkun millifærsla athuga forskoða bóka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók endurflokkun millifærsla athuga forskoða bóka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Previews selected Transfer journal lines through native posting rollback. Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Preview entries are rolled back; selected journal lines remain unchanged. Licensed dispatch and company domain gates apply.</source>
+          <target>Forskoðar bókun endurflokkunarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun endurflokkunarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Transfer journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>
