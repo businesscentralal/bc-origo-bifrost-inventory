@@ -277,6 +277,77 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsFalse(PendingEntry.IsEmpty(), 'Unselected pending entry is preserved.');
     end;
 
+    /// <summary>Native posting-date selection leaves excluded pending costs intact before posting the same owned entry.</summary>
+    [Test]
+    [HandlerFunctions('PostingMessageHandler')]
+    procedure NativePostHonorsPostingDateFilter()
+    var
+        Item: Record Item;
+        ValueEntry: Record "Value Entry";
+        PendingEntry: Record "Post Value Entry to G/L";
+        GLEntry: Record "G/L Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        GLBefore: Integer;
+        PendingBefore: Integer;
+    begin
+        CreateUnpostedCost(Item);
+        PendingEntry.SetRange("Item No.", Item."No.");
+        PendingBefore := PendingEntry.Count();
+        Assert.IsTrue(PendingBefore > 0, 'Owned cost is pending before selection.');
+        GLBefore := GLEntry.Count();
+        Request.Add('itemNo', Item."No.");
+        Request.Add('postingDateFilter', Format(WorkDate() + 1, 0, 9));
+        CostReports.PostCostToGL(Request, Response);
+        Assert.AreEqual(GLBefore, GLEntry.Count(), 'Excluded date creates no G/L entries.');
+        Assert.AreEqual(PendingBefore, PendingEntry.Count(), 'Excluded date preserves pending costs.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Excluded cost remains unposted.');
+        Request.Replace('postingDateFilter', Format(WorkDate(), 0, 9));
+        CostReports.PostCostToGL(Request, Response);
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(24, ValueEntry."Cost Posted to G/L", 'Matching date posts the actual two-unit cost.');
+        Assert.IsTrue(PendingEntry.IsEmpty(), 'Successfully posted owned pending entry is consumed.');
+    end;
+
+    /// <summary>Native posting-group mode uses its output document number while preserving the excluded item.</summary>
+    [Test]
+    [HandlerFunctions('PostingMessageHandler')]
+    procedure NativePostPerPostingGroupUsesDocumentNumber()
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        ValueEntry: Record "Value Entry";
+        PendingEntry: Record "Post Value Entry to G/L";
+        GLEntry: Record "G/L Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        LastEntryNo: Integer;
+    begin
+        CreateUnpostedCost(Item);
+        CreateUnpostedCost(OtherItem);
+        if GLEntry.FindLast() then
+            LastEntryNo := GLEntry."Entry No.";
+        Request.Add('itemNo', Item."No.");
+        Request.Add('perPostingGroup', true);
+        Request.Add('documentNo', 'OWNED-COST-GROUP');
+        CostReports.PostCostToGL(Request, Response);
+        GLEntry.SetFilter("Entry No.", '>%1', LastEntryNo);
+        Assert.IsTrue(GLEntry.FindSet(), 'Native posting group creates real G/L entries.');
+        repeat
+            Assert.AreEqual('OWNED-COST-GROUP', GLEntry."Document No.", 'Document number is an output option.');
+        until GLEntry.Next() = 0;
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(24, ValueEntry."Cost Posted to G/L", 'Selected real cost is posted once.');
+        ValueEntry.SetRange("Item No.", OtherItem."No.");
+        ValueEntry.CalcSums("Cost Posted to G/L");
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Other item remains unposted.');
+        PendingEntry.SetRange("Item No.", OtherItem."No.");
+        Assert.IsFalse(PendingEntry.IsEmpty(), 'Excluded pending cost is preserved.');
+    end;
+
     /// <summary>Report 795 adjusts only the selected self-posted item through its real request-page path.</summary>
     [Test]
     procedure NativeAdjustmentHonorsItemSelection()

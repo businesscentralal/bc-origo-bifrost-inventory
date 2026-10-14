@@ -1,5 +1,7 @@
 # Changelog
 
+- Verify native CostToGL.Post date inclusion/exclusion and posting-group output document numbers while preserving other pending costs (test codeunit 96931; issues #4/#35).
+
 - Add an owned native contention probe that starts two independent BC sessions against the same reservation supply or application pair, records actual insert-transaction overlap and refuses double consumption (test-only table 96990/codeunits 96991–96993; issues #7/#40).
 
 - Read native source reservation tracking when describing reclassification preview/post results; retain scalar identity for a single assignment and include all assignments with base quantities in `tracking` (codeunit 70013463; issue #34).
