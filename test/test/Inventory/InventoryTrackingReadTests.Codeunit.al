@@ -169,6 +169,64 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(Response, 'status', 'Error');
     end;
 
+    /// <summary>An existing item with no tracking returns RecordNotFound without changing native rows.</summary>
+    [Test]
+    procedure Scenario_AC3_UntrackedItemReturnsNotFoundWithoutWrites()
+    begin
+        AssertUntrackedReadHasNoWrites(false);
+    end;
+
+    /// <summary>An existing document line with no tracking returns RecordNotFound without changing native rows.</summary>
+    [Test]
+    procedure Scenario_AC3_UntrackedDocumentReturnsNotFoundWithoutWrites()
+    begin
+        AssertUntrackedReadHasNoWrites(true);
+    end;
+
+    local procedure AssertUntrackedReadHasNoWrites(ReadDocument: Boolean)
+    var
+        Item: Record Item;
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Ledger: Record "Item Ledger Entry";
+        Specification: Record "Tracking Specification";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryCount: Integer;
+        LedgerCount: Integer;
+        SpecificationCount: Integer;
+        ItemModifiedAt: DateTime;
+        LineModifiedAt: DateTime;
+    begin
+        // Story #5 AC03 | Time: independent | Risk: empty reads must not create tracking or modify source records.
+        LibraryInventory.CreateItem(Item);
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
+        Item.Get(Item."No.");
+        ItemModifiedAt := Item.SystemModifiedAt;
+        LineModifiedAt := PurchaseLine.SystemModifiedAt;
+        EntryCount := Entry.Count();
+        LedgerCount := Ledger.Count();
+        SpecificationCount := Specification.Count();
+        if ReadDocument then
+            Request := DocumentRequest(PurchaseLine)
+        else
+            Request.Add('itemNo', Item."No.");
+
+        ExecuteRead(Request, 0, Response);
+
+        AssertText(Response, 'status', 'Error');
+        AssertText(Response, 'code', 'RecordNotFound');
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Empty read creates no reservation entries.');
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Empty read creates no ledger entries.');
+        Assert.AreEqual(SpecificationCount, Specification.Count(), 'Empty read creates no tracking specifications.');
+        Item.Get(Item."No.");
+        PurchaseLine.Get(PurchaseLine."Document Type", PurchaseLine."Document No.", PurchaseLine."Line No.");
+        Assert.AreEqual(ItemModifiedAt, Item.SystemModifiedAt, 'Empty read leaves the item unchanged.');
+        Assert.AreEqual(LineModifiedAt, PurchaseLine.SystemModifiedAt, 'Empty read leaves the document line unchanged.');
+    end;
+
     /// <summary>Malformed tracking filters and fractional paging never silently broaden reads.</summary>
     [Test]
     procedure Scenario_AC3_InvalidFilterAndPagingReturnError()

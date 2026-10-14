@@ -1,5 +1,7 @@
 # Changelog
 
+- Verify structured RecordNotFound and unchanged native records for existing untracked items/documents; prove successful document, stock and availability reads under actual read-only permissions (test codeunits 96927/96929; issue #5).
+
 - Verify Inventory.Cost.Update refuses a real read-only caller before licensing and allows discovery with native Item writes without conferring an Inventory posting token (test codeunit 96933; issue #4).
 
 - Extend native tracking coverage to sales/purchase returns, invoices and credit memos, negative-adjustment journals and inbound transfers, including source and composite-document read-back of signed quantities; verify source-only reservation cancellation and repeat no-op alongside entry-selected modes for every shared W1 lifecycle fixture (test codeunits 96925/96926; issues #5/#7/#37).
