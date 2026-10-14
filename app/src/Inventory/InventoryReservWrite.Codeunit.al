@@ -35,6 +35,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         SupplySpecification: Record "Tracking Specification";
         SourceEntry: Record "Reservation Entry";
         SupplyEntry: Record "Reservation Entry";
+        ExistingSourceEntry: Record "Reservation Entry";
         ItemLedgerEntry: Record "Item Ledger Entry";
         Resolver: Codeunit "Inventory Source Resolve ori";
         Reader: Codeunit "Request Value Reader ori";
@@ -48,7 +49,9 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Response: JsonObject;
         Quantity: Decimal;
         QuantityBase: Decimal;
+        ReservedBaseBefore: Decimal;
         ExpectedDate: Date;
+        NativeQuantityErr: Label 'The native reservation operation did not reserve the requested base quantity for this source.', Comment = 'is-IS=Innbyggða frátektaraðgerðin tók ekki frá umbeðið grunnmagn fyrir þennan uppruna.';
         InvalidPairErr: Label 'Select distinct, opposite reservation sources for the same item, variant and location.', Comment = 'is-IS=Veldu aðskilda, gagnstæða frátektaruppruna fyrir sömu vöru, afbrigði og birgðageymslu.';
         InvalidQuantityErr: Label 'Reservation quantity must be positive and available on both sources.', Comment = 'is-IS=Frátekið magn verður að vera jákvætt og tiltækt á báðum upprunum.';
     begin
@@ -103,6 +106,11 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidQuantityErr, 'quantity', Format(Quantity, 0, 9), '', '');
             exit;
         end;
+        ExistingSourceEntry := SourceEntry;
+        ExistingSourceEntry.SetPointerFilter();
+        ExistingSourceEntry.SetRange("Reservation Status", ExistingSourceEntry."Reservation Status"::Reservation);
+        ExistingSourceEntry.CalcSums("Quantity (Base)");
+        ReservedBaseBefore := Abs(ExistingSourceEntry."Quantity (Base)");
         // Native source adapters call Create Reserv. Entry and preserve reservation pairing and UOM.
         if SourceRef.Number = Database::"Item Ledger Entry" then begin
             SourceRef.SetTable(ItemLedgerEntry);
@@ -118,8 +126,11 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         end;
         SourceEntry.SetPointerFilter();
         SourceEntry.SetRange("Reservation Status", SourceEntry."Reservation Status"::Reservation);
-        if SourceEntry.FindLast() then
-            Response.Add('entryNo', SourceEntry."Entry No.");
+        SourceEntry.CalcSums("Quantity (Base)");
+        if Abs(SourceEntry."Quantity (Base)") <> ReservedBaseBefore + QuantityBase then
+            Error(NativeQuantityErr);
+        SourceEntry.FindLast();
+        Response.Add('entryNo', SourceEntry."Entry No.");
         Response.Add('status', 'Success');
         Response.Add('quantity', Quantity);
         Response.Add('quantityBase', QuantityBase);

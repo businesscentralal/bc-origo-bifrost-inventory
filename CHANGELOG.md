@@ -1,6 +1,6 @@
 # Changelog
 
-- Verify native project planning and project journal reservation pairs, source pointers, balanced quantities and both source/entry cancellation paths (test codeunit 96926; issue #7).
+- Verify native project planning reservation pairs, source pointers, balanced quantities and both cancellation paths; refuse native project-journal no-ops instead of returning Success without a reservation. Measure the exact source-reserved base-quantity increase before any success response (codeunit 10036915; test 96926; issue #7).
 
 - Verify Icelandic blocked-item cost/price refusals and unchanged native values; retain invariant allowBlocked request key (tests 96937/96939; issues #4/#32/#33).
 

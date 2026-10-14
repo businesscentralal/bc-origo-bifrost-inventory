@@ -721,17 +721,19 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertNativeRoundTrip(Request, Database::"Job Planning Line", Job."No.", '', PlanningLine."Job Contract Entry No.", false, 2, 0);
     end;
 
-    /// <summary>A native project journal demand uses its exact template, batch and line for both reservation and cancellation.</summary>
+    /// <summary>A project journal tracking adapter without native CreateReservation support cannot report a successful reservation.</summary>
     [Test]
-    procedure JobJournalLinePairsAndCancelsInventory()
+    procedure JobJournalNativeNoOpRefusesWithoutReservations()
     var
         SalesLine: Record "Sales Line";
         Ledger: Record "Item Ledger Entry";
         Job: Record Job;
         JobTask: Record "Job Task";
         JournalLine: Record "Job Journal Line";
+        Entry: Record "Reservation Entry";
         LibraryJob: Codeunit "Library - Job";
         Request: JsonObject;
+        Response: JsonObject;
     begin
         CreateSources(SalesLine, Ledger);
         LibraryJob.CreateJob(Job);
@@ -746,7 +748,13 @@ codeunit 96926 "Inventory Reservation Tests"
         Request.Add('source', SourceObject('JobJournalLine', JournalLine.SystemId));
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
-        AssertNativeRoundTrip(Request, Database::"Job Journal Line", JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.", false, 2, 0);
+        Commit();
+        asserterror ExecuteReservation(Request, false, Response);
+        Assert.ExpectedError('did not reserve the requested base quantity');
+        Entry.SetRange("Item No.", SalesLine."No.");
+        Assert.IsTrue(Entry.IsEmpty(), 'A native no-op leaves no partial reservation or tracking rows.');
+        JournalLine.Get(JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.");
+        Assert.AreEqual(10, JournalLine.Quantity, 'Native source quantity is unchanged.');
     end;
 
     local procedure CreateFullyShippedSource(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry")
