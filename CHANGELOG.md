@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — native journal acceptance (#6, #34)
+
+- Replace reclassification count/echo stubs with native line checks, posting preview and filtered batch posting. Reject wrong template/entry types and malformed or foreign subsets; preserve unselected lines and return actual item register statistics (70013463/70013469/70013474/70013492/70013493; tests 96960–96961).
+
 ## Unreleased — costing report acceptance (#4, #35)
 
 - Replace Revaluation.Calculate estimates with native report 5899 journal proposals; add distinct native Post and rollback PreviewPost with register/entry statistics, batch-type checks and isolated acceptance fixtures (70013400–70013404/70013488; enum 70013434 values 70013438–70013439; tests 96941–96942).

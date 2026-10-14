@@ -321,6 +321,54 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.</source>
+          <target>Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType BatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected journal contains no lines.</source>
+          <target>Valin bók inniheldur engar línur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin bók inniheldur engar línur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2828025725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line %1 has a future posting date.</source>
+          <target>Lína %1 hefur bókunardagsetningu í framtíðinni.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Lína %1 hefur bókunardagsetningu í framtíðinni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType FutureDateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the selected journal lines before posting.</source>
+          <target>Leiðréttu valdar bókarlínur áður en bókað er.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu valdar bókarlínur áður en bókað er.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 567304435" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No native item register was produced.</source>
+          <target>Engin innbyggð vöruskrá var mynduð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin innbyggð vöruskrá var mynduð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NothingPostedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported journal parameter %1.</source>
+          <target>Bókafæribreytan %1 er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.</source>
+          <target>lineSystemIds verður að vera fylki sem er ekki tómt með aðgreindum SystemId sem tilheyra auðkenndri bókarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineSystemIds verður að vera fylki sem er ekki tómt með aðgreindum SystemId sem tilheyra auðkenndri bókarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType SelectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must be nonempty text of at most %2 characters.</source>
+          <target>Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2249393538 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
           <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
@@ -602,18 +650,6 @@
           <target>Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 274045509 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>reclassification journal, change item location, change lot</source>
-          <target>endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 274045509 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Validates a reclassification journal. Posting is a separate type.</source>
-          <target>Staðfestir endurflokkun. Bókun er sérstök tegund.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Staðfestir endurflokkun. Bókun er sérstök tegund.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer order %1 has no lines to post.</source>

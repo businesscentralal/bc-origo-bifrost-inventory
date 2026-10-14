@@ -3,188 +3,151 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
-/// <summary>
-/// Inventory.Reclassification.Check. Validates a reclassification journal. Does not post.
-/// </summary>
+/// <summary>Checks selected Transfer journal lines with native Item Jnl.-Check Line.</summary>
 codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Requires company Reclassification, native journal writes and a posting token.</summary>
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled(Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", true, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false));
     end;
 
+    /// <summary>Returns the batch selection table.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Journal Line");
+        exit(Database::"Item Journal Batch");
     end;
 
-    procedure GetDescription(): Text[250]
-    begin
-        exit('Checks a reclassification journal. Does not post.');
-    end;
-
-    procedure GetKeywords(): Text
-    var
-        KeywordsLbl: Label 'reclassification journal, change item location, change lot', Comment = 'is-IS=endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu';
-    begin
-        exit(KeywordsLbl);
-    end;
-
-    procedure GetSelectionDescription(): Text
-    var
-        SelectionLbl: Label 'Validates a reclassification journal. Posting is a separate type.', Comment = 'is-IS=Staðfestir endurflokkun. Bókun er sérstök tegund.';
-    begin
-        exit(SelectionLbl);
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('dataRequired', true);
-        Envelope.Add('version', '1.0');
-        Envelope.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        Parameter: JsonObject;
-    begin
-        Parameter.Add('name', 'templateName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Item journal template. journalTemplateName is also accepted.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'batchName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Item journal batch. journalBatchName is also accepted.');
-        Parameters.Add(Parameter);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.PreviewPost', 'Preview the reclassification posting without committing it.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Post', 'Post the reclassification journal after the check.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Checks a reclassification journal. Refuses templates that are not Transfer.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Notes := 'This is not a transfer order.';
-        exit(true);
-    end;
-
+    /// <summary>Reclassification requests use inbound dispatch.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
-        exit(Enum::"Msg Direction ori"::Inbound);
+        exit("Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalLine: Record "Item Journal Line";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        TemplateName: Code[10];
-        BatchName: Code[10];
-        LineCount: Integer;
-        MissingBatchErr: Label 'templateName and batchName are required.', Locked = true;
-        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name', Locked = true;
-        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name', Locked = true;
+        Gate: Codeunit "Inventory Domain Gate ori";
+        Journal: Codeunit "Inventory Native Journal ori";
     begin
-        Argument.AssertVersion1();
-        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", true, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then
             exit;
         Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        Journal.Check(Argument, "Item Journal Template Type"::Transfer);
+    end;
 
-        RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('templateName', Token) and Token.IsValue() then
-            TemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TemplateName))
-        else
-            if RequestJson.Get('journalTemplateName', Token) and Token.IsValue() then
-                TemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TemplateName));
-        if RequestJson.Get('batchName', Token) and Token.IsValue() then
-            BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName))
-        else
-            if RequestJson.Get('journalBatchName', Token) and Token.IsValue() then
-                BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName));
-        if (TemplateName = '') or (BatchName = '') then begin
-            Argument.RespondWithError(MissingBatchErr);
-            exit;
-        end;
-        if not ItemJournalTemplate.Get(TemplateName) then begin
-            Argument.RespondWithError(StrSubstNo(TemplateNotFoundErr, TemplateName));
-            exit;
-        end;
-        if ItemJournalTemplate.Type <> ItemJournalTemplate.Type::Transfer then begin
-            Argument.RespondWithError(StrSubstNo(NotTransferErr, TemplateName));
-            exit;
-        end;
+    /// <summary>Returns the native reclassification envelope contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
 
-        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
-        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::Transfer);
-        LineCount := ItemJournalLine.Count();
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.Reclassification.Check');
-        ResponseJson.Add('templateName', TemplateName);
-        ResponseJson.Add('batchName', BatchName);
-        ResponseJson.Add('postedLineCount', LineCount);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+    /// <summary>Returns the native reclassification target contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    begin
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Transfer template batch."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification parameters contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        Clear(Parameters);
+        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"journalTemplateName","type":"string","required":false},{"name":"journalBatchName","type":"string","required":false},{"name":"lineSystemIds","type":"array","required":false}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification response contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    begin
+        Clear(Response);
+        Response.ReadFrom('{"status":"Success","validationResult":"Ready","lineCount":0,"errors":[],"warnings":[]}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification errors contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    begin
+        Clear(Errors);
+        Errors.ReadFrom('[{"code":"PreconditionFailed","when":"Wrong journal type, recurring or invalid batch, or native calculation/posting failure."},{"code":"PermissionDenied","when":"Company/native permission or posting gate refuses caller."},{"code":"InvalidParameter","when":"Parameters are malformed or unsupported."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification effect contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.ReadFrom('{"writes":false,"posts":false,"rollback":false}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification related contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    begin
+        Clear(Related);
+        Related.ReadFrom('[{"name":"Inventory.Reclassification.PreviewPost","useInsteadWhen":"PreviewPost the journal."},{"name":"Inventory.Reclassification.Post","useInsteadWhen":"Post the journal."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification examples contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Check selected Transfer journal lines","request":{"type":"Inventory.Reclassification.Check","subject":"RECLASS|OWNED"}}]');
+        exit(true);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetMetering(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetWorkflow(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetDescription(): Text[250]
+    begin
+        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetSelectionDescription(): Text
+    begin
+        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetKeywords(): Text
+    begin
+        exit('Checks selected Transfer journal lines with native Item Jnl.-Check Line.');
+    end;
+
+    /// <summary>Explains native reclassification constraints.</summary>
+    procedure GetOverview(var Value: Text): Boolean
+    begin
+        Value := 'Checks selected Transfer journal lines with native Item Jnl.-Check Line. Existing nonrecurring Transfer template batch required. Optional lineSystemIds selects distinct lines from that batch only. Native line validation, rollback preview and batch posting retain the subset. No transfer order is created. Normal licensed dispatch applies.';
+        exit(true);
+    end;
+
+    /// <summary>Explains native reclassification constraints.</summary>
+    procedure GetNotes(var Value: Text): Boolean
+    begin
+        Value := 'Checks selected Transfer journal lines with native Item Jnl.-Check Line. Existing nonrecurring Transfer template batch required. Optional lineSystemIds selects distinct lines from that batch only. Native line validation, rollback preview and batch posting retain the subset. No transfer order is created. Normal licensed dispatch applies.';
+        exit(true);
     end;
 }
