@@ -147,7 +147,10 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not Codeunit.Run(Codeunit::"Inv. Price Write Process ori", Argument) then
-            Argument.RespondWithError(GetLastErrorText());
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv. Price Write Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv. Price Write Process ori", Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 }

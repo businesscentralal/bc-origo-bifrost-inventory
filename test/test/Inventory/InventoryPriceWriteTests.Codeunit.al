@@ -77,7 +77,7 @@ codeunit 96939 "Inventory Price Write Tests"
     begin
         CreateItem(Item);
         Item.SetRange("No.", Item."No.");
-        Request.Add('tableView', Item.GetView(false));
+        Request.Add('tableView', Item.GetView(true));
         Request.Add('unitPrice', '12.75');
         InitArgument(TempArgument, '', Request);
         PriceWrite.UpdatePrice(TempArgument);
@@ -97,7 +97,7 @@ codeunit 96939 "Inventory Price Write Tests"
         CreateItem(Item);
         CreateItem(OtherItem);
         Item.SetFilter("No.", '%1|%2', Item."No.", OtherItem."No.");
-        Request.Add('tableView', Item.GetView(false));
+        Request.Add('tableView', Item.GetView(true));
         Request.Add('unitPrice', 99);
         InitArgument(TempArgument, '', Request);
         Commit();

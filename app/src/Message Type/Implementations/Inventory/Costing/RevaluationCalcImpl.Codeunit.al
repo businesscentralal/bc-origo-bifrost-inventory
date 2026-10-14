@@ -1,176 +1,156 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Item;
-using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
+/// <summary>Populates an empty revaluation journal using native Calculate Inventory Value report 5899.</summary>
 codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Requires company Costing, native journal writes.</summary>
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::Costing, Database::"Item Journal Line", true, false));
     end;
 
+    /// <summary>Returns the batch selection table.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Ledger Entry");
+        exit(Database::"Item Journal Batch");
     end;
 
-    procedure GetDescription(): Text[250]
+    /// <summary>Revaluation requests use inbound dispatch.</summary>
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
-        exit('Calculates remaining inventory quantity and value for an item.');
+        exit("Msg Direction ori"::Inbound);
     end;
 
-    procedure GetKeywords(): Text
-    begin
-        exit('revaluation, calculate inventory value');
-    end;
-
-    procedure GetSelectionDescription(): Text
-    begin
-        exit('Calculates remaining quantity and inventory value. Does not post a revaluation journal.');
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('messageType', 'Inventory.Revaluation.Calculate');
-        Envelope.Add('version', 1);
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
-    begin
-        TargetJson.Add('table', 'Item Ledger Entry');
-        Target.Add(TargetJson);
-        exit(true);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
-    begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('status', 'Success');
-        Response.Add('itemNo', '');
-        Response.Add('remainingQuantity', 0);
-        Response.Add('inventoryValue', 0);
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ErrorJson: JsonObject;
-    begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemNo must be specified.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the item was not found.');
-        Errors.Add(ErrorJson);
-        exit(true);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Cost.Get', 'Read the stored item cost instead of calculating remaining value.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Adjust item costs with report 795 instead of only calculating value.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Calculates remaining quantity and inventory value for one item.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Notes := 'Read only. It does not post a revaluation journal.';
-        exit(true);
-    end;
-
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
-    begin
-        exit(Enum::"Msg Direction ori"::Outbound);
-    end;
-
+    /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Item: Record Item;
-        ItemLedgerEntry: Record "Item Ledger Entry";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        RemainingQty: Decimal;
-        InventoryValue: Decimal;
-        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
-        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.', Locked = true;
+        Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Journal Line", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
-            exit;
-        end;
-        if not Item.Get(CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(Item."No."))) then begin
-            Argument.RespondWithError(StrSubstNo(NotFoundErr, Token.AsValue().AsCode()));
-            exit;
-        end;
-        ItemLedgerEntry.SetRange("Item No.", Item."No.");
-        ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
-        if ItemLedgerEntry.FindSet() then
-            repeat
-                RemainingQty += ItemLedgerEntry."Remaining Quantity";
-                InventoryValue += ItemLedgerEntry."Remaining Quantity" * ItemLedgerEntry."Cost Amount (Actual)" / ItemLedgerEntry.Quantity;
-            until ItemLedgerEntry.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNo', Item."No.");
-        ResponseJson.Add('remainingQuantity', RemainingQty);
-        ResponseJson.Add('inventoryValue', InventoryValue);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv Reval Calc Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv Reval Calc Process ori", Argument) then
+                Argument.RespondWithError(GetLastErrorText());
+    end;
+
+    /// <summary>Returns the native revaluation envelope contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation target contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    begin
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Revaluation template batch."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation parameters contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        Clear(Parameters);
+        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"batchId","type":"string","required":false},{"name":"id","type":"string","required":false},{"name":"systemId","type":"string","required":false},{"name":"recordSystemId","type":"string","required":false},{"name":"itemNo","type":"string","required":false},{"name":"locationCode","type":"string","required":false},{"name":"variantCode","type":"string","required":false},{"name":"postingDate","type":"date","required":true},{"name":"documentNo","type":"string","required":true},{"name":"calculatePer","type":"string","required":false},{"name":"byLocation","type":"boolean","required":false},{"name":"byVariant","type":"boolean","required":false}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation response contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    begin
+        Clear(Response);
+        Response.ReadFrom('{"status":"Success","templateName":"","batchName":"","linesCreated":0,"totalQuantity":0,"calculatedValue":0,"revaluedValue":0,"posted":false}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation errors contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    begin
+        Clear(Errors);
+        Errors.ReadFrom('[{"code":"PreconditionFailed","when":"Wrong journal type, recurring or invalid batch, or native calculation/posting failure."},{"code":"PermissionDenied","when":"Company/native permission or posting gate refuses caller."},{"code":"InvalidParameter","when":"Parameters are malformed or unsupported."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation effect contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.ReadFrom('{"writes":true,"posts":false,"rollback":false,"changes":"Populates an empty revaluation journal using native Calculate Inventory Value report 5899."}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation related contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    begin
+        Clear(Related);
+        Related.ReadFrom('[{"name":"Inventory.Revaluation.Post","useInsteadWhen":"Post the journal."},{"name":"Inventory.Revaluation.PreviewPost","useInsteadWhen":"PreviewPost the journal."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native revaluation examples contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Populates an empty revaluation journal using native Calculate Inventory Value report 5899.","request":{"type":"Inventory.Revaluation.Calculate","subject":"REVAL|OWNED","data":{"itemNo":"OWNED-ITEM","postingDate":"2026-10-14","documentNo":"OWNED-REVAL"}}}]');
+        exit(true);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetMetering(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetWorkflow(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>Describes native revaluation behavior.</summary>
+    procedure GetDescription(): Text[250]
+    begin
+        exit('Populates an empty revaluation journal using native Calculate Inventory Value report 5899.');
+    end;
+
+    /// <summary>Describes native revaluation behavior.</summary>
+    procedure GetSelectionDescription(): Text
+    begin
+        exit('Populates an empty revaluation journal using native Calculate Inventory Value report 5899.');
+    end;
+
+    /// <summary>Describes native revaluation behavior.</summary>
+    procedure GetKeywords(): Text
+    begin
+        exit('Populates an empty revaluation journal using native Calculate Inventory Value report 5899.');
+    end;
+
+    /// <summary>Explains native revaluation constraints.</summary>
+    procedure GetOverview(var Value: Text): Boolean
+    begin
+        Value := 'Populates an empty revaluation journal using native Calculate Inventory Value report 5899. Explicit Revaluation batch required. Calculate refuses a nonempty batch and never updates Standard Cost. Post/PreviewPost require native revaluation lines. Normal licensed dispatch applies.';
+        exit(true);
+    end;
+
+    /// <summary>Explains native revaluation constraints.</summary>
+    procedure GetNotes(var Value: Text): Boolean
+    begin
+        Value := 'Populates an empty revaluation journal using native Calculate Inventory Value report 5899. Explicit Revaluation batch required. Calculate refuses a nonempty batch and never updates Standard Cost. Post/PreviewPost require native revaluation lines. Normal licensed dispatch applies.';
+        exit(true);
     end;
 }

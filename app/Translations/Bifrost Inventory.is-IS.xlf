@@ -405,6 +405,60 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir framboðsfærsluna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Reserv. Write ori - Method ResolveSupply - NamedType PermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
+          <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType BatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 1247718329" size-unit="char" translate="yes" xml:space="preserve">
+          <source>calculatePer must be Item or Item Ledger Entry.</source>
+          <target>calculatePer verður að vera Item eða Item Ledger Entry.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=calculatePer verður að vera Item eða Item Ledger Entry.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType CalcPerErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The revaluation batch has no lines to post.</source>
+          <target>Endurmatskeyrslan hefur engar línur til að bóka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurmatskeyrslan hefur engar línur til að bóka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 2185232766" size-unit="char" translate="yes" xml:space="preserve">
+          <source>byLocation and byVariant require calculatePer=Item.</source>
+          <target>byLocation og byVariant krefjast calculatePer=Item.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=byLocation og byVariant krefjast calculatePer=Item.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType GroupErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the revaluation journal lines before posting.</source>
+          <target>Farðu yfir línur endurmatsbókarinnar áður en bókað er.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir línur endurmatsbókarinnar áður en bókað er.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 6578919" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculate requires an empty revaluation batch to avoid duplicate proposals.</source>
+          <target>Útreikningur krefst tómrar endurmatskeyrslu til að forðast tvíteknar tillögur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útreikningur krefst tómrar endurmatskeyrslu til að forðast tvíteknar tillögur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType NotEmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 567304435" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No native item register was produced.</source>
+          <target>Engin innbyggð vöruskrá var mynduð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin innbyggð vöruskrá var mynduð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType NothingPostedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported revaluation parameter %1.</source>
+          <target>Endurmatsfæribreytan %1 er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Endurmatsfæribreytan %1 er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType ParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3100648654 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must be nonempty text of at most %2 characters.</source>
+          <target>Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType TextErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1196884345 - Method 11078697 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specify %1 as text.</source>
           <target>Tilgreindu %1 sem texta.</target>

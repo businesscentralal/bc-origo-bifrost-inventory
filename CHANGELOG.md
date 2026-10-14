@@ -2,6 +2,8 @@
 
 ## Unreleased — costing report acceptance (#4, #35)
 
+- Replace Revaluation.Calculate estimates with native report 5899 journal proposals; add distinct native Post and rollback PreviewPost with register/entry statistics, batch-type checks and isolated acceptance fixtures (70013400–70013404/70013488; enum 70013434 values 70013438–70013439; tests 96941).
+
 - Make Price.Update require an explicit single-item selection, typed parameters, native Item/field permissions and blocked-item opt-in; preserve Validate and rollback subscriber writes on error (70013438–70013439/70013486; tests 96939–96940).
 
 - Use native report795 InitializeRequest/SetPostToGL with its request page disabled so defaults cannot overwrite explicit options; bind native item-by-item parameter for that run only (70013429/70013431). Test G/L posting of real receipt/invoice/outbound cost adjustments (96931/96932).
