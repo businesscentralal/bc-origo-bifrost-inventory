@@ -9,6 +9,9 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.Document;
 using Microsoft.Purchases.Document;
+using Microsoft.Projects.Project.Job;
+using Microsoft.Projects.Project.Journal;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Sales.Document;
 using Microsoft.Service.Document;
 using Origo.Bifrost;
@@ -692,6 +695,58 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertStatus(Response, 'Error');
         SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
         Assert.AreEqual(10, SalesLine."Quantity Shipped", 'Refusal preserves the real posted source.');
+    end;
+
+    /// <summary>An open native project planning demand reserves and cancels exact posted inventory through its contract-entry pointer.</summary>
+    [Test]
+    procedure JobPlanningLinePairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Job: Record Job;
+        JobTask: Record "Job Task";
+        PlanningLine: Record "Job Planning Line";
+        LibraryJob: Codeunit "Library - Job";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryJob.CreateJob(Job);
+        Job.Validate(Status, Job.Status::Open);
+        Job.Modify(true);
+        LibraryJob.CreateJobTask(Job, JobTask);
+        LibraryJob.CreateJobPlanningLine(JobTask, PlanningLine."Line Type"::Budget, PlanningLine.Type::Item, SalesLine."No.", 10, PlanningLine);
+        Request.Add('source', SourceObject('JobPlanningLine', PlanningLine.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+        AssertNativeRoundTrip(Request, Database::"Job Planning Line", Job."No.", '', PlanningLine."Job Contract Entry No.", false, 2, 0);
+    end;
+
+    /// <summary>A native project journal demand uses its exact template, batch and line for both reservation and cancellation.</summary>
+    [Test]
+    procedure JobJournalLinePairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Job: Record Job;
+        JobTask: Record "Job Task";
+        JournalLine: Record "Job Journal Line";
+        LibraryJob: Codeunit "Library - Job";
+        Request: JsonObject;
+    begin
+        CreateSources(SalesLine, Ledger);
+        LibraryJob.CreateJob(Job);
+        Job.Validate(Status, Job.Status::Open);
+        Job.Modify(true);
+        LibraryJob.CreateJobTask(Job, JobTask);
+        LibraryJob.CreateJobJournalLine(JournalLine."Line Type"::Budget, JobTask, JournalLine);
+        JournalLine.Validate(Type, JournalLine.Type::Item);
+        JournalLine.Validate("No.", SalesLine."No.");
+        JournalLine.Validate(Quantity, 10);
+        JournalLine.Modify(true);
+        Request.Add('source', SourceObject('JobJournalLine', JournalLine.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+        AssertNativeRoundTrip(Request, Database::"Job Journal Line", JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.", false, 2, 0);
     end;
 
     local procedure CreateFullyShippedSource(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry")

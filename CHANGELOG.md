@@ -1,5 +1,7 @@
 # Changelog
 
+- Verify native project planning and project journal reservation pairs, source pointers, balanced quantities and both source/entry cancellation paths (test codeunit 96926; issue #7).
+
 - Verify Icelandic blocked-item cost/price refusals and unchanged native values; retain invariant allowBlocked request key (tests 96937/96939; issues #4/#32/#33).
 
 - Document native Average revaluation prerequisites in English and Icelandic and verify location/variant selection in entry and item modes (codeunit 70013488; tests 96941/96921; issues #4/#30/#32).
