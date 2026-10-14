@@ -8,6 +8,13 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Reapplies an exact base quantity between native outbound and inbound item ledger entries.', Comment = 'is-IS=Endurjafnar nákvæmt magn í grunneiningu milli innbyggðra útleiðar- og innleiðarbirgðafærslna.';
+        KeywordsLbl: Label 'reapply item application, apply item ledger entry', Comment = 'is-IS=endurjafna jöfnun vöru, jafna birgðafærslu fyrir vöru';
+        SelectionDescriptionLbl: Label 'Requires outboundEntryNo, inboundEntryNo and a positive quantity in base units.', Comment = 'is-IS=Krefst outboundEntryNo, inboundEntryNo og jákvæðs quantity í grunneiningum.';
+        OverviewLbl: Label 'Uses Item Jnl.-Post Line.ReApply with a pair-scoped native quantity limit and exact result validation.', Comment = 'is-IS=Notar Item Jnl.-Post Line.ReApply með innbyggðri magntakmörkun fyrir færslupar og nákvæmri sannprófun niðurstöðu.';
+        NotesLbl: Label 'Preserves native worksheet checks and marks adjustment required. Adjust Cost is a separate operation.', Comment = 'is-IS=Varðveitir innbyggðar athuganir vinnublaðsins og merkir að kostnaðarleiðréttingar sé þörf. Kostnaðarleiðrétting er aðskilin aðgerð.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -22,17 +29,17 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Reapplies an item ledger entry through Item Jnl.-Post Line.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('reapply item application, apply item ledger entry');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reapplies an outbound item ledger entry to an inbound entry.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -76,7 +83,10 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('itemLedgerEntryNo', 0);
+        Response.Add('outboundEntryNo', 0);
+        Response.Add('inboundEntryNo', 0);
+        Response.Add('quantity', 0);
+        Response.Add('adjustmentRequired', true);
         exit(true);
     end;
 
@@ -123,13 +133,13 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reapplies an item ledger entry through the standard posting line codeunit.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls Item Jnl.-Post Line. It does not insert table 339 directly.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

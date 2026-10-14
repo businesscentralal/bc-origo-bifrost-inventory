@@ -10,6 +10,13 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Undoes selected posted transfer shipment lines with native corrective entries.', Comment = 'is-IS=Afturkallar valdar línur bókaðrar flutningsafhendingar með innbyggðum leiðréttingarfærslum.';
+        KeywordsLbl: Label 'undo transfer shipment', Comment = 'is-IS=afturkalla afhendingu flutnings';
+        SelectionDescriptionLbl: Label 'Selects a shipment by documentNo and optionally distinct lineNos.', Comment = 'is-IS=Velur afhendingu eftir documentNo og valkvæðum aðgreindum lineNos.';
+        OverviewLbl: Label 'Calls native codeunit 9030 Undo Transfer Shipment. Preserves the posted document.', Comment = 'is-IS=Kallar á innbyggða keyrslueiningu 9030 Undo Transfer Shipment. Varðveitir bókaða skjalið.';
+        NotesLbl: Label 'Received, corrected or missing source lines are refused. Unselected shipment lines are preserved.', Comment = 'is-IS=Línum sem hafa verið mótteknar eða leiðréttar og línum án upprunalínu er hafnað. Óvaldar afhendingarlínur eru varðveittar.';
+
     procedure IsEnabled(): Boolean
     var
         Gate: Codeunit "Inventory Domain Gate ori";
@@ -24,17 +31,17 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Undoes a posted transfer shipment with corrective entries.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('undo transfer shipment');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Same action as Undo Shipment on a posted transfer shipment.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -93,13 +100,13 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Calls codeunit 5815. Does not delete the posted document.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Receipt undo is a separate type.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

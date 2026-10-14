@@ -8,6 +8,13 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Unapplies the real applications connected to a native item ledger entry.', Comment = 'is-IS=Afturkallar raunverulegar jafnanir sem tengjast innbyggðri birgðafærslu.';
+        KeywordsLbl: Label 'unapply item application, undo application', Comment = 'is-IS=afturkalla jöfnun vöru, bakfæra jöfnun';
+        SelectionDescriptionLbl: Label 'Requires itemLedgerEntryNo. Legacy entryNo selects one application entry instead.', Comment = 'is-IS=Krefst itemLedgerEntryNo. Eldri færibreytan entryNo velur eina jöfnunarfærslu í staðinn.';
+        OverviewLbl: Label 'Calls Item Jnl.-Post Line.UnApply atomically for the selected real applications.', Comment = 'is-IS=Kallar á Item Jnl.-Post Line.UnApply fyrir valdar raunverulegar jafnanir í einni færslu.';
+        NotesLbl: Label 'Native restrictions remain enforced and adjustment is marked required. No application row is deleted directly.', Comment = 'is-IS=Innbyggðar takmarkanir gilda áfram og kostnaðarleiðrétting er merkt nauðsynleg. Enginni jöfnunarlínu er eytt beint.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -22,17 +29,17 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Unapplies an item application entry through Item Jnl.-Post Line.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('unapply item application, undo application');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Unapplies one item application entry by entry number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -66,7 +73,9 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Response.Add('status', 'Success');
-        Response.Add('entryNo', 0);
+        Response.Add('itemLedgerEntryNo', 0);
+        Response.Add('unappliedCount', 0);
+        Response.Add('adjustmentRequired', true);
         exit(true);
     end;
 
@@ -113,13 +122,13 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Unapplies one item application entry through the standard posting line codeunit.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls Item Jnl.-Post Line.UnApply. It does not delete table 339 directly.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

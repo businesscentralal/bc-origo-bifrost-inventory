@@ -10,6 +10,13 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Reads native item applications and both joined ledger entries for one item or entry.', Comment = 'is-IS=Les innbyggðar vörujafnanir og báðar tengdar birgðafærslur fyrir eina vöru eða færslu.';
+        KeywordsLbl: Label 'item application, applied entries', Comment = 'is-IS=jöfnun vöru, jafnaðar færslur';
+        SelectionDescriptionLbl: Label 'Selects exactly one itemNo or itemLedgerEntryNo, with optional exact location and variant filters.', Comment = 'is-IS=Velur nákvæmlega eitt itemNo eða itemLedgerEntryNo með valkvæðum nákvæmum síum fyrir birgðageymslu og afbrigði.';
+        OverviewLbl: Label 'Reads deduplicated applications connected to either side of the selected ledger entries.', Comment = 'is-IS=Les vörujafnanir sem tengjast hvorri hlið valinna birgðafærslna án tvítekningar.';
+        NotesLbl: Label 'Read only. Zero or unavailable ledger sides are explicitly identified; unapply and reapply are separate types.', Comment = 'is-IS=Aðeins lestur. Hliðar með núlli eða án aðgengilegrar birgðafærslu eru sérstaklega auðkenndar; afturköllun og endurjöfnun eru aðskildar gerðir.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -24,17 +31,17 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Reads item application entries for an item ledger entry.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('item application, applied entries');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reads application entries. Unapply and reapply are separate types.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -127,13 +134,13 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads item applications with both ledger sides for one item or ledger entry.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only. Unapply and reapply are separate message types.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

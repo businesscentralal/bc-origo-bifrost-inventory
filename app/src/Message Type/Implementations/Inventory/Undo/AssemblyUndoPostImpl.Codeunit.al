@@ -8,6 +8,13 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Undoes a posted assembly document through the native assembly posting codeunit.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með innbyggðri bókunareiningu samsetninga.';
+        KeywordsLbl: Label 'undo assembly, reverse posted assembly', Comment = 'is-IS=afturkalla samsetningu, bakfæra bókaða samsetningu';
+        SelectionDescriptionLbl: Label 'Undoes a posted assembly by document number; optionally recreates its order.', Comment = 'is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri; getur endurstofnað pöntunina.';
+        OverviewLbl: Label 'Calls Assembly-Post.Undo with the requested recreateOrder option.', Comment = 'is-IS=Kallar á Assembly-Post.Undo með umbeðnum valkosti recreateOrder.';
+        NotesLbl: Label 'Native validation refuses reversed or consumed output. A failed undo rolls back its writes.', Comment = 'is-IS=Innbyggð sannprófun hafnar bakfærðri eða notaðri frálagsfærslu. Misheppnuð afturköllun bakfærir breytingarnar.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -22,17 +29,17 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Undoes a posted assembly document through the standard posted assembly undo.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('undo assembly, reverse posted assembly');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Undoes a posted assembly by document number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -110,13 +117,13 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Undoes a posted assembly by document number.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls Assembly-Post.Undo. A failed undo is returned as an error.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

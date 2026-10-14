@@ -195,6 +195,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undoes a posted assembly document through the native assembly posting codeunit.</source>
+          <target>Afturkallar bókað samsetningarskjal með innbyggðri bókunareiningu samsetninga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókað samsetningarskjal með innbyggðri bókunareiningu samsetninga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>undo assembly, reverse posted assembly</source>
+          <target>afturkalla samsetningu, bakfæra bókaða samsetningu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla samsetningu, bakfæra bókaða samsetningu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native validation refuses reversed or consumed output. A failed undo rolls back its writes.</source>
+          <target>Innbyggð sannprófun hafnar bakfærðri eða notaðri frálagsfærslu. Misheppnuð afturköllun bakfærir breytingarnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggð sannprófun hafnar bakfærðri eða notaðri frálagsfærslu. Misheppnuð afturköllun bakfærir breytingarnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calls Assembly-Post.Undo with the requested recreateOrder option.</source>
+          <target>Kallar á Assembly-Post.Undo með umbeðnum valkosti recreateOrder.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallar á Assembly-Post.Undo með umbeðnum valkosti recreateOrder.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undoes a posted assembly by document number; optionally recreates its order.</source>
+          <target>Afturkallar bókaða samsetningu eftir skjalnúmeri; getur endurstofnað pöntunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri; getur endurstofnað pöntunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3400197598 - NamedType 876571053" size-unit="char" translate="yes" xml:space="preserve">
           <source>The native worksheet did not apply exactly the requested base quantity.</source>
           <target>Innbyggða vinnublaðið jafnaði ekki nákvæmlega umbeðið magn í grunneiningu.</target>
@@ -687,6 +717,96 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method ReadTrackingEntry - NamedType InvalidTrackingErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 886104080 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads native item applications and both joined ledger entries for one item or entry.</source>
+          <target>Les innbyggðar vörujafnanir og báðar tengdar birgðafærslur fyrir eina vöru eða færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les innbyggðar vörujafnanir og báðar tengdar birgðafærslur fyrir eina vöru eða færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item application, applied entries</source>
+          <target>jöfnun vöru, jafnaðar færslur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=jöfnun vöru, jafnaðar færslur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Zero or unavailable ledger sides are explicitly identified; unapply and reapply are separate types.</source>
+          <target>Aðeins lestur. Hliðar með núlli eða án aðgengilegrar birgðafærslu eru sérstaklega auðkenndar; afturköllun og endurjöfnun eru aðskildar gerðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Hliðar með núlli eða án aðgengilegrar birgðafærslu eru sérstaklega auðkenndar; afturköllun og endurjöfnun eru aðskildar gerðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads deduplicated applications connected to either side of the selected ledger entries.</source>
+          <target>Les vörujafnanir sem tengjast hvorri hlið valinna birgðafærslna án tvítekningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les vörujafnanir sem tengjast hvorri hlið valinna birgðafærslna án tvítekningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selects exactly one itemNo or itemLedgerEntryNo, with optional exact location and variant filters.</source>
+          <target>Velur nákvæmlega eitt itemNo eða itemLedgerEntryNo með valkvæðum nákvæmum síum fyrir birgðageymslu og afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eitt itemNo eða itemLedgerEntryNo með valkvæðum nákvæmum síum fyrir birgðageymslu og afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reapplies an exact base quantity between native outbound and inbound item ledger entries.</source>
+          <target>Endurjafnar nákvæmt magn í grunneiningu milli innbyggðra útleiðar- og innleiðarbirgðafærslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurjafnar nákvæmt magn í grunneiningu milli innbyggðra útleiðar- og innleiðarbirgðafærslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>reapply item application, apply item ledger entry</source>
+          <target>endurjafna jöfnun vöru, jafna birgðafærslu fyrir vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=endurjafna jöfnun vöru, jafna birgðafærslu fyrir vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preserves native worksheet checks and marks adjustment required. Adjust Cost is a separate operation.</source>
+          <target>Varðveitir innbyggðar athuganir vinnublaðsins og merkir að kostnaðarleiðréttingar sé þörf. Kostnaðarleiðrétting er aðskilin aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varðveitir innbyggðar athuganir vinnublaðsins og merkir að kostnaðarleiðréttingar sé þörf. Kostnaðarleiðrétting er aðskilin aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Uses Item Jnl.-Post Line.ReApply with a pair-scoped native quantity limit and exact result validation.</source>
+          <target>Notar Item Jnl.-Post Line.ReApply með innbyggðri magntakmörkun fyrir færslupar og nákvæmri sannprófun niðurstöðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notar Item Jnl.-Post Line.ReApply með innbyggðri magntakmörkun fyrir færslupar og nákvæmri sannprófun niðurstöðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requires outboundEntryNo, inboundEntryNo and a positive quantity in base units.</source>
+          <target>Krefst outboundEntryNo, inboundEntryNo og jákvæðs quantity í grunneiningum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst outboundEntryNo, inboundEntryNo og jákvæðs quantity í grunneiningum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unapplies the real applications connected to a native item ledger entry.</source>
+          <target>Afturkallar raunverulegar jafnanir sem tengjast innbyggðri birgðafærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar raunverulegar jafnanir sem tengjast innbyggðri birgðafærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>unapply item application, undo application</source>
+          <target>afturkalla jöfnun vöru, bakfæra jöfnun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla jöfnun vöru, bakfæra jöfnun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native restrictions remain enforced and adjustment is marked required. No application row is deleted directly.</source>
+          <target>Innbyggðar takmarkanir gilda áfram og kostnaðarleiðrétting er merkt nauðsynleg. Enginni jöfnunarlínu er eytt beint.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggðar takmarkanir gilda áfram og kostnaðarleiðrétting er merkt nauðsynleg. Enginni jöfnunarlínu er eytt beint.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calls Item Jnl.-Post Line.UnApply atomically for the selected real applications.</source>
+          <target>Kallar á Item Jnl.-Post Line.UnApply fyrir valdar raunverulegar jafnanir í einni færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallar á Item Jnl.-Post Line.UnApply fyrir valdar raunverulegar jafnanir í einni færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requires itemLedgerEntryNo. Legacy entryNo selects one application entry instead.</source>
+          <target>Krefst itemLedgerEntryNo. Eldri færibreytan entryNo velur eina jöfnunarfærslu í staðinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst itemLedgerEntryNo. Eldri færibreytan entryNo velur eina jöfnunarfærslu í staðinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>create item attribute definition, define item characteristic, add attribute type, create option list, item metadata definition</source>
           <target>búa til eiginleikaskilgreiningu vöru, skilgreina eiginleika vöru, bæta við eiginleikategund, búa til valkostalista, skilgreining á lýsigögnum vöru</target>
@@ -765,6 +885,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun millifærslu án frágangs; notaðu Post til að framkvæma óafturkræfa afhendingu eða móttöku.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Refuses transfer receipt undo because this BC version has no supported native path.</source>
+          <target>Hafnar afturköllun flutningsmóttöku þar sem þessi útgáfa BC hefur enga studda innbyggða leið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hafnar afturköllun flutningsmóttöku þar sem þessi útgáfa BC hefur enga studda innbyggða leið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>undo transfer receipt</source>
+          <target>afturkalla móttöku flutnings</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla móttöku flutnings</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A posted transfer receipt that exists returns an error, never a false success.</source>
+          <target>Bókuð flutningsmóttaka sem er til skilar villu, aldrei rangri staðfestingu á árangri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókuð flutningsmóttaka sem er til skilar villu, aldrei rangri staðfestingu á árangri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Refuses to undo a posted transfer receipt in this Business Central version.</source>
+          <target>Hafnar afturköllun bókaðrar flutningsmóttöku í þessari útgáfu Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hafnar afturköllun bókaðrar flutningsmóttöku í þessari útgáfu Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reports the native transfer receipt undo limitation without modifying posted entries.</source>
+          <target>Tilkynnir takmörkun innbyggðrar afturköllunar flutningsmóttöku án þess að breyta bókuðum færslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilkynnir takmörkun innbyggðrar afturköllunar flutningsmóttöku án þess að breyta bókuðum færslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3816472531 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>release transfer order, transfer ready to ship, lock the transfer</source>
           <target>losa millifærslupöntun, staðfesta millifærslupöntun, millifærsla tilbúin til afhendingar</target>
@@ -824,6 +974,36 @@
           <target>Les magn, pakka, þyngdir og rúmmál millifærslupöntunar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les magn, pakka, þyngdir og rúmmál millifærslupöntunar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Stats Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undoes selected posted transfer shipment lines with native corrective entries.</source>
+          <target>Afturkallar valdar línur bókaðrar flutningsafhendingar með innbyggðum leiðréttingarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar valdar línur bókaðrar flutningsafhendingar með innbyggðum leiðréttingarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>undo transfer shipment</source>
+          <target>afturkalla afhendingu flutnings</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla afhendingu flutnings</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Received, corrected or missing source lines are refused. Unselected shipment lines are preserved.</source>
+          <target>Línum sem hafa verið mótteknar eða leiðréttar og línum án upprunalínu er hafnað. Óvaldar afhendingarlínur eru varðveittar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línum sem hafa verið mótteknar eða leiðréttar og línum án upprunalínu er hafnað. Óvaldar afhendingarlínur eru varðveittar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calls native codeunit 9030 Undo Transfer Shipment. Preserves the posted document.</source>
+          <target>Kallar á innbyggða keyrslueiningu 9030 Undo Transfer Shipment. Varðveitir bókaða skjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallar á innbyggða keyrslueiningu 9030 Undo Transfer Shipment. Varðveitir bókaða skjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selects a shipment by documentNo and optionally distinct lineNos.</source>
+          <target>Velur afhendingu eftir documentNo og valkvæðum aðgreindum lineNos.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velur afhendingu eftir documentNo og valkvæðum aðgreindum lineNos.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Page 88444387 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory Setup</source>

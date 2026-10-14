@@ -7,6 +7,13 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Refuses transfer receipt undo because this BC version has no supported native path.', Comment = 'is-IS=Hafnar afturköllun flutningsmóttöku þar sem þessi útgáfa BC hefur enga studda innbyggða leið.';
+        KeywordsLbl: Label 'undo transfer receipt', Comment = 'is-IS=afturkalla móttöku flutnings';
+        SelectionDescriptionLbl: Label 'Reports the native transfer receipt undo limitation without modifying posted entries.', Comment = 'is-IS=Tilkynnir takmörkun innbyggðrar afturköllunar flutningsmóttöku án þess að breyta bókuðum færslum.';
+        OverviewLbl: Label 'Refuses to undo a posted transfer receipt in this Business Central version.', Comment = 'is-IS=Hafnar afturköllun bókaðrar flutningsmóttöku í þessari útgáfu Business Central.';
+        NotesLbl: Label 'A posted transfer receipt that exists returns an error, never a false success.', Comment = 'is-IS=Bókuð flutningsmóttaka sem er til skilar villu, aldrei rangri staðfestingu á árangri.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -21,17 +28,17 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Undoes a posted transfer receipt by writing corrective item ledger entries.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('undo transfer receipt');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Undoes a posted transfer receipt. Does not delete the posted document.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -116,13 +123,13 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Refuses to undo a posted transfer receipt in this Business Central version.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'A posted transfer receipt that exists is answered with an error. Success is not returned.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

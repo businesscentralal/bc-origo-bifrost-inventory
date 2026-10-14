@@ -13,6 +13,62 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
+    /// <summary>The touched undo/application discovery must actually switch language, not merely be nonempty.</summary>
+    [Test]
+    procedure NativeUndoApplication_DiscoveryChangesToIcelandic()
+    var
+        Discovery: Interface "Msg Discovery ori";
+        MessageType: Enum "Message Type ori";
+        Names: List of [Text];
+        Name: Text;
+        EnglishKeywords: Text;
+        EnglishSelection: Text;
+        IcelandicKeywords: Text;
+        IcelandicSelection: Text;
+        PreviousLanguage: Integer;
+    begin
+        Names.Add('Inventory.Transfer.UndoShipment');
+        Names.Add('Inventory.Transfer.UndoReceipt');
+        Names.Add('Inventory.Assembly.UndoPost');
+        Names.Add('Inventory.ItemApplication.Get');
+        Names.Add('Inventory.ItemApplication.Unapply');
+        Names.Add('Inventory.ItemApplication.Reapply');
+        PreviousLanguage := GlobalLanguage();
+        foreach Name in Names do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(Name));
+            Discovery := MessageType;
+            GlobalLanguage(1033);
+            EnglishKeywords := Discovery.GetKeywords();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(1039);
+            IcelandicKeywords := Discovery.GetKeywords();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.IsFalse(EnglishKeywords = IcelandicKeywords, Name + ' needs actual Icelandic keywords.');
+            LibraryAssert.IsFalse(EnglishSelection = IcelandicSelection, Name + ' needs actual Icelandic selection text.');
+            LibraryAssert.IsFalse(IcelandicKeywords = '', Name + ' cannot have empty Icelandic keywords.');
+        end;
+    end;
+
+    /// <summary>Application response metadata names the fields actually emitted by the native write contracts.</summary>
+    [Test]
+    procedure NativeApplication_ResponseContractsMatchActualFields()
+    var
+        Reapply: Codeunit "Item Appl. Reapply Impl ori";
+        Unapply: Codeunit "Item Appl. Unapply Impl ori";
+        Response: JsonObject;
+    begin
+        LibraryAssert.IsTrue(Reapply.GetResponse(Response), 'Reapply response chapter exists.');
+        LibraryAssert.IsTrue(Response.Contains('outboundEntryNo'), 'Response identifies outbound.');
+        LibraryAssert.IsTrue(Response.Contains('inboundEntryNo'), 'Response identifies inbound.');
+        LibraryAssert.IsTrue(Response.Contains('quantity'), 'Response identifies applied base quantity.');
+        LibraryAssert.IsTrue(Response.Contains('adjustmentRequired'), 'Response declares pending adjustment.');
+        Clear(Response);
+        LibraryAssert.IsTrue(Unapply.GetResponse(Response), 'Unapply response chapter exists.');
+        LibraryAssert.IsTrue(Response.Contains('itemLedgerEntryNo'), 'Unapply identifies the ledger selector.');
+        LibraryAssert.IsTrue(Response.Contains('unappliedCount'), 'Unapply reports actual application count.');
+    end;
+
     [Test]
     procedure AllInventoryTypes_HaveRequiredContractChapters()
     var
