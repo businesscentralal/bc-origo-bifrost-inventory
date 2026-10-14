@@ -22,6 +22,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
         CostReports: Codeunit "Inventory Cost Reports ori";
+        DateFilterMessageCount: Integer;
 
     /// <summary>Report 795 receives escaped native fields and explicit boolean options.</summary>
     [Test]
@@ -279,7 +280,7 @@ codeunit 96931 "Inventory Cost Report Tests"
 
     /// <summary>Native posting-date selection leaves excluded pending costs intact before posting the same owned entry.</summary>
     [Test]
-    [HandlerFunctions('PostingMessageHandler')]
+    [HandlerFunctions('DateFilterPostingMessageHandler')]
     procedure NativePostHonorsPostingDateFilter()
     var
         Item: Record Item;
@@ -291,6 +292,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         GLBefore: Integer;
         PendingBefore: Integer;
     begin
+        DateFilterMessageCount := 0;
         CreateUnpostedCost(Item);
         PendingEntry.SetRange("Item No.", Item."No.");
         PendingBefore := PendingEntry.Count();
@@ -299,6 +301,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         Request.Add('itemNo', Item."No.");
         Request.Add('postingDateFilter', Format(WorkDate() + 1, 0, 9));
         CostReports.PostCostToGL(Request, Response);
+        Assert.AreEqual(1, DateFilterMessageCount, 'Excluded date produces the native nothing-to-post summary.');
         Assert.AreEqual(GLBefore, GLEntry.Count(), 'Excluded date creates no G/L entries.');
         Assert.AreEqual(PendingBefore, PendingEntry.Count(), 'Excluded date preserves pending costs.');
         ValueEntry.SetRange("Item No.", Item."No.");
@@ -308,6 +311,7 @@ codeunit 96931 "Inventory Cost Report Tests"
         CostReports.PostCostToGL(Request, Response);
         ValueEntry.CalcSums("Cost Posted to G/L");
         Assert.AreEqual(24, ValueEntry."Cost Posted to G/L", 'Matching date posts the actual two-unit cost.');
+        Assert.AreEqual(2, DateFilterMessageCount, 'Matching date produces the native posting summary.');
         Assert.IsTrue(PendingEntry.IsEmpty(), 'Successfully posted owned pending entry is consumed.');
     end;
 
@@ -683,6 +687,20 @@ codeunit 96931 "Inventory Cost Report Tests"
     procedure PostingMessageHandler(MessageText: Text[1024])
     begin
         Assert.IsTrue(MessageText.Contains('value entries have been posted to the general ledger'), 'Expected native posting summary: ' + MessageText);
+    end;
+
+    [MessageHandler]
+    procedure DateFilterPostingMessageHandler(MessageText: Text[1024])
+    begin
+        DateFilterMessageCount += 1;
+        case DateFilterMessageCount of
+            1:
+                Assert.AreEqual('There is nothing to post to the general ledger.', MessageText, 'Excluded selection must report no posting.');
+            2:
+                Assert.IsTrue(MessageText.Contains('value entries have been posted to the general ledger'), 'Included selection must report actual posting: ' + MessageText);
+            else
+                Assert.Fail('Unexpected extra posting message: ' + MessageText);
+        end;
     end;
 
     /// <summary>Checks generated request parameter names against the platform request page itself.</summary>
