@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Foundation.Enums;
+using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
@@ -56,6 +57,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             exit;
         if not CheckOpenSource(Argument, SourceSpecification) then
             exit;
+        LockItemReservationAvailability(SourceSpecification);
         if not Request.Contains('supply') and not Request.Contains('itemLedgerEntryNo') then begin
             CreateFromInventory(Argument, Request, SourceRef, SourceSpecification, SourceDirection);
             exit;
@@ -332,6 +334,19 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         exit((not Request.Contains('lotNo') or (Specification."Lot No." = Lot)) and
              (not Request.Contains('serialNo') or (Specification."Serial No." = Serial)) and
              (not Request.Contains('packageNo') or (Specification."Package No." = Package)));
+    end;
+
+    local procedure LockItemReservationAvailability(Specification: Record "Tracking Specification")
+    var
+        Item: Record Item;
+        ReservationEntry: Record "Reservation Entry";
+    begin
+        // An empty reservation set has no existing row to serialize competing availability reads.
+        // Lock the real shared item before reading either source; native adapters still perform every write.
+        Item.ReadIsolation(IsolationLevel::UpdLock);
+        Item.Get(Specification."Item No.");
+        ReservationEntry.TransferFields(Specification);
+        ReservationEntry.Lock();
     end;
 
     local procedure AvailableQuantity(SourceEntry: Record "Reservation Entry"): Decimal

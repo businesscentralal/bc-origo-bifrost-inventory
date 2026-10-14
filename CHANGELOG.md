@@ -1,5 +1,7 @@
 # Changelog
 
+- Serialize manual reservation availability against the shared native item and reservation lock before either source is consumed, including initially empty reservation sets (codeunit 10036915; issue #7). Independent-session acceptance exposed two successful reservations against the same two units.
+
 - Verify native CostToGL.Post date inclusion/exclusion and posting-group output document numbers while preserving other pending costs (test codeunit 96931; issues #4/#35).
 
 - Add an owned native contention probe that starts two independent BC sessions against the same reservation supply or application pair, records actual insert-transaction overlap and refuses double consumption (test-only table 96990/codeunits 96991–96993/page 96994; issues #7/#40).
