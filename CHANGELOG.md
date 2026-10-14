@@ -29,7 +29,7 @@
 
 ## Unreleased — native journal acceptance (#6, #34)
 
-- Verify restrictive caller discovery and pre-license execution refusals for fourteen physical/reclassification/undo/application types, isolating native read/write rights and the existing ItemPost versus InvPost gates (test 96964; test-only permission sets 96965–96966). Granted discovery is not licensed execution proof.
+- Verify restrictive caller discovery and pre-license execution refusals for fourteen physical/reclassification/undo/application types, isolating native read/write rights and the existing ItemPost versus InvPost gates (test 96964; test-only permission sets 96965–96966). Self-seeded journal denial tests preserve selected and unselected rows and ledger counts. Granted discovery is not licensed execution proof.
 
 - Add registered physical Check, PreviewPost and batched RecordCount. Use native report 790 with explicit options and empty-batch protection, Validate counted quantities atomically, preserve legacy Record input, and return both native ledger ranges on Post. Use the public Foundation ItemJournal.Post permission interface (70013463/70013465/70013466/70013469/70013472/70013479/70013496; enum 70013459 values 70013460–70013462; tests 96962–96964).
 

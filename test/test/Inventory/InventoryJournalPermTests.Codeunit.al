@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.History;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
@@ -926,5 +927,82 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         Assert.AreEqual('PermissionDenied', Token.AsValue().AsText(), 'Native permission denial is not a licensing or missing-record error.');
         Assert.IsTrue(Response.Get('status', Token), 'The refusal has an error status.');
         Assert.AreEqual('Error', Token.AsValue().AsText(), 'Permission denial cannot report success.');
+    end;
+
+    /// <summary>Denied PhysInventory.Post preserves both selected and outside-selection native rows.</summary>
+    [Test]
+    procedure PhysicalPost_Denied_PreservesOwnedRows()
+    begin
+        AssertDeniedJournalPreservesRows("Message Type ori"::"Inventory.PhysInventory.Post", "Item Journal Template Type"::"Phys. Inventory");
+    end;
+
+    /// <summary>Denied PhysInventory.PreviewPost preserves both selected and outside-selection native rows.</summary>
+    [Test]
+    procedure PhysicalPreview_Denied_PreservesOwnedRows()
+    begin
+        AssertDeniedJournalPreservesRows("Message Type ori"::"Inventory.PhysInventory.PreviewPost", "Item Journal Template Type"::"Phys. Inventory");
+    end;
+
+    /// <summary>Denied Reclassification.Post preserves both selected and outside-selection native rows.</summary>
+    [Test]
+    procedure ReclassificationPost_Denied_PreservesOwnedRows()
+    begin
+        AssertDeniedJournalPreservesRows("Message Type ori"::"Inventory.Reclassification.Post", "Item Journal Template Type"::"Transfer");
+    end;
+
+    /// <summary>Denied Reclassification.PreviewPost preserves both selected and outside-selection native rows.</summary>
+    [Test]
+    procedure ReclassificationPreview_Denied_PreservesOwnedRows()
+    begin
+        AssertDeniedJournalPreservesRows("Message Type ori"::"Inventory.Reclassification.PreviewPost", "Item Journal Template Type"::"Transfer");
+    end;
+
+    local procedure AssertDeniedJournalPreservesRows(MessageType: Enum "Message Type ori"; TemplateType: Enum "Item Journal Template Type")
+    var
+        Item: Record Item;
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Selected: Record "Item Journal Line";
+        Outside: Record "Item Journal Line";
+        Reloaded: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        Values: Record "Value Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibraryInventory: Codeunit "Library - Inventory";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Request: JsonObject;
+        Selection: JsonArray;
+        EntryCount: Integer;
+        ValueCount: Integer;
+    begin
+        LibraryInventory.CreateItem(Item);
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, TemplateType);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Selected, JournalTemplate.Name, Batch.Name, Selected."Entry Type"::"Positive Adjmt.", Item."No.", 1);
+        LibraryInventory.CreateItemJournalLine(Outside, JournalTemplate.Name, Batch.Name, Outside."Entry Type"::"Positive Adjmt.", Item."No.", 2);
+        Selected.GetBySystemId(Selected.SystemId);
+        Outside.GetBySystemId(Outside.SystemId);
+        EntryCount := Entries.Count();
+        ValueCount := Values.Count();
+        InitArgument(TempArgument, MessageType);
+        TempArgument.Subject := JournalTemplate.Name + '|' + Batch.Name;
+        Selection.Add(Selected.SystemId);
+        Request.Add('lineSystemIds', Selection);
+        TempArgument.SetRequestJson(Request);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
+        Assert.IsTrue(Selected.WritePermission(), 'Native writes are present; only posting authorization is missing.');
+        AssertPostingToken('ItemPost', false);
+        AssertPostingToken('InvPost', false);
+        AssertDispatch(TempArgument, false);
+        Assert.IsTrue(Reloaded.GetBySystemId(Selected.SystemId), 'Denied dispatch preserves the selected line.');
+        Assert.AreEqual(Selected.Quantity, Reloaded.Quantity, 'Selected quantity unchanged.');
+        Assert.AreEqual(Selected.SystemModifiedAt, Reloaded.SystemModifiedAt, 'Denied dispatch must not modify selected data.');
+        Assert.IsTrue(Reloaded.GetBySystemId(Outside.SystemId), 'Denied dispatch preserves the outside-selection line.');
+        Assert.AreEqual(Outside.Quantity, Reloaded.Quantity, 'Outside-selection quantity unchanged.');
+        Assert.AreEqual(Outside.SystemModifiedAt, Reloaded.SystemModifiedAt, 'Outside-selection data remains untouched.');
+        LowerPermissions.SetO365Full();
+        Assert.AreEqual(EntryCount, Entries.Count(), 'Denied dispatch must not post item entries.');
+        Assert.AreEqual(ValueCount, Values.Count(), 'Denied dispatch must not post value entries.');
     end;
 }
