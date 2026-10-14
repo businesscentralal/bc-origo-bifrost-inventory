@@ -145,9 +145,9 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         RequestJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];
-        MissingDocErr: Label 'documentNo must be specified.', Locked = true;
-        NotFoundErr: Label 'Posted transfer receipt %1 was not found.', Comment = '%1 = document no.', Locked = true;
-        NotSupportedErr: Label 'Posted transfer receipts cannot be undone in this Business Central version.', Locked = true;
+        MissingDocErr: Label 'documentNo must be specified.', Comment = 'is-IS=Tilgreina verður documentNo.';
+        NotFoundErr: Label 'Posted transfer receipt %1 was not found.', Comment = '%1 = document no.; is-IS=Bókuð flutningsmóttaka %1 fannst ekki.';
+        NotSupportedErr: Label 'Posted transfer receipts cannot be undone in this Business Central version.', Comment = 'is-IS=Ekki er hægt að afturkalla bókaðar flutningsmóttökur í þessari útgáfu Business Central.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Receipt Header", false, true) then
             exit;

@@ -915,6 +915,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilkynnir takmörkun innbyggðrar afturköllunar flutningsmóttöku án þess að breyta bókuðum færslum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - Method 3571782927 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo must be specified.</source>
+          <target>Tilgreina verður documentNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreina verður documentNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - Method ExecuteBifrostTask - NamedType MissingDocErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted transfer receipt %1 was not found.</source>
+          <target>Bókuð flutningsmóttaka %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no.; is-IS=Bókuð flutningsmóttaka %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3398809111 - Method 3571782927 - NamedType 2164942842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted transfer receipts cannot be undone in this Business Central version.</source>
+          <target>Ekki er hægt að afturkalla bókaðar flutningsmóttökur í þessari útgáfu Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að afturkalla bókaðar flutningsmóttökur í þessari útgáfu Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - Method ExecuteBifrostTask - NamedType NotSupportedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3816472531 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>release transfer order, transfer ready to ship, lock the transfer</source>
           <target>losa millifærslupöntun, staðfesta millifærslupöntun, millifærsla tilbúin til afhendingar</target>
