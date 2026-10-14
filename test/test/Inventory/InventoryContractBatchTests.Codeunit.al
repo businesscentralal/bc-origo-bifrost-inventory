@@ -1866,4 +1866,64 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.AreEqual(English, ActualEnglish, TypeName + ' English description must match the supported operation.');
         LibraryAssert.AreEqual(Icelandic, ActualIcelandic, TypeName + ' Icelandic description must use its shipped translation.');
     end;
+    /// <summary>Period close discovery and narrative describe the implemented behavior in both languages.</summary>
+    [Test]
+    procedure PeriodClose_BilingualDiscoveryAndNarrative()
+    begin
+        AssertPeriodNarrative('Inventory.Period.Close', 'Marks the selected period closed; an already closed period is unchanged. Does not run native close checks or create close history.', 'Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.', 'inventory period, mark period closed, closed flag', 'birgðatímabil, merkja tímabil lokað, lokunarmerki');
+    end;
+
+    /// <summary>Period get discovery and narrative describe the implemented behavior in both languages.</summary>
+    [Test]
+    procedure PeriodGet_BilingualDiscoveryAndNarrative()
+    begin
+        AssertPeriodNarrative('Inventory.Period.Get', 'Reads inventory periods without changing them. Close and reopen are separate types.', 'Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.', 'inventory period, closed period, read periods', 'birgðatímabil, lokað tímabil, lesa tímabil');
+    end;
+
+    /// <summary>Period reopen discovery and narrative describe the implemented behavior in both languages.</summary>
+    [Test]
+    procedure PeriodReopen_BilingualDiscoveryAndNarrative()
+    begin
+        AssertPeriodNarrative('Inventory.Period.Reopen', 'Clears the selected inventory period closed flag; an already open period is unchanged. Does not run the native reopen action.', 'Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.', 'inventory period, clear closed flag, reopen period', 'birgðatímabil, fjarlægja lokunarmerki, opna tímabil aftur');
+    end;
+
+    local procedure AssertPeriodNarrative(TypeName: Text; English: Text; Icelandic: Text; EnglishKeywords: Text; IcelandicKeywords: Text)
+    var
+        MessageType: Enum "Message Type ori";
+        Discovery: Interface "Msg Discovery ori";
+        Contract: Interface "Msg Contract ori";
+        PreviousLanguage: Integer;
+        EnglishSelection: Text;
+        IcelandicSelection: Text;
+        ActualEnglishKeywords: Text;
+        ActualIcelandicKeywords: Text;
+        EnglishOverview: Text;
+        IcelandicOverview: Text;
+        EnglishNotes: Text;
+        IcelandicNotes: Text;
+    begin
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Discovery := MessageType;
+        Contract := MessageType;
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        EnglishSelection := Discovery.GetSelectionDescription();
+        ActualEnglishKeywords := Discovery.GetKeywords();
+        Contract.GetOverview(EnglishOverview);
+        Contract.GetNotes(EnglishNotes);
+        GlobalLanguage(1039);
+        IcelandicSelection := Discovery.GetSelectionDescription();
+        ActualIcelandicKeywords := Discovery.GetKeywords();
+        Contract.GetOverview(IcelandicOverview);
+        Contract.GetNotes(IcelandicNotes);
+        GlobalLanguage(PreviousLanguage);
+        LibraryAssert.AreEqual(English, EnglishSelection, 'English selection describes actual source semantics.');
+        LibraryAssert.AreEqual(Icelandic, IcelandicSelection, 'Icelandic selection is shipped.');
+        LibraryAssert.AreEqual(English, EnglishOverview, 'Overview must not contradict selection.');
+        LibraryAssert.AreEqual(Icelandic, IcelandicOverview, 'Icelandic overview matches selection.');
+        LibraryAssert.AreEqual(EnglishKeywords, ActualEnglishKeywords, 'English keywords match actual operation.');
+        LibraryAssert.AreEqual(IcelandicKeywords, ActualIcelandicKeywords, 'Icelandic search terms are shipped.');
+        LibraryAssert.AreNotEqual(EnglishNotes, IcelandicNotes, 'Human notes translate too.');
+        LibraryAssert.IsTrue(StrLen(IcelandicNotes) > 0, 'Translated notes are not empty.');
+    end;
 }

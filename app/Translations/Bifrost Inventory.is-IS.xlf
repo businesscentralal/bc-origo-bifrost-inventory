@@ -1245,11 +1245,59 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory period, mark period closed, closed flag</source>
+          <target>birgðatímabil, merkja tímabil lokað, lokunarmerki</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðatímabil, merkja tímabil lokað, lokunarmerki</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sets Inventory Period.Closed directly without posting inventory. This is not the native inventory-period close workflow.</source>
+          <target>Setur Inventory Period.Closed beint án birgðabókunar. Þetta er ekki innbyggða verkferlið til að loka birgðatímabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setur Inventory Period.Closed beint án birgðabókunar. Þetta er ekki innbyggða verkferlið til að loka birgðatímabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Marks the selected period closed; an already closed period is unchanged. Does not run native close checks or create close history.</source>
+          <target>Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Marks the selected period closed; an already closed period is unchanged. Does not run native close checks or create close history.</source>
+          <target>Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
           <target>Les birgðatímabil.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 425395417 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory period, closed period, read periods</source>
+          <target>birgðatímabil, lokað tímabil, lesa tímabil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðatímabil, lokað tímabil, lesa tímabil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 425395417 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Close and reopen are separate message types.</source>
+          <target>Les eingöngu. Lokun og enduropnun eru aðskildar skilaboðategundir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les eingöngu. Lokun og enduropnun eru aðskildar skilaboðategundir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 425395417 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads inventory periods without changing them. Close and reopen are separate types.</source>
+          <target>Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 425395417 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads inventory periods without changing them. Close and reopen are separate types.</source>
+          <target>Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
           <source>endingDate is required.</source>
@@ -1268,6 +1316,30 @@
           <target>Opnar lokað birgðatímabil aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar lokað birgðatímabil aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory period, clear closed flag, reopen period</source>
+          <target>birgðatímabil, fjarlægja lokunarmerki, opna tímabil aftur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðatímabil, fjarlægja lokunarmerki, opna tímabil aftur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Clears Inventory Period.Closed directly without posting inventory or running the native reopen workflow.</source>
+          <target>Fjarlægir Inventory Period.Closed beint án birgðabókunar eða innbyggðs verkferlis fyrir enduropnun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir Inventory Period.Closed beint án birgðabókunar eða innbyggðs verkferlis fyrir enduropnun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Clears the selected inventory period closed flag; an already open period is unchanged. Does not run the native reopen action.</source>
+          <target>Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Clears the selected inventory period closed flag; an already open period is unchanged. Does not run the native reopen action.</source>
+          <target>Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</source>

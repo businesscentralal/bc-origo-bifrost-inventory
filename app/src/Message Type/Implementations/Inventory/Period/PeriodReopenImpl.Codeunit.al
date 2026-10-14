@@ -31,13 +31,17 @@ codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'inventory period, clear closed flag, reopen period', Comment = 'is-IS=birgðatímabil, fjarlægja lokunarmerki, opna tímabil aftur';
     begin
-        exit('reopen inventory period');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionLbl: Label 'Clears the selected inventory period closed flag; an already open period is unchanged. Does not run the native reopen action.', Comment = 'is-IS=Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.';
     begin
-        exit('Reopens a closed inventory period.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -122,14 +126,18 @@ codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewLbl: Label 'Clears the selected inventory period closed flag; an already open period is unchanged. Does not run the native reopen action.', Comment = 'is-IS=Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.';
     begin
-        Overview := 'Reopens a closed inventory period.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Clears Inventory Period.Closed directly without posting inventory or running the native reopen workflow.', Comment = 'is-IS=Fjarlægir Inventory Period.Closed beint án birgðabókunar eða innbyggðs verkferlis fyrir enduropnun.';
     begin
-        Notes := 'Clears Inventory Period.Closed. It does not post inventory.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

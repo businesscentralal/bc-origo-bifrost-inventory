@@ -31,13 +31,17 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'inventory period, closed period, read periods', Comment = 'is-IS=birgðatímabil, lokað tímabil, lesa tímabil';
     begin
-        exit('inventory period, closed period');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionLbl: Label 'Reads inventory periods without changing them. Close and reopen are separate types.', Comment = 'is-IS=Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.';
     begin
-        exit('Reads inventory periods. Close and reopen are separate types.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -105,14 +109,18 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewLbl: Label 'Reads inventory periods without changing them. Close and reopen are separate types.', Comment = 'is-IS=Les birgðatímabil án þess að breyta þeim. Lokun og enduropnun eru aðskildar skilaboðategundir.';
     begin
-        Overview := 'Reads inventory periods.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Read only. Close and reopen are separate message types.', Comment = 'is-IS=Les eingöngu. Lokun og enduropnun eru aðskildar skilaboðategundir.';
     begin
-        Notes := 'Read only. Close and reopen are separate message types.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
