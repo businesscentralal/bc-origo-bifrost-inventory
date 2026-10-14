@@ -1,7 +1,10 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Foundation.NoSeries;
+using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
@@ -289,16 +292,10 @@ codeunit 96933 "Inventory Cost Perm. Tests"
     procedure NativeTest_ReadOnlyCaller_TestsPendingCostWithoutWrites()
     var
         Item: Record Item;
-        GLSetup: Record "General Ledger Setup";
-        InventorySetup: Record "Inventory Setup";
-        JournalTemplate: Record "Item Journal Template";
-        JournalBatch: Record "Item Journal Batch";
-        JournalLine: Record "Item Journal Line";
         GLEntry: Record "G/L Entry";
         ValueEntry: Record "Value Entry";
         CostReports: Codeunit "Inventory Cost Reports ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
-        LibraryInventory: Codeunit "Library - Inventory";
         LowerPermissions: Codeunit "Library - Lower Permissions";
         Request: JsonObject;
         Response: JsonObject;
@@ -307,20 +304,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         ValueCount: Integer;
     begin
         // Story #35 native read-only report | Time: WorkDate() fixture | Risk: native test is not licensed MCP.
-        GLSetup.Get();
-        GLSetup."Journal Templ. Name Mandatory" := false;
-        GLSetup.Modify();
-        InventorySetup.Get();
-        InventorySetup."Automatic Cost Posting" := false;
-        InventorySetup."Automatic Cost Adjustment" := InventorySetup."Automatic Cost Adjustment"::Never;
-        InventorySetup.Modify();
-        LibraryInventory.CreateItem(Item);
-        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
-        LibraryInventory.CreateItemJournalBatch(JournalBatch, JournalTemplate.Name);
-        LibraryInventory.CreateItemJournalLine(JournalLine, JournalTemplate.Name, JournalBatch.Name, JournalLine."Entry Type"::"Positive Adjmt.", Item."No.", 2);
-        JournalLine.Validate("Unit Amount", 12);
-        JournalLine.Modify(true);
-        LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+        CreateOwnedPendingCost(Item);
         Request.Add('itemNo', Item."No.");
         GLCount := GLEntry.Count();
         ValueCount := ValueEntry.Count();
@@ -335,6 +319,92 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Assert.IsFalse(Token.AsValue().AsBoolean(), 'Read-only native test never posts.');
         Assert.AreEqual(GLCount, GLEntry.Count(), 'No new G/L entries.');
         Assert.AreEqual(ValueCount, ValueEntry.Count(), 'No new value entries.');
+    end;
+
+    /// <summary>A real read-only caller refuses mandatory journal numbering without consuming a number or posting costs.</summary>
+    [Test]
+    procedure Scenario_AC35_MandatoryTemplateRefusalPreservesNumberSeries()
+    var
+        Item: Record Item;
+        GLSetup: Record "General Ledger Setup";
+        JournalTemplate: Record "Gen. Journal Template";
+        JournalBatch: Record "Gen. Journal Batch";
+        SeriesLine: Record "No. Series Line";
+        PendingEntry: Record "Post Value Entry to G/L";
+        GLEntry: Record "G/L Entry";
+        ValueEntry: Record "Value Entry";
+        CostReports: Codeunit "Inventory Cost Reports ori";
+        LibraryERM: Codeunit "Library - ERM";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Request: JsonObject;
+        Response: JsonObject;
+        LastNoUsed: Code[20];
+        LastDateUsed: Date;
+        SeriesModifiedAt: DateTime;
+        PendingCount: Integer;
+        GLCount: Integer;
+        ValueCount: Integer;
+    begin
+        // Story #35 native refusal per6157312634 | Time: WorkDate() fixture | Risk: full mandatory-template support remains pending.
+        CreateOwnedPendingCost(Item);
+        LibraryERM.CreateGenJournalTemplate(JournalTemplate);
+        LibraryERM.CreateGenJournalBatch(JournalBatch, JournalTemplate.Name);
+        JournalBatch.Validate("No. Series", LibraryERM.CreateNoSeriesCode());
+        JournalBatch.Modify(true);
+        SeriesLine.SetRange("Series Code", JournalBatch."No. Series");
+        SeriesLine.FindFirst();
+        LastNoUsed := SeriesLine."Last No. Used";
+        LastDateUsed := SeriesLine."Last Date Used";
+        SeriesModifiedAt := SeriesLine.SystemModifiedAt;
+        GLSetup.Get();
+        GLSetup."Journal Templ. Name Mandatory" := true;
+        GLSetup.Modify();
+        PendingEntry.SetRange("Item No.", Item."No.");
+        PendingCount := PendingEntry.Count();
+        Assert.IsTrue(PendingCount > 0, 'The refusal protects actual owned pending inventory costs.');
+        GLCount := GLEntry.Count();
+        ValueCount := ValueEntry.Count();
+        Request.Add('itemNo', Item."No.");
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        LowerPermissions.AddPermissionSet('D365 READ');
+        Assert.IsTrue(SeriesLine.ReadPermission(), 'Caller can read the owned series.');
+        Assert.IsFalse(SeriesLine.WritePermission() or GLEntry.WritePermission() or ValueEntry.WritePermission(), 'Caller cannot consume series or write posted costs.');
+
+        asserterror CostReports.TestCostToGL(Request, Response);
+        Assert.ExpectedError('read-only operation refuses');
+
+        SeriesLine.FindFirst();
+        Assert.AreEqual(LastNoUsed, SeriesLine."Last No. Used", 'Refusal consumes no number.');
+        Assert.AreEqual(LastDateUsed, SeriesLine."Last Date Used", 'Refusal changes no number-series date.');
+        Assert.AreEqual(SeriesModifiedAt, SeriesLine.SystemModifiedAt, 'Refusal does not modify the number series.');
+        Assert.AreEqual(PendingCount, PendingEntry.Count(), 'Selected costs stay pending.');
+        Assert.AreEqual(GLCount, GLEntry.Count(), 'Refusal creates no G/L entries.');
+        Assert.AreEqual(ValueCount, ValueEntry.Count(), 'Refusal creates no value entries.');
+    end;
+
+    local procedure CreateOwnedPendingCost(var Item: Record Item)
+    var
+        GLSetup: Record "General Ledger Setup";
+        InventorySetup: Record "Inventory Setup";
+        JournalTemplate: Record "Item Journal Template";
+        JournalBatch: Record "Item Journal Batch";
+        JournalLine: Record "Item Journal Line";
+        LibraryInventory: Codeunit "Library - Inventory";
+    begin
+        GLSetup.Get();
+        GLSetup."Journal Templ. Name Mandatory" := false;
+        GLSetup.Modify();
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := false;
+        InventorySetup."Automatic Cost Adjustment" := InventorySetup."Automatic Cost Adjustment"::Never;
+        InventorySetup.Modify();
+        LibraryInventory.CreateItem(Item);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(JournalBatch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(JournalLine, JournalTemplate.Name, JournalBatch.Name, JournalLine."Entry Type"::"Positive Adjmt.", Item."No.", 2);
+        JournalLine.Validate("Unit Amount", 12);
+        JournalLine.Modify(true);
+        LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
     end;
 
     local procedure AssertPermissionDenied(var Argument: Record "Message Argument ori")
