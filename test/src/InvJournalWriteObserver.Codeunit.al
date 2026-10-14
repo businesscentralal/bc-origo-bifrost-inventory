@@ -12,6 +12,7 @@ codeunit 96961 "Inv Journal Write Observer"
         ItemNo: Code[20];
         CountMode: Boolean;
         ApplicationEntryNo: Integer;
+        ApplicationOutboundNo: Integer;
         FailureLbl: Label 'Owned native journal insert failure', Locked = true;
 
     /// <summary>Restricts failure injection to the self-created test item.</summary>
@@ -50,6 +51,18 @@ codeunit 96961 "Inv Journal Write Observer"
     local procedure FailAfterUnapply(var Rec: Record "Item Application Entry"; RunTrigger: Boolean)
     begin
         if not Rec.IsTemporary() and (ApplicationEntryNo <> 0) and (Rec."Entry No." = ApplicationEntryNo) then
+            Error(FailureLbl);
+    end;
+    /// <summary>Fails after native reapply inserts an application for the self-created outbound entry.</summary>
+    procedure SetApplicationOutbound(EntryNo: Integer)
+    begin
+        ApplicationOutboundNo := EntryNo;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Application Entry", 'OnAfterInsertEvent', '', false, false)]
+    local procedure FailAfterReapply(var Rec: Record "Item Application Entry"; RunTrigger: Boolean)
+    begin
+        if not Rec.IsTemporary() and (ApplicationOutboundNo <> 0) and (Rec."Outbound Item Entry No." = ApplicationOutboundNo) then
             Error(FailureLbl);
     end;
 }

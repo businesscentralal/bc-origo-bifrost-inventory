@@ -144,6 +144,92 @@ codeunit 96983 "Inv Application Write Tests"
         Assert.AreEqual(7, Ledger."Remaining Quantity", 'Inbound reopen rolled back.');
     end;
 
+    [Test]
+    procedure Reapply_LegacySelectorsRetainFullQuantityDefault()
+    var
+        Item: Record Item;
+        Ledger: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Inbound: Integer;
+        Outbound: Integer;
+    begin
+        CreateApplication(Item, Inbound, Outbound);
+        UnapplyEntry(Outbound);
+        Request.Add('itemLedgerEntryNo', Outbound);
+        Request.Add('applyToEntryNo', Inbound);
+        InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Reapply");
+        NativeApplication.Reapply(TempArgument);
+        Ledger.Get(Outbound);
+        Assert.AreEqual(0, Ledger."Remaining Quantity", 'Legacy selectors retain full available quantity behavior.');
+        Assert.IsFalse(Ledger.Open, 'Legacy reapply closes the native outbound.');
+    end;
+
+    [Test]
+    procedure Reapply_AfterNativeInsertFailure_RollsBack()
+    var
+        Item: Record Item;
+        Ledger: Record "Item Ledger Entry";
+        Application: Record "Item Application Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Observer: Codeunit "Inv Journal Write Observer";
+        Request: JsonObject;
+        Inbound: Integer;
+        Outbound: Integer;
+        BeforeCount: Integer;
+    begin
+        CreateApplication(Item, Inbound, Outbound);
+        UnapplyEntry(Outbound);
+        Observer.SetApplicationOutbound(Outbound);
+        BindSubscription(Observer);
+        Request.Add('outboundEntryNo', Outbound);
+        Request.Add('inboundEntryNo', Inbound);
+        Request.Add('quantity', 1);
+        InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Reapply");
+        BeforeCount := Application.Count();
+        Commit();
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'Actual native insertion failure must roll back.');
+        Assert.ExpectedError('Owned native journal insert failure');
+        UnbindSubscription(Observer);
+        Assert.AreEqual(BeforeCount, Application.Count(), 'Native application insertion rolled back.');
+        Ledger.Get(Outbound);
+        Assert.AreEqual(-3, Ledger."Remaining Quantity", 'Outbound quantity unchanged after failed reapply.');
+        Ledger.Get(Inbound);
+        Assert.AreEqual(10, Ledger."Remaining Quantity", 'Inbound quantity unchanged after failed reapply.');
+    end;
+
+    [Test]
+    procedure Reapply_RejectsMissingStringZeroAndMixedParameters()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Inbound: Integer;
+        Outbound: Integer;
+    begin
+        CreateApplication(Item, Inbound, Outbound);
+        UnapplyEntry(Outbound);
+        Request.Add('outboundEntryNo', Outbound);
+        Request.Add('inboundEntryNo', Inbound);
+        InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Reapply");
+        Commit();
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'New contract requires quantity.');
+        Assert.ExpectedError('quantity');
+        Request.Add('quantity', '1');
+        TempArgument.SetRequestJson(Request);
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'String quantity is not a JSON number.');
+        Assert.ExpectedError('quantity');
+        Request.Replace('quantity', 0);
+        TempArgument.SetRequestJson(Request);
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'Zero quantity is refused.');
+        Assert.ExpectedError('quantity');
+        Request.Replace('quantity', 1);
+        Request.Add('itemLedgerEntryNo', Outbound);
+        TempArgument.SetRequestJson(Request);
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'Ambiguous aliases are refused.');
+        Assert.ExpectedError('outboundEntryNo');
+    end;
+
     local procedure UnapplyEntry(Outbound: Integer)
     var
         TempArgument: Record "Message Argument ori" temporary;
