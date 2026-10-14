@@ -168,14 +168,20 @@ codeunit 10036913 "Inventory Source Resolve ori"
             end;
             case TypeName of
                 'SalesLine': begin
+                    SalesLine.SetLoadFields(SystemId);
+                    SalesLine.ReadIsolation(IsolationLevel::ReadCommitted);
                     Found := SalesLine.Get(Subtype, DocumentNo, LineNo);
                     IdText := Format(SalesLine.SystemId, 0, 4);
                 end;
                 'PurchaseLine': begin
+                    PurchaseLine.SetLoadFields(SystemId);
+                    PurchaseLine.ReadIsolation(IsolationLevel::ReadCommitted);
                     Found := PurchaseLine.Get(Subtype, DocumentNo, LineNo);
                     IdText := Format(PurchaseLine.SystemId, 0, 4);
                 end;
                 'TransferLine': begin
+                    TransferLine.SetLoadFields(SystemId);
+                    TransferLine.ReadIsolation(IsolationLevel::ReadCommitted);
                     Found := TransferLine.Get(DocumentNo, LineNo);
                     IdText := Format(TransferLine.SystemId, 0, 4);
                 end;

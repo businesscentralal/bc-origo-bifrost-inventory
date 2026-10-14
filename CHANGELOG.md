@@ -1,5 +1,7 @@
 # Changelog
 
+- Load only projected tracking/reservation/stock fields and native expiration settings; narrow document-key identity lookups to SystemId while leaving native source initialization fully loaded (codeunits 10036913/10036916; issue #5).
+
 - Verify structured RecordNotFound and unchanged native records for existing untracked items/documents; prove successful document, stock and availability reads under actual read-only permissions (test codeunits 96927/96929; issue #5).
 
 - Verify Inventory.Cost.Update refuses a real read-only caller before licensing and allows discovery with native Item writes without conferring an Inventory posting token (test codeunit 96933; issue #4).

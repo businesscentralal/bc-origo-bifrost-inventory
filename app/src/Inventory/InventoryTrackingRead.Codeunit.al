@@ -68,6 +68,8 @@ codeunit 10036916 "Inventory Tracking Read ori"
             Ledger.SetRange("Item No.", Item."No.");
             Ledger.SetFilter("Remaining Quantity", '<>0');
             FilterLedger(Ledger, Request);
+            Ledger.SetLoadFields("Entry No.", "Item No.", "Lot No.", "Serial No.", "Package No.", "Location Code", "Variant Code", "Remaining Quantity", "Expiration Date");
+            Ledger.ReadIsolation(IsolationLevel::ReadCommitted);
             if Ledger.FindSet() then
                 repeat
                     if HasTracking(Ledger."Lot No.", Ledger."Serial No.", Ledger."Package No.") then begin
@@ -80,6 +82,8 @@ codeunit 10036916 "Inventory Tracking Read ori"
             Entry.SetFilter("Quantity (Base)", '<>0');
         end;
         FilterReservation(Entry, Request);
+        Entry.SetLoadFields("Entry No.", "Item No.", "Lot No.", "Serial No.", "Package No.", "Location Code", "Variant Code", Quantity, "Quantity (Base)", "Expiration Date", Positive, "Reservation Status", "Source Type", "Source Subtype", "Source ID", "Source Batch Name", "Source Prod. Order Line", "Source Ref. No.");
+        Entry.ReadIsolation(IsolationLevel::ReadCommitted);
         if Entry.FindSet() then
             repeat
                 if HasTracking(Entry."Lot No.", Entry."Serial No.", Entry."Package No.") then begin
@@ -93,6 +97,8 @@ codeunit 10036916 "Inventory Tracking Read ori"
             until Entry.Next() = 0;
         if IsSource then begin
             FilterSpecification(Specification, Request);
+            Specification.SetLoadFields("Entry No.", "Item No.", "Lot No.", "Serial No.", "Package No.", "Location Code", "Variant Code", "Quantity (Base)", "Expiration Date", "Quantity Handled (Base)", "Quantity Invoiced (Base)");
+            Specification.ReadIsolation(IsolationLevel::ReadCommitted);
             if Specification.FindSet() then
                 repeat
                     if HasTracking(Specification."Lot No.", Specification."Serial No.", Specification."Package No.") then begin
@@ -157,6 +163,8 @@ codeunit 10036916 "Inventory Tracking Read ori"
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingEntryErr, 'entryNo', Format(EntryNo, 0, 9), '', '');
             exit;
         end;
+        Entry.SetLoadFields("Entry No.", "Item No.", "Lot No.", "Serial No.", "Package No.", "Location Code", "Variant Code", Quantity, "Quantity (Base)", "Expiration Date", Positive, "Reservation Status", "Source Type", "Source Subtype", "Source ID", "Source Batch Name", "Source Prod. Order Line", "Source Ref. No.");
+        Entry.ReadIsolation(IsolationLevel::ReadCommitted);
         if Entry.FindSet() then
             repeat
                 Clear(Row);
@@ -201,6 +209,8 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Ledger.SetRange(Positive, true);
         Ledger.SetFilter("Remaining Quantity", '>0');
         FilterLedger(Ledger, Request);
+        Ledger.SetLoadFields("Entry No.", "Item No.", "Lot No.", "Serial No.", "Package No.", "Location Code", "Variant Code", "Remaining Quantity", "Expiration Date");
+        Ledger.ReadIsolation(IsolationLevel::ReadCommitted);
         Ledger.SetAutoCalcFields("Reserved Quantity");
         AggregateAvailability(Ledger, Rows);
         Response.Add('itemNo', Item."No.");
@@ -438,8 +448,12 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Item: Record Item;
         TrackingCode: Record "Item Tracking Code";
     begin
+        Item.SetLoadFields("Item Tracking Code");
+        Item.ReadIsolation(IsolationLevel::ReadCommitted);
         if not Item.Get(ItemNo) then
             exit('');
+        TrackingCode.SetLoadFields("Use Expiration Dates");
+        TrackingCode.ReadIsolation(IsolationLevel::ReadCommitted);
         if not TrackingCode.Get(Item."Item Tracking Code") then
             exit('');
         if not TrackingCode."Use Expiration Dates" then
