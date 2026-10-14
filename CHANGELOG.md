@@ -1,5 +1,7 @@
 # Changelog
 
+- Preserve native requisition/planning order-to-order binding refusals with real persisted source identities and unchanged-supply assertions; require owned inventory-document locations and explicit read-only costing ledger permissions in fixtures (codeunit 70013476; tests 96926/96933, permission set 96934; issues #4/#7).
+
 - Verify Inventory.Cost.Get discovery and native snapshot reads for a real read-only caller without item writes or posting rights, plus public execution refusal before licensing when native Item read is absent (test codeunit 96933; issue #4).
 
 - Localize the 17 shared Attribute/Transfer/Assembly Help overviews and eight notes in Icelandic; correct the registered Attribute.Create name and assembly request-key casing. Verify discovery and direct narrative localization for all 51 app-owned types while preserving invariant English public contracts (codeunit 70013445; tests 96921; issues #30/#32/#33).

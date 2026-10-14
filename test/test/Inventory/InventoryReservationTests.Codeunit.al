@@ -763,9 +763,9 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.AreEqual(10, JournalLine.Quantity, 'Native source quantity is unchanged.');
     end;
 
-    /// <summary>A requisition supply keeps its worksheet and batch identity through reservation and cancellation.</summary>
+    /// <summary>Native requisition supply requires order-to-order binding and refuses ordinary manual reservations.</summary>
     [Test]
-    procedure Scenario_AC04_AC08_RequisitionLinePairsAndCancelsDemand()
+    procedure Scenario_AC04_RequisitionLineRequiresNativeBinding()
     var
         SalesLine: Record "Sales Line";
         Ledger: Record "Item Ledger Entry";
@@ -780,14 +780,14 @@ codeunit 96926 "Inventory Reservation Tests"
         Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
         Request.Add('quantity', 2);
 
-        // [WHEN] Reserve the selected demand, then cancel by source and by entry.
-        // [THEN] Native pointers, balanced quantities and both cancellation paths are exact.
-        AssertNativeRoundTrip(Request, Database::"Requisition Line", RequisitionLine."Worksheet Template Name", RequisitionLine."Journal Batch Name", RequisitionLine."Line No.", true, 2, 0);
+        // [WHEN] Attempt an ordinary manual reservation without native order-to-order binding.
+        // [THEN] Req. Line-Reserve rejects it before a partial pair can survive.
+        AssertNativeBindingRefusal(Request, SalesLine."No.", Ledger);
     end;
 
-    /// <summary>A planning component retains its parent worksheet line separately from its component reference.</summary>
+    /// <summary>Native planning components require order-to-order binding and refuse ordinary manual reservations.</summary>
     [Test]
-    procedure Scenario_AC05_AC08_PlanningComponentPairsAndCancelsInventory()
+    procedure Scenario_AC05_PlanningComponentRequiresNativeBinding()
     var
         SalesLine: Record "Sales Line";
         Ledger: Record "Item Ledger Entry";
@@ -807,13 +807,14 @@ codeunit 96926 "Inventory Reservation Tests"
         Component.Validate("Expected Quantity", 10);
         Component.Validate("Due Date", WorkDate());
         Component.Modify(true);
+        Component.Get(Component."Worksheet Template Name", Component."Worksheet Batch Name", Component."Worksheet Line No.", Component."Line No.");
         Request.Add('source', SourceObject('PlanningComponent', Component.SystemId));
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
 
-        // [WHEN] Reserve inventory and exercise both cancellation selectors.
-        // [THEN] Parent worksheet line and component reference remain distinct native pointers.
-        AssertNativeRoundTrip(Request, Database::"Planning Component", Component."Worksheet Template Name", Component."Worksheet Batch Name", Component."Line No.", false, 2, Component."Worksheet Line No.");
+        // [WHEN] Attempt an ordinary manual reservation without native order-to-order binding.
+        // [THEN] Plng. Component-Reserve rejects it without changing the posted supply.
+        AssertNativeBindingRefusal(Request, SalesLine."No.", Ledger);
     end;
 
     /// <summary>An inventory shipment reserves selected posted inventory through the native document adapter.</summary>
@@ -824,15 +825,19 @@ codeunit 96926 "Inventory Reservation Tests"
         Ledger: Record "Item Ledger Entry";
         Header: Record "Invt. Document Header";
         Line: Record "Invt. Document Line";
+        Location: Record Location;
+        LibraryWarehouse: Codeunit "Library - Warehouse";
         Request: JsonObject;
     begin
         // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
         // [GIVEN] An owned inventory shipment and matching posted stock.
-        CreateSources(SalesLine, Ledger);
-        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Shipment, '');
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
+        CreateSourcesAtLocation(SalesLine, Ledger, Location.Code);
+        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Shipment, Location.Code);
         Header.Validate("Document Date", WorkDate());
         Header.Modify(true);
         LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
+        Line.Get(Line."Document Type", Line."Document No.", Line."Line No.");
         Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
@@ -850,15 +855,19 @@ codeunit 96926 "Inventory Reservation Tests"
         Ledger: Record "Item Ledger Entry";
         Header: Record "Invt. Document Header";
         Line: Record "Invt. Document Line";
+        Location: Record Location;
+        LibraryWarehouse: Codeunit "Library - Warehouse";
         Request: JsonObject;
     begin
         // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
         // [GIVEN] An owned inventory receipt and matching sales demand.
-        CreateSources(SalesLine, Ledger);
-        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Receipt, '');
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
+        CreateSourcesAtLocation(SalesLine, Ledger, Location.Code);
+        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Receipt, Location.Code);
         Header.Validate("Document Date", WorkDate());
         Header.Modify(true);
         LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
+        Line.Get(Line."Document Type", Line."Document No.", Line."Line No.");
         Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
         Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
         Request.Add('quantity', 2);
@@ -886,6 +895,7 @@ codeunit 96926 "Inventory Reservation Tests"
         RequisitionLine.Validate(Quantity, 10);
         RequisitionLine.Validate("Due Date", WorkDate());
         RequisitionLine.Modify(true);
+        RequisitionLine.Get(RequisitionLine."Worksheet Template Name", RequisitionLine."Journal Batch Name", RequisitionLine."Line No.");
     end;
 
     local procedure CreateFullyShippedSource(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry")
@@ -1078,7 +1088,32 @@ codeunit 96926 "Inventory Reservation Tests"
         Data := Token.AsObject();
     end;
 
+    local procedure AssertNativeBindingRefusal(Request: JsonObject; ItemNo: Code[20]; Ledger: Record "Item Ledger Entry")
+    var
+        Entries: Record "Reservation Entry";
+        Response: JsonObject;
+        RemainingQuantity: Decimal;
+        Source: JsonToken;
+        SourceId: JsonToken;
+    begin
+        Request.Get('source', Source);
+        Source.AsObject().Get('systemId', SourceId);
+        Assert.AreNotEqual('00000000-0000-0000-0000-000000000000', SourceId.AsValue().AsText(), 'Refusal must exercise the real native source, not a missing record.');
+        RemainingQuantity := Ledger."Remaining Quantity";
+        asserterror ExecuteReservation(Request, false, Response);
+        Assert.ExpectedError('not a true demand or supply');
+        Entries.SetRange("Item No.", ItemNo);
+        Assert.IsTrue(Entries.IsEmpty(), 'Native binding refusal leaves no reservation or tracking pair.');
+        Ledger.Get(Ledger."Entry No.");
+        Assert.AreEqual(RemainingQuantity, Ledger."Remaining Quantity", 'Refusal does not consume posted supply.');
+    end;
+
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
+    begin
+        CreateSourcesAtLocation(SalesLine, ItemLedgerEntry, '');
+    end;
+
+    local procedure CreateSourcesAtLocation(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry"; LocationCode: Code[10])
     var
         Item: Record Item;
         ItemJournalTemplate: Record "Item Journal Template";
@@ -1090,11 +1125,15 @@ codeunit 96926 "Inventory Reservation Tests"
         LibraryInventory.CreateItemJournalTemplate(ItemJournalTemplate);
         LibraryInventory.CreateItemJournalBatch(ItemJournalBatch, ItemJournalTemplate.Name);
         LibraryInventory.CreateItemJournalLine(ItemJournalLine, ItemJournalTemplate.Name, ItemJournalBatch.Name, ItemJournalLine."Entry Type"::"Positive Adjmt.", Item."No.", 10);
+        ItemJournalLine.Validate("Location Code", LocationCode);
+        ItemJournalLine.Modify(true);
         LibraryInventory.PostItemJournalLine(ItemJournalTemplate.Name, ItemJournalBatch.Name);
         ItemLedgerEntry.SetRange("Item No.", Item."No.");
         ItemLedgerEntry.FindLast();
         LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
         LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 10);
+        SalesLine.Validate("Location Code", LocationCode);
+        SalesLine.Modify(true);
     end;
 
     local procedure CreateRequest(SalesLine: Record "Sales Line"; ItemLedgerEntry: Record "Item Ledger Entry"; Quantity: Decimal) Request: JsonObject

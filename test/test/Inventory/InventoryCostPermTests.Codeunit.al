@@ -59,7 +59,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
 
         Response := TempArgument.GetResponseJson();
         Response.Get('status', Token);
-        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native reader returns Success with read-only permissions.');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native reader returns Success with read-only permissions: ' + TempArgument.GetResponseText());
         Response.Get('items', Token);
         Rows := Token.AsArray();
         Assert.AreEqual(1, Rows.Count(), 'The owned selector returns exactly one item.');
