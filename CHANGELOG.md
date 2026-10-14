@@ -1,5 +1,7 @@
 # Changelog
 
+- Verify Inventory.Cost.Get discovery and native snapshot reads for a real read-only caller without item writes or posting rights, plus public execution refusal before licensing when native Item read is absent (test codeunit 96933; issue #4).
+
 - Localize the 17 shared Attribute/Transfer/Assembly Help overviews and eight notes in Icelandic; correct the registered Attribute.Create name and assembly request-key casing. Verify discovery and direct narrative localization for all 51 app-owned types while preserving invariant English public contracts (codeunit 70013445; tests 96921; issues #30/#32/#33).
 
 - Add current-cost read regression cases for all five native costing methods in en-US and is-IS, using posted owned stock and native serial tracking for Specific, with item/ledger/value read-only assertions (test codeunit 96936; issue #4).

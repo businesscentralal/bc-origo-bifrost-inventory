@@ -19,6 +19,80 @@ codeunit 96933 "Inventory Cost Perm. Tests"
     var
         Assert: Codeunit "Library Assert";
 
+    /// <summary>A real read-only caller reads native cost and stock without card or posting rights.</summary>
+    [Test]
+    procedure CostGet_ReadOnlyCaller_ReturnsSnapshotWithoutWriteRights()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        ReadCosts: Codeunit "Inventory Cost Read ori";
+        ReadImpl: Codeunit "Cost Get Impl ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        Token: JsonToken;
+        Rows: JsonArray;
+        ModifiedAt: DateTime;
+    begin
+        // Story #4 AC01/AC02 | Time: independent | Risk: a semantic read accidentally requires native writes.
+        LibraryInventory.CreateItem(Item);
+        Item.Validate("Unit Cost", 12);
+        Item.Modify(true);
+        ModifiedAt := Item.SystemModifiedAt;
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        Request.Add('itemNo', Item."No.");
+        TempArgument.SetRequestJson(Request);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Read Test');
+        Assert.IsTrue(Item.ReadPermission(), 'Caller has actual native Item read access.');
+        Assert.IsFalse(Item.WritePermission(), 'Caller cannot change Item records.');
+        Assert.IsFalse(PostingGate.HasPostingPermission(), 'Cost reads do not gain posting rights.');
+        Assert.IsTrue(ReadImpl.IsEnabled(), 'Semantic cost reads are discoverable for this read-only caller.');
+        Assert.AreEqual("Msg Direction ori"::Outbound, ReadImpl.GetMessageDirection(), 'Cost reads are Outbound.');
+
+        ReadCosts.ReadCosts(TempArgument);
+
+        Response := TempArgument.GetResponseJson();
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native reader returns Success with read-only permissions.');
+        Response.Get('items', Token);
+        Rows := Token.AsArray();
+        Assert.AreEqual(1, Rows.Count(), 'The owned selector returns exactly one item.');
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        Row.Get('unitCost', Token);
+        Assert.AreEqual(12, Token.AsValue().AsDecimal(), 'Native cost reaches the caller unchanged.');
+        Row.Get('inventory', Token);
+        Assert.AreEqual(0, Token.AsValue().AsDecimal(), 'Stock FlowField can be read without posting.');
+        Item.Get(Item."No.");
+        Assert.AreEqual(ModifiedAt, Item.SystemModifiedAt, 'The read did not modify the item.');
+    end;
+
+    /// <summary>The public cost implementation refuses a caller without native Item read before licensing.</summary>
+    [Test]
+    procedure CostGet_NoItemRead_RefusesBeforeLicense()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        ReadImpl: Codeunit "Cost Get Impl ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        // Story #4 AC02 | Time: independent | Risk: discovery and execution disagree on denied native reads.
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        Assert.IsFalse(Item.ReadPermission(), 'The caller actually lacks native Item read permission.');
+        Assert.IsFalse(ReadImpl.IsEnabled(), 'Cost read discovery is disabled without native Item read.');
+        ReadImpl.ExecuteBifrostTask(TempArgument);
+        AssertPermissionDenied(TempArgument);
+    end;
+
     /// <summary>Price discovery and execution refuse a caller with only native Item read access.</summary>
     [Test]
     procedure PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense()
