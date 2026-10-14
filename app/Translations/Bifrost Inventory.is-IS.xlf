@@ -201,6 +201,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = permission set name, is-IS=Bókun hafnað: vantar '%1' heimildasett.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inv. Posting Gate ori - Method AssertCanPost - NamedType PostingDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1835610377 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must be text.</source>
+          <target>Færibreytan %1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter; is-IS=Færibreytan %1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Read ori - NamedType InvalidTextErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835610377 - NamedType 2685541316" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for item costing data.</source>
+          <target>Heimild hafnað fyrir kostnaðargögn vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir kostnaðargögn vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Read ori - NamedType ReadDeniedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4210224724 - NamedType 1174431717" size-unit="char" translate="yes" xml:space="preserve">
           <source>Report 795 accepts either itemNo or itemCategoryCode, not both.</source>
           <target>Skýrsla 795 samþykkir annaðhvort itemNo eða itemCategoryCode, ekki bæði.</target>

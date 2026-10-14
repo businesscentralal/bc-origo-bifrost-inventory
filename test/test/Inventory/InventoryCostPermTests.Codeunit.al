@@ -50,6 +50,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         // Story #35 permission contract | Time: independent | Risk: no license bypass.
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         Assert.IsFalse(Item.ReadPermission(), 'Fixture must actually lack Item read access.');
         Assert.IsFalse(TestImpl.IsEnabled(), 'Unreadable Item hides this type.');
@@ -70,6 +71,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         // Story #35 posting contract | Time: independent | Risk: no native report may run.
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Cost Write Test');
         Assert.IsTrue(Item.WritePermission(), 'Native write is present; this isolates the token gate.');
@@ -80,6 +82,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Clear(TempArgument);
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         PostImpl.ExecuteBifrostTask(TempArgument);
         AssertPermissionDenied(TempArgument);
     end;
@@ -178,7 +181,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Response: JsonObject;
         Token: JsonToken;
     begin
-        Response.ReadFrom(Argument.GetResponseText());
+        Response := Argument.GetResponseJson();
         Response.Get('code', Token);
         Assert.AreEqual('PermissionDenied', Token.AsValue().AsText(), 'Structured refusal precedes license and report work.');
     end;

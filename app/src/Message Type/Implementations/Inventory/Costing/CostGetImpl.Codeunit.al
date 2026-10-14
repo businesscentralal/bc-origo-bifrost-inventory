@@ -31,59 +31,48 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Returns unit cost, last direct cost, and inventory for an item.');
+        exit('Returns current costing fields and native filtered inventory for one or more items.');
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('messageType', 'Inventory.Cost.Get');
-        Envelope.Add('version', 1);
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["itemNo","systemId"],"description":"Subject wins over data identifiers and tableView."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
     begin
-        TargetJson.Add('table', 'Item');
-        Target.Add(TargetJson);
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item","selection":"subject, itemNo, itemId/id/systemId/recordSystemId, tableView, otherwise unblocked items"}]');
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Exact Item No.; subject takes precedence."},{"name":"itemId","type":"string","required":false,"description":"Item SystemId; used after itemNo."},{"name":"id","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"systemId","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"recordSystemId","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"tableView","type":"string","required":false,"description":"Foundation Item table view; supports multiple items."},{"name":"locationFilter","type":"string","required":false,"description":"Native Location Filter applied to inventory; does not change card costs."},{"name":"variantCode","type":"string","required":false,"description":"Exact variant selection for inventory; does not change card costs."},{"name":"asOfDate","type":"string","required":false,"description":"ISO posting-date upper bound for inventory quantity only. Costs and adjustment/G/L flags remain current."}]');
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        Response.Add('status', 'Success');
-        Response.Add('unitCost', 0);
-        Response.Add('lastDirectCost', 0);
-        Response.Add('inventory', 0);
+        Clear(Response);
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success."},{"name":"items","type":"array","description":"One current cost snapshot per selected item.","children":[{"name":"itemNo","type":"string","description":"Item number."},{"name":"itemId","type":"string","description":"Item SystemId."},{"name":"costingMethod","type":"string","description":"Invariant costing-method member name."},{"name":"unitCost","type":"number","description":"Current Item Unit Cost."},{"name":"standardCost","type":"number","description":"Current Item Standard Cost."},{"name":"lastDirectCost","type":"number","description":"Current Item Last Direct Cost."},{"name":"indirectCostPct","type":"number","description":"Current Item Indirect Cost %."},{"name":"costIsAdjusted","type":"boolean","description":"Current Item adjustment flag."},{"name":"costIsPostedToGL","type":"boolean","description":"Native current pending-cost FlowField."},{"name":"inventory","type":"number","description":"Native stock quantity with location/variant and optional asOfDate."},{"name":"locationFilter","type":"string","description":"Effective native location filter."},{"name":"variantFilter","type":"string","description":"Effective native variant filter."},{"name":"asOfDate","type":"string","description":"Optional ISO upper posting date for inventory only."}]}]}');
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ErrorJson: JsonObject;
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'itemNo was not found');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.ReadFrom('[{"code":"RecordNotFound","when":"No Item matches Foundation selection.","fix":"Use an existing identifier or tableView."},{"code":"InvalidParameter","when":"Invalid optional text parameter.","fix":"Send text filters."},{"code":"InvalidParameterFormat","when":"Invalid date or identifier.","fix":"Use ISO date and valid identifiers."},{"code":"PermissionDenied","when":"Native Item read permission is absent.","fix":"Assign the appropriate read role."}]');
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
+        Clear(Effect);
+        Effect.ReadFrom('{"effect":"readOnly","writes":false,"posts":false,"idempotent":true,"changes":"None. Reads current Item costs and filtered native inventory quantities."}');
         exit(true);
     end;
 
@@ -119,7 +108,7 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only. Intentional cost writes stay on the revaluation journal.';
+        Notes := 'Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.';
         exit(true);
     end;
 
@@ -130,34 +119,13 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Item: Record Item;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        ItemNo: Code[20];
+        CostRead: Codeunit "Inventory Cost Read ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError('itemNo is required.');
-            exit;
-        end;
-        ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
-        if not Item.Get(ItemNo) then begin
-            Argument.RespondWithError('Item ' + ItemNo + ' was not found.');
-            exit;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNo', Item."No.");
-        ResponseJson.Add('unitCost', Item."Unit Cost");
-        ResponseJson.Add('lastDirectCost', Item."Last Direct Cost");
-        ResponseJson.Add('standardCost', Item."Standard Cost");
-        ResponseJson.Add('inventory', Item.Inventory);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        CostRead.ReadCosts(Argument);
     end;
 }

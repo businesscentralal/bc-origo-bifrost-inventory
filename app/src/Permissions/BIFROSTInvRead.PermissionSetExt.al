@@ -32,5 +32,6 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Inventory Cost Reports ori" = X,
         codeunit "Cost To GL Test Impl ori" = X,
+        codeunit "Inventory Cost Read ori" = X,
         codeunit "Cost Get Impl ori" = X;
 }
