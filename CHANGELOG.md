@@ -2,7 +2,7 @@
 
 - Localize period selection, keywords, overview and notes and state the current direct Closed-field behavior without claiming native close/reopen workflows (70013483–70013485; test 96921). Native period workflow remediation remains assigned separately.
 
-- Add fourteen self-seeded native tracking/reservation cases covering every lot/serial/package combination, actual receipt posting, exact UOM base quantities, location/variant/dimension preservation and reservation cancellation (test codeunit 96925; issues #5/#7/#37). These cases do not claim licensed MCP or independent-session concurrency.
+- Add fourteen self-seeded native tracking/reservation cases covering every lot/serial/package combination, actual receipt posting, exact UOM base quantities, location/variant/dimension preservation and reservation cancellation plus availability reads before/during/after reservation (test codeunit 96925; issues #5/#7/#37). These cases do not claim licensed MCP or independent-session concurrency.
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 

@@ -626,6 +626,7 @@ codeunit 96925 "Inventory Tracking Tests"
         Assert.AreEqual(Variant.Code, Ledger."Variant Code", 'Posted variant identity.');
         Assert.AreEqual(DimensionSetId, Ledger."Dimension Set ID", 'Posting preserves the source dimensions.');
         Assert.AreEqual(BaseQuantity, Ledger."Remaining Quantity", 'Only the assigned base quantity was received.');
+        AssertCombinationAvailability(Ledger, 0);
         if not ReserveAfterPosting then
             exit;
 
@@ -664,6 +665,7 @@ codeunit 96925 "Inventory Tracking Tests"
         Assert.AreEqual(-BaseQuantity, Entry."Quantity (Base)", 'Demand reserves exact base quantity.');
         Assert.AreEqual(BaseQuantity, Opposite."Quantity (Base)", 'Supply balances the demand.');
         Assert.AreEqual(Ledger."Entry No.", Opposite."Source Ref. No.", 'Only the selected posted supply is paired.');
+        AssertCombinationAvailability(Ledger, BaseQuantity);
         Clear(Request);
         Request.Add('source', GenericSource('SalesLine', SalesLine.SystemId));
         Request.Add('entryNo', PairNo);
@@ -677,8 +679,61 @@ codeunit 96925 "Inventory Tracking Tests"
         Ledger.CalcFields("Reserved Quantity");
         Assert.AreEqual(0, Ledger."Reserved Quantity", 'Cancellation releases the selected supply.');
         Assert.AreEqual(BaseQuantity, Ledger."Remaining Quantity", 'Cancellation never alters posted inventory.');
+        AssertCombinationAvailability(Ledger, 0);
         SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
         Assert.AreEqual(DimensionSetId, SalesLine."Dimension Set ID", 'Reservation does not change source dimensions.');
+    end;
+
+    local procedure AssertCombinationAvailability(Ledger: Record "Item Ledger Entry"; ExpectedReserved: Decimal)
+    var
+        Entries: Record "Reservation Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        Rows: JsonArray;
+        Token: JsonToken;
+        EntryCount: Integer;
+    begin
+        EntryCount := Entries.Count();
+        Request.Add('itemNo', Ledger."Item No.");
+        Request.Add('locationFilter', Ledger."Location Code");
+        Request.Add('variantCode', Ledger."Variant Code");
+        Request.Add('lotNo', Ledger."Lot No.");
+        Request.Add('serialNo', Ledger."Serial No.");
+        Request.Add('packageNo', Ledger."Package No.");
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+
+        TrackingRead.ReadAvailability(TempArgument);
+
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Response.Get('availability', Token);
+        Rows := Token.AsArray();
+        Assert.AreEqual(1, Rows.Count(), 'Owned filters identify exactly one tracking combination.');
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        Row.Get('lotNo', Token);
+        Assert.AreEqual(Ledger."Lot No.", Token.AsValue().AsText(), 'Read preserves the lot.');
+        Row.Get('serialNo', Token);
+        Assert.AreEqual(Ledger."Serial No.", Token.AsValue().AsText(), 'Read preserves the serial.');
+        Row.Get('packageNo', Token);
+        Assert.AreEqual(Ledger."Package No.", Token.AsValue().AsText(), 'Read preserves the package.');
+        Row.Get('locationCode', Token);
+        Assert.AreEqual(Ledger."Location Code", Token.AsValue().AsText(), 'Read preserves the location.');
+        Row.Get('variantCode', Token);
+        Assert.AreEqual(Ledger."Variant Code", Token.AsValue().AsText(), 'Read preserves the variant.');
+        Row.Get('inventory', Token);
+        Assert.AreEqual(Ledger."Remaining Quantity", Token.AsValue().AsDecimal(), 'Read uses posted base inventory.');
+        Row.Get('qtyReserved', Token);
+        Assert.AreEqual(ExpectedReserved, Token.AsValue().AsDecimal(), 'Read follows native reservation and cancellation.');
+        Row.Get('availableQuantity', Token);
+        Assert.AreEqual(Ledger."Remaining Quantity" - ExpectedReserved, Token.AsValue().AsDecimal(), 'Available stock is net of the native pair.');
+        Assert.AreEqual(EntryCount, Entries.Count(), 'Reading does not create or delete reservation entries.');
     end;
 
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
