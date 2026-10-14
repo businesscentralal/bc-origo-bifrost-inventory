@@ -863,19 +863,130 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
     end;
 
+    /// <summary>All 51 registered app types expose real localized discovery, not merely nonempty English strings.</summary>
     [Test]
     procedure AllInventoryTypes_HaveBilingualDiscovery()
     var
-        MessageType: Enum "Message Type ori";
-        Discovery: Interface "Msg Discovery ori";
+        Types: List of [Text];
         TypeName: Text;
     begin
-        foreach TypeName in InventoryTypes() do begin
-            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
-            Discovery := MessageType;
-            LibraryAssert.IsFalse(Discovery.GetKeywords() = '', TypeName + ' must have discovery keywords.');
-            LibraryAssert.IsFalse(Discovery.GetSelectionDescription() = '', TypeName + ' must have a selection description.');
+        // Issues #30/#32/#33 | Time: independent | Risk: untranslated discovery silently falls back to English.
+        Types := AppRegisteredInventoryTypes();
+        LibraryAssert.AreEqual(51, Types.Count(), 'Cover every app-owned registered type.');
+        foreach TypeName in Types do
+            AssertLocalizedDiscovery(TypeName);
+    end;
+
+    /// <summary>Direct app narratives localize while the public Foundation contract remains English.</summary>
+    [Test]
+    procedure AllInventoryTypes_LocalizeNarrativeAndKeepPublicContractInvariant()
+    var
+        Types: List of [Text];
+        TypeName: Text;
+    begin
+        // Issues #30/#32/#33 | Time: independent | Risk: direct Help fallback or translated wire-contract chapters.
+        Types := AppRegisteredInventoryTypes();
+        LibraryAssert.AreEqual(51, Types.Count(), 'Narrative acceptance covers all registered app types.');
+        foreach TypeName in Types do
+            AssertLocalizedNarrative(TypeName);
+    end;
+
+    local procedure AssertLocalizedDiscovery(TypeName: Text)
+    var
+        MessageType: Enum "Message Type ori";
+        Implementation: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        EnglishDescription: Text;
+        EnglishSelection: Text;
+        EnglishKeywords: Text;
+        IcelandicDescription: Text;
+        IcelandicSelection: Text;
+        IcelandicKeywords: Text;
+        EnglishTerms: List of [Text];
+        IcelandicTerms: List of [Text];
+        Term: Text;
+        PreviousLanguage: Integer;
+    begin
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Implementation := MessageType;
+        Discovery := MessageType;
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        EnglishDescription := Implementation.GetDescription();
+        EnglishSelection := Discovery.GetSelectionDescription();
+        EnglishKeywords := Discovery.GetKeywords();
+        GlobalLanguage(1039);
+        IcelandicDescription := Implementation.GetDescription();
+        IcelandicSelection := Discovery.GetSelectionDescription();
+        IcelandicKeywords := Discovery.GetKeywords();
+        GlobalLanguage(PreviousLanguage);
+        AssertTranslatedText(TypeName + ' description', EnglishDescription, IcelandicDescription);
+        AssertTranslatedText(TypeName + ' selection', EnglishSelection, IcelandicSelection);
+        AssertTranslatedText(TypeName + ' keywords', EnglishKeywords, IcelandicKeywords);
+        EnglishTerms := EnglishKeywords.Split(',');
+        IcelandicTerms := IcelandicKeywords.Split(',');
+        LibraryAssert.AreEqual(EnglishTerms.Count(), IcelandicTerms.Count(), TypeName + ' has one localized term per English search term.');
+        foreach Term in EnglishTerms do
+            LibraryAssert.AreNotEqual('', Term.Trim(), TypeName + ' English keywords have no empty filler.');
+        foreach Term in IcelandicTerms do
+            LibraryAssert.AreNotEqual('', Term.Trim(), TypeName + ' Icelandic keywords have no empty filler.');
+    end;
+
+    local procedure AssertLocalizedNarrative(TypeName: Text)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        Implementation: Interface "Msg Contract ori";
+        EnglishContract: JsonObject;
+        IcelandicContract: JsonObject;
+        EnglishToken: JsonToken;
+        IcelandicToken: JsonToken;
+        EnglishOverview: Text;
+        IcelandicOverview: Text;
+        EnglishNotes: Text;
+        IcelandicNotes: Text;
+        EnglishJson: Text;
+        IcelandicJson: Text;
+        Chapter: Text;
+        Chapters: List of [Text];
+        PreviousLanguage: Integer;
+        RestoredLanguage: Integer;
+    begin
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Implementation := MessageType;
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        Implementation.GetOverview(EnglishOverview);
+        Implementation.GetNotes(EnglishNotes);
+        ContractMgt.GetContract(MessageType, EnglishContract);
+        GlobalLanguage(1039);
+        Implementation.GetOverview(IcelandicOverview);
+        Implementation.GetNotes(IcelandicNotes);
+        ContractMgt.GetContract(MessageType, IcelandicContract);
+        RestoredLanguage := GlobalLanguage();
+        GlobalLanguage(PreviousLanguage);
+        LibraryAssert.AreEqual(1039, RestoredLanguage, TypeName + ' contract reader restores caller language.');
+        AssertTranslatedText(TypeName + ' overview', EnglishOverview, IcelandicOverview);
+        if EnglishNotes <> '' then
+            AssertTranslatedText(TypeName + ' notes', EnglishNotes, IcelandicNotes)
+        else
+            LibraryAssert.AreEqual('', IcelandicNotes, TypeName + ' absent notes stay absent.');
+        Chapters := 'overview,notes,parameters,response,errors,effect,related,examples,workflow'.Split(',');
+        foreach Chapter in Chapters do begin
+            LibraryAssert.AreEqual(EnglishContract.Get(Chapter, EnglishToken), IcelandicContract.Get(Chapter, IcelandicToken), TypeName + ' chapter presence is language invariant: ' + Chapter);
+            if EnglishContract.Contains(Chapter) then begin
+                EnglishToken.WriteTo(EnglishJson);
+                IcelandicToken.WriteTo(IcelandicJson);
+                LibraryAssert.AreEqual(EnglishJson, IcelandicJson, TypeName + ' public chapter stays English: ' + Chapter);
+            end;
         end;
+    end;
+
+    local procedure AssertTranslatedText(Context: Text; English: Text; Icelandic: Text)
+    begin
+        LibraryAssert.AreNotEqual('', English, Context + ' has English text.');
+        LibraryAssert.AreNotEqual('', Icelandic, Context + ' has Icelandic text.');
+        LibraryAssert.AreNotEqual(English, Icelandic, Context + ' uses a shipped translation.');
     end;
 
     /// <summary>Fails when an Inventory help contract names an empty or unknown related message type.</summary>
@@ -1167,7 +1278,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertAttributeContract('Inventory.Attribute.Update', 10036895,
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
             'write', false, 6, 2, 0,
-            'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.',
+            'Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.',
             'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.');
     end;
 

@@ -1,5 +1,7 @@
 # Changelog
 
+- Localize the 17 shared Attribute/Transfer/Assembly Help overviews and eight notes in Icelandic; correct the registered Attribute.Create name and assembly request-key casing. Verify discovery and direct narrative localization for all 51 app-owned types while preserving invariant English public contracts (codeunit 70013445; tests 96921; issues #30/#32/#33).
+
 - Add current-cost read regression cases for all five native costing methods in en-US and is-IS, using posted owned stock and native serial tracking for Specific, with item/ledger/value read-only assertions (test codeunit 96936; issue #4).
 
 - Add native reservation lifecycle regression cases for requisition supply, planning component demand, and inventory receipt/shipment sources, including exact source pointers, balanced quantities and both cancellation selectors (test codeunit 96926; issue #7).
