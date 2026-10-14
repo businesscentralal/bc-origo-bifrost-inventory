@@ -43,6 +43,7 @@ codeunit 96983 "Inv Application Write Tests"
         Assert.IsTrue(Ledger."Applied Entry to Adjust", 'Inbound marked for adjustment.');
         Application.SetRange("Outbound Item Entry No.", Outbound);
         Assert.IsTrue(Application.IsEmpty(), 'Native application removed through worksheet.');
+        AssertNoInteractiveRecoveryMarkers(Inbound, Outbound);
         Commit();
         Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'Repeated unapply refuses empty selection.');
         Assert.ExpectedError('no real application');
@@ -77,6 +78,7 @@ codeunit 96983 "Inv Application Write Tests"
         Assert.AreEqual(-1.5, Application.Quantity, 'Actual native application quantity, not response-only.');
         Item.Get(Item."No.");
         Assert.IsFalse(Item."Cost is Adjusted", 'Adjustment remains required, no Adjust Cost run.');
+        AssertNoInteractiveRecoveryMarkers(Inbound, Outbound);
     end;
 
     [Test]
@@ -228,6 +230,15 @@ codeunit 96983 "Inv Application Write Tests"
         TempArgument.SetRequestJson(Request);
         Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Application Process ori", TempArgument), 'Ambiguous aliases are refused.');
         Assert.ExpectedError('outboundEntryNo');
+    end;
+
+    local procedure AssertNoInteractiveRecoveryMarkers(Inbound: Integer; Outbound: Integer)
+    var
+        History: Record "Item Application Entry History";
+    begin
+        History.SetRange("Entry No.", 0);
+        History.SetFilter("Item Ledger Entry No.", '%1|%2', Inbound, Outbound);
+        Assert.IsTrue(History.IsEmpty(), 'A completed API operation must not be restored as an abandoned interactive worksheet.');
     end;
 
     local procedure UnapplyEntry(Outbound: Integer)

@@ -60,7 +60,8 @@ codeunit 70013495 "Inv Application Write ori"
         end;
         if EntryNos.Count() = 0 then
             Error(NoApplicationsErr);
-        NativeApply.SetCalledFromApplicationWorksheet(true);
+        // This headless operation uses the native worksheet API, but is not a crashed interactive worksheet.
+        // Keep the native default false so exact partial results do not create recovery markers.
         foreach EntryNo in EntryNos do begin
             Application.Get(EntryNo);
             NativeApply.UnApply(Application);
@@ -125,7 +126,8 @@ codeunit 70013495 "Inv Application Write ori"
         BeforeOutbound := Outbound."Remaining Quantity";
         QuantityLimit.SetQuantity(Inbound."Entry No.", Outbound."Entry No.", Quantity);
         BindSubscription(QuantityLimit);
-        NativeApply.SetCalledFromApplicationWorksheet(true);
+        // This headless operation uses the native worksheet API, but is not a crashed interactive worksheet.
+        // Keep the native default false so exact partial results do not create recovery markers.
         NativeApply.ReApply(Outbound, Inbound."Entry No.");
         UnbindSubscription(QuantityLimit);
         Inbound.Get(Inbound."Entry No.");

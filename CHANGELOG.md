@@ -8,6 +8,8 @@
 
 - Align undo/application discovery and response metadata with the native contracts; make the six touched type descriptions, keywords and selection notes translatable to is-IS, and describe unsupported receipt undo truthfully (70013480–70013482/70013490–70013492).
 
+- Keep application API calls noninteractive: preserve native validation/history while avoiding interactive worksheet recovery markers that could reapply a completed partial API result (70013495; test96983).
+
 ## Unreleased — native journal acceptance (#6, #34)
 
 - Add registered physical Check, PreviewPost and batched RecordCount. Use native report 790 with explicit options and empty-batch protection, Validate counted quantities atomically, preserve legacy Record input, and return both native ledger ranges on Post. Use the public Foundation ItemJournal.Post permission interface (70013463/70013465/70013466/70013469/70013472/70013479/70013496; enum 70013459 values 70013460–70013462; tests 96962–96964).
