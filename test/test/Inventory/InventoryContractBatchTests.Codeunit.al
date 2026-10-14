@@ -829,12 +829,18 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertJsonText(Response, 'contentType', 'text/json');
         Response.Get('fields', Token);
         if TypeName = 'Inventory.AdjustCost.Run' then
-            LibraryAssert.AreEqual(4, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
+            LibraryAssert.AreEqual(7, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
         else
             LibraryAssert.AreEqual(5, Token.AsArray().Count(), 'Exact CostToGL response field count.');
         GetNamedMember(Response, 'fields', 'name', 'status', Field);
         AssertJsonText(Field, 'type', 'string');
         if TypeName = 'Inventory.AdjustCost.Run' then begin
+            GetNamedMember(Response, 'fields', 'name', 'itemsProcessed', Field);
+            AssertJsonText(Field, 'type', 'integer');
+            GetNamedMember(Response, 'fields', 'name', 'reportCompleted', Field);
+            AssertJsonText(Field, 'type', 'boolean');
+            GetNamedMember(Response, 'fields', 'name', 'errors', Field);
+            AssertJsonText(Field, 'type', 'array');
             GetNamedMember(Response, 'fields', 'name', 'itemsSelected', Field);
             AssertJsonText(Field, 'type', 'integer');
             GetNamedMember(Response, 'fields', 'name', 'postToGL', Field);
