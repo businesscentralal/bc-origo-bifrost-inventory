@@ -76,7 +76,7 @@ codeunit 96924 "Inventory Domain Setup Tests"
                 Assert.IsFalse(Implementation.IsEnabled(), TypeName + ' must honor its company opt-out.');
                 Checked += 1;
             end;
-        Assert.AreEqual(45, Checked, 'Every Inventory-owned type, including Tracking.Get, is checked.');
+        Assert.AreEqual(46, Checked, 'Every Inventory-owned type, including Tracking.Get and Cost.Update, is checked.');
     end;
 
     /// <summary>Execution refuses disabled domains before payload processing, licensing or native business writes.</summary>
@@ -109,7 +109,7 @@ codeunit 96924 "Inventory Domain Setup Tests"
                 Checked += 1;
             end;
         // The exact DomainDisabled error-code AC awaits the Foundation enum; this test makes no such claim.
-        Assert.AreEqual(45, Checked, 'All Inventory implementations refuse before their licensed operation.');
+        Assert.AreEqual(46, Checked, 'All Inventory implementations refuse before their licensed operation.');
     end;
 
     local procedure DisableAllDomains()

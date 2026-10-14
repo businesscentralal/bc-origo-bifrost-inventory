@@ -6,6 +6,7 @@
 
 - Refuse report795 postToGL=true when the native Automatic Cost Posting prerequisite is disabled, before any adjustment (70013429); verify real selected G/L posting and explicit false (96931/96932).
 
+- Add guarded Inventory.Cost.Update with native Validate and Codeunit.Run isolation, Standard-cost refusal, blocked-item opt-in, expected method and field permissions; protect only dedicated Item cost/price fields from generic writes (70013433–70013435/70013437; tests 96937–96938).
 - Implement Inventory.Cost.Get through Foundation item resolution, including SystemId aliases and tableView; return current costing fields, calculated posting status and native filtered/date-bounded stock (70013432/70013468; tests 96936).
 - Make CostToGL.Test Outbound and accessible without a posting token; add shipping read/full execute grants and require both posting and native table permissions (70013453/70013467, permission extensions 10036915/10036916; restricted tests 96933–96935).
 - Return native completed-item counts separately from selected items, report completion and errors; cover all four category/boolean combinations and already-adjusted/empty selections (70013429/70013431/70013460; tests 96931).

@@ -114,11 +114,12 @@ codeunit 96936 "Inventory Cost Read Tests"
         CreateItem(Item);
         CreateItem(OtherItem);
         Item.SetFilter("No.", '%1|%2', Item."No.", OtherItem."No.");
-        Request.Add('tableView', Item.GetView(false));
+        Request.Add('tableView', Item.GetView(true));
         InitArgument(TempArgument);
         TempArgument.SetRequestJson(Request);
         CostRead.ReadCosts(TempArgument);
         Response := TempArgument.GetResponseJson();
+        AssertText(Response, 'status', 'Success');
         Response.Get('items', Token);
         Assert.AreEqual(2, Token.AsArray().Count(), 'Both and only both selected items are returned.');
     end;
@@ -195,7 +196,7 @@ codeunit 96936 "Inventory Cost Read Tests"
         Row := FirstItem(TempArgument);
         AssertNumber(Row, 'inventory', 2);
         AssertNumber(Row, 'unitCost', Item."Unit Cost");
-        Request.Add('locationFilter', 'NONEXISTENT');
+        Request.Add('locationFilter', 'XNONE');
         InitArgument(TempArgument);
         TempArgument.SetRequestJson(Request);
         CostRead.ReadCosts(TempArgument);
@@ -212,6 +213,7 @@ codeunit 96936 "Inventory Cost Read Tests"
     var
         Item: Record Item;
         Variant: Record "Item Variant";
+        Ledger: Record "Item Ledger Entry";
         TempArgument: Record "Message Argument ori" temporary;
         Request: JsonObject;
     begin
@@ -220,6 +222,10 @@ codeunit 96936 "Inventory Cost Read Tests"
         LibraryInventory.CreateItemVariant(Variant, Item."No.");
         PostStock(Item."No.", WorkDate(), 2, Variant.Code);
         PostStock(Item."No.", WorkDate(), 3, '');
+        Ledger.SetRange("Item No.", Item."No.");
+        Ledger.SetRange("Variant Code", Variant.Code);
+        Ledger.CalcSums(Quantity);
+        Assert.AreEqual(2, Ledger.Quantity, 'Native fixture contains exactly two units of the requested variant.');
         Request.Add('itemNo', Item."No.");
         Request.Add('variantCode', Variant.Code);
         InitArgument(TempArgument);
@@ -308,8 +314,10 @@ codeunit 96936 "Inventory Cost Read Tests"
     local procedure AssertNumber(Row: JsonObject; Name: Text; Expected: Decimal)
     var
         Token: JsonToken;
+        Serialized: Text;
     begin
         Assert.IsTrue(Row.Get(Name, Token), Name);
-        Assert.AreEqual(Expected, Token.AsValue().AsDecimal(), Name);
+        Row.WriteTo(Serialized);
+        Assert.AreEqual(Expected, Token.AsValue().AsDecimal(), Name + ': ' + Serialized);
     end;
 }

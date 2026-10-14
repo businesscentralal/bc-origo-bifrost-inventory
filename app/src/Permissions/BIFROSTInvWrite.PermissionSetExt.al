@@ -58,6 +58,10 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Cost To GL Test Impl ori" = X,
         codeunit "Inventory Cost Read ori" = X,
         codeunit "Cost Get Impl ori" = X,
+        codeunit "Inventory Cost Write ori" = X,
+        codeunit "Inventory Cost Write Proc. ori" = X,
+        codeunit "Cost Update Impl ori" = X,
+        codeunit "Inventory Cost Data Guard ori" = X,
         codeunit "Adjust Cost Run Impl ori" = X,
         codeunit "Adjust Cost Run Process ori" = X,
         codeunit "Cost To GL Post Impl ori" = X;

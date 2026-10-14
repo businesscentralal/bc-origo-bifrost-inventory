@@ -241,6 +241,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.AssemblyOrder.Statistics');
         Types.Add('Inventory.AdjustCost.Run');
         Types.Add('Inventory.Cost.Get');
+        Types.Add('Inventory.Cost.Update');
         Types.Add('Inventory.CostToGL.Post');
         Types.Add('Inventory.CostToGL.Test');
         Types.Add('Inventory.Tracking.Get');

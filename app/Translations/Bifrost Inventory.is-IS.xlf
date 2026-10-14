@@ -261,6 +261,54 @@
           <note from="Developer" annotates="general" priority="2">%1 = report number, %2 = parameter name; is-IS=Skýrsla %1 styður ekki afmörkunina %2. Engin skýrsla var keyrð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Reports ori - NamedType UnsupportedFilterErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
+          <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 2195463964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to write item cost field %1.</source>
+          <target>Heimild hafnað til að breyta kostnaðarreit vöru %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = field number; is-IS=Heimild hafnað til að breyta kostnaðarreit vöru %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType FieldDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 160901118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCostingMethod does not match the current costing method %1.</source>
+          <target>expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = current method; is-IS=expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType MethodErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 3660386871" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Supply unitCost, lastDirectCost or standardCost.</source>
+          <target>Tilgreindu unitCost, lastDirectCost eða standardCost.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu unitCost, lastDirectCost eða standardCost.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType NoFieldsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select exactly one item using subject, an item identifier or tableView.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType SelectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 2278941802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard-costed items require Inventory.Revaluation.Post. No item-card cost was changed.</source>
+          <target>Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType StandardErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCostingMethod must be text.</source>
+          <target>expectedCostingMethod verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCostingMethod verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType TextErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1739476244 - NamedType 2509391145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to update item costs.</source>
+          <target>Heimild hafnað til að uppfæra vörukostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra vörukostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType WriteDeniedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
           <target>%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.</target>
