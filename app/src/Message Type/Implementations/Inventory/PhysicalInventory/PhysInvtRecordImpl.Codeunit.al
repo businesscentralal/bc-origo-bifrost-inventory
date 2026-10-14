@@ -57,7 +57,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 

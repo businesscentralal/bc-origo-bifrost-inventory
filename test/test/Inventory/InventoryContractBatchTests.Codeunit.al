@@ -83,6 +83,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Contract: JsonObject;
+        Envelope: JsonObject;
         Parameter: JsonObject;
         Example: JsonObject;
         Request: JsonObject;
@@ -91,6 +92,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         // Issues #6/#27/#30 | Time: example date is illustrative | Risk: example cannot execute.
         ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.Calculate", Contract);
+        Contract.Get('envelope', Token);
+        Envelope := Token.AsObject();
+        Envelope.Get('dataRequired', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Native write example requires request data.');
         GetNamedMember(Contract, 'parameters', 'name', 'postingDate', Parameter);
         Parameter.Get('required', Token);
         LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Calculation requires postingDate.');
@@ -107,6 +112,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Data.Contains('postingDate'), 'Published example supplies postingDate.');
         LibraryAssert.IsTrue(Data.Contains('documentNo'), 'Published example supplies documentNo.');
         ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.RecordCount", Contract);
+        Contract.Get('envelope', Token);
+        Envelope := Token.AsObject();
+        Envelope.Get('dataRequired', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsBoolean(), 'Native write example requires request data.');
         GetNamedMember(Contract, 'parameters', 'name', 'counts', Parameter);
         Parameter.Get('description', Token);
         LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Required for RecordCount'), 'Canonical required array is documented.');
