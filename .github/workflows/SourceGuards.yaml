@@ -5,10 +5,11 @@ name: Source Guards
 # tableView is validated before SetView, the parameter names a contract declares are the keys the code reads and the
 # other way round, nothing is declared obsolete, every page, query and report is granted by an assignable permission
 # set, no answer mixes a Locked English sentence with translated text, and every Icelandic keyword list is complete.
-# Contract parameter keys and mixed-language labels are copied in tools/ but not run here yet:
-# the shared contract chapters declare keys individual list types do not read, and several Locked
-# telemetry and refusal labels predate the Foundation rule. Enabling those two jobs would fail on main.
-# The Icelandic xlf check (tools/Test-IcelandicXlfInSync.ps1) needs a build and is run by hand before a PR.
+# The full contract parameter scan awaits the remaining AL contract repairs (issue #30); its
+# regression fixtures run below. The mixed-language source scan awaits AL localization (issue #33).
+# Icelandic xlf parity needs compiler-generated translations and is checked after compilation (issue #32).
+# Help links need the external Inventory help folders in businesscentralal/bifrost (issue #31).
+# These open acceptance items remain separate from the passing guard regression tests.
 
 on:
   pull_request:
@@ -87,3 +88,16 @@ jobs:
       - name: Every Icelandic keyword list is complete
         shell: pwsh
         run: ./tools/Test-IcelandicKeywordCounts.ps1
+
+  ContractParameterKeysRegression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: The contract guard checks itself
+        shell: pwsh
+        run: ./tools/Test-ContractParameterKeys.ps1 -SelfTest
+
+      - name: Contract selectors, declarations and typed readers retain mismatch detection
+        run: python3 tools/tests/test-contract-parameter-keys.py
