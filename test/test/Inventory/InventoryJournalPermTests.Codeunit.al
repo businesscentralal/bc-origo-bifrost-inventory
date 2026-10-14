@@ -121,13 +121,13 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
+        AssertPostingGate('ItemPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
     /// <summary>PhysInventory.PreviewPost: NativeRead checks actual permissions separately from licensing.</summary>
     [Test]
-    procedure PhysPreview_NativeRead_Enabled()
+    procedure PhysPreview_NativeRead_Refuses()
     var
         Native: Record "Item Journal Line";
         TempArgument: Record "Message Argument ori" temporary;
@@ -139,8 +139,8 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
-        AssertDispatch(TempArgument, true);
+        AssertPostingGate('ItemPost', false);
+        AssertDispatch(TempArgument, false);
     end;
 
     /// <summary>PhysInventory.PreviewPost: NativeWrite checks actual permissions separately from licensing.</summary>
@@ -157,7 +157,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
+        AssertPostingGate('ItemPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -174,7 +174,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', false);
+        AssertPostingGate('ItemPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -192,7 +192,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
+        AssertPostingGate('ItemPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -210,7 +210,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
+        AssertPostingGate('ItemPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -228,7 +228,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', true);
+        AssertPostingGate('ItemPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -245,7 +245,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('ItemPost', false);
+        AssertPostingGate('ItemPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -407,7 +407,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -425,7 +425,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -443,7 +443,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -460,7 +460,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -478,7 +478,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -496,7 +496,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -514,7 +514,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -531,7 +531,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -549,7 +549,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -567,7 +567,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -585,7 +585,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -602,7 +602,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -620,7 +620,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -638,7 +638,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -656,7 +656,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -673,7 +673,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -691,7 +691,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsFalse(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -709,7 +709,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsFalse(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -727,7 +727,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', true);
+        AssertPostingGate('InvPost', true);
         AssertDispatch(TempArgument, true);
     end;
 
@@ -744,7 +744,7 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Native.ReadPermission(), 'Verify actual native read grant.');
         Assert.IsTrue(Native.WritePermission(), 'Verify actual native write grant.');
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
     end;
 
@@ -900,13 +900,13 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         Argument.Insert(true);
     end;
 
-    local procedure AssertPostingToken(TokenName: Text; Expected: Boolean)
+    local procedure AssertPostingGate(TokenName: Text; Expected: Boolean)
     var
         NativeJournal: Codeunit "Inventory Native Journal ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
     begin
         if TokenName = 'ItemPost' then
-            Assert.AreEqual(Expected, NativeJournal.HasItemPostingPermission(), 'Check the independent Foundation token.')
+            Assert.AreEqual(Expected, NativeJournal.HasItemPostingPermission(), 'The public Foundation gate requires its token and native journal writes.')
         else
             Assert.AreEqual(Expected, PostingGate.HasPostingPermission(), 'Check the independent Inventory token.');
     end;
@@ -992,8 +992,8 @@ codeunit 96964 "Inventory Journal Perm. Tests"
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Native Wrt Test');
         Assert.IsTrue(Selected.WritePermission(), 'Native writes are present; only posting authorization is missing.');
-        AssertPostingToken('ItemPost', false);
-        AssertPostingToken('InvPost', false);
+        AssertPostingGate('ItemPost', false);
+        AssertPostingGate('InvPost', false);
         AssertDispatch(TempArgument, false);
         Assert.IsTrue(Reloaded.GetBySystemId(Selected.SystemId), 'Denied dispatch preserves the selected line.');
         Assert.AreEqual(Selected.Quantity, Reloaded.Quantity, 'Selected quantity unchanged.');
