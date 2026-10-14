@@ -153,3 +153,5 @@
 ## PR #96 AL warning repairs
 
 - Correct AL filenames and declaration order; clear absent optional notes; preserve temporary argument names, full response content types and loaded Description fields; initialize contract-array indexes. Preserve all assertions and the original guard/workflow patch. Objects: 96900, 96901, 96902, 96903, 96904, 96918, 96919, 96921, 10036897, 70013413, 70013414, 70013415, 70013417, 70013419, 70013421, 70013422, 70013423, 70013424, 70013425, 70013426, 70013427, 70013455, 70013456, 70013458, 70013459, 70013469, 70013472, 70013473, 70013475, 70013477, 70013481, 70013483, 70013486, 70013488, 70013490, 70013491, 70013492, 70013496. Foreign Item Attribute permission migration remains coordinated with Foundation; no warning waiver.
+
+- This PR retains the `.github/workflows/SourceGuards.yaml` contract-guard workflow change and `tools/tests/test-contract-parameter-keys.py` regression fixtures. Gunnar H2 sign-off for the workflow change remains required; no warning waiver applies, including the four existing permission warnings.
