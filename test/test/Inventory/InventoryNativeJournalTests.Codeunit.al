@@ -38,6 +38,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         BeforeCount: Integer;
     begin
         CreateTransfer(Item, Batch, Line);
+        Item.Get(Item."No.");
         Item.Validate(Blocked, true);
         Item.Modify(true);
         BeforeCount := Entries.Count();
@@ -202,10 +203,13 @@ codeunit 96960 "Inventory Native Journal Tests"
     begin
         CreateBatch(Batch, "Item Journal Template Type"::Item);
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Check(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('Type');
+        Commit();
         asserterror Journal.Preview(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('Type');
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('Type');
     end;
@@ -224,6 +228,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         Line."Entry Type" := Line."Entry Type"::"Positive Adjmt.";
         Line.Modify();
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('Entry Type');
         Assert.IsTrue(Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No."), 'Invalid line retained for correction.');
@@ -247,6 +252,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         CreateTransfer(OtherItem, OtherBatch, OtherLine);
         SelectOne(Request, OtherLine.SystemId);
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('lineSystemIds');
         Clear(Request);
@@ -254,6 +260,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         Ids.Add(Line.SystemId);
         Request.Add('lineSystemIds', Ids);
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Preview(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('lineSystemIds');
         Assert.IsTrue(OtherLine.Get(OtherLine."Journal Template Name", OtherLine."Journal Batch Name", OtherLine."Line No."), 'Foreign line never touched.');
@@ -272,14 +279,17 @@ codeunit 96960 "Inventory Native Journal Tests"
         CreateTransfer(Item, Batch, Line);
         Request.ReadFrom('{"lineSystemIds":[]}');
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('lineSystemIds');
         Request.ReadFrom('{"lineSystemIds":[null]}');
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('lineSystemIds');
         Request.ReadFrom('{"lineSystemIds":"not-an-array"}');
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('lineSystemIds');
     end;
@@ -298,10 +308,12 @@ codeunit 96960 "Inventory Native Journal Tests"
         Request.Add('templateName', Batch."Journal Template Name");
         Request.Add('batchName', 'WRONG');
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Check(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('Identify');
         Request.ReadFrom('{"templateName":"ELEVENCHARS","batchName":"X"}');
         InitArgument(TempArgument, Batch, Request);
+        Commit();
         asserterror Journal.Check(TempArgument, "Item Journal Template Type"::Transfer);
         Assert.ExpectedError('at most 10');
     end;

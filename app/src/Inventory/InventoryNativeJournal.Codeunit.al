@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Finance.GeneralLedger.Preview;
 using Microsoft.Foundation.Navigate;
+using Microsoft.Inventory.Counting.Journal;
+using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
@@ -22,7 +24,29 @@ codeunit 70013463 "Inventory Native Journal ori"
         NothingPostedErr: Label 'No native item register was produced.', Comment = 'is-IS=Engin innbyggð vöruskrá var mynduð.';
         NextStepLbl: Label 'Correct the selected journal lines before posting.', Comment = 'is-IS=Leiðréttu valdar bókarlínur áður en bókað er.';
         FutureDateLbl: Label 'Line %1 has a future posting date.', Comment = '%1 = line number; is-IS=Lína %1 hefur bókunardagsetningu í framtíðinni.';
+        NonemptyErr: Label 'Calculate requires an empty physical inventory batch.', Comment = 'is-IS=Útreikningur krefst tómrar talningarbókarkeyrslu.';
+        CountsErr: Label 'counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', Comment = 'is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.';
         LineParameterTok: Label 'line %1', Locked = true;
+
+    /// <summary>Uses Foundation's published ItemJournal.Post interface to check its actual native table and posting permissions.</summary>
+    procedure HasItemPostingPermission(): Boolean
+    var
+        ItemPost: Interface "Msg Interface ori";
+    begin
+        ItemPost := "Message Type ori"::"Inventory.ItemJournal.Post";
+        exit(ItemPost.IsEnabled());
+    end;
+
+    /// <summary>Preserves Foundation's item-posting gate without accessing its internal gate objects or granting permissions.</summary>
+    procedure AssertItemPostingPermission(var Argument: Record "Message Argument ori"): Boolean
+    var
+        DeniedLbl: Label 'Posting denied: native journal write permission and BIFROST ItemPost ori are required.', Comment = 'is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.';
+    begin
+        if HasItemPostingPermission() then
+            exit(true);
+        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, DeniedLbl, '', '', 'BIFROST ItemPost ori', '');
+        exit(false);
+    end;
 
     /// <summary>Runs native line checks and returns readiness, errors and warnings without posting.</summary>
     procedure Check(var Argument: Record "Message Argument ori"; JournalType: Enum "Item Journal Template Type")
@@ -39,6 +63,7 @@ codeunit 70013463 "Inventory Native Journal ori"
         LineCount: Integer;
         Verdict: Text;
     begin
+        CheckParameters(Argument.GetRequestJson(), '');
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit;
         LineCount := Line.Count();
@@ -88,6 +113,7 @@ codeunit 70013463 "Inventory Native Journal ori"
         Results: JsonArray;
     begin
         Line.LockTable();
+        CheckParameters(Argument.GetRequestJson(), '');
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit;
         ReadLines(Line, JournalType, Results);
@@ -125,6 +151,7 @@ codeunit 70013463 "Inventory Native Journal ori"
         GLEntryCount: Integer;
         Balanced: Boolean;
     begin
+        CheckParameters(Argument.GetRequestJson(), '');
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit;
         ReadLines(Line, JournalType, Results);
@@ -155,20 +182,235 @@ codeunit 70013463 "Inventory Native Journal ori"
         SetResponse(Argument, Response);
     end;
 
+    /// <summary>Runs native report 790 into one explicitly selected empty physical-inventory batch.</summary>
+    procedure Calculate(var Argument: Record "Message Argument ori")
+    var
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Item: Record Item;
+        CalculateInventory: Report "Calculate Inventory";
+        Reader: Codeunit "Request Value Reader ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        PostingDate: Date;
+        DocumentNo: Code[20];
+        IncludeZero: Boolean;
+        IncludeNoTransactions: Boolean;
+    begin
+        Request := Argument.GetRequestJson();
+        CheckParameters(Request, 'Calculate');
+        Line.LockTable();
+        if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then
+            exit;
+        if not Line.IsEmpty() then
+            Error(NonemptyErr);
+        if not Reader.TryReadDate(Argument, Request, 'postingDate', true, PostingDate) then
+            exit;
+        DocumentNo := CopyStr(ReadText(Request, 'documentNo', 20), 1, 20);
+        if not Reader.TryReadBoolean(Argument, Request, 'itemsNotOnInventory', Request.Contains('itemsNotOnInventory'), IncludeZero) then
+            exit;
+        if not Reader.TryReadBoolean(Argument, Request, 'includeItemsWithNoTransactions', Request.Contains('includeItemsWithNoTransactions'), IncludeNoTransactions) then
+            exit;
+        if Request.Contains('itemNo') then
+            Item.SetFilter("No.", ReadText(Request, 'itemNo', 2048));
+        if Request.Contains('locationCode') then
+            Item.SetFilter("Location Filter", ReadText(Request, 'locationCode', 2048));
+        if Request.Contains('variantCode') then
+            Item.SetFilter("Variant Filter", ReadText(Request, 'variantCode', 2048));
+        Line."Journal Template Name" := Batch."Journal Template Name";
+        Line."Journal Batch Name" := Batch.Name;
+        CalculateInventory.SetItemJnlLine(Line);
+        CalculateInventory.InitializeRequest(PostingDate, DocumentNo, IncludeZero, IncludeNoTransactions);
+        CalculateInventory.SetHideValidationDialog(true);
+        CalculateInventory.SetTableView(Item);
+        CalculateInventory.UseRequestPage(false);
+        CalculateInventory.Run();
+        AddBatch(Response, Batch);
+        Response.Add('linesCreated', Line.Count());
+        Response.Add('posted', false);
+        SetResponse(Argument, Response);
+    end;
+
+    /// <summary>Validates each supplied count atomically; omitted quantity leaves that line unchanged, explicit zero is written.</summary>
+    procedure RecordCount(var Argument: Record "Message Argument ori")
+    var
+        Batch: Record "Item Journal Batch";
+        Lines: Record "Item Journal Line";
+        Line: Record "Item Journal Line";
+        Request: JsonObject;
+        Count: JsonObject;
+        Result: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        Entry: JsonToken;
+        Counts: JsonArray;
+        Results: JsonArray;
+        LineIds: List of [Guid];
+        LineId: Guid;
+        LineNo: Integer;
+        BeforeQuantity: Decimal;
+        CountedQuantity: Decimal;
+        ParameterName: Text;
+    begin
+        Request := Argument.GetRequestJson();
+        NormalizeLegacyCount(Argument, Request);
+        CheckParameters(Request, 'RecordCount');
+        Lines.LockTable();
+        if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Lines) then
+            exit;
+        if not Request.Get('counts', Token) or not Token.IsArray() then
+            Error(CountsErr);
+        Counts := Token.AsArray();
+        if Counts.Count() = 0 then
+            Error(CountsErr);
+        // Validate every entry before any Modify; later native errors still roll back through the process codeunit.
+        foreach Entry in Counts do begin
+            if not Entry.IsObject() then
+                Error(CountsErr);
+            Count := Entry.AsObject();
+            foreach ParameterName in Count.Keys() do
+                if not (ParameterName in ['lineNo', 'systemId', 'qtyCounted']) then
+                    Error(ParameterErr, ParameterName);
+            Clear(LineId);
+            if Count.Contains('systemId') then begin
+                if not Evaluate(LineId, ReadText(Count, 'systemId', 50)) or IsNullGuid(LineId) then
+                    Error(CountsErr);
+                if not Line.GetBySystemId(LineId) then
+                    Error(CountsErr);
+            end else begin
+                LineNo := ReadLineNo(Count);
+                Line.Get(Batch."Journal Template Name", Batch.Name, LineNo);
+                LineId := Line.SystemId;
+            end;
+            if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then
+                Error(CountsErr);
+            if Count.Contains('lineNo') then begin
+                LineNo := ReadLineNo(Count);
+                if LineNo <> Line."Line No." then
+                    Error(CountsErr);
+            end;
+            if LineIds.Contains(LineId) then
+                Error(CountsErr);
+            LineIds.Add(LineId);
+            CheckLineType(Line, "Item Journal Template Type"::"Phys. Inventory");
+            if Count.Contains('qtyCounted') then begin
+                CountedQuantity := ReadCount(Count);
+                if CountedQuantity < 0 then
+                    Error(CountsErr);
+            end;
+        end;
+        LineNo := 0;
+        foreach Entry in Counts do begin
+            LineNo += 1;
+            Line.GetBySystemId(LineIds.Get(LineNo));
+            Count := Entry.AsObject();
+            BeforeQuantity := Line."Qty. (Phys. Inventory)";
+            if Count.Contains('qtyCounted') then begin
+                CountedQuantity := ReadCount(Count);
+                Line.Validate("Qty. (Phys. Inventory)", CountedQuantity);
+                Line.Modify(true);
+            end;
+            Clear(Result);
+            Result.Add('systemId', Line.SystemId);
+            Result.Add('lineNo', Line."Line No.");
+            Result.Add('counted', Count.Contains('qtyCounted'));
+            Result.Add('before', BeforeQuantity);
+            Result.Add('after', Line."Qty. (Phys. Inventory)");
+            Result.Add('quantityCalculated', Line."Qty. (Calculated)");
+            Result.Add('adjustmentQuantity', Line.Quantity);
+            Results.Add(Result);
+        end;
+        AddBatch(Response, Batch);
+        Response.Add('result', Results);
+        if Argument.Type = "Message Type ori"::"Inventory.PhysInventory.Record" then begin
+            Response.Add('lineNo', Line."Line No.");
+            Response.Add('quantity', Line."Qty. (Phys. Inventory)");
+            Response.Add('quantityCalculated', Line."Qty. (Calculated)");
+        end;
+        SetResponse(Argument, Response);
+    end;
+
+    local procedure NormalizeLegacyCount(Argument: Record "Message Argument ori"; var Request: JsonObject)
+    var
+        Count: JsonObject;
+        Counts: JsonArray;
+        Token: JsonToken;
+    begin
+        if Argument.Type <> "Message Type ori"::"Inventory.PhysInventory.Record" then
+            exit;
+        if Request.Contains('counts') then
+            exit;
+        if Request.Get('lineNo', Token) then begin
+            Count.Add('lineNo', Token);
+            Request.Remove('lineNo');
+        end;
+        if Request.Get('quantity', Token) then begin
+            Count.Add('qtyCounted', Token);
+            Request.Remove('quantity');
+        end;
+        Counts.Add(Count);
+        Request.Add('counts', Counts);
+    end;
+
+    local procedure ReadCount(Count: JsonObject): Decimal
+    var
+        Token: JsonToken;
+        Serialized: Text;
+        Number: Decimal;
+    begin
+        if not Count.Get('qtyCounted', Token) or not Token.IsValue() then
+            Error(CountsErr);
+        Token.WriteTo(Serialized);
+        if not Evaluate(Number, Serialized, 9) or (Number < 0) then
+            Error(CountsErr);
+        exit(Number);
+    end;
+
+    local procedure ReadLineNo(Count: JsonObject): Integer
+    var
+        Token: JsonToken;
+        Serialized: Text;
+        Number: Decimal;
+    begin
+        if not Count.Get('lineNo', Token) or not Token.IsValue() then
+            Error(CountsErr);
+        Token.WriteTo(Serialized);
+        if not Evaluate(Number, Serialized, 9) then
+            Error(CountsErr);
+        if (Number <= 0) or (Number > 2147483647) or (Number <> Round(Number, 1)) then
+            Error(CountsErr);
+        exit(Number);
+    end;
+
+    local procedure CheckParameters(Request: JsonObject; Operation: Text)
+    var
+        ParameterName: Text;
+    begin
+        foreach ParameterName in Request.Keys() do
+            if not (ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) then
+                case Operation of
+                    'Calculate':
+                        if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
+                            Error(ParameterErr, ParameterName);
+                    'RecordCount':
+                        if ParameterName <> 'counts' then
+                            Error(ParameterErr, ParameterName);
+                    else
+                        if ParameterName <> 'lineSystemIds' then
+                            Error(ParameterErr, ParameterName);
+                end;
+    end;
+
     local procedure Resolve(var Argument: Record "Message Argument ori"; JournalType: Enum "Item Journal Template Type"; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"): Boolean
     var
         JournalTemplate: Record "Item Journal Template";
         Request: JsonObject;
-        ParameterName: Text;
         TemplateName: Code[10];
         BatchName: Code[10];
         BatchId: Guid;
         Parts: List of [Text];
     begin
         Request := Argument.GetRequestJson();
-        foreach ParameterName in Request.Keys() do
-            if not (ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName', 'lineSystemIds']) then
-                Error(ParameterErr, ParameterName);
         NormalizeAlias(Request, 'journalTemplateName', 'templateName');
         NormalizeAlias(Request, 'journalBatchName', 'batchName');
         if Request.Contains('templateName') or Request.Contains('batchName') then begin

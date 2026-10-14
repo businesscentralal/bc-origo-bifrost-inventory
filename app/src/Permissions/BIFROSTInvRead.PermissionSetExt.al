@@ -30,6 +30,8 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Reservation Get Impl ori" = X,
         codeunit "Inventory Domain Gate ori" = X,
         codeunit "Inventory Native Journal ori" = X,
+        codeunit "Phys. Inv. Check Impl ori" = X,
+        codeunit "Phys. Inv. Preview Impl ori" = X,
         codeunit "Reclass Check Impl ori" = X,
         codeunit "Reclass Preview Impl ori" = X,
         codeunit "Inv. Posting Gate ori" = X,

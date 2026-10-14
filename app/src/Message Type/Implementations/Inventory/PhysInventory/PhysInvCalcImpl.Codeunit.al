@@ -1,176 +1,159 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
+/// <summary>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</summary>
 codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Requires company Reclassification, native journal writes and a posting token.</summary>
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false));
     end;
 
+    /// <summary>Returns the batch selection table.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Journal Line");
+        exit(Database::"Item Journal Batch");
     end;
 
-    procedure GetDescription(): Text[250]
+    /// <summary>Reclassification requests use inbound dispatch.</summary>
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
-        exit('Calculates inventory into a physical inventory journal. Does not post.');
+        exit("Msg Direction ori"::Inbound);
     end;
-
-    procedure GetKeywords(): Text
-    begin
-        exit('physical inventory, calculate inventory');
-    end;
-
-    procedure GetSelectionDescription(): Text
-    begin
-        exit('Fills a physical inventory batch. Posting is Inventory.PhysInventory.Post.');
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('dataRequired', true);
-        Envelope.Add('version', '1.0');
-        Envelope.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        Parameter: JsonObject;
-    begin
-        Parameter.Add('name', 'journalTemplateName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Physical inventory journal template.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'journalBatchName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Physical inventory journal batch.');
-        Parameters.Add(Parameter);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', true);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Post', 'Post the physical inventory journal after calculation.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Runs report Calculate Inventory against a physical inventory journal batch.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Clear(Notes);
-        exit(false);
-    end;
-
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
-    begin
-        exit(Enum::"Msg Direction ori"::Inbound);
-    end;
-
+    /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemJournalLine: Record "Item Journal Line";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        JournalTemplateName: Code[10];
-        JournalBatchName: Code[10];
-        MissingTemplateErr: Label 'journalTemplateName and journalBatchName are required.', Locked = true;
+        Gate: Codeunit "Inventory Domain Gate ori";
+        Process: Codeunit "Inv Native Journal Process ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError(MissingTemplateErr);
-            exit;
-        end;
-        JournalTemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(JournalTemplateName));
-        if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError(MissingTemplateErr);
-            exit;
-        end;
-        JournalBatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(JournalBatchName));
-        ItemJournalLine."Journal Template Name" := JournalTemplateName;
-        ItemJournalLine."Journal Batch Name" := JournalBatchName;
-        if not TryRunCalculateInventory(ItemJournalLine) then begin
-            Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.PhysInventory.Calculate');
-        ResponseJson.Add('journalTemplateName', JournalTemplateName);
-        ResponseJson.Add('journalBatchName', JournalBatchName);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        Process.SetOperation('Calculate');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 
-    [TryFunction]
-    local procedure TryRunCalculateInventory(var ItemJournalLine: Record "Item Journal Line")
-    var
-        CalculateInventory: Report "Calculate Inventory";
+
+
+    /// <summary>Returns the native reclassification envelope contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        CalculateInventory.SetItemJnlLine(ItemJournalLine);
-        CalculateInventory.UseRequestPage(false);
-        CalculateInventory.Run();
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification target contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    begin
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Phys. Inventory template batch."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification parameters contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        Clear(Parameters);
+        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"journalTemplateName","type":"string","required":false},{"name":"journalBatchName","type":"string","required":false},{"name":"postingDate","type":"date","required":true},{"name":"documentNo","type":"string","required":true},{"name":"itemNo","type":"string","required":false},{"name":"locationCode","type":"string","required":false},{"name":"variantCode","type":"string","required":false},{"name":"itemsNotOnInventory","type":"boolean","required":false},{"name":"includeItemsWithNoTransactions","type":"boolean","required":false}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification response contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    begin
+        Clear(Response);
+        Response.ReadFrom('{"status":"Success","linesCreated":0,"posted":false}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification errors contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    begin
+        Clear(Errors);
+        Errors.ReadFrom('[{"code":"PreconditionFailed","when":"Wrong journal type, recurring or invalid batch, or native calculation/posting failure."},{"code":"PermissionDenied","when":"Company/native permission or posting gate refuses caller."},{"code":"InvalidParameter","when":"Parameters are malformed or unsupported."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification effect contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.ReadFrom('{"writes":true,"posts":false,"rollback":false}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification related contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    begin
+        Clear(Related);
+        Related.ReadFrom('[{"name":"Inventory.PhysInventory.RecordCount","useInsteadWhen":"RecordCount the physical inventory journal."},{"name":"Inventory.PhysInventory.Check","useInsteadWhen":"Check the physical inventory journal."},{"name":"Inventory.PhysInventory.PreviewPost","useInsteadWhen":"PreviewPost the physical inventory journal."},{"name":"Inventory.PhysInventory.Post","useInsteadWhen":"Post the physical inventory journal."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native reclassification examples contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Calculates expected stock into an existing empty physical-inventory journal with native report 790.","request":{"type":"Inventory.PhysInventory.Calculate","subject":"PHYS|OWNED"}}]');
+        exit(true);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetMetering(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetWorkflow(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetDescription(): Text[250]
+    begin
+        exit('Calculates expected stock into an existing empty physical-inventory journal with native report 790.');
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetSelectionDescription(): Text
+    begin
+        exit('Calculates expected stock into an existing empty physical-inventory journal with native report 790.');
+    end;
+
+    /// <summary>Describes native reclassification behavior.</summary>
+    procedure GetKeywords(): Text
+    begin
+        exit('Calculates expected stock into an existing empty physical-inventory journal with native report 790.');
+    end;
+
+    /// <summary>Explains native reclassification constraints.</summary>
+    procedure GetOverview(var Value: Text): Boolean
+    begin
+        Value := 'Calculates expected stock into an existing empty physical-inventory journal with native report 790. Existing nonrecurring Phys. Inventory template batch required. Calculate requires an empty batch, postingDate and documentNo. RecordCount accepts counts with lineNo or systemId and optional qtyCounted; every supplied count is atomic. Check/Post/PreviewPost support lineSystemIds. Native uncounted quantities are not given invented state fields. Normal licensed dispatch applies.';
+        exit(true);
+    end;
+
+    /// <summary>Explains native reclassification constraints.</summary>
+    procedure GetNotes(var Value: Text): Boolean
+    begin
+        Value := 'Calculates expected stock into an existing empty physical-inventory journal with native report 790. Existing nonrecurring Phys. Inventory template batch required. Calculate requires an empty batch, postingDate and documentNo. RecordCount accepts counts with lineNo or systemId and optional qtyCounted; every supplied count is atomic. Check/Post/PreviewPost support lineSystemIds. Native uncounted quantities are not given invented state fields. Normal licensed dispatch applies.';
+        exit(true);
     end;
 }

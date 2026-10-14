@@ -327,6 +327,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType BatchErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3275118031" size-unit="char" translate="yes" xml:space="preserve">
+          <source>counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.</source>
+          <target>counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CountsErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
           <source>The selected journal contains no lines.</source>
           <target>Valin bók inniheldur engar línur.</target>
@@ -344,6 +350,12 @@
           <target>Leiðréttu valdar bókarlínur áður en bókað er.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu valdar bókarlínur áður en bókað er.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1131567873" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculate requires an empty physical inventory batch.</source>
+          <target>Útreikningur krefst tómrar talningarbókarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útreikningur krefst tómrar talningarbókarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NonemptyErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 567304435" size-unit="char" translate="yes" xml:space="preserve">
           <source>No native item register was produced.</source>
@@ -368,6 +380,12 @@
           <target>Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</target>
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 3881973616 - NamedType 286034047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting denied: native journal write permission and BIFROST ItemPost ori are required.</source>
+          <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2249393538 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>

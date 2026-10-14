@@ -2,7 +2,9 @@
 
 ## Unreleased — native journal acceptance (#6, #34)
 
-- Replace reclassification count/echo stubs with native line checks, posting preview and filtered batch posting. Reject wrong template/entry types and malformed or foreign subsets; preserve unselected lines and return actual item register statistics (70013463/70013469/70013474/70013492/70013493; tests 96960–96961).
+- Add registered physical Check, PreviewPost and batched RecordCount. Use native report 790 with explicit options and empty-batch protection, Validate counted quantities atomically, preserve legacy Record input, and return both native ledger ranges on Post. Use the public Foundation ItemJournal.Post permission interface (70013463/70013465/70013466/70013469/70013472/70013479/70013496; enum 70013459 values 70013460–70013462; tests 96962–96964).
+
+- Replace reclassification count/echo stubs with native line checks, posting preview and filtered batch posting. Reject wrong template/entry types and malformed or foreign subsets; preserve unselected lines and return actual item register statistics (70013463/70013469/70013474/70013475/70013493; tests 96960–96961).
 
 ## Unreleased — costing report acceptance (#4, #35)
 
