@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.Dimension;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Inventory.Item;
@@ -7,6 +8,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -358,6 +360,279 @@ codeunit 96960 "Inventory Native Journal Tests"
         Assert.AreEqual(ValueCount, Values.Count(), 'Native value insertion rolled back.');
         Assert.AreEqual(RegisterCount, Registers.Count(), 'Native register rolled back.');
         Assert.IsTrue(Line.GetBySystemId(LineId), 'Journal line restored.');
+    end;
+
+    /// <summary>Lot reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_LotReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(true, false, false);
+    end;
+
+    /// <summary>Serial reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_SerialReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(false, true, false);
+    end;
+
+    /// <summary>Package reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_PackageReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(false, false, true);
+    end;
+
+    /// <summary>LotSerial reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_LotSerialReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(true, true, false);
+    end;
+
+    /// <summary>LotPackage reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_LotPackageReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(true, false, true);
+    end;
+
+    /// <summary>SerialPackage reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_SerialPackageReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(false, true, true);
+    end;
+
+    /// <summary>LotSerialPackage reclassification previews without writes, then posts native tracking and dimension changes for the selected line.</summary>
+    [Test]
+    procedure Scenario_AC34_LotSerialPackageReclassPreservesSelection()
+    begin
+        VerifyTrackedReclassification(true, true, true);
+    end;
+
+    local procedure VerifyTrackedReclassification(UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean)
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        OtherLine: Record "Item Journal Line";
+        Entry: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
+        Reservation: Record "Reservation Entry";
+        Register: Record "Item Register";
+        TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inv Native Journal Process ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OriginalId: Guid;
+        OtherId: Guid;
+        EntryCount: Integer;
+        ValueCount: Integer;
+        ReservationCount: Integer;
+        RegisterCount: Integer;
+        OriginalDimensions: Integer;
+        NewDimensions: Integer;
+        SourceLocation: Code[10];
+        Destination: Code[10];
+        VariantCode: Code[10];
+        BaseQuantity: Decimal;
+    begin
+        // Native integration below the licensed dispatcher; no licensed MCP or concurrency claim.
+        CreateTrackedReclassification(Item, Batch, Line, UseLot, UseSerial, UsePackage);
+        OriginalId := Line.SystemId;
+        OriginalDimensions := Line."Dimension Set ID";
+        NewDimensions := Line."New Dimension Set ID";
+        SourceLocation := Line."Location Code";
+        Destination := Line."New Location Code";
+        VariantCode := Line."Variant Code";
+        BaseQuantity := Line."Quantity (Base)";
+        // Deliberately incomplete unselected tracking must neither be posted nor invalidate the selected line.
+        AddTransfer(Batch, Item, Destination, OtherLine);
+        OtherId := OtherLine.SystemId;
+        EntryCount := Entry.Count();
+        ValueCount := ValueEntry.Count();
+        ReservationCount := Reservation.Count();
+        RegisterCount := Register.Count();
+        SelectOne(Request, OriginalId);
+        InitArgument(TempArgument, Batch, Request);
+        Journal.Check(TempArgument, "Item Journal Template Type"::Transfer);
+        Response := TempArgument.GetResponseJson();
+        Response.Get('validationResult', Token);
+        Assert.AreEqual('Ready', Token.AsValue().AsText(), 'Selected tracked source passes native line validation.');
+        Commit();
+        Journal.Preview(TempArgument, "Item Journal Template Type"::Transfer);
+        Response := TempArgument.GetResponseJson();
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Tracked subset previews successfully.');
+        Response.Get('preview', Token);
+        Assert.IsTrue(Token.AsArray().Count() > 0, 'Preview captures actual native ledger impact.');
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Preview preserves all item entries.');
+        Assert.AreEqual(ValueCount, ValueEntry.Count(), 'Preview preserves all value entries.');
+        Assert.AreEqual(ReservationCount, Reservation.Count(), 'Preview preserves pending tracking rows.');
+        Assert.AreEqual(RegisterCount, Register.Count(), 'Preview preserves registers.');
+        Assert.IsTrue(Line.GetBySystemId(OriginalId), 'Preview preserves the selected source.');
+        Assert.IsTrue(OtherLine.GetBySystemId(OtherId), 'Preview preserves the unselected source.');
+        Assert.AreEqual(OriginalDimensions, Line."Dimension Set ID", 'Preview preserves source dimensions.');
+        Assert.AreEqual(NewDimensions, Line."New Dimension Set ID", 'Preview preserves destination dimensions.');
+        InitArgument(TempArgument, Batch, Request);
+        Process.SetJournalType("Item Journal Template Type"::Transfer);
+        Commit();
+        Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
+        Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Reclassification.Post", Response);
+        Response.Get('postedLineCount', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Only selected tracked line posts.');
+        Response.Get('itemRegisterNo', Token);
+        Register.Get(Token.AsValue().AsInteger());
+        Entry.SetRange("Entry No.", Register."From Entry No.", Register."To Entry No.");
+        Entry.SetRange("Item No.", Item."No.");
+        Assert.AreEqual(2, Entry.Count(), 'Native transfer creates exactly two item entries.');
+        Entry.SetRange(Positive, false);
+        Entry.FindFirst();
+        Assert.AreEqual(SourceLocation, Entry."Location Code", 'Outbound source location.');
+        Assert.AreEqual(-BaseQuantity, Entry.Quantity, 'Outbound base quantity.');
+        Assert.AreEqual(OriginalDimensions, Entry."Dimension Set ID", 'Outbound source dimensions.');
+        AssertTrackingIdentity(Entry, UseLot, UseSerial, UsePackage, false);
+        Entry.SetRange(Positive, true);
+        Entry.FindFirst();
+        Assert.AreEqual(Destination, Entry."Location Code", 'Inbound destination location.');
+        Assert.AreEqual(BaseQuantity, Entry.Quantity, 'Inbound exact UOM base quantity.');
+        Assert.AreEqual(NewDimensions, Entry."Dimension Set ID", 'Inbound changed dimensions.');
+        Assert.AreEqual(VariantCode, Entry."Variant Code", 'Variant survives reclassification.');
+        AssertTrackingIdentity(Entry, UseLot, UseSerial, UsePackage, true);
+        Entry.SetRange("Entry No.");
+        Entry.SetRange(Positive);
+        Entry.CalcSums(Quantity);
+        Assert.AreEqual(BaseQuantity, Entry.Quantity, 'Reclassification conserves total inventory.');
+        Assert.IsFalse(Line.GetBySystemId(OriginalId), 'Native posting removes selected line.');
+        Assert.IsTrue(OtherLine.GetBySystemId(OtherId), 'Unselected line identity survives posting.');
+        Assert.AreEqual(2, OtherLine.Quantity, 'Unselected line quantity is unchanged.');
+        Reservation.SetRange("Source Type", Database::"Item Journal Line");
+        Reservation.SetRange("Source ID", Batch."Journal Template Name");
+        Reservation.SetRange("Source Batch Name", Batch.Name);
+        Assert.IsTrue(Reservation.IsEmpty(), 'Native posting consumes selected pending tracking.');
+    end;
+
+    local procedure CreateTrackedReclassification(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"; UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean)
+    var
+        GLSetup: Record "General Ledger Setup";
+        InventorySetup: Record "Inventory Setup";
+        TrackingCode: Record "Item Tracking Code";
+        Variant: Record "Item Variant";
+        ItemUOM: Record "Item Unit of Measure";
+        SourceLocation: Record Location;
+        Destination: Record Location;
+        DimensionValue: Record "Dimension Value";
+        NewDimensionValue: Record "Dimension Value";
+        ReceiptBatch: Record "Item Journal Batch";
+        Receipt: Record "Item Journal Line";
+        LibraryDimension: Codeunit "Library - Dimension";
+        DimensionSetId: Integer;
+        NewDimensionSetId: Integer;
+    begin
+        GLSetup.Get();
+        GLSetup."Journal Templ. Name Mandatory" := false;
+        GLSetup."Allow Posting From" := 0D;
+        GLSetup."Allow Posting To" := 0D;
+        GLSetup.Modify();
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := false;
+        InventorySetup."Automatic Cost Adjustment" := InventorySetup."Automatic Cost Adjustment"::Never;
+        InventorySetup.Modify();
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode.Validate("Lot Specific Tracking", UseLot);
+        TrackingCode.Validate("SN Specific Tracking", UseSerial);
+        TrackingCode.Validate("Package Specific Tracking", UsePackage);
+        TrackingCode.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Modify(true);
+        LibraryInventory.CreateItemVariant(Variant, Item."No.");
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(SourceLocation);
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Destination);
+        LibraryDimension.CreateDimWithDimValue(DimensionValue);
+        LibraryDimension.CreateDimensionValue(NewDimensionValue, DimensionValue."Dimension Code");
+        DimensionSetId := LibraryDimension.CreateDimSet(0, DimensionValue."Dimension Code", DimensionValue.Code);
+        NewDimensionSetId := LibraryDimension.CreateDimSet(0, NewDimensionValue."Dimension Code", NewDimensionValue.Code);
+        if not UseSerial then
+            LibraryInventory.CreateItemUnitOfMeasureCode(ItemUOM, Item."No.", 3);
+        CreateBatch(ReceiptBatch, "Item Journal Template Type"::Item);
+        LibraryInventory.CreateItemJournalLine(Receipt, ReceiptBatch."Journal Template Name", ReceiptBatch.Name, Receipt."Entry Type"::"Positive Adjmt.", Item."No.", 1);
+        Receipt.Validate("Posting Date", WorkDate());
+        Receipt.Validate("Location Code", SourceLocation.Code);
+        Receipt.Validate("Variant Code", Variant.Code);
+        if not UseSerial then
+            Receipt.Validate("Unit of Measure Code", ItemUOM.Code);
+        Receipt.Validate("Dimension Set ID", DimensionSetId);
+        Receipt.Validate("Unit Amount", 12);
+        Receipt.Modify(true);
+        SetNativeJournalTracking(Receipt, UseLot, UseSerial, UsePackage, false);
+        LibraryInventory.PostItemJournalLine(ReceiptBatch."Journal Template Name", ReceiptBatch.Name);
+        CreateBatch(Batch, "Item Journal Template Type"::Transfer);
+        LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 1);
+        Line.Validate("Posting Date", WorkDate());
+        Line.Validate("Location Code", SourceLocation.Code);
+        Line.Validate("New Location Code", Destination.Code);
+        Line.Validate("Variant Code", Variant.Code);
+        if not UseSerial then
+            Line.Validate("Unit of Measure Code", ItemUOM.Code);
+        Line.Validate("Dimension Set ID", DimensionSetId);
+        Line.Validate("New Dimension Set ID", NewDimensionSetId);
+        Line.Modify(true);
+        SetNativeJournalTracking(Line, UseLot, UseSerial, UsePackage, true);
+    end;
+
+    local procedure SetNativeJournalTracking(Line: Record "Item Journal Line"; UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean; Reclassify: Boolean)
+    var
+        Source: Record "Tracking Specification";
+        TempTracking: Record "Tracking Specification" temporary;
+        Reserve: Codeunit "Item Jnl. Line-Reserve";
+        TrackingLines: Page "Item Tracking Lines";
+    begin
+        Reserve.InitFromItemJnlLine(Source, Line);
+        TempTracking := Source;
+        TempTracking."Entry No." := 1;
+        TempTracking."Quantity (Base)" := Line."Quantity (Base)";
+        if UseLot then begin
+            TempTracking."Lot No." := 'X-OLD-LOT';
+            TempTracking."New Lot No." := 'X-NEW-LOT';
+        end;
+        if UseSerial then begin
+            TempTracking."Serial No." := 'X-OLD-SERIAL';
+            TempTracking."New Serial No." := 'X-NEW-SERIAL';
+        end;
+        if UsePackage then begin
+            TempTracking."Package No." := 'X-OLD-PACKAGE';
+            TempTracking."New Package No." := 'X-NEW-PACKAGE';
+        end;
+        TempTracking.Insert();
+        TrackingLines.SetBlockCommit(true);
+        if Reclassify then
+            TrackingLines.SetRunMode("Item Tracking Run Mode"::Reclass);
+        TrackingLines.RegisterItemTrackingLines(Source, WorkDate(), TempTracking);
+    end;
+
+    local procedure AssertTrackingIdentity(Entry: Record "Item Ledger Entry"; UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean; NewTracking: Boolean)
+    var
+        Prefix: Text;
+    begin
+        Prefix := 'X-OLD-';
+        if NewTracking then
+            Prefix := 'X-NEW-';
+        if UseLot then
+            Assert.AreEqual(Prefix + 'LOT', Entry."Lot No.", 'Native lot identity.')
+        else
+            Assert.AreEqual('', Entry."Lot No.", 'No lot was introduced.');
+        if UseSerial then
+            Assert.AreEqual(Prefix + 'SERIAL', Entry."Serial No.", 'Native serial identity.')
+        else
+            Assert.AreEqual('', Entry."Serial No.", 'No serial was introduced.');
+        if UsePackage then
+            Assert.AreEqual(Prefix + 'PACKAGE', Entry."Package No.", 'Native package identity.')
+        else
+            Assert.AreEqual('', Entry."Package No.", 'No package was introduced.');
     end;
 
     local procedure CreateTransfer(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")

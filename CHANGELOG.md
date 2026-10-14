@@ -1,5 +1,7 @@
 # Changelog
 
+- Add seven native reclassification lifecycle cases for all lot/serial/package combinations: selected preview rollback, from/to tracking and dimension changes, exact UOM quantities, inventory conservation and unselected-line preservation (test codeunit 96960; issue #34).
+
 - Localize period selection, keywords, overview and notes and state the current direct Closed-field behavior without claiming native close/reopen workflows (70013483–70013485; test 96921). Native period workflow remediation remains assigned separately.
 
 - Add fourteen self-seeded native tracking/reservation cases covering every lot/serial/package combination, actual receipt posting, exact UOM base quantities, location/variant/dimension preservation and reservation cancellation plus availability reads before/during/after reservation (test codeunit 96925; issues #5/#7/#37). These cases do not claim licensed MCP or independent-session concurrency.
