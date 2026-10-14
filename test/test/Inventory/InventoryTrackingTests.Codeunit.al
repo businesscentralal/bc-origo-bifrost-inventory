@@ -399,12 +399,18 @@ codeunit 96925 "Inventory Tracking Tests"
     var
         Entry: Record "Reservation Entry";
         Specification: Record "Tracking Specification";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
         Request: JsonObject;
         DeleteRequest: JsonObject;
         Tracking: JsonObject;
         Entries: JsonArray;
         Response: JsonObject;
         BeforeSpecifications: Integer;
+        EntryNo: Integer;
+        Token: JsonToken;
+        Row: JsonObject;
+        Rows: JsonArray;
     begin
         BeforeSpecifications := Specification.Count();
         Request.Add('source', Source);
@@ -423,7 +429,25 @@ codeunit 96925 "Inventory Tracking Tests"
         Entry.FindFirst();
         Assert.AreEqual(2, Abs(Entry."Quantity (Base)"), 'Tracking has the requested base quantity.');
         Assert.AreEqual(BeforeSpecifications, Specification.Count(), 'Assignment did not create persistent tracking specification rows.');
+        EntryNo := Entry."Entry No.";
         DeleteRequest.Add('source', Source);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(DeleteRequest);
+        TrackingRead.ReadTracking(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Response.Get('trackingLines', Token);
+        Rows := Token.AsArray();
+        Assert.AreEqual(1, Rows.Count(), 'Source read returns only its pending tracking side.');
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        Row.Get('lotNo', Token);
+        Assert.AreEqual('ROUND-LOT', Token.AsValue().AsText(), 'Source read retains the native lot.');
+        Row.Get('quantityBase', Token);
+        Assert.AreEqual(Entry."Quantity (Base)", Token.AsValue().AsDecimal(), 'Source read retains signed base quantity.');
+        Assert.IsTrue(Entry.Get(EntryNo, Positive), 'Reading the source cannot remove its pending entry.');
 
         ExecuteTracking(DeleteRequest, true, Response);
 
