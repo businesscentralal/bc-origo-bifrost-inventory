@@ -11,7 +11,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Costing, Database::Item, false, true));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Costing, Database::Item, false, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -65,7 +65,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The existing domain/posting gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"Company Costing domain is disabled.","fix":"Enable Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The domain or Item read permission gate refuses the caller.","fix":"Review permissions."},{"code":"PreconditionFailed","when":"Request validation or the native report fails; no native commit rollback is promised.","fix":"Review the returned error and actual ledger state."},{"code":"BusinessCentralError","when":"Foundation scheduled-task failure handler maps uncaught failures. Direct invocation may raise instead.","fix":"Review the native error and current ledger state before retrying."}]');
         exit(true);
     end;
 
@@ -116,7 +116,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
-        exit(Enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
@@ -124,7 +124,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Response: JsonObject;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

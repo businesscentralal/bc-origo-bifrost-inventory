@@ -69,6 +69,7 @@ codeunit 70013429 "Inventory Cost Reports ori"
         Adjustment: Report "Adjust Cost - Item Entries";
         Options: Codeunit "Inventory Cost Options ori";
         SelectedItems: Integer;
+        Errors: JsonArray;
     begin
         PrepareAdjustment(Request, Item);
         if ReadBoolean(Request, 'postToGL') then begin
@@ -87,6 +88,9 @@ codeunit 70013429 "Inventory Cost Reports ori"
         Clear(Response);
         Response.Add('status', 'Success');
         Response.Add('itemsSelected', SelectedItems);
+        Response.Add('itemsProcessed', Options.ItemsProcessed());
+        Response.Add('reportCompleted', Options.Completed());
+        Response.Add('errors', Errors);
         Response.Add('postToGL', ReadBoolean(Request, 'postToGL'));
         Response.Add('itemByItem', ReadBoolean(Request, 'itemByItem'));
     end;

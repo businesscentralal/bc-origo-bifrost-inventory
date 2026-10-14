@@ -20,8 +20,8 @@ codeunit 70013453 "Inventory Domain Gate ori"
             exit(false);
         if not InventorySetup.IsDomainEnabled(Domain) then
             exit(false);
-        if NeedPost then
-            exit(PostingGate.HasPostingPermission());
+        if NeedPost and not PostingGate.HasPostingPermission() then
+            exit(false);
         RecRef.Open(FilterTableNo);
         if NeedWrite then
             exit(RecRef.WritePermission());

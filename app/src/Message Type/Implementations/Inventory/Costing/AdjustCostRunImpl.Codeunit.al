@@ -99,7 +99,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"itemsSelected","type":"integer","description":"Pre-run item selection count; not a processed count."},{"name":"postToGL","type":"boolean","description":"Requested native G/L option."},{"name":"itemByItem","type":"boolean","description":"Requested native item-by-item option."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success when the native report completes."},{"name":"itemsProcessed","type":"integer","description":"Distinct items observed completing the native item adjustment in this invocation; not the selected-item count."},{"name":"reportCompleted","type":"boolean","description":"False when the native report exits before adjustment because the ledger is empty."},{"name":"errors","type":"array","description":"Empty on successful report completion; failures return the structured process error response and may follow native commits."},{"name":"itemsSelected","type":"integer","description":"Pre-run item selection count; not a processed count."},{"name":"postToGL","type":"boolean","description":"Requested native G/L option."},{"name":"itemByItem","type":"boolean","description":"Requested native item-by-item option."}]}');
         exit(true);
     end;
 
@@ -175,7 +175,7 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback, retry-safety or actual-items-processed count is promised. itemsSelected is the pre-run selection count.';
+        Notes := 'Report 795 has no postingDate or inventoryPostingGroup request filter in BC28.5; nonempty values are refused before execution. Item/category filters are never truncated. Native commits remain effective on partial failure; no preview, rollback or retry-safety is promised. itemsSelected is the pre-run selection count; itemsProcessed counts distinct completed native item adjustments during this run. reportCompleted is false on the native early exit before adjustment. errors is empty on success; failures use the structured process error boundary, and may follow native commits.';
         exit(true);
     end;
 }

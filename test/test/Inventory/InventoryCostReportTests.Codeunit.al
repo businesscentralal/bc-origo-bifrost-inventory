@@ -480,6 +480,133 @@ codeunit 96931 "Inventory Cost Report Tests"
         Assert.IsFalse(PendingEntry.IsEmpty(), 'Expected-cost exclusion stays pending.');
     end;
 
+    /// <summary>Native category selection honors both booleans and excludes stock in another category.</summary>
+    [Test]
+    procedure CategoryAdjustment_ByItemFalse_PostGLFalse()
+    begin
+        // Story #35 native combinations | Time: WorkDate() for owned fixture posting | Risk: no MCP licensing proof.
+        VerifyCategoryAdjustment(false, false);
+    end;
+
+    /// <summary>Native category selection honors both booleans and excludes stock in another category.</summary>
+    [Test]
+    procedure CategoryAdjustment_ByItemTrue_PostGLFalse()
+    begin
+        // Story #35 native combinations | Time: WorkDate() for owned fixture posting | Risk: no MCP licensing proof.
+        VerifyCategoryAdjustment(true, false);
+    end;
+
+    /// <summary>Native category selection honors both booleans and excludes stock in another category.</summary>
+    [Test]
+    procedure CategoryAdjustment_ByItemFalse_PostGLTrue()
+    begin
+        // Story #35 native combinations | Time: WorkDate() for owned fixture posting | Risk: no MCP licensing proof.
+        VerifyCategoryAdjustment(false, true);
+    end;
+
+    /// <summary>Native category selection honors both booleans and excludes stock in another category.</summary>
+    [Test]
+    procedure CategoryAdjustment_ByItemTrue_PostGLTrue()
+    begin
+        // Story #35 native combinations | Time: WorkDate() for owned fixture posting | Risk: no MCP licensing proof.
+        VerifyCategoryAdjustment(true, true);
+    end;
+
+    /// <summary>Selected items are not reported as processed when no native adjustment is needed.</summary>
+    [Test]
+    procedure Adjustment_AlreadyAdjusted_ReportsZeroProcessed()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Story #35 actual outcomes | Time: WorkDate() for fixture | Risk: selected is not processed.
+        CreateUnpostedCost(Item);
+        Request.Add('itemNo', Item."No.");
+        CostReports.AdjustCost(Request, Response);
+        Response.Get('itemsProcessed', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'First invocation completes an actual item adjustment.');
+        CostReports.AdjustCost(Request, Response);
+        Response.Get('itemsSelected', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Already-adjusted Item still matches selection.');
+        Response.Get('itemsProcessed', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'Second invocation must not report the selection as processed.');
+    end;
+
+    /// <summary>Empty selection completes without fabricated item processing.</summary>
+    [Test]
+    procedure Adjustment_NoMatchingItem_ReportsZeroProcessed()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Story #35 actual outcomes | Time: WorkDate() fixture | Risk: empty is not full test coverage.
+        CreateUnpostedCost(Item);
+        Request.Add('itemNo', Item."No." + 'MISSING');
+        CostReports.AdjustCost(Request, Response);
+        Response.Get('itemsSelected', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'No matching selection.');
+        Response.Get('itemsProcessed', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'No fabricated completed adjustment.');
+        Item.Get(Item."No.");
+        Assert.IsFalse(Item."Cost is Adjusted", 'Unselected fixture remains unadjusted.');
+    end;
+
+    local procedure VerifyCategoryAdjustment(ItemByItem: Boolean; PostToGL: Boolean)
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        Category: Record "Item Category";
+        InventorySetup: Record "Inventory Setup";
+        ValueEntry: Record "Value Entry";
+        Observer: Codeunit "Inventory Cost Observer";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateCostAdjustmentChain(Item);
+        CreateUnpostedCost(OtherItem);
+        LibraryInventory.CreateItemCategory(Category);
+        Item.Get(Item."No.");
+        Item.Validate("Item Category Code", Category.Code);
+        Item.Modify(true);
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := true;
+        InventorySetup.Modify();
+        Request.Add('itemCategoryCode', Category.Code);
+        Request.Add('itemByItem', ItemByItem);
+        Request.Add('postToGL', PostToGL);
+        BindSubscription(Observer);
+        CostReports.AdjustCost(Request, Response);
+        UnbindSubscription(Observer);
+        Assert.AreEqual(ItemByItem, Observer.ItemByItem(), 'Actual native item-by-item option.');
+        Assert.AreEqual(PostToGL, Observer.PostToGLOption(), 'Actual native G/L option.');
+        Assert.AreEqual(0, Observer.Report1002Runs(), 'Adjustment must never add a report 1002 execution.');
+        Response.Get('itemsSelected', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Category includes only the self-created selected item.');
+        Response.Get('itemsProcessed', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Count comes from a completed native adjustment, once per item.');
+        Response.Get('reportCompleted', Token);
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'Native report reached completion.');
+        Response.Get('errors', Token);
+        Assert.AreEqual(0, Token.AsArray().Count(), 'Successful native execution has no error entries.');
+        Item.Get(Item."No.");
+        OtherItem.Get(OtherItem."No.");
+        Assert.IsTrue(Item."Cost is Adjusted", 'Selected category item really adjusted.');
+        Assert.IsFalse(OtherItem."Cost is Adjusted", 'Other category item remains unadjusted.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.SetRange(Adjustment, true);
+        ValueEntry.CalcSums("Cost Amount (Actual)", "Cost Posted to G/L");
+        Assert.AreNotEqual(0, ValueEntry."Cost Amount (Actual)", 'Fixture produces genuine cost corrections.');
+        if PostToGL then
+            Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'Native option posts the generated cost.')
+        else
+            Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Explicit false leaves generated cost unposted.');
+    end;
+
     /// <summary>Handles the actual native report posting summary without hiding unexpected messages.</summary>
     [MessageHandler]
     procedure PostingMessageHandler(MessageText: Text[1024])

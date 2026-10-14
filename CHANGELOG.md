@@ -1,11 +1,13 @@
 # Changelog
 
+## Unreleased — costing report acceptance (#4, #35)
+
 - Use native report795 InitializeRequest/SetPostToGL with its request page disabled so defaults cannot overwrite explicit options; bind native item-by-item parameter for that run only (70013429/70013431). Test G/L posting of real receipt/invoice/outbound cost adjustments (96931/96932).
 
 - Refuse report795 postToGL=true when the native Automatic Cost Posting prerequisite is disabled, before any adjustment (70013429); verify real selected G/L posting and explicit false (96931/96932).
 
-## Unreleased — costing report acceptance (#4, #35)
-
+- Make CostToGL.Test Outbound and accessible without a posting token; add shipping read/full execute grants and require both posting and native table permissions (70013453/70013467, permission extensions 10036915/10036916; restricted tests 96933–96935).
+- Return native completed-item counts separately from selected items, report completion and errors; cover all four category/boolean combinations and already-adjusted/empty selections (70013429/70013431/70013460; tests 96931).
 - Bind report 795 request options and report 1002/1003 pending-entry filters, reject unsupported or malformed selections before execution, and explicitly enable native G/L posting. CostToGL.Test runs report 1003 and returns native warning text instead of counting items (70013429–70013430, 70013460–70013462, 70013467; tests 96931).
 - Serialize report 795 source-expression parameter names verified against its native request page; retain observed-option and unselected-item regressions (test helper 96932).
 - Preserve native report commits and licensing/domain gates; no report 795 dry-run or rollback promise.
