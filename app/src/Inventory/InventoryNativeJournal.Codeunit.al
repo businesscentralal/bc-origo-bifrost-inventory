@@ -7,6 +7,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using System.Utilities;
 
@@ -550,9 +551,52 @@ codeunit 70013463 "Inventory Native Journal ori"
             Result.Add('newSerialNo', Line."New Serial No.");
             Result.Add('packageNo', Line."Package No.");
             Result.Add('newPackageNo', Line."New Package No.");
+            AddLineTracking(Line, Result);
             Results.Add(Result);
         until Line.Next() = 0;
         Line.FindFirst();
+    end;
+
+    local procedure AddLineTracking(Line: Record "Item Journal Line"; var Result: JsonObject)
+    var
+        Reservation: Record "Reservation Entry";
+        Tracking: JsonArray;
+        TrackingEntry: JsonObject;
+        TrackingToken: JsonToken;
+        FieldName: Text;
+        TrackingFields: List of [Text];
+    begin
+        // Native item tracking belongs to the source reservation rows, not normally to journal fields.
+        Reservation.ReadIsolation := IsolationLevel::ReadCommitted;
+        Line.SetReservationFilters(Reservation);
+        if Reservation.FindSet() then
+            repeat
+                if Reservation.TrackingExists() then begin
+                    Clear(TrackingEntry);
+                    TrackingEntry.Add('lotNo', Reservation."Lot No.");
+                    TrackingEntry.Add('newLotNo', Reservation."New Lot No.");
+                    TrackingEntry.Add('serialNo', Reservation."Serial No.");
+                    TrackingEntry.Add('newSerialNo', Reservation."New Serial No.");
+                    TrackingEntry.Add('packageNo', Reservation."Package No.");
+                    TrackingEntry.Add('newPackageNo', Reservation."New Package No.");
+                    TrackingEntry.Add('quantityBase', Abs(Reservation."Quantity (Base)"));
+                    Tracking.Add(TrackingEntry);
+                end;
+            until Reservation.Next() = 0;
+        Result.Add('tracking', Tracking);
+        // Keep the original scalar contract for a single assignment. Multiple assignments are explicit.
+        if Tracking.Count() = 1 then begin
+            TrackingFields.Add('lotNo');
+            TrackingFields.Add('newLotNo');
+            TrackingFields.Add('serialNo');
+            TrackingFields.Add('newSerialNo');
+            TrackingFields.Add('packageNo');
+            TrackingFields.Add('newPackageNo');
+            foreach FieldName in TrackingFields do begin
+                TrackingEntry.Get(FieldName, TrackingToken);
+                Result.Replace(FieldName, TrackingToken);
+            end;
+        end;
     end;
 
     [TryFunction]

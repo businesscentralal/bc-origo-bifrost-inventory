@@ -466,6 +466,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         Response := TempArgument.GetResponseJson();
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Tracked subset previews successfully.');
+        AssertResponseTracking(Response, UseLot, UseSerial, UsePackage, BaseQuantity);
         Response.Get('preview', Token);
         Assert.IsTrue(Token.AsArray().Count() > 0, 'Preview captures actual native ledger impact.');
         Assert.AreEqual(EntryCount, Entry.Count(), 'Preview preserves all item entries.');
@@ -484,6 +485,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Reclassification.Post", Response);
         Response.Get('postedLineCount', Token);
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Only selected tracked line posts.');
+        AssertResponseTracking(Response, UseLot, UseSerial, UsePackage, BaseQuantity);
         Response.Get('itemRegisterNo', Token);
         Register.Get(Token.AsValue().AsInteger());
         Entry.SetRange("Entry No.", Register."From Entry No.", Register."To Entry No.");
@@ -513,6 +515,38 @@ codeunit 96960 "Inventory Native Journal Tests"
         Reservation.SetRange("Source ID", Batch."Journal Template Name");
         Reservation.SetRange("Source Batch Name", Batch.Name);
         Assert.IsTrue(Reservation.IsEmpty(), 'Native posting consumes selected pending tracking.');
+    end;
+
+    local procedure AssertResponseTracking(Response: JsonObject; UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean; BaseQuantity: Decimal)
+    var
+        Entry: Record "Item Ledger Entry";
+        Token: JsonToken;
+        ResultLine: JsonObject;
+        TrackingEntry: JsonObject;
+    begin
+        Response.Get('result', Token);
+        Token.AsArray().Get(0, Token);
+        ResultLine := Token.AsObject();
+        ResultLine.Get('lotNo', Token);
+        Entry."Lot No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Lot No."));
+        ResultLine.Get('serialNo', Token);
+        Entry."Serial No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Serial No."));
+        ResultLine.Get('packageNo', Token);
+        Entry."Package No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Package No."));
+        AssertTrackingIdentity(Entry, UseLot, UseSerial, UsePackage, false);
+        ResultLine.Get('newLotNo', Token);
+        Entry."Lot No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Lot No."));
+        ResultLine.Get('newSerialNo', Token);
+        Entry."Serial No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Serial No."));
+        ResultLine.Get('newPackageNo', Token);
+        Entry."Package No." := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Entry."Package No."));
+        AssertTrackingIdentity(Entry, UseLot, UseSerial, UsePackage, true);
+        ResultLine.Get('tracking', Token);
+        Assert.AreEqual(1, Token.AsArray().Count(), 'Response includes the selected native assignment.');
+        Token.AsArray().Get(0, Token);
+        TrackingEntry := Token.AsObject();
+        TrackingEntry.Get('quantityBase', Token);
+        Assert.AreEqual(BaseQuantity, Token.AsValue().AsDecimal(), 'Response tracking quantity uses base units.');
     end;
 
     local procedure CreateTrackedReclassification(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"; UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean)

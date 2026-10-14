@@ -95,7 +95,7 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Fields.Add(ContractMgt.ResponseField('itemRegisterNo', 'integer', 'Native item register created by posting.'));
         Fields.Add(ContractMgt.ResponseField('fromEntryNo', 'integer', 'First item ledger entry number in the native register.'));
         Fields.Add(ContractMgt.ResponseField('toEntryNo', 'integer', 'Last item ledger entry number in the native register.'));
-        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo.'));
+        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo. tracking contains all native source assignments with these six tracking fields and quantityBase; scalar tracking fields identify a single assignment.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
         Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
         Fields.Add(ContractMgt.ResponseField('fromPhysInventoryEntryNo', 'integer', 'First physical inventory ledger entry in the native register; may be zero for nonphysical journals.'));

@@ -89,7 +89,7 @@ codeunit 70013474 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'Number of selected lines included in the rollback preview.'));
         Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True: native preview entries have been rolled back.'));
         Fields.Add(ContractMgt.ResponseField('preview', 'array', 'Captured native preview entries grouped by table.'));
-        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo.'));
+        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo. tracking contains all native source assignments with these six tracking fields and quantityBase; scalar tracking fields identify a single assignment.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
         Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
         Fields.Add(ContractMgt.ResponseField('totals', 'object', 'Native preview G/L totals.'));

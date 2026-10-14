@@ -1,5 +1,7 @@
 # Changelog
 
+- Read native source reservation tracking when describing reclassification preview/post results; retain scalar identity for a single assignment and include all assignments with base quantities in `tracking` (codeunit 70013463; issue #34).
+
 - Add seven native reclassification lifecycle cases for all lot/serial/package combinations: selected preview rollback, from/to tracking and dimension changes, exact UOM quantities, inventory conservation and unselected-line preservation (test codeunit 96960; issue #34).
 
 - Localize period selection, keywords, overview and notes and state the current direct Closed-field behavior without claiming native close/reopen workflows (70013483–70013485; test 96921). Native period workflow remediation remains assigned separately.
