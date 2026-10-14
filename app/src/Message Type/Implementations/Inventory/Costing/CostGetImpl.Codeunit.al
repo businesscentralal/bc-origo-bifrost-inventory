@@ -49,9 +49,19 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Exact Item No.; subject takes precedence."},{"name":"itemId","type":"string","required":false,"description":"Item SystemId; used after itemNo."},{"name":"id","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"systemId","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"recordSystemId","type":"string","required":false,"description":"Alias for Item SystemId."},{"name":"tableView","type":"string","required":false,"description":"Foundation Item table view; supports multiple items."},{"name":"locationFilter","type":"string","required":false,"description":"Native Location Filter applied to inventory; does not change card costs."},{"name":"variantCode","type":"string","required":false,"description":"Exact variant selection for inventory; does not change card costs."},{"name":"asOfDate","type":"string","required":false,"description":"ISO posting-date upper bound for inventory quantity only. Costs and adjustment/G/L flags remain current."}]');
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Exact Item No.; subject takes precedence.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId; used after itemNo.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Foundation Item table view; supports multiple items.'));
+        Parameters.Add(ContractMgt.Parameter('locationFilter', 'string', false, 'Native Location Filter applied to inventory; does not change card costs.'));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant selection for inventory; does not change card costs.'));
+        Parameters.Add(ContractMgt.Parameter('asOfDate', 'string', false, 'ISO posting-date upper bound for inventory quantity only. Costs and adjustment/G/L flags remain current.'));
         exit(true);
     end;
 

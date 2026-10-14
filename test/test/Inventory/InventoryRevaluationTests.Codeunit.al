@@ -18,6 +18,7 @@ codeunit 96941 "Inventory Revaluation Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         Revaluation: Codeunit "Inventory Revaluation ori";
 
@@ -54,6 +55,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert.AreEqual(24, Line."Inventory Value (Calculated)", 'Actual posted value.');
         Assert.AreEqual(ValueCount, ValueEntry.Count(), 'Calculate creates no ledger values.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.Calculate", Response);
         Response.Get('linesCreated', Token);
         Assert.AreEqual(Line.Count(), Token.AsValue().AsInteger(), 'Truthful created count.');
     end;
@@ -84,6 +86,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Commit();
         Revaluation.Preview(TempArgument);
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.PreviewPost", Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native posting preview succeeds.');
         Response.Get('rollback', Token);
@@ -122,6 +125,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Commit();
         Assert.IsTrue(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), GetLastErrorText());
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.Post", Response);
         Response.Get('itemRegisterNo', Token);
         Register.Get(Token.AsValue().AsInteger());
         Response.Get('fromValueEntryNo', Token);

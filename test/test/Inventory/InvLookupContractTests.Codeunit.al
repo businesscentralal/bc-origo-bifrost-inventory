@@ -32,22 +32,21 @@ codeunit 96922 "Inv. Lookup Contract Tests"
             // [WHEN] Reading their public contract.
             Errors := ReadErrors(Name);
             Found := 0;
-            foreach Entry in Errors do begin
-                Entry.AsObject().Get('code', Value);
-                if Value.AsValue().AsText() = 'InvalidParameterFormat' then begin
-                    Found += 1;
-                    Entry.WriteTo(TextValue);
-                    // [THEN] The contract describes data and the exact document key family.
-                    Assert.IsTrue(TextValue.Contains('data is not a JSON object'), Name + ': data shape');
-                    Assert.IsTrue(TextValue.Contains('documentNo'), Name + ': documentNo');
-                    Assert.IsTrue(TextValue.Contains('no, systemId, recordSystemId, id'), Name + ': aliases');
-                    if Name.StartsWith('Inventory.TransferOrder.') then
-                        Assert.IsTrue(TextValue.Contains('transferOrderNo'), Name + ': transfer alias')
-                    else
-                        Assert.IsTrue(TextValue.Contains('assemblyOrderNo'), Name + ': assembly alias');
-                    Assert.IsFalse(TextValue.Contains('A SystemId or document identifier cannot be read.'), Name + ': obsolete text');
-                end;
-            end;
+            foreach Entry in Errors do
+                if Entry.AsObject().Get('code', Value) then
+                    if Value.AsValue().AsText() = 'InvalidParameterFormat' then begin
+                        Found += 1;
+                        Entry.WriteTo(TextValue);
+                        // [THEN] The contract describes data and the exact document key family.
+                        Assert.IsTrue(TextValue.Contains('data is not a JSON object'), Name + ': data shape');
+                        Assert.IsTrue(TextValue.Contains('documentNo'), Name + ': documentNo');
+                        Assert.IsTrue(TextValue.Contains('no, systemId, recordSystemId, id'), Name + ': aliases');
+                        if Name.StartsWith('Inventory.TransferOrder.') then
+                            Assert.IsTrue(TextValue.Contains('transferOrderNo'), Name + ': transfer alias')
+                        else
+                            Assert.IsTrue(TextValue.Contains('assemblyOrderNo'), Name + ': assembly alias');
+                        Assert.IsFalse(TextValue.Contains('A SystemId or document identifier cannot be read.'), Name + ': obsolete text');
+                    end;
             Assert.AreEqual(1, Found, Name + ': one format error');
         end;
     end;
@@ -95,6 +94,9 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         Setup.InsertIfNotExists();
         Setup."Item Tracking" := false;
         Setup.Modify(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         PreviousLanguage := GlobalLanguage();
         // [WHEN] The same refusal is produced in both supported languages.
         GlobalLanguage(1033);

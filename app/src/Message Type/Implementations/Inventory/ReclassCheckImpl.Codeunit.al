@@ -59,17 +59,35 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Returns the native reclassification parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"journalTemplateName","type":"string","required":false},{"name":"journalBatchName","type":"string","required":false},{"name":"lineSystemIds","type":"array","required":false}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native reclassification response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","validationResult":"Ready","lineCount":0,"errors":[],"warnings":[]}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady from native line validation.'));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of selected journal lines checked.'));
+        Fields.Add(ContractMgt.ResponseField('errors', 'array', 'Structured native validation errors.'));
+        Fields.Add(ContractMgt.ResponseField('warnings', 'array', 'Structured native validation warnings.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('errorCount', 'integer', 'Number of collected native errors.'));
+        Fields.Add(ContractMgt.ResponseField('warningCount', 'integer', 'Number of collected warnings.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

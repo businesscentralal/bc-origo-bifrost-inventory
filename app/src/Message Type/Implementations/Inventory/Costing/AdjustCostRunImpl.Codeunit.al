@@ -87,9 +87,29 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Parameters">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterJson: JsonObject;
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native item filter, at most 250 characters. Legacy itemNoFilter is accepted.","default":""},{"name":"itemCategoryCode","type":"string","required":false,"description":"Native category filter, mutually exclusive with itemNo; at most 250 characters. Legacy itemCategoryFilter is accepted.","default":""},{"name":"itemByItem","type":"boolean","required":false,"description":"Native item-by-item adjustment option; may commit each item.","default":false},{"name":"postToGL","type":"boolean","required":false,"description":"Use the native report 795 G/L option; report 1002 is not additionally run.","default":false},{"name":"itemNoFilter","type":"string","required":false,"default":"","description":"Legacy alias of itemNo; conflicting simultaneous values are refused."},{"name":"itemCategoryFilter","type":"string","required":false,"default":"","description":"Legacy alias of itemCategoryCode; conflicting simultaneous values are refused."}]');
+        ParameterJson := ContractMgt.Parameter('itemNo', 'string', false, 'Native item filter, at most 250 characters. Legacy itemNoFilter is accepted.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('itemCategoryCode', 'string', false, 'Native category filter, mutually exclusive with itemNo; at most 250 characters. Legacy itemCategoryFilter is accepted.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('itemByItem', 'boolean', false, 'Native item-by-item adjustment option; may commit each item.');
+        ParameterJson.Add('default', false);
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('postToGL', 'boolean', false, 'Use the native report 795 G/L option; report 1002 is not additionally run.');
+        ParameterJson.Add('default', false);
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Legacy alias of itemNo; conflicting simultaneous values are refused.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('itemCategoryFilter', 'string', false, 'Legacy alias of itemCategoryCode; conflicting simultaneous values are refused.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
         exit(true);
     end;
 

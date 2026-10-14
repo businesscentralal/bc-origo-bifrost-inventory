@@ -19,6 +19,7 @@ codeunit 96960 "Inventory Native Journal Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryWarehouse: Codeunit "Library - Warehouse";
         Journal: Codeunit "Inventory Native Journal ori";
@@ -69,6 +70,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         InitArgument(TempArgument, Batch, Request);
         Journal.Check(TempArgument, "Item Journal Template Type"::Transfer);
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Reclassification.Check", Response);
         Response.Get('validationResult', Token);
         Assert.AreEqual('Ready', Token.AsValue().AsText(), 'Valid native Transfer journal.');
         Line.Validate("Posting Date", WorkDate() + 1);
@@ -130,6 +132,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         Commit();
         Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Reclassification.Post", Response);
         Response.Get('postedLineCount', Token);
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Exactly the selected line was posted.');
         Response.Get('itemRegisterNo', Token);
@@ -180,6 +183,7 @@ codeunit 96960 "Inventory Native Journal Tests"
         Commit();
         Journal.Preview(TempArgument, "Item Journal Template Type"::Transfer);
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Reclassification.PreviewPost", Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native preview succeeds.');
         Response.Get('preview', Token);

@@ -62,17 +62,43 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
 
     /// <summary>Returns the native revaluation parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"batchId","type":"string","required":false},{"name":"id","type":"string","required":false},{"name":"systemId","type":"string","required":false},{"name":"recordSystemId","type":"string","required":false},{"name":"itemNo","type":"string","required":false},{"name":"locationCode","type":"string","required":false},{"name":"variantCode","type":"string","required":false},{"name":"postingDate","type":"date","required":true},{"name":"documentNo","type":"string","required":true},{"name":"calculatePer","type":"string","required":false},{"name":"byLocation","type":"boolean","required":false},{"name":"byVariant","type":"boolean","required":false}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('postingDate', 'date', true, ''));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, ''));
+        Parameters.Add(ContractMgt.Parameter('calculatePer', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('byLocation', 'boolean', false, ''));
+        Parameters.Add(ContractMgt.Parameter('byVariant', 'boolean', false, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","templateName":"","batchName":"","linesCreated":0,"totalQuantity":0,"calculatedValue":0,"revaluedValue":0,"posted":false}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('linesCreated', 'integer', 'Number of journal lines created by the native calculation.'));
+        Fields.Add(ContractMgt.ResponseField('totalQuantity', 'decimal', 'Total native journal quantity.'));
+        Fields.Add(ContractMgt.ResponseField('calculatedValue', 'decimal', 'Calculated inventory value from the native proposal.'));
+        Fields.Add(ContractMgt.ResponseField('revaluedValue', 'decimal', 'Revalued inventory value from the native proposal.'));
+        Fields.Add(ContractMgt.ResponseField('posted', 'boolean', 'False: calculation does not post the journal.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

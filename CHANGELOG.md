@@ -2,6 +2,7 @@
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
+- Replace sample-only native journal/revaluation/price response chapters with typed fields matching actual outputs, and express parameters through the canonical contract builder while preserving typed defaults (native implementation objects; tests 96902/96939/96941/96960/96962).
 - Declare strict data/identifier format errors and one MultipleErrors entry for the eleven document lookup types; retain Item/Create error contracts and require Foundation 28.0.2.0 (70013445; tests 96922–96923).
 - Translate human-facing refusal, expected-value and next-step labels without translating protocol keys or enum tokens; preserve existing translations and check exact en-US/is-IS refusal output (10036908/10036919/70013453; inventory tracking/reservation helpers and assembly/transfer/period/attribute implementations).
 - Correct stale local expiration and physical-journal acceptance notes to the current Architect dispositions; retain licensing, permission, external-documentation and remaining full-workflow acceptance dependencies.

@@ -19,6 +19,7 @@ codeunit 96962 "Inventory Physical Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         Journal: Codeunit "Inventory Native Journal ori";
 
@@ -52,6 +53,7 @@ codeunit 96962 "Inventory Physical Tests"
         Assert.AreEqual(10, Line."Qty. (Calculated)", 'Report calculates actual posted stock.');
         Assert.AreEqual(BeforeCount, Entries.Count(), 'Calculation creates no ledger rows.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.PhysInventory.Calculate", Response);
         Response.Get('linesCreated', Token);
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Actual inserted count returned.');
         Commit();
@@ -85,6 +87,7 @@ codeunit 96962 "Inventory Physical Tests"
         Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
         Assert.AreEqual(BeforeQuantity, Line."Qty. (Phys. Inventory)", 'Omitted quantity is not a zero write.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.PhysInventory.RecordCount", Response);
         Response.Get('result', Token);
         Token.AsArray().Get(0, Token);
         Token.AsObject().Get('counted', Token);
@@ -157,6 +160,7 @@ codeunit 96962 "Inventory Physical Tests"
         Commit();
         Journal.Preview(TempArgument, "Item Journal Template Type"::"Phys. Inventory");
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.PhysInventory.PreviewPost", Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native physical preview succeeds.');
         Response.Get('preview', Token);
@@ -193,6 +197,7 @@ codeunit 96962 "Inventory Physical Tests"
         Commit();
         Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.PhysInventory.Post", Response);
         Response.Get('itemRegisterNo', Token);
         Register.Get(Token.AsValue().AsInteger());
         Assert.IsTrue(Register."From Phys. Inventory Entry No." > 0, 'Native register contains physical count range.');

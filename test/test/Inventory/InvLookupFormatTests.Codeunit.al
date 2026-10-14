@@ -320,12 +320,13 @@ codeunit 96923 "Inv. Lookup Format Tests"
         Parent: Record Item;
         Component: Record Item;
         Helper: Codeunit "Assembly Order Test Helper";
+        LibraryAssembly: Codeunit "Library - Assembly";
         Response: JsonObject;
     begin
         // [GIVEN] A self-created valid order and subject.
         Library.Initialize();
         Helper.CreateAssemblyItemWithBOM(Parent, Component);
-        Helper.CreateAssemblyOrder(Header, Parent."No.", 1);
+        LibraryAssembly.CreateAssemblyHeader(Header, CalcDate('<1M>', WorkDate()), Parent."No.", '', 1, '');
         // [WHEN] An explicit identifier has the wrong type.
         Response := Dispatch("Message Type ori"::"Inventory.AssemblyOrder.Statistics", Header."No.", '{"documentNo":{}}');
         // [THEN] The subject cannot override validation, and no totals escape.

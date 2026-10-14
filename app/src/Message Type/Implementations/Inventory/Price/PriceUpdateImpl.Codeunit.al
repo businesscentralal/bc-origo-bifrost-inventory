@@ -62,17 +62,35 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"itemId","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"id","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"systemId","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"recordSystemId","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"tableView","type":"string","required":false,"description":"Nonempty native Item selection; must resolve exactly one item."},{"name":"unitPrice","type":"decimal","required":true,"description":"Native Item Unit Price; JSON number or invariant decimal string."},{"name":"allowBlocked","type":"boolean","required":false,"description":"Explicitly permit a blocked item; default false."}]');
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('unitPrice', 'decimal', true, 'Native Item Unit Price; JSON number or invariant decimal string.'));
+        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Explicitly permit a blocked item; default false.'));
         exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","messageType":"Inventory.Price.Update","itemNo":"","itemId":"","previousUnitPrice":0,"unitPrice":0}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('messageType', 'string', 'Stable message type name.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The resolved item number.'));
+        Fields.Add(ContractMgt.ResponseField('itemId', 'string', 'The resolved Item SystemId.'));
+        Fields.Add(ContractMgt.ResponseField('previousUnitPrice', 'decimal', 'Unit Price before native validation.'));
+        Fields.Add(ContractMgt.ResponseField('unitPrice', 'decimal', 'Unit Price after native validation.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

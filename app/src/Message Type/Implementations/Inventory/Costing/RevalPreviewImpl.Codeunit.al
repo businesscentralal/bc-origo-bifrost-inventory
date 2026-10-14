@@ -59,17 +59,36 @@ codeunit 70013404 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Returns the native revaluation parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"batchId","type":"string","required":false},{"name":"id","type":"string","required":false},{"name":"systemId","type":"string","required":false},{"name":"recordSystemId","type":"string","required":false}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","templateName":"","batchName":"","linesToPost":0,"rollback":true,"preview":[],"totals":{},"entryCount":0,"glEntryCount":0}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'Number of selected lines included in the rollback preview.'));
+        Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True: native preview entries have been rolled back.'));
+        Fields.Add(ContractMgt.ResponseField('preview', 'array', 'Captured native preview entries grouped by table.'));
+        Fields.Add(ContractMgt.ResponseField('totals', 'object', 'Native preview G/L totals.'));
+        Fields.Add(ContractMgt.ResponseField('entryCount', 'integer', 'Total native preview entry count.'));
+        Fields.Add(ContractMgt.ResponseField('glEntryCount', 'integer', 'Native preview G/L entry count.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

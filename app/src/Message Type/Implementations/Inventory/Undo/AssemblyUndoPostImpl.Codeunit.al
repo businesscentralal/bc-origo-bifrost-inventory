@@ -59,8 +59,12 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.ReadFrom('[{"name":"documentNo","type":"string","required":true},{"name":"recreateOrder","type":"boolean","required":false}]');
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, ''));
+        Parameters.Add(ContractMgt.Parameter('recreateOrder', 'boolean', false, ''));
         exit(true);
     end;
 

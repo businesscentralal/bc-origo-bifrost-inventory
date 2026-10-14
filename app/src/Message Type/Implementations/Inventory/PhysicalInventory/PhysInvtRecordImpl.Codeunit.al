@@ -65,17 +65,33 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
 
     /// <summary>Returns the native reclassification parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"journalTemplateName","type":"string","required":false},{"name":"journalBatchName","type":"string","required":false},{"name":"counts","type":"array","required":true}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('counts', 'array', true, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native reclassification response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","result":[]}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected line results; RecordCount includes before/after counts and counted state.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Legacy Record selected line number.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Legacy Record resulting physical count.'));
+        Fields.Add(ContractMgt.ResponseField('quantityCalculated', 'decimal', 'Legacy Record calculated inventory quantity.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

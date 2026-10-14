@@ -77,9 +77,21 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
 
     /// <summary>Returns the parameters contract for guarded cost writes.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Exact item number."},{"name":"itemId","type":"string","required":false,"description":"Item SystemId."},{"name":"id","type":"string","required":false,"description":"SystemId alias."},{"name":"systemId","type":"string","required":false,"description":"SystemId alias."},{"name":"recordSystemId","type":"string","required":false,"description":"SystemId alias."},{"name":"tableView","type":"string","required":false,"description":"Must resolve exactly one Item."},{"name":"unitCost","type":"number","required":false,"description":"Validate Item Unit Cost."},{"name":"lastDirectCost","type":"number","required":false,"description":"Validate Item Last Direct Cost."},{"name":"standardCost","type":"number","required":false,"description":"Validate Item Standard Cost on non-Standard items only."},{"name":"allowBlocked","type":"boolean","required":false,"description":"Explicitly permit a blocked Item; default false."},{"name":"expectedCostingMethod","type":"string","required":false,"description":"Optional case-insensitive native costing-method name guard."}]');
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Exact item number.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Must resolve exactly one Item.'));
+        Parameters.Add(ContractMgt.Parameter('unitCost', 'number', false, 'Validate Item Unit Cost.'));
+        Parameters.Add(ContractMgt.Parameter('lastDirectCost', 'number', false, 'Validate Item Last Direct Cost.'));
+        Parameters.Add(ContractMgt.Parameter('standardCost', 'number', false, 'Validate Item Standard Cost on non-Standard items only.'));
+        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Explicitly permit a blocked Item; default false.'));
+        Parameters.Add(ContractMgt.Parameter('expectedCostingMethod', 'string', false, 'Optional case-insensitive native costing-method name guard.'));
         exit(true);
     end;
 

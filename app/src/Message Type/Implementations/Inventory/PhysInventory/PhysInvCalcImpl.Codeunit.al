@@ -65,17 +65,37 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Returns the native reclassification parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"journalTemplateName","type":"string","required":false},{"name":"journalBatchName","type":"string","required":false},{"name":"postingDate","type":"date","required":true},{"name":"documentNo","type":"string","required":true},{"name":"itemNo","type":"string","required":false},{"name":"locationCode","type":"string","required":false},{"name":"variantCode","type":"string","required":false},{"name":"itemsNotOnInventory","type":"boolean","required":false},{"name":"includeItemsWithNoTransactions","type":"boolean","required":false}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('postingDate', 'date', true, ''));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, ''));
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('itemsNotOnInventory', 'boolean', false, ''));
+        Parameters.Add(ContractMgt.Parameter('includeItemsWithNoTransactions', 'boolean', false, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native reclassification response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","linesCreated":0,"posted":false}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('linesCreated', 'integer', 'Number of journal lines created by the native calculation.'));
+        Fields.Add(ContractMgt.ResponseField('posted', 'boolean', 'False: calculation does not post the journal.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 

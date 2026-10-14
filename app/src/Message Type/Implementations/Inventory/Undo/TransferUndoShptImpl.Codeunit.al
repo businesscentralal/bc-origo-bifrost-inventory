@@ -58,8 +58,12 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.ReadFrom('[{"name":"documentNo","type":"string","required":true},{"name":"lineNos","type":"array","required":false}]');
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, ''));
+        Parameters.Add(ContractMgt.Parameter('lineNos', 'array', false, ''));
         exit(true);
     end;
 

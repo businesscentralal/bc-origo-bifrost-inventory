@@ -87,9 +87,29 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Parameters">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterJson: JsonObject;
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNo","type":"string","required":false,"description":"Native Item No. filter; blank selects all pending entries. Legacy itemNoFilter is accepted only when equal if both are present.","default":""},{"name":"postingDate","type":"string","required":false,"description":"Native Posting Date filter on pending value entries. Legacy postingDateFilter is accepted.","default":""},{"name":"perPostingGroup","type":"boolean","required":false,"description":"False posts/tests per entry; true summarizes by posting group.","default":false},{"name":"documentNo","type":"string","required":false,"description":"Output document number required with perPostingGroup=true; forbidden with per-entry posting. This is not a document filter.","default":""},{"name":"itemNoFilter","type":"string","required":false,"default":"","description":"Legacy alias of itemNo; conflicting simultaneous values are refused."},{"name":"postingDateFilter","type":"string","required":false,"default":"","description":"Legacy alias of postingDate; conflicting simultaneous values are refused."}]');
+        ParameterJson := ContractMgt.Parameter('itemNo', 'string', false, 'Native Item No. filter; blank selects all pending entries. Legacy itemNoFilter is accepted only when equal if both are present.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('postingDate', 'string', false, 'Native Posting Date filter on pending value entries. Legacy postingDateFilter is accepted.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('perPostingGroup', 'boolean', false, 'False posts/tests per entry; true summarizes by posting group.');
+        ParameterJson.Add('default', false);
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('documentNo', 'string', false, 'Output document number required with perPostingGroup=true; forbidden with per-entry posting. This is not a document filter.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Legacy alias of itemNo; conflicting simultaneous values are refused.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
+        ParameterJson := ContractMgt.Parameter('postingDateFilter', 'string', false, 'Legacy alias of postingDate; conflicting simultaneous values are refused.');
+        ParameterJson.Add('default', '');
+        Parameters.Add(ParameterJson);
         exit(true);
     end;
 

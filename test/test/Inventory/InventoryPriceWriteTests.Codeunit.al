@@ -13,6 +13,7 @@ codeunit 96939 "Inventory Price Write Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         PriceWrite: Codeunit "Inventory Price Write ori";
 
@@ -44,6 +45,7 @@ codeunit 96939 "Inventory Price Write Tests"
         Assert.AreEqual(25.5, Item."Unit Price", 'Selected item stored price.');
         Assert.AreEqual(10, OtherItem."Unit Price", 'Foundation subject precedence preserves the other item.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Price.Update", Response);
         Response.Get('previousUnitPrice', Token);
         Assert.AreEqual(10, Token.AsValue().AsDecimal(), 'Actual previous price.');
         Response.Get('unitPrice', Token);

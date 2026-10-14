@@ -62,17 +62,38 @@ codeunit 70013403 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
 
     /// <summary>Returns the native revaluation parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"templateName","type":"string","required":false},{"name":"batchName","type":"string","required":false},{"name":"batchId","type":"string","required":false},{"name":"id","type":"string","required":false},{"name":"systemId","type":"string","required":false},{"name":"recordSystemId","type":"string","required":false}]');
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('batchId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, ''));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, ''));
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation response contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
         Clear(Response);
-        Response.ReadFrom('{"status":"Success","templateName":"","batchName":"","linesPosted":0,"totalQuantity":0,"totalAmount":0,"itemRegisterNo":0,"fromEntryNo":0,"toEntryNo":0,"fromValueEntryNo":0,"toValueEntryNo":0}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('linesPosted', 'integer', 'Number of selected revaluation lines posted.'));
+        Fields.Add(ContractMgt.ResponseField('totalQuantity', 'decimal', 'Total native journal quantity.'));
+        Fields.Add(ContractMgt.ResponseField('totalAmount', 'decimal', 'Total selected revaluation amount.'));
+        Fields.Add(ContractMgt.ResponseField('itemRegisterNo', 'integer', 'Native item register created by posting.'));
+        Fields.Add(ContractMgt.ResponseField('fromEntryNo', 'integer', 'First item ledger entry number in the native register.'));
+        Fields.Add(ContractMgt.ResponseField('toEntryNo', 'integer', 'Last item ledger entry number in the native register.'));
+        Fields.Add(ContractMgt.ResponseField('fromValueEntryNo', 'integer', 'First value entry number in the native register.'));
+        Fields.Add(ContractMgt.ResponseField('toValueEntryNo', 'integer', 'Last value entry number in the native register.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
