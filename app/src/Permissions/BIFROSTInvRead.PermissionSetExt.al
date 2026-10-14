@@ -9,6 +9,8 @@ using Microsoft.Inventory.Item.Attribute;
 permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
 {
     Permissions =
+        codeunit "Inventory Application Read ori" = X,
+        codeunit "Item Appl. Get Impl ori" = X,
         tabledata "Item Attribute" = R,
         tabledata "Item Attribute Value" = R,
         tabledata "Item Attribute Value Mapping" = R,

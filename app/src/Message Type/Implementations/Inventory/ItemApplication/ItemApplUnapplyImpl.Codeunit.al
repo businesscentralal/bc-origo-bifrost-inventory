@@ -53,12 +53,13 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        Parameter: JsonObject;
     begin
-        ParameterJson.Add('name', 'entryNo');
-        ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Clear(Parameter);
+        Parameter.Add('name', 'itemLedgerEntryNo');
+        Parameter.Add('type', 'integer');
+        Parameter.Add('required', true);
+        Parameters.Add(Parameter);
         exit(true);
     end;
 
@@ -129,35 +130,16 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemApplicationEntry: Record "Item Application Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        EntryNo: Integer;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
-            exit;
-        end;
-        EntryNo := Token.AsValue().AsInteger();
-        if not ItemApplicationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError('Item application entry ' + Format(EntryNo) + ' was not found.');
-            exit;
-        end;
-
-        ItemJnlPostLine.UnApply(ItemApplicationEntry);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
-        ResponseJson.Add('inboundItemEntryNo', ItemApplicationEntry."Inbound Item Entry No.");
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv Application Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv Application Process ori", Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 }

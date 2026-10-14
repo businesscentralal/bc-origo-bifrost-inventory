@@ -66,7 +66,7 @@ codeunit 96980 "Inventory Native Undo Tests"
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Exactly one original line undone.');
         Commit();
         Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Native Undo Process ori", TempArgument), 'Already-undone explicit line refuses.');
-        Assert.ExpectedError('Correction Line');
+        Assert.ExpectedError('Correction must be equal');
     end;
 
     /// <summary>Native undo refuses received shipments without corrective ledger writes.</summary>

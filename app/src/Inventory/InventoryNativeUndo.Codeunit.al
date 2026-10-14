@@ -15,6 +15,7 @@ codeunit 70013487 "Inventory Native Undo ori"
         ParameterErr: Label 'Unsupported undo parameter %1.', Comment = '%1 = parameter name; is-IS=Færibreytan %1 fyrir afturköllun er ekki studd.';
         DocumentErr: Label 'documentNo must be nonempty text of at most 20 characters.', Comment = 'is-IS=documentNo verður að vera texti sem er ekki tómur og er að hámarki 20 stafir.';
         LinesErr: Label 'lineNos must be a nonempty array of distinct positive line numbers on this shipment.', Comment = 'is-IS=lineNos verður að vera fylki sem er ekki tómt með aðgreindum jákvæðum línunúmerum í þessari afhendingu.';
+        ReceivedErr: Label 'The shipment cannot be undone: its transfer line no longer exists or has already been received.', Comment = 'is-IS=Ekki er hægt að afturkalla afhendinguna: flutningslínan er ekki lengur til eða þegar hefur verið tekið við henni.';
         EmptyErr: Label 'The shipment has no remaining lines to undo.', Comment = 'is-IS=Afhendingin hefur engar línur eftir til að afturkalla.';
 
     /// <summary>Undoes only selected shipment lines using native Undo Transfer Shipment; no posted rows are deleted directly.</summary>
@@ -67,6 +68,7 @@ codeunit 70013487 "Inventory Native Undo ori"
         if not Line.FindSet() then
             Error(EmptyErr);
         repeat
+            CheckTransferLine(Line);
             Clear(Result);
             Result.Add('lineNo', Line."Line No.");
             Result.Add('itemNo', Line."Item No.");
@@ -115,6 +117,16 @@ codeunit 70013487 "Inventory Native Undo ori"
         Response.Add('orderNo', Header."Order No.");
         Response.Add('orderExists', AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, Header."Order No."));
         SetResponse(Argument, Response);
+    end;
+
+    local procedure CheckTransferLine(ShipmentLine: Record "Transfer Shipment Line")
+    var
+        TransferLine: Record "Transfer Line";
+    begin
+        if not TransferLine.Get(ShipmentLine."Transfer Order No.", ShipmentLine."Trans. Order Line No.") then
+            Error(ReceivedErr);
+        if TransferLine."Qty. Received (Base)" > 0 then
+            Error(ReceivedErr);
     end;
 
     local procedure ReadDocumentNo(Request: JsonObject): Code[20]

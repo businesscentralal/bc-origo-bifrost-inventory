@@ -55,12 +55,24 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        Parameter: JsonObject;
+        Name: Text;
+        Names: List of [Text];
     begin
-        ParameterJson.Add('name', 'itemLedgerEntryNo');
-        ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Names.Add('itemNo');
+        Names.Add('itemLedgerEntryNo');
+        Names.Add('locationCode');
+        Names.Add('variantCode');
+        foreach Name in Names do begin
+            Clear(Parameter);
+            Parameter.Add('name', Name);
+            if Name = 'itemLedgerEntryNo' then
+                Parameter.Add('type', 'integer')
+            else
+                Parameter.Add('type', 'string');
+            Parameter.Add('required', false);
+            Parameters.Add(Parameter);
+        end;
         exit(true);
     end;
 
@@ -115,7 +127,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads item application entries for one item ledger entry.';
+        Overview := 'Reads item applications with both ledger sides for one item or ledger entry.';
         exit(true);
     end;
 
@@ -132,41 +144,13 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemApplicationEntry: Record "Item Application Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Entries: JsonArray;
-        EntryJson: JsonObject;
-        Token: JsonToken;
-        ItemLedgerEntryNo: Integer;
-        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Locked = true;
+        NativeRead: Codeunit "Inventory Application Read ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'itemLedgerEntryNo', '', '', '');
-            exit;
-        end;
-        ItemLedgerEntryNo := Token.AsValue().AsInteger();
-        ItemApplicationEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
-        if ItemApplicationEntry.FindSet() then
-            repeat
-                Clear(EntryJson);
-                EntryJson.Add('entryNo', ItemApplicationEntry."Entry No.");
-                EntryJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
-                EntryJson.Add('inboundItemEntryNo', ItemApplicationEntry."Inbound Item Entry No.");
-                EntryJson.Add('outboundItemEntryNo', ItemApplicationEntry."Outbound Item Entry No.");
-                EntryJson.Add('quantity', ItemApplicationEntry.Quantity);
-                Entries.Add(EntryJson);
-            until ItemApplicationEntry.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo);
-        ResponseJson.Add('entries', Entries);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        NativeRead.Read(Argument);
     end;
 }

@@ -9,6 +9,10 @@ using Microsoft.Inventory.Item.Attribute;
 permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori"
 {
     Permissions =
+        codeunit "Inv Application Write ori" = X,
+        codeunit "Inv Application Process ori" = X,
+        codeunit "Item Appl. Unapply Impl ori" = X,
+        codeunit "Item Appl. Reapply Impl ori" = X,
         tabledata "Item Attribute" = RIMD,
         tabledata "Item Attribute Value" = RIMD,
         tabledata "Item Attribute Value Mapping" = RIMD,

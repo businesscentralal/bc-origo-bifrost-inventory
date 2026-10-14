@@ -2,7 +2,9 @@
 
 ## Unreleased — native undo and application acceptance (#39, #40)
 
-- Run transfer-shipment and assembly undo through isolated native processes with posting gates, validated line selection and recreateOrder support (70013480/70013482/70013487/70013489; tests 96980–96981). Preserve the unsupported native transfer-receipt undo limitation pending platform disposition.
+- Run transfer-shipment and assembly undo through isolated native processes with posting gates, validated line selection and recreateOrder support (70013480/70013482/70013487/70013489; test 96980). Preserve the unsupported native transfer-receipt undo limitation pending platform disposition.
+
+- Add item/ledger-scoped application reads with both ledger sides and exact filters. Run atomic native worksheet Unapply/Reapply with explicit base quantity, sign/remaining/reservation checks, native adjustment flags and legacy aliases (70013490–70013492/70013494/70013495/70013497; tests 96982–96983).
 
 ## Unreleased — native journal acceptance (#6, #34)
 

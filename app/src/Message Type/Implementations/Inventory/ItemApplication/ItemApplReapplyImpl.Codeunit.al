@@ -53,17 +53,23 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        Parameter: JsonObject;
     begin
-        ParameterJson.Add('name', 'itemLedgerEntryNo');
-        ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'applyToEntryNo');
-        ParameterJson.Add('type', 'integer');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Clear(Parameter);
+        Parameter.Add('name', 'outboundEntryNo');
+        Parameter.Add('type', 'integer');
+        Parameter.Add('required', true);
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'inboundEntryNo');
+        Parameter.Add('type', 'integer');
+        Parameter.Add('required', true);
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'quantity');
+        Parameter.Add('type', 'decimal');
+        Parameter.Add('required', true);
+        Parameters.Add(Parameter);
         exit(true);
     end;
 
@@ -134,45 +140,16 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemLedgerEntry: Record "Item Ledger Entry";
-        ApplyToItemLedgerEntry: Record "Item Ledger Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        ItemLedgerEntryNo: Integer;
-        ApplyToEntryNo: Integer;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
-            Argument.RespondWithError('itemLedgerEntryNo is required.');
-            exit;
-        end;
-        ItemLedgerEntryNo := Token.AsValue().AsInteger();
-        if not RequestJson.Get('applyToEntryNo', Token) then begin
-            Argument.RespondWithError('applyToEntryNo is required.');
-            exit;
-        end;
-        ApplyToEntryNo := Token.AsValue().AsInteger();
-        if not ItemLedgerEntry.Get(ItemLedgerEntryNo) then begin
-            Argument.RespondWithError('Item ledger entry ' + Format(ItemLedgerEntryNo) + ' was not found.');
-            exit;
-        end;
-        if not ApplyToItemLedgerEntry.Get(ApplyToEntryNo) then begin
-            Argument.RespondWithError('Item ledger entry ' + Format(ApplyToEntryNo) + ' was not found.');
-            exit;
-        end;
-
-        ItemJnlPostLine.ReApply(ItemLedgerEntry, ApplyToEntryNo);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo);
-        ResponseJson.Add('applyToEntryNo', ApplyToEntryNo);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Inv Application Process ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Inv Application Process ori", Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 }
