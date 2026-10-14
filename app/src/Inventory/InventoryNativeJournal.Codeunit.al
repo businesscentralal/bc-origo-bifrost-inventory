@@ -568,7 +568,8 @@ codeunit 70013463 "Inventory Native Journal ori"
     begin
         // Native item tracking belongs to the source reservation rows, not normally to journal fields.
         Reservation.ReadIsolation := IsolationLevel::ReadCommitted;
-        Line.SetReservationFilters(Reservation);
+        // The broader helper also filters by blank journal tracking fields and would hide page assignments.
+        Line.SetReservEntrySourceFilters(Reservation, false);
         if Reservation.FindSet() then
             repeat
                 if Reservation.TrackingExists() then begin
