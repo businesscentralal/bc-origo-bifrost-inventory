@@ -322,6 +322,34 @@ codeunit 96939 "Inventory Price Write Tests"
         Assert.AreEqual(10, Item."Unit Price", 'Refusal preserves stored price.');
     end;
 
+    /// <summary>The blocked-item refusal is translated and preserves the native field without changing the request key.</summary>
+    [Test]
+    procedure UpdatePrice_BlockedIcelandic_PreservesValue()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Refusal: Text;
+        PreviousValue: Decimal;
+        PreviousLanguage: Integer;
+    begin
+        CreateItem(Item);
+        PreviousValue := Item."Unit Price";
+        Item.Validate(Blocked, true);
+        Item.Modify(true);
+        Request.Add('unitPrice', 99);
+        InitArgument(TempArgument, Item."No.", Request);
+        Commit();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
+        asserterror PriceWrite.UpdatePrice(TempArgument);
+        Refusal := GetLastErrorText();
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreEqual('Vara ' + Item."No." + ' er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.', Refusal, 'Native refusal is entirely Icelandic apart from the invariant request key.');
+        Item.Get(Item."No.");
+        Assert.AreEqual(PreviousValue, Item."Unit Price", 'Translated refusal does not change the stored value.');
+    end;
+
     local procedure VerifyMalformed(JsonText: Text)
     var
         Item: Record Item;

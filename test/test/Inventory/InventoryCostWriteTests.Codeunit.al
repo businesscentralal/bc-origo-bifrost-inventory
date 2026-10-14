@@ -249,6 +249,34 @@ codeunit 96937 "Inventory Cost Write Tests"
         Assert.AreEqual(PreviousCost, Item."Last Direct Cost", 'Card cost is rolled back.');
     end;
 
+    /// <summary>The blocked-item refusal is translated and preserves the native field without changing the request key.</summary>
+    [Test]
+    procedure UpdateCost_BlockedIcelandic_PreservesValue()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Refusal: Text;
+        PreviousValue: Decimal;
+        PreviousLanguage: Integer;
+    begin
+        CreateItem(Item, Item."Costing Method"::FIFO);
+        PreviousValue := Item."Unit Cost";
+        Item.Validate(Blocked, true);
+        Item.Modify(true);
+        Request.Add('unitCost', 99);
+        InitArgument(TempArgument, Item."No.", Request);
+        Commit();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
+        asserterror CostWrite.UpdateCost(TempArgument);
+        Refusal := GetLastErrorText();
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreEqual('Vara ' + Item."No." + ' er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.', Refusal, 'Native refusal is entirely Icelandic apart from the invariant request key.');
+        Item.Get(Item."No.");
+        Assert.AreEqual(PreviousValue, Item."Unit Cost", 'Translated refusal does not change the stored value.');
+    end;
+
     local procedure VerifyWrite(Method: Enum "Costing Method")
     var
         Item: Record Item;

@@ -22,6 +22,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert: Codeunit "Library Assert";
         ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
+        LibraryCosting: Codeunit "Library - Costing";
         LibraryWarehouse: Codeunit "Library - Warehouse";
         Revaluation: Codeunit "Inventory Revaluation ori";
 
@@ -642,6 +643,8 @@ codeunit 96941 "Inventory Revaluation Tests"
         if Method = Method::Specific then
             AssignNativeSerials(JournalLine);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+        if Method = Method::Average then
+            LibraryCosting.AdjustCostItemEntries(Item."No.", '');
     end;
 
     local procedure AssignNativeSerials(Line: Record "Item Journal Line")

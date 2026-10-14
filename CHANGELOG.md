@@ -1,5 +1,7 @@
 # Changelog
 
+- Verify Icelandic blocked-item cost/price refusals and unchanged native values; retain invariant allowBlocked request key (tests 96937/96939; issues #4/#32/#33).
+
 - Document native Average revaluation prerequisites in English and Icelandic and verify location/variant selection in entry and item modes (codeunit 70013488; tests 96941/96921; issues #4/#30/#32).
 
 - Verify native LIFO, Average, Standard and serial-specific revaluation calculation, preview rollback and exact posted value delta without changing standard cost (test codeunit 96941; issue #4).
