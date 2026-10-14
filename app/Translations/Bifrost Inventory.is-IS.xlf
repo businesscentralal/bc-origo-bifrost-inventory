@@ -1419,6 +1419,96 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Transfer sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancels native reservations by source or reservation entry number.</source>
+          <target>Afturkallar innbyggðar frátektir eftir uppruna eða frátektarfærslunúmeri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar innbyggðar frátektir eftir uppruna eða frátektarfærslunúmeri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>cancel reservation,release reserved quantity,reservation source</source>
+          <target>afturkalla frátekt,losa frátekið magn,frátektaruppruni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla frátekt,losa frátekið magn,frátektaruppruni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancels only Reservation-status entries through Reservation Engine Mgt. and removes both sides of each selected pair. A source without entryNo cancels all its reservations and is repeatable with entriesCancelled zero; a missing explicit entryNo returns RecordNotFound. Closed sources are refused. entriesCancelled counts selected source rows, not both pair sides. Returned quantities are positive magnitudes in source and base units. No posting occurs.</source>
+          <target>Afturkallar aðeins færslur með stöðuna Reservation með Reservation Engine Mgt. og fjarlægir báðar hliðar hvers valins pars. Uppruni án entryNo afturkallar allar frátektir sínar og má endurtaka með entriesCancelled núll; ef tilgreint entryNo finnst ekki er skilað RecordNotFound. Lokuðum uppruna er hafnað. entriesCancelled telur valdar upprunalínur, ekki báðar hliðar parsins. Skilað magn er jákvætt í mælieiningu upprunans og grunneiningum. Engin bókun fer fram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar aðeins færslur með stöðuna Reservation með Reservation Engine Mgt. og fjarlægir báðar hliðar hvers valins pars. Uppruni án entryNo afturkallar allar frátektir sínar og má endurtaka með entriesCancelled núll; ef tilgreint entryNo finnst ekki er skilað RecordNotFound. Lokuðum uppruna er hafnað. entriesCancelled telur valdar upprunalínur, ekki báðar hliðar parsins. Skilað magn er jákvætt í mælieiningu upprunans og grunneiningum. Engin bókun fer fram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancels native reservations by source or reservation entry number.</source>
+          <target>Afturkallar innbyggðar frátektir eftir uppruna eða frátektarfærslunúmeri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar innbyggðar frátektir eftir uppruna eða frátektarfærslunúmeri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a source, optionally narrowed by entryNo, or provide entryNo alone to resolve its native source.</source>
+          <target>Veldu uppruna, valfrjálst þrengdan með entryNo, eða gefðu aðeins entryNo til að finna innbyggðan uppruna hans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu uppruna, valfrjálst þrengdan með entryNo, eða gefðu aðeins entryNo til að finna innbyggðan uppruna hans.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manually pairs native reservation sources with explicit supply or matching posted inventory.</source>
+          <target>Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>create manual reservation,explicit supply,reserve item</source>
+          <target>stofna handvirka frátekt,tilgreindur uppruni,taka vöru frá</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=stofna handvirka frátekt,tilgreindur uppruni,taka vöru frá</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Uses native W1 source adapters and Create Reserv. Entry. quantity uses the source unit of measure; quantityBase is the converted quantity. Explicit supply must be distinct and opposite, with the same item, variant and location. Without supply or itemLedgerEntryNo, matching open positive posted inventory is selected in entry order and may produce several pairs. expectedDate is forwarded to each native pair. Closed sources, insufficient availability and invalid serial quantities refuse without partial pairing. No posting occurs.</source>
+          <target>Notar innbyggða W1 upprunaaðlögun og Create Reserv. Entry. quantity er í mælieiningu upprunans; quantityBase er umreiknað magn. Tilgreindur mótuppruni verður að vera aðskilinn og gagnstæður fyrir sömu vöru, afbrigði og birgðageymslu. Án supply eða itemLedgerEntryNo eru samsvarandi opnar jákvæðar bókaðar birgðir valdar í færsluröð og geta myndað mörg pör. expectedDate er sent áfram til hvers innbyggðs pars. Lokuðum uppruna, ónógu tiltæku magni og ógildu raðnúmeramagni er hafnað án pörunar að hluta. Engin bókun fer fram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notar innbyggða W1 upprunaaðlögun og Create Reserv. Entry. quantity er í mælieiningu upprunans; quantityBase er umreiknað magn. Tilgreindur mótuppruni verður að vera aðskilinn og gagnstæður fyrir sömu vöru, afbrigði og birgðageymslu. Án supply eða itemLedgerEntryNo eru samsvarandi opnar jákvæðar bókaðar birgðir valdar í færsluröð og geta myndað mörg pör. expectedDate er sent áfram til hvers innbyggðs pars. Lokuðum uppruna, ónógu tiltæku magni og ógildu raðnúmeramagni er hafnað án pörunar að hluta. Engin bókun fer fram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manually pairs native reservation sources with explicit supply or matching posted inventory.</source>
+          <target>Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a W1 reservation source or legacy document line and a positive quantity in the source unit of measure.</source>
+          <target>Veldu W1 frátektaruppruna eða eldri skjalalínuvalkost og jákvætt magn í mælieiningu upprunans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu W1 frátektaruppruna eða eldri skjalalínuvalkost og jákvætt magn í mælieiningu upprunans.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads native reservation entries with source identities and intersected filters.</source>
+          <target>Les innbyggðar frátektarfærslur með upprunaauðkennum og sameinuðum síum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les innbyggðar frátektarfærslur með upprunaauðkennum og sameinuðum síum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>read reservations,reservation pair,reserved quantity,source filter</source>
+          <target>lesa frátektir,frátektarpar,frátekið magn,upprunasía</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lesa frátektir,frátektarpar,frátekið magn,upprunasía</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Native Reservation Entry is keyed by Entry No. and Positive; entryNo retains both matching sides unless source filters isolate one. No reservation-status filter is imposed. quantity uses source units and quantityBase uses signed base units. Expiration is the native entry date only with Use Expiration Dates enabled; otherwise blank, never 0D. No matches returns an empty page, except an explicit unmatched entryNo returns RecordNotFound.</source>
+          <target>Aðeins lestur. Lykill innbyggðrar Reservation Entry er Entry No. og Positive; entryNo heldur báðum samsvarandi hliðum nema upprunasíur einangri aðra. Engin sía á frátektarstöðu er sett. quantity er í mælieiningu upprunans og quantityBase í formerktu grunnmagni. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef ekkert finnst er skilað tómri síðu, nema tilgreint entryNo án samsvörunar skili RecordNotFound.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Lykill innbyggðrar Reservation Entry er Entry No. og Positive; entryNo heldur báðum samsvarandi hliðum nema upprunasíur einangri aðra. Engin sía á frátektarstöðu er sett. quantity er í mælieiningu upprunans og quantityBase í formerktu grunnmagni. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef ekkert finnst er skilað tómri síðu, nema tilgreint entryNo án samsvörunar skili RecordNotFound.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads native reservation entries with source identities and intersected filters.</source>
+          <target>Les innbyggðar frátektarfærslur með upprunaauðkennum og sameinuðum síum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les innbyggðar frátektarfærslur með upprunaauðkennum og sameinuðum síum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read all entries or intersect item, source, entryNo, location, variant and tracking filters. entryNo identifies a pair; source selects its side.</source>
+          <target>Lestu allar færslur eða sameinaðu síur fyrir vöru, uppruna, entryNo, birgðageymslu, afbrigði og rakningu. entryNo auðkennir par; uppruni velur hlið þess.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu allar færslur eða sameinaðu síur fyrir vöru, uppruna, entryNo, birgðageymslu, afbrigði og rakningu. entryNo auðkennir par; uppruni velur hlið þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Runs native revaluation posting preview and returns captured entries without committing.</source>
           <target>Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær.</target>
@@ -1508,6 +1598,126 @@
           <target>Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assigns lot, serial and package tracking to an existing source through native Item Tracking Lines.</source>
+          <target>Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>assign lot,assign serial,assign package,item tracking</source>
+          <target>úthluta lotu,úthluta raðnúmeri,úthluta pakka,vörurakning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=úthluta lotu,úthluta raðnúmeri,úthluta pakka,vörurakning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantities use base units, unlike Reservation.Create. Every entry is validated before native registration. Serial quantity must be one. Native source, tracking-code, availability and expiration checks remain active. No posting or direct protected-table insertion occurs.</source>
+          <target>Magn er í grunneiningum, ólíkt Reservation.Create. Allar línur eru sannprófaðar fyrir innbyggða skráningu. Magn raðnúmers verður að vera einn. Innbyggðar athuganir á uppruna, rakningarkóta, tiltæku magni og fyrningu gilda áfram. Engin bókun eða bein skráning í varðar töflur fer fram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn er í grunneiningum, ólíkt Reservation.Create. Allar línur eru sannprófaðar fyrir innbyggða skráningu. Magn raðnúmers verður að vera einn. Innbyggðar athuganir á uppruna, rakningarkóta, tiltæku magni og fyrningu gilda áfram. Engin bókun eða bein skráning í varðar töflur fer fram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assigns lot, serial and package tracking to an existing source through native Item Tracking Lines.</source>
+          <target>Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select source.type and source.systemId; entries supplies 1..200 tracking rows in base units.</source>
+          <target>Veldu source.type og source.systemId; entries inniheldur 1..200 rakningarlínur í grunneiningum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu source.type og source.systemId; entries inniheldur 1..200 rakningarlínur í grunneiningum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads tracked inventory, reserved quantities and availability by location and variant.</source>
+          <target>Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>tracking availability,lot availability,serial availability,package availability</source>
+          <target>tiltæk rakning,tiltækar lotur,tiltæk raðnúmer,tiltækir pakkar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=tiltæk rakning,tiltækar lotur,tiltæk raðnúmer,tiltækir pakkar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Groups open positive tracked item ledger entries by location, variant, lot, serial and package. All quantities use base units; availableQuantity equals remainingQuantity minus qtyReserved. expirationDate is the native entry date only with Use Expiration Dates enabled, and blank for undated or disagreeing grouped entries. No matching stock returns a successful empty page. Filters apply before paging.</source>
+          <target>Aðeins lestur. Opnar jákvæðar raktar vörufærslur eru flokkaðar eftir birgðageymslu, afbrigði, lotu, raðnúmeri og pakka. Allt magn er í grunneiningum; availableQuantity er remainingQuantity að frádregnu qtyReserved. expirationDate er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt, og tómt fyrir ódagsettar færslur eða misræmi innan hóps. Ef engar samsvarandi birgðir finnast er skilað tómri síðu án villu. Síur gilda fyrir síðuskiptingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Opnar jákvæðar raktar vörufærslur eru flokkaðar eftir birgðageymslu, afbrigði, lotu, raðnúmeri og pakka. Allt magn er í grunneiningum; availableQuantity er remainingQuantity að frádregnu qtyReserved. expirationDate er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt, og tómt fyrir ódagsettar færslur eða misræmi innan hóps. Ef engar samsvarandi birgðir finnast er skilað tómri síðu án villu. Síur gilda fyrir síðuskiptingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads tracked inventory, reserved quantities and availability by location and variant.</source>
+          <target>Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an item using subject or item identifiers; intersect location, variant and exact tracking filters.</source>
+          <target>Veldu vöru með subject eða vöruauðkennum; sameinaðu síur fyrir birgðageymslu, afbrigði og nákvæma rakningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vöru með subject eða vöruauðkennum; sameinaðu síur fyrir birgðageymslu, afbrigði og nákvæma rakningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Removes tracking from the selected source through native reservation APIs.</source>
+          <target>Fjarlægir rakningu af völdum uppruna með innbyggðum frátektaraðgerðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir rakningu af völdum uppruna með innbyggðum frátektaraðgerðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>remove tracking,delete lot,delete serial,source tracking</source>
+          <target>fjarlægja rakningu,eyða lotu,eyða raðnúmeri,rakning uppruna</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fjarlægja rakningu,eyða lotu,eyða raðnúmeri,rakning uppruna</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omitted entryNos removes all tracking on the source; an empty array changes nothing. Duplicate entry numbers are counted once. All selected entries must belong to this source and carry tracking; validation finishes before the first change. Native reservation pairing remains active; no posting occurs.</source>
+          <target>Ef entryNos vantar er öll rakning upprunans fjarlægð; tómt fylki breytir engu. Tvítekin færslunúmer eru talin einu sinni. Allar valdar færslur verða að tilheyra upprunanum og bera rakningu; sannprófun lýkur áður en breytingar hefjast. Innbyggð pörun frátekta gildir áfram; engin bókun fer fram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ef entryNos vantar er öll rakning upprunans fjarlægð; tómt fylki breytir engu. Tvítekin færslunúmer eru talin einu sinni. Allar valdar færslur verða að tilheyra upprunanum og bera rakningu; sannprófun lýkur áður en breytingar hefjast. Innbyggð pörun frátekta gildir áfram; engin bókun fer fram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Removes tracking from the selected source through native reservation APIs.</source>
+          <target>Fjarlægir rakningu af völdum uppruna með innbyggðum frátektaraðgerðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir rakningu af völdum uppruna með innbyggðum frátektaraðgerðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select source.type and source.systemId; omit entryNos for all source tracking or send distinct entry numbers.</source>
+          <target>Veldu source.type og source.systemId; slepptu entryNos fyrir alla rakningu upprunans eða sendu aðgreind færslunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu source.type og source.systemId; slepptu entryNos fyrir alla rakningu upprunans eða sendu aðgreind færslunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 34502663 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads lot, serial and package tracking for an item or document line.</source>
+          <target>Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 34502663 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>read tracking,lot tracking,serial tracking,package tracking</source>
+          <target>lesa rakningu,loturakning,raðnúmerarakning,pakkarakning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lesa rakningu,loturakning,raðnúmerarakning,pakkarakning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 34502663 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Source selection takes precedence over item selection. Item mode returns tracked remaining ledger entries and nonzero reservation entries; source mode returns reservation and tracking specification rows. quantityBase totals all matching rows before paging, not available stock. Expiration is the native entry date only when Use Expiration Dates is enabled; otherwise blank, never 0D. No matching tracking returns RecordNotFound; paging past existing rows returns an empty page.</source>
+          <target>Aðeins lestur. Val uppruna hefur forgang yfir vöruval. Vöruval skilar röknum eftirstöðvum vörufærslna og frátektarfærslum með magni; upprunaval skilar frátektar- og rakningarlínum. quantityBase er summa allra samsvarandi lína fyrir síðuskiptingu, ekki tiltækar birgðir. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef engin rakning finnst er skilað RecordNotFound; síðuskipting fram yfir fyrirliggjandi línur skilar tómri síðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Val uppruna hefur forgang yfir vöruval. Vöruval skilar röknum eftirstöðvum vörufærslna og frátektarfærslum með magni; upprunaval skilar frátektar- og rakningarlínum. quantityBase er summa allra samsvarandi lína fyrir síðuskiptingu, ekki tiltækar birgðir. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef engin rakning finnst er skilað RecordNotFound; síðuskipting fram yfir fyrirliggjandi línur skilar tómri síðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 34502663 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads lot, serial and package tracking for an item or document line.</source>
+          <target>Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 34502663 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a source or legacy document line; otherwise select an item. A sales, purchase or transfer line SystemId in subject selects that source.</source>
+          <target>Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>

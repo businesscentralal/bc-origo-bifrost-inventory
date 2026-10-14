@@ -13,6 +13,218 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure TrackingAssign_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Tracking.Assign', 'status:string,entriesAssigned:integer');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure TrackingDelete_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Tracking.Delete', 'status:string,entriesDeleted:integer');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure TrackingRead_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Tracking.Get', 'status:string,itemNo:string,quantityBase:decimal,trackingLines:array,noOfLines:integer,totalNoOfLines:integer');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure TrackingAvailability_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.TrackingAvailability.Get', 'status:string,itemNo:string,availability:array,noOfLines:integer,totalNoOfLines:integer');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure ReservationCreate_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Reservation.Create', 'status:string,quantity:decimal,quantityBase:decimal,entryNo:integer,entryNos:array');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure ReservationCancel_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Reservation.Cancel', 'status:string,entriesCancelled:integer,itemNo:string,quantityUnreserved:decimal,quantityBaseUnreserved:decimal');
+    end;
+
+    /// <summary>Public tracking and reservation Help describes the actual native response and typed refusals.</summary>
+    [Test]
+    procedure ReservationRead_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: examples or public schema drift from native behavior.
+        AssertTrackingHelp('Inventory.Reservation.Get', 'status:string,entries:array,noOfLines:integer,totalNoOfLines:integer');
+    end;
+
+    /// <summary>Every tracking/reservation operation localizes discovery while its public contract remains invariant English.</summary>
+    [Test]
+    procedure TrackingHelp_AllRegisteredTypes_LocalizesDiscoveryAndKeepsContractInvariant()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageInterface: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        EnglishContract: JsonObject;
+        Token: JsonToken;
+        EnglishToken: JsonToken;
+        Parameter: JsonObject;
+        Names: List of [Text];
+        Name: Text;
+        Chapter: Text;
+        Chapters: List of [Text];
+        EnglishDescription: Text;
+        EnglishSelection: Text;
+        EnglishKeywords: Text;
+        IcelandicDescription: Text;
+        IcelandicSelection: Text;
+        IcelandicKeywords: Text;
+        PreviousLanguage: Integer;
+    begin
+        // Issues #32/#33 | Time: independent | Risk: compile-only localization misses registered Help.
+        Names.Add('Inventory.Tracking.Assign');
+        Names.Add('Inventory.Tracking.Delete');
+        Names.Add('Inventory.Tracking.Get');
+        Names.Add('Inventory.TrackingAvailability.Get');
+        Names.Add('Inventory.Reservation.Create');
+        Names.Add('Inventory.Reservation.Cancel');
+        Names.Add('Inventory.Reservation.Get');
+        Chapters.Add('overview');
+        Chapters.Add('notes');
+        PreviousLanguage := GlobalLanguage();
+        foreach Name in Names do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(Name));
+            MessageInterface := MessageType;
+            Discovery := MessageType;
+            GlobalLanguage(1033);
+            EnglishDescription := MessageInterface.GetDescription();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            ContractMgt.GetContract(MessageType, EnglishContract);
+            GlobalLanguage(1039);
+            IcelandicDescription := MessageInterface.GetDescription();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            IcelandicKeywords := Discovery.GetKeywords();
+            ContractMgt.GetContract(MessageType, Contract);
+            LibraryAssert.AreEqual(1039, GlobalLanguage(), 'Contract reader restores the caller language.');
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, Name + ' description changes language.');
+            LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, Name + ' selection changes language.');
+            LibraryAssert.AreNotEqual(EnglishKeywords, IcelandicKeywords, Name + ' keywords change language.');
+            foreach Chapter in Chapters do begin
+                LibraryAssert.IsTrue(EnglishContract.Get(Chapter, EnglishToken), Name + ' English Help chapter.');
+                LibraryAssert.IsTrue(Contract.Get(Chapter, Token), Name + ' Icelandic Help chapter.');
+                LibraryAssert.AreEqual(EnglishToken.AsValue().AsText(), Token.AsValue().AsText(), Name + ' ' + Chapter + ' is an invariant English contract chapter (Foundation #777).');
+            end;
+            Contract.Get('parameters', Token);
+            foreach Token in Token.AsArray() do begin
+                Parameter := Token.AsObject();
+                LibraryAssert.IsTrue(Parameter.Get('description', Token), Name + ' parameter description.');
+                LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), Name + ' parameter is explained.');
+            end;
+        end;
+    end;
+
+    /// <summary>Help preserves the distinct selector, deletion, pairing and expiration semantics.</summary>
+    [Test]
+    procedure TrackingHelp_SelectorsAndExpiration_DescribeNativeBehavior()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Token: JsonToken;
+    begin
+        // Issues #5/#7/#30 | Time: independent | Risk: a copied description changes the public promise.
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Reservation.Cancel", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'entryNo', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('alone'), 'Entry-only cancellation is documented.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Reservation.Create", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'quantity', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('source unit of measure'), 'Reservations use source units.');
+        GetNamedMember(Contract, 'parameters', 'name', 'source', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('ProdOrderComponent'), 'W1 sources are not sales-only.');
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('JobPlanningLine'), 'Job planning is discoverable.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Tracking.Delete", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'entryNos', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('empty array changes nothing'), 'Empty deletion is a no-op.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Reservation.Get", Contract);
+        Contract.Get('notes', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('both matching sides'), 'Pair semantics remain intact pending Architect.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.TrackingAvailability.Get", Contract);
+        Contract.Get('notes', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('disagreeing grouped entries'), 'Expiration disagreement is blank.');
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('Use Expiration Dates'), 'Native expiration flag controls output.');
+        GetNamedMember(Contract, 'parameters', 'name', 'systemId', Parameter);
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('document-line selectors are not supported'), 'Availability has only item selectors.');
+    end;
+
+    local procedure AssertTrackingHelp(TypeName: Text; ExpectedFields: Text)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Response: JsonObject;
+        Member: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Token: JsonToken;
+        Parts: List of [Text];
+        Field: Text;
+    begin
+        LibraryAssert.IsTrue(ContractMgt.GetContract(Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName)), Contract), 'Registered public Help exists.');
+        Contract.Get('response', Token);
+        Response := Token.AsObject();
+        AssertJsonText(Response, 'contentType', 'text/json');
+        Response.Get('fields', Token);
+        LibraryAssert.AreEqual(ExpectedFields.Split(',').Count(), Token.AsArray().Count(), 'Exact response schema.');
+        foreach Field in ExpectedFields.Split(',') do begin
+            Parts := Field.Split(':');
+            GetNamedMember(Response, 'fields', 'name', Parts.Get(1), Member);
+            AssertJsonText(Member, 'type', Parts.Get(2));
+            Member.Get('description', Token);
+            LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'Native field is explained.');
+        end;
+        Contract.Get('errors', Token);
+        LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Typed parsing, permission and native refusal contracts.');
+        foreach Token in Token.AsArray() do begin
+            Member := Token.AsObject();
+            Member.Get('when', Token);
+            LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'Refusal condition is explicit.');
+            Member.Get('fix', Token);
+            LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'Refusal action is explicit.');
+        end;
+        GetNamedMember(Contract, 'errors', 'code', 'MissingParameter', Member);
+        GetNamedMember(Contract, 'errors', 'code', 'InvalidParameterFormat', Member);
+        GetNamedMember(Contract, 'errors', 'code', 'RecordNotFound', Member);
+        GetNamedMember(Contract, 'errors', 'code', 'PermissionDenied', Member);
+        Contract.Get('examples', Token);
+        LibraryAssert.AreEqual(1, Token.AsArray().Count(), 'A complete native example is published.');
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        AssertJsonText(Request, 'type', TypeName);
+        LibraryAssert.IsTrue(Request.Get('data', Token), 'Example provides actual request data.');
+        LibraryAssert.IsTrue(Token.IsObject(), 'Example data is an object.');
+    end;
+
     /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
     [Test]
     procedure AdjustCost_PublicHelp_DeclaresNativeFieldsAndErrors()

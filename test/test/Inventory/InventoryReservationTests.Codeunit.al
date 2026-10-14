@@ -812,6 +812,78 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'Entry-only cancellation removes the opposite side too.');
     end;
 
+    /// <summary>Published Help examples form, read and cancel a native pair using only owned fixtures.</summary>
+    [Test]
+    procedure Scenario_AC1_PublicExamples_CreateReadCancelOwnedPair()
+    var
+        SalesLine: Record "Sales Line";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        OppositeEntry: Record "Reservation Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        PairNo: Integer;
+        LedgerCount: Integer;
+    begin
+        // Issue #7 | Time: native fixture WorkDate | Risk: source/quantity examples omit real pairing requirements.
+        // Native layer only; no licensed dispatch or full MCP acceptance is claimed.
+        CreateSources(SalesLine, ItemLedgerEntry);
+        LedgerCount := ItemLedgerEntry.Count();
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Reservation.Create");
+        Request.Replace('source', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Replace('itemLedgerEntryNo', ItemLedgerEntry."Entry No.");
+        ExecuteReservation(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSalesReservations(SalesLine, ReservationEntry);
+        Assert.AreEqual(1, ReservationEntry.Count(), 'One demand row is paired.');
+        ReservationEntry.FindFirst();
+        PairNo := ReservationEntry."Entry No.";
+        OppositeEntry.Get(PairNo, not ReservationEntry.Positive);
+        Assert.AreEqual(ItemLedgerEntry."Entry No.", OppositeEntry."Source Ref. No.", 'Explicit owned stock is paired.');
+        Assert.AreEqual(2, OppositeEntry."Quantity (Base)", 'Published quantity is reserved.');
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Reservation.Get");
+        Request.Replace('source', SourceObject('SalesLine', SalesLine.SystemId));
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        TrackingRead.ReadReservations(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Response.Get('entries', Token);
+        Assert.AreEqual(1, Token.AsArray().Count(), 'Source filter selects only the demand side.');
+        Assert.AreEqual(1, ReservationEntry.Count(), 'Reading does not change the pair.');
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Reservation.Cancel");
+        Request.Replace('source', SourceObject('SalesLine', SalesLine.SystemId));
+        ExecuteReservation(Request, true, Response);
+        AssertStatus(Response, 'Success');
+        ReservationEntry.Reset();
+        ReservationEntry.SetRange("Entry No.", PairNo);
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Native cancellation removes both sides.');
+        Assert.AreEqual(LedgerCount, ItemLedgerEntry.Count(), 'No additional inventory posting.');
+    end;
+
+    local procedure PublishedExampleData(MessageType: Enum "Message Type ori") Data: JsonObject
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Token: JsonToken;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Registered public Help exists.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Data := Token.AsObject();
+    end;
+
     local procedure CreateSources(var SalesLine: Record "Sales Line"; var ItemLedgerEntry: Record "Item Ledger Entry")
     var
         Item: Record Item;

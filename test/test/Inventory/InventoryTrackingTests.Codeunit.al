@@ -354,6 +354,85 @@ codeunit 96925 "Inventory Tracking Tests"
         Assert.IsTrue(Entry.IsEmpty(), 'Pending tracking was removed on the selected source.');
     end;
 
+    /// <summary>Actual public Help examples assign, read and delete only independently seeded source tracking.</summary>
+    [Test]
+    procedure Scenario_AC1_PublicExamples_AssignReadDeleteOwnedTracking()
+    var
+        PurchaseLine: Record "Purchase Line";
+        OtherLine: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Specification: Record "Tracking Specification";
+        Ledger: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        Token: JsonToken;
+        SpecificationCount: Integer;
+        LedgerCount: Integer;
+    begin
+        // Issues #5/#37 | Time: WorkDate from owned fixtures | Risk: examples compile but do not execute.
+        // Native layer only: licensed MCP remains blocked by #95; no shipping gate is bypassed.
+        CreatePurchaseLine(PurchaseLine, false);
+        CreatePurchaseLine(OtherLine, false);
+        ExecuteTracking(AssignmentRequest(OtherLine, 'OTHER-LOT', '', 1), false, Response);
+        AssertStatus(Response, 'Success');
+        SpecificationCount := Specification.Count();
+        LedgerCount := Ledger.Count();
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Tracking.Assign");
+        Request.Replace('source', SourceObject(PurchaseLine));
+        ExecuteTracking(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(PurchaseLine, Entry);
+        Assert.AreEqual(1, Entry.Count(), 'One native tracking row.');
+        Entry.FindFirst();
+        Assert.AreEqual('OWNED-LOT', Entry."Lot No.", 'Published lot is assigned.');
+        Assert.AreEqual(2, Entry."Quantity (Base)", 'Published base quantity is assigned.');
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Tracking.Get");
+        Request.Replace('source', SourceObject(PurchaseLine));
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        TrackingRead.ReadTracking(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Response.Get('trackingLines', Token);
+        Assert.AreEqual(1, Token.AsArray().Count(), 'Only the selected line is read.');
+        Token.AsArray().Get(0, Token);
+        Row := Token.AsObject();
+        Row.Get('lotNo', Token);
+        Assert.AreEqual('OWNED-LOT', Token.AsValue().AsText(), 'Read example sees assigned tracking.');
+        Request := PublishedExampleData("Message Type ori"::"Inventory.Tracking.Delete");
+        Request.Replace('source', SourceObject(PurchaseLine));
+        ExecuteTracking(Request, true, Response);
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(Entry.IsEmpty(), 'Owned source tracking is removed.');
+        FilterSourceEntries(OtherLine, Entry);
+        Assert.AreEqual(1, Entry.Count(), 'Unrelated source is unchanged.');
+        Assert.AreEqual(SpecificationCount, Specification.Count(), 'No persistent tracking specification writes.');
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'No posting occurs.');
+    end;
+
+    local procedure PublishedExampleData(MessageType: Enum "Message Type ori") Data: JsonObject
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Token: JsonToken;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Registered public Help exists.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Data := Token.AsObject();
+    end;
+
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
     var
         Item: Record Item;

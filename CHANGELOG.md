@@ -2,6 +2,8 @@
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
+- Complete seven tracking/reservation Help contracts with native selectors, response schemas, typed refusals, runnable owned-data examples and Icelandic discovery. Preserve native pair, source, expiration and empty-delete semantics (10036919/70013470/70013471/70013473/70013476–70013478; tests 96921/96925–96927).
+
 - Localize registered costing, price and revaluation discovery/Help in Icelandic; document native revaluation selection and grouping, actual text refusal paths and JSON response media types. Correct Cost.Get multi-item overview and add a read example (70013403/70013404/70013435/70013460/70013467/70013468/70013462/70013486/70013488; regression tests 96921/96941).
 
 - Describe native journal selectors, required calculation/count inputs, legacy Record alternatives, actual error shapes and line results; supply complete examples and Icelandic discovery (70013465/70013466/70013474/70013475/70013479/70013493/70013496/70013472; tests 96921/96962).

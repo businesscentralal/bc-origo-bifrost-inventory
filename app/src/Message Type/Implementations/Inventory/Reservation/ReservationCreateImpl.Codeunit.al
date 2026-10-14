@@ -7,6 +7,13 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Manually pairs native reservation sources with explicit supply or matching posted inventory.', Comment = 'is-IS=Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.';
+        SelectionLbl: Label 'Select a W1 reservation source or legacy document line and a positive quantity in the source unit of measure.', Comment = 'is-IS=Veldu W1 frátektaruppruna eða eldri skjalalínuvalkost og jákvætt magn í mælieiningu upprunans.';
+        KeywordsLbl: Label 'create manual reservation,explicit supply,reserve item', Comment = 'is-IS=stofna handvirka frátekt,tilgreindur uppruni,taka vöru frá';
+        OverviewLbl: Label 'Manually pairs native reservation sources with explicit supply or matching posted inventory.', Comment = 'is-IS=Parar innbyggða frátektaruppruna handvirkt við tilgreindan uppruna eða samsvarandi bókaðar birgðir.';
+        NotesLbl: Label 'Uses native W1 source adapters and Create Reserv. Entry. quantity uses the source unit of measure; quantityBase is the converted quantity. Explicit supply must be distinct and opposite, with the same item, variant and location. Without supply or itemLedgerEntryNo, matching open positive posted inventory is selected in entry order and may produce several pairs. expectedDate is forwarded to each native pair. Closed sources, insufficient availability and invalid serial quantities refuse without partial pairing. No posting occurs.', Comment = 'is-IS=Notar innbyggða W1 upprunaaðlögun og Create Reserv. Entry. quantity er í mælieiningu upprunans; quantityBase er umreiknað magn. Tilgreindur mótuppruni verður að vera aðskilinn og gagnstæður fyrir sömu vöru, afbrigði og birgðageymslu. Án supply eða itemLedgerEntryNo eru samsvarandi opnar jákvæðar bókaðar birgðir valdar í færsluröð og geta myndað mörg pör. expectedDate er sent áfram til hvers innbyggðs pars. Lokuðum uppruna, ónógu tiltæku magni og ógildu raðnúmeramagni er hafnað án pörunar að hluta. Engin bókun fer fram.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -22,17 +29,17 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Creates a reservation through Reservation Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('create manual reservation, explicit supply, reserve item');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reserves quantity for an item through Reservation Management.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -59,13 +66,13 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ParameterJson.Add('name', 'source');
         ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', false);
-        ParameterJson.Add('description', 'W1 reservation source type and systemId; transferDirection selects Outbound or Inbound.');
+        ParameterJson.Add('description', 'Object with type (SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine, ServiceLine, ProdOrderLine, ProdOrderComponent, ItemJournalLine, RequisitionLine, PlanningComponent, JobJournalLine, JobPlanningLine, InventoryDocumentLine or ItemLedgerEntry) and systemId (GUID). transferDirection is Outbound (default) or Inbound. Required unless documentType with a line selector is supplied; source takes precedence.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'supply');
         ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', false);
-        ParameterJson.Add('description', 'Explicit opposite source type and systemId. Otherwise use itemLedgerEntryNo, or matching posted inventory in entry order.');
+        ParameterJson.Add('description', 'Opposite native source object with type and systemId, plus optional transferDirection. Takes precedence over itemLedgerEntryNo. Omit both for matching posted inventory in entry order.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'quantity');
@@ -77,6 +84,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ParameterJson.Add('name', 'expectedDate');
         ParameterJson.Add('type', 'date');
         ParameterJson.Add('required', false);
+        ParameterJson.Add('description', 'Optional native expected date forwarded to each selected pair; defaults to an unspecified date.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'documentType');
@@ -136,20 +144,32 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('quantity', 0);
-        Response.Add('quantityBase', 0);
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the operation completes.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Reserved quantity in the source unit of measure.'));
+        Fields.Add(ContractMgt.ResponseField('quantityBase', 'decimal', 'Reserved quantity in base units.'));
+        Fields.Add(ContractMgt.ResponseField('entryNo', 'integer', 'Created pair number for explicit supply, or when automatic inventory selection creates exactly one pair.'));
+        Fields.Add(ContractMgt.ResponseField('entryNos', 'array', 'Created pair numbers for automatic inventory selection; absent for explicit supply.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'itemNo or quantity is missing');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required source, document identifier or quantity is absent.', 'Supply the required selector and data described in parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A source object, identifier, number, date, filter or array has an invalid type or range.', 'Use the declared JSON types and valid ranges.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, quantity is unavailable, the source is closed, or the company domain is disabled.', 'Correct the selection and quantity; check Inventory Setup and native source rules.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'A selected source or explicit entry does not exist or does not match the filters.', 'Read the source again and use identifiers belonging to it.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks required domain or native table permissions.', 'Ask an administrator for the required permissions.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native source, tracking or reservation validation raises an error in the isolated write transaction.', 'Resolve the native error before retrying; failed native writes roll back.'));
         exit(true);
     end;
 
@@ -181,18 +201,20 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Reserve owned inventory for a sales line","description":"Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply.","request":{"type":"Inventory.Reservation.Create","data":{"source":{"type":"SalesLine","systemId":"11111111-1111-1111-1111-111111111111"},"itemLedgerEntryNo":123,"quantity":2}}}]');
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Manually reserves the requested quantity against explicit supply or matching posted inventory through native W1 adapters.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Uses native source adapters and Create Reserv. Entry. Quantity is in the source unit of measure; pairing and availability checks apply.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

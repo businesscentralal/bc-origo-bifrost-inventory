@@ -10,6 +10,13 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Reads lot, serial and package tracking for an item or document line.', Comment = 'is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.';
+        SelectionLbl: Label 'Select a source or legacy document line; otherwise select an item. A sales, purchase or transfer line SystemId in subject selects that source.', Comment = 'is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.';
+        KeywordsLbl: Label 'read tracking,lot tracking,serial tracking,package tracking', Comment = 'is-IS=lesa rakningu,loturakning,raðnúmerarakning,pakkarakning';
+        OverviewLbl: Label 'Reads lot, serial and package tracking for an item or document line.', Comment = 'is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.';
+        NotesLbl: Label 'Read only. Source selection takes precedence over item selection. Item mode returns tracked remaining ledger entries and nonzero reservation entries; source mode returns reservation and tracking specification rows. quantityBase totals all matching rows before paging, not available stock. Expiration is the native entry date only when Use Expiration Dates is enabled; otherwise blank, never 0D. No matching tracking returns RecordNotFound; paging past existing rows returns an empty page.', Comment = 'is-IS=Aðeins lestur. Val uppruna hefur forgang yfir vöruval. Vöruval skilar röknum eftirstöðvum vörufærslna og frátektarfærslum með magni; upprunaval skilar frátektar- og rakningarlínum. quantityBase er summa allra samsvarandi lína fyrir síðuskiptingu, ekki tiltækar birgðir. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef engin rakning finnst er skilað RecordNotFound; síðuskipting fram yfir fyrirliggjandi línur skilar tómri síðu.';
+
     /// <summary>Provides IsEnabled for Inventory.Tracking.Get.</summary>
     procedure IsEnabled(): Boolean
     var
@@ -27,19 +34,19 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides GetDescription for Inventory.Tracking.Get.</summary>
     procedure GetDescription(): Text[250]
     begin
-        exit('Reads lot, serial and package tracking for an item or document line.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Provides GetKeywords for Inventory.Tracking.Get.</summary>
     procedure GetKeywords(): Text
     begin
-        exit('tracking availability, lot availability, serial availability, package');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Provides GetSelectionDescription for Inventory.Tracking.Get.</summary>
     procedure GetSelectionDescription(): Text
     begin
-        exit('Reads lot, serial and package tracking for an item or document line.');
+        exit(SelectionLbl);
     end;
 
     /// <summary>Provides GetEnvelope for Inventory.Tracking.Get.</summary>
@@ -75,7 +82,7 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         Parameters.Add(ContractMgt.Parameter('packageNo', 'string', false, 'Exact package number, including blank.'));
         Parameters.Add(ContractMgt.Parameter('skip', 'integer', false, 'Number of rows to skip; default 0.'));
         Parameters.Add(ContractMgt.Parameter('take', 'integer', false, 'Page size 1..10000; default 100.'));
-        Parameters.Add(ContractMgt.Parameter('source', 'object', false, 'Native source type and systemId; transferDirection selects transfer side.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', false, 'Object with type (SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine, ServiceLine, ProdOrderLine, ProdOrderComponent, ItemJournalLine, RequisitionLine, PlanningComponent, JobJournalLine, JobPlanningLine, InventoryDocumentLine or ItemLedgerEntry) and systemId (GUID); transferDirection selects Outbound (default) or Inbound. Source takes precedence over legacy document fields.'));
         Parameters.Add(ContractMgt.Parameter('documentType', 'string', false, 'Sales.Order, Sales.Invoice, Sales.CreditMemo, Sales.ReturnOrder, corresponding Purchase types, or Transfer.Order. Unqualified Order means Sales.Order.'));
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', false, 'Document number with documentType and lineNo.'));
         Parameters.Add(ContractMgt.Parameter('lineNo', 'integer', false, 'Positive document line number.'));
@@ -85,39 +92,34 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
 
     /// <summary>Provides GetResponse for Inventory.Tracking.Get.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('trackingLines', 'array');
-        Response.Add('noOfLines', 0);
-        Response.Add('totalNoOfLines', 0);
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the operation completes.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'Item on the selected source or item.'));
+        Fields.Add(ContractMgt.ResponseField('quantityBase', 'decimal', 'Sum of all matching signed tracking rows before paging; not available stock.'));
+        Fields.Add(ContractMgt.ResponseField('trackingLines', 'array', 'Rows contain source, entryNo, itemNo, lotNo, serialNo, packageNo, locationCode, variantCode, quantityBase and expirationDate. Reservation rows also include positive, reservationStatus and source pointer fields; specification rows include quantityHandledBase and quantityInvoicedBase. In source mode the response also includes source pointer fields.'));
+        Fields.Add(ContractMgt.ResponseField('noOfLines', 'integer', 'Rows returned after skip and take.'));
+        Fields.Add(ContractMgt.ResponseField('totalNoOfLines', 'integer', 'All matching rows before paging.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     /// <summary>Provides GetErrors for Inventory.Tracking.Get.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'A required item or document identifier is absent.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'InvalidParameterFormat');
-        ErrorJson.Add('when', 'An identifier, filter or paging value has the wrong type or range.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'The requested source or document type is unsupported, or the company domain is disabled.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'No record matches all requested criteria.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'PermissionDenied');
-        ErrorJson.Add('when', 'The caller cannot read a required source table.');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required source, document identifier or quantity is absent.', 'Supply the required selector and data described in parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A source object, identifier, number, date, filter or array has an invalid type or range.', 'Use the declared JSON types and valid ranges.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, quantity is unavailable, the source is closed, or the company domain is disabled.', 'Correct the selection and quantity; check Inventory Setup and native source rules.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'A selected source is missing or no tracking rows match before paging.', 'Check the source and intersected filters; paging alone does not cause this error.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks required domain or native table permissions.', 'Ask an administrator for the required permissions.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native item selection or filter error.', 'Foundation rejects the item selector or a native filter cannot be evaluated.', 'Correct the item selection and Business Central filter syntax.'));
         exit(true);
     end;
 
@@ -153,20 +155,22 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides GetExamples for Inventory.Tracking.Get.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Read tracking on an owned purchase line","description":"Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply.","request":{"type":"Inventory.Tracking.Get","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"take":100}}}]');
+        exit(true);
     end;
 
     /// <summary>Provides GetOverview for Inventory.Tracking.Get.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reads lot, serial and package tracking for an item or document line.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     /// <summary>Provides GetNotes for Inventory.Tracking.Get.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only. Quantities are in base units. Entry expiration dates are returned as ISO dates or blank. Each reservation pair has two sides distinguished by positive and the native source pointer.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

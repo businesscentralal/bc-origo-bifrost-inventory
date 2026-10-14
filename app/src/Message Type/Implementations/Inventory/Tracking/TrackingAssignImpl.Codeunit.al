@@ -7,6 +7,13 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Assigns lot, serial and package tracking to an existing source through native Item Tracking Lines.', Comment = 'is-IS=Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.';
+        SelectionLbl: Label 'Select source.type and source.systemId; entries supplies 1..200 tracking rows in base units.', Comment = 'is-IS=Veldu source.type og source.systemId; entries inniheldur 1..200 rakningarlínur í grunneiningum.';
+        KeywordsLbl: Label 'assign lot,assign serial,assign package,item tracking', Comment = 'is-IS=úthluta lotu,úthluta raðnúmeri,úthluta pakka,vörurakning';
+        OverviewLbl: Label 'Assigns lot, serial and package tracking to an existing source through native Item Tracking Lines.', Comment = 'is-IS=Úthlutar lotu-, raðnúmera- og pakkarakningu á fyrirliggjandi uppruna með innbyggðum vörurakningarlínum.';
+        NotesLbl: Label 'Quantities use base units, unlike Reservation.Create. Every entry is validated before native registration. Serial quantity must be one. Native source, tracking-code, availability and expiration checks remain active. No posting or direct protected-table insertion occurs.', Comment = 'is-IS=Magn er í grunneiningum, ólíkt Reservation.Create. Allar línur eru sannprófaðar fyrir innbyggða skráningu. Magn raðnúmers verður að vera einn. Innbyggðar athuganir á uppruna, rakningarkóta, tiltæku magni og fyrningu gilda áfram. Engin bókun eða bein skráning í varðar töflur fer fram.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -22,17 +29,17 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     begin
-        exit('Assigns lot, serial, or package tracking through Item Tracking Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
     begin
-        exit('assign lot, assign serial, assign package, item tracking');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
     begin
-        exit('Assigns item tracking through codeunit 6500.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -46,7 +53,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     var
         TargetJson: JsonObject;
     begin
-        TargetJson.Add('codeunit', 'Item Tracking Management');
+        TargetJson.Add('page', 'Item Tracking Lines');
         Target.Add(TargetJson);
         exit(true);
     end;
@@ -59,7 +66,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         ParameterJson.Add('name', 'source');
         ParameterJson.Add('type', 'object');
         ParameterJson.Add('required', true);
-        ParameterJson.Add('description', 'Source type and systemId; transfers also accept transferDirection (Outbound or Inbound).');
+        ParameterJson.Add('description', 'Object with type (SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine) and systemId (GUID). transferDirection is Outbound (default) or Inbound.');
         Parameters.Add(ParameterJson);
         Clear(ParameterJson);
         ParameterJson.Add('name', 'entries');
@@ -71,19 +78,29 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('entriesAssigned', 0);
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the operation completes.'));
+        Fields.Add(ContractMgt.ResponseField('entriesAssigned', 'integer', 'Number of supplied tracking rows registered.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'itemNo, quantity, or a tracking number is missing');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required source, document identifier or quantity is absent.', 'Supply the required selector and data described in parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A source object, identifier, number, date, filter or array has an invalid type or range.', 'Use the declared JSON types and valid ranges.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, quantity is unavailable, the source is closed, or the company domain is disabled.', 'Correct the selection and quantity; check Inventory Setup and native source rules.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'A selected source or explicit entry does not exist or does not match the filters.', 'Read the source again and use identifiers belonging to it.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks required domain or native table permissions.', 'Ask an administrator for the required permissions.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native source, tracking or reservation validation raises an error in the isolated write transaction.', 'Resolve the native error before retrying; failed native writes roll back.'));
         exit(true);
     end;
 
@@ -114,18 +131,20 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Assign a lot to an owned purchase line","description":"Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply.","request":{"type":"Inventory.Tracking.Assign","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"entries":[{"lotNo":"OWNED-LOT","quantity":2}]}}}]');
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Assigns lot, serial and package tracking to a real source through the native Item Tracking Lines registration path.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Quantities use base units. Native Item Tracking Lines calls Item Tracking Management and Create Reserv. Entry; no protected table is inserted directly.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

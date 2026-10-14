@@ -586,6 +586,53 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(SingleRow(Response, 'trackingLines'), 'expirationDate', '');
     end;
 
+    /// <summary>The published availability example reads owned posted stock and leaves native records unchanged.</summary>
+    [Test]
+    procedure Scenario_AC4_PublicAvailabilityExample_ReadsOwnedStock()
+    var
+        PurchaseLine: Record "Purchase Line";
+        PurchaseHeader: Record "Purchase Header";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Example: JsonObject;
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        Token: JsonToken;
+        LedgerCount: Integer;
+        EntryCount: Integer;
+    begin
+        // Issues #5/#30 | Time: owned native WorkDate | Risk: Help examples return plausible but unrelated stock.
+        // Native read verification only; licensed MCP remains a separate requirement on #95.
+        CreateTrackedLine(PurchaseLine, 'OWNED-LOT', '', '', 2);
+        PurchaseHeader.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        PurchaseLine.Validate("Qty. to Receive", 2);
+        PurchaseLine.Modify(true);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        LedgerCount := Ledger.Count();
+        EntryCount := Entry.Count();
+        Assert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.TrackingAvailability.Get", Contract), 'Published Help exists.');
+        Contract.Get('examples', Token);
+        Token.AsArray().Get(0, Token);
+        Example := Token.AsObject();
+        Example.Get('request', Token);
+        Request := Token.AsObject();
+        Request.Get('data', Token);
+        Request := Token.AsObject();
+        Request.Replace('itemNo', PurchaseLine."No.");
+        ExecuteRead(Request, 2, Response);
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'availability');
+        AssertText(Row, 'lotNo', 'OWNED-LOT');
+        AssertDecimal(Row, 'inventory', 2);
+        AssertDecimal(Row, 'qtyReserved', 0);
+        AssertDecimal(Row, 'availableQuantity', 2);
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Read does not post.');
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Read does not reserve or alter tracking.');
+    end;
+
     local procedure CreateAvailabilityItem(var Item: Record Item; UseExpirationDates: Boolean)
     var
         TrackingCode: Record "Item Tracking Code";
