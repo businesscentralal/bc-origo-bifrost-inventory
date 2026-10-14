@@ -17,6 +17,7 @@ codeunit 96983 "Inv Application Write Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         NativeApplication: Codeunit "Inv Application Write ori";
 
@@ -35,6 +36,7 @@ codeunit 96983 "Inv Application Write Tests"
         Request.Add('itemLedgerEntryNo', Outbound);
         InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Unapply");
         NativeApplication.Unapply(TempArgument);
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.ItemApplication.Unapply", TempArgument.GetResponseJson());
         Ledger.Get(Outbound);
         Assert.AreEqual(-3, Ledger."Remaining Quantity", 'Outbound reopened by native unapply.');
         Assert.IsTrue(Ledger."Applied Entry to Adjust", 'Outbound marked for adjustment.');
@@ -67,6 +69,7 @@ codeunit 96983 "Inv Application Write Tests"
         Request.Add('quantity', 1.5);
         InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Reapply");
         NativeApplication.Reapply(TempArgument);
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.ItemApplication.Reapply", TempArgument.GetResponseJson());
         Ledger.Get(Outbound);
         Assert.AreEqual(-1.5, Ledger."Remaining Quantity", 'Partial base quantity only.');
         Assert.IsTrue(Ledger.Open, 'Partial outbound remains open.');
@@ -162,6 +165,7 @@ codeunit 96983 "Inv Application Write Tests"
         Request.Add('applyToEntryNo', Inbound);
         InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Reapply");
         NativeApplication.Reapply(TempArgument);
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.ItemApplication.Reapply", TempArgument.GetResponseJson());
         Ledger.Get(Outbound);
         Assert.AreEqual(0, Ledger."Remaining Quantity", 'Legacy selectors retain full available quantity behavior.');
         Assert.IsFalse(Ledger.Open, 'Legacy reapply closes the native outbound.');
@@ -249,6 +253,7 @@ codeunit 96983 "Inv Application Write Tests"
         Request.Add('itemLedgerEntryNo', Outbound);
         InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.ItemApplication.Unapply");
         NativeApplication.Unapply(TempArgument);
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.ItemApplication.Unapply", TempArgument.GetResponseJson());
     end;
 
     local procedure InitArgument(var TempArgument: Record "Message Argument ori" temporary; Request: JsonObject; MessageType: Enum "Message Type ori")

@@ -43,6 +43,7 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
+        Clear(Envelope);
         Envelope.Add('messageType', 'Inventory.Transfer.UndoReceipt');
         Envelope.Add('version', 1);
         exit(true);
@@ -52,6 +53,7 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     var
         TargetJson: JsonObject;
     begin
+        Clear(Target);
         TargetJson.Add('table', 'Transfer Receipt Header');
         Target.Add(TargetJson);
         exit(true);
@@ -59,40 +61,43 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ParameterJson.Add('name', 'documentNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'Posted transfer receipt number. This operation refuses receipt undo.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Error; this version has no successful receipt undo path.'));
+        Fields.Add(ContractMgt.ResponseField('error', 'string', 'Refusal text; no native receipt or ledger changes are made.'));
+        Fields.Add(ContractMgt.ResponseField('help', 'string', 'Foundation help hint when present.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'documentNo must be specified.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the posted transfer receipt was not found.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'this Business Central version cannot undo a posted transfer receipt.');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.TextErrorEntry('documentNo must be specified.', 'documentNo is absent.', 'Supply a posted receipt number.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipt %1 was not found.', 'The posted receipt does not exist.', 'Check the posted receipt number.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipts cannot be undone in this Business Central version.', 'The posted receipt exists, but this version has no supported native undo path.', 'Use the supported Business Central correction process; receipt undo is not available here.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, table or posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company Inventory domain is disabled.', 'Enable the domain from Inventory Setup.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Clear(Effect);
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -100,6 +105,7 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
+        Clear(Metering);
         exit(false);
     end;
 
@@ -107,17 +113,20 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Related);
         Related.Add(ContractMgt.RelatedEntry('Inventory.Transfer.UndoShipment', 'Undo a posted transfer shipment. Receipt undo is not available in this version.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
+        Clear(Workflow);
         exit(false);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
+        Clear(Examples);
         exit(false);
     end;
 

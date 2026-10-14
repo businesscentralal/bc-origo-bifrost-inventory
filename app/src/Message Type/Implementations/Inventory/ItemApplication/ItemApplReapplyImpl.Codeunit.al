@@ -44,6 +44,7 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
+        Clear(Envelope);
         Envelope.Add('messageType', 'Inventory.ItemApplication.Reapply');
         Envelope.Add('version', 1);
         exit(true);
@@ -53,6 +54,7 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     var
         TargetJson: JsonObject;
     begin
+        Clear(Target);
         TargetJson.Add('codeunit', 'Item Jnl.-Post Line');
         Target.Add(TargetJson);
         exit(true);
@@ -60,48 +62,52 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        Parameter: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Clear(Parameter);
-        Parameter.Add('name', 'outboundEntryNo');
-        Parameter.Add('type', 'integer');
-        Parameter.Add('required', true);
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'inboundEntryNo');
-        Parameter.Add('type', 'integer');
-        Parameter.Add('required', true);
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'quantity');
-        Parameter.Add('type', 'decimal');
-        Parameter.Add('required', true);
-        Parameters.Add(Parameter);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('outboundEntryNo', 'integer', false, 'Negative outbound ledger entry; use this pair or the legacy pair.'));
+        Parameters.Add(ContractMgt.Parameter('inboundEntryNo', 'integer', false, 'Positive inbound ledger entry; required with outboundEntryNo.'));
+        Parameters.Add(ContractMgt.Parameter('quantity', 'decimal', false, 'Positive base quantity required with the canonical pair.'));
+        Parameters.Add(ContractMgt.Parameter('itemLedgerEntryNo', 'integer', false, 'Legacy outbound selector; use only with applyToEntryNo.'));
+        Parameters.Add(ContractMgt.Parameter('applyToEntryNo', 'integer', false, 'Legacy inbound selector; cannot be mixed with the canonical pair.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
         Response.Add('status', 'Success');
         Response.Add('outboundEntryNo', 0);
         Response.Add('inboundEntryNo', 0);
         Response.Add('quantity', 0);
         Response.Add('adjustmentRequired', true);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after native reapplication.'));
+        Fields.Add(ContractMgt.ResponseField('outboundEntryNo', 'integer', 'Selected negative outbound ledger entry.'));
+        Fields.Add(ContractMgt.ResponseField('inboundEntryNo', 'integer', 'Selected positive inbound ledger entry.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Exact applied base quantity.'));
+        Fields.Add(ContractMgt.ResponseField('adjustmentRequired', 'boolean', 'True; Adjust Cost remains a separate operation.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'either item ledger entry was not found');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.TextErrorEntry('Native application validation error.', 'Missing, conflicting or invalid selectors or quantity, wrong entry signs, item mismatch, unavailable or reserved quantity, or native worksheet refusal.', 'Select eligible matching entries and a valid base quantity; failed writes are rolled back.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, table or posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company Inventory domain is disabled.', 'Enable the domain from Inventory Setup.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Clear(Effect);
         Effect.Add('writes', 'Item Application Entry');
         Effect.Add('posts', false);
         exit(true);
@@ -109,6 +115,7 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
+        Clear(Metering);
         exit(false);
     end;
 
@@ -116,6 +123,7 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Related);
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Unapply', 'Unapply the item ledger entry instead of reapplying it.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Get', 'Read the item application before reapplying it.'));
         exit(true);
@@ -123,11 +131,13 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
+        Clear(Workflow);
         exit(false);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
+        Clear(Examples);
         exit(false);
     end;
 

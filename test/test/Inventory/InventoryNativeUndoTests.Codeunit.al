@@ -21,6 +21,7 @@ codeunit 96980 "Inventory Native Undo Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryWarehouse: Codeunit "Library - Warehouse";
         LibraryAssembly: Codeunit "Library - Assembly";
@@ -62,6 +63,7 @@ codeunit 96980 "Inventory Native Undo Tests"
         OtherLine.Get(OtherLine."Document No.", OtherLine."Line No.");
         Assert.IsFalse(OtherLine."Correction Line", 'Unselected original line is unchanged.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Transfer.UndoShipment", Response);
         Response.Get('undoneLineCount', Token);
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Exactly one original line undone.');
         Commit();
@@ -174,6 +176,7 @@ codeunit 96980 "Inventory Native Undo Tests"
         Assert.IsTrue(PostedHeader.Reversed, 'Posted assembly is reversed, never deleted.');
         Assert.IsTrue(Order.Get(Order."Document Type"::Order, PostedHeader."Order No."), 'Native recreateOrder produces the original order.');
         Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Assembly.UndoPost", Response);
         Response.Get('orderExists', Token);
         Assert.IsTrue(Token.AsValue().AsBoolean(), 'Response observes actual recreated order.');
     end;

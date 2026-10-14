@@ -44,6 +44,7 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
+        Clear(Envelope);
         Envelope.Add('messageType', 'Inventory.ItemApplication.Unapply');
         Envelope.Add('version', 1);
         exit(true);
@@ -53,6 +54,7 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     var
         TargetJson: JsonObject;
     begin
+        Clear(Target);
         TargetJson.Add('codeunit', 'Item Jnl.-Post Line');
         Target.Add(TargetJson);
         exit(true);
@@ -60,37 +62,47 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        Parameter: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Clear(Parameter);
-        Parameter.Add('name', 'itemLedgerEntryNo');
-        Parameter.Add('type', 'integer');
-        Parameter.Add('required', true);
-        Parameters.Add(Parameter);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemLedgerEntryNo', 'integer', false, 'Positive ledger entry number; exactly one selector is required.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'Legacy positive application entry number; mutually exclusive with itemLedgerEntryNo.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
         Response.Add('status', 'Success');
         Response.Add('itemLedgerEntryNo', 0);
         Response.Add('unappliedCount', 0);
         Response.Add('adjustmentRequired', true);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after native unapplication.'));
+        Fields.Add(ContractMgt.ResponseField('itemLedgerEntryNo', 'integer', 'Resolved ledger entry, including when legacy entryNo selects an application.'));
+        Fields.Add(ContractMgt.ResponseField('unappliedCount', 'integer', 'Number of native applications unapplied.'));
+        Fields.Add(ContractMgt.ResponseField('adjustmentRequired', 'boolean', 'True; Adjust Cost remains a separate operation.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'entryNo was not found');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.TextErrorEntry('Native application validation error.', 'Missing, conflicting or invalid selectors, unknown or ineligible applications, or native worksheet refusal.', 'Select an eligible entry and resolve the native error before retrying; failed writes are rolled back.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, table or posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company Inventory domain is disabled.', 'Enable the domain from Inventory Setup.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Clear(Effect);
         Effect.Add('writes', 'Item Application Entry');
         Effect.Add('posts', false);
         exit(true);
@@ -98,6 +110,7 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
+        Clear(Metering);
         exit(false);
     end;
 
@@ -105,6 +118,7 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Related);
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Get', 'Read the item application before unapplying it.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Reapply', 'Reapply the item ledger entry after unapplying it.'));
         exit(true);
@@ -112,11 +126,13 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
+        Clear(Workflow);
         exit(false);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
+        Clear(Examples);
         exit(false);
     end;
 

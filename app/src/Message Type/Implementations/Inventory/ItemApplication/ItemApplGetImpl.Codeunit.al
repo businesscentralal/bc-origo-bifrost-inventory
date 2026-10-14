@@ -46,6 +46,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
+        Clear(Envelope);
         Envelope.Add('messageType', 'Inventory.ItemApplication.Get');
         Envelope.Add('version', 1);
         exit(true);
@@ -55,6 +56,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
     var
         TargetJson: JsonObject;
     begin
+        Clear(Target);
         TargetJson.Add('table', 'Item Application Entry');
         Target.Add(TargetJson);
         exit(true);
@@ -62,47 +64,49 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        Parameter: JsonObject;
-        Name: Text;
-        Names: List of [Text];
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Names.Add('itemNo');
-        Names.Add('itemLedgerEntryNo');
-        Names.Add('locationCode');
-        Names.Add('variantCode');
-        foreach Name in Names do begin
-            Clear(Parameter);
-            Parameter.Add('name', Name);
-            if Name = 'itemLedgerEntryNo' then
-                Parameter.Add('type', 'integer')
-            else
-                Parameter.Add('type', 'string');
-            Parameter.Add('required', false);
-            Parameters.Add(Parameter);
-        end;
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Exactly one of itemNo and itemLedgerEntryNo is required.'));
+        Parameters.Add(ContractMgt.Parameter('itemLedgerEntryNo', 'integer', false, 'Positive entry number; mutually exclusive with itemNo.'));
+        Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, 'Exact location filter; empty selects the blank location.'));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant filter; empty selects the blank variant.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
         Response.Add('status', 'Success');
         Response.Add('itemLedgerEntryNo', 0);
         Response.Add('entries', 'array');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the read.'));
+        Fields.Add(ContractMgt.ResponseField('itemLedgerEntryNo', 'integer', 'Included only for an entry selector.'));
+        Fields.Add(ContractMgt.ResponseField('entries', 'array', 'Deduplicated applications with entryNo, itemLedgerEntryNo, inboundItemEntryNo, outboundItemEntryNo, quantity and joined inboundEntry/outboundEntry objects. Each joined side reports entryNo and exists; existing sides also report itemNo, locationCode, variantCode, quantity, remainingQuantity, positive, open and documentNo.'));
+        Fields.Add(ContractMgt.ResponseField('count', 'integer', 'Number of returned applications.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemLedgerEntryNo is required.');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Specify exactly one of itemNo and itemLedgerEntryNo.', 'Both selectors or neither selector is supplied.', 'Supply exactly one selector.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native application query error.', 'Malformed or unsupported parameters, or an unknown ledger entry.', 'Correct the selector and exact filters before retrying.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, table or posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company Inventory domain is disabled.', 'Enable the domain from Inventory Setup.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Clear(Effect);
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -110,6 +114,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
+        Clear(Metering);
         exit(false);
     end;
 
@@ -117,6 +122,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Related);
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Unapply', 'Unapply an item application entry instead of reading it.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemApplication.Reapply', 'Reapply an item ledger entry instead of reading applications.'));
         exit(true);
@@ -124,11 +130,13 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
+        Clear(Workflow);
         exit(false);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
+        Clear(Examples);
         exit(false);
     end;
 

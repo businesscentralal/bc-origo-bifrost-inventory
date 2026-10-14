@@ -17,6 +17,7 @@ codeunit 96982 "Inv Application Read Tests"
 
     var
         Assert: Codeunit "Library Assert";
+        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         NativeRead: Codeunit "Inventory Application Read ori";
 
@@ -41,6 +42,7 @@ codeunit 96982 "Inv Application Read Tests"
         BeforeCount := Application.Count();
         Request.Add('itemNo', Item."No.");
         Response := Read(Request);
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.ItemApplication.Get", Response);
         Response.Get('entries', Token);
         Entries := Token.AsArray();
         Assert.IsTrue(Entries.Count() >= 2, 'Includes the inbound origin and real outbound application.');

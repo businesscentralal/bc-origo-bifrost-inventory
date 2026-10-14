@@ -13,6 +13,206 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
+    /// <summary>Shipping Help resolves meaningful UndoShipment schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure UndoShipment_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.Transfer.UndoShipment', 'status:string,documentNo:string,undoneLineCount:integer,result:array', 5);
+    end;
+
+    /// <summary>Shipping Help resolves meaningful UndoAssembly schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure UndoAssembly_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.Assembly.UndoPost', 'status:string,documentNo:string,reversed:boolean,recreateOrder:boolean,orderNo:string,orderExists:boolean', 5);
+    end;
+
+    /// <summary>Shipping Help resolves meaningful UndoReceipt schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure UndoReceipt_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.Transfer.UndoReceipt', 'status:string,error:string,help:string', 5);
+    end;
+
+    /// <summary>Shipping Help resolves meaningful ApplicationGet schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure ApplicationGet_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.ItemApplication.Get', 'status:string,itemLedgerEntryNo:integer,entries:array,count:integer', 4);
+    end;
+
+    /// <summary>Shipping Help resolves meaningful ApplicationUnapply schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure ApplicationUnapply_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.ItemApplication.Unapply', 'status:string,itemLedgerEntryNo:integer,unappliedCount:integer,adjustmentRequired:boolean', 3);
+    end;
+
+    /// <summary>Shipping Help resolves meaningful ApplicationReapply schemas and errors through the registered contract reader.</summary>
+    [Test]
+    procedure ApplicationReapply_PublicHelp_DeclaresNativeFieldsAndErrors()
+    begin
+        // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
+        AssertNativeHelp('Inventory.ItemApplication.Reapply', 'status:string,outboundEntryNo:integer,inboundEntryNo:integer,quantity:decimal,adjustmentRequired:boolean', 3);
+    end;
+
+    /// <summary>Repeated interface reads replace reused buffers, including explicitly absent chapters.</summary>
+    [Test]
+    procedure NativeHelp_ReusedOutput_DoesNotLeakOtherChapters()
+    var
+        Contract: Interface "Msg Contract ori";
+        MessageType: Enum "Message Type ori";
+        Names: List of [Text];
+        Name: Text;
+        ObjectChapter: JsonObject;
+        ArrayChapter: JsonArray;
+        Keys: List of [Text];
+        RepeatRead: Integer;
+    begin
+        Names := NativeHelpTypes();
+        foreach Name in Names do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(Name));
+            Contract := MessageType;
+            for RepeatRead := 1 to 2 do begin
+                ObjectChapter.Add('stale', true);
+                Contract.GetEnvelope(ObjectChapter);
+                LibraryAssert.IsFalse(ObjectChapter.Contains('stale'), Name + ' envelope replaces output.');
+                ArrayChapter.Add('stale');
+                Contract.GetTarget(ArrayChapter);
+                AssertNoStaleArray(ArrayChapter);
+                ArrayChapter.Add('stale');
+                Contract.GetParameters(ArrayChapter);
+                AssertNoStaleArray(ArrayChapter);
+                ObjectChapter.Add('stale', true);
+                Contract.GetResponse(ObjectChapter);
+                LibraryAssert.IsFalse(ObjectChapter.Contains('stale'), Name + ' response replaces output.');
+                ArrayChapter.Add('stale');
+                Contract.GetErrors(ArrayChapter);
+                AssertNoStaleArray(ArrayChapter);
+                ObjectChapter.Add('stale', true);
+                Contract.GetEffect(ObjectChapter);
+                LibraryAssert.IsFalse(ObjectChapter.Contains('stale'), Name + ' effect replaces output.');
+                ObjectChapter.Add('stale', true);
+                LibraryAssert.IsFalse(Contract.GetMetering(ObjectChapter), Name + ' adds no metering.');
+                Keys := ObjectChapter.Keys();
+                LibraryAssert.AreEqual(0, Keys.Count(), Name + ' clears metering output.');
+                ArrayChapter.Add('stale');
+                Contract.GetRelated(ArrayChapter);
+                AssertNoStaleArray(ArrayChapter);
+                ObjectChapter.Add('stale', true);
+                LibraryAssert.IsFalse(Contract.GetWorkflow(ObjectChapter), Name + ' has no workflow chapter.');
+                Keys := ObjectChapter.Keys();
+                LibraryAssert.AreEqual(0, Keys.Count(), Name + ' clears workflow output.');
+                ArrayChapter.Add('stale');
+                LibraryAssert.IsFalse(Contract.GetExamples(ArrayChapter), Name + ' has no examples chapter.');
+                LibraryAssert.AreEqual(0, ArrayChapter.Count(), Name + ' clears examples output.');
+            end;
+        end;
+    end;
+
+    /// <summary>The contract permits canonical and legacy selectors with their actual conditional requirements.</summary>
+    [Test]
+    procedure ApplicationHelp_Parameters_PreserveLegacySelectors()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Token: JsonToken;
+    begin
+        ContractMgt.GetContract("Message Type ori"::"Inventory.ItemApplication.Unapply", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'entryNo', Parameter);
+        AssertJsonText(Parameter, 'type', 'integer');
+        GetNamedMember(Contract, 'parameters', 'name', 'itemLedgerEntryNo', Parameter);
+        Parameter.Get('required', Token);
+        LibraryAssert.IsFalse(Token.AsValue().AsBoolean(), 'Legacy entryNo is an alternative selector.');
+        ContractMgt.GetContract("Message Type ori"::"Inventory.ItemApplication.Reapply", Contract);
+        GetNamedMember(Contract, 'parameters', 'name', 'itemLedgerEntryNo', Parameter);
+        GetNamedMember(Contract, 'parameters', 'name', 'applyToEntryNo', Parameter);
+        GetNamedMember(Contract, 'parameters', 'name', 'quantity', Parameter);
+        AssertJsonText(Parameter, 'type', 'decimal');
+        Parameter.Get('description', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().Contains('canonical pair'), 'Conditional quantity requirement must be documented.');
+    end;
+
+    local procedure NativeHelpTypes() Names: List of [Text]
+    begin
+        Names.Add('Inventory.Transfer.UndoShipment');
+        Names.Add('Inventory.Assembly.UndoPost');
+        Names.Add('Inventory.Transfer.UndoReceipt');
+        Names.Add('Inventory.ItemApplication.Get');
+        Names.Add('Inventory.ItemApplication.Unapply');
+        Names.Add('Inventory.ItemApplication.Reapply');
+    end;
+
+    local procedure AssertNoStaleArray(Chapter: JsonArray)
+    var
+        Token: JsonToken;
+    begin
+        foreach Token in Chapter do
+            LibraryAssert.IsTrue(Token.IsObject(), 'Contract entries must be objects; stale scalar output leaked.');
+    end;
+
+    local procedure AssertNativeHelp(TypeName: Text; ExpectedFields: Text; ErrorCount: Integer)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        Response: JsonObject;
+        Field: JsonObject;
+        ErrorEntry: JsonObject;
+        Token: JsonToken;
+        Value: JsonToken;
+        Fields: List of [Text];
+        Parts: List of [Text];
+        ExpectedField: Text;
+        RepeatRead: Integer;
+        TextErrorCount: Integer;
+    begin
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        for RepeatRead := 1 to 2 do begin
+            Contract.Add('stale', true);
+            LibraryAssert.IsTrue(ContractMgt.GetContract(MessageType, Contract), TypeName + ' public Help contract exists.');
+            LibraryAssert.IsFalse(Contract.Contains('stale'), 'Public reader replaces previous output.');
+            LibraryAssert.IsTrue(Contract.Get('response', Token), 'Response chapter exists.');
+            Response := Token.AsObject();
+            AssertJsonText(Response, 'contentType', 'text/json');
+            LibraryAssert.IsTrue(Response.Get('fields', Token), 'Response declares semantic fields, not an empty object.');
+            Fields := ExpectedFields.Split(',');
+            LibraryAssert.AreEqual(Fields.Count(), Token.AsArray().Count(), TypeName + ' exact response schema.');
+            foreach ExpectedField in Fields do begin
+                Parts := ExpectedField.Split(':');
+                GetNamedMember(Response, 'fields', 'name', Parts.Get(1), Field);
+                AssertJsonText(Field, 'type', Parts.Get(2));
+                LibraryAssert.IsTrue(Field.Get('description', Value), 'Each native field has a description.');
+                LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Native field description cannot be empty.');
+            end;
+            LibraryAssert.IsTrue(Contract.Get('errors', Token), 'Error chapter exists.');
+            LibraryAssert.AreEqual(ErrorCount, Token.AsArray().Count(), TypeName + ' meaningful native errors.');
+            TextErrorCount := 0;
+            foreach Token in Token.AsArray() do begin
+                ErrorEntry := Token.AsObject();
+                LibraryAssert.IsTrue(ErrorEntry.Get('when', Value), 'Error must describe its condition.');
+                LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Error condition cannot be empty.');
+                LibraryAssert.IsTrue(ErrorEntry.Get('fix', Value), 'Error must describe the next action.');
+                LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Error next action cannot be empty.');
+                if ErrorEntry.Get('error', Value) then begin
+                    TextErrorCount += 1;
+                    LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Text errors must declare a pattern.');
+                    if TypeName <> 'Inventory.ItemApplication.Get' then
+                        LibraryAssert.IsFalse(ErrorEntry.Contains('code'), 'RespondWithError(text) does not invent a typed error code.');
+                end;
+            end;
+            LibraryAssert.IsTrue(TextErrorCount > 0, 'Native refusal paths must be documented.');
+            GetNamedMember(Contract, 'errors', 'code', 'PermissionDenied', ErrorEntry);
+            GetNamedMember(Contract, 'errors', 'code', 'InvalidParameter', ErrorEntry);
+        end;
+    end;
+
     /// <summary>The touched undo/application discovery must actually switch language, not merely be nonempty.</summary>
     [Test]
     procedure NativeUndoApplication_DiscoveryChangesToIcelandic()

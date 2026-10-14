@@ -44,6 +44,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
+        Clear(Envelope);
         Envelope.Add('messageType', 'Inventory.Assembly.UndoPost');
         Envelope.Add('version', 1);
         exit(true);
@@ -53,6 +54,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         TargetJson: JsonObject;
     begin
+        Clear(Target);
         TargetJson.Add('table', 'Posted Assembly Header');
         Target.Add(TargetJson);
         exit(true);
@@ -63,34 +65,46 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, ''));
-        Parameters.Add(ContractMgt.Parameter('recreateOrder', 'boolean', false, ''));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'Nonempty posted assembly number, at most 20 characters.'));
+        Parameters.Add(ContractMgt.Parameter('recreateOrder', 'boolean', false, 'Recreate the original order during native undo. Default false.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
         Response.Add('status', 'Success');
         Response.Add('documentNo', '');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after native undo.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'Posted assembly number.'));
+        Fields.Add(ContractMgt.ResponseField('reversed', 'boolean', 'True after the native document reversal.'));
+        Fields.Add(ContractMgt.ResponseField('recreateOrder', 'boolean', 'Requested order recreation; defaults to false.'));
+        Fields.Add(ContractMgt.ResponseField('orderNo', 'string', 'Original assembly order number.'));
+        Fields.Add(ContractMgt.ResponseField('orderExists', 'boolean', 'Whether that assembly order exists after native undo.'));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'documentNo is required.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the posted assembly was not found.');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.TextErrorEntry('documentNo must be nonempty text of at most 20 characters.', 'Missing, empty, overlong or non-text documentNo.', 'Supply the posted assembly number as text.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native assembly validation error.', 'Unknown document, already reversed or unavailable output, unsupported keys or native posting refusal.', 'Resolve the native error before retrying; failed native writes are rolled back.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'recreateOrder is not a JSON Boolean.', 'Send true or false.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, table or posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company Inventory domain is disabled.', 'Enable the domain from Inventory Setup.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Clear(Effect);
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         exit(true);
@@ -98,6 +112,7 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
+        Clear(Metering);
         exit(false);
     end;
 
@@ -105,17 +120,20 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Related);
         Related.Add(ContractMgt.RelatedEntry('Inventory.AssemblyOrder.Post', 'Post an assembly order instead of undoing a posted assembly.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
+        Clear(Workflow);
         exit(false);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
+        Clear(Examples);
         exit(false);
     end;
 
