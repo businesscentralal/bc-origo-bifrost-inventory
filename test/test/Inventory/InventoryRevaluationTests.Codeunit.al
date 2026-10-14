@@ -134,7 +134,10 @@ codeunit 96941 "Inventory Revaluation Tests"
         ValueEntry.CalcSums("Cost Amount (Actual)");
         Assert.AreEqual(16, ValueEntry."Cost Amount (Actual)", 'Native revaluation delta 40 minus 24.');
         FilterLines(Batch, Line);
-        Assert.IsTrue(Line.IsEmpty(), 'Posted batch cleared by native posting.');
+        Assert.IsTrue(Line.FindFirst(), 'Native posting creates its next blank journal line.');
+        Assert.IsTrue(Line.EmptyLine(), 'Native replacement row is empty.');
+        Line.SetFilter("Item No.", '<>%1', '');
+        Assert.IsTrue(Line.IsEmpty(), 'No posted item proposal remains in the batch.');
         FilterLines(OtherBatch, OtherLine);
         Assert.AreEqual(1, OtherLine.Count(), 'Unselected batch preserved.');
         Response.Get('linesPosted', Token);
@@ -259,6 +262,82 @@ codeunit 96941 "Inventory Revaluation Tests"
         Assert.AreEqual(0, Token.AsValue().AsInteger(), 'No matching stock is not a fake nonzero calculation.');
         FilterLines(Batch, Line);
         Assert.IsTrue(Line.IsEmpty(), 'Empty native selection has no writes.');
+    end;
+
+    /// <summary>The process rolls back an error after actual native value-entry insertion, not merely prevalidation.</summary>
+    [Test]
+    procedure Post_AfterNativeInsertFailure_RollsBackActualWrite()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        ValueEntry: Record "Value Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Observer: Codeunit "Inv Revaluation Observer";
+        Request: JsonObject;
+        ValuesBefore: Integer;
+    begin
+        CreateProposal(Item, Batch, Line);
+        ValuesBefore := ValueEntry.Count();
+        InitArgument(TempArgument, Batch, Request);
+        Observer.SetItem(Item."No.");
+        BindSubscription(Observer);
+        Commit();
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), 'Post-insert failure rolls back the process.');
+        Assert.ExpectedError('Owned revaluation failure after native value entry insertion');
+        UnbindSubscription(Observer);
+        Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'The real inserted value entry was rolled back.');
+        FilterLines(Batch, Line);
+        Assert.AreEqual(1, Line.Count(), 'Proposal survives failed native posting.');
+    end;
+
+    /// <summary>Explicit template/batch data parameters resolve a native batch with no subject.</summary>
+    [Test]
+    procedure Calculate_DataBatchKey_UsesNativePerItemMode()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+    begin
+        CreateStock(Item);
+        CreateBatch(Batch, Batch."Template Type"::Revaluation);
+        CalculationRequest(Request, Item."No.");
+        Request.Add('templateName', Batch."Journal Template Name");
+        Request.Add('batchName', Batch.Name);
+        Request.Add('calculatePer', 'Item');
+        Request.Add('byLocation', true);
+        Request.Add('byVariant', true);
+        InitArgument(TempArgument, Batch, Request);
+        TempArgument.Subject := '';
+        Revaluation.Calculate(TempArgument);
+        FilterLines(Batch, Line);
+        Assert.IsTrue(Line.FindFirst(), 'Native per-item calculation creates a journal proposal.');
+        Assert.AreEqual(0, Line."Applies-to Entry", 'Native per-item mode aggregates rather than binding an entry.');
+        Assert.AreEqual(24, Line."Inventory Value (Calculated)", 'Native aggregated value.');
+    end;
+
+    /// <summary>Malformed calculate options fail before the report writes any journal proposal.</summary>
+    [Test]
+    procedure Calculate_InvalidGrouping_LeavesEmptyBatch()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+    begin
+        CreateStock(Item);
+        CreateBatch(Batch, Batch."Template Type"::Revaluation);
+        CalculationRequest(Request, Item."No.");
+        Request.Add('byLocation', true);
+        InitArgument(TempArgument, Batch, Request);
+        Commit();
+        asserterror Revaluation.Calculate(TempArgument);
+        Assert.ExpectedError('require calculatePer=Item');
+        FilterLines(Batch, Line);
+        Assert.IsTrue(Line.IsEmpty(), 'Rejected option combination cannot create proposals.');
     end;
 
     local procedure CreateProposal(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")

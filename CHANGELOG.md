@@ -2,7 +2,7 @@
 
 ## Unreleased — costing report acceptance (#4, #35)
 
-- Replace Revaluation.Calculate estimates with native report 5899 journal proposals; add distinct native Post and rollback PreviewPost with register/entry statistics, batch-type checks and isolated acceptance fixtures (70013400–70013404/70013488; enum 70013434 values 70013438–70013439; tests 96941).
+- Replace Revaluation.Calculate estimates with native report 5899 journal proposals; add distinct native Post and rollback PreviewPost with register/entry statistics, batch-type checks and isolated acceptance fixtures (70013400–70013404/70013488; enum 70013434 values 70013438–70013439; tests 96941–96942).
 
 - Make Price.Update require an explicit single-item selection, typed parameters, native Item/field permissions and blocked-item opt-in; preserve Validate and rollback subscriber writes on error (70013438–70013439/70013486; tests 96939–96940).
 
