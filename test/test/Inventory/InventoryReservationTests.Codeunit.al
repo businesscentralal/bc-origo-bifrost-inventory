@@ -751,6 +751,9 @@ codeunit 96926 "Inventory Reservation Tests"
         Commit();
         asserterror ExecuteReservation(Request, false, Response);
         Assert.ExpectedError('did not reserve the requested base quantity');
+        Request.Remove('itemLedgerEntryNo');
+        asserterror ExecuteReservation(Request, false, Response);
+        Assert.ExpectedError('did not reserve the requested base quantity');
         Entry.SetRange("Item No.", SalesLine."No.");
         Assert.IsTrue(Entry.IsEmpty(), 'A native no-op leaves no partial reservation or tracking rows.');
         JournalLine.Get(JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.");
