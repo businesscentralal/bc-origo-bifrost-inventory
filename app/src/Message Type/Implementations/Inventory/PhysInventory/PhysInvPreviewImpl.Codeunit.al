@@ -138,7 +138,7 @@ codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.PreviewPost","subject":"PHYS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Previews native physical-inventory posting with rollback and captured ledger entries. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.PreviewPost","subject":"PHYS|OWNED"}}]');
         exit(true);
     end;
 

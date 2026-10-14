@@ -138,7 +138,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Calculate","subject":"PHYS|OWNED","data":{"postingDate":"2026-10-14","documentNo":"COUNT-001","itemNo":"OWNED-ITEM"}}}]');
+        Examples.ReadFrom('[{"title":"Calculates expected stock into an existing empty physical-inventory journal with native report 790. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Calculate","subject":"PHYS|OWNED","data":{"postingDate":"2026-10-14","documentNo":"COUNT-001","itemNo":"OWNED-ITEM"}}}]');
         exit(true);
     end;
 

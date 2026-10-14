@@ -137,7 +137,7 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.Reclassification.Post","subject":"RECLASS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Posts selected Transfer journal lines through native Item Jnl.-Post Batch. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.Reclassification.Post","subject":"RECLASS|OWNED"}}]');
         exit(true);
     end;
 

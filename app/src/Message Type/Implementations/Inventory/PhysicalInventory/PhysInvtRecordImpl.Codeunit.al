@@ -136,7 +136,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.RecordCount","subject":"PHYS|OWNED","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}},{"title":"Legacy single-line count using Inventory.PhysInventory.Record.","request":{"type":"Inventory.PhysInventory.Record","subject":"PHYS|OWNED","data":{"lineNo":10000,"quantity":0}}}]');
+        Examples.ReadFrom('[{"title":"Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.RecordCount","subject":"PHYS|OWNED","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}},{"title":"Legacy single-line count using Inventory.PhysInventory.Record.","request":{"type":"Inventory.PhysInventory.Record","subject":"PHYS|OWNED","data":{"lineNo":10000,"quantity":0}}}]');
         exit(true);
     end;
 

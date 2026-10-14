@@ -131,7 +131,7 @@ codeunit 70013479 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Check","subject":"PHYS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Checks physical-inventory journal lines through native Item Jnl.-Check Line. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Check","subject":"PHYS|OWNED"}}]');
         exit(true);
     end;
 

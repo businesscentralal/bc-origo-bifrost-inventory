@@ -105,6 +105,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract.Get('examples', Token);
         Token.AsArray().Get(0, Token);
         Example := Token.AsObject();
+        Example.Get('title', Token);
+        LibraryAssert.IsTrue(Token.AsValue().AsText().StartsWith('Calculates expected stock'), 'Calculation example title must describe calculation, not counting.');
         Example.Get('request', Token);
         Request := Token.AsObject();
         Request.Get('data', Token);

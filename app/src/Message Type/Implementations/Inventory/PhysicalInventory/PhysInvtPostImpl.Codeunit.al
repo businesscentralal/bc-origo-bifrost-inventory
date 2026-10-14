@@ -141,7 +141,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Post","subject":"PHYS|OWNED"}}]');
+        Examples.ReadFrom('[{"title":"Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Post","subject":"PHYS|OWNED"}}]');
         exit(true);
     end;
 
