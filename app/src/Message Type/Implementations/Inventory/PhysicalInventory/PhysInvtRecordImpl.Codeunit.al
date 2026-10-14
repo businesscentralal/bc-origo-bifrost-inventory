@@ -92,6 +92,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         Fields: JsonArray;
     begin
         Clear(Response);
+        Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
         Fields.Add(ContractMgt.ResponseField('result', 'array', 'Each selected line: systemId, lineNo, counted (whether qtyCounted was supplied), before, after, quantityCalculated and adjustmentQuantity.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));

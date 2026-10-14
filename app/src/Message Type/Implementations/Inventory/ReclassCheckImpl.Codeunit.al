@@ -84,6 +84,7 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Fields: JsonArray;
     begin
         Clear(Response);
+        Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
         Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady from native line validation.'));
         Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of selected journal lines checked.'));

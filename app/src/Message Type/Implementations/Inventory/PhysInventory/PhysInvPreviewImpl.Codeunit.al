@@ -89,6 +89,7 @@ codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
         Fields: JsonArray;
     begin
         Clear(Response);
+        Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
         Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'Number of selected lines included in the rollback preview.'));
         Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True: native preview entries have been rolled back.'));

@@ -93,6 +93,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Fields: JsonArray;
     begin
         Clear(Response);
+        Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
         Fields.Add(ContractMgt.ResponseField('postedLineCount', 'integer', 'Number of selected journal lines posted.'));
         Fields.Add(ContractMgt.ResponseField('itemRegisterNo', 'integer', 'Native item register created by posting.'));

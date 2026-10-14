@@ -96,6 +96,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         Fields: JsonArray;
     begin
         Clear(Response);
+        Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
         Fields.Add(ContractMgt.ResponseField('linesCreated', 'integer', 'Number of journal lines created by the native calculation.'));
         Fields.Add(ContractMgt.ResponseField('posted', 'boolean', 'False: calculation does not post the journal.'));
