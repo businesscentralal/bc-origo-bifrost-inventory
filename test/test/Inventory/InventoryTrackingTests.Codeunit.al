@@ -270,6 +270,82 @@ codeunit 96925 "Inventory Tracking Tests"
         AssertTrackingRoundTrip(Source, Database::"Transfer Line", Line."Document No.", Line."Line No.", false);
     end;
 
+    /// <summary>Sales returns carry positive pending tracking and remove only that source assignment.</summary>
+    [Test]
+    procedure SalesReturnTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Sales Header";
+        Line: Record "Sales Line";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::"Return Order", '');
+        LibrarySales.CreateSalesLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('SalesLine', Line.SystemId), Database::"Sales Line", Line."Document No.", Line."Line No.", true);
+    end;
+
+    /// <summary>Purchase returns carry negative tracking against owned posted stock.</summary>
+    [Test]
+    procedure PurchaseReturnTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::"Return Order", PurchaseLine."Buy-from Vendor No.");
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('PurchaseLine', Line.SystemId), Database::"Purchase Line", Line."Document No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Negative adjustments retain posted stock while pending tracking is assigned and removed.</summary>
+    [Test]
+    procedure NegativeAdjustmentTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, JournalTemplate.Name, Batch.Name, Line."Entry Type"::"Negative Adjmt.", PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('ItemJournalLine', Line.SystemId), Database::"Item Journal Line", JournalTemplate.Name, Line."Line No.", false);
+    end;
+
+    /// <summary>Inbound transfer tracking preserves the independent outbound source side.</summary>
+    [Test]
+    procedure TransferInboundTrackingRoundTrip()
+    var
+        PurchaseLine: Record "Purchase Line";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        TransitLocation: Record Location;
+        Header: Record "Transfer Header";
+        Line: Record "Transfer Line";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+        Source: JsonObject;
+    begin
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryWarehouse.CreateTransferLocations(FromLocation, ToLocation, TransitLocation);
+        PurchaseLine.Validate("Location Code", FromLocation.Code);
+        PurchaseLine.Modify(true);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, TransitLocation.Code);
+        LibraryInventory.CreateTransferLine(Header, Line, PurchaseLine."No.", 10);
+        Source := GenericSource('TransferLine', Line.SystemId);
+        Source.Add('transferDirection', 'Inbound');
+
+        AssertTrackingRoundTrip(Source, Database::"Transfer Line", Line."Document No.", Line."Line No.", true);
+    end;
+
     /// <summary>Removing unposted purchase tracking after a partial receipt cannot undo the posted lot quantity.</summary>
     [Test]
     procedure PartialReceiptDeletePreservesPostedLedger()

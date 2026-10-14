@@ -1021,6 +1021,28 @@ codeunit 96926 "Inventory Reservation Tests"
         AssertStatus(Response, 'Success');
         Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Entry-only cancellation removes the selected source side.');
         Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'Entry-only cancellation removes the opposite side too.');
+        // The source-only mode must work independently of the optional entry selector.
+        ExecuteReservation(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        EntryNo := Token.AsValue().AsInteger();
+        Clear(CancelRequest);
+        Request.Get('source', Token);
+        CancelRequest.Add('source', Token);
+
+        ExecuteReservation(CancelRequest, true, Response);
+
+        AssertStatus(Response, 'Success');
+        Response.Get('quantityUnreserved', Token);
+        Assert.AreEqual(SourceQuantity, Token.AsValue().AsDecimal(), 'Source-only cancellation keeps source UOM.');
+        Response.Get('quantityBaseUnreserved', Token);
+        Assert.AreEqual(BaseQuantity, Token.AsValue().AsDecimal(), 'Source-only cancellation keeps base quantity.');
+        Assert.IsFalse(Entry.Get(EntryNo, Positive), 'Source-only cancellation removes the selected side.');
+        Assert.IsFalse(Opposite.Get(EntryNo, not Positive), 'Source-only cancellation removes the paired side.');
+        ExecuteReservation(CancelRequest, true, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entriesCancelled', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'Repeated source-only cancellation is an empty success.');
     end;
 
     /// <summary>Published Help examples form, read and cancel a native pair using only owned fixtures.</summary>
