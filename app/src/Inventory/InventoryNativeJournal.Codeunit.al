@@ -116,6 +116,10 @@ codeunit 70013463 "Inventory Native Journal ori"
         CheckParameters(Argument.GetRequestJson(), '');
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit;
+        if Line.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, '', NextStepLbl);
+            exit;
+        end;
         ReadLines(Line, JournalType, Results);
         PostBatch.SetSuppressCommit(true);
         PostBatch.Run(Line);
@@ -154,6 +158,10 @@ codeunit 70013463 "Inventory Native Journal ori"
         CheckParameters(Argument.GetRequestJson(), '');
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit;
+        if Line.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, '', NextStepLbl);
+            exit;
+        end;
         ReadLines(Line, JournalType, Results);
         BindSubscription(ItemPost);
         NativePreview.SetContext(ItemPost, Line);
@@ -557,7 +565,12 @@ codeunit 70013463 "Inventory Native Journal ori"
     end;
 
     local procedure CheckLineType(Line: Record "Item Journal Line"; JournalType: Enum "Item Journal Template Type")
+    var
+        Item: Record Item;
     begin
+        Line.TestField("Item No.");
+        Item.Get(Line."Item No.");
+        Item.TestField(Blocked, false);
         if JournalType = JournalType::Transfer then begin
             Line.TestField("Entry Type", Line."Entry Type"::Transfer);
             Line.TestField("Phys. Inventory", false);
