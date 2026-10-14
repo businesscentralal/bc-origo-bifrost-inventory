@@ -8,6 +8,7 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Planning;
 using Microsoft.Inventory.Requisition;
+using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.Document;
@@ -831,6 +832,7 @@ codeunit 96926 "Inventory Reservation Tests"
     begin
         // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
         // [GIVEN] An owned inventory shipment and matching posted stock.
+        EnableInventoryDocumentReservation();
         LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
         CreateSourcesAtLocation(SalesLine, Ledger, Location.Code);
         LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Shipment, Location.Code);
@@ -838,6 +840,8 @@ codeunit 96926 "Inventory Reservation Tests"
         Header.Modify(true);
         LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
         Line.Get(Line."Document Type", Line."Document No.", Line."Line No.");
+        Assert.AreEqual(10, Line.Quantity, 'Owned inventory document has outstanding quantity.');
+        Assert.AreEqual(10, Line."Quantity (Base)", 'Owned inventory document has native base quantity.');
         Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
         Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
         Request.Add('quantity', 2);
@@ -861,6 +865,7 @@ codeunit 96926 "Inventory Reservation Tests"
     begin
         // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
         // [GIVEN] An owned inventory receipt and matching sales demand.
+        EnableInventoryDocumentReservation();
         LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
         CreateSourcesAtLocation(SalesLine, Ledger, Location.Code);
         LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Receipt, Location.Code);
@@ -868,6 +873,8 @@ codeunit 96926 "Inventory Reservation Tests"
         Header.Modify(true);
         LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
         Line.Get(Line."Document Type", Line."Document No.", Line."Line No.");
+        Assert.AreEqual(10, Line.Quantity, 'Owned inventory document has outstanding quantity.');
+        Assert.AreEqual(10, Line."Quantity (Base)", 'Owned inventory document has native base quantity.');
         Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
         Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
         Request.Add('quantity', 2);
@@ -1086,6 +1093,15 @@ codeunit 96926 "Inventory Reservation Tests"
         Request := Token.AsObject();
         Request.Get('data', Token);
         Data := Token.AsObject();
+    end;
+
+    local procedure EnableInventoryDocumentReservation()
+    var
+        InventorySetup: Record "Inventory Setup";
+    begin
+        InventorySetup.Get();
+        InventorySetup.Validate("Allow Invt. Doc. Reservation", true);
+        InventorySetup.Modify(true);
     end;
 
     local procedure AssertNativeBindingRefusal(Request: JsonObject; ItemNo: Code[20]; Ledger: Record "Item Ledger Entry")

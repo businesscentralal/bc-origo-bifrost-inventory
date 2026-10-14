@@ -1,6 +1,6 @@
 # Changelog
 
-- Preserve native requisition/planning order-to-order binding refusals with real persisted source identities and unchanged-supply assertions; require owned inventory-document locations and explicit read-only costing ledger permissions in fixtures (codeunit 70013476; tests 96926/96933, permission set 96934; issues #4/#7).
+- Preserve native requisition/planning order-to-order binding refusals with real persisted source identities and unchanged-supply assertions; require owned inventory-document locations, native Allow Invt. Doc. Reservation setup, and explicit read-only costing ledger permissions in fixtures (codeunit 70013476; tests 96926/96933, permission set 96934; issues #4/#7).
 
 - Verify Inventory.Cost.Get discovery and native snapshot reads for a real read-only caller without item writes or posting rights, plus public execution refusal before licensing when native Item read is absent (test codeunit 96933; issue #4).
 
@@ -8,7 +8,7 @@
 
 - Add current-cost read regression cases for all five native costing methods in en-US and is-IS, using posted owned stock and native serial tracking for Specific, with item/ledger/value read-only assertions (test codeunit 96936; issue #4).
 
-- Add native reservation lifecycle regression cases for requisition supply, planning component demand, and inventory receipt/shipment sources, including exact source pointers, balanced quantities and both cancellation selectors (test codeunit 96926; issue #7).
+- Add native reservation regression cases for requisition supply and planning component binding refusals, plus inventory receipt/shipment lifecycles with exact source pointers, balanced quantities and both cancellation selectors (test codeunit 96926; issue #7).
 
 - Verify native project planning reservation pairs, source pointers, balanced quantities and both cancellation paths; refuse native project-journal no-ops instead of returning Success without a reservation. Measure the exact source-reserved base-quantity increase before any success response (codeunit 10036915; test 96926; issue #7).
 
