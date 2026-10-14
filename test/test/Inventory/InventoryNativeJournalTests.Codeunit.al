@@ -411,6 +411,134 @@ codeunit 96960 "Inventory Native Journal Tests"
         VerifyTrackedReclassification(true, true, true);
     end;
 
+    /// <summary>Two lot assignments remain distinct in preview/post results and native ledger entries.</summary>
+    [Test]
+    procedure Scenario_AC34_SplitLotsReturnEveryAssignment()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        ReceiptBatch: Record "Item Journal Batch";
+        Receipt: Record "Item Journal Line";
+        Entry: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inv Native Journal Process ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        ItemNo: Code[20];
+        Destination: Code[10];
+    begin
+        CreateTrackedReclassification(Item, Batch, Line, true, false, false);
+        ItemNo := Item."No.";
+        Destination := Line."New Location Code";
+        CreateBatch(ReceiptBatch, "Item Journal Template Type"::Item);
+        LibraryInventory.CreateItemJournalLine(Receipt, ReceiptBatch."Journal Template Name", ReceiptBatch.Name, Receipt."Entry Type"::"Positive Adjmt.", ItemNo, 1);
+        Receipt.Validate("Posting Date", WorkDate());
+        Receipt.Validate("Location Code", Line."Location Code");
+        Receipt.Validate("Variant Code", Line."Variant Code");
+        Receipt.Validate("Unit of Measure Code", Line."Unit of Measure Code");
+        Receipt.Validate("Unit Amount", 12);
+        Receipt.Modify(true);
+        SetAdditionalLotTracking(Receipt, 'X-SECOND-LOT', '', 3);
+        LibraryInventory.PostItemJournalLine(ReceiptBatch."Journal Template Name", ReceiptBatch.Name);
+        Line.Validate(Quantity, 2);
+        Line.Modify(true);
+        SetAdditionalLotTracking(Line, 'X-SECOND-LOT', 'X-SECOND-NEW', 3);
+        BeforeCount := Entry.Count();
+        SelectOne(Request, Line.SystemId);
+        InitArgument(TempArgument, Batch, Request);
+        Commit();
+        Journal.Preview(TempArgument, "Item Journal Template Type"::Transfer);
+        Response := TempArgument.GetResponseJson();
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Split tracking preview succeeds.');
+        AssertSplitTracking(Response);
+        Assert.AreEqual(BeforeCount, Entry.Count(), 'Split preview writes no ledger rows.');
+        InitArgument(TempArgument, Batch, Request);
+        Process.SetJournalType("Item Journal Template Type"::Transfer);
+        Commit();
+        Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
+        Response := TempArgument.GetResponseJson();
+        AssertSplitTracking(Response);
+        Entry.SetRange("Item No.", ItemNo);
+        Entry.SetRange("Location Code", Destination);
+        Assert.AreEqual(2, Entry.Count(), 'Both native destination lots are posted.');
+        Entry.SetRange("Lot No.", 'X-NEW-LOT');
+        Entry.FindFirst();
+        Assert.AreEqual(3, Entry.Quantity, 'First lot base quantity.');
+        Entry.SetRange("Lot No.", 'X-SECOND-NEW');
+        Entry.FindFirst();
+        Assert.AreEqual(3, Entry.Quantity, 'Second lot base quantity.');
+        Entry.SetRange("Lot No.");
+        Entry.SetRange("Location Code");
+        Entry.CalcSums(Quantity);
+        Assert.AreEqual(6, Entry.Quantity, 'Split reclassification conserves total stock.');
+    end;
+
+    local procedure SetAdditionalLotTracking(Line: Record "Item Journal Line"; LotNo: Code[50]; NewLotNo: Code[50]; QuantityBase: Decimal)
+    var
+        Source: Record "Tracking Specification";
+        TempTracking: Record "Tracking Specification" temporary;
+        Reserve: Codeunit "Item Jnl. Line-Reserve";
+        TrackingLines: Page "Item Tracking Lines";
+    begin
+        Reserve.InitFromItemJnlLine(Source, Line);
+        TempTracking := Source;
+        TempTracking."Entry No." := 1;
+        TempTracking."Quantity (Base)" := QuantityBase;
+        TempTracking."Lot No." := LotNo;
+        TempTracking."New Lot No." := NewLotNo;
+        TempTracking.Insert();
+        TrackingLines.SetBlockCommit(true);
+        if Line."Entry Type" = Line."Entry Type"::Transfer then
+            TrackingLines.SetRunMode("Item Tracking Run Mode"::Reclass);
+        TrackingLines.RegisterItemTrackingLines(Source, WorkDate(), TempTracking);
+    end;
+
+    local procedure AssertSplitTracking(Response: JsonObject)
+    var
+        Token: JsonToken;
+        Assignment: JsonToken;
+        ResultLine: JsonObject;
+        TrackingEntry: JsonObject;
+        Assignments: JsonArray;
+        SeenLots: List of [Text];
+        TotalBase: Decimal;
+        LotNo: Text;
+    begin
+        Response.Get('result', Token);
+        Assert.AreEqual(1, Token.AsArray().Count(), 'Split tracking remains one selected journal line.');
+        Token.AsArray().Get(0, Token);
+        ResultLine := Token.AsObject();
+        ResultLine.Get('tracking', Token);
+        Assignments := Token.AsArray();
+        Assert.AreEqual(2, Assignments.Count(), 'Every native assignment is returned.');
+        foreach Assignment in Assignments do begin
+            TrackingEntry := Assignment.AsObject();
+            TrackingEntry.Get('lotNo', Token);
+            LotNo := Token.AsValue().AsText();
+            Assert.IsFalse(SeenLots.Contains(LotNo), 'No assignment is duplicated.');
+            SeenLots.Add(LotNo);
+            TrackingEntry.Get('newLotNo', Token);
+            case LotNo of
+                'X-OLD-LOT':
+                    Assert.AreEqual('X-NEW-LOT', Token.AsValue().AsText(), 'First destination lot.');
+                'X-SECOND-LOT':
+                    Assert.AreEqual('X-SECOND-NEW', Token.AsValue().AsText(), 'Second destination lot.');
+                else
+                    Assert.Fail('Unexpected source assignment.');
+            end;
+            TrackingEntry.Get('quantityBase', Token);
+            Assert.AreEqual(3, Token.AsValue().AsDecimal(), 'Each assignment has its exact base quantity.');
+            TotalBase += Token.AsValue().AsDecimal();
+        end;
+        Assert.AreEqual(6, TotalBase, 'No assignment is lost.');
+        ResultLine.Get('lotNo', Token);
+        Assert.AreEqual('', Token.AsValue().AsText(), 'A split line must not pretend it has one source lot.');
+    end;
+
     local procedure VerifyTrackedReclassification(UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean)
     var
         Item: Record Item;
