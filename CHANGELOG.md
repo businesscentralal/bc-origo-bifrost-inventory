@@ -1,5 +1,7 @@
 # Changelog
 
+- Point attribute mapping conflict and missing-mapping errors to the registered Inventory.Attribute.Update/Create types in English, Icelandic and public Help; verify the actionable contract hint (codeunits 10036908/70013445, test 96921; issues #38/#30/#32/#33).
+
 - Verify the accepted mandatory-template report 1003 refusal under a real read-only caller, preserving an owned number series, pending costs and G/L/value entry counts; full mandatory-template support remains pending (test codeunit 96933; issues #4/#35).
 
 - Load only projected tracking/reservation/stock fields and native expiration settings; narrow document-key identity lookups to SystemId while leaving native source initialization fully loaded (codeunits 10036913/10036916; issue #5).

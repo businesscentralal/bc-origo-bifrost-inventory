@@ -1318,15 +1318,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType ItemBlockedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 3184723545" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Item.Attribute.Update.</source>
-          <target>Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.</note>
+          <source>Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Inventory.Attribute.Update.</source>
+          <target>Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType MappingConflictErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 2179025215" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.</source>
-          <target>Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.</note>
+          <source>Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.</source>
+          <target>Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Inventory.Attribute.Create fyrst.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Inventory.Attribute.Create fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType MappingMissingErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 1411243613" size-unit="char" translate="yes" xml:space="preserve">

@@ -1456,7 +1456,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             end;
             'Inventory.Attribute.Update': begin
                 Index := 5;
-                Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
+                Expected := 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.';
             end;
             'Inventory.AttributeDefinition.Create': begin
                 Index := 3;
@@ -1466,6 +1466,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Errors.Get(Index, Token);
         Entry := Token.AsObject();
         AssertJsonText(Entry, 'error', Expected);
+        if TypeName = 'Inventory.Attribute.Create' then
+            AssertJsonText(Entry, 'nextStep', 'Set overwrite to true or use Inventory.Attribute.Update.');
     end;
 
     local procedure AssertAttributeLegacyPayloads(TypeName: Text; Contract: JsonObject)
