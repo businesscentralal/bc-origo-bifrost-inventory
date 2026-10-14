@@ -19,6 +19,40 @@ codeunit 96933 "Inventory Cost Perm. Tests"
     var
         Assert: Codeunit "Library Assert";
 
+    /// <summary>Price discovery and execution refuse a caller with only native Item read access.</summary>
+    [Test]
+    procedure PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        PriceImpl: Codeunit "Price Update Impl ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Read Test');
+        Assert.IsFalse(Item.WritePermission(), 'Caller really lacks native Item write permission.');
+        Assert.IsFalse(PriceImpl.IsEnabled(), 'Price write is hidden without native write access.');
+        PriceImpl.ExecuteBifrostTask(TempArgument);
+        AssertPermissionDenied(TempArgument);
+    end;
+
+    /// <summary>Price update needs native Item writes but not an inventory posting token.</summary>
+    [Test]
+    procedure PriceUpdate_NativeWriteWithoutPostToken_Enabled()
+    var
+        PriceImpl: Codeunit "Price Update Impl ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Write Test');
+        Assert.IsFalse(PostingGate.HasPostingPermission(), 'Price write does not require a posting token.');
+        Assert.IsTrue(PriceImpl.IsEnabled(), 'Shipping full role grants execution and native Item rights allow discovery.');
+    end;
+
     /// <summary>The shipping read role can discover read-only costing without a posting token.</summary>
     [Test]
     procedure TestCost_ReadCaller_EnabledOutboundWithoutPost()

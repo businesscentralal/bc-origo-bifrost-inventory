@@ -321,6 +321,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2249393538 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
+          <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2249393538 - NamedType 2813169322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item selection parameter %1 must be nonempty text.</source>
+          <target>Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType IdentifierErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2249393538 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported price parameter %1.</source>
+          <target>Verðfæribreytan %1 er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Verðfæribreytan %1 er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType ParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2249393538 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select exactly one item using subject, an item identifier or tableView.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType SelectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2249393538 - NamedType 2509391145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to update item unit price.</source>
+          <target>Heimild hafnað til að uppfæra einingarverð vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra einingarverð vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType WriteDeniedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 292814924 - Method 2737301317 - NamedType 3765409534" size-unit="char" translate="yes" xml:space="preserve">
           <source>Requested tracking must match the selected inventory entry; a serial reservation must be one base unit.</source>
           <target>Umbeðin rakning verður að passa við valda birgðafærslu; raðnúmerafrátekt verður að vera ein grunneining.</target>
