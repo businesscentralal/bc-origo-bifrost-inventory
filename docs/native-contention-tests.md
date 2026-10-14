@@ -1,0 +1,9 @@
+# Native contention acceptance (#7 / #40)
+
+Use only an individually owned development container with the exact candidate product and test apps. Do not invoke this coordinator in shared, customer or production environments. This is native diagnostic acceptance below the licensed dispatcher; it does not establish licensed MCP execution.
+
+Run codeunit 96993 `Inv Contention Coordinator` through the native administration `Invoke-NAVCodeunit` command in the owned company. The coordinator creates unique `XW8` items, native posted stock, two sales lines and a separate application pair. It starts two real background sessions per scenario. A manually bound observer sleeps for three seconds after the first actual native insert, holding that transaction so the competing session overlaps it. The observer does not modify reservation/application rows.
+
+Test-only table 96990 retains each run ID, fixture item, actual BC session ID, start/finish timestamps, observed hold timestamps, native response/refusal and final assertion verdict. A pass requires one success, one refusal, distinct session IDs, actual overlapping transaction intervals and exact persisted native quantities. Reservation cancellation uses the supported native process and must leave no owned reservation pair. Application ledger fixtures and the probe records are removed with verified deletion of the owned container.
+
+The coordinator is a normal codeunit, not a test method: transaction-isolated full-suite tests cannot share uncommitted fixtures with background sessions. Execute it separately after the full configured suite and record its two scenario outcomes independently. No tests are excluded from the full suite. If the coordinator errors, retain the probe rows and actual error for diagnosis; do not treat invocation success or an empty result set as acceptance.
