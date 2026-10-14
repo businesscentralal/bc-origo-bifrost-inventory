@@ -365,6 +365,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         GLCount := GLEntry.Count();
         ValueCount := ValueEntry.Count();
         Request.Add('itemNo', Item."No.");
+        // Preserve the owned fixture across asserterror rollback; the test runner still isolates the codeunit.
+        Commit();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         LowerPermissions.AddPermissionSet('D365 READ');
         Assert.IsTrue(SeriesLine.ReadPermission(), 'Caller can read the owned series.');
