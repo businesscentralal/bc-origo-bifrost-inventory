@@ -34,7 +34,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     procedure CostWrite_PublicHelp_DeclaresNativeFieldsAndErrors()
     begin
         // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
-        AssertNativeHelp('Inventory.Cost.Update', 'status:string,itemNo:string,itemId:string,costingMethod:string,before:object,after:object,warnings:array', 4);
+        AssertNativeHelp('Inventory.Cost.Update', 'status:string,itemNo:string,itemId:string,costingMethod:string,before:object,after:object,warnings:array', 6);
     end;
 
     /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
@@ -58,7 +58,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     procedure PriceWrite_PublicHelp_DeclaresNativeFieldsAndErrors()
     begin
         // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
-        AssertNativeHelp('Inventory.Price.Update', 'status:string,messageType:string,itemNo:string,itemId:string,previousUnitPrice:decimal,unitPrice:decimal', 5);
+        AssertNativeHelp('Inventory.Price.Update', 'status:string,messageType:string,itemNo:string,itemId:string,previousUnitPrice:decimal,unitPrice:decimal', 6);
     end;
 
     /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>
@@ -66,7 +66,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     procedure RevalCalculate_PublicHelp_DeclaresNativeFieldsAndErrors()
     begin
         // Issues #4/#30/#35 | Time: independent | Risk: public Help differs from native response.
-        AssertNativeHelp('Inventory.Revaluation.Calculate', 'status:string,templateName:string,batchName:string,linesCreated:integer,totalQuantity:decimal,calculatedValue:decimal,revaluedValue:decimal,posted:boolean', 4);
+        AssertNativeHelp('Inventory.Revaluation.Calculate', 'status:string,templateName:string,batchName:string,linesCreated:integer,totalQuantity:decimal,calculatedValue:decimal,revaluedValue:decimal,posted:boolean', 5);
     end;
 
     /// <summary>Registered costing Help describes native result fields, media type and actual error shapes.</summary>

@@ -326,6 +326,13 @@ codeunit 96939 "Inventory Price Write Tests"
     var
         Item: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        ErrorEntry: JsonObject;
+        Errors: JsonArray;
+        ErrorToken: JsonToken;
+        ErrorCode: Text;
+        Declared: Boolean;
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -337,6 +344,17 @@ codeunit 96939 "Inventory Price Write Tests"
         Response := TempArgument.GetResponseJson();
         Assert.IsTrue(Response.Get('status', Token), 'Error response exists.');
         Assert.AreEqual('Error', Token.AsValue().AsText(), 'Malformed request refused.');
+        Response.Get('code', Token);
+        ErrorCode := Token.AsValue().AsText();
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Price.Update", Contract);
+        Contract.Get('errors', Token);
+        Errors := Token.AsArray();
+        foreach ErrorToken in Errors do begin
+            ErrorEntry := ErrorToken.AsObject();
+            if ErrorEntry.Get('code', Token) then
+                Declared := Declared or (Token.AsValue().AsText() = ErrorCode);
+        end;
+        Assert.IsTrue(Declared, 'Registered Help must declare the actual native input error: ' + ErrorCode);
         Item.Get(Item."No.");
         Assert.AreEqual(10, Item."Unit Price", 'Invalid input preserves the price.');
     end;

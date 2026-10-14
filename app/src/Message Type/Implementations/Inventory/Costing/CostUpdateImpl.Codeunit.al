@@ -120,6 +120,8 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Company/native write gate refuses caller.', 'Review permissions and company setup.'));
         Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Standard-costed or blocked Item, method mismatch, field restriction, ambiguous selection or native validation failure. The direct native call may raise; the process wrapper returns text without a typed code.','Use native revaluation for Standard-costed items; otherwise correct the request.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or request parameters are malformed.', 'Enable the domain or correct the request.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A date, decimal or Boolean request value has the wrong format.', 'Use ISO dates, invariant decimals and JSON Booleans.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A supplied required cost value is null or empty.', 'Supply a numeric cost value.'));
         exit(true);
     end;
 

@@ -113,6 +113,7 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item selection finds nothing.', 'Select an existing record.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item or Unit Price field permission refuses the caller.', 'Request the required native permission from an administrator.'));
         Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Selection is ambiguous, item is blocked without opt-in or native validation fails. The direct native call may raise; the process wrapper returns text without a typed code.','Correct the selected batch, input or native validation error before retrying.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A date, decimal or Boolean request value has the wrong format.', 'Use ISO dates, invariant decimals and JSON Booleans.'));
         exit(true);
     end;
 
