@@ -93,6 +93,43 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         AssertPermissionDenied(TempArgument);
     end;
 
+    /// <summary>Card-cost execution refuses a real read-only caller before licensing or field writes.</summary>
+    [Test]
+    procedure CostUpdate_ReadOnlyCaller_RefusesBeforeLicense()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        CostImpl: Codeunit "Cost Update Impl ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Read Test');
+        Assert.IsTrue(Item.ReadPermission(), 'Caller retains native Item read permission.');
+        Assert.IsFalse(Item.WritePermission(), 'Caller really lacks native Item write permission.');
+        Assert.IsFalse(CostImpl.IsEnabled(), 'Card-cost write is hidden without native write access.');
+        CostImpl.ExecuteBifrostTask(TempArgument);
+        AssertPermissionDenied(TempArgument);
+    end;
+
+    /// <summary>Card-cost discovery requires native writes but does not acquire an inventory posting token.</summary>
+    [Test]
+    procedure CostUpdate_NativeWriteWithoutPostToken_Enabled()
+    var
+        Item: Record Item;
+        CostImpl: Codeunit "Cost Update Impl ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Write Test');
+        Assert.IsTrue(Item.WritePermission(), 'Native Item writes are present.');
+        Assert.IsFalse(PostingGate.HasPostingPermission(), 'Card-cost writes do not confer a posting token.');
+        Assert.IsTrue(CostImpl.IsEnabled(), 'Native Item write permission enables card-cost discovery.');
+    end;
+
     /// <summary>Price discovery and execution refuse a caller with only native Item read access.</summary>
     [Test]
     procedure PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense()
