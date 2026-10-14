@@ -144,8 +144,8 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         ResponseJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
-        MissingDateErr: Label 'endingDate is required.', Locked = true;
-        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date', Locked = true;
+        MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
+        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date||is-IS=Birgðatímabil sem lýkur %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;

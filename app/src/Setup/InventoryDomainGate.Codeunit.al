@@ -39,7 +39,7 @@ codeunit 70013453 "Inventory Domain Gate ori"
             exit(false);
         end;
         if not InventorySetup.IsDomainEnabled(Domain) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', 'Turn the domain on from the Inventory Setup page.');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', EnableDomainNextStepLbl);
             exit(false);
         end;
         if IsEnabled(Domain, FilterTableNo, NeedWrite, NeedPost) then
@@ -47,4 +47,6 @@ codeunit 70013453 "Inventory Domain Gate ori"
         Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', '');
         exit(false);
     end;
+    var
+        EnableDomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
 }

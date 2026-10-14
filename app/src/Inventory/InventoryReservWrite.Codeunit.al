@@ -206,7 +206,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
                     if PartBase > RemainingBase then
                         PartBase := RemainingBase;
                     if (Ledger."Serial No." <> '') and (PartBase <> 1) then begin
-                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SupplyErr, 'quantity', Format(Quantity, 0, 9), 'one base unit per serial', '');
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SupplyErr, 'quantity', Format(Quantity, 0, 9), SerialQuantityExpectedLbl, '');
                         exit;
                     end;
                     Clear(Supply);
@@ -269,7 +269,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
     begin
         if Request.Contains('supply') then begin
             if Request.Contains('itemLedgerEntryNo') then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidSupplyErr, 'supply', '', 'one supply selector', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidSupplyErr, 'supply', '', SupplyExpectedLbl, '');
                 exit(false);
             end;
             exit(Resolver.Resolve(Argument, Request, 'supply', false, SupplyRef, Specification, Direction));
@@ -277,7 +277,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         if not Reader.TryReadDecimal(Argument, Request, 'itemLedgerEntryNo', true, EntryNo) then
             exit(false);
         if (EntryNo <= 0) or (EntryNo > 2147483647) or (EntryNo <> Round(EntryNo, 1)) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidSupplyErr, 'itemLedgerEntryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidSupplyErr, 'itemLedgerEntryNo', Format(EntryNo, 0, 9), PositiveIntegerExpectedLbl, '');
             exit(false);
         end;
         if not ItemLedgerEntry.ReadPermission() then begin
@@ -357,7 +357,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Entry.TransferFields(Specification);
         if ReservationManagement.SourceQuantity(Entry, false) <> 0 then
             exit(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, ClosedSourceErr, 'source', '', 'source with outstanding quantity', '');
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, ClosedSourceErr, 'source', '', OpenSourceExpectedLbl, '');
         exit(false);
     end;
 
@@ -386,7 +386,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             if not Reader.TryReadDecimal(Argument, Request, 'entryNo', true, EntryNo) then
                 exit;
             if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), PositiveIntegerExpectedLbl, '');
                 exit;
             end;
             ReservationEntry.SetRange("Entry No.", EntryNo);
@@ -410,7 +410,7 @@ codeunit 10036915 "Inventory Reserv. Write ori"
             if not Reader.TryReadDecimal(Argument, Request, 'entryNo', true, EntryNo) then
                 exit;
             if (EntryNo <= 0) or (EntryNo <> Round(EntryNo, 1)) or (EntryNo > 2147483647) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), 'positive integer', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidEntryErr, 'entryNo', Format(EntryNo, 0, 9), PositiveIntegerExpectedLbl, '');
                 exit;
             end;
             ReservationEntry.SetRange("Entry No.", EntryNo);
@@ -445,4 +445,9 @@ codeunit 10036915 "Inventory Reserv. Write ori"
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
+    var
+        SerialQuantityExpectedLbl: Label 'one base unit per serial', Comment = 'is-IS=ein grunneining fyrir hvert raðnúmer';
+        OpenSourceExpectedLbl: Label 'source with outstanding quantity', Comment = 'is-IS=upprunafærsla með eftirstandandi magni';
+        SupplyExpectedLbl: Label 'one supply selector', Comment = 'is-IS=eitt framboðsval';
+        PositiveIntegerExpectedLbl: Label 'positive integer', Comment = 'is-IS=jákvæð heiltala';
 }

@@ -157,10 +157,10 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
         ReceiptDate: Date;
         DirectTransfer: Boolean;
         HasLines: Boolean;
-        MissingFromErr: Label 'transferFromCode must be specified in the request JSON.', Locked = true;
-        MissingToErr: Label 'transferToCode must be specified in the request JSON.', Locked = true;
-        MissingInTransitErr: Label 'inTransitCode must be specified when directTransfer is false.', Locked = true;
-        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
+        MissingFromErr: Label 'transferFromCode must be specified in the request JSON.', Comment = 'is-IS=Tilgreina verður transferFromCode í JSON-beiðninni.';
+        MissingToErr: Label 'transferToCode must be specified in the request JSON.', Comment = 'is-IS=Tilgreina verður transferToCode í JSON-beiðninni.';
+        MissingInTransitErr: Label 'inTransitCode must be specified when directTransfer is false.', Comment = 'is-IS=Tilgreina verður inTransitCode þegar directTransfer er false.';
+        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value||is-IS=Skrif í reit %1 eru takmörkuð. Ekki er hægt að nota gildið ''%2''.';
         ReadOk: Boolean;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false) then

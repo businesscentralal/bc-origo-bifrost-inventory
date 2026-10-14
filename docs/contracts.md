@@ -8,27 +8,13 @@ Document types that resolve an identifier list these error codes:
 - `InvalidParameterFormat` on the identifier key
 - one `MultipleErrors` entry
 
-This applies to transfer order, assembly order, undo, and reservation create lookups. Contract tests still have to assert those codes after the Foundation publish.
+This applies to the eleven transfer-order and assembly-order lookups listed in #27. It does not change Item range readers, document creation, undo or reservation readers. Test codeunit 96922 checks the public errors chapters; 96923 exercises strict malformed data/identifiers and aggregation through the public dispatcher. Foundation 28.0.2.0 is the minimum dependency. Runtime results are recorded separately from test source.
 
-## Issue status on main 147e8a6
+## Retained acceptance candidates
 
-- #34 reclassification check refuses a non-Transfer template and accepts `templateName` and `batchName`. Preview and post are implemented.
-- #35 adjust cost runs report 795. Cost to G/L post and test are implemented.
-- #36 domain flags and the domain gate are implemented. Inventory Setup is blocked from `Data.Records.Set`.
-- #37 tracking assign and delete go through Item Tracking Management and include package.
-- #38 attribute types use `Inventory.Attribute.*`.
-- #39 undo shipment, receipt, and assembly call the standard undo codeunits.
-- #40 item application unapply and reapply call `Item Jnl.-Post Line`.
-- #30-#33 guard wiring stays with worker-5/PR89; guard results and Architect pipeline ownership govern that work. There is no internal-review approval gate.
-- #27 contract tests are not written yet. They wait for the Foundation publish.
+These are private implementation candidates, not claims that the nineteen accepted issues are complete. Native AL tests, licensed MCP, shipping Web Client workflows, current-tip CI, review clearance and deployment are separate evidence. Worker-5 retains PR89 guard/workflow ownership. Product and test compilation must both have zero errors and zero warnings before GitHub candidate publication; the four foreign permission diagnostics remain with Architect/Foundation ownership under #26. Licensed MCP remains required before review under #95. Tryggvi retains external Inventory documentation under #31 and HelpLinks remains a required gate.
 
-## Costing metadata (PR #90 draft)
-
-Adjust Cost Run Impl ori (70013460) and Cost To GL Post Impl ori (70013462) declare the existing costing contracts. Optional string parameters have empty-string defaults; postToGL defaults to Boolean false. Report 795 receives either the item or category filter, truncated to 250 characters, and rejects two nonempty effective filters. Report 1002 receives no request filters or explicit Post initialization; its success response confirms report completion and response construction, not G/L posting. Both contracts preserve potential write/posting risks without a safe-retry guarantee.
-
-The error declarations distinguish the report Run=false response from raised report/conversion errors and Foundation's scheduled-task failure handler. Synchronous dispatch and direct invocation do not themselves establish that scheduled response mapping. Runtime conversion, posting and failure-handler evidence remains pending.
-
-Inventory Contract Batch Tests (96921) contains six costing metadata regressions for typed defaults, filter preconditions, error declarations, report options and reused interface outputs. They have not run: the app still fails compilation, so this draft supplies no runtime, permission or financial execution proof.
+The costing, journal, tracking/reservation and undo/application sections below describe their implemented native paths and retained limitations. #27 adds strict lookup error contracts and tests; #30/#32/#33 include AL contract and locale repairs. No code comment, guard result or subset test closes an issue by itself.
 
 ## Native tracking/reservation candidate (#5/#7/#36/#37)
 
@@ -38,7 +24,7 @@ The response identifies each row as `ReservationEntry`, `TrackingSpecification` 
 
 Exact `lotNo`, `serialNo`, `packageNo`, `variantCode`, `locationCode` values may include blank. `locationFilter` accepts BC filter syntax and intersects `locationCode`. `skip` is nonnegative; `take` is 1..10000, default 100. `noOfLines` counts returned rows; `totalNoOfLines` counts matching rows before paging. An empty tracking set returns `RecordNotFound`; a page beyond the end of a nonempty set returns an empty successful page.
 
-`Inventory.TrackingAvailability.Get` returns `availability`, grouped by lot/serial/package, location and variant, with `inventory`, `qtyReserved` and `availableQuantity`. Reserved quantities come from each posted entry's native `Reserved Quantity` FlowField. Only open positive item ledger positions contribute. The current [Architect AC-5 correction](https://bifrst-group.slack.com/archives/C0C0XM70YF8/p1791930111133289) requires master expiration precedence when enabled and available, then the native entry date (including when the flag is disabled), then blank. Entry fallback and blank output are implemented; master precedence is **pending**, because the target's downloaded symbols do not expose the specified master field. The earlier entry-only acceptance amendment is superseded. Grouped entry-date disagreement returns blank. See [expiration acceptance](inventory-expiration-acceptance.md) for the exact platform evidence and outstanding schema dependency.
+`Inventory.TrackingAvailability.Get` returns `availability`, grouped by lot/serial/package, location and variant, with `inventory`, `qtyReserved` and `availableQuantity`. Reserved quantities come from each posted entry's native `Reserved Quantity` FlowField. Only open positive item ledger positions contribute. The binding [Architect AC-5 withdrawal and reinstatement](https://bifrst-group.slack.com/archives/C0C0XM70YF8/p1791931218380149) uses the entry's native expiration only when the Item Tracking Code has Use Expiration Dates enabled. Disabled or undated entries return blank; grouped lot/package disagreement returns blank. Master precedence was struck from AC-5 on 13 October because the BC 28.5 target has no such Lot/Package master field. No table extension is introduced. See [expiration acceptance](inventory-expiration-acceptance.md) for provenance.
 
 `Inventory.Reservation.Get` accepts the same document/source forms, item identifiers, `entryNo` and tracking/location filters. All supplied criteria intersect before entry-not-found is evaluated. An entry number identifies a native reservation pair; supply/demand rows are distinguished by source and positive, rather than silently discarding one side.
 
@@ -64,7 +50,7 @@ Reclassification Check now runs Item Jnl.-Check Line and returns `validationResu
 
 Physical inventory adds registered Check, PreviewPost and RecordCount, retaining the existing Calculate/Post/Record identities. All use an existing nonrecurring Phys. Inventory template batch. Calculate invokes report 790, requires an empty batch plus `postingDate` and `documentNo`, and supports native item/location/variant filters and `itemsNotOnInventory`/`includeItemsWithNoTransactions`. RecordCount accepts `counts: [{lineNo|systemId, qtyCounted?}]`, validates the full selection and uses native Validate/Modify inside the process transaction. Omitted qtyCounted leaves the line unchanged and returns counted=false; explicit zero records zero. Duplicate or foreign line IDs and invalid quantities are refused. Legacy Record accepts its existing lineNo/quantity input and keeps its response fields. Preview captures native rollback entries; Post returns item and physical inventory ledger ranges from the actual register. Post/Preview use Foundation's published ItemJournal.Post IsEnabled interface to enforce its existing native journal/ItemPost gate. No private gate object or new token is used.
 
-The later field-granularity decision in #4 comment 5638411651 keeps shared Item Journal Line generic writes legal. The older #6 AC8/9 blanket-table block is therefore not introduced; the discrepancy needs explicit acceptance reconciliation, not a fabricated pass. Existing cost-field restrictions remain unchanged. Shipping licensed MCP, full workflow UI and exact-tip readiness remain separate from native helper tests; #95 is not waived.
+The [Architect reconciliation of #6 AC8/9](https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/6#issuecomment-6160056699) confirms the later field-granularity decision in #4: generic Item Journal Line writes stay legal and there is no table-83 write-restriction subscriber. Existing governed Item cost/price field restrictions remain unchanged. This reconciles the acceptance contract; it is not a licensed Data.Records.Set test pass. Shipping licensed MCP, full workflow UI and exact-tip readiness remain separate from native helper tests; #95 is not waived.
 
 ## Native undo and application candidate (#39, #40)
 

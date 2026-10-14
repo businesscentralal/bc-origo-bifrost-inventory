@@ -260,9 +260,9 @@ codeunit 70013445 "Inventory Contract Parts ori"
         if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then
             AddLookupErrors(Errors, 'Item');
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
-            AddLookupErrors(Errors, 'Transfer Header');
+            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo');
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
-            AddLookupErrors(Errors, 'Assembly Header');
+            AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo');
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
@@ -320,6 +320,24 @@ codeunit 70013445 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.TextErrorEntry('Business Central''s own posting error text.', 'The assembly posting preview failed.', 'Read the error text and correct the order or setup.'));
                 end;
         end;
+    end;
+
+    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter,
+            'No ' + RecordName + ' identifier in subject or data.', 'Send subject or an identifier key under data.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound,
+            'An identifier was given but matches no ' + RecordName + '.', 'Check the value or look the record up first.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers,
+            'Two identifiers were given that point to different records.', 'Send one identifier.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat,
+            'data is not a JSON object (parameter data); an identifier key under data (documentNo, ' + DocumentAlias + ', no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.',
+            'Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors,
+            'More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.',
+            'Fix every listed key and send the request again.'));
     end;
 
     local procedure AddLookupErrors(var Errors: JsonArray; RecordName: Text)

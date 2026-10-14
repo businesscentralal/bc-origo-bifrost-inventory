@@ -157,9 +157,9 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         Quantity: Decimal;
         QuantityToAssemble: Decimal;
         RefreshLines: Boolean;
-        MissingItemErr: Label 'itemNo must be specified in the request JSON.', Locked = true;
-        MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Locked = true;
-        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
+        MissingItemErr: Label 'itemNo must be specified in the request JSON.', Comment = 'is-IS=Tilgreina verður itemNo í JSON-beiðninni.';
+        MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Comment = 'is-IS=Tilgreina verður quantity sem er stærra en 0 í JSON-beiðninni.';
+        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value||is-IS=Skrif í reit %1 eru takmörkuð. Ekki er hægt að nota gildið ''%2''.';
         ReadOk: Boolean;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then

@@ -145,13 +145,13 @@ codeunit 10036914 "Inventory Tracking Write ori"
         ReservationEntry.SetPointerFilter();
         if Request.Get('entryNos', Token) then begin
             if not Token.IsArray() then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', '', 'array of integers', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', '', IntegerArrayExpectedLbl, '');
                 exit(false);
             end;
             EntryNumbers := Token.AsArray();
             foreach EntryToken in EntryNumbers do begin
                 if not ReadEntryNo(EntryToken, EntryNo) then begin
-                    Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', '', 'positive integer', '');
+                    Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', '', PositiveIntegerExpectedLbl, '');
                     exit(false);
                 end;
                 ReservationEntry.SetRange("Entry No.", EntryNo);
@@ -200,4 +200,7 @@ codeunit 10036914 "Inventory Tracking Write ori"
         if EntryNo <= 0 then
             Error(Format(EntryNo, 0, 9));
     end;
+    var
+        IntegerArrayExpectedLbl: Label 'array of integers', Comment = 'is-IS=fylki af heiltölum';
+        PositiveIntegerExpectedLbl: Label 'positive integer', Comment = 'is-IS=jákvæð heiltala';
 }

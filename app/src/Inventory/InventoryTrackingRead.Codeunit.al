@@ -327,7 +327,7 @@ codeunit 10036916 "Inventory Tracking Read ori"
         if not Reader.TryReadDecimal(Argument, Request, KeyName, true, Number) then
             exit(false);
         if (Number < Minimum) or (Number > Maximum) or (Number <> Round(Number, 1)) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, KeyName, Format(Number, 0, 9), 'integer in range', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, KeyName, Format(Number, 0, 9), IntegerRangeExpectedLbl, '');
             exit(false);
         end;
         Value := Number;
@@ -473,4 +473,6 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
+    var
+        IntegerRangeExpectedLbl: Label 'integer in range', Comment = 'is-IS=heiltala innan marka';
 }
