@@ -104,6 +104,12 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         Response := TempArgument.GetResponseJson();
         Assert.IsTrue(Response.Get('nextStep', Token), 'English nextStep machine key');
         English := Token.AsValue().AsText();
+        // Each language represents a separate request; do not aggregate the previous request's error.
+        TempArgument.DeleteAll();
+        Clear(TempArgument);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         GlobalLanguage(1039);
         Gate.AssertEnabled(TempArgument, "Inventory Domain ori"::ItemTracking, Database::Item, false, false);
         Response := TempArgument.GetResponseJson();
