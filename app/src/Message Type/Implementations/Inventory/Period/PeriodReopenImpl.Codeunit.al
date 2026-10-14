@@ -24,8 +24,10 @@ codeunit 70013484 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reopens a closed inventory period.', Comment = 'is-IS=Opnar lokað birgðatímabil aftur.';
     begin
-        exit('Reopens a closed inventory period.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

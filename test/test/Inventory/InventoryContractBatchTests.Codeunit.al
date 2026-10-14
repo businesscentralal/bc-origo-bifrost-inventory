@@ -1706,4 +1706,164 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Token.IsValue(), Name + ' must be scalar.');
         LibraryAssert.AreEqual(Expected, Token.AsValue().AsText(), Name + ' mismatch.');
     end;
+
+    /// <summary>AssemblyOrder.PreviewPost exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AsmDocPrevPostImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.PreviewPost', 'Simulates posting an assembly order and returns predicted ledger entries (Item, Value, G/L, Resource) without committing changes.', 'Hermir eftir bókun samsetningarpöntunar og skilar áætluðum vöru-, virðis-, fjárhags- og forðafærslum án þess að vista breytingar.');
+    end;
+
+    /// <summary>AssemblyOrder.RefreshLines exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AsmOrderRefreshLnImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.RefreshLines', 'Revalidates the assembly order item number to refresh component lines through native validation.', 'Endurmetur vörunúmer samsetningarpöntunar til að uppfæra íhlutalínur með innbyggðri sannprófun.');
+    end;
+
+    /// <summary>AssemblyOrder.Release exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AsmOrderReleaseImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.Release', 'Releases an open assembly order so it can be posted (status Open -> Released).', 'Útgefur opna samsetningarpöntun svo hægt sé að bóka hana (staðan breytist úr Open í Released).');
+    end;
+
+    /// <summary>AssemblyOrder.Statistics exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AsmOrderStatisticsImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.Statistics', 'Returns assembly order statistics: header info, line counts, quantities and cost breakdown.', 'Skilar tölfræði samsetningarpöntunar: hausupplýsingum, línufjölda, magni og sundurliðun kostnaðar.');
+    end;
+
+    /// <summary>AssemblyOrder.Create exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AssemblyOrderCreateImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.Create', 'Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.', 'Stofnar haus samsetningarpöntunar fyrir samsetta vöru og getur uppfært íhlutalínur úr uppskrift.');
+    end;
+
+    /// <summary>AssemblyOrder.Post exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AssemblyOrderPostImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.Post', 'Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.', 'Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.');
+    end;
+
+    /// <summary>AssemblyOrder.Reopen exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure AssemblyOrderReopenImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AssemblyOrder.Reopen', 'Reopens a released assembly order so it can be edited again (status Released -> Open).', 'Opnar útgefna samsetningarpöntun aftur til breytinga (staðan breytist úr Released í Open).');
+    end;
+
+    /// <summary>Period.Close exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure PeriodCloseImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Period.Close', 'Marks the selected inventory period closed. Does not run the native inventory-period close action.', 'Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.');
+    end;
+
+    /// <summary>Period.Get exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure PeriodGetImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Period.Get', 'Reads inventory periods.', 'Les birgðatímabil.');
+    end;
+
+    /// <summary>Period.Reopen exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure PeriodReopenImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Period.Reopen', 'Reopens a closed inventory period.', 'Opnar lokað birgðatímabil aftur.');
+    end;
+
+    /// <summary>TransferOrder.PreviewPost exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransfDocPrevPostImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.PreviewPost', 'Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.', 'Hermir eftir bókun flutningspöntunar og skilar áætluðum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.');
+    end;
+
+    /// <summary>TransferOrder.Create exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransferOrderCreateImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.Create', 'Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.', 'Stofnar flutningspöntun með uppruna- og áfangabirgðageymslu, dagsetningum, valfrjálsum beinum flutningi og línum.');
+    end;
+
+    /// <summary>TransferOrder.Post exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransferOrderPostImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.Post', 'Posts a transfer order (ship/receive, or ship+receive for direct transfers).', 'Bókar flutningspöntun (afhendingu eða móttöku, eða hvort tveggja fyrir beina flutninga).');
+    end;
+
+    /// <summary>TransferOrder.Reopen exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransferOrderReopenImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.Reopen', 'Reopens a transfer order, changing its status from Released to Open.', 'Opnar flutningspöntun aftur með því að breyta stöðu úr Released í Open.');
+    end;
+
+    /// <summary>TransferOrder.Statistics exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransferOrderStatsImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.Statistics', 'Returns transfer order statistics: line count, quantity, parcels, net/gross weight and volume.', 'Skilar tölfræði flutningspöntunar: línufjölda, magni, pakkafjölda, nettó- og brúttóþyngd og rúmmáli.');
+    end;
+
+    /// <summary>TransferOrder.Release exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure TransfOrderReleaseImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.TransferOrder.Release', 'Releases a transfer order, changing its status from Open to Released.', 'Útgefur flutningspöntun með því að breyta stöðu úr Open í Released.');
+    end;
+
+    /// <summary>Attribute.Create exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure ItemAttributeCreateImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Attribute.Create', 'Assigns attribute values to an item. Idempotent when the same value already exists.', 'Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til staðar.');
+    end;
+
+    /// <summary>Attribute.Get exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure ItemAttributeGetImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Attribute.Get', 'Returns item attribute definitions and assigned values for one or more items.', 'Skilar eiginleikaskilgreiningum og úthlutuðum gildum fyrir eina eða fleiri vörur.');
+    end;
+
+    /// <summary>Attribute.Update exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure ItemAttributeUpdateImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.Attribute.Update', 'Updates an existing item attribute mapping and returns before/after values.', 'Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi.');
+    end;
+
+    /// <summary>AttributeDefinition.Create exposes its exact human description in both supported locales.</summary>
+    [Test]
+    procedure ItemAttrDefCreateImpl_BilingualDescription()
+    begin
+        AssertBilingualDescription('Inventory.AttributeDefinition.Create', 'Creates an item attribute definition and optional option values, independent of any item.', 'Stofnar eiginleikaskilgreiningu vöru og valfrjáls gildi fyrir valkosti, óháð tiltekinni vöru.');
+    end;
+
+    local procedure AssertBilingualDescription(TypeName: Text; English: Text; Icelandic: Text)
+    var
+        MessageType: Enum "Message Type ori";
+        Implementation: Interface "Msg Interface ori";
+        PreviousLanguage: Integer;
+        ActualEnglish: Text;
+        ActualIcelandic: Text;
+    begin
+        MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Implementation := MessageType;
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        ActualEnglish := Implementation.GetDescription();
+        GlobalLanguage(1039);
+        ActualIcelandic := Implementation.GetDescription();
+        GlobalLanguage(PreviousLanguage);
+        LibraryAssert.AreEqual(English, ActualEnglish, TypeName + ' English description must match the supported operation.');
+        LibraryAssert.AreEqual(Icelandic, ActualIcelandic, TypeName + ' Icelandic description must use its shipped translation.');
+    end;
 }

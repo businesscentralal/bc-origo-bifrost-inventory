@@ -24,8 +24,10 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Marks the selected inventory period closed. Does not run the native inventory-period close action.', Comment = 'is-IS=Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.';
     begin
-        exit('Closes inventory periods through an ending date, matching the inventory period close action.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

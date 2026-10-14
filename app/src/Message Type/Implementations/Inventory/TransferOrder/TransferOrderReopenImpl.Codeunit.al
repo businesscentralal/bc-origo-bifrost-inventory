@@ -20,8 +20,10 @@ codeunit 70013417 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Reopens a transfer order, changing its status from Released to Open.', Comment = 'is-IS=Opnar flutningspöntun aftur með því að breyta stöðu úr Released í Open.';
     begin
-        exit('Reopens a transfer order, changing its status from Released to Open.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

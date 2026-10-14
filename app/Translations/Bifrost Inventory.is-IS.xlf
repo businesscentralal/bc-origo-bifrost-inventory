@@ -141,6 +141,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Magn til samsetningar er 0. Skoðið með Inventory.AssemblyOrder.Statistics.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType NothingToPostNextStepTok</note>
         </trans-unit>
+        <trans-unit id="Codeunit 998221038 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Simulates posting an assembly order and returns predicted ledger entries (Item, Value, G/L, Resource) without committing changes.</source>
+          <target>Hermir eftir bókun samsetningarpöntunar og skilar áætluðum vöru-, virðis-, fjárhags- og forðafærslum án þess að vista breytingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hermir eftir bókun samsetningarpöntunar og skilar áætluðum vöru-, virðis-, fjárhags- og forðafærslum án þess að vista breytingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Doc Prev. Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>preview assembly posting, simulate assembly, what would the assembly post</source>
           <target>forskoða bókun samsetningar, herma samsetningu, hvað myndi samsetningin bóka</target>
@@ -152,6 +158,12 @@
           <target>Forskoðar bókun samsetningar án frágangs; notaðu Post til að framkvæma óafturkræfa notkun íhluta og framleiðslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun samsetningar án frágangs; notaðu Post til að framkvæma óafturkræfa notkun íhluta og framleiðslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Doc Prev. Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2748083792 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Revalidates the assembly order item number to refresh component lines through native validation.</source>
+          <target>Endurmetur vörunúmer samsetningarpöntunar til að uppfæra íhlutalínur með innbyggðri sannprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurmetur vörunúmer samsetningarpöntunar til að uppfæra íhlutalínur með innbyggðri sannprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order RefreshLn Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2748083792 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>refresh assembly lines, update components from bom, reload bill of materials, recalculate components</source>
@@ -165,6 +177,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir samsetningarhluti úr uppskrift móðurvöru; notaðu Create til að búa til nýja samsetningarpöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order RefreshLn Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2894791278 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Releases an open assembly order so it can be posted (status Open -&gt; Released).</source>
+          <target>Útgefur opna samsetningarpöntun svo hægt sé að bóka hana (staðan breytist úr Open í Released).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útgefur opna samsetningarpöntun svo hægt sé að bóka hana (staðan breytist úr Open í Released).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Release Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2894791278 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>release assembly order, assembly ready, lock the assembly order</source>
           <target>losa samsetningarpöntun, staðfesta samsetningarpöntun, samsetning tilbúin</target>
@@ -176,6 +194,12 @@
           <target>Leyfir opna samsetningarpöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Leyfir opna samsetningarpöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Release Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1983770618 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns assembly order statistics: header info, line counts, quantities and cost breakdown.</source>
+          <target>Skilar tölfræði samsetningarpöntunar: hausupplýsingum, línufjölda, magni og sundurliðun kostnaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar tölfræði samsetningarpöntunar: hausupplýsingum, línufjölda, magni og sundurliðun kostnaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Statistics Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1983770618 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assembly statistics, assembly cost, cost of components, kit cost breakdown</source>
@@ -207,6 +231,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value||is-IS=Skrif í reit %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.</source>
+          <target>Stofnar haus samsetningarpöntunar fyrir samsetta vöru og getur uppfært íhlutalínur úr uppskrift.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar haus samsetningarpöntunar fyrir samsetta vöru og getur uppfært íhlutalínur úr uppskrift.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assembly order, assemble, kit, build a product, bill of materials, bom, make to order, bundle</source>
           <target>samsetningarpöntun, setja saman, vörusett, smíða vöru, uppskrift, íhlutalisti, framleiða eftir pöntun, vöruknippi</target>
@@ -219,6 +249,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýja samsetningarpöntun fyrir móðurvöru; notaðu RefreshLines, Release eða Post eftir stofnun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2987745232 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.</source>
+          <target>Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2987745232 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>post assembly, finish assembly, assembled, output the kit, consume components</source>
           <target>bóka samsetningu, ljúka samsetningu, samsett, skila vörusetti, nota íhluti</target>
@@ -230,6 +266,12 @@
           <target>Bókar samsetningarpöntun og notar íhluti; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar samsetningarpöntun og notar íhluti; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1450582865 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopens a released assembly order so it can be edited again (status Released -&gt; Open).</source>
+          <target>Opnar útgefna samsetningarpöntun aftur til breytinga (staðan breytist úr Released í Open).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar útgefna samsetningarpöntun aftur til breytinga (staðan breytist úr Released í Open).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1450582865 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reopen assembly order, change released assembly, unlock assembly order</source>
@@ -1035,6 +1077,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Hvert stak í attributes[] verður að vera hlutur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attr. Update Process ori - NamedType AttributeObjectErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an item attribute definition and optional option values, independent of any item.</source>
+          <target>Stofnar eiginleikaskilgreiningu vöru og valfrjáls gildi fyrir valkosti, óháð tiltekinni vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eiginleikaskilgreiningu vöru og valfrjáls gildi fyrir valkosti, óháð tiltekinni vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>create item attribute definition, define item characteristic, add attribute type, create option list, item metadata definition</source>
           <target>búa til eiginleikaskilgreiningu vöru, skilgreina eiginleika vöru, bæta við eiginleikategund, búa til valkostalista, skilgreining á lýsigögnum vöru</target>
@@ -1047,6 +1095,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Býr til endurnýtanlega eiginleikaskilgreiningu vöru og valkvæða valkosti; notaðu Inventory.Attribute.Create til að úthluta henni á vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 354516227 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assigns attribute values to an item. Idempotent when the same value already exists.</source>
+          <target>Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til staðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til staðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 354516227 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assign item attribute, create item attribute value, set item characteristic, tag item, add item metadata</source>
           <target>úthluta eiginleika vöru, búa til eiginleikagildi vöru, stilla eiginleika vöru, merkja vöru, bæta við lýsigögnum vöru</target>
@@ -1058,6 +1112,12 @@
           <target>Úthlutar eiginleikagildum á vöru og getur búið til valkosti sem vantar; notaðu Inventory.Attribute.Update fyrir núverandi vörutengingu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar eiginleikagildum á vöru og getur búið til valkosti sem vantar; notaðu Inventory.Attribute.Update fyrir núverandi vörutengingu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3712530045 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns item attribute definitions and assigned values for one or more items.</source>
+          <target>Skilar eiginleikaskilgreiningum og úthlutuðum gildum fyrir eina eða fleiri vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar eiginleikaskilgreiningum og úthlutuðum gildum fyrir eina eða fleiri vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3712530045 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>read item attributes, get item attribute values, inspect item characteristics, list assigned attributes, item metadata</source>
@@ -1149,6 +1209,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = Attribute name||is-IS=Gildi er nauðsynlegt fyrir eigindina "%1".</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType ValueRequiredErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1112021512 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updates an existing item attribute mapping and returns before/after values.</source>
+          <target>Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1112021512 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>update item attribute, change item attribute value, replace item characteristic, edit item metadata, overwrite item attribute</source>
           <target>uppfæra eiginleika vöru, breyta eiginleikagildi vöru, skipta um eiginleika vöru, breyta lýsigögnum vöru, skrifa yfir eiginleika vöru</target>
@@ -1173,6 +1239,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = ending date||is-IS=Birgðatímabil sem lýkur %1 fannst ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Marks the selected inventory period closed. Does not run the native inventory-period close action.</source>
+          <target>Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads inventory periods.</source>
+          <target>Les birgðatímabil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
           <source>endingDate is required.</source>
           <target>endingDate er nauðsynlegt.</target>
@@ -1184,6 +1262,12 @@
           <target>Birgðatímabil sem lýkur %1 fannst ekki.</target>
           <note from="Developer" annotates="general" priority="2">%1 = ending date||is-IS=Birgðatímabil sem lýkur %1 fannst ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopens a closed inventory period.</source>
+          <target>Opnar lokað birgðatímabil aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar lokað birgðatímabil aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</source>
@@ -1755,6 +1839,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Engin lína hefur magn til að senda eða móttaka. Skoðið með Inventory.TransferOrder.Statistics.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType NothingToPostNextStepTok</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.</source>
+          <target>Hermir eftir bókun flutningspöntunar og skilar áætluðum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hermir eftir bókun flutningspöntunar og skilar áætluðum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>preview transfer posting, simulate stock transfer, what would the transfer post</source>
           <target>forskoða bókun millifærslu, herma birgðaflutning, hvað myndi millifærslan bóka</target>
@@ -1815,6 +1905,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að afturkalla bókaðar flutningsmóttökur í þessari útgáfu Business Central.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Undo Rcpt Impl ori - Method ExecuteBifrostTask - NamedType NotSupportedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3816472531 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Releases a transfer order, changing its status from Open to Released.</source>
+          <target>Útgefur flutningspöntun með því að breyta stöðu úr Open í Released.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útgefur flutningspöntun með því að breyta stöðu úr Open í Released.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf. Order Release Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3816472531 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>release transfer order, transfer ready to ship, lock the transfer</source>
           <target>losa millifærslupöntun, staðfesta millifærslupöntun, millifærsla tilbúin til afhendingar</target>
@@ -1851,6 +1947,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value||is-IS=Skrif í reit %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.</source>
+          <target>Stofnar flutningspöntun með uppruna- og áfangabirgðageymslu, dagsetningum, valfrjálsum beinum flutningi og línum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar flutningspöntun með uppruna- og áfangabirgðageymslu, dagsetningum, valfrjálsum beinum flutningi og línum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory</source>
           <target>millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, færa birgðir til</target>
@@ -1875,6 +1977,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = received value||is-IS=postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType InvalidPostingTypeErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts a transfer order (ship/receive, or ship+receive for direct transfers).</source>
+          <target>Bókar flutningspöntun (afhendingu eða móttöku, eða hvort tveggja fyrir beina flutninga).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar flutningspöntun (afhendingu eða móttöku, eða hvort tveggja fyrir beina flutninga).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>post transfer, ship transfer order, receive transfer order, goods arrived at the other warehouse, direct transfer</source>
           <target>bóka millifærslu, afhenda millifærslupöntun, taka á móti millifærslupöntun, móttekið í hinni birgðageymslunni, bein millifærsla</target>
@@ -1887,6 +1995,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar millifærslupöntun með afhendingu eða móttöku; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3303258622 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopens a transfer order, changing its status from Released to Open.</source>
+          <target>Opnar flutningspöntun aftur með því að breyta stöðu úr Released í Open.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar flutningspöntun aftur með því að breyta stöðu úr Released í Open.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Reopen Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3303258622 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reopen transfer order, change released transfer, unlock transfer</source>
           <target>opna millifærslupöntun aftur, breyta staðfestri millifærslu, aflæsa millifærslu</target>
@@ -1898,6 +2012,12 @@
           <target>Opnar leyfða millifærslupöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða millifærslupöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2491728684 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns transfer order statistics: line count, quantity, parcels, net/gross weight and volume.</source>
+          <target>Skilar tölfræði flutningspöntunar: línufjölda, magni, pakkafjölda, nettó- og brúttóþyngd og rúmmáli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar tölfræði flutningspöntunar: línufjölda, magni, pakkafjölda, nettó- og brúttóþyngd og rúmmáli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Stats Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2491728684 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>transfer statistics, transfer weight, parcels, transfer volume, transfer quantities</source>

@@ -20,8 +20,10 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Releases an open assembly order so it can be posted (status Open -> Released).', Comment = 'is-IS=Útgefur opna samsetningarpöntun svo hægt sé að bóka hana (staðan breytist úr Open í Released).';
     begin
-        exit('Releases an open assembly order so it can be posted (status Open -> Released).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

@@ -2,6 +2,8 @@
 
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
+- Localize the remaining twenty app-owned assembly, transfer, period and attribute descriptions, with exact bilingual public-interface checks (70013423,70013421,70013426,70013422,70013424,70013425,70013427,70013485,70013483,70013484,70013413,70013414,70013415,70013417,70013419,70013416,10036898,10036897,10036899,10036900; test 96921). Correct unsupported reservation-state/RefreshBOM claims and disclose Period.Close's current direct-field behavior; native period workflow remediation remains a separate finding.
+
 - Complete seven tracking/reservation Help contracts with native selectors, response schemas, typed refusals, runnable owned-data examples and Icelandic discovery. Preserve native pair, source, expiration and empty-delete semantics (10036919/70013470/70013471/70013473/70013476–70013478; tests 96921/96925–96927).
 
 - Localize registered costing, price and revaluation discovery/Help in Icelandic; document native revaluation selection and grouping, actual text refusal paths and JSON response media types. Correct Cost.Get multi-item overview and add a read example (70013403/70013404/70013435/70013460/70013467/70013468/70013462/70013486/70013488; regression tests 96921/96941).
@@ -26,6 +28,8 @@
 - Keep application API calls noninteractive: preserve native validation/history while avoiding interactive worksheet recovery markers that could reapply a completed partial API result (70013495; test96983).
 
 ## Unreleased — native journal acceptance (#6, #34)
+
+- Verify restrictive caller discovery and pre-license execution refusals for fourteen physical/reclassification/undo/application types, isolating native read/write rights and the existing ItemPost versus InvPost gates (test 96964; test-only permission sets 96965–96966). Granted discovery is not licensed execution proof.
 
 - Add registered physical Check, PreviewPost and batched RecordCount. Use native report 790 with explicit options and empty-batch protection, Validate counted quantities atomically, preserve legacy Record input, and return both native ledger ranges on Post. Use the public Foundation ItemJournal.Post permission interface (70013463/70013465/70013466/70013469/70013472/70013479/70013496; enum 70013459 values 70013460–70013462; tests 96962–96964).
 

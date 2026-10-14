@@ -23,8 +23,10 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.', Comment = 'is-IS=Stofnar flutningspöntun með uppruna- og áfangabirgðageymslu, dagsetningum, valfrjálsum beinum flutningi og línum.';
     begin
-        exit('Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

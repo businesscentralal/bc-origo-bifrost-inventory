@@ -24,8 +24,10 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads inventory periods.', Comment = 'is-IS=Les birgðatímabil.';
     begin
-        exit('Reads inventory periods.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

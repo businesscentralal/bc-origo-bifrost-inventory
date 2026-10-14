@@ -24,8 +24,10 @@ codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Updates an existing item attribute mapping and returns before/after values.', Comment = 'is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi.';
     begin
-        exit('Updates an existing item attribute mapping and returns before/after values.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

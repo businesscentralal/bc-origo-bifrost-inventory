@@ -23,8 +23,10 @@ codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Releases a transfer order, changing its status from Open to Released.', Comment = 'is-IS=Útgefur flutningspöntun með því að breyta stöðu úr Open í Released.';
     begin
-        exit('Releases a transfer order, changing its status from Open to Released.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

@@ -20,8 +20,10 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Revalidates the assembly order item number to refresh component lines through native validation.', Comment = 'is-IS=Endurmetur vörunúmer samsetningarpöntunar til að uppfæra íhlutalínur með innbyggðri sannprófun.';
     begin
-        exit('Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

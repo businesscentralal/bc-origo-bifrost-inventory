@@ -20,8 +20,10 @@ codeunit 70013427 "Assembly Order Reopen Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Reopens a released assembly order so it can be edited again (status Released -> Open).', Comment = 'is-IS=Opnar útgefna samsetningarpöntun aftur til breytinga (staðan breytist úr Released í Open).';
     begin
-        exit('Reopens a released assembly order so it can be edited again (status Released -> Open).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
