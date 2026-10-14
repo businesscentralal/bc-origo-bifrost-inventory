@@ -435,6 +435,7 @@ codeunit 96980 "Inventory Native Undo Tests"
 
     local procedure InitArgument(var TempArgument: Record "Message Argument ori" temporary; Request: JsonObject; MessageType: Enum "Message Type ori")
     begin
+        Clear(TempArgument);
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Type := MessageType;
