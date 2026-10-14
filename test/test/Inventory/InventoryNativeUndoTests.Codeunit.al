@@ -230,6 +230,136 @@ codeunit 96980 "Inventory Native Undo Tests"
         Assert.IsFalse(PostedHeader.Reversed, 'Posted assembly remains unreversed.');
     end;
 
+    /// <summary>Malformed document identifiers never resolve or change a posted shipment.</summary>
+    [Test]
+    procedure Shipment_MalformedDocumentNumbers_PreservePostedRows()
+    var
+        Header: Record "Transfer Header";
+        Shipment: Record "Transfer Shipment Header";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Payloads: List of [Text];
+        Payload: Text;
+        BeforeCount: Integer;
+    begin
+        // Issue #39 | Time: WorkDate fixture posting | Risk: truncation could target another document.
+        CreateShipment(Header, Shipment, false);
+        BeforeCount := Entries.Count();
+        Payloads.Add('{}');
+        Payloads.Add('{"documentNo":""}');
+        Payloads.Add('{"documentNo":null}');
+        Payloads.Add('{"documentNo":123}');
+        Payloads.Add('{"documentNo":true}');
+        Payloads.Add('{"documentNo":{}}');
+        Payloads.Add('{"documentNo":[]}');
+        Payloads.Add('{"documentNo":"123456789012345678901"}');
+        foreach Payload in Payloads do begin
+            Clear(Request);
+            Request.ReadFrom(Payload);
+            InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.Transfer.UndoShipment");
+            Commit();
+            Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Native Undo Process ori", TempArgument), 'Malformed documentNo must refuse.');
+            Assert.ExpectedError('documentNo');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'Invalid identifier cannot emit ledger corrections.');
+            Shipment.Get(Shipment."No.");
+        end;
+    end;
+
+    /// <summary>Malformed line selections cannot widen undo or alter any original line.</summary>
+    [Test]
+    procedure Shipment_MalformedLineNumbers_PreserveEveryLine()
+    var
+        Header: Record "Transfer Header";
+        Shipment: Record "Transfer Shipment Header";
+        Line: Record "Transfer Shipment Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        LineToken: JsonToken;
+        Values: List of [Text];
+        Value: Text;
+        BeforeCount: Integer;
+    begin
+        CreateShipment(Header, Shipment, false);
+        BeforeCount := Entries.Count();
+        Values.Add('null');
+        Values.Add('{}');
+        Values.Add('"10000"');
+        Values.Add('["10000"]');
+        Values.Add('[0]');
+        Values.Add('[-1]');
+        Values.Add('[1.5]');
+        Values.Add('[2147483648]');
+        Values.Add('[true]');
+        Values.Add('[null]');
+        Values.Add('[{}]');
+        foreach Value in Values do begin
+            Clear(Request);
+            Request.Add('documentNo', Shipment."No.");
+            LineToken.ReadFrom(Value);
+            Request.Add('lineNos', LineToken);
+            InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.Transfer.UndoShipment");
+            Commit();
+            Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Native Undo Process ori", TempArgument), 'Malformed lineNos must refuse.');
+            Assert.ExpectedError('lineNos');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'Invalid line selection has no ledger effects.');
+            Line.SetRange("Document No.", Shipment."No.");
+            Line.SetRange("Correction Line", true);
+            Assert.IsTrue(Line.IsEmpty(), 'Every original shipment line remains uncorrected.');
+        end;
+    end;
+
+    /// <summary>Unknown keys are refused before native undo even when the posted document is valid.</summary>
+    [Test]
+    procedure Shipment_UnsupportedSelection_RefusesBeforeNativeWrites()
+    var
+        Header: Record "Transfer Header";
+        Shipment: Record "Transfer Shipment Header";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        BeforeCount: Integer;
+    begin
+        CreateShipment(Header, Shipment, false);
+        BeforeCount := Entries.Count();
+        Request.Add('documentNo', Shipment."No.");
+        Request.Add('lineNo', 10000);
+        InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.Transfer.UndoShipment");
+        Commit();
+        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Native Undo Process ori", TempArgument), 'Unknown selector must not become an all-lines undo.');
+        Assert.ExpectedError('Unsupported undo parameter lineNo');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Unsupported key cannot emit ledger corrections.');
+    end;
+
+    /// <summary>Malformed recreateOrder returns the documented format error without reversing the assembly.</summary>
+    [Test]
+    procedure Assembly_MalformedRecreation_ReturnsFormatErrorWithoutWrites()
+    var
+        PostedHeader: Record "Posted Assembly Header";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+    begin
+        CreatePostedAssembly(PostedHeader);
+        BeforeCount := Entries.Count();
+        Request.Add('documentNo', PostedHeader."No.");
+        Request.Add('recreateOrder', 'invalid');
+        InitArgument(TempArgument, Request, "Message Type ori"::"Inventory.Assembly.UndoPost");
+        NativeUndo.UndoAssembly(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        Assert.IsTrue(Response.Get('code', Token), 'Typed refusal returns its code.');
+        Assert.AreEqual('InvalidParameterFormat', Token.AsValue().AsText(), 'Matches the public Help format error.');
+        Assert.IsTrue(Response.Get('parameter', Token), 'Typed refusal names the parameter.');
+        Assert.AreEqual('recreateOrder', Token.AsValue().AsText(), 'Bad option is identified.');
+        PostedHeader.Get(PostedHeader."No.");
+        Assert.IsFalse(PostedHeader.Reversed, 'Invalid option cannot reverse the assembly.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Invalid option cannot write corrective entries.');
+    end;
+
     local procedure CreateShipment(var Header: Record "Transfer Header"; var Shipment: Record "Transfer Shipment Header"; Receive: Boolean)
     var
         Item: Record Item;

@@ -34,7 +34,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     procedure UndoReceipt_PublicHelp_DeclaresNativeFieldsAndErrors()
     begin
         // Issues #27/#30/#39/#40 | Time: no date dependence | Risk: public Help contract drift.
-        AssertNativeHelp('Inventory.Transfer.UndoReceipt', 'status:string,error:string,help:string', 5);
+        AssertNativeHelp('Inventory.Transfer.UndoReceipt', 'status:string,error:string,hint:string', 5);
     end;
 
     /// <summary>Shipping Help resolves meaningful ApplicationGet schemas and errors through the registered contract reader.</summary>

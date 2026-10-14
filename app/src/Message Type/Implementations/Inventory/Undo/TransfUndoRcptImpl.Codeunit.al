@@ -77,7 +77,7 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Error; this version has no successful receipt undo path.'));
         Fields.Add(ContractMgt.ResponseField('error', 'string', 'Refusal text; no native receipt or ledger changes are made.'));
-        Fields.Add(ContractMgt.ResponseField('help', 'string', 'Foundation help hint when present.'));
+        Fields.Add(ContractMgt.ResponseField('hint', 'string', 'Foundation help hint when present.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
