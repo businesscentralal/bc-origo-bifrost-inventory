@@ -1,5 +1,7 @@
 # Changelog
 
+- Add fourteen self-seeded native tracking/reservation cases covering every lot/serial/package combination, actual receipt posting, exact UOM base quantities, location/variant/dimension preservation and reservation cancellation (test codeunit 96925; issues #5/#7/#37). These cases do not claim licensed MCP or independent-session concurrency.
+
 ## Unreleased — document lookup contracts and locale acceptance (#27, #30, #32, #33)
 
 - Localize the remaining twenty app-owned assembly, transfer, period and attribute descriptions, with exact bilingual public-interface checks (70013423,70013421,70013426,70013422,70013424,70013425,70013427,70013485,70013483,70013484,70013413,70013414,70013415,70013417,70013419,70013416,10036898,10036897,10036899,10036900; test 96921). Correct unsupported reservation-state/RefreshBOM claims and disclose Period.Close's current direct-field behavior; native period workflow remediation remains a separate finding.

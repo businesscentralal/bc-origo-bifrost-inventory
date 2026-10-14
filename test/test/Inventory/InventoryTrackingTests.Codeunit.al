@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
+using Microsoft.Finance.Dimension;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -431,6 +432,253 @@ codeunit 96925 "Inventory Tracking Tests"
         Request := Token.AsObject();
         Request.Get('data', Token);
         Data := Token.AsObject();
+    end;
+
+    /// <summary>Lot tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_LotReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, false, false, false);
+    end;
+
+    /// <summary>Serial tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_SerialReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, true, false, false);
+    end;
+
+    /// <summary>Package tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_PackageReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, false, true, false);
+    end;
+
+    /// <summary>LotSerial tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_LotSerialReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, true, false, false);
+    end;
+
+    /// <summary>LotPackage tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_LotPackageReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, false, true, false);
+    end;
+
+    /// <summary>SerialPackage tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_SerialPackageReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, true, true, false);
+    end;
+
+    /// <summary>LotSerialPackage tracking survives native receipt with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC37_LotSerialPackageReceiptPreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, true, true, false);
+    end;
+
+    /// <summary>Lot tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_LotReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, false, false, true);
+    end;
+
+    /// <summary>Serial tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_SerialReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, true, false, true);
+    end;
+
+    /// <summary>Package tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_PackageReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, false, true, true);
+    end;
+
+    /// <summary>LotSerial tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_LotSerialReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, true, false, true);
+    end;
+
+    /// <summary>LotPackage tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_LotPackageReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, false, true, true);
+    end;
+
+    /// <summary>SerialPackage tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_SerialPackageReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(false, true, true, true);
+    end;
+
+    /// <summary>LotSerialPackage tracking survives native reserve with owned location, variant and dimensions.</summary>
+    [Test]
+    procedure Scenario_AC7_LotSerialPackageReservePreservesNativeIdentity()
+    begin
+        VerifyTrackedCombination(true, true, true, true);
+    end;
+
+    local procedure VerifyTrackedCombination(UseLot: Boolean; UseSerial: Boolean; UsePackage: Boolean; ReserveAfterPosting: Boolean)
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Variant: Record "Item Variant";
+        ItemUOM: Record "Item Unit of Measure";
+        Location: Record Location;
+        DimensionValue: Record "Dimension Value";
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Opposite: Record "Reservation Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+        LibraryDimension: Codeunit "Library - Dimension";
+        LibrarySales: Codeunit "Library - Sales";
+        ReservationWrite: Codeunit "Inventory Reserv. Write ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Tracking: JsonObject;
+        Entries: JsonArray;
+        Token: JsonToken;
+        LotNo: Code[50];
+        SerialNo: Code[50];
+        PackageNo: Code[50];
+        BaseQuantity: Decimal;
+        DimensionSetId: Integer;
+        PairNo: Integer;
+    begin
+        // Issues #5/#7/#37: native integration, not licensed MCP or independent-session contention.
+        // Every fixture is created here. Native posting alone creates protected ledger entries.
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode.Validate("Lot Specific Tracking", UseLot);
+        TrackingCode.Validate("SN Specific Tracking", UseSerial);
+        TrackingCode.Validate("Package Specific Tracking", UsePackage);
+        TrackingCode.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Modify(true);
+        LibraryInventory.CreateItemVariant(Variant, Item."No.");
+        LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
+        LibraryDimension.CreateDimWithDimValue(DimensionValue);
+        DimensionSetId := LibraryDimension.CreateDimSet(0, DimensionValue."Dimension Code", DimensionValue.Code);
+        BaseQuantity := 1;
+        if not UseSerial then begin
+            BaseQuantity := 3;
+            LibraryInventory.CreateItemUnitOfMeasureCode(ItemUOM, Item."No.", BaseQuantity);
+        end;
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 1);
+        PurchaseLine.Validate("Location Code", Location.Code);
+        PurchaseLine.Validate("Variant Code", Variant.Code);
+        if not UseSerial then
+            PurchaseLine.Validate("Unit of Measure Code", ItemUOM.Code);
+        PurchaseLine.Validate("Dimension Set ID", DimensionSetId);
+        PurchaseLine.Modify(true);
+        if UseLot then
+            LotNo := 'W8-COMB-LOT';
+        if UseSerial then
+            SerialNo := 'W8-COMB-SERIAL';
+        if UsePackage then
+            PackageNo := 'W8-COMB-PACKAGE';
+        Tracking.Add('lotNo', LotNo);
+        Tracking.Add('serialNo', SerialNo);
+        Tracking.Add('packageNo', PackageNo);
+        Tracking.Add('quantity', BaseQuantity);
+        Entries.Add(Tracking);
+        Request.Add('source', SourceObject(PurchaseLine));
+        Request.Add('entries', Entries);
+        ExecuteTracking(Request, false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(PurchaseLine, Entry);
+        Assert.AreEqual(1, Entry.Count(), 'All tracking dimensions belong to the same pending row.');
+        Entry.FindFirst();
+        Assert.AreEqual(LotNo, Entry."Lot No.", 'Pending lot identity.');
+        Assert.AreEqual(SerialNo, Entry."Serial No.", 'Pending serial identity.');
+        Assert.AreEqual(PackageNo, Entry."Package No.", 'Pending package identity.');
+        Assert.AreEqual(BaseQuantity, Entry."Quantity (Base)", 'Assignment quantity is in base units.');
+
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+
+        Ledger.SetRange("Item No.", Item."No.");
+        Assert.AreEqual(1, Ledger.Count(), 'Exactly one native receipt entry.');
+        Ledger.FindFirst();
+        Assert.AreEqual(LotNo, Ledger."Lot No.", 'Posted lot identity.');
+        Assert.AreEqual(SerialNo, Ledger."Serial No.", 'Posted serial identity.');
+        Assert.AreEqual(PackageNo, Ledger."Package No.", 'Posted package identity.');
+        Assert.AreEqual(Location.Code, Ledger."Location Code", 'Posted location identity.');
+        Assert.AreEqual(Variant.Code, Ledger."Variant Code", 'Posted variant identity.');
+        Assert.AreEqual(DimensionSetId, Ledger."Dimension Set ID", 'Posting preserves the source dimensions.');
+        Assert.AreEqual(BaseQuantity, Ledger."Remaining Quantity", 'Only the assigned base quantity was received.');
+        if not ReserveAfterPosting then
+            exit;
+
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 1);
+        SalesLine.Validate("Location Code", Location.Code);
+        SalesLine.Validate("Variant Code", Variant.Code);
+        if not UseSerial then
+            SalesLine.Validate("Unit of Measure Code", ItemUOM.Code);
+        SalesLine.Validate("Dimension Set ID", DimensionSetId);
+        SalesLine.Modify(true);
+        Clear(Request);
+        Request.Add('source', GenericSource('SalesLine', SalesLine.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 1);
+        Request.Add('lotNo', LotNo);
+        Request.Add('serialNo', SerialNo);
+        Request.Add('packageNo', PackageNo);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        ReservationWrite.Run(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        PairNo := Token.AsValue().AsInteger();
+        Entry.Get(PairNo, false);
+        Opposite.Get(PairNo, true);
+        Assert.AreEqual(LotNo, Entry."Lot No.", 'Demand retains selected lot.');
+        Assert.AreEqual(SerialNo, Entry."Serial No.", 'Demand retains selected serial.');
+        Assert.AreEqual(PackageNo, Entry."Package No.", 'Demand retains selected package.');
+        Assert.AreEqual(LotNo, Opposite."Lot No.", 'Supply retains selected lot.');
+        Assert.AreEqual(SerialNo, Opposite."Serial No.", 'Supply retains selected serial.');
+        Assert.AreEqual(PackageNo, Opposite."Package No.", 'Supply retains selected package.');
+        Assert.AreEqual(-BaseQuantity, Entry."Quantity (Base)", 'Demand reserves exact base quantity.');
+        Assert.AreEqual(BaseQuantity, Opposite."Quantity (Base)", 'Supply balances the demand.');
+        Assert.AreEqual(Ledger."Entry No.", Opposite."Source Ref. No.", 'Only the selected posted supply is paired.');
+        Clear(Request);
+        Request.Add('source', GenericSource('SalesLine', SalesLine.SystemId));
+        Request.Add('entryNo', PairNo);
+        TempArgument.SetRequestJson(Request);
+        Clear(ReservationWrite);
+        ReservationWrite.SetCancelMode();
+        ReservationWrite.Run(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Success');
+        Ledger.Get(Ledger."Entry No.");
+        Ledger.CalcFields("Reserved Quantity");
+        Assert.AreEqual(0, Ledger."Reserved Quantity", 'Cancellation releases the selected supply.');
+        Assert.AreEqual(BaseQuantity, Ledger."Remaining Quantity", 'Cancellation never alters posted inventory.');
+        SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        Assert.AreEqual(DimensionSetId, SalesLine."Dimension Set ID", 'Reservation does not change source dimensions.');
     end;
 
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
