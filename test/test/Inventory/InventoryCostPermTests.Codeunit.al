@@ -38,6 +38,22 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         Assert.AreEqual("Msg Direction ori"::Outbound, TestImpl.GetMessageDirection(), 'Read-only validation is Outbound.');
     end;
 
+    /// <summary>A restricted read caller can resolve dedicated cost/price hints without being granted card writes.</summary>
+    [Test]
+    procedure CostFieldHints_ReadCaller_KeepWritePermissionsAbsent()
+    var
+        Item: Record Item;
+        TempArgument: Record "Message Argument ori" temporary;
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        // Story #4 field guard and #35 caller permissions | Time: independent | Risk: event subscriber must be executable for readers.
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        LowerPermissions.AddPermissionSet('Inv Cost Read Test');
+        Assert.IsFalse(Item.WritePermission(), 'Hint access confers no native card writes.');
+        Assert.IsTrue(TempArgument.GetDedicatedMessageTypeHintForField(Database::Item, Item.FieldNo("Unit Cost")).Contains('Inventory.Cost.Update'), 'Restricted read caller can execute the hint subscriber.');
+        Assert.AreEqual('Inventory.Price.Update', TempArgument.GetDedicatedMessageTypeHintForField(Database::Item, Item.FieldNo("Unit Price")), 'Read caller can discover the price hint.');
+    end;
+
     /// <summary>A reader cannot use discovery or execution to access Item data it cannot read.</summary>
     [Test]
     procedure TestCost_NoItemRead_RefusesBeforeLicense()
