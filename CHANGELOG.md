@@ -1,5 +1,7 @@
 # Changelog
 
+- Add current-cost read regression cases for all five native costing methods in en-US and is-IS, using posted owned stock and native serial tracking for Specific, with item/ledger/value read-only assertions (test codeunit 96936; issue #4).
+
 - Add native reservation lifecycle regression cases for requisition supply, planning component demand, and inventory receipt/shipment sources, including exact source pointers, balanced quantities and both cancellation selectors (test codeunit 96926; issue #7).
 
 - Verify native project planning reservation pairs, source pointers, balanced quantities and both cancellation paths; refuse native project-journal no-ops instead of returning Success without a reservation. Measure the exact source-reserved base-quantity increase before any success response (codeunit 10036915; test 96926; issue #7).

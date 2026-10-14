@@ -5,6 +5,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -242,6 +243,127 @@ codeunit 96936 "Inventory Cost Read Tests"
         AssertNumber(FirstItem(TempArgument), 'inventory', 3);
     end;
 
+    /// <summary>FIFO cost reads reflect posted stock and current card values in both supported languages.</summary>
+    [Test]
+    procedure Scenario_AC01_FIFO_NativeSnapshotIsReadOnlyInBothLanguages()
+    begin
+        // Story #4 AC1 | Time: WorkDate for owned stock posting | Risk: None.
+        VerifyNativeMethodSnapshot("Costing Method"::FIFO, 'FIFO');
+    end;
+
+    /// <summary>LIFO remains an invariant method name while native cost fields remain unchanged.</summary>
+    [Test]
+    procedure Scenario_AC01_LIFO_NativeSnapshotIsReadOnlyInBothLanguages()
+    begin
+        // Story #4 AC1 | Time: WorkDate for owned stock posting | Risk: None.
+        VerifyNativeMethodSnapshot("Costing Method"::LIFO, 'LIFO');
+    end;
+
+    /// <summary>Average cost reads return current native values rather than a calculated substitute.</summary>
+    [Test]
+    procedure Scenario_AC01_Average_NativeSnapshotIsReadOnlyInBothLanguages()
+    begin
+        // Story #4 AC1 | Time: WorkDate for owned stock posting | Risk: None.
+        VerifyNativeMethodSnapshot("Costing Method"::Average, 'Average');
+    end;
+
+    /// <summary>Standard-cost snapshots preserve the native standard cost after posting stock.</summary>
+    [Test]
+    procedure Scenario_AC01_Standard_NativeSnapshotIsReadOnlyInBothLanguages()
+    begin
+        // Story #4 AC1 | Time: WorkDate for owned stock posting | Risk: None.
+        VerifyNativeMethodSnapshot("Costing Method"::Standard, 'Standard');
+    end;
+
+    /// <summary>Specific-cost snapshots read real serial-tracked stock without modifying tracking or value entries.</summary>
+    [Test]
+    procedure Scenario_AC01_Specific_NativeSnapshotIsReadOnlyInBothLanguages()
+    begin
+        // Story #4 AC1 | Time: WorkDate for owned serial stock posting | Risk: None.
+        VerifyNativeMethodSnapshot("Costing Method"::Specific, 'Specific');
+    end;
+
+    local procedure VerifyNativeMethodSnapshot(Method: Enum "Costing Method"; ExpectedMethod: Text)
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Ledger: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Row: JsonObject;
+        Token: JsonToken;
+        Languages: List of [Integer];
+        LanguageId: Integer;
+        OriginalLanguage: Integer;
+        LedgerCount: Integer;
+        ValueCount: Integer;
+        ActualCost: Decimal;
+        ItemModifiedAt: DateTime;
+    begin
+        // [GIVEN] Native posted stock for the selected costing method, owned by this test.
+        LibraryInventory.CreateItem(Item);
+        if Method = Method::Specific then begin
+            LibraryInventory.CreateItemTrackingCode(TrackingCode);
+            TrackingCode.Validate("SN Specific Tracking", true);
+            TrackingCode.Modify(true);
+            Item.Validate("Item Tracking Code", TrackingCode.Code);
+        end;
+        Item.Validate("Costing Method", Method);
+        if Method = Method::Standard then
+            Item.Validate("Standard Cost", 9);
+        Item.Modify(true);
+        PostStock(Item."No.", WorkDate(), 2, '');
+        Item.Get(Item."No.");
+        Item.CalcFields(Inventory, "Cost is Posted to G/L");
+        ItemModifiedAt := Item.SystemModifiedAt;
+        Ledger.SetRange("Item No.", Item."No.");
+        ValueEntry.SetRange("Item No.", Item."No.");
+        LedgerCount := Ledger.Count();
+        ValueCount := ValueEntry.Count();
+        ValueEntry.CalcSums("Cost Amount (Actual)");
+        ActualCost := ValueEntry."Cost Amount (Actual)";
+        Assert.AreEqual(2, Item.Inventory, 'Fixture has two units posted by the native journal.');
+        if Method = Method::Specific then begin
+            Assert.AreEqual(2, LedgerCount, 'Specific fixture has two distinct serial entries.');
+            Ledger.FindSet();
+            repeat
+                Assert.IsTrue(Ledger."Serial No." in ['BIFT-COST-1', 'BIFT-COST-2'], 'Each serial belongs to this test.');
+            until Ledger.Next() = 0;
+        end;
+        Request.Add('itemNo', Item."No.");
+        Languages.Add(1033);
+        Languages.Add(1039);
+        foreach LanguageId in Languages do begin
+            // [WHEN] Read current cost fields in each language without licensed dispatch.
+            InitArgument(TempArgument);
+            TempArgument.SetRequestJson(Request);
+            OriginalLanguage := GlobalLanguage();
+            GlobalLanguage(LanguageId);
+            CostRead.ReadCosts(TempArgument);
+            GlobalLanguage(OriginalLanguage);
+            Row := FirstItem(TempArgument);
+
+            // [THEN] Wire method and every cost/status field agree with the native item.
+            AssertText(Row, 'costingMethod', ExpectedMethod);
+            AssertNumber(Row, 'unitCost', Item."Unit Cost");
+            AssertNumber(Row, 'standardCost', Item."Standard Cost");
+            AssertNumber(Row, 'lastDirectCost', Item."Last Direct Cost");
+            AssertNumber(Row, 'indirectCostPct', Item."Indirect Cost %");
+            AssertNumber(Row, 'inventory', Item.Inventory);
+            Row.Get('costIsAdjusted', Token);
+            Assert.AreEqual(Item."Cost is Adjusted", Token.AsValue().AsBoolean(), 'Native adjustment status is unchanged.');
+            Row.Get('costIsPostedToGL', Token);
+            Assert.AreEqual(Item."Cost is Posted to G/L", Token.AsValue().AsBoolean(), 'Native G/L cost status is unchanged.');
+        end;
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Reads do not add or remove item ledger rows.');
+        Assert.AreEqual(ValueCount, ValueEntry.Count(), 'Reads do not add or remove value rows.');
+        ValueEntry.CalcSums("Cost Amount (Actual)");
+        Assert.AreEqual(ActualCost, ValueEntry."Cost Amount (Actual)", 'Reads do not change posted cost.');
+        Item.Get(Item."No.");
+        Assert.AreEqual(ItemModifiedAt, Item.SystemModifiedAt, 'Reads do not write the item card.');
+    end;
+
     local procedure InitArgument(var TempArgument: Record "Message Argument ori" temporary)
     begin
         Clear(TempArgument);
@@ -262,6 +384,7 @@ codeunit 96936 "Inventory Cost Read Tests"
 
     local procedure PostStock(ItemNo: Code[20]; PostingDate: Date; Quantity: Decimal; VariantCode: Code[10])
     var
+        Item: Record Item;
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
         JournalTemplate: Record "Item Journal Template";
@@ -283,7 +406,31 @@ codeunit 96936 "Inventory Cost Read Tests"
         Line.Validate("Posting Date", PostingDate);
         Line.Validate("Unit Amount", 12);
         Line.Modify(true);
+        Item.Get(ItemNo);
+        if Item."Costing Method" = Item."Costing Method"::Specific then
+            AssignNativeCostSerials(Line);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, Batch.Name);
+    end;
+
+    local procedure AssignNativeCostSerials(Line: Record "Item Journal Line")
+    var
+        Source: Record "Tracking Specification";
+        TempTracking: Record "Tracking Specification" temporary;
+        Reserve: Codeunit "Item Jnl. Line-Reserve";
+        TrackingLines: Page "Item Tracking Lines";
+        SerialIndex: Integer;
+    begin
+        Assert.AreEqual(2, Line."Quantity (Base)", 'Specific-cost fixture posts exactly two serial units.');
+        Reserve.InitFromItemJnlLine(Source, Line);
+        for SerialIndex := 1 to 2 do begin
+            TempTracking := Source;
+            TempTracking."Entry No." := SerialIndex;
+            TempTracking."Quantity (Base)" := 1;
+            TempTracking."Serial No." := CopyStr('BIFT-COST-' + Format(SerialIndex, 0, 9), 1, MaxStrLen(TempTracking."Serial No."));
+            TempTracking.Insert();
+        end;
+        TrackingLines.SetBlockCommit(true);
+        TrackingLines.RegisterItemTrackingLines(Source, Line."Posting Date", TempTracking);
     end;
 
     local procedure FirstItem(var TempArgument: Record "Message Argument ori") Row: JsonObject
