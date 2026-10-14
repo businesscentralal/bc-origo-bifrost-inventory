@@ -115,6 +115,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Clear(Notes);
         exit(false);
     end;
 
@@ -125,8 +126,8 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJournalLine: Record "Item Journal Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;

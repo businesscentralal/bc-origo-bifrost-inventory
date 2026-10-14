@@ -137,9 +137,9 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         PostedAsmHeader: Record "Posted Assembly Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
         AssemblyPost: Codeunit "Assembly-Post";

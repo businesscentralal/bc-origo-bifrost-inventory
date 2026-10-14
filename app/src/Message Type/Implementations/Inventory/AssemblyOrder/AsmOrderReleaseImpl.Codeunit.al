@@ -127,8 +127,8 @@ codeunit 70013426 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;

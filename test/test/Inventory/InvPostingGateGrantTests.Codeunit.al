@@ -58,18 +58,18 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure AssertCanPost_WithInvPost_WritesNoError()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] A granted caller passes the gate and the argument is left unchanged.
         LowerToInvPost(LibraryLowerPermissions);
-        Argument.Init();
-        Argument.Version := "Message Version ori"::"1.0";
-        Argument.Insert(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
 
-        Assert.IsTrue(PostingGate.AssertCanPost(Argument), 'AssertCanPost should allow the token');
-        Assert.AreEqual(0, Argument.GetResponseContentLength(), 'AssertCanPost must not write an error');
+        Assert.IsTrue(PostingGate.AssertCanPost(TempArgument), 'AssertCanPost should allow the token');
+        Assert.AreEqual(0, TempArgument.GetResponseContentLength(), 'AssertCanPost must not write an error');
     end;
 
     local procedure LowerToInvPost(var LibraryLowerPermissions: Codeunit "Library - Lower Permissions")

@@ -135,9 +135,9 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
         ItemLedgerEntry: Record "Item Ledger Entry";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;

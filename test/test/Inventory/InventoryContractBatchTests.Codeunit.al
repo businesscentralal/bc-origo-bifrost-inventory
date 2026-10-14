@@ -128,11 +128,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed()
     var
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Helper: Codeunit "Transfer Order Test Helper";
         LibraryInventory: Codeunit "Library - Inventory";
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
         Contract: JsonObject;
         ErrorEntry: JsonObject;
         RequestJson: JsonObject;
@@ -406,6 +406,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Expected: Text;
         Index: Integer;
     begin
+        Index := 0;
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Parameters.Count(), 'Exact parameter count; other chapters cannot donate fields.');
         foreach Expected in Specs do begin
@@ -434,6 +435,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Expected: Text;
         Index: Integer;
     begin
+        Index := 0;
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Fields.Count(), 'Exact response field count.');
         foreach Expected in Specs do begin
@@ -455,6 +457,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Source: Text;
         Index: Integer;
     begin
+        Index := 0;
         Envelope.Get('subject', Token);
         Subject := Token.AsObject();
         if TypeName = 'Inventory.AttributeDefinition.Create' then begin

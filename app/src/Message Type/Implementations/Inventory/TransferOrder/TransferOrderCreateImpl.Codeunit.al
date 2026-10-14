@@ -141,8 +141,8 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;

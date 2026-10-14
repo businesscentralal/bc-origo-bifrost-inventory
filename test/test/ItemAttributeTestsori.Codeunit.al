@@ -293,15 +293,15 @@ codeunit 96900 "Item Attribute Tests ori"
     [Test]
     procedure DataRecords_WriteRestricted_AttributeTables()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori";
     begin
         Library.Initialize();
-        Argument.Init();
-        Argument.Insert(true);
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute", false), '7500');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value", false), '7501');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attr. Value Translation", false), '7504');
-        Assert.IsTrue(Argument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping", false), '7505');
-        Assert.IsFalse(Argument.IsTableWriteRestrictedForDataRecords(Database::Item, false), 'Item 27 must not be restricted');
+        TempArgument.Init();
+        TempArgument.Insert(true);
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute", false), '7500');
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value", false), '7501');
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attr. Value Translation", false), '7504');
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping", false), '7505');
+        Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::Item, false), 'Item 27 must not be restricted');
     end;
 }

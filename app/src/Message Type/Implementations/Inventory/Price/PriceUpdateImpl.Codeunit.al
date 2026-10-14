@@ -132,8 +132,8 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;

@@ -117,6 +117,7 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Clear(Notes);
         exit(false);
     end;
 
@@ -127,8 +128,8 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemLedgerEntry: Record "Item Ledger Entry";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Entries: JsonArray;

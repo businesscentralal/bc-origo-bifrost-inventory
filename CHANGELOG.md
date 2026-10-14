@@ -149,3 +149,7 @@
 - Message types: `Item.Attribute.Get`, `Item.Attribute.Create`, `Item.Attribute.Update`, `Item.AttributeDefinition.Create`.
 - PermissionSetExtensions `BIFROST InvRead ori` / `BIFROST InvWrite ori` onto Foundation Read/Full (no own assignable set).
 - AC-9: `Data.Records.Set` refused on Item Attribute tables 7500/7501/7504/7505; Get remains allowed.
+
+## PR #96 AL warning repairs
+
+- Correct AL filenames and declaration order; clear absent optional notes; preserve temporary argument names, full response content types and loaded Description fields; initialize contract-array indexes. Preserve all assertions and the original guard/workflow patch. Objects: 96900, 96901, 96902, 96903, 96904, 96918, 96919, 96921, 10036897, 70013413, 70013414, 70013415, 70013417, 70013419, 70013421, 70013422, 70013423, 70013424, 70013425, 70013426, 70013427, 70013455, 70013456, 70013458, 70013459, 70013469, 70013472, 70013473, 70013475, 70013477, 70013481, 70013483, 70013486, 70013488, 70013490, 70013491, 70013492, 70013496. Foreign Item Attribute permission migration remains coordinated with Foundation; no warning waiver.

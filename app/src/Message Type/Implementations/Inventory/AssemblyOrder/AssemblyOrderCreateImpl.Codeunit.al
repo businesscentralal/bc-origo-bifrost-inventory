@@ -138,8 +138,8 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
