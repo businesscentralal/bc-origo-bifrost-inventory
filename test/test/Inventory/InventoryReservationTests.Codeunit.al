@@ -1,10 +1,13 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Inventory.Document;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Planning;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.Document;
@@ -758,6 +761,131 @@ codeunit 96926 "Inventory Reservation Tests"
         Assert.IsTrue(Entry.IsEmpty(), 'A native no-op leaves no partial reservation or tracking rows.');
         JournalLine.Get(JournalLine."Journal Template Name", JournalLine."Journal Batch Name", JournalLine."Line No.");
         Assert.AreEqual(10, JournalLine.Quantity, 'Native source quantity is unchanged.');
+    end;
+
+    /// <summary>A requisition supply keeps its worksheet and batch identity through reservation and cancellation.</summary>
+    [Test]
+    procedure Scenario_AC04_AC08_RequisitionLinePairsAndCancelsDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        RequisitionLine: Record "Requisition Line";
+        Request: JsonObject;
+    begin
+        // Story #7, AC04/AC05/AC08 | Time: WorkDate for native due dates | Risk: None.
+        // [GIVEN] Owned requisition supply and a matching sales demand.
+        CreateSources(SalesLine, Ledger);
+        CreateOwnedRequisitionLine(RequisitionLine, SalesLine."No.");
+        Request.Add('source', SourceObject('RequisitionLine', RequisitionLine.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        // [WHEN] Reserve the selected demand, then cancel by source and by entry.
+        // [THEN] Native pointers, balanced quantities and both cancellation paths are exact.
+        AssertNativeRoundTrip(Request, Database::"Requisition Line", RequisitionLine."Worksheet Template Name", RequisitionLine."Journal Batch Name", RequisitionLine."Line No.", true, 2, 0);
+    end;
+
+    /// <summary>A planning component retains its parent worksheet line separately from its component reference.</summary>
+    [Test]
+    procedure Scenario_AC05_AC08_PlanningComponentPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        RequisitionLine: Record "Requisition Line";
+        Component: Record "Planning Component";
+        OtherComponent: Record "Planning Component";
+        LibraryPlanning: Codeunit "Library - Planning";
+        Request: JsonObject;
+    begin
+        // Story #7, AC04/AC05/AC08 | Time: WorkDate for native due dates | Risk: None.
+        // [GIVEN] An owned planning component with ten units of demand and posted supply.
+        CreateSources(SalesLine, Ledger);
+        CreateOwnedRequisitionLine(RequisitionLine, SalesLine."No.");
+        LibraryPlanning.CreatePlanningComponent(OtherComponent, RequisitionLine);
+        LibraryPlanning.CreatePlanningComponent(Component, RequisitionLine);
+        Component.Validate("Item No.", SalesLine."No.");
+        Component.Validate("Expected Quantity", 10);
+        Component.Validate("Due Date", WorkDate());
+        Component.Modify(true);
+        Request.Add('source', SourceObject('PlanningComponent', Component.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        // [WHEN] Reserve inventory and exercise both cancellation selectors.
+        // [THEN] Parent worksheet line and component reference remain distinct native pointers.
+        AssertNativeRoundTrip(Request, Database::"Planning Component", Component."Worksheet Template Name", Component."Worksheet Batch Name", Component."Line No.", false, 2, Component."Worksheet Line No.");
+    end;
+
+    /// <summary>An inventory shipment reserves selected posted inventory through the native document adapter.</summary>
+    [Test]
+    procedure Scenario_AC05_AC08_InventoryShipmentPairsAndCancelsInventory()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Invt. Document Header";
+        Line: Record "Invt. Document Line";
+        Request: JsonObject;
+    begin
+        // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
+        // [GIVEN] An owned inventory shipment and matching posted stock.
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Shipment, '');
+        Header.Validate("Document Date", WorkDate());
+        Header.Modify(true);
+        LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
+        Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
+        Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+        Request.Add('quantity', 2);
+
+        // [WHEN] Reserve inventory and cancel using both supported selectors.
+        // [THEN] The native shipment source and opposite inventory row are removed together.
+        AssertNativeRoundTrip(Request, Database::"Invt. Document Line", Header."No.", '', Line."Line No.", false, 2, 0);
+    end;
+
+    /// <summary>An inventory receipt provides native supply without being confused with a shipment.</summary>
+    [Test]
+    procedure Scenario_AC04_AC08_InventoryReceiptPairsAndCancelsDemand()
+    var
+        SalesLine: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        Header: Record "Invt. Document Header";
+        Line: Record "Invt. Document Line";
+        Request: JsonObject;
+    begin
+        // Story #7, AC04/AC05/AC08 | Time: WorkDate for document and posting dates | Risk: None.
+        // [GIVEN] An owned inventory receipt and matching sales demand.
+        CreateSources(SalesLine, Ledger);
+        LibraryInventory.CreateInvtDocument(Header, Header."Document Type"::Receipt, '');
+        Header.Validate("Document Date", WorkDate());
+        Header.Modify(true);
+        LibraryInventory.CreateInvtDocumentLine(Header, Line, SalesLine."No.", 0, 10);
+        Request.Add('source', SourceObject('InventoryDocumentLine', Line.SystemId));
+        Request.Add('supply', SourceObject('SalesLine', SalesLine.SystemId));
+        Request.Add('quantity', 2);
+
+        // [WHEN] Reserve the demand and cancel using both supported selectors.
+        // [THEN] The receipt creates a positive native source and cancellation removes both sides.
+        AssertNativeRoundTrip(Request, Database::"Invt. Document Line", Header."No.", '', Line."Line No.", true, 2, 0);
+    end;
+
+    local procedure CreateOwnedRequisitionLine(var RequisitionLine: Record "Requisition Line"; ItemNo: Code[20])
+    var
+        WorksheetTemplate: Record "Req. Wksh. Template";
+        WorksheetName: Record "Requisition Wksh. Name";
+        LibraryPlanning: Codeunit "Library - Planning";
+    begin
+        WorksheetTemplate.Init();
+        WorksheetTemplate.Name := CopyStr('BIFT' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(WorksheetTemplate.Name));
+        WorksheetTemplate.Insert(true);
+        WorksheetTemplate.Validate(Type, WorksheetTemplate.Type::Planning);
+        WorksheetTemplate.Modify(true);
+        LibraryPlanning.CreateRequisitionWkshName(WorksheetName, WorksheetTemplate.Name);
+        LibraryPlanning.CreateRequisitionLine(RequisitionLine, WorksheetTemplate.Name, WorksheetName.Name);
+        RequisitionLine.Validate(Type, RequisitionLine.Type::Item);
+        RequisitionLine.Validate("No.", ItemNo);
+        RequisitionLine.Validate(Quantity, 10);
+        RequisitionLine.Validate("Due Date", WorkDate());
+        RequisitionLine.Modify(true);
     end;
 
     local procedure CreateFullyShippedSource(var SalesLine: Record "Sales Line"; var Ledger: Record "Item Ledger Entry")
