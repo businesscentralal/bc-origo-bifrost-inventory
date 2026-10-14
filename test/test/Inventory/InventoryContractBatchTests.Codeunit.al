@@ -85,9 +85,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertNativeHelp('Inventory.Revaluation.Post', 'status:string,templateName:string,batchName:string,linesPosted:integer,totalQuantity:decimal,totalAmount:decimal,itemRegisterNo:integer,fromEntryNo:integer,toEntryNo:integer,fromValueEntryNo:integer,toValueEntryNo:integer', 3);
     end;
 
-    /// <summary>Every costing/price operation switches its discovery and explanatory Help to Icelandic.</summary>
+    /// <summary>Every costing/price operation localizes discovery while its public contract remains invariant English.</summary>
     [Test]
-    procedure CostingHelp_AllRegisteredTypes_LocalizesDiscoveryAndNotes()
+    procedure CostingHelp_AllRegisteredTypes_LocalizesDiscoveryAndKeepsContractInvariant()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         MessageInterface: Interface "Msg Interface ori";
@@ -137,6 +137,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             IcelandicSelection := Discovery.GetSelectionDescription();
             IcelandicKeywords := Discovery.GetKeywords();
             ContractMgt.GetContract(MessageType, Contract);
+            LibraryAssert.AreEqual(1039, GlobalLanguage(), 'Contract reader restores the caller language.');
             GlobalLanguage(PreviousLanguage);
             LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, Name + ' description changes language.');
             LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, Name + ' selection changes language.');
@@ -144,7 +145,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             foreach Chapter in Chapters do begin
                 LibraryAssert.IsTrue(EnglishContract.Get(Chapter, EnglishToken), Name + ' English Help chapter.');
                 LibraryAssert.IsTrue(Contract.Get(Chapter, Token), Name + ' Icelandic Help chapter.');
-                LibraryAssert.AreNotEqual(EnglishToken.AsValue().AsText(), Token.AsValue().AsText(), Name + ' ' + Chapter + ' changes language.');
+                LibraryAssert.AreEqual(EnglishToken.AsValue().AsText(), Token.AsValue().AsText(), Name + ' ' + Chapter + ' is an invariant English contract chapter (Foundation #777).');
             end;
             Contract.Get('parameters', Token);
             foreach Token in Token.AsArray() do begin
@@ -1234,9 +1235,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Error.Get('when', ValueToken);
         LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
-        GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', Error);
+        GetNamedMember(Contract, 'errors', 'error', 'Native selection, validation or report error.', Error);
+        LibraryAssert.IsFalse(Error.Contains('code'), 'The process wrapper returns native text without an invented error code.');
         Error.Get('when', ValueToken);
-        LibraryAssert.AreEqual('Request validation or the native report fails; no native commit rollback is promised.', ValueToken.AsValue().AsText(), 'Validation precedes native report execution; report commits are preserved.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('no native commit rollback is promised'), 'Report commits are preserved.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('process wrapper returns text without a typed code'), 'Native refusal mapping is explicit.');
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
     end;
 
