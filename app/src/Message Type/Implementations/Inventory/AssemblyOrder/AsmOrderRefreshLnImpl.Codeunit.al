@@ -127,9 +127,9 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         LinesBefore: Integer;

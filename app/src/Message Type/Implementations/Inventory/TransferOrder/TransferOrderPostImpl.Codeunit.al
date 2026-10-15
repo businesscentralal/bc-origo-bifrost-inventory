@@ -136,8 +136,8 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";

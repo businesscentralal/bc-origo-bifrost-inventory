@@ -2,9 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - zero-warning Inventory verification
+
+- Preserve the attribute-table grants from `BIFROSTInvRead.PermissionSetExt.al` (10036915) and `BIFROSTInvWrite.PermissionSetExt.al` (10036916) in the included, nonassignable `BIFROSTInvAttrRead.PermissionSet.al` (10036915) and `BIFROSTInvAttrWrite.PermissionSet.al` (10036916). Read and Full roles retain their original access; no posting or Foundation Setup grants are added.
+- Align AL filenames with object names and order record declarations before codeunits without changing message execution. `PhysInvCalcImpl.Codeunit.al` (70013496), `PhysInvPreviewImpl.Codeunit.al` (70013472) and `TrackingAvailGetImpl.Codeunit.al` (70013473) clear the notes output when they report no notes.
+- Fix test helper content-type buffer lengths, load the item Description field, initialize JSON-array indexes explicitly and name temporary arguments consistently. `InvPostingGateTests.Codeunit.al` (96918) verifies preserved read-only/write attribute access, and `InventoryContractBatchTests.Codeunit.al` (96921) verifies stale notes are cleared. Existing tests and assertions remain enabled.
+
 ### Fixed (2026-10-13) - contract source guard recognizes Inventory chapters
 
 - `Test-ContractParameterKeys.ps1` follows a literal shared-chapter selector, literal JSON parameter arrays, attached parameter objects and the typed request readers in Foundation Request Value Reader ori. Unresolved selectors and malformed arrays fail with explicit diagnostics; undeclared and unread keys still fail. Regression fixtures cover valid chapters, mismatches, unrelated objects, cleared objects and dynamic calls. No AL object or message implementation changes.
+
+- `.github/workflows/SourceGuards.yaml` adds the `ContractParameterKeysRegression` job for the guard self-test and Python regression fixtures. Its comments identify the remaining production contract, localization, translation and help-link checks.
+- `tools/tests/test-contract-parameter-keys.py` adds 26 regression fixtures for contract selectors, declarations and typed readers, including mismatches and malformed inputs.
 
 ### Fixed (2026-10-12) - related help entries name existing message types
 

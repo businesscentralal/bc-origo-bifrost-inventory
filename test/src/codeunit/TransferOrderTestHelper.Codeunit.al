@@ -100,7 +100,7 @@ codeunit 96904 "Transfer Order Test Helper"
         Dispatcher: Codeunit "Dispatcher ori";
         RequestContent: BigText;
         ResponseContent: BigText;
-        ResponseContentType: Text[50];
+        ResponseContentType: Text[100];
         MessageId: Guid;
         ResponseTime: Duration;
         EmptyTaskId: Guid;

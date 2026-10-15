@@ -133,8 +133,8 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ReceiptHeader: Record "Transfer Receipt Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];

@@ -121,8 +121,8 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         InventoryPeriod: Record "Inventory Period";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         ResponseJson: JsonObject;
         Periods: JsonArray;
         PeriodJson: JsonObject;

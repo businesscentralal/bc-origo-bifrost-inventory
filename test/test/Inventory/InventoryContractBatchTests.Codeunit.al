@@ -14,6 +14,25 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
     [Test]
+    procedure EmptyNotes_ClearPreviousOutput()
+    var
+        CalculateImpl: Codeunit "Phys. Inv. Calc Impl ori";
+        PreviewImpl: Codeunit "Phys. Inv. Preview Impl ori";
+        TrackingImpl: Codeunit "Tracking Avail. Get Impl ori";
+        Notes: Text;
+    begin
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(CalculateImpl.GetNotes(Notes), 'Calculate has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Calculate must clear previous output.');
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(PreviewImpl.GetNotes(Notes), 'Preview has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Preview must clear previous output.');
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(TrackingImpl.GetNotes(Notes), 'Tracking has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Tracking must clear previous output.');
+    end;
+
+    [Test]
     procedure AllInventoryTypes_HaveRequiredContractChapters()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -128,11 +147,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed()
     var
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Helper: Codeunit "Transfer Order Test Helper";
         LibraryInventory: Codeunit "Library - Inventory";
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
         Contract: JsonObject;
         ErrorEntry: JsonObject;
         RequestJson: JsonObject;
@@ -408,6 +427,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Parameters.Count(), 'Exact parameter count; other chapters cannot donate fields.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Parameters.Get(Index, Token);
@@ -436,6 +456,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Fields.Count(), 'Exact response field count.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Fields.Get(Index, Token);
@@ -473,6 +494,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Sources.Add('data.itemNo');
         Sources.Add('data.itemId, data.id, data.systemId, data.recordSystemId');
         Sources.Add('data.tableView');
+        Index := 0;
         foreach Source in Sources do begin
             Target.Get(Index, Token);
             Entry := Token.AsObject();

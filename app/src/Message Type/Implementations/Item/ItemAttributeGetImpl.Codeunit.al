@@ -138,8 +138,8 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         Resolve: Codeunit "Item Attribute Resolve ori";
         RequestJson: JsonObject;
