@@ -1,20 +1,17 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using Microsoft.Inventory.Item.Attribute;
 
 /// <summary>
 /// Extends Foundation <c>BIFROST Read ori</c> with execute rights for Item.Attribute.Get and helpers.
 /// </summary>
 permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
 {
+    IncludedPermissionSets = "BIFROST InvAttrRead ori";
+
     Permissions =
         codeunit "Inventory Application Read ori" = X,
         codeunit "Item Appl. Get Impl ori" = X,
-        tabledata "Item Attribute" = R,
-        tabledata "Item Attribute Value" = R,
-        tabledata "Item Attribute Value Mapping" = R,
-        tabledata "Item Attr. Value Translation" = R,
         tabledata "Inventory Setup ori" = R,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Resolve ori" = X,

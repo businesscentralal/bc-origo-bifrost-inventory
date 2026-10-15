@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -19,6 +20,42 @@ codeunit 96918 "Inv. Posting Gate Tests"
 
     var
         Assert: Codeunit "Library Assert";
+
+    [Test]
+    procedure InventoryRead_PreservesAttributeReadOnlyPermissions()
+    var
+        ItemAttribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        AttributeMapping: Record "Item Attribute Value Mapping";
+        AttributeTranslation: Record "Item Attr. Value Translation";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        Assert.IsTrue(ItemAttribute.ReadPermission(), 'Read role must retain attribute read.');
+        Assert.IsTrue(AttributeValue.ReadPermission(), 'Read role must retain value read.');
+        Assert.IsTrue(AttributeMapping.ReadPermission(), 'Read role must retain mapping read.');
+        Assert.IsTrue(AttributeTranslation.ReadPermission(), 'Read role must retain translation read.');
+        Assert.IsFalse(ItemAttribute.WritePermission(), 'Read role must not gain attribute writes.');
+        Assert.IsFalse(AttributeValue.WritePermission(), 'Read role must not gain value writes.');
+        Assert.IsFalse(AttributeMapping.WritePermission(), 'Read role must not gain mapping writes.');
+        Assert.IsFalse(AttributeTranslation.WritePermission(), 'Read role must not gain translation writes.');
+    end;
+
+    [Test]
+    procedure InventoryFull_PreservesAttributeWritePermissions()
+    var
+        ItemAttribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        AttributeMapping: Record "Item Attribute Value Mapping";
+        AttributeTranslation: Record "Item Attr. Value Translation";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        Assert.IsTrue(ItemAttribute.WritePermission(), 'Full role must retain attribute writes.');
+        Assert.IsTrue(AttributeValue.WritePermission(), 'Full role must retain value writes.');
+        Assert.IsTrue(AttributeMapping.WritePermission(), 'Full role must retain mapping writes.');
+        Assert.IsTrue(AttributeTranslation.WritePermission(), 'Full role must retain translation writes.');
+    end;
 
     [Test]
     procedure TransferPost_WithoutInvPost_IsDisabled()
