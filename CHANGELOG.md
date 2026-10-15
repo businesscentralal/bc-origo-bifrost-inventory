@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - contract reads retain payload generation and source position
+
+- `tools/Test-ContractParameterKeys.ps1` versions JSON snapshots and the underlying request payload, applies exhaustive validators at individual read/call sites, and unions conditional paths. Source-checked normalization retains removed keys in the original payload constraint; replacements, streams, unknown effects, implicit calls and try-function/codeunit return boundaries discard stale proof. Unsupported regions retain their reads. JSON key comparisons remain case sensitive (#30).
+- The AL statement parser preserves CASE/IF/ELSE ownership across terminators and loop statements. Portable source-proof fixtures, branch parser controls and an independent bounded concrete source oracle retain the counterexamples behind this repair.
+- Remaining `tableView` source discrepancies stay visible. Issues #30–33 remain acceptance-open, and production guard wiring stays off. No AL object IDs, contracts, allow-lists, workflow files or app versions change in this tooling repair.
+
 ### Fixed (2026-10-15) - preserve request context in contract source checks
 
 - `tools/Test-ContractParameterKeys.ps1` follows nested JSON records through array iteration and helper arguments, while cleared or replaced tokens retain ambiguity diagnostics. It narrows runtime branches only from source-proven literal selectors, fresh local codeunit modes, or an unchanged message envelope at an entry dispatch. Unknown consumers, shared instances, mutation and ambiguous calls retain both paths (#30).
