@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - label property scanner respects quoted comments
+
+- `tools/Test-MixedLanguageLabels.ps1` now reads the `Locked` property outside quoted strings and comments. Protocol text such as `allowBlocked=true` in an Icelandic translation comment no longer reports a translated refusal as locked (#33). Actual `Locked = true` labels remain findings.
+- `tools/tests/test-mixed-language-labels.py` checks both local and global labels, escaped quotes, property order, case and whitespace, explicit false, and real locked properties. No AL objects, allow-lists or workflow jobs changed.
+
 ### Fixed (2026-10-15) - zero-warning Inventory verification
 
 - Preserve the attribute-table grants from `BIFROSTInvRead.PermissionSetExt.al` (10036915) and `BIFROSTInvWrite.PermissionSetExt.al` (10036916) in the included, nonassignable `BIFROSTInvAttrRead.PermissionSet.al` (10036915) and `BIFROSTInvAttrWrite.PermissionSet.al` (10036916). Read and Full roles retain their original access; no posting or Foundation Setup grants are added.

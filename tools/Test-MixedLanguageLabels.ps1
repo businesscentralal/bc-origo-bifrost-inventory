@@ -159,6 +159,13 @@ function Get-LabelKind($Label) {
     return $null
 }
 
+# Label properties are AL syntax. Quoted comments can contain protocol tokens such as
+# allowBlocked=true or even "Locked = true" without locking the label (#33).
+function Test-LabelLocked([string]$Properties) {
+    $syntax = [regex]::Replace($Properties, "'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/", ' ')
+    return [regex]::IsMatch($syntax, '(?:^|,)\s*Locked\s*=\s*true\s*(?=,|$)', 'IgnoreCase')
+}
+
 function Read-Source([string]$AppSrc) {
     $objects = @{}
     foreach ($file in Get-ChildItem -LiteralPath $AppSrc -Recurse -Filter '*.al') {
@@ -185,7 +192,7 @@ function Read-Source([string]$AppSrc) {
             $declarationSpans.Add([int[]]@($from, $from + $declaration.Length))
             $locals = @{}
             foreach ($l in $labelDeclaration.Matches($declaration)) {
-                $locals[$l.Groups['name'].Value.Trim('"')] = @{ Name = $l.Groups['name'].Value.Trim('"'); File = $relative; Index = $from + $l.Index; Text = $l.Groups['text'].Value.Replace("''", "'"); Locked = ($l.Groups['props'].Value -match '(?i)locked\s*=\s*true') }
+                $locals[$l.Groups['name'].Value.Trim('"')] = @{ Name = $l.Groups['name'].Value.Trim('"'); File = $relative; Index = $from + $l.Index; Text = $l.Groups['text'].Value.Replace("''", "'"); Locked = (Test-LabelLocked $l.Groups['props'].Value) }
             }
             $variables = @{}
             foreach ($v in $variableDeclaration.Matches($declaration)) { $variables[$v.Groups['var'].Value.ToLowerInvariant()] = $v.Groups['type'].Value }
@@ -216,7 +223,7 @@ function Read-Source([string]$AppSrc) {
             $inside = $false
             foreach ($span in $declarationSpans) { if ($l.Index -ge $span[0] -and $l.Index -lt $span[1]) { $inside = $true; break } }
             if ($inside) { continue }
-            $object.Labels[$l.Groups['name'].Value.Trim('"')] = @{ Name = $l.Groups['name'].Value.Trim('"'); File = $relative; Index = $l.Index; Text = $l.Groups['text'].Value.Replace("''", "'"); Locked = ($l.Groups['props'].Value -match '(?i)locked\s*=\s*true') }
+            $object.Labels[$l.Groups['name'].Value.Trim('"')] = @{ Name = $l.Groups['name'].Value.Trim('"'); File = $relative; Index = $l.Index; Text = $l.Groups['text'].Value.Replace("''", "'"); Locked = (Test-LabelLocked $l.Groups['props'].Value) }
         }
         $firstProcedure = if ($starts.Count -gt 0) { $starts[0].Index } else { $text.Length }
         foreach ($v in $variableDeclaration.Matches($text.Substring(0, $firstProcedure))) { $object.Variables[$v.Groups['var'].Value.ToLowerInvariant()] = $v.Groups['type'].Value }
