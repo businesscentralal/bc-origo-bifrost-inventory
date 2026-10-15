@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - typed-reader keys retain literal caller bindings
+
+- `tools/Test-ContractParameterKeys.ps1` resolves a forwarded typed-reader key only when every reached source call supplies a literal for that parameter. Unknown receivers, nested or dynamic arguments, mutable keys, unknown key consumers and overloaded procedures retain the ambiguity diagnostic (#30). This recognizes the existing `skip` and `take` wrapper without a key-name exception.
+- `tools/tests/test-contract-parameter-keys.py` adds fifteen caller-binding cases, including undocumented literal keys, multiple callers and unresolved bindings. The remaining production guard findings stay visible; no workflow is enabled.
+
 ### Fixed (2026-10-15) - operation selectors are not request parameters
 
 - `tools/Test-ContractParameterKeys.ps1` excludes a literal operation selector only when the resolved callee's source proves that its parameter is used solely in `case` selectors (#30). Unknown calls, additional parameter uses and ambiguous overloads retain the conservative request-key check. No method-name exception or allow-list was added.

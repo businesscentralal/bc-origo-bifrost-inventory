@@ -703,7 +703,7 @@ function Get-ReadKeys($Objects, [string]$Codeunit) {
         $parts = $entry -split '::', 2
         $requestNames = $requestVars[$entry]
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
-            Add-TypedReaderKeys $Objects[$parts[0]] $body $requestNames $keys
+            Add-TypedReaderKeys $Objects $seen $parts[0] $parts[1] $body $requestNames $keys
             foreach ($m in $memberRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
             foreach ($m in $callRead.Matches($body)) {
                 if (-not (Test-CaseSelectorArgument $Objects $parts[0] $m)) { Add-CallRead $m $requestNames $keys }
@@ -818,14 +818,101 @@ function Add-ContractDeclarations([string]$Body, $Keys) {
         foreach ($key in $outputKeys) { [void]$Keys.Add($key) }
     }
 }
-function Add-TypedReaderKeys($Object, [string]$Body, $RequestNames, $Keys) {
+# A caller binding is usable only while the parameter stays unchanged. Treat any
+# other use conservatively, including unknown calls that could receive it by var.
+function Test-StableTypedReaderKey($Object, [string]$Body, [string]$Parameter) {
+    $syntax = [regex]::Replace($Body, "'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/", ' ')
+    $begin = [regex]::Match($syntax, '(?i)\bbegin\b')
+    if (-not $begin.Success) { return $false }
+    $syntax = $syntax.Substring($begin.Index + $begin.Length)
+    $uses = @{}
+    foreach ($use in [regex]::Matches($syntax, "(?i)(?<![\w])$([regex]::Escape($Parameter))(?![\w])")) { $uses[$use.Index] = $true }
+    $stack = New-Object 'System.Collections.Generic.List[object]'
+    for ($i = 0; $i -lt $syntax.Length; $i++) {
+        if ($uses.ContainsKey($i)) {
+            if ($stack.Count -eq 0) { return $false }
+            $call = $stack[$stack.Count - 1]
+            $type = if ($Object.Variables.ContainsKey($call.Receiver)) { @($Object.Variables[$call.Receiver]) } else { @() }
+            $reader = $type -contains 'Request Value Reader ori' -and $call.Name -match '^(?i:TryReadDate|TryReadDecimal|TryReadBoolean)$' -and $call.Argument -eq 2
+            # Message Argument's error-response text parameters are read-only API inputs.
+            $response = $type -contains 'Message Argument ori' -and $call.Name -ieq 'RespondWithError'
+            if (-not $reader -and -not $response) { return $false }
+        }
+        if ($syntax[$i] -eq '(') {
+            $match = [regex]::Match($syntax.Substring(0, $i), '(?i)(?:(?<receiver>\w+)\.)?(?<callee>\w+)\s*$')
+            $stack.Add(@{ Name = $match.Groups['callee'].Value; Receiver = $match.Groups['receiver'].Value.ToLowerInvariant(); Argument = 0 })
+        } elseif ($syntax[$i] -eq ')' -and $stack.Count -gt 0) { $stack.RemoveAt($stack.Count - 1) }
+        elseif ($syntax[$i] -eq ',' -and $stack.Count -gt 0) { $stack[$stack.Count - 1].Argument++ }
+    }
+    return $uses.Count -gt 0
+}
+
+# Resolve one parameter only when every reached call supplies a literal. Do not
+# guess through overloads, unknown receivers or another variable forwarding layer.
+function Get-LiteralParameterBindings($Objects, $Seen, [string]$ObjectName, [string]$ProcedureName, [string]$Body, [string]$Parameter) {
+    $unresolved = @{ Resolved = $false; Values = @() }
+    if (@($Objects[$ObjectName].Procedures[$ProcedureName]).Count -ne 1) { return $unresolved }
+    $params = Get-ParameterNames $Body
+    $position = [array]::IndexOf($params, $Parameter.ToLowerInvariant())
+    if ($position -lt 0) { return $unresolved }
+    if (-not (Test-StableTypedReaderKey $Objects[$ObjectName] $Body $Parameter)) { return $unresolved }
+    $values = New-Object 'System.Collections.Generic.HashSet[string]'
+    $calls = 0
+    foreach ($entry in $Seen.Keys) {
+        $parts = $entry -split '::', 2
+        $caller = $Objects[$parts[0]]
+        foreach ($callerBody in $caller.Procedures[$parts[1]]) {
+            $flatCalls = @($callWithArgs.Matches($callerBody))
+            # A nested/dynamic argument list must not disappear from the proof just
+            # because the flat argument matcher cannot parse it.
+            foreach ($start in $anyCall.Matches($callerBody)) {
+                $name = if ($start.Groups['callee'].Success) { $start.Groups['callee'].Value } else { $start.Groups['chained'].Value }
+                if ($name -ine $ProcedureName) { continue }
+                if ($callerBody.Substring(0, $start.Index) -match '(?i)\b(procedure|trigger)\s+$') { continue }
+                if (-not ($flatCalls | Where-Object { $_.Index -eq $start.Index })) { return $unresolved }
+            }
+            foreach ($call in $flatCalls) {
+                if ($call.Groups['callee'].Value -ine $ProcedureName) { continue }
+                if ($callerBody.Substring(0, $call.Index) -match '(?i)\b(procedure|trigger)\s+$') { continue }
+                $receiver = $call.Groups['receiver'].Value.ToLowerInvariant()
+                $targets = @(if ($receiver -eq '' -or $receiver -in @('this', 'rec')) { $parts[0] }
+                    elseif ($caller.Variables.ContainsKey($receiver)) { $caller.Variables[$receiver] })
+                if ($targets.Count -eq 0) { return $unresolved }
+                if ($targets -notcontains $ObjectName) { continue }
+                if ($targets.Count -ne 1) { return $unresolved }
+                $args = @([regex]::Matches($call.Groups['args'].Value, "'(?:[^']|'')*'|[^,]+") | ForEach-Object { $_.Value.Trim() })
+                if ($position -ge $args.Count) { return $unresolved }
+                $literal = [regex]::Match($args[$position], "^'((?:[^']|'')*)'$")
+                if (-not $literal.Success) { return $unresolved }
+                [void]$values.Add($literal.Groups[1].Value.Replace("''", "'"))
+                $calls++
+            }
+        }
+    }
+    return @{ Resolved = $calls -gt 0; Values = @($values) }
+}
+
+function Add-TypedReaderKeys($Objects, $Seen, [string]$ObjectName, [string]$ProcedureName, [string]$Body, $RequestNames, $Keys) {
+    $Object = $Objects[$ObjectName]
     foreach ($call in $callWithArgs.Matches($Body)) {
         $receiver = $call.Groups['receiver'].Value.ToLowerInvariant()
         if (-not $Object.Variables.ContainsKey($receiver) -or $Object.Variables[$receiver] -notcontains 'Request Value Reader ori') { continue }
         if ($call.Groups['callee'].Value -notmatch '^(?i:TryReadDate|TryReadDecimal|TryReadBoolean)$') { continue }
         $args = @([regex]::Matches($call.Groups['args'].Value, "'(?:[^']|'')*'|[^,]+") | ForEach-Object { $_.Value.Trim() })
-        if ($args.Count -ge 5 -and $RequestNames.Contains($args[1].ToLowerInvariant()) -and $args[2] -match "^'((?:[^']|'')*)'$" ) { [void]$Keys.Add($Matches[1].Replace("''", "'")) }
-        else { $script:ContractDiagnostics.Add('dynamic-ambiguity|typed-reader:'+ $call.Value) }
+        $resolved = $false
+        if ($args.Count -ge 5 -and $RequestNames.Contains($args[1].ToLowerInvariant())) {
+            if ($args[2] -match "^'((?:[^']|'')*)'$" ) {
+                [void]$Keys.Add($Matches[1].Replace("''", "'"))
+                $resolved = $true
+            } elseif ($args[2] -match '^\w+$') {
+                $binding = Get-LiteralParameterBindings $Objects $Seen $ObjectName $ProcedureName $Body $args[2]
+                if ($binding.Resolved) {
+                    foreach ($key in $binding.Values) { [void]$Keys.Add($key) }
+                    $resolved = $true
+                }
+            }
+        }
+        if (-not $resolved) { $script:ContractDiagnostics.Add('dynamic-ambiguity|typed-reader:'+ $call.Value) }
     }
 }
 

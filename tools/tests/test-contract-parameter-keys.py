@@ -118,6 +118,33 @@ selector_cases = {
 }
 for name, (body, call, expected) in selector_cases.items():
  cases.append((name, literal('selectedKey'), read('selectedKey') + '\n        ' + call, expected, ''))
+binding_body = """    local procedure ReadNumber(var Argument: Record "Message Argument ori"; Request: JsonObject; KeyName: Text)
+    var
+        Reader: Codeunit "Request Value Reader ori";
+        Number: Decimal;
+    begin
+        Reader.TryReadDecimal(Argument, Request, KeyName, true, Number);
+    end;
+"""
+binding_cases = {
+ 'binding-literal': (binding_body, "ReadNumber(Argument, RequestJson, 'selectedKey');", [], literal('selectedKey')),
+ 'binding-unknown-key': (binding_body, "ReadNumber(Argument, RequestJson, 'unknownKey');", ['declared-not-read|selectedKey', 'read-not-declared|unknownKey'], literal('selectedKey')),
+ 'binding-dynamic': (binding_body, "ReadNumber(Argument, RequestJson, DynamicKey);", None, literal('selectedKey')),
+ 'binding-mixed-callers': (binding_body, "ReadNumber(Argument, RequestJson, 'selectedKey'); ReadNumber(Argument, RequestJson, DynamicKey);", None, literal('selectedKey')),
+ 'binding-nested-caller': (binding_body, "ReadNumber(Argument, RequestJson, 'selectedKey'); ReadNumber(Argument, RequestJson, GetDynamicKey());", None, literal('selectedKey')),
+ 'binding-unknown-receiver': (binding_body, "ReadNumber(Argument, RequestJson, 'selectedKey'); Unknown.ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-multiple-literals': (binding_body, "ReadNumber(Argument, RequestJson, 'selectedKey'); ReadNumber(Argument, RequestJson, 'extraKey');", ['read-not-declared|extraKey'], literal('selectedKey')),
+ 'binding-qualified': ('qualified', "Parts.ReadNumber(Argument, RequestJson, 'selectedKey');", [], literal('selectedKey')),
+ 'binding-ambiguous-overload': (binding_body + binding_body.replace('KeyName: Text', 'KeyName: Code[20]'), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-mutated-key': (binding_body.replace('Reader.TryReadDecimal', "KeyName := 'otherKey';\n        Reader.TryReadDecimal"), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-cleared-key': (binding_body.replace('Reader.TryReadDecimal', "Clear(KeyName);\n        Reader.TryReadDecimal"), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-unknown-mutator': (binding_body.replace('Reader.TryReadDecimal', "Mutate(KeyName);\n        Reader.TryReadDecimal"), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-nested-mutator': (binding_body.replace('Reader.TryReadDecimal', "Argument.RespondWithError(Code, Msg, Mutate(KeyName), '', '', '');\n        Reader.TryReadDecimal"), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+ 'binding-error-context': (binding_body.replace('Reader.TryReadDecimal', "Argument.RespondWithError(Code, Msg, KeyName, Format(Number, 0, 9), '', '');\n        Reader.TryReadDecimal"), "ReadNumber(Argument, RequestJson, 'selectedKey');", [], literal('selectedKey')),
+ 'binding-not-parameter': (binding_body.replace('KeyName: Text)', 'Unused: Text)').replace('Number: Decimal;', 'Number: Decimal; KeyName: Text;'), "ReadNumber(Argument, RequestJson, 'selectedKey');", None, literal('selectedKey')),
+}
+for name, (body, call, expected, contract) in binding_cases.items():
+ cases.append((name, contract, '        ' + call, expected, ''))
 results=[]
 for name,contract,execute,expected,part in cases:
  root=app(name,contract,execute,part)
@@ -126,6 +153,14 @@ for name,contract,execute,expected,part in cases:
   if body == 'qualified':
    body = 'codeunit 3 "Fixture Parts"\n{\n' + selector_body.replace('local procedure', 'procedure') + '}\n'
    (root/'src'/'Parts.al').write_text(body)
+  else:
+   impl = root/'src'/'Impl.al'
+   text = impl.read_text()
+   impl.write_text(text.rsplit('}', 1)[0] + body + '}\n')
+ if name in binding_cases:
+  body = binding_cases[name][0]
+  if body == 'qualified':
+   (root/'src'/'Parts.al').write_text('codeunit 3 "Fixture Parts"\n{\n' + binding_body.replace('local procedure', 'procedure') + '}\n')
   else:
    impl = root/'src'/'Impl.al'
    text = impl.read_text()
