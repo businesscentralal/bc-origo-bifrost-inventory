@@ -2,7 +2,7 @@ from pathlib import Path
 import subprocess, json, re, tempfile, os, shutil, atexit
 repo = Path(__file__).resolve().parents[2]
 pw = os.environ.get('PWSH', 'pwsh')
-script = repo / 'tools/Test-ContractParameterKeys.ps1'
+script = Path(os.environ.get('CONTRACT_PARAMETER_SCANNER', repo / 'tools/Test-ContractParameterKeys.ps1'))
 root = Path(tempfile.mkdtemp(prefix='inventory-contract-guard-'))
 p = root
 atexit.register(shutil.rmtree, root, ignore_errors=True)
@@ -96,9 +96,40 @@ cases=[
  ('overwritten-literal',literal('selectedKey')+'\n        Parameters.ReadFrom(\'[]\');',read('selectedKey'),['read-not-declared|selectedKey'],''),
  ('helper-dynamic',literal('postingDate'),"        Reader.TryReadDate(Argument, RequestJson, KeyName, false, ValueDate);",None,''),
 ]
+# A source-resolved operation selector is not a request key. Keep true key uses,
+# unknown calls and ambiguous overloads visible instead of exempting method names.
+selector_body = """    local procedure CheckParameters(Request: JsonObject; Operation: Text)
+    begin
+        case Operation of
+            'Calculate':
+                Request.Contains('selectedKey');
+        end;
+    end;
+"""
+selector_cases = {
+ 'operation-selector': (selector_body, "CheckParameters(RequestJson, 'Calculate');", []),
+ 'selector-comment-decoy': (selector_body.replace('case Operation of', "// Operation is a selector; not a key.\n        case Operation of"), "CheckParameters(RequestJson, 'Calculate');", []),
+ 'selector-string-decoy': (selector_body.replace("Request.Contains('selectedKey');", "begin\n                    Request.Contains('selectedKey');\n                    Error('Operation must be Calculate.');\n                end;"), "CheckParameters(RequestJson, 'Calculate');", []),
+ 'selector-also-read': (selector_body.replace("Request.Contains('selectedKey');", "begin\n                    Request.Contains('selectedKey');\n                    Request.Contains(Operation);\n                end;"), "CheckParameters(RequestJson, 'Calculate');", ['read-not-declared|Calculate']),
+ 'unknown-selector-callee': ('', "CheckParameters(RequestJson, 'Calculate');", ['read-not-declared|Calculate']),
+ 'selector-no-case': (selector_body.replace('case Operation of', 'case Request.Keys().Count() of'), "CheckParameters(RequestJson, 'Calculate');", ['read-not-declared|Calculate']),
+ 'selector-qualified': ('qualified', "Parts.CheckParameters(RequestJson, 'Calculate');", []),
+ 'selector-ambiguous-overload': (selector_body + selector_body.replace('Operation: Text', 'Operation: Code[20]').replace('case Operation of', 'case Request.Keys().Count() of'), "CheckParameters(RequestJson, 'Calculate');", ['read-not-declared|Calculate']),
+}
+for name, (body, call, expected) in selector_cases.items():
+ cases.append((name, literal('selectedKey'), read('selectedKey') + '\n        ' + call, expected, ''))
 results=[]
 for name,contract,execute,expected,part in cases:
  root=app(name,contract,execute,part)
+ if name in selector_cases:
+  body = selector_cases[name][0]
+  if body == 'qualified':
+   body = 'codeunit 3 "Fixture Parts"\n{\n' + selector_body.replace('local procedure', 'procedure') + '}\n'
+   (root/'src'/'Parts.al').write_text(body)
+  else:
+   impl = root/'src'/'Impl.al'
+   text = impl.read_text()
+   impl.write_text(text.rsplit('}', 1)[0] + body + '}\n')
  r=run('Test-ContractParameterKeys.ps1',root,'fixture-'+name)
  found=re.findall(r'New offender .*?: Fixture.Selected\|([^\n]+)',r.stdout)
  if expected is None: ok=r.returncode==1 and any(x.startswith('dynamic-ambiguity|typed-reader:') for x in found)

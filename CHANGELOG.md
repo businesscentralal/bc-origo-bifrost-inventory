@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - operation selectors are not request parameters
+
+- `tools/Test-ContractParameterKeys.ps1` excludes a literal operation selector only when the resolved callee's source proves that its parameter is used solely in `case` selectors (#30). Unknown calls, additional parameter uses and ambiguous overloads retain the conservative request-key check. No method-name exception or allow-list was added.
+- `tools/tests/test-contract-parameter-keys.py` adds eight operation-selector regressions. The full production scan still reports the existing four contract discrepancies at this product base; this repair does not close #30 or enable the production guard.
+
 ### Fixed (2026-10-15) - label property scanner respects quoted comments
 
 - `tools/Test-MixedLanguageLabels.ps1` now reads the `Locked` property outside quoted strings and comments. Protocol text such as `allowBlocked=true` in an Icelandic translation comment no longer reports a translated refusal as locked (#33). Actual `Locked = true` labels remain findings.

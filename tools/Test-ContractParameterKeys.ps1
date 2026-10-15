@@ -112,7 +112,7 @@ $anyCall = [regex]::new('(?<![.\w])(?:(?<receiver>\w+)\.)?(?<callee>\w+)\s*\(|(?
 # array is the request data, so Obj is one record of it and its keys are request keys (#431).
 $assignRecordObject = [regex]::new('(?<![.\w])(\w+)\s*:=\s*\w+\.AsObject\(\)', 'IgnoreCase')
 # Any call whose first argument is the request and whose second is a literal key.
-$callRead = [regex]::new("(?:\b\w+\.)?\b\w+\s*\(\s*(?:(?<var>\w+)|(?:\w+\.)?GetRequestJson\(\))\s*,\s*'(?<key>[^']+)'", 'IgnoreCase')
+$callRead = [regex]::new("(?:(?<receiver>\b\w+)\.)?(?<callee>\b\w+)\s*\(\s*(?:(?<var>\w+)|(?:\w+\.)?GetRequestJson\(\))\s*,\s*'(?<key>[^']+)'", 'IgnoreCase')
 # RequestJson.Get('k'...) / ReqJson.Contains('k'...) / GetRequestJson().Contains('k') (#431).
 $memberRead = [regex]::new("(?:\b(?<var>\w+)|GetRequestJson\(\))\.(?:Get|Contains)\(\s*'(?<key>[^']+)'", 'IgnoreCase')
 
@@ -667,6 +667,30 @@ function Add-CallRead($Match, $RequestNames, $Keys) {
     [void]$Keys.Add($Match.Groups['key'].Value)
 }
 
+# A literal passed after the request is not a request key when source proves that
+# parameter is used only to select CASE branches. Unknown calls and parameters also
+# used as data keep the conservative key check; no method-name exceptions (#30).
+function Test-CaseSelectorArgument($Objects, [string]$ObjectName, $Call) {
+    $receiver = $Call.Groups['receiver'].Value.ToLowerInvariant()
+    $callee = $Call.Groups['callee'].Value.ToLowerInvariant()
+    $targets = @(if ($receiver -eq '' -or $receiver -in @('this', 'rec')) { $ObjectName }
+        elseif ($Objects[$ObjectName].Variables.ContainsKey($receiver)) { $Objects[$ObjectName].Variables[$receiver] })
+    if ($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0])) { return $false }
+    $target = $Objects[$targets[0]]
+    if (-not $target.Procedures.ContainsKey($callee)) { return $false }
+    foreach ($body in $target.Procedures[$callee]) {
+        $params = Get-ParameterNames $body
+        if ($params.Count -lt 2) { return $false }
+        $parameter = [regex]::Escape($params[1])
+        $syntax = [regex]::Replace($body, "'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/", ' ')
+        $cases = [regex]::Matches($syntax, "(?i)\bcase\s+$parameter\s+of\b").Count
+        $uses = [regex]::Matches($syntax, "(?i)(?<![\w])$parameter(?![\w])").Count
+        # One declaration plus CASE selectors only; any additional use prevents exclusion.
+        if ($cases -eq 0 -or $uses -ne $cases + 1) { return $false }
+    }
+    return $true
+}
+
 # The keys the implementation reads from the request in the procedures it reaches from ExecuteBifrostTask.
 # A call whose first argument is the request and whose second argument is a literal counts, including a wrapper
 # such as GetTextParam(RequestJson, 'dateFilter', ...) and a variable such as ReqJson (#430).
@@ -681,7 +705,9 @@ function Get-ReadKeys($Objects, [string]$Codeunit) {
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
             Add-TypedReaderKeys $Objects[$parts[0]] $body $requestNames $keys
             foreach ($m in $memberRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
-            foreach ($m in $callRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
+            foreach ($m in $callRead.Matches($body)) {
+                if (-not (Test-CaseSelectorArgument $Objects $parts[0] $m)) { Add-CallRead $m $requestNames $keys }
+            }
             foreach ($m in $keySpec.Matches($body)) {
                 foreach ($pair in $m.Groups[1].Value.Split(',')) { [void]$keys.Add($pair.Split('=')[0]) }
             }
