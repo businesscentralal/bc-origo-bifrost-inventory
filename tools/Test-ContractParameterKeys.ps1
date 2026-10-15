@@ -56,6 +56,12 @@
 .PARAMETER AllowListPath
     The allow-list file (default: ContractParameterKeys.AllowList.txt next to this script).
 
+.PARAMETER DependencyAppFolders
+    Optional app folders containing the exact dependency source used by the candidate.
+    Dependency objects resolve helper calls; only the selected app's message types are scanned.
+    Retain dependency commit/artifact provenance with the invocation. Missing source is
+    never replaced by a list of assumed keys.
+
 .PARAMETER Explain
     A message type name. Prints the parameters its contract declares, the target keys and the keys the code reads, and
     exits 0 without comparing the allow-list. A name that is not a message type with a contract says so and exits 1.
@@ -70,6 +76,7 @@
 param(
     [string]$AppFolder = (Join-Path $PSScriptRoot '..\app'),
     [string]$AllowListPath = (Join-Path $PSScriptRoot 'ContractParameterKeys.AllowList.txt'),
+    [string[]]$DependencyAppFolders = @(),
     [switch]$SelfTest,
     [string]$Explain = ''
 )
@@ -142,7 +149,7 @@ function Read-Source([string]$AppSrc) {
             foreach ($v in $varDeclaration.Matches($lines[$i])) {
                 $varName = $v.Groups[1].Value.ToLowerInvariant()
                 if (-not $object.Variables.ContainsKey($varName)) { $object.Variables[$varName] = @() }
-                $object.Variables[$varName] += $v.Groups[2].Value
+                if ($object.Variables[$varName] -notcontains $v.Groups[2].Value) { $object.Variables[$varName] += $v.Groups[2].Value }
             }
             foreach ($l in $labelLiteral.Matches($lines[$i])) { $object.Labels += $l.Groups[1].Value.Replace("''", "'") }
         }
@@ -667,18 +674,136 @@ function Add-CallRead($Match, $RequestNames, $Keys) {
     [void]$Keys.Add($Match.Groups['key'].Value)
 }
 
+# Read balanced argument lists so request values passed as Token.AsObject() are
+# not lost by the flat-call matcher. Strings/comments cannot introduce calls.
+function Get-SourceCalls([string]$Body) {
+    $mask = [regex]::Replace($Body, '''(?:[^'']|'''')*''|"(?:[^"]|"")*"|//[^\r\n]*|/\*[\s\S]*?\*/', { param($m) ' ' * $m.Length })
+    foreach ($start in $anyCall.Matches($mask)) {
+        if (-not $start.Groups['callee'].Success) { continue }
+        if ($start.Groups['callee'].Value -imatch '^(if|not|and|or|xor|in|while|until|case|for|foreach|repeat)$') { continue }
+        if ($mask.Substring(0, $start.Index) -match '(?i)\b(procedure|trigger)\s+$') { continue }
+        $depth = 1; $offset = $start.Index + $start.Length; $argumentStart = $offset
+        $args = New-Object 'System.Collections.Generic.List[string]'
+        for ($i = $offset; $i -lt $mask.Length; $i++) {
+            if ($mask[$i] -eq '(') { $depth++ }
+            elseif ($mask[$i] -eq ')') {
+                $depth--
+                if ($depth -eq 0) {
+                    $args.Add($Body.Substring($argumentStart, $i - $argumentStart).Trim())
+                    break
+                }
+            } elseif ($mask[$i] -eq ',' -and $depth -eq 1) {
+                $args.Add($Body.Substring($argumentStart, $i - $argumentStart).Trim()); $argumentStart = $i + 1
+            }
+        }
+        if ($depth -eq 0) {
+            @{ Receiver = $start.Groups['receiver'].Value.ToLowerInvariant(); Callee = $start.Groups['callee'].Value.ToLowerInvariant(); Arguments = @($args) }
+        }
+    }
+}
+
+function Get-ExpressionOrigins([string]$Expression, $Origins) {
+    if ($Expression -match '^(?i)(?:\w+\.)?GetRequestJson\(\)$') { return '' }
+    if ($Expression -match '^(?i)(\w+)(?:\.(?:AsObject|AsArray)\(\))?$') {
+        $name = $Matches[1].ToLowerInvariant()
+        if ($Origins.ContainsKey($name)) { foreach ($path in $Origins[$name]) { $path } }
+    }
+}
+
+function Add-RequestOrigins($Origins, [string]$Name, $Paths) {
+    if (-not $Origins.ContainsKey($Name)) { $Origins[$Name] = New-Object 'System.Collections.Generic.HashSet[string]' }
+    $changed = $false
+    foreach ($path in $Paths) { if ($Origins[$Name].Add([string]$path)) { $changed = $true } }
+    return $changed
+}
+
+# Retain the top-level request key through JSON extraction, array iteration and
+# helper parameters. A nested quantity belongs to entries, not to request.quantity.
+# Missing lineage remains unknown and keeps the typed-reader ambiguity diagnostic.
+function Get-RequestOrigins($Objects, $Seen, $RequestVars) {
+    $origins = @{}
+    foreach ($entry in $Seen.Keys) {
+        $origins[$entry] = @{}
+        foreach ($name in $RequestVars[$entry]) { [void](Add-RequestOrigins $origins[$entry] $name @('')) }
+    }
+    $changed = $true; $validateUnknown = $false
+    while ($changed -or -not $validateUnknown) {
+        if (-not $changed) { $validateUnknown = $true }
+        $changed = $false
+        foreach ($entry in $Seen.Keys) {
+            $parts = $entry -split '::', 2; $object = $Objects[$parts[0]]; $local = $origins[$entry]
+            foreach ($body in $object.Procedures[$parts[1]]) {
+                foreach ($call in @(Get-SourceCalls $body)) {
+                    if (($call.Receiver -eq '' -and $call.Callee -eq 'clear' -and $call.Arguments.Count -eq 1 -and $call.Arguments[0] -match '^\w+$')) {
+                        if (Add-RequestOrigins $local $call.Arguments[0].ToLowerInvariant() @('?')) { $changed = $true }
+                    }
+                    if ($call.Receiver -ne '' -and $call.Callee -eq 'readfrom') {
+                        if (Add-RequestOrigins $local $call.Receiver @('?')) { $changed = $true }
+                    }
+                    if ($call.Callee -eq 'get' -and $call.Arguments.Count -eq 2 -and $call.Arguments[1] -match '^\w+$') {
+                        $paths = @()
+                        foreach ($path in @($local[$call.Receiver] | Where-Object { $null -ne $_ })) {
+                            if ($path -ne '') { $paths += $path }
+                            elseif ($call.Arguments[0] -match "^'((?:[^']|'')*)'$") { $paths += $Matches[1].Replace("''", "'") }
+                        }
+                        if ($paths.Count -eq 0 -and $validateUnknown) { $paths = @('?') }
+                        if (Add-RequestOrigins $local $call.Arguments[1].ToLowerInvariant() $paths) { $changed = $true }
+                    }
+                    $targets = @(if ($call.Receiver -eq '' -or $call.Receiver -in @('this','rec')) { $parts[0] }
+                        elseif ($object.Variables.ContainsKey($call.Receiver)) { $object.Variables[$call.Receiver] })
+                    foreach ($target in $targets) {
+                        $targetKey = "${target}::$($call.Callee)"
+                        if (-not $origins.ContainsKey($targetKey)) { continue }
+                        foreach ($calleeBody in $Objects[$target].Procedures[$call.Callee]) {
+                            $parameters = Get-ParameterNames $calleeBody
+                            for ($i = 0; $i -lt $parameters.Count -and $i -lt $call.Arguments.Count; $i++) {
+                                $paths = @(Get-ExpressionOrigins $call.Arguments[$i] $local)
+                                if ($paths.Count -eq 0 -and $validateUnknown) { $paths = @('?') }
+                                if (Add-RequestOrigins $origins[$targetKey] $parameters[$i] $paths) { $changed = $true }
+                            }
+                        }
+                    }
+                }
+                $assignments = [regex]::Matches($body, '(?i)\b(\w+)\s*:=\s*(\w+(?:\.(?:AsObject|AsArray)\(\))?)\s*;|\bforeach\s+(\w+)\s+in\s+(\w+)\s+do\b')
+                foreach ($assignment in $assignments) {
+                    $name = if ($assignment.Groups[1].Success) { $assignment.Groups[1].Value } else { $assignment.Groups[3].Value }
+                    $value = if ($assignment.Groups[2].Success) { $assignment.Groups[2].Value } else { $assignment.Groups[4].Value }
+                    $paths = @(Get-ExpressionOrigins $value $local)
+                    if ($paths.Count -eq 0 -and $validateUnknown) { $paths = @('?') }
+                    if (Add-RequestOrigins $local $name.ToLowerInvariant() $paths) { $changed = $true }
+                }
+                # Replacing a token/object with a literal, call result or constructor
+                # invalidates the earlier extraction proof. Keep all possible origins.
+                $syntax = [regex]::Replace($body, '//[^\r\n]*|/\*[\s\S]*?\*/', ' ')
+                foreach ($assignment in [regex]::Matches($syntax, '(?im)\b(\w+)\s*:=\s*([^;]+);')) {
+                    $value = $assignment.Groups[2].Value.Trim()
+                    if ($value -notmatch '^(?i)\w+(?:\.(?:AsObject|AsArray)\(\))?$|^(?:\w+\.)?GetRequestJson\(\)$') {
+                        if (Add-RequestOrigins $local $assignment.Groups[1].Value.ToLowerInvariant() @('?')) { $changed = $true }
+                    }
+                }
+            }
+        }
+    }
+    return $origins
+}
+
 # A literal passed after the request is not a request key when source proves that
 # parameter is used only to select CASE branches. Unknown calls and parameters also
 # used as data keep the conservative key check; no method-name exceptions (#30).
-function Test-CaseSelectorArgument($Objects, [string]$ObjectName, $Call) {
+function Test-CaseSelectorArgument($Objects, [string]$ObjectName, $Call, [string]$CallerBody = '') {
+    # A chained receiver is unresolved, even if this object has a same-name helper.
+    if (-not $Call.Groups['receiver'].Success -and $Call.Index -gt 0 -and $CallerBody.Substring(0,$Call.Index) -match '\.\s*$') { return $false }
     $receiver = $Call.Groups['receiver'].Value.ToLowerInvariant()
     $callee = $Call.Groups['callee'].Value.ToLowerInvariant()
     $targets = @(if ($receiver -eq '' -or $receiver -in @('this', 'rec')) { $ObjectName }
         elseif ($Objects[$ObjectName].Variables.ContainsKey($receiver)) { $Objects[$ObjectName].Variables[$receiver] })
     if ($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0])) { return $false }
     $target = $Objects[$targets[0]]
-    if (-not $target.Procedures.ContainsKey($callee)) { return $false }
-    foreach ($body in $target.Procedures[$callee]) {
+    # Branch specialization removes selector uses from the analysis body. Prove
+    # the argument's role against the original definition, never that pruned body.
+    $definitions = if ($target.ContainsKey('SourceProcedures')) { $target.SourceProcedures } else { $target.Procedures }
+    if (-not $definitions.ContainsKey($callee)) { return $false }
+    foreach ($body in $definitions[$callee]) {
         $params = Get-ParameterNames $body
         if ($params.Count -lt 2) { return $false }
         $parameter = [regex]::Escape($params[1])
@@ -694,19 +819,109 @@ function Test-CaseSelectorArgument($Objects, [string]$ObjectName, $Call) {
 # The keys the implementation reads from the request in the procedures it reaches from ExecuteBifrostTask.
 # A call whose first argument is the request and whose second argument is a literal counts, including a wrapper
 # such as GetTextParam(RequestJson, 'dateFilter', ...) and a variable such as ReqJson (#430).
+# A JSON reader may be used only to reject an unsupported nonempty value. Prove
+# that its request argument is read-only: aliases, unknown consumers and writes
+# invalidate that proof, including writes hidden in source-resolved helpers.
+function Test-ReadOnlyJsonParameter($Objects, [string]$ObjectName, [string]$ProcedureName, [string]$Parameter, $Seen) {
+    $key="$ObjectName::$ProcedureName::$Parameter"
+    if ($Seen.ContainsKey($key)) { return $true };$Seen[$key]=$true
+    if (-not $Objects.ContainsKey($ObjectName) -or -not $Objects[$ObjectName].Procedures.ContainsKey($ProcedureName)) { return $false }
+    $object=$Objects[$ObjectName]
+    foreach ($body in $object.Procedures[$ProcedureName]) {
+        $syntax=[regex]::Replace($body,"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+        $uses=[regex]::Matches($syntax,"(?i)(?<![.\w])$([regex]::Escape($Parameter))(?![\w])").Count
+        $accounted=1
+        if ($syntax -match '\b\w+\.\w+\s*:=') { return $false }
+        $scalarReaders=@{}
+        foreach($declaration in [regex]::Matches($body,'(?i)\b(\w+)\s*:\s*(JsonObject|JsonArray|JsonToken|JsonValue|Text)\b')){$scalarReaders[$declaration.Groups[1].Value.ToLowerInvariant()]=$true}
+        foreach ($call in @(Get-SourceCalls $body)) {
+            if ($call.Receiver -ieq $Parameter) {
+                if ($call.Callee -notin @('get','contains','keys','values','count','writeto','clone')) { return $false }
+                $accounted++
+            }
+            $forwardsRequest=$false
+            for($position=0;$position -lt $call.Arguments.Count;$position++) {
+                if ($call.Arguments[$position] -ine $Parameter) { continue }
+                $forwardsRequest=$true
+                $targets=@(if($call.Receiver -in @('','this','rec')){$ObjectName}elseif($object.Variables.ContainsKey($call.Receiver)){$object.Variables[$call.Receiver]})
+                if($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0]) -or -not $Objects[$targets[0]].Procedures.ContainsKey($call.Callee)){return $false}
+                foreach($calleeBody in $Objects[$targets[0]].Procedures[$call.Callee]){
+                    $params=Get-ParameterNames $calleeBody
+                    if($position -ge $params.Count -or -not (Test-ReadOnlyJsonParameter $Objects $targets[0] $call.Callee $params[$position] $Seen)){return $false}
+                }
+                $accounted++
+            }
+            if ($call.Receiver -ine $Parameter -and -not $forwardsRequest) {
+                $platform=$call.Receiver -eq '' -and $call.Callee -in @('exit','error','strsubstno','copystr','strlen','uppercase','lowercase','format')
+                $scalar=$scalarReaders.ContainsKey($call.Receiver) -and $call.Callee -in @('get','contains','keys','values','count','writeto','clone','isvalue','isobject','isarray','asvalue','asobject','asarray','astext','asdecimal','asboolean','startswith')
+                if(-not $platform -and -not $scalar){return $false}
+            }
+        }
+        if($accounted -ne $uses){return $false}
+    }
+    return $true
+}
+
+function Test-RejectionOnlyCall($Objects, [string]$ObjectName, $Call, [string]$CallerBody = '') {
+    if (-not $Call.Groups['receiver'].Success -and $Call.Index -gt 0 -and $CallerBody.Substring(0,$Call.Index) -match '\.\s*$') { return $false }
+    $receiver=$Call.Groups['receiver'].Value.ToLowerInvariant();$callee=$Call.Groups['callee'].Value.ToLowerInvariant()
+    $object=$Objects[$ObjectName]
+    $targets=@(if($receiver -in @('','this','rec')){$ObjectName}elseif($object.Variables.ContainsKey($receiver)){$object.Variables[$receiver]})
+    if($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0])){return $false}
+    $target=$Objects[$targets[0]]
+    if($target.Procedures.ContainsKey('error')){return $false}
+    $definitions=if($target.ContainsKey('SourceProcedures')){$target.SourceProcedures}else{$target.Procedures}
+    if(-not $definitions.ContainsKey($callee)){return $false}
+    foreach($body in $definitions[$callee]){
+        $signature=[regex]::Match($body,'(?is)^\s*(?:local\s+|internal\s+|protected\s+)?procedure\s+\w+\s*\([^)]*\)\s*(?=var\b|begin\b)')
+        if(-not $signature.Success){return $false}
+        $tokens=@(Get-ALTokens $body);$begin=-1
+        for($i=0;$i -lt $tokens.Count;$i++){if($tokens[$i].Text -ieq 'begin'){$begin=$i;break}}
+        if($begin -lt 0 -or $tokens[$begin+1].Text -ine 'if'){return $false}
+        $then=-1;$depth=0
+        for($i=$begin+2;$i -lt $tokens.Count;$i++){
+            if($tokens[$i].Text -eq '('){$depth++}elseif($tokens[$i].Text -eq ')'){$depth--}
+            elseif($depth -eq 0 -and $tokens[$i].Text -ieq 'then'){$then=$i;break}
+        }
+        if($then -lt 0 -or $tokens[$then+1].Text -ine 'Error' -or $tokens[$then+2].Text -ne '('){return $false}
+        $condition=$body.Substring($tokens[$begin+2].Start,$tokens[$then].Start-$tokens[$begin+2].Start).Trim()
+        if($condition -notmatch "^\w+\(\s*\w+\s*,\s*\w+(?:\s*,\s*\w+)*\s*\)\s*<>\s*''$"){return $false}
+        $next=Get-ALStatementNext $tokens ($then+1)
+        if($next -lt 0 -or $tokens[$next].Text -ine 'end'){return $false}
+        # Everything after the IF is the procedure/object terminator, not a
+        # second statement that could consume the value on a successful path.
+        $first=Get-FirstParam $body
+        if($first -eq '' -or -not (Test-ReadOnlyJsonParameter $Objects $targets[0] $callee $first @{})){return $false}
+    }
+    return $true
+}
+
 function Get-ReadKeys($Objects, [string]$Codeunit) {
     $keys = New-Object 'System.Collections.Generic.HashSet[string]'
     $seen = @{}
     Get-Reach $Objects $Codeunit 'executebifrosttask' $seen $true
     $requestVars = Get-RequestVars $Objects $seen
+    $origins = Get-RequestOrigins $Objects $seen $requestVars
     foreach ($entry in $seen.Keys) {
         $parts = $entry -split '::', 2
         $requestNames = $requestVars[$entry]
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
-            Add-TypedReaderKeys $Objects $seen $parts[0] $parts[1] $body $requestNames $keys
-            foreach ($m in $memberRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
+            Add-TypedReaderKeys $Objects $seen $parts[0] $parts[1] $body $requestNames $keys $origins[$entry]
+            foreach ($m in $memberRead.Matches($body)) {
+                Add-CallRead $m $requestNames $keys
+                if ($m.Groups['var'].Success -and $origins[$entry].ContainsKey($m.Groups['var'].Value.ToLowerInvariant())) {
+                    foreach ($path in $origins[$entry][$m.Groups['var'].Value.ToLowerInvariant()]) {
+                        if ($path -ne '' -and $path -ne '?') { [void]$keys.Add($path) }
+                    }
+                }
+            }
             foreach ($m in $callRead.Matches($body)) {
-                if (-not (Test-CaseSelectorArgument $Objects $parts[0] $m)) { Add-CallRead $m $requestNames $keys }
+                if (Test-CaseSelectorArgument $Objects $parts[0] $m $body) { continue }
+                if (Test-RejectionOnlyCall $Objects $parts[0] $m $body) {
+                    if ($m.Groups['var'].Success -and $requestNames.Contains($m.Groups['var'].Value.ToLowerInvariant())) { [void]$script:RejectedReads.Add($m.Groups['key'].Value) }
+                    continue
+                }
+                Add-CallRead $m $requestNames $keys
             }
             foreach ($m in $keySpec.Matches($body)) {
                 foreach ($pair in $m.Groups[1].Value.Split(',')) { [void]$keys.Add($pair.Split('=')[0]) }
@@ -892,7 +1107,7 @@ function Get-LiteralParameterBindings($Objects, $Seen, [string]$ObjectName, [str
     return @{ Resolved = $calls -gt 0; Values = @($values) }
 }
 
-function Add-TypedReaderKeys($Objects, $Seen, [string]$ObjectName, [string]$ProcedureName, [string]$Body, $RequestNames, $Keys) {
+function Add-TypedReaderKeys($Objects, $Seen, [string]$ObjectName, [string]$ProcedureName, [string]$Body, $RequestNames, $Keys, $Origins) {
     $Object = $Objects[$ObjectName]
     foreach ($call in $callWithArgs.Matches($Body)) {
         $receiver = $call.Groups['receiver'].Value.ToLowerInvariant()
@@ -900,6 +1115,11 @@ function Add-TypedReaderKeys($Objects, $Seen, [string]$ObjectName, [string]$Proc
         if ($call.Groups['callee'].Value -notmatch '^(?i:TryReadDate|TryReadDecimal|TryReadBoolean)$') { continue }
         $args = @([regex]::Matches($call.Groups['args'].Value, "'(?:[^']|'')*'|[^,]+") | ForEach-Object { $_.Value.Trim() })
         $resolved = $false
+        $paths = if ($args.Count -ge 5 -and $null -ne $Origins) { @(Get-ExpressionOrigins $args[1] $Origins) } else { @() }
+        if ($paths.Count -gt 0 -and $paths -notcontains '' -and $paths -notcontains '?') {
+            foreach ($path in $paths) { [void]$Keys.Add($path) }
+            $resolved = $true
+        }
         if ($args.Count -ge 5 -and $RequestNames.Contains($args[1].ToLowerInvariant())) {
             if ($args[2] -match "^'((?:[^']|'')*)'$" ) {
                 [void]$Keys.Add($Matches[1].Replace("''", "'"))
@@ -916,10 +1136,449 @@ function Add-TypedReaderKeys($Objects, $Seen, [string]$ObjectName, [string]$Proc
     }
 }
 
+# Token positions are retained so discarded branches cannot affect reachability.
+function Get-ALTokens([string]$Text) {
+    foreach ($match in [regex]::Matches($Text, '''(?:[^'']|'''')*''|"(?:[^"]|"")*"|//[^\r\n]*|/\*[\s\S]*?\*/|\w+|:=|<>|[^\s]')) {
+        if ($match.Value.StartsWith('//') -or $match.Value.StartsWith('/*')) { continue }
+        @{ Text = $match.Value; Start = $match.Index; End = $match.Index + $match.Length }
+    }
+}
+
+# Return the first token following one complete AL statement, including dangling
+# ELSE ownership. Unsupported/malformed statements are never used to prune.
+function Get-ALStatementNext($Tokens, [int]$Index) {
+    if ($Index -ge $Tokens.Count) { return -1 }
+    $word = $Tokens[$Index].Text.ToLowerInvariant()
+    if ($word -in @('begin','case')) {
+        $depth = 1
+        for ($i = $Index + 1; $i -lt $Tokens.Count; $i++) {
+            if ($Tokens[$i].Text -iin @('begin','case')) { $depth++ }
+            elseif ($Tokens[$i].Text -ieq 'end') { $depth-- }
+            if ($depth -eq 0) {
+                $i++; if ($i -lt $Tokens.Count -and $Tokens[$i].Text -eq ';') { $i++ }; return $i
+            }
+        }
+        return -1
+    }
+    if ($word -eq 'if') {
+        $depth = 0; $then = -1
+        for ($i = $Index + 1; $i -lt $Tokens.Count; $i++) {
+            if ($Tokens[$i].Text -eq '(') { $depth++ }
+            elseif ($Tokens[$i].Text -eq ')') { $depth-- }
+            elseif ($depth -eq 0 -and $Tokens[$i].Text -ieq 'then') { $then = $i; break }
+        }
+        if ($then -lt 0) { return -1 }
+        $next = Get-ALStatementNext $Tokens ($then + 1)
+        if ($next -ge 0 -and $next -lt $Tokens.Count -and $Tokens[$next].Text -ieq 'else') { $next = Get-ALStatementNext $Tokens ($next + 1) }
+        return $next
+    }
+    $depth = 0
+    for ($i = $Index; $i -lt $Tokens.Count; $i++) {
+        if ($Tokens[$i].Text -eq '(') { $depth++ }
+        elseif ($Tokens[$i].Text -eq ')') { $depth-- }
+        elseif ($depth -eq 0 -and $Tokens[$i].Text -eq ';') { return ($i + 1) }
+        elseif ($depth -eq 0 -and $Tokens[$i].Text -iin @('else','end')) { return $i }
+    }
+    return -1
+}
+
+function Select-KnownRuntimeBranches([string]$Body, $Bindings) {
+    $tokens = @(Get-ALTokens $Body)
+    $entryStatement = -1
+    for ($p=0;$p -lt $tokens.Count;$p++) { if ($tokens[$p].Text -ieq 'begin') { $entryStatement=$p+1;break } }
+    # Work from the end, reparsing after a change so nested positions stay valid.
+    for ($i = $tokens.Count - 1; $i -ge 0; $i--) {
+        $replacement = $null; $next = -1
+        if ($tokens[$i].Text -ieq 'if') {
+            $p = $i + 1; $negated = $false
+            if ($p -lt $tokens.Count -and $tokens[$p].Text -ieq 'not') { $negated = $true; $p++ }
+            if ($p + 1 -ge $tokens.Count -or $tokens[$p+1].Text -ine 'then') { continue }
+            $name = $tokens[$p].Text.ToLowerInvariant()
+            if (-not $Bindings.ContainsKey($name) -or $Bindings[$name] -isnot [bool]) { continue }
+            $value = $Bindings[$name]; if ($negated) { $value = -not $value }
+            $thenStart = $p + 2; $thenNext = Get-ALStatementNext $tokens $thenStart
+            if ($thenNext -le $thenStart) { continue }
+            $next = $thenNext; $elseStart = -1
+            if ($next -lt $tokens.Count -and $tokens[$next].Text -ieq 'else') {
+                $elseStart = $next + 1; $next = Get-ALStatementNext $tokens $elseStart
+                if ($next -le $elseStart) { continue }
+            }
+            $replacement = ''
+            if ($value) { $replacement = $Body.Substring($tokens[$thenStart].Start, $tokens[$thenNext-1].End - $tokens[$thenStart].Start) + ';' }
+            elseif ($elseStart -ge 0) { $replacement = $Body.Substring($tokens[$elseStart].Start, $tokens[$next-1].End - $tokens[$elseStart].Start) + ';' }
+        } elseif ($tokens[$i].Text -ieq 'case' -and $i + 2 -lt $tokens.Count) {
+            $name = $tokens[$i+1].Text.ToLowerInvariant(); $of = $i + 2
+            if ($tokens[$of].Text -eq '.' -and $of + 2 -lt $tokens.Count) { $name += '.'+$tokens[$of+1].Text.ToLowerInvariant(); $of += 2 }
+            if ($tokens[$of].Text -ine 'of' -or -not $Bindings.ContainsKey($name) -or $Bindings[$name] -isnot [string]) { continue }
+            # Envelope identity is proved at entry, before the first dispatch;
+            # never carry it across arbitrary code inside a selected branch.
+            if ($name.Contains('.') -and $i -ne $entryStatement) { continue }
+            $end = Get-ALStatementNext $tokens $i
+            if ($end -lt 0) { continue }
+            $cursor = $of + 1; $chosen = ''; $valid = $true
+            while ($cursor -lt $end -and $tokens[$cursor].Text -ine 'end') {
+                $labels = @(); $default = $tokens[$cursor].Text -ieq 'else'
+                if ($default) { $cursor++ }
+                else {
+                    while ($cursor -lt $end) {
+                        if ($tokens[$cursor].Text -match "^'((?:[^']|'')*)'$") { $labels += $Matches[1].Replace("''", "'"); $cursor++ }
+                        elseif ($cursor+3 -lt $end -and $tokens[$cursor].Text.StartsWith('"') -and $tokens[$cursor+1].Text -eq ':' -and $tokens[$cursor+2].Text -eq ':' -and $tokens[$cursor+3].Text.StartsWith('"')) {
+                            $labels += ($tokens[$cursor].Text+'::'+$tokens[$cursor+3].Text); $cursor+=4
+                        } else { break }
+                        if ($tokens[$cursor].Text -ne ',') { break }; $cursor++
+                    }
+                    if ($labels.Count -eq 0 -or $tokens[$cursor].Text -ne ':') { $valid = $false; break }; $cursor++
+                }
+                $stop = Get-ALStatementNext $tokens $cursor
+                if ($stop -le $cursor) { $valid = $false; break }
+                $matches=if($name -eq 'rec.type'){$labels -icontains $Bindings[$name]}else{$labels -ccontains $Bindings[$name]}
+                if ($matches -or ($default -and $chosen -eq '')) {
+                    $chosen = $Body.Substring($tokens[$cursor].Start, $tokens[$stop-1].End - $tokens[$cursor].Start) + ';'
+                }
+                $cursor = $stop
+            }
+            if (-not $valid) { continue }
+            $replacement = $chosen; $next = $end
+        }
+        if ($null -ne $replacement -and $next -gt $i) {
+            $Body = $Body.Substring(0, $tokens[$i].Start) + $replacement + $Body.Substring($tokens[$next-1].End)
+            $tokens = @(Get-ALTokens $Body)
+            $i = [Math]::Min($i, $tokens.Count)
+        }
+    }
+    return $Body
+}
+
+# A fresh local codeunit has default Boolean/Text state. Specialize only when all
+# source uses of that instance are calls, and every mode write is a simple setter
+# invoked unconditionally before any operation. Shared/global instances and unknown
+# setters retain both paths. Nothing is inferred from procedure or field names.
+function Get-FreshCodeunitBindings($Objects, $Seen) {
+    $candidates = @{}; $invalid = @{}
+    foreach ($entry in $Seen.Keys) {
+        $parts = $entry -split '::', 2; $caller = $Objects[$parts[0]]
+        foreach ($body in $caller.Procedures[$parts[1]]) {
+            $tokens = @(Get-ALTokens $body); $begin = -1
+            for ($i=0; $i -lt $tokens.Count; $i++) { if ($tokens[$i].Text -ieq 'begin') { $begin = $i; break } }
+            if ($begin -lt 0) { continue }
+            $declarations = $body.Substring(0,$tokens[$begin].Start)
+            $declarations = [regex]::Replace($declarations,"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+            $localVars = @{}
+            foreach ($match in [regex]::Matches($declarations, '(?i)\b(\w+)\s*:\s*Codeunit\s+"([^"]+)"')) { $localVars[$match.Groups[1].Value.ToLowerInvariant()] = $match.Groups[2].Value }
+            $calls = @(Get-SourceCalls $body)
+            foreach ($receiver in $caller.Variables.Keys) {
+                foreach ($target in $caller.Variables[$receiver]) {
+                    if (-not $Objects.ContainsKey($target) -or $Objects[$target].Kind -ne 'codeunit') { continue }
+                    $instanceCalls = @($calls | Where-Object { $_.Receiver -eq $receiver })
+                    if ($instanceCalls.Count -eq 0) { continue }
+                    $object = $Objects[$target]
+                    if (-not $localVars.ContainsKey($receiver) -or $localVars[$receiver] -ne $target -or $object.Text -match '(?i)\bSingleInstance\s*=\s*true') { $invalid[$target]=$true; continue }
+                    $header = $object.Text -split '(?im)^\s*(?:\[[^\]]*\]\s*)*(?:(?:local|internal|protected)\s+)?(?:procedure|trigger)\b', 2
+                    $header[0] = [regex]::Replace($header[0],"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+                    $state = @{}
+                    foreach ($field in [regex]::Matches($header[0], '(?i)\b(\w+)\s*:\s*(Boolean|Text(?:\[\d+\])?)\s*;')) {
+                        $state[$field.Groups[1].Value.ToLowerInvariant()] = $(if ($field.Groups[2].Value -ieq 'Boolean') { $false } else { '' })
+                    }
+                    if ($state.Count -eq 0) { continue }
+                    # Every textual use after the declaration must be a qualified call.
+                    $syntax = [regex]::Replace($body.Substring($tokens[$begin].End), "'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/", ' ')
+                    $allUses = [regex]::Matches($syntax, "(?i)\b$([regex]::Escape($receiver))\b").Count
+                    if ($allUses -ne $instanceCalls.Count) { $invalid[$target]=$true; continue }
+                    $setters = @{}
+                    foreach ($proc in $object.Procedures.Keys) {
+                        if (@($object.Procedures[$proc]).Count -ne 1) { continue }
+                        $setterBody = $object.Procedures[$proc][0]
+                        $match = [regex]::Match($setterBody, "(?is)\bbegin\s+(\w+)\s*:=\s*(true|false|'(?:[^']|'')*'|\w+)\s*;\s*end\s*;\s*\}\s*$|\bbegin\s+(\w+)\s*:=\s*(true|false|'(?:[^']|'')*'|\w+)\s*;\s*end\s*;\s*$")
+                        if (-not $match.Success) { continue }
+                        $field = $(if($match.Groups[1].Success){$match.Groups[1].Value}else{$match.Groups[3].Value}).ToLowerInvariant()
+                        $value = if($match.Groups[2].Success){$match.Groups[2].Value}else{$match.Groups[4].Value}
+                        if ($state.ContainsKey($field) -and (Get-ParameterNames $setterBody) -notcontains $field -and $setterBody.Substring(0,$match.Index) -notmatch ("(?i)\b"+[regex]::Escape($field)+"\s*:")) { $setters[$proc] = @{ Field=$field; Value=$value; Parameters=(Get-ParameterNames $setterBody) } }
+                    }
+                    # A mode field with a non-setter writer cannot be inferred.
+                    foreach ($field in @($state.Keys)) {
+                        foreach ($proc in $object.Procedures.Keys) {
+                            foreach ($procBody in $object.Procedures[$proc]) {
+                                $syntax = [regex]::Replace($procBody, "'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/", ' ')
+                                if ($syntax -match "(?i)\b$([regex]::Escape($field))\s*:=" -and -not $setters.ContainsKey($proc)) { $state.Remove($field) }
+                                if ($syntax -match "(?i)\bClear\(\s*$([regex]::Escape($field))\s*\)") { $state.Remove($field) }
+                                if (-not $setters.ContainsKey($proc)) {
+                                    $start=[regex]::Match($syntax,'(?i)\bbegin\b')
+                                    if ($start.Success) {
+                                        $executable=$syntax.Substring($start.Index+$start.Length)
+                                        $uses=[regex]::Matches($executable,"(?i)(?<![.\w])$([regex]::Escape($field))(?![\w])").Count
+                                        $selectors=[regex]::Matches($executable,"(?i)\bif\s+(?:not\s+)?$([regex]::Escape($field))\s+then\b|\bcase\s+$([regex]::Escape($field))\s+of\b").Count
+                                        if ($uses -ne $selectors) { $state.Remove($field) }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $configured = @{}; $operationSeen=$false; $bad=$false
+                    $cursor = $begin + 1
+                    while ($cursor -lt $tokens.Count -and $tokens[$cursor].Text -ine 'end') {
+                        $next = Get-ALStatementNext $tokens $cursor
+                        if ($next -le $cursor) { $bad=$true; break }
+                        $statement = $body.Substring($tokens[$cursor].Start, $tokens[$next-1].End - $tokens[$cursor].Start)
+                        $uses = @(Get-SourceCalls $statement | Where-Object { $_.Receiver -eq $receiver })
+                        foreach ($call in $uses) {
+                            if ($setters.ContainsKey($call.Callee)) {
+                                $exact = [regex]::Match($statement, '(?is)^\s*\w+\.\w+\s*\(.*\)\s*;\s*$')
+                                if ($operationSeen -or -not $exact.Success -or $uses.Count -ne 1) { $bad=$true; break }
+                                $setter = $setters[$call.Callee]; $value = $setter.Value
+                                $position = [array]::IndexOf($setter.Parameters, $value.ToLowerInvariant())
+                                if ($position -ge 0) {
+                                    $setterBody=$object.Procedures[$call.Callee][0]
+                                    $parameterName=[regex]::Escape($setter.Parameters[$position])
+                                    if($setterBody -notmatch ("(?i)\b"+$parameterName+'\s*:\s*(?:Text|Boolean)\s*(?:;|\))')){$bad=$true;break}
+                                    if ($position -ge $call.Arguments.Count) { $bad=$true; break }; $value = $call.Arguments[$position]
+                                }
+                                if ($value -match "^'((?:[^']|'')*)'$") { $value=$Matches[1].Replace("''", "'") }
+                                elseif ($value -ieq 'true') { $value=$true }
+                                elseif ($value -ieq 'false') { $value=$false }
+                                else { $bad=$true; break }
+                                if ($state.ContainsKey($setter.Field)) { $state[$setter.Field]=$value }
+                                $configured[$call.Callee]=$true
+                            } else { $operationSeen=$true }
+                        }
+                        $cursor=$next
+                    }
+                    if ($bad) { $invalid[$target]=$true; continue }
+                    # Internal calls to setters could change state during the operation.
+                    foreach ($calledEntry in $Seen.Keys) {
+                        $ep=$calledEntry -split '::',2
+                        if ($ep[0] -ne $target) { continue }
+                        foreach ($procBody in $object.Procedures[$ep[1]]) {
+                            foreach ($call in @(Get-SourceCalls $procBody)) {
+                                if ($call.Receiver -in @('','this') -and $setters.ContainsKey($call.Callee)) { $invalid[$target]=$true }
+                            }
+                        }
+                    }
+                    if (-not $candidates.ContainsKey($target)) { $candidates[$target]=New-Object 'System.Collections.Generic.List[object]' }
+                    $candidates[$target].Add($state)
+                }
+            }
+        }
+    }
+    $bindings=@{}
+    foreach ($target in $candidates.Keys) {
+        if ($invalid.ContainsKey($target)) { continue }
+        foreach ($entry in $Seen.Keys) {
+            $ep=$entry -split '::',2
+            foreach ($body in $Objects[$ep[0]].Procedures[$ep[1]]) {
+                if ($body -match ('(?i)Codeunit::"'+[regex]::Escape($target)+'"')) { $invalid[$target]=$true }
+            }
+        }
+        if ($invalid.ContainsKey($target)) { continue }
+        $bindings[$target]=@{}
+        foreach ($field in $candidates[$target][0].Keys) {
+            $value=$candidates[$target][0][$field]; $same=$true
+            foreach ($state in $candidates[$target]) { if (-not $state.ContainsKey($field) -or $state[$field] -cne $value) { $same=$false } }
+            if ($same) { $bindings[$target][$field]=$value }
+        }
+    }
+    return $bindings
+}
+
+function Get-SelectorBindings($Objects, $Seen, [string]$ObjectName, [string]$ProcedureName, [string]$Body) {
+    $bindings=@{}
+    if (@($Objects[$ObjectName].Procedures[$ProcedureName]).Count -ne 1) { return $bindings }
+    $parameters=Get-ParameterNames $Body
+    $syntax=[regex]::Replace($Body,"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+    foreach ($parameter in $parameters) {
+        $escaped=[regex]::Escape($parameter)
+        # Code parameters normalize case, and bounded Text can reject a value at
+        # the call boundary. Retain both paths unless the value is plain Text/Boolean.
+        if($Body -notmatch ("(?i)\b"+$escaped+'\s*:\s*(?:Text|Boolean)\s*(?:;|\))')){continue}
+        $selectors=[regex]::Matches($syntax,"(?i)\bif\s+(?:not\s+)?$escaped\s+then\b|\bcase\s+$escaped\s+of\b").Count
+        $uses=[regex]::Matches($syntax,"(?i)(?<![.\w])$escaped(?![\w])").Count
+        if ($selectors -eq 0 -or $uses -ne $selectors + 1) { continue }
+        $position=[array]::IndexOf($parameters,$parameter);$values=@();$unknown=$false
+        foreach ($entry in $Seen.Keys) {
+            $ep=$entry -split '::',2;$caller=$Objects[$ep[0]]
+            foreach ($callerBody in $caller.Procedures[$ep[1]]) {
+                $callSyntax=[regex]::Replace($callerBody,'''(?:[^'']|'''')*''|"(?:[^"]|"")*"|//[^\r\n]*|/\*[\s\S]*?\*/',' ')
+                foreach($site in $anyCall.Matches($callSyntax)){if($site.Groups['chained'].Value -ieq $ProcedureName){$unknown=$true}}
+                foreach ($call in @(Get-SourceCalls $callerBody)) {
+                    if ($call.Callee -ine $ProcedureName) { continue }
+                    $targets=@(if ($call.Receiver -in @('','this','rec')) { $ep[0] }
+                        elseif ($caller.Variables.ContainsKey($call.Receiver)) { $caller.Variables[$call.Receiver] })
+                    if ($targets.Count -eq 0) { $unknown=$true; continue }
+                    if ($targets -notcontains $ObjectName) { continue }
+                    if ($targets.Count -ne 1 -or $position -ge $call.Arguments.Count) { $unknown=$true; continue }
+                    $value=$call.Arguments[$position]
+                    if ($value -match "^'((?:[^']|'')*)'$") { $values+=,$Matches[1].Replace("''", "'") }
+                    elseif ($value -ieq 'true') { $values+=,$true }
+                    elseif ($value -ieq 'false') { $values+=,$false }
+                    else { $unknown=$true }
+                }
+            }
+        }
+        if (-not $unknown -and $values.Count -gt 0) {
+            $same=$true
+            foreach ($value in $values) { if ($value -cne $values[0] -or $value.GetType() -ne $values[0].GetType()) { $same=$false } }
+            if ($same) { $bindings[$parameter]=$values[0] }
+        }
+    }
+    return $bindings
+}
+
+# Prove envelope identity through the wrapper and its source-resolved record
+# helpers before specializing a Codeunit.Run dispatch on Rec.Type. Unknown
+# record methods, record replacement and Type writes keep every CASE branch.
+function Test-ScalarArgumentReadOnly($Objects, [string]$ObjectName, $Call, [int]$Position) {
+    if($Call.Receiver -eq '' -and $Call.Callee -in @('format','message','error','strsubstno','copystr','strlen','uppercase','lowercase')){return $true}
+    $object=$Objects[$ObjectName]
+    $targets=@(if($Call.Receiver -in @('','this','rec')){$ObjectName}elseif($object.Variables.ContainsKey($Call.Receiver)){$object.Variables[$Call.Receiver]})
+    if($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0]) -or -not $Objects[$targets[0]].Procedures.ContainsKey($Call.Callee)){return $false}
+    foreach($body in $Objects[$targets[0]].Procedures[$Call.Callee]){
+        $signature=[regex]::Match($body,'(?is)(?:procedure|trigger)\s+(?:"[^"]+"|\w+)\s*\(([^)]*)\)')
+        if(-not $signature.Success){return $false};$params=@($signature.Groups[1].Value.Split(';'))
+        if($Position -ge $params.Count -or $params[$Position] -match '(?i)^\s*var\b'){return $false}
+    }
+    return $true
+}
+
+function Test-EnvelopePreserved($Objects, [string]$ObjectName, [string]$ProcedureName, [string]$RecordName, $Seen) {
+    $key="$ObjectName::$ProcedureName::$RecordName"
+    if ($Seen.ContainsKey($key)) { return $true };$Seen[$key]=$true
+    if (-not $Objects.ContainsKey($ObjectName) -or -not $Objects[$ObjectName].Procedures.ContainsKey($ProcedureName)) { return $false }
+    $object=$Objects[$ObjectName]
+    foreach ($body in $object.Procedures[$ProcedureName]) {
+        $syntax=[regex]::Replace($body,"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+        $name=[regex]::Escape($RecordName)
+        if ($syntax -match ("(?i)\b$name\s*:=|\b$name\s*\.\s*"+'"?Type"?\s*:=|\bClear\(\s*'+$name+'\s*\)')) { return $false }
+        $implicit=$object.Kind -eq 'table' -and $RecordName -eq 'rec'
+        if ($implicit) {
+            $fieldTokens=@(Get-ALTokens $body)
+            for($i=0;$i+1 -lt $fieldTokens.Count;$i++) {
+                if($fieldTokens[$i].Text -iin @('Type','"Type"') -and $fieldTokens[$i+1].Text -eq ':=' -and ($i -eq 0 -or $fieldTokens[$i-1].Text -ne '.')) { return $false }
+            }
+        }
+        foreach($site in $anyCall.Matches($syntax)){
+            if(-not $site.Groups['chained'].Success){continue}
+            $tail=$syntax.Substring($site.Index+$site.Length);$stop=$tail.IndexOf(')');if($stop -ge 0){$tail=$tail.Substring(0,$stop+1)}
+            $field=if($implicit){'|"?Type"?'}else{''}
+            if($tail -match ("(?i)(?:^|,)\s*(?:$name(?:\."+'"?Type"?'+")?$field)\s*(?=,|\))")){return $false}
+        }
+        foreach ($call in @(Get-SourceCalls $body)) {
+            $sameRecord=$call.Receiver -eq $RecordName -or ($implicit -and $call.Receiver -in @('','this','rec'))
+            if($sameRecord -and $call.Callee -in @('get','find','findfirst','findlast','findset','next','init','reset','copy','transferfields','validate','rename')){return $false}
+            if($sameRecord -and $call.Callee -in @('modify','insert','delete')){
+                if($call.Arguments.Count -eq 0 -or $call.Arguments[0] -in @('','false')){continue}
+                if($call.Arguments[0] -ine 'true'){return $false}
+                $trigger='on'+$call.Callee
+                if($Objects.ContainsKey('Message Argument ori') -and $Objects['Message Argument ori'].Procedures.ContainsKey($trigger)){
+                    if(-not (Test-EnvelopePreserved $Objects 'Message Argument ori' $trigger 'rec' $Seen)){return $false}
+                }
+                continue
+            }
+            if ($call.Receiver -eq $RecordName) {
+                if ($call.Callee -in @('get','find','findfirst','findlast','findset','next','init','reset','copy','transferfields','validate','rename')) { return $false }
+                if ($call.Callee -in @('testfield','fieldno','fieldcaption','count','isempty','getfilters','getrangefilter','getrangemin','getrangemax')) { continue }
+                if (-not (Test-EnvelopePreserved $Objects 'Message Argument ori' $call.Callee 'rec' $Seen)) { return $false }
+                continue
+            }
+            if ($implicit -and $call.Receiver -in @('','this','rec') -and $object.Procedures.ContainsKey($call.Callee)) {
+                if (-not (Test-EnvelopePreserved $Objects $ObjectName $call.Callee 'rec' $Seen)) { return $false }
+            }
+            for ($position=0;$position -lt $call.Arguments.Count;$position++) {
+                $argument=$call.Arguments[$position]
+                $field=$argument -match ("(?i)^$name\."+'(?:Type|"Type")$')
+                if($implicit -and $argument -imatch '^(Type|"Type")$'){$field=$true}
+                if($field -and -not (Test-ScalarArgumentReadOnly $Objects $ObjectName $call $position)){return $false}
+                if ($argument -ine $RecordName) { continue }
+                # Record.Copy reads its source argument; the receiver receives
+                # the fields. Copying Rec to a temporary buffer does not replace Rec.
+                if ($position -eq 0 -and $call.Callee -eq 'copy' -and $object.Variables.ContainsKey($call.Receiver) -and $object.Variables[$call.Receiver] -contains 'Message Argument ori') { continue }
+                if ($call.Receiver -eq 'codeunit' -and $call.Callee -eq 'run' -and $position -eq 1 -and $call.Arguments[0] -match '^Codeunit::"([^"]+)"$') {
+                    $target=$Matches[1]
+                    if ($Objects.ContainsKey($target) -and $Objects[$target].TableNo -eq 'Message Argument ori') { continue }
+                    return $false
+                }
+                $targets=@(if ($call.Receiver -in @('','this','rec')) { $ObjectName }
+                    elseif ($object.Variables.ContainsKey($call.Receiver)) { $object.Variables[$call.Receiver] })
+                if ($targets.Count -ne 1 -or -not $Objects.ContainsKey($targets[0])) { return $false }
+                $target=$Objects[$targets[0]]
+                if (-not $target.Procedures.ContainsKey($call.Callee)) { return $false }
+                foreach ($calleeBody in $target.Procedures[$call.Callee]) {
+                    $params=Get-ParameterNames $calleeBody
+                    if ($position -ge $params.Count -or -not (Test-EnvelopePreserved $Objects $targets[0] $call.Callee $params[$position] $Seen)) { return $false }
+                }
+            }
+        }
+    }
+    return $true
+}
+
+function Get-EnvelopeRunTargets($Objects, [string]$Root) {
+    $targets=New-Object 'System.Collections.Generic.HashSet[string]'
+    foreach ($body in $Objects[$Root].Procedures['executebifrosttask']) {
+        $record=Get-FirstParam $body
+        if ($record -eq '' -or -not (Test-EnvelopePreserved $Objects $Root 'executebifrosttask' $record @{})) { return ,$targets }
+        foreach ($call in @(Get-SourceCalls $body)) {
+            if ($call.Receiver -eq 'codeunit' -and $call.Callee -eq 'run' -and $call.Arguments.Count -eq 2 -and $call.Arguments[1] -ieq $record -and $call.Arguments[0] -match '^Codeunit::"([^"]+)"$') {
+                $target=$Matches[1]
+                if ($Objects.ContainsKey($target) -and $Objects[$target].TableNo -eq 'Message Argument ori') { [void]$targets.Add($target) }
+            }
+        }
+    }
+    return ,$targets
+}
+
+function Get-RuntimeObjects($Objects, [string]$Root, [string]$MessageType) {
+    $copy=@{}
+    foreach ($name in $Objects.Keys) {
+        $copy[$name]=$Objects[$name].Clone();$copy[$name].Procedures=@{}
+        $copy[$name].SourceProcedures=$Objects[$name].Procedures
+        foreach ($proc in $Objects[$name].Procedures.Keys) { $copy[$name].Procedures[$proc]=@($Objects[$name].Procedures[$proc]) }
+    }
+    foreach ($target in (Get-EnvelopeRunTargets $copy $Root)) {
+        $binding=@{ 'rec.type'=('"Message Type ori"::"'+$MessageType+'"') }
+        $copy[$target].Procedures['onrun']=@($copy[$target].Procedures['onrun'] | ForEach-Object { Select-KnownRuntimeBranches $_ $binding })
+    }
+    $seen=@{};Get-Reach $copy $Root 'executebifrosttask' $seen $true
+    $state=Get-FreshCodeunitBindings $copy $seen
+    foreach ($name in $state.Keys) {
+        foreach ($proc in @($copy[$name].Procedures.Keys)) {
+            $copy[$name].Procedures[$proc]=@($copy[$name].Procedures[$proc] | ForEach-Object {
+                $bindings=$state[$name].Clone()
+                $bodyTokens=@(Get-ALTokens $_); $begin=@($bodyTokens | Where-Object { $_.Text -ieq 'begin' } | Select-Object -First 1)
+                if ($begin.Count -eq 1) {
+                    $declarations=$_.Substring(0,$begin[0].Start)
+                    $declarations=[regex]::Replace($declarations,"'(?:[^']|'')*'|//[^\r\n]*|/\*[\s\S]*?\*/",' ')
+                    foreach ($field in @($bindings.Keys)) {
+                        if ($declarations -match ("(?i)\b"+[regex]::Escape($field)+"\s*:")) { $bindings.Remove($field) }
+                    }
+                }
+                Select-KnownRuntimeBranches $_ $bindings
+            })
+        }
+    }
+    $seen=@{};Get-Reach $copy $Root 'executebifrosttask' $seen $true
+    $pruned=@{}
+    foreach ($entry in $seen.Keys) {
+        $ep=$entry -split '::',2;$bodies=@()
+        foreach ($body in $copy[$ep[0]].Procedures[$ep[1]]) {
+            $bindings=Get-SelectorBindings $copy $seen $ep[0] $ep[1] $body
+            $bodies+=Select-KnownRuntimeBranches $body $bindings
+        }
+        $pruned[$entry]=$bodies
+    }
+    foreach ($entry in $pruned.Keys) { $ep=$entry -split '::',2;$copy[$ep[0]].Procedures[$ep[1]]=$pruned[$entry] }
+    return $copy
+}
+
 function Find-Offenders([string]$AppFolder) {
     $script:ContractDiagnostics = New-Object 'System.Collections.Generic.List[string]'
     $objects = Read-Source (Join-Path $AppFolder 'src')
     $types = Get-Types $objects
+    foreach ($dependency in $DependencyAppFolders) {
+        $dependencyObjects = Read-Source (Join-Path $dependency 'src')
+        foreach ($name in $dependencyObjects.Keys) {
+            if ($objects.ContainsKey($name)) { throw "Duplicate AL object name '$name' in dependency source '$dependency'." }
+            $objects[$name] = $dependencyObjects[$name]
+        }
+    }
     $found = New-Object 'System.Collections.Generic.List[string]'
     foreach ($typeName in $types.Keys) {
         $contractCodeunit = $types[$typeName].Contract
@@ -928,12 +1587,15 @@ function Find-Offenders([string]$AppFolder) {
         if (-not $objects.ContainsKey($contractCodeunit) -or -not $objects.ContainsKey($interfaceCodeunit)) { continue }
         if ($Explain -ne '' -and $typeName -ne $Explain) { continue }
         $script:ContractDiagnostics.Clear()
+        $script:RejectedReads=New-Object 'System.Collections.Generic.HashSet[string]'
         $selectedObjects = Get-SelectedObjects $objects $contractCodeunit
         $declared = Get-DeclaredKeys $selectedObjects $contractCodeunit
-        $literals = Get-ReachableLiterals $objects $interfaceCodeunit
-        $reads = Get-ReadKeys $objects $interfaceCodeunit
+        $runtimeObjects = Get-RuntimeObjects $objects $interfaceCodeunit $typeName
+        $literals = Get-ReachableLiterals $runtimeObjects $interfaceCodeunit
+        $reads = Get-ReadKeys $runtimeObjects $interfaceCodeunit
         $targetKeys = Get-TargetKeys $selectedObjects $contractCodeunit
         foreach ($diagnostic in ($script:ContractDiagnostics | Sort-Object -Unique)) { $found.Add("$typeName|$diagnostic") }
+        foreach ($key in ($script:RejectedReads | Sort-Object)) { Write-Host "Rejection-only request check (source-proven, unsupported): $typeName|$key" }
         if ($Explain -ne '') {
             $script:Explained = $true
             Write-Host "contract codeunit : $contractCodeunit"
@@ -943,7 +1605,7 @@ function Find-Offenders([string]$AppFolder) {
             Write-Host "read              : $(($reads | Sort-Object) -join ', ')"
         }
         foreach ($key in ($declared | Sort-Object)) {
-            if (-not $literals.Contains($key)) { $found.Add("$typeName|declared-not-read|$key") }
+            if (-not $literals.Contains($key) -or ($script:RejectedReads.Contains($key) -and -not $reads.Contains($key))) { $found.Add("$typeName|declared-not-read|$key") }
         }
         foreach ($key in ($reads | Sort-Object)) {
             if ($script:NeverParameters -contains $key) { continue }

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-15) - preserve request context in contract source checks
+
+- `tools/Test-ContractParameterKeys.ps1` follows nested JSON records through array iteration and helper arguments, while cleared or replaced tokens retain ambiguity diagnostics. It narrows runtime branches only from source-proven literal selectors, fresh local codeunit modes, or an unchanged message envelope at an entry dispatch. Unknown consumers, shared instances, mutation and ambiguous calls retain both paths (#30).
+- Dependency source can be supplied with `-DependencyAppFolders`; only the selected app's registrations are scanned. Duplicate object names fail, and invocation evidence must identify the dependency commit and official artifact. Rejection-only checks are reported separately only when a void helper's sole action is a read-only nonempty-value check followed by `Error`; real reads and incorrect declarations remain findings.
+- `tools/tests/test-contract-parameter-keys.py` covers positive and negative request lineage, dispatch, dependency and rejection scenarios. The functional candidate's remaining journal-validation findings and newly exposed `tableView` discrepancies remain visible; this does not close #30–33 or enable production workflow wiring. No AL object IDs, contracts, allow-lists or workflow files changed in this tooling repair.
+
 ### Fixed (2026-10-15) - typed-reader keys retain literal caller bindings
 
 - `tools/Test-ContractParameterKeys.ps1` resolves a forwarded typed-reader key only when every reached source call supplies a literal for that parameter. Unknown receivers, nested or dynamic arguments, mutable keys, unknown key consumers and overloaded procedures retain the ambiguity diagnostic (#30). This recognizes the existing `skip` and `take` wrapper without a key-name exception.
