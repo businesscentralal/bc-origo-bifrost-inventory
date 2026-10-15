@@ -1547,6 +1547,10 @@ function Test-ProofNoImplicitEffects($Objects,[string]$Object,$Proc) {
     $keywords=@('if','not','and','or','xor','in','while','until','case','of','for','foreach','repeat','begin','end','then','else','do','to','downto','true','false','exit','break','continue','database','codeunit','enum','textencoding')
     for($i=$Proc.Start;$i -lt $Proc.Stop;$i++){
         $name=$t[$i].Text.ToLowerInvariant()
+        if($i+2 -lt $Proc.Stop -and $t[$i].Text -in @(')',']') -and $t[$i+1].Text -eq '.'){
+            $chained=$t[$i+2].Text.Trim('"').Replace('""','"').ToLowerInvariant()
+            if($chained -notin @('astext','asdecimal','asboolean','asinteger','asbiginteger','asdate','asdatetime','astime','isvalue','isobject','isarray','asvalue','asobject','asarray','count','contains','get','keys','values','clone')){return $false}
+        }
         if($name -notmatch '^[a-z_][\w]*$' -or $name -in $keywords){continue}
         if($i+2 -lt $Proc.Stop -and $t[$i+1].Text -eq '.' -and ($i+3 -ge $Proc.Stop -or $t[$i+3].Text -ne '(')){
             $member=$t[$i+2].Text.ToLowerInvariant();$methodKnown=(Get-SourceProofMethodNames $Objects).Contains($member)

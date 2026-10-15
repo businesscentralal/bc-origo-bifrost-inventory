@@ -425,3 +425,30 @@ print(json.dumps({'total':len(results),'passed':sum(x['passed'] for x in results
 failed = [x for x in results if not x['passed']]
 shutil.rmtree(root)
 assert not failed, json.dumps(failed)
+
+# Keep the payload/branch counterexamples in the existing SourceGuards command.
+# Workflow ownership and production guard wiring are unchanged.
+import sys
+extension_results = []
+tests_folder = Path(__file__).resolve().parent
+with tempfile.TemporaryDirectory(prefix='inventory-contract-source-extensions-') as extension_tmp:
+    extension_root = Path(extension_tmp)
+    for filename in ['Test-RequestPayloadProof.ps1', 'Test-ContractBranchParser.ps1']:
+        result_file = extension_root / (filename + '.json')
+        result = subprocess.run([pw, '-NoProfile', '-File', str(tests_folder / filename),
+                                 '-Scanner', str(script), '-OutputPath', str(result_file)],
+                                capture_output=True, text=True)
+        assert result.returncode == 0, result.stdout + result.stderr
+        report = json.loads(result_file.read_text(encoding='utf-8-sig'))
+        assert report['executed'] > 0 and report['failed'] == report['skipped'] == 0, report
+        extension_results.append({key: value for key, value in report.items() if key != 'results'})
+    oracle_env = dict(os.environ, PWSH=pw, CONTRACT_PARAMETER_SCANNER=str(script))
+    result = subprocess.run([sys.executable, '-I', str(tests_folder / 'test-request-payload-source-oracle.py')],
+                            capture_output=True, text=True, env=oracle_env)
+    assert result.returncode == 0, result.stdout + result.stderr
+    oracle = json.loads(result.stdout)
+    assert oracle['passed'] and oracle['missing'] == oracle['unsoundExclusionsFound'] == 0, oracle
+    extension_results.append(oracle)
+assert not extension_root.exists()
+print(json.dumps({'kind': 'additional source regressions; not AL runtime tests',
+                  'ownedFixtureCleanupVerified': True, 'families': extension_results}))
