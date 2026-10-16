@@ -105,6 +105,25 @@ codeunit 96962 "Inventory Physical Tests"
         Token.AsArray().Get(0, Token);
         Token.AsObject().Get('before', Token);
         Assert.AreEqual(BeforeQuantity, Token.AsValue().AsDecimal(), 'Before value returned for the changed line.');
+        Response.Get('result', Token);
+        Token.AsArray().Get(0, Token);
+        Token.AsObject().Get('counted', Token);
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'Explicit zero is a submitted count.');
+
+        // Story #6, AC2 | Time: native WorkDate fixture | Risk: zero value mistaken for a submitted count on a later omitted request.
+        Clear(Request);
+        Request.Add('counts', Counts);
+        InitArgument(TempArgument, Batch, Request);
+        Journal.RecordCount(TempArgument);
+        Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
+        Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Omission after zero preserves the recorded count.');
+        Assert.AreEqual(10, Line.Quantity, 'Omission preserves the native shortage.');
+        Response := TempArgument.GetResponseJson();
+        ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.PhysInventory.RecordCount", Response);
+        Response.Get('result', Token);
+        Token.AsArray().Get(0, Token);
+        Token.AsObject().Get('counted', Token);
+        Assert.IsFalse(Token.AsValue().AsBoolean(), 'Omitted qtyCounted is not a submitted count, even when the stored value is zero.');
     end;
 
     /// <summary>The native check accepts physical-count zero deltas rather than applying generic nonzero quantity rules.</summary>

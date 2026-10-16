@@ -1,5 +1,7 @@
 # Changelog
 
+- Cover mixed dated/undated lot and package availability in both entry orders without writing posted ledgers (test codeunit 96927; issue #5). Assert explicit-zero and subsequent omitted physical-count response semantics while preserving native shortage quantities (test codeunit 96962; issue #6).
+
 - Preserve existing attribute Read/Full access through nonassignable included permission sets, integrating the published PR #96 permission repair without changing native functional grants. Add restricted-role read/no-write and full-write regressions (permission sets/extensions 10036915/10036916, test codeunit 96918; issue #26).
 
 - Exercise restrictive cost reads against self-posted stock with pending G/L costs; grant the test caller native pending-cost read access only and assert unchanged pending rows, no writes and no posting token (test codeunit 96933, permission set 96934; issues #4/#35).

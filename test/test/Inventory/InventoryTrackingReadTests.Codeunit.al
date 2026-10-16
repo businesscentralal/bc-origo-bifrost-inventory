@@ -537,6 +537,86 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertDecimal(Row, 'inventory', 4);
     end;
 
+    /// <summary>A lot containing dated then undated stock has no unambiguous expiration date.</summary>
+    [Test]
+    procedure Scenario_AC5_LotDatedThenUndatedReturnsBlank()
+    begin
+        // Story #5, AC5 | Time: fixed entry dates; Today/WorkDate ignored | Risk: temporary inconsistent native state only.
+        AssertMixedExpirationGroup(false, false);
+    end;
+
+    /// <summary>A lot containing undated then dated stock must not acquire the later entry date.</summary>
+    [Test]
+    procedure Scenario_AC5_LotUndatedThenDatedReturnsBlank()
+    begin
+        // Story #5, AC5 | Time: fixed entry dates; Today/WorkDate ignored | Risk: temporary inconsistent native state only.
+        AssertMixedExpirationGroup(false, true);
+    end;
+
+    /// <summary>A package containing dated then undated stock has no unambiguous expiration date.</summary>
+    [Test]
+    procedure Scenario_AC5_PackageDatedThenUndatedReturnsBlank()
+    begin
+        // Story #5, AC5 | Time: fixed entry dates; Today/WorkDate ignored | Risk: temporary inconsistent native state only.
+        AssertMixedExpirationGroup(true, false);
+    end;
+
+    /// <summary>A package containing undated then dated stock must not acquire the later entry date.</summary>
+    [Test]
+    procedure Scenario_AC5_PackageUndatedThenDatedReturnsBlank()
+    begin
+        // Story #5, AC5 | Time: fixed entry dates; Today/WorkDate ignored | Risk: temporary inconsistent native state only.
+        AssertMixedExpirationGroup(true, true);
+    end;
+
+    local procedure AssertMixedExpirationGroup(PackageOnly: Boolean; UndatedFirst: Boolean)
+    var
+        Item: Record Item;
+        Ledger: Record "Item Ledger Entry";
+        TempLedger: Record "Item Ledger Entry" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
+        Rows: JsonArray;
+        Token: JsonToken;
+        Row: JsonObject;
+        FirstDate: Date;
+        SecondDate: Date;
+        LedgerCount: Integer;
+    begin
+        // [GIVEN] Only temporary entries carry the inconsistent date combination; posted ledgers are untouched.
+        CreateAvailabilityItem(Item, true);
+        LedgerCount := Ledger.Count();
+        FirstDate := 20310101D;
+        SecondDate := 0D;
+        if UndatedFirst then begin
+            FirstDate := 0D;
+            SecondDate := 20310101D;
+        end;
+        AddTemporaryStock(TempLedger, Item."No.", 1, FirstDate);
+        AddTemporaryStock(TempLedger, Item."No.", 2, SecondDate);
+        AddTemporaryStock(TempLedger, Item."No.", 3, 20310101D);
+        if PackageOnly then
+            TempLedger.ModifyAll("Lot No.", '')
+        else
+            TempLedger.ModifyAll("Package No.", '');
+
+        // [WHEN] The same native projection aggregates all three positions.
+        TrackingRead.AggregateAvailability(TempLedger, Rows);
+
+        // [THEN] Neither encounter order nor a later dated row can invent a group expiration.
+        Assert.AreEqual(1, Rows.Count(), 'Mixed dates must not split the tracking group.');
+        Rows.Get(0, Token);
+        Row := Token.AsObject();
+        AssertText(Row, 'expirationDate', '');
+        AssertDecimal(Row, 'inventory', 6);
+        AssertDecimal(Row, 'availableQuantity', 6);
+        AssertDecimal(Row, 'qtyReserved', 0);
+        TempLedger.Get(1);
+        Assert.AreEqual(FirstDate, TempLedger."Expiration Date", 'Projection preserves the first entry date.');
+        TempLedger.Get(2);
+        Assert.AreEqual(SecondDate, TempLedger."Expiration Date", 'Projection preserves the second entry date.');
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Defensive projection must not create posted stock.');
+    end;
+
     /// <summary>Explicit serial/package selection survives native posted supply and both reservation sides.</summary>
     [Test]
     procedure Scenario_AC4_ReservationCarriesSerialAndPackage()
