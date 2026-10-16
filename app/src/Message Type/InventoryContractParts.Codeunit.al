@@ -7,6 +7,33 @@ codeunit 70013445 "Inventory Contract Parts ori"
 {
     Access = Internal;
 
+    var
+        AttributeGetOverviewLbl: Label 'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', Comment = 'is-IS=Les eigindaskilgreiningar og úthlutuð gildi fyrir eina eða fleiri vörur án þess að breyta gögnum í Business Central.';
+        AttributeCreateOverviewLbl: Label 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.', Comment = 'is-IS=Úthlutar einu eða fleiri eigindagildum á vöru. Fyrirliggjandi tengingar með sama gildi eru óbreyttar; árekstrar krefjast yfirskriftar eða uppfærsluskilaboða.';
+        AttributeUpdateOverviewLbl: Label 'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.', Comment = 'is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Item.Attribute.Create þegar tengingu vantar.';
+        AttributeDefinitionOverviewLbl: Label 'Creates an Item Attribute definition and optional Option values independently of an Item.', Comment = 'is-IS=Stofnar eigindaskilgreiningu fyrir vörur og valfrjáls valkostagildi án tengingar við tiltekna vöru.';
+        TransferCreateOverviewLbl: Label 'Creates a Transfer Order header and optional lines. The call allocates a new document number and is not idempotent.', Comment = 'is-IS=Stofnar haus flutningspöntunar og valfrjálsar línur. Kallið úthlutar nýju skjalanúmeri og endurtekið kall stofnar nýtt skjal.';
+        TransferReleaseOverviewLbl: Label 'Releases an open Transfer Order so it can be posted.', Comment = 'is-IS=Útgefur opna flutningspöntun svo hægt sé að bóka hana.';
+        TransferReopenOverviewLbl: Label 'Reopens a released Transfer Order so it can be edited again.', Comment = 'is-IS=Opnar útgefna flutningspöntun aftur svo hægt sé að breyta henni.';
+        TransferPostOverviewLbl: Label 'Posts a Transfer Order as Ship, Receive or direct transfer and writes the corresponding inventory documents and ledger entries.', Comment = 'is-IS=Bókar flutningspöntun sem afhendingu, móttöku eða beinan flutning og stofnar samsvarandi birgðaskjöl og færslur.';
+        TransferPreviewOverviewLbl: Label 'Simulates Transfer Order posting, returns predicted entries and always rolls back the transaction.', Comment = 'is-IS=Hermir eftir bókun flutningspöntunar, skilar fyrirhuguðum færslum og afturkallar alltaf gagnagrunnsbreytingarnar.';
+        TransferStatisticsOverviewLbl: Label 'Reads Transfer Order line counts, quantities, parcels, weights and volume without writing data.', Comment = 'is-IS=Les línufjölda, magn, pakkafjölda, þyngd og rúmmál flutningspöntunar án þess að breyta gögnum.';
+        AssemblyCreateOverviewLbl: Label 'Creates an Assembly Order for a parent Item and optionally refreshes its component lines from the BOM.', Comment = 'is-IS=Stofnar samsetningarpöntun fyrir yfirvöru og endurnýjar valfrjálst íhlutalínur úr uppskrift hennar.';
+        AssemblyRefreshOverviewLbl: Label 'Refreshes Assembly Order component lines from the parent Item BOM.', Comment = 'is-IS=Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift yfirvöru.';
+        AssemblyReleaseOverviewLbl: Label 'Releases an open Assembly Order so it can be posted.', Comment = 'is-IS=Útgefur opna samsetningarpöntun svo hægt sé að bóka hana.';
+        AssemblyReopenOverviewLbl: Label 'Reopens a released Assembly Order so it can be edited again.', Comment = 'is-IS=Opnar útgefna samsetningarpöntun aftur svo hægt sé að breyta henni.';
+        AssemblyPostOverviewLbl: Label 'Posts an Assembly Order and returns the posted document number.', Comment = 'is-IS=Bókar samsetningarpöntun og skilar númeri bókaða skjalsins.';
+        AssemblyPreviewOverviewLbl: Label 'Simulates Assembly Order posting and returns predicted entries without committing changes.', Comment = 'is-IS=Hermir eftir bókun samsetningarpöntunar og skilar fyrirhuguðum færslum án þess að vista breytingar.';
+        AssemblyStatisticsOverviewLbl: Label 'Reads Assembly Order header, line-count and cost statistics without writing data.', Comment = 'is-IS=Les haus, línufjölda og kostnaðartölfræði samsetningarpöntunar án þess að breyta gögnum.';
+        AttributeCreateNotesLbl: Label 'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.', Comment = 'is-IS=Eigindagildi fylgja gagnategund skilgreiningarinnar. Stilltu createValueIfMissing á eigindahlut þegar stofna þarf valkostagildi. Lokaðar vörur krefjast allowBlocked.';
+        AttributeUpdateNotesLbl: Label 'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.', Comment = 'is-IS=Uppfærsla nær aðeins til tenginga sem þegar eru til. Aðgerðin fer fram í aðskildu skrifferli.';
+        TransferCreateNotesLbl: Label 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.', Comment = 'is-IS=Beiðnin er framkvæmd í heild eða alls ekki. Þegar línur eru gefnar nota svæðisheiti camelCase og hámarksfjöldi lína er 200. Dagsetningar nota YYYY-MM-DD.';
+        TransferPostNotesLbl: Label 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration.', Comment = 'is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive. Beinir flutningar nota bókunarstillingu beinna flutninga í birgðagrunni.';
+        TransferPreviewNotesLbl: Label 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.', Comment = 'is-IS=Heppnuð forskoðun inniheldur rollback true. Ekkert er vistað, þar á meðal númer bókaðra skjala.';
+        AssemblyCreateNotesLbl: Label 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.', Comment = 'is-IS=refreshLines er sjálfgefið true. postingDate er vinnudagsetning þegar henni er sleppt. quantity verður að vera jákvætt.';
+        AssemblyPostNotesLbl: Label 'The posting gate requires BIFROST InvPost ori. Optional postingDate and quantityToAssemble are applied before posting.', Comment = 'is-IS=Bókunarhlið krefst BIFROST InvPost ori. Valfrjáls postingDate og quantityToAssemble eru notuð fyrir bókun.';
+        AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur.';
+
     /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEnvelope(MessageType: Text): JsonObject
     var
@@ -509,39 +536,39 @@ codeunit 70013445 "Inventory Contract Parts ori"
     begin
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
-                Overview := 'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.';
+                Overview := AttributeGetOverviewLbl;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
-                Overview := 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.';
+                Overview := AttributeCreateOverviewLbl;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
-                Overview := 'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.';
+                Overview := AttributeUpdateOverviewLbl;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
-                Overview := 'Creates an Item Attribute definition and optional Option values independently of an Item.';
+                Overview := AttributeDefinitionOverviewLbl;
             'Inventory.TransferOrder.Create':
-                Overview := 'Creates a Transfer Order header and optional lines. The call allocates a new document number and is not idempotent.';
+                Overview := TransferCreateOverviewLbl;
             'Inventory.TransferOrder.Release':
-                Overview := 'Releases an open Transfer Order so it can be posted.';
+                Overview := TransferReleaseOverviewLbl;
             'Inventory.TransferOrder.Reopen':
-                Overview := 'Reopens a released Transfer Order so it can be edited again.';
+                Overview := TransferReopenOverviewLbl;
             'Inventory.TransferOrder.Post':
-                Overview := 'Posts a Transfer Order as Ship, Receive or direct transfer and writes the corresponding inventory documents and ledger entries.';
+                Overview := TransferPostOverviewLbl;
             'Inventory.TransferOrder.PreviewPost':
-                Overview := 'Simulates Transfer Order posting, returns predicted entries and always rolls back the transaction.';
+                Overview := TransferPreviewOverviewLbl;
             'Inventory.TransferOrder.Statistics':
-                Overview := 'Reads Transfer Order line counts, quantities, parcels, weights and volume without writing data.';
+                Overview := TransferStatisticsOverviewLbl;
             'Inventory.AssemblyOrder.Create':
-                Overview := 'Creates an Assembly Order for a parent Item and optionally refreshes its component lines from the BOM.';
+                Overview := AssemblyCreateOverviewLbl;
             'Inventory.AssemblyOrder.RefreshLines':
-                Overview := 'Refreshes Assembly Order component lines from the parent Item BOM.';
+                Overview := AssemblyRefreshOverviewLbl;
             'Inventory.AssemblyOrder.Release':
-                Overview := 'Releases an open Assembly Order so it can be posted.';
+                Overview := AssemblyReleaseOverviewLbl;
             'Inventory.AssemblyOrder.Reopen':
-                Overview := 'Reopens a released Assembly Order so it can be edited again.';
+                Overview := AssemblyReopenOverviewLbl;
             'Inventory.AssemblyOrder.Post':
-                Overview := 'Posts an Assembly Order and returns the posted document number.';
+                Overview := AssemblyPostOverviewLbl;
             'Inventory.AssemblyOrder.PreviewPost':
-                Overview := 'Simulates Assembly Order posting and returns predicted entries without committing changes.';
+                Overview := AssemblyPreviewOverviewLbl;
             'Inventory.AssemblyOrder.Statistics':
-                Overview := 'Reads Assembly Order header, line-count and cost statistics without writing data.';
+                Overview := AssemblyStatisticsOverviewLbl;
         end;
     end;
 
@@ -550,21 +577,21 @@ codeunit 70013445 "Inventory Contract Parts ori"
     begin
         case MessageType of
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
-                Notes := 'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.';
+                Notes := AttributeCreateNotesLbl;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
-                Notes := 'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.';
+                Notes := AttributeUpdateNotesLbl;
             'Inventory.TransferOrder.Create':
-                Notes := 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.';
+                Notes := TransferCreateNotesLbl;
             'Inventory.TransferOrder.Post':
-                Notes := 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration.';
+                Notes := TransferPostNotesLbl;
             'Inventory.TransferOrder.PreviewPost':
-                Notes := 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.';
+                Notes := TransferPreviewNotesLbl;
             'Inventory.AssemblyOrder.Create':
-                Notes := 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.';
+                Notes := AssemblyCreateNotesLbl;
             'Inventory.AssemblyOrder.Post':
-                Notes := 'The posting gate requires BIFROST InvPost ori. Optional postingDate and quantityToAssemble are applied before posting.';
+                Notes := AssemblyPostNotesLbl;
             'Inventory.AssemblyOrder.PreviewPost':
-                Notes := 'The preview is rolled back and does not create posted documents or ledger entries.';
+                Notes := AssemblyPreviewNotesLbl;
         end;
     end;
 }

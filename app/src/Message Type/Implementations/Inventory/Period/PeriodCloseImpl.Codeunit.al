@@ -24,18 +24,24 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Marks the selected inventory period closed. Does not run the native inventory-period close action.', Comment = 'is-IS=Merkir tiltekið birgðatímabil sem lokað. Kallar ekki á innbyggða aðgerð til að loka birgðatímabili.';
     begin
-        exit('Closes inventory periods through an ending date, matching the inventory period close action.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'inventory period, mark period closed, closed flag', Comment = 'is-IS=birgðatímabil, merkja tímabil lokað, lokunarmerki';
     begin
-        exit('close inventory period, lock inventory period');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionLbl: Label 'Marks the selected period closed; an already closed period is unchanged. Does not run native close checks or create close history.', Comment = 'is-IS=Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.';
     begin
-        exit('Closes an inventory period. An already closed period returns success.');
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -120,14 +126,18 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewLbl: Label 'Marks the selected period closed; an already closed period is unchanged. Does not run native close checks or create close history.', Comment = 'is-IS=Merkir tiltekið tímabil sem lokað; lokað tímabil er óbreytt. Keyrir ekki innbyggðar lokunarprófanir og stofnar ekki lokunarferil.';
     begin
-        Overview := 'Closes an inventory period. An already closed period returns success.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Sets Inventory Period.Closed directly without posting inventory. This is not the native inventory-period close workflow.', Comment = 'is-IS=Setur Inventory Period.Closed beint án birgðabókunar. Þetta er ekki innbyggða verkferlið til að loka birgðatímabili.';
     begin
-        Notes := 'Sets Inventory Period.Closed. It does not post inventory.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
@@ -144,8 +154,8 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         ResponseJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
-        MissingDateErr: Label 'endingDate is required.', Locked = true;
-        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date', Locked = true;
+        MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
+        NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date||is-IS=Birgðatímabil sem lýkur %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
             exit;

@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -74,6 +75,33 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         AssertCodeCount('Inventory.Attribute.Create', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.Attribute.Update', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.AttributeDefinition.Create', 'MultipleErrors', 0);
+    end;
+
+    /// <summary>Blocked attribute refusal translates its sentence while retaining the item and protocol key.</summary>
+    [Test]
+    procedure AttributeBlocked_BothLanguages_PlaceholderAndKeyPreserved()
+    var
+        TempItem: Record Item temporary;
+        Resolve: Codeunit "Item Attribute Resolve ori";
+        PreviousLanguage: Integer;
+        English: Text;
+        Icelandic: Text;
+    begin
+        // [GIVEN] A self-contained temporary blocked item; no shared fixture or persistent write.
+        TempItem."No." := 'W8-LOCALE';
+        TempItem.Blocked := true;
+        PreviousLanguage := GlobalLanguage();
+        // [WHEN] Native validation refuses the same item in both languages.
+        GlobalLanguage(1033);
+        asserterror Resolve.AssertItemWritable(TempItem, false);
+        English := GetLastErrorText();
+        GlobalLanguage(1039);
+        asserterror Resolve.AssertItemWritable(TempItem, false);
+        Icelandic := GetLastErrorText();
+        GlobalLanguage(PreviousLanguage);
+        // [THEN] Exact sentences prove translation, interpolation and an unchanged allowBlocked key.
+        Assert.AreEqual('Item "W8-LOCALE" is blocked. Pass allowBlocked: true to override.', English, 'English refusal');
+        Assert.AreEqual('Varan "W8-LOCALE" er lokuð. Sendu allowBlocked: true til að leyfa breytinguna.', Icelandic, 'Icelandic refusal');
     end;
 
     local procedure ReadErrors(Name: Text) Errors: JsonArray

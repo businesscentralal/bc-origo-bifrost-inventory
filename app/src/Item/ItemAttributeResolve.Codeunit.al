@@ -14,18 +14,18 @@ codeunit 10036908 "Item Attribute Resolve ori"
     Access = Internal;
 
     var
-        AttributeNotFoundErr: Label 'Item attribute "%1" was not found.', Comment = '%1 = Attribute name or id', Locked = true;
-        AttributeTypeMismatchErr: Label 'Attribute "%1" has type %2; request type %3 does not match.', Comment = '%1 = Name, %2 = Actual type, %3 = Requested type', Locked = true;
-        OptionValueMissingErr: Label 'Option value "%1" was not found for attribute "%2". Pass createValueIfMissing: true to create it.', Comment = '%1 = Value, %2 = Attribute name', Locked = true;
-        MappingConflictErr: Label 'Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Item.Attribute.Update.', Comment = '%1 = Item No., %2 = Attribute name', Locked = true;
-        MappingMissingErr: Label 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', Comment = '%1 = Item No., %2 = Attribute name', Locked = true;
-        ItemBlockedErr: Label 'Item "%1" is blocked. Pass allowBlocked: true to override.', Comment = '%1 = Item No.', Locked = true;
-        AttributesRequiredErr: Label 'Request data.attributes must be a non-empty array.', Locked = true;
-        NameRequiredErr: Label 'Attribute definition requires data.name.', Locked = true;
-        TypeRequiredErr: Label 'Attribute definition requires data.type.', Comment = '', Locked = true;
-        DuplicateAttributeErr: Label 'Item attribute "%1" already exists.', Comment = '%1 = Attribute name', Locked = true;
-        UnknownTypeErr: Label 'Unknown attribute type "%1". Expected Option, Text, Integer, Decimal, or Date.', Comment = '%1 = Type name', Locked = true;
-        ValueRequiredErr: Label 'A value is required for attribute "%1".', Comment = '%1 = Attribute name', Locked = true;
+        AttributeNotFoundErr: Label 'Item attribute "%1" was not found.', Comment = '%1 = Attribute name or id||is-IS=Vörueigindin "%1" fannst ekki.';
+        AttributeTypeMismatchErr: Label 'Attribute "%1" has type %2; request type %3 does not match.', Comment = '%1 = Name, %2 = Actual type, %3 = Requested type||is-IS=Eigindin "%1" er af gerðinni %2; gerðin %3 í beiðninni passar ekki.';
+        OptionValueMissingErr: Label 'Option value "%1" was not found for attribute "%2". Pass createValueIfMissing: true to create it.', Comment = '%1 = Value, %2 = Attribute name||is-IS=Valkostsgildið "%1" fannst ekki fyrir eigindina "%2". Sendu createValueIfMissing: true til að stofna það.';
+        MappingConflictErr: Label 'Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Item.Attribute.Update.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.';
+        MappingMissingErr: Label 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.';
+        ItemBlockedErr: Label 'Item "%1" is blocked. Pass allowBlocked: true to override.', Comment = '%1 = Item No.||is-IS=Varan "%1" er lokuð. Sendu allowBlocked: true til að leyfa breytinguna.';
+        AttributesRequiredErr: Label 'Request data.attributes must be a non-empty array.', Comment = 'is-IS=data.attributes í beiðninni verður að vera fylki sem er ekki tómt.';
+        NameRequiredErr: Label 'Attribute definition requires data.name.', Comment = 'is-IS=Skilgreining eigindar krefst data.name.';
+        TypeRequiredErr: Label 'Attribute definition requires data.type.', Comment = 'is-IS=Skilgreining eigindar krefst data.type.';
+        DuplicateAttributeErr: Label 'Item attribute "%1" already exists.', Comment = '%1 = Attribute name||is-IS=Vörueigindin "%1" er þegar til.';
+        UnknownTypeErr: Label 'Unknown attribute type "%1". Expected Option, Text, Integer, Decimal, or Date.', Comment = '%1 = Type name||is-IS=Óþekkt gerð eigindar "%1". Búist var við Option, Text, Integer, Decimal eða Date.';
+        ValueRequiredErr: Label 'A value is required for attribute "%1".', Comment = '%1 = Attribute name||is-IS=Gildi er nauðsynlegt fyrir eigindina "%1".';
 
     /// <summary>Returns the Option member name for an Item Attribute Type (never Format of ordinal).</summary>
     /// <param name="ItemAttribute">The attribute whose Type to emit.</param>
@@ -193,7 +193,7 @@ codeunit 10036908 "Item Attribute Resolve ori"
         if not DocumentLookup.FindItemRange(Argument, Item) then
             exit(false);
         if not Item.FindFirst() then begin
-            Argument.RespondWithError('No items found matching the specified criteria.');
+            Argument.RespondWithError(NoItemsErr);
             exit(false);
         end;
         exit(true);
@@ -567,4 +567,6 @@ codeunit 10036908 "Item Attribute Resolve ori"
             end;
         end;
     end;
+    var
+        NoItemsErr: Label 'No items found matching the specified criteria.', Comment = 'is-IS=Engar vörur fundust sem passa við tilgreind skilyrði.';
 }

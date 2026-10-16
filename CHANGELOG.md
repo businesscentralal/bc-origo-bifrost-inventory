@@ -2,9 +2,10 @@
 
 ## [Unreleased]
 
-### Changed — strict document lookup error contracts (#27, #32)
+### Changed — strict document lookup errors and Icelandic responses (#27, #32, #33)
 
 - Inventory Contract Parts ori (70013445) declares malformed data and identifier keys plus one MultipleErrors entry for the eleven TransferOrder/AssemblyOrder lookups; Create and Item range contracts keep their existing behavior.
+- Translate existing Item attribute and inventory-period refusals plus shared attribute/TransferOrder/AssemblyOrder overview/notes (10036905–10036906, 10036908, 70013445, 70013484–70013485). Add an exact en-US/is-IS blocked-item refusal regression in 96922. Machine keys and existing message-type names stay unchanged.
 - Regenerate the Icelandic translation artifact from this branch’s build to remove orphan units and include existing translatable labels (#32); source guard wiring remains separately owned.
 - Add chapter tests (96922) and public-dispatch malformed-input regressions (96923). Raise the Foundation dependency floor to 28.0.2.0 without changing app versions. Test execution and runtime acceptance are tracked separately.
 
