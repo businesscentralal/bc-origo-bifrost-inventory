@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added (2026-10-16) - Inventory.AvailabilityByPeriod.Get
+
+- Avail. By Period Impl ori (70013487) adds `Inventory.AvailabilityByPeriod.Get` (enum value 70013438, enum extension 70013494). A caller sends `itemNo` or `items`, `periodType` (`day`, `week`, `month`, `quarter`, or `year`), `from`, and `periods` (1 to 53), with optional `variant` and `location`. Each period row returns periodStart, periodEnd, grossRequirement, scheduledReceipt, plannedOrderReceipt, projectedAvailableBalance, inventory, and amountType `netChange`. The figures follow Item Availability by Periods (page 157) and Item Availability Forms Mgt (codeunit 353). It does not write.
+- More than 53 periods or more than 20 items answers `LimitExceeded`. An unknown period type answers `InvalidParameter`. A missing item answers `RecordNotFound`. A Service or Non-Inventory item answers `PreconditionFailed`.
+- Inventory Domain ori value `Availability` (12) and Inventory Setup ori field Availability (22) gate the type. Inventory Upgrade ori turns the field on for companies that already have a setup row. BIFROST InvAttrRead ori (10036915) and BIFROST InvAttrWrite ori (10036916) grant read on Item, Item Variant, and Location. BIFROST InvRead ori and BIFROST InvWrite ori execute Avail. By Period Impl ori. No new assignable permission set is added.
+- Avail. By Period Tests (96924) and Avail. By Period Perm (96925) cover a posted inventory item, several items, a missing item, a bad period type, too many periods, too many items, a missing key, an unknown key, a format error, conflicting identifiers, a service item, a non-inventory item, and a caller without read permission.
+- Inventory Contract Batch Tests (96921) expects 45 message types registered by this app. The LCID 1033/1039 catalogue census includes this type, so that scoped count is 36.
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.

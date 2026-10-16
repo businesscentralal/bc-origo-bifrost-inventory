@@ -71,6 +71,11 @@ table 70013451 "Inventory Setup ori"
             Caption = 'Item Price', Comment = 'is-IS=Vöruverð';
             InitValue = true;
         }
+        field(22; Availability; Boolean)
+        {
+            Caption = 'Availability', Comment = 'is-IS=Framboð';
+            InitValue = true;
+        }
     }
 
     keys
@@ -116,6 +121,8 @@ table 70013451 "Inventory Setup ori"
                 exit("Inventory Period");
             Domain::ItemPrice:
                 exit("Item Price");
+            Domain::Availability:
+                exit(Availability);
         end;
         exit(true);
     end;

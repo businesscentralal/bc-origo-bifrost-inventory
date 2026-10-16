@@ -7,6 +7,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | Type | Direction | Purpose |
 |------|-----------|---------|
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
+| `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability by day, week, month, quarter, or year |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
