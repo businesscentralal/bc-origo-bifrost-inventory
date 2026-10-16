@@ -6,11 +6,14 @@ using System.TestLibraries.Utilities;
 
 /// <summary>
 /// Inventory.ItemReference.Resolve denies a caller who cannot read item references.
+/// BIFROST Read ori includes the InvRead extension, which grants Item and Item Reference,
+/// so this test keeps the caller on no permission set.
 /// </summary>
 codeunit 96923 "Item Ref. Resolve Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;
+    Permissions = tabledata "Message Argument ori" = RIMD;
 
     var
         Assert: Codeunit "Library Assert";
@@ -20,13 +23,11 @@ codeunit 96923 "Item Ref. Resolve Perm"
     var
         TempArgument: Record "Message Argument ori" temporary;
         ResolveImpl: Codeunit "Item Ref. Resolve Impl ori";
-        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         CodeToken: JsonToken;
         NextStepToken: JsonToken;
     begin
-        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         Assert.IsFalse(ResolveImpl.IsEnabled(), 'Resolve should be disabled without item reference read');
 
         TempArgument.Init();

@@ -205,10 +205,6 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         ResultJson: JsonObject;
         ReferencesToken: JsonToken;
         ReferenceToken: JsonToken;
-        ReferenceNoToken: JsonToken;
-        ReferenceTypeToken: JsonToken;
-        ReferenceTypeNoToken: JsonToken;
-        DateToken: JsonToken;
         ReferenceNo: Text;
         HasReferences: Boolean;
     begin
@@ -219,13 +215,13 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         RequestJson := Argument.GetRequestJson();
         if not RejectUnknownKeys(Argument, RequestJson) then
             exit;
-        // String literals are the keys the contract guard counts. The locked tokens are the same names.
-        RequestJson.Get('referenceNo', ReferenceNoToken);
-        RequestJson.Get('referenceType', ReferenceTypeToken);
-        RequestJson.Get('referenceTypeNo', ReferenceTypeNoToken);
-        RequestJson.Get('date', DateToken);
-        RequestJson.Get('references', ReferencesToken);
-        if ReferenceNoToken.IsValue() or ReferenceTypeToken.IsValue() or ReferenceTypeNoToken.IsValue() or DateToken.IsValue() then;
+        // String literals are the keys the contract guard counts as reads.
+        // Get throws when its Boolean result is discarded and the key is absent, so use Contains.
+        if RequestJson.Contains('referenceNo') then;
+        if RequestJson.Contains('referenceType') then;
+        if RequestJson.Contains('referenceTypeNo') then;
+        if RequestJson.Contains('date') then;
+        if RequestJson.Contains('references') then;
         if not ValidateTopLevelShape(Argument, RequestJson, HasReferences) then
             exit;
         if HasReferences then begin
