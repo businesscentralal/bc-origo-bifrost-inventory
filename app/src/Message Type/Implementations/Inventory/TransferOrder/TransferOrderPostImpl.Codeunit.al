@@ -151,8 +151,10 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostShipment: Boolean;
         PostReceipt: Boolean;
         PostTransfer: Boolean;
+        PostedOk: Boolean;
         xLastShipmentNo: Code[20];
         xLastReceiptNo: Code[20];
+        LastErrorText: Text;
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Locked = true;
         InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value', Locked = true;
     begin
@@ -201,17 +203,23 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         TransferPostSubscriber.SetChoices(PostShipment, PostReceipt, PostTransfer);
         BindSubscription(TransferPostSubscriber);
         Commit();
-        if not TransferOrderPostYesNo.Run(TransferHeader) then begin
-            UnbindSubscription(TransferPostSubscriber);
-            Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
+        PostedOk := TransferOrderPostYesNo.Run(TransferHeader);
+        if not PostedOk then
+            LastErrorText := GetLastErrorText();
         UnbindSubscription(TransferPostSubscriber);
 
-        if TransferHeader.Get(DocumentNo) then
-            BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson)
+        if not PostedOk then
+            if HeaderPostedAndDeleted(DocumentNo) then
+                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson)
+            else begin
+                Argument.RespondWithError(LastErrorText);
+                exit;
+            end
         else
-            BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson);
+            if TransferHeader.Get(DocumentNo) then
+                BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson)
+            else
+                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -276,5 +284,20 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('postedShipmentNo', PostedShipmentNo);
         ResponseJson.Add('postedReceiptNo', PostedReceiptNo);
         ResponseJson.Add('postingDate', Format(PostingDate, 0, 9));
+    end;
+
+    local procedure HeaderPostedAndDeleted(DocumentNo: Code[20]): Boolean
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+    begin
+        if TransferHeader.Get(DocumentNo) then
+            exit(false);
+        TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
+        if not TransferReceiptHeader.IsEmpty() then
+            exit(true);
+        TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
+        exit(not TransferShipmentHeader.IsEmpty());
     end;
 }

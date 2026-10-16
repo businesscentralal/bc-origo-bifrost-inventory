@@ -98,7 +98,7 @@ codeunit 96923 "Reservation Create Tests"
         RequestJson.Add('itemNo', Item."No.");
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'create status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Create should reserve against the transfer line');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Create should reserve against the transfer line. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('entryNo', EntryToken), 'entryNo missing');
         EntryNo := EntryToken.AsValue().AsInteger();
         Assert.AreNotEqual(0, EntryNo, 'entryNo should be populated');
@@ -113,5 +113,13 @@ codeunit 96923 "Reservation Create Tests"
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Cancel should work on the created entry');
         ReservationEntry.SetRange("Entry No.", EntryNo);
         Assert.IsFalse(ReservationEntry.FindFirst(), 'Reservation entry should be removed');
+    end;
+
+    local procedure JsonText(ResponseJson: JsonObject): Text
+    var
+        TextValue: Text;
+    begin
+        ResponseJson.WriteTo(TextValue);
+        exit(TextValue);
     end;
 }

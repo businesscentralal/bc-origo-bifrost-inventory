@@ -152,6 +152,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemJournalLine: Record "Item Journal Line";
+        ItemJournalBatch: Record "Item Journal Batch";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
@@ -164,6 +165,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         LineCount: Integer;
         MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er skylda.';
         MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er skylda.';
+        BatchNotFoundErr: Label 'Item journal batch %1 %2 was not found.', Comment = '%1 = template name, %2 = batch name, is-IS=Vörubók %1 %2 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;
@@ -184,9 +186,20 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
             exit;
         if RequestJson.Get('itemNoFilter', Token) then
             ItemNoFilter := Token.AsValue().AsText();
+        if not ItemJournalBatch.Get(JournalTemplateName, JournalBatchName) then begin
+            Argument.RespondWithError(
+                "Bifrost Error Code ori"::RecordNotFound,
+                StrSubstNo(BatchNotFoundErr, JournalTemplateName, JournalBatchName),
+                'journalBatchName', JournalBatchName, '', '');
+            exit;
+        end;
         ItemJournalLine."Journal Template Name" := JournalTemplateName;
         ItemJournalLine."Journal Batch Name" := JournalBatchName;
-        if not TryRunCalculateInventory(ItemJournalLine, PostingDate, ItemNoFilter) then begin
+        ItemJournalLine."Posting Date" := PostingDate;
+        ItemJournalLine."Document No." := JournalBatchName;
+        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
+        if not TryRunCalculateInventory(ItemJournalLine, PostingDate, JournalBatchName, ItemNoFilter) then begin
             Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
@@ -205,18 +218,18 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     [TryFunction]
-    local procedure TryRunCalculateInventory(var ItemJournalLine: Record "Item Journal Line"; PostingDate: Date; ItemNoFilter: Text)
+    local procedure TryRunCalculateInventory(var ItemJournalLine: Record "Item Journal Line"; PostingDate: Date; DocumentNo: Code[20]; ItemNoFilter: Text)
     var
         Item: Record Item;
         CalculateInventory: Report "Calculate Inventory";
     begin
-        CalculateInventory.SetItemJnlLine(ItemJournalLine);
-        CalculateInventory.InitializeRequest(PostingDate, '', false, false);
-        CalculateInventory.SetHideValidationDialog(true);
-        if ItemNoFilter <> '' then begin
+        Item.SetRange(Type, Item.Type::Inventory);
+        if ItemNoFilter <> '' then
             Item.SetFilter("No.", ItemNoFilter);
-            CalculateInventory.SetTableView(Item);
-        end;
+        CalculateInventory.SetItemJnlLine(ItemJournalLine);
+        CalculateInventory.InitializeRequest(PostingDate, DocumentNo, false, true);
+        CalculateInventory.SetHideValidationDialog(true);
+        CalculateInventory.SetTableView(Item);
         CalculateInventory.UseRequestPage(false);
         CalculateInventory.Run();
     end;

@@ -181,6 +181,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         EntryNo: Integer;
         FullAutoReservation: Boolean;
         AvailabilityDate: Date;
+        QtyPerUOM: Decimal;
         MissingSourceTypeErr: Label 'sourceType is required.', Comment = 'is-IS=sourceType er skylda.';
         MissingSourceNoErr: Label 'sourceNo is required.', Comment = 'is-IS=sourceNo er skylda.';
         MissingSourceLineErr: Label 'sourceLineNo is required.', Comment = 'is-IS=sourceLineNo er skylda.';
@@ -230,13 +231,15 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
         if not BindReservationSource(
             Argument, ReservationManagement, SourceType, SourceSubtype, SourceNo, SourceLineNo,
-            ItemNo, LocationCode, AvailabilityDate, UnsupportedSourceErr, SourceNotFoundErr, ItemMismatchErr)
+            ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, UnsupportedSourceErr, SourceNotFoundErr, ItemMismatchErr)
         then
             exit;
 
         if AvailabilityDate = 0D then
             AvailabilityDate := WorkDate();
-        if not TryAutoReserve(ReservationManagement, FullAutoReservation, ItemNo, AvailabilityDate, Quantity) then begin
+        if QtyPerUOM = 0 then
+            QtyPerUOM := 1;
+        if not TryAutoReserve(ReservationManagement, FullAutoReservation, ItemNo, AvailabilityDate, Quantity, Quantity * QtyPerUOM) then begin
             Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
@@ -287,6 +290,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         var ItemNo: Code[20];
         var LocationCode: Code[10];
         var AvailabilityDate: Date;
+        var QtyPerUOM: Decimal;
         UnsupportedSourceErr: Text;
         SourceNotFoundErr: Text;
         ItemMismatchErr: Text): Boolean
@@ -295,17 +299,10 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
-        ReservationEntry: Record "Reservation Entry";
         SourceItemNo: Code[20];
         SourceLocationCode: Code[10];
-        QtyPerUOM: Decimal;
-        VariantCode: Code[10];
     begin
-        ReservationEntry.Init();
-        ReservationEntry."Source Type" := SourceType;
-        ReservationEntry."Source Subtype" := SourceSubtype;
-        ReservationEntry."Source ID" := SourceNo;
-        ReservationEntry."Source Ref. No." := SourceLineNo;
+        QtyPerUOM := 1;
         case SourceType of
             Database::"Sales Line":
                 begin
@@ -315,9 +312,9 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
                     end;
                     SourceItemNo := SalesLine."No.";
                     SourceLocationCode := SalesLine."Location Code";
-                    VariantCode := SalesLine."Variant Code";
                     QtyPerUOM := SalesLine."Qty. per Unit of Measure";
                     AvailabilityDate := SalesLine."Shipment Date";
+                    ReservationManagement.SetReservSource(SalesLine);
                 end;
             Database::"Purchase Line":
                 begin
@@ -327,9 +324,9 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
                     end;
                     SourceItemNo := PurchaseLine."No.";
                     SourceLocationCode := PurchaseLine."Location Code";
-                    VariantCode := PurchaseLine."Variant Code";
                     QtyPerUOM := PurchaseLine."Qty. per Unit of Measure";
                     AvailabilityDate := PurchaseLine."Expected Receipt Date";
+                    ReservationManagement.SetReservSource(PurchaseLine);
                 end;
             Database::"Transfer Line":
                 begin
@@ -342,9 +339,9 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
                         SourceLocationCode := TransferLine."Transfer-to Code"
                     else
                         SourceLocationCode := TransferLine."Transfer-from Code";
-                    VariantCode := TransferLine."Variant Code";
                     QtyPerUOM := TransferLine."Qty. per Unit of Measure";
                     AvailabilityDate := TransferLine."Shipment Date";
+                    ReservationManagement.SetReservSource(TransferLine);
                 end;
             Database::"Assembly Line":
                 begin
@@ -354,9 +351,9 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
                     end;
                     SourceItemNo := AssemblyLine."No.";
                     SourceLocationCode := AssemblyLine."Location Code";
-                    VariantCode := AssemblyLine."Variant Code";
                     QtyPerUOM := AssemblyLine."Qty. per Unit of Measure";
                     AvailabilityDate := AssemblyLine."Due Date";
+                    ReservationManagement.SetReservSource(AssemblyLine);
                 end;
             else begin
                 Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnsupportedSourceErr, SourceType), 'sourceType', Format(SourceType), '37, 39, 5741, or 901', '');
@@ -375,17 +372,12 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
             LocationCode := SourceLocationCode;
         if QtyPerUOM = 0 then
             QtyPerUOM := 1;
-        ReservationEntry."Item No." := ItemNo;
-        ReservationEntry."Variant Code" := VariantCode;
-        ReservationEntry."Location Code" := LocationCode;
-        ReservationEntry."Qty. per Unit of Measure" := QtyPerUOM;
-        ReservationManagement.SetReservSource(ReservationEntry);
         exit(true);
     end;
 
     [TryFunction]
-    local procedure TryAutoReserve(var ReservationManagement: Codeunit "Reservation Management"; var FullAutoReservation: Boolean; Description: Text[100]; AvailabilityDate: Date; Quantity: Decimal)
+    local procedure TryAutoReserve(var ReservationManagement: Codeunit "Reservation Management"; var FullAutoReservation: Boolean; Description: Text[100]; AvailabilityDate: Date; Quantity: Decimal; QuantityBase: Decimal)
     begin
-        ReservationManagement.AutoReserve(FullAutoReservation, Description, AvailabilityDate, Quantity, Quantity);
+        ReservationManagement.AutoReserve(FullAutoReservation, Description, AvailabilityDate, Quantity, QuantityBase);
     end;
 }

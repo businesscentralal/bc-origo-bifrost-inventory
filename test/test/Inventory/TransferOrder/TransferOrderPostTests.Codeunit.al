@@ -146,7 +146,7 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'receive status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Full receive must not return an error after the posting committed');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Full receive must not return an error after the posting committed. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
         ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
         Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
@@ -197,5 +197,13 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
         Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
         Assert.IsTrue(TransferHeader.Get(DocumentNo), 'A partial receive keeps the transfer order');
+    end;
+
+    local procedure JsonText(ResponseJson: JsonObject): Text
+    var
+        TextValue: Text;
+    begin
+        ResponseJson.WriteTo(TextValue);
+        exit(TextValue);
     end;
 }

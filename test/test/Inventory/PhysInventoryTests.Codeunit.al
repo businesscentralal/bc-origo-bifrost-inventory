@@ -75,7 +75,7 @@ codeunit 96922 "Phys Inventory Tests"
         RequestJson.Add('itemNoFilter', Item."No.");
         Helper.ProcessMessage("Message Type ori"::"Inventory.PhysInventory.Calculate", RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Calculate should succeed');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Calculate should succeed. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('lineCount', LineCountToken), 'lineCount missing');
         Assert.AreNotEqual(0, LineCountToken.AsValue().AsInteger(), 'lineCount should be at least one');
         ItemJournalLine.SetRange("Journal Template Name", ItemJournalTemplate.Name);
@@ -113,7 +113,7 @@ codeunit 96922 "Phys Inventory Tests"
         RequestJson.Add('itemNoFilter', Item."No.");
         Helper.ProcessMessage("Message Type ori"::"Inventory.PhysInventory.Calculate", RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'calculate status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Calculate should succeed before post');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Calculate should succeed before post. ' + JsonText(ResponseJson));
 
         Clear(RequestJson);
         Clear(ResponseJson);
@@ -137,5 +137,13 @@ codeunit 96922 "Phys Inventory Tests"
         LibraryWarehouse.CreateLocationWithInventoryPostingSetup(Location);
         LibraryInventory.CreateItem(Item);
         Helper.CreatePositiveAdjustment(Item."No.", Location.Code, Quantity);
+    end;
+
+    local procedure JsonText(ResponseJson: JsonObject): Text
+    var
+        TextValue: Text;
+    begin
+        ResponseJson.WriteTo(TextValue);
+        exit(TextValue);
     end;
 }

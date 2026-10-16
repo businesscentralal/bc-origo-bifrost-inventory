@@ -279,6 +279,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName er skylda.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 177427374 - Method 3571782927 - NamedType 927039822" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item journal batch %1 %2 was not found.</source>
+          <target>Vörubók %1 %2 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name, %2 = batch name, is-IS=Vörubók %1 %2 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - Method ExecuteBifrostTask - NamedType BatchNotFoundErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 177427374 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Calculates inventory into a physical inventory journal. Does not post.</source>
           <target>Reiknar birgðir inn í birgðatalningarbók. Bókar ekki.</target>
