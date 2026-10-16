@@ -236,14 +236,13 @@ codeunit 96924 "Avail. By Period Tests"
     var
         ServiceItem: Record Item;
         NonInventoryItem: Record Item;
-        MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
         EnableAvailability();
         CreateItem(ServiceItem, ServiceItem.Type::Service);
         CreateItem(NonInventoryItem, NonInventoryItem.Type::"Non-Inventory");
-        AssertResponseError(CallItem(MessageType, ServiceItem."No."), 'PreconditionFailed', 'Use an inventory item.');
-        AssertResponseError(CallItem(MessageType, NonInventoryItem."No."), 'PreconditionFailed', 'Use an inventory item.');
+        AssertResponseError(CallItem("Message Type ori"::"Inventory.AvailabilityByPeriod.Get", ServiceItem."No."), 'PreconditionFailed', 'Use an inventory item.');
+        AssertResponseError(CallItem("Message Type ori"::"Inventory.AvailabilityByPeriod.Get", NonInventoryItem."No."), 'PreconditionFailed', 'Use an inventory item.');
     end;
 
     local procedure CallItem(MessageType: Enum "Message Type ori"; ItemNo: Code[20]) ResponseJson: JsonObject
