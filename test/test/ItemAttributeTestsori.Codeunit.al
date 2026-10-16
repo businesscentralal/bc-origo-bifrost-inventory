@@ -293,7 +293,7 @@ codeunit 96900 "Item Attribute Tests ori"
     [Test]
     procedure DataRecords_WriteRestricted_AttributeTables()
     var
-        TempArgument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
     begin
         Library.Initialize();
         TempArgument.Init();

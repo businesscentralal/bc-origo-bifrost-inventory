@@ -20,8 +20,10 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).', Comment = 'is-IS=Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift móðurvörunnar (RefreshBOM).';
     begin
-        exit('Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

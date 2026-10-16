@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-16) - integrate contract tooling after product acceptance
+
+- Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.
+
+### Fixed (2026-10-16) - runtime catalogue localization
+
+- Replace literal catalogue descriptions with translatable labels for the 35 scoped message types, including TransferOrder.Release. Convert the remaining 17 literal keyword lists and 17 selection descriptions; preserve all existing English text and existing translated labels. Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the compiler output.
+- Remove compiler/developer instructions from public Reservation.Create and CostToGL.Test notes and clear reused notes outputs. Message execution and wire identifiers are unchanged.
+- `InventoryContractBatchTests.Codeunit.al` (96921) adds a language-switch regression over all 35 scoped catalogue entries in LCIDs 1033/1039 and checks both removed notes outputs. The existing nonempty discovery check alone did not detect English literals at LCID 1039.
+- Amended implementation files and codeunit IDs: `ReclassCheckImpl.Codeunit.al` (70013475); `AsmDocPrevPostImpl.Codeunit.al` (70013423); `AsmOrderRefreshLnImpl.Codeunit.al` (70013421); `AsmOrderReleaseImpl.Codeunit.al` (70013426); `AsmOrderStatisticsImpl.Codeunit.al` (70013422); `AssemblyOrderCreateImpl.Codeunit.al` (70013424); `AssemblyOrderPostImpl.Codeunit.al` (70013425); `AssemblyOrderReopenImpl.Codeunit.al` (70013427); `CostGetImpl.Codeunit.al` (70013468); `CostToGLTestImpl.Codeunit.al` (70013467); `RevaluationCalcImpl.Codeunit.al` (70013488); `ItemApplGetImpl.Codeunit.al` (70013490); `ItemApplReapplyImpl.Codeunit.al` (70013492); `ItemApplUnapplyImpl.Codeunit.al` (70013491); `PeriodGetImpl.Codeunit.al` (70013483); `PhysInvtPostImpl.Codeunit.al` (70013465); `PhysInvtRecordImpl.Codeunit.al` (70013466); `PhysInvCalcImpl.Codeunit.al` (70013496); `PriceUpdateImpl.Codeunit.al` (70013486); `ReclassPreviewImpl.Codeunit.al` (70013474); `ReservationCancelImpl.Codeunit.al` (70013478); `ReservationCreateImpl.Codeunit.al` (70013476); `ReservationGetImpl.Codeunit.al` (70013477); `TrackingAvailGetImpl.Codeunit.al` (70013473); `TransfDocPrevPostImpl.Codeunit.al` (70013413); `TransferOrderCreateImpl.Codeunit.al` (70013414); `TransferOrderPostImpl.Codeunit.al` (70013415); `TransferOrderReopenImpl.Codeunit.al` (70013417); `TransferOrderStatsImpl.Codeunit.al` (70013419); `TransfOrderReleaseImpl.Codeunit.al` (70013416); `TransfUndoRcptImpl.Codeunit.al` (70013481); `ItemAttrDefCreateImpl.Codeunit.al` (10036900); `ItemAttributeCreateImpl.Codeunit.al` (10036898); `ItemAttributeGetImpl.Codeunit.al` (10036897); `ItemAttributeUpdateImpl.Codeunit.al` (10036899).
+
+### Fixed (2026-10-16) - Icelandic translation resources
+
+- Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the current build: include all 85 generated units using the existing Icelandic source comments and replace the three obsolete numeric-ID entries. Inventory Setup captions, domain captions, posting refusals, assembly/transfer descriptions and attribute help now have matching runtime translation IDs. English source text and AL behavior are unchanged.
+- Explicitly mark the five already-temporary Message Argument test variables as `temporary` in `ItemAttributeTestsori.Codeunit.al` (96900), `InvPostingGateTests.Codeunit.al` (96918) and `InvPostingGateGrantTests.Codeunit.al` (96919). This preserves the Foundation table's `TableType = Temporary` behavior and lets the BC 28 analyzer recognize the existing temporary-variable names without AA0237 warnings.
+
 ### Fixed (2026-10-15) - contract reads retain payload generation and source position
 
 - `tools/Test-ContractParameterKeys.ps1` versions JSON snapshots and the underlying request payload, applies exhaustive validators at individual read/call sites, and unions conditional paths. Source-checked normalization retains removed keys in the original payload constraint; replacements, streams, unknown effects, implicit calls and try-function/codeunit return boundaries discard stale proof. Unsupported regions retain their reads. JSON key comparisons remain case sensitive (#30).

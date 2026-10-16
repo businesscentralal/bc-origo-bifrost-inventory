@@ -25,8 +25,10 @@ codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Simulates posting an assembly order and returns predicted ledger entries (Item, Value, G/L, Resource) without committing changes.', Comment = 'is-IS=Hermir bókun samsetningarpöntunar og skilar væntanlegum vöru-, virðis-, fjárhags- og forðafærslum án þess að vista breytingar.';
     begin
-        exit('Simulates posting an assembly order and returns predicted ledger entries (Item, Value, G/L, Resource) without committing changes.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

@@ -23,8 +23,10 @@ codeunit 10036900 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Creates an item attribute definition and optional option values, independent of any item.', Comment = 'is-IS=Býr til skilgreiningu vörueiginleika og valkvæða valkosti, óháð einstökum vörum.';
     begin
-        exit('Creates an item attribute definition and optional option values, independent of any item.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
