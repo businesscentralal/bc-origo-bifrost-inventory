@@ -538,7 +538,7 @@ codeunit 70013445 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Create':
                 Notes := 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.';
             'Inventory.TransferOrder.Post':
-                Notes := 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration.';
+                Notes := TransferOrderPostNotesLbl();
             'Inventory.TransferOrder.PreviewPost':
                 Notes := 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.';
             'Inventory.AssemblyOrder.Create':
@@ -548,5 +548,12 @@ codeunit 70013445 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.PreviewPost':
                 Notes := 'The preview is rolled back and does not create posted documents or ledger entries.';
         end;
+    end;
+
+    local procedure TransferOrderPostNotesLbl(): Text
+    var
+        NotesLbl: Label 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration. A full Receive that deletes the transfer order still returns Success with postedReceiptNo.', Comment = 'is-IS=Óbeinar pantanir krefjast postingType Ship eða Receive. Beinar millifærslur nota stillingu beinnar millifærslubókunar í birgðastillingu. Full móttaka sem eyðir millifærslupöntuninni skilar samt Success með postedReceiptNo.';
+    begin
+        exit(NotesLbl);
     end;
 }

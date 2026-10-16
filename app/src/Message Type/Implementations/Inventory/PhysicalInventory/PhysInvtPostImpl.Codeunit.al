@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
@@ -69,19 +70,32 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        StatusLbl: Label 'Success when the batch was posted.', Comment = 'is-IS=Success þegar keyrslan var bókuð.';
+        LineCountLbl: Label 'Number of journal lines posted.', Comment = 'is-IS=Fjöldi bókaðra bókunarlína.';
+        RegisterLbl: Label 'Item register number created by the post.', Comment = 'is-IS=Númer birgðaskrár sem bókunin bjó til.';
+        FromEntryLbl: Label 'First item ledger entry number posted.', Comment = 'is-IS=Fyrsta númer birgðafærslu sem var bókað.';
+        ToEntryLbl: Label 'Last item ledger entry number posted.', Comment = 'is-IS=Síðasta númer birgðafærslu sem var bókað.';
     begin
-        Response.Add('status', 'Success');
-        Response.Add('lineCount', 0);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', StatusLbl));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', LineCountLbl));
+        Fields.Add(ContractMgt.ResponseField('itemRegisterNo', 'integer', RegisterLbl));
+        Fields.Add(ContractMgt.ResponseField('fromEntryNo', 'integer', FromEntryLbl));
+        Fields.Add(ContractMgt.ResponseField('toEntryNo', 'integer', ToEntryLbl));
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        EmptyWhenLbl: Label 'the physical inventory batch has no lines', Comment = 'is-IS=birgðatalningarbókin hefur engar línur';
+        EmptyFixLbl: Label 'Calculate the physical inventory journal, then post the batch.', Comment = 'is-IS=Reiknaðu birgðatalningarbókina og bókaðu síðan keyrsluna.';
     begin
-        ErrorJson.Add('code', 'PreconditionFailed');
-        ErrorJson.Add('when', 'the batch has no lines');
-        Errors.Add(ErrorJson);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, EmptyWhenLbl, EmptyFixLbl));
         exit(true);
     end;
 
@@ -122,8 +136,10 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Posts through Item Jnl.-Post Batch after positioning the first line. An empty batch is PreconditionFailed: received is the batch name, expected is at least one journal line. Calculate Inventory remains Inventory.PhysInventory.Calculate.', Comment = 'is-IS=Bókar í gegnum Item Jnl.-Post Batch eftir að fyrsta línan er sett. Tóm keyrsla er PreconditionFailed: received er heiti keyrslunnar, expected er að minnsta kosti ein bókunarlína. Reikna birgðir er áfram Inventory.PhysInventory.Calculate.';
     begin
-        Notes := 'Uses Item Jnl.-Post. Calculate Inventory remains a separate message type.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
@@ -135,17 +151,23 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemJournalLine: Record "Item Journal Line";
+        ItemRegister: Record "Item Register";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJnlPost: Codeunit "Item Jnl.-Post";
+        ItemJnlPostBatch: Codeunit "Item Jnl.-Post Batch";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         TemplateName: Code[10];
         BatchName: Code[10];
         LineCount: Integer;
-        EmptyBatchErr: Label 'The physical inventory batch has no lines.', Locked = true;
-        EmptyBatchExpectedTok: Label 'at least one journal line', Locked = true;
-        EmptyBatchNextStepTok: Label 'Calculate the physical inventory journal, then post the batch.', Locked = true;
+        ItemRegisterNo: Integer;
+        FromEntryNo: Integer;
+        ToEntryNo: Integer;
+        EmptyBatchErr: Label 'The physical inventory batch has no lines.', Comment = 'is-IS=Birgðatalningarbókin hefur engar línur.';
+        EmptyBatchExpectedTok: Label 'at least one journal line', Comment = 'is-IS=að minnsta kosti ein bókunarlína';
+        EmptyBatchNextStepTok: Label 'Calculate the physical inventory journal, then post the batch.', Comment = 'is-IS=Reiknaðu birgðatalningarbókina og bókaðu síðan keyrsluna.';
+        MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er skylda.';
+        MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er skylda.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, true) then
             exit;
@@ -153,27 +175,39 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError('journalTemplateName is required.');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingTemplateErr, 'journalTemplateName', '', '', '');
             exit;
         end;
         TemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(TemplateName));
         if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError('journalBatchName is required.');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingBatchErr, 'journalBatchName', '', '', '');
             exit;
         end;
         BatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(BatchName));
         ItemJournalLine.SetRange("Journal Template Name", TemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", BatchName);
         LineCount := ItemJournalLine.Count();
-        if LineCount = 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyBatchErr, 'journalBatchName', EmptyBatchExpectedTok, '0', EmptyBatchNextStepTok);
+        if not ItemJournalLine.FindFirst() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyBatchErr, 'journalBatchName', BatchName, EmptyBatchExpectedTok, EmptyBatchNextStepTok);
             exit;
         end;
-        ItemJnlPost.Run(ItemJournalLine);
+        if not ItemJnlPostBatch.Run(ItemJournalLine) then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
+        if ItemJournalLine."Line No." <> 0 then
+            if ItemRegister.Get(ItemJournalLine."Line No.") then begin
+                ItemRegisterNo := ItemRegister."No.";
+                FromEntryNo := ItemRegister."From Entry No.";
+                ToEntryNo := ItemRegister."To Entry No.";
+            end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('journalTemplateName', TemplateName);
         ResponseJson.Add('journalBatchName', BatchName);
         ResponseJson.Add('lineCount', LineCount);
+        ResponseJson.Add('itemRegisterNo', ItemRegisterNo);
+        ResponseJson.Add('fromEntryNo', FromEntryNo);
+        ResponseJson.Add('toEntryNo', ToEntryNo);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;

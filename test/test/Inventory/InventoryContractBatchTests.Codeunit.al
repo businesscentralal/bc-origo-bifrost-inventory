@@ -156,6 +156,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Empty batch code.');
         LibraryAssert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
         LibraryAssert.AreEqual('journalBatchName', Token.AsValue().AsText(), 'parameter');
+        LibraryAssert.IsTrue(ResponseJson.Get('received', Token), 'received missing');
+        LibraryAssert.AreEqual(ItemJournalBatch.Name, Token.AsValue().AsText(), 'received is the batch name');
+        LibraryAssert.IsTrue(ResponseJson.Get('expected', Token), 'expected missing');
+        LibraryAssert.AreEqual('at least one journal line', Token.AsValue().AsText(), 'expected names a non-empty batch');
         LibraryAssert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
         LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'nextStep');
     end;
@@ -277,7 +281,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('related');
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.PhysInventory.Calculate', 'Inventory.PhysInventory.Post', 'Inventory.Reservation.Create'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');

@@ -114,4 +114,88 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
         Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'A partial direct transfer should keep the order');
     end;
+
+    [Test]
+    procedure Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted()
+    var
+        FromLocation, ToLocation, InTransitLocation : Record Location;
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        RequestJson, ResponseJson : JsonObject;
+        StatusToken, ReceiptToken: JsonToken;
+        DocumentNo: Code[20];
+        ReceiptNo: Code[20];
+    begin
+        // [SCENARIO] Full Receive after Ship deletes the transfer order and still returns Success with postedReceiptNo.
+        Initialize();
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 10);
+        Helper.CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
+        DocumentNo := TransferHeader."No.";
+
+        RequestJson.Add('postingType', 'Ship');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'ship status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Ship should succeed');
+
+        Clear(RequestJson);
+        Clear(ResponseJson);
+        RequestJson.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'receive status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Full receive must not return an error after the posting committed');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
+        ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
+        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
+        Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
+        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'A full receive deletes the transfer order');
+    end;
+
+    [Test]
+    procedure Post_Receive_Partial_KeepsOrderAndReturnsPostedReceiptNo()
+    var
+        FromLocation, ToLocation, InTransitLocation : Record Location;
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        RequestJson, ResponseJson : JsonObject;
+        StatusToken, ReceiptToken: JsonToken;
+        DocumentNo: Code[20];
+        ReceiptNo: Code[20];
+    begin
+        // [SCENARIO] Partial Receive after Ship keeps the transfer order and returns postedReceiptNo.
+        Initialize();
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 10);
+        Helper.CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
+        DocumentNo := TransferHeader."No.";
+
+        RequestJson.Add('postingType', 'Ship');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'ship status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Ship should succeed');
+
+        TransferLine.SetRange("Document No.", DocumentNo);
+        TransferLine.FindFirst();
+        TransferLine.Validate("Qty. to Receive", 4);
+        TransferLine.Modify(true);
+
+        Clear(RequestJson);
+        Clear(ResponseJson);
+        RequestJson.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'receive status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Partial receive should succeed');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
+        ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
+        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
+        Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
+        Assert.IsTrue(TransferHeader.Get(DocumentNo), 'A partial receive keeps the transfer order');
+    end;
 }

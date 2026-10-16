@@ -136,8 +136,8 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
@@ -208,8 +208,10 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         end;
         UnbindSubscription(TransferPostSubscriber);
 
-        TransferHeader.Find();
-        BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson);
+        if TransferHeader.Get(DocumentNo) then
+            BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson)
+        else
+            BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -246,5 +248,33 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('postedShipmentNo', PostedShipmentNo);
         ResponseJson.Add('postedReceiptNo', PostedReceiptNo);
         ResponseJson.Add('postingDate', Format(TransferHeader."Posting Date", 0, 9));
+    end;
+
+    local procedure BuildSuccessResponseAfterDeletedHeader(DocumentNo: Code[20]; PostingTypeText: Text; DirectTransfer: Boolean; var ResponseJson: JsonObject)
+    var
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        PostedShipmentNo: Code[20];
+        PostedReceiptNo: Code[20];
+        PostingDate: Date;
+    begin
+        TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
+        if TransferReceiptHeader.FindLast() then begin
+            PostedReceiptNo := TransferReceiptHeader."No.";
+            PostingDate := TransferReceiptHeader."Posting Date";
+        end;
+        TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
+        if TransferShipmentHeader.FindLast() then begin
+            PostedShipmentNo := TransferShipmentHeader."No.";
+            if PostingDate = 0D then
+                PostingDate := TransferShipmentHeader."Posting Date";
+        end;
+        ResponseJson.Add('status', 'Success');
+        ResponseJson.Add('documentNo', DocumentNo);
+        ResponseJson.Add('postingType', PostingTypeText);
+        ResponseJson.Add('directTransfer', DirectTransfer);
+        ResponseJson.Add('postedShipmentNo', PostedShipmentNo);
+        ResponseJson.Add('postedReceiptNo', PostedReceiptNo);
+        ResponseJson.Add('postingDate', Format(PostingDate, 0, 9));
     end;
 }

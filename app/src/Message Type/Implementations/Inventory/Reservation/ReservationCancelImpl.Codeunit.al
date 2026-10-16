@@ -146,7 +146,8 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             exit;
         end;
         EntryNo := Token.AsValue().AsInteger();
-        if not ReservationEntry.Get(EntryNo) then begin
+        ReservationEntry.SetRange("Entry No.", EntryNo);
+        if not ReservationEntry.FindFirst() then begin
             Argument.RespondWithError('Reservation entry ' + Format(EntryNo) + ' was not found.');
             exit;
         end;

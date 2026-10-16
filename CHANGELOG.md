@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-16) - four main message types that always failed
+
+- Transfer Order Post Impl ori (70013415): a full `Inventory.TransferOrder.Post` Receive deleted the transfer order, then `Find()` returned "The Transfer Header does not exist" after the posting had committed. Success now returns `postedReceiptNo` from the posted receipt when the header is gone. Partial receive still keeps the order. Transfer Order Post Tests (96914) covers full and partial receive.
+- Phys. Inv. Calc Impl ori (70013496): `Inventory.PhysInventory.Calculate` ran report Calculate Inventory without a posting date, so it always failed with "Enter the posting date." The contract now requires `postingDate` (YYYY-MM-DD) and accepts optional `itemNoFilter`. The report is initialized with that date, an item filter when sent, and HideValidationDialog. The answer includes `lineCount`.
+- Phys. Invt. Post Impl ori (70013465): `Inventory.PhysInventory.Post` passed an unpositioned `Item Journal Line` to Item Jnl.-Post, which failed with an empty template name. It now finds the first line, posts through Item Jnl.-Post Batch, and returns `itemRegisterNo` / `fromEntryNo` / `toEntryNo`. An empty batch is `PreconditionFailed` on `journalBatchName` with received = batch name and expected = at least one journal line.
+- Reservation Create Impl ori (70013476): `Inventory.Reservation.Create` called AutoReserve on a reservation entry with no source type, so every call failed. It now loads a real source line (`sourceType` / `sourceNo` / `sourceLineNo`, optional `sourceSubtype`) for sales, purchase, transfer, and assembly lines, returns `entryNo`, and Reservation Cancel Impl ori (70013478) finds that entry by number so `Inventory.Reservation.Cancel` can remove it.
+- Phys Inventory Tests (96922) and Reservation Create Tests (96923) cover happy path, missing input, and the empty-batch / unknown-source edges. Help chapters are updated in en-US and is-IS.
+
 ### Fixed (2026-10-12) - related help entries name existing message types
 
 - Cost Get Impl ori (70013468) added `Inventory.AdjustCost.Run` and `Inventory.Revaluation.Calculate` as plain strings. Foundation reads a string related entry as message type "", so `Help.Implementation.Get` failed and the UAT roster refresh dropped 50 help documents.
