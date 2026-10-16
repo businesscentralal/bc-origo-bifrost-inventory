@@ -25,12 +25,16 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         Value: JsonToken;
         TextValue: Text;
         Found: Integer;
+        PreviousLanguage: Integer;
     begin
         // [GIVEN] All eleven shipping document lookup types.
+        PreviousLanguage := GlobalLanguage();
         Names := LookupNames();
         foreach Name in Names do begin
             // [WHEN] Reading their public contract.
+            GlobalLanguage(1033);
             Errors := ReadErrors(Name);
+            GlobalLanguage(PreviousLanguage);
             Found := 0;
             foreach Entry in Errors do
                 if Entry.AsObject().Get('code', Value) then
@@ -102,6 +106,78 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         // [THEN] Exact sentences prove translation, interpolation and an unchanged allowBlocked key.
         Assert.AreEqual('Item "W8-LOCALE" is blocked. Pass allowBlocked: true to override.', English, 'English refusal');
         Assert.AreEqual('Varan "W8-LOCALE" er lokuð. Sendu allowBlocked: true til að leyfa breytinguna.', Icelandic, 'Icelandic refusal');
+    end;
+
+    /// <summary>Every strict lookup translates its explanations while preserving error codes and identifier keys.</summary>
+    [Test]
+    procedure AllLookupTypes_BothLanguages_TranslateLookupErrors()
+    var
+        Names: List of [Text];
+        Codes: List of [Text];
+        Name: Text;
+        Code: Text;
+        EnglishErrors: JsonArray;
+        IcelandicErrors: JsonArray;
+        EnglishEntry: JsonObject;
+        IcelandicEntry: JsonObject;
+        PreviousLanguage: Integer;
+    begin
+        // [GIVEN] All eleven document lookup contracts with their five shared error entries.
+        Names := LookupNames();
+        Codes.Add('MissingParameter');
+        Codes.Add('RecordNotFound');
+        Codes.Add('ConflictingIdentifiers');
+        Codes.Add('InvalidParameterFormat');
+        Codes.Add('MultipleErrors');
+        PreviousLanguage := GlobalLanguage();
+        foreach Name in Names do begin
+            // [WHEN] The public contract reader runs under each supported UI language.
+            GlobalLanguage(1033);
+            EnglishErrors := ReadErrors(Name);
+            GlobalLanguage(1039);
+            IcelandicErrors := ReadErrors(Name);
+            GlobalLanguage(PreviousLanguage);
+            // [THEN] Explanations and next steps translate; protocol codes remain invariant.
+            foreach Code in Codes do begin
+                EnglishEntry := ErrorByCode(EnglishErrors, Code);
+                IcelandicEntry := ErrorByCode(IcelandicErrors, Code);
+                Assert.AreNotEqual(EntryText(EnglishEntry, 'when'), EntryText(IcelandicEntry, 'when'), Name + ': translated ' + Code);
+                Assert.AreNotEqual(EntryText(EnglishEntry, 'fix'), EntryText(IcelandicEntry, 'fix'), Name + ': translated next step ' + Code);
+            end;
+            IcelandicEntry := ErrorByCode(IcelandicErrors, 'InvalidParameterFormat');
+            Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('data er ekki JSON-hlutur'), Name + ': Icelandic data explanation');
+            Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('no, systemId, recordSystemId, id'), Name + ': invariant identifier keys');
+            if Name.StartsWith('Inventory.TransferOrder.') then
+                Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('documentNo, transferOrderNo'), Name + ': transfer alias')
+            else
+                Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('documentNo, assemblyOrderNo'), Name + ': assembly alias');
+            IcelandicEntry := ErrorByCode(IcelandicErrors, 'MultipleErrors');
+            Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('errors[]'), Name + ': invariant aggregate key');
+        end;
+    end;
+
+    local procedure ErrorByCode(Errors: JsonArray; Code: Text) Result: JsonObject
+    var
+        Entry: JsonToken;
+        Value: JsonToken;
+        Count: Integer;
+    begin
+        foreach Entry in Errors do
+            if Entry.AsObject().Get('code', Value) then
+                if Value.AsValue().AsText() = Code then begin
+                    Result := Entry.AsObject();
+                    Count += 1;
+                end;
+        Assert.AreEqual(1, Count, 'Exactly one stable ' + Code + ' entry in each language.');
+    end;
+
+    local procedure EntryText(Entry: JsonObject; FieldName: Text): Text
+    var
+        Value: JsonToken;
+    begin
+        Assert.IsTrue(Entry.Get(FieldName, Value), 'Required help entry field ' + FieldName);
+        Assert.IsTrue(Value.AsValue().AsText() <> '', 'Nonempty help text ' + FieldName);
+        exit(Value.AsValue().AsText());
     end;
 
     local procedure ReadErrors(Name: Text) Errors: JsonArray
