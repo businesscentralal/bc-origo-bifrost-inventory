@@ -140,7 +140,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         TransferHeader: Record "Transfer Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
-        TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
         RequestJson: JsonObject;
@@ -210,13 +209,16 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         TransferPostSubscriber.SetChoices(PostShipment, PostReceipt, PostTransfer);
         BindSubscription(TransferPostSubscriber);
         Commit();
-        PostedOk := TransferOrderPostYesNo.Run(TransferHeader);
+        // Codeunit 5706 sets HideValidationDialog from PostBatch, which is false here.
+        // DeleteOneTransferOrder then shows "successfully posted and is now deleted" before Commit.
+        // That Message fails the test runner and rolls the receipt back. Post the documents directly.
+        PostedOk := PostTransferDocuments(TransferHeader, PostShipment, PostReceipt, PostTransfer);
         if not PostedOk then
             LastErrorText := GetLastErrorText();
         UnbindSubscription(TransferPostSubscriber);
 
         if not PostedOk then
-            if HeaderPostedAndDeleted(DocumentNo) or PostedAndDeletedUi(LastErrorText) then
+            if HeaderPostedAndDeleted(DocumentNo) then
                 BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, TransferFromCode, TransferToCode, InTransitCode, xLastShipmentNo, xLastReceiptNo, TransferPostSubscriber.GetCapturedShipmentNo(), TransferPostSubscriber.GetCapturedReceiptNo(), TransferPostSubscriber.GetCapturedPostingDate(), ResponseJson)
             else begin
                 Argument.RespondWithError(LastErrorText);
@@ -229,6 +231,30 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
                 BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, TransferFromCode, TransferToCode, InTransitCode, xLastShipmentNo, xLastReceiptNo, TransferPostSubscriber.GetCapturedShipmentNo(), TransferPostSubscriber.GetCapturedReceiptNo(), TransferPostSubscriber.GetCapturedPostingDate(), ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure PostTransferDocuments(var TransferHeader: Record "Transfer Header"; PostShipment: Boolean; PostReceipt: Boolean; PostTransfer: Boolean): Boolean
+    var
+        TransferOrderPostReceipt: Codeunit "TransferOrder-Post Receipt";
+        TransferOrderPostShipment: Codeunit "TransferOrder-Post Shipment";
+        TransferOrderPostTransfer: Codeunit "TransferOrder-Post Transfer";
+    begin
+        if PostShipment then begin
+            TransferOrderPostShipment.SetHideValidationDialog(true);
+            if not TransferOrderPostShipment.Run(TransferHeader) then
+                exit(false);
+        end;
+        if PostReceipt then begin
+            TransferOrderPostReceipt.SetHideValidationDialog(true);
+            if not TransferOrderPostReceipt.Run(TransferHeader) then
+                exit(false);
+        end;
+        if PostTransfer then begin
+            TransferOrderPostTransfer.SetHideValidationDialog(true);
+            if not TransferOrderPostTransfer.Run(TransferHeader) then
+                exit(false);
+        end;
+        exit(true);
     end;
 
     local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
@@ -414,10 +440,4 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             PostingDate := TransferShipmentHeader."Posting Date";
     end;
 
-    local procedure PostedAndDeletedUi(LastErrorText: Text): Boolean
-    var
-        PostedDeletedTok: Label 'successfully posted and is now deleted', Locked = true;
-    begin
-        exit(LastErrorText.Contains(PostedDeletedTok));
-    end;
 }

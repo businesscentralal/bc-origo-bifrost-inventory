@@ -4,9 +4,10 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Transfer;
 
 /// <summary>
-/// Manual event subscriber that overrides Transfer Order posting options.
-/// Bind before running codeunit 5706 "TransferOrder-Post (Yes/No)" to force a specific
-/// combination of Ship / Receive / Direct Transfer posting without showing the StrMenu prompt.
+/// Manual event subscriber for transfer posting.
+/// Preview binds this before codeunit 5706 "TransferOrder-Post (Yes/No)" so Ship, Receive,
+/// or Direct Transfer is chosen without StrMenu. Posting binds it to capture the posted
+/// receipt and shipment numbers from insert and header-delete events.
 /// </summary>
 codeunit 70013420 "Transfer Post Subscriber ori"
 {
