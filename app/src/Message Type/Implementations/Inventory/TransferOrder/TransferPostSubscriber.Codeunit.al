@@ -13,6 +13,9 @@ codeunit 70013420 "Transfer Post Subscriber ori"
     EventSubscriberInstance = Manual;
 
     var
+        CapturedReceiptNo: Code[20];
+        CapturedShipmentNo: Code[20];
+        CapturedPostingDate: Date;
         ChosenPostShipment: Boolean;
         ChosenPostReceipt: Boolean;
         ChosenPostTransfer: Boolean;
@@ -34,5 +37,33 @@ codeunit 70013420 "Transfer Post Subscriber ori"
         PostReceipt := ChosenPostReceipt;
         PostTransfer := ChosenPostTransfer;
         IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Transfer Header", 'OnBeforeDeleteEvent', '', false, false)]
+    local procedure CapturePostedDocumentNos(var Rec: Record "Transfer Header"; RunTrigger: Boolean)
+    begin
+        if Rec.IsTemporary() then
+            exit;
+        if Rec."Last Receipt No." <> '' then
+            CapturedReceiptNo := Rec."Last Receipt No.";
+        if Rec."Last Shipment No." <> '' then
+            CapturedShipmentNo := Rec."Last Shipment No.";
+        if Rec."Posting Date" <> 0D then
+            CapturedPostingDate := Rec."Posting Date";
+    end;
+
+    internal procedure GetCapturedReceiptNo(): Code[20]
+    begin
+        exit(CapturedReceiptNo);
+    end;
+
+    internal procedure GetCapturedShipmentNo(): Code[20]
+    begin
+        exit(CapturedShipmentNo);
+    end;
+
+    internal procedure GetCapturedPostingDate(): Date
+    begin
+        exit(CapturedPostingDate);
     end;
 }
