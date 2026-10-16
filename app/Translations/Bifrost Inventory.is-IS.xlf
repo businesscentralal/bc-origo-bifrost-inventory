@@ -57,6 +57,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vöruverð</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Price - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 1067425594 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Reference</source>
+          <target>Vörutilvísun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Reference - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 392666526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>
           <target>Vörurakning</target>
@@ -416,6 +422,312 @@
           <target>Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 720166676 - NamedType 4148992451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Several items match this reference.</source>
+          <target>Nokkrar vörur passa við þessa tilvísun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nokkrar vörur passa við þessa tilvísun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerItemOrGtin - NamedType AmbiguousErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 720166676 - NamedType 3127681293" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pass referenceType and referenceTypeNo to narrow it.</source>
+          <target>Sendu referenceType og referenceTypeNo til að þrengja leitina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceType og referenceTypeNo til að þrengja leitina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerItemOrGtin - NamedType AmbiguousNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3577826929 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item reference, item number, or GTIN matched.</source>
+          <target>Engin vörutilvísun, vörunúmer eða GTIN fannst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vörutilvísun, vörunúmer eða GTIN fannst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerNotFound - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3577826929 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the barcode, or add the reference in BC (Item References).</source>
+          <target>Athugaðu strikamerkið, eða bættu tilvísuninni við í BC (vörutilvísanir).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu strikamerkið, eða bættu tilvísuninni við í BC (vörutilvísanir).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerNotFound - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1584783920 - NamedType 4148992451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Several items match this reference.</source>
+          <target>Nokkrar vörur passa við þessa tilvísun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nokkrar vörur passa við þessa tilvísun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerReferences - NamedType AmbiguousErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1584783920 - NamedType 3127681293" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pass referenceType and referenceTypeNo to narrow it.</source>
+          <target>Sendu referenceType og referenceTypeNo til að þrengja leitina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceType og referenceTypeNo til að þrengja leitina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerReferences - NamedType AmbiguousNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Reference domain is turned off for this company.</source>
+          <target>Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn the domain on from the Inventory Setup page.</source>
+          <target>Kveiktu á sviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign BIFROST InvRead ori, the extension of BIFROST Read ori.</source>
+          <target>Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolves a barcode, customer reference, or vendor reference to an item.</source>
+          <target>Leysir strikamerki, viðskiptavinatilvísun eða birgjatilvísun upp í vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leysir strikamerki, viðskiptavinatilvísun eða birgjatilvísun upp í vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>referenceNo is missing and references was not sent.</source>
+          <target>referenceNo vantar og references var ekki sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=referenceNo vantar og references var ekki sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send referenceNo, or send references with a referenceNo on each entry.</source>
+          <target>Sendu referenceNo, eða sendu references með referenceNo á hverri færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceNo, eða sendu references með referenceNo á hverri færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send referenceNo as text, date as a date, and references as an array.</source>
+          <target>Sendu referenceNo sem texta, date sem dagsetningu og references sem fylki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceNo sem texta, date sem dagsetningu og references sem fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are referenceNo, referenceType, referenceTypeNo, date and references.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru referenceNo, referenceType, referenceTypeNo, date og references.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru referenceNo, referenceType, referenceTypeNo, date og references.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No reference, item number, or GTIN matched.</source>
+          <target>Engin tilvísun, vörunúmer eða GTIN fannst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin tilvísun, vörunúmer eða GTIN fannst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the barcode, or add the reference in BC (Item References).</source>
+          <target>Athugaðu strikamerkið, eða bættu tilvísuninni við í BC (vörutilvísanir).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu strikamerkið, eða bættu tilvísuninni við í BC (vörutilvísanir).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>referenceNo and references were both sent.</source>
+          <target>referenceNo og references voru bæði send.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=referenceNo og references voru bæði send.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send either referenceNo or references, not both.</source>
+          <target>Sendu annaðhvort referenceNo eða references, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3805433198" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Several items match the reference.</source>
+          <target>Nokkrar vörur passa við tilvísunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nokkrar vörur passa við tilvísunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType AmbiguousWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 1716513419" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pass referenceType and referenceTypeNo to narrow it.</source>
+          <target>Sendu referenceType og referenceTypeNo til að þrengja leitina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceType og referenceTypeNo til að þrengja leitina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType AmbiguousFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 755057313" size-unit="char" translate="yes" xml:space="preserve">
+          <source>referenceTypeNo was sent for a barcode or a blank reference type.</source>
+          <target>referenceTypeNo var sent fyrir strikamerki eða tóma tegund tilvísunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=referenceTypeNo var sent fyrir strikamerki eða tóma tegund tilvísunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType TypeNoWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 549175368" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Leave referenceTypeNo empty for barcodes.</source>
+          <target>Skildu referenceTypeNo eftir tómt fyrir strikamerki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skildu referenceTypeNo eftir tómt fyrir strikamerki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType TypeNoFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read item references or items.</source>
+          <target>Kallandinn getur ekki lesið vörutilvísanir eða vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörutilvísanir eða vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign BIFROST InvRead ori, the extension of BIFROST Read ori.</source>
+          <target>Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolve one barcode</source>
+          <target>Leysa eitt strikamerki</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leysa eitt strikamerki</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>barcode, item reference, customer item number, vendor item number, GTIN</source>
+          <target>strikamerki, vörutilvísun, vörunúmer viðskiptavinar, vörunúmer birgja, GTIN</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=strikamerki, vörutilvísun, vörunúmer viðskiptavinar, vörunúmer birgja, GTIN</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A blocked item is returned with blocked true. A reference whose ending date is before date is ignored. Send references to resolve several values, without referenceNo beside that array.</source>
+          <target>Lokuð vara kemur til baka með blocked true. Tilvísun sem lýkur fyrir date er hunsuð. Sendu references til að leysa nokkur gildi, án referenceNo við hliðina á fylkinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lokuð vara kemur til baka með blocked true. Tilvísun sem lýkur fyrir date er hunsuð. Sendu references til að leysa nokkur gildi, án referenceNo við hliðina á fylkinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolves a barcode, customer or vendor item reference, item number, or GTIN to the item, variant, and unit of measure. It does not create references.</source>
+          <target>Leysir strikamerki, vörutilvísun viðskiptavinar eða birgja, vörunúmer eða GTIN upp í vöru, afbrigði og mælieiningu. Hún stofnar ekki tilvísanir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leysir strikamerki, vörutilvísun viðskiptavinar eða birgja, vörunúmer eða GTIN upp í vöru, afbrigði og mælieiningu. Hún stofnar ekki tilvísanir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 1079304508" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One barcode, reference, item number, or GTIN. Omit it when references is sent.</source>
+          <target>Eitt strikamerki, tilvísun, vörunúmer eða GTIN. Slepptu því þegar references er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eitt strikamerki, tilvísun, vörunúmer eða GTIN. Slepptu því þegar references er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 844981987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>barCode, customer, vendor, or blank. Blank searches barcodes and blank references.</source>
+          <target>barCode, customer, vendor eða tómt. Tómt leitar í strikamerkjum og tómum tilvísunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=barCode, customer, vendor eða tómt. Tómt leitar í strikamerkjum og tómum tilvísunum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 946568340" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer or vendor number. Leave it empty for barcodes.</source>
+          <target>Númer viðskiptavinar eða birgja. Skildu það eftir tómt fyrir strikamerki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer viðskiptavinar eða birgja. Skildu það eftir tómt fyrir strikamerki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceTypeNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Date the reference must be valid on. An ending date before this date is ignored.</source>
+          <target>Dagsetning sem tilvísunin verður að gilda á. Lokadagur fyrir þessa dagsetningu er hunsaður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning sem tilvísunin verður að gilda á. Lokadagur fyrir þessa dagsetningu er hunsaður.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType DateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 1321635566" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Several references. Each entry uses referenceNo and the same optional keys. Do not also send referenceNo.</source>
+          <target>Margar tilvísanir. Hver færsla notar referenceNo og sömu valkvæða lykla. Ekki senda referenceNo líka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Margar tilvísanir. Hver færsla notar referenceNo og sömu valkvæða lykla. Ekki senda referenceNo líka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferencesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read item attributes when the item number is already known and no barcode needs resolving.</source>
+          <target>Lestu eiginleika vöru þegar vörunúmerið er þegar þekkt og ekkert strikamerki þarf að leysa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu eiginleika vöru þegar vörunúmerið er þegar þekkt og ekkert strikamerki þarf að leysa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolves a scanned barcode or a customer or vendor item number to the item, variant, and unit of measure.</source>
+          <target>Leysir skannað strikamerki eða vörunúmer viðskiptavinar eða birgja upp í vöru, afbrigði og mælieiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leysir skannað strikamerki eða vörunúmer viðskiptavinar eða birgja upp í vöru, afbrigði og mælieiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The barcode, customer or vendor reference, item number, or GTIN to resolve.</source>
+          <target>Strikamerkið, tilvísun viðskiptavinar eða birgja, vörunúmerið eða GTIN sem á að leysa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Strikamerkið, tilvísun viðskiptavinar eða birgja, vörunúmerið eða GTIN sem á að leysa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 248411274 - NamedType 2034178160" size-unit="char" translate="yes" xml:space="preserve">
+          <source>That reference type is not supported.</source>
+          <target>Þessi tegund tilvísunar er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þessi tegund tilvísunar er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ParseReferenceType - NamedType InvalidTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 248411274 - NamedType 139478346" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use barCode, customer, vendor, or leave referenceType empty.</source>
+          <target>Notaðu barCode, customer, vendor, eða skildu referenceType eftir tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu barCode, customer, vendor, eða skildu referenceType eftir tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ParseReferenceType - NamedType InvalidTypeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are referenceNo, referenceType, referenceTypeNo, date and references.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru referenceNo, referenceType, referenceTypeNo, date og references.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru referenceNo, referenceType, referenceTypeNo, date og references.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 4082714256 - NamedType 4236658184" size-unit="char" translate="yes" xml:space="preserve">
+          <source>referenceTypeNo is only for a customer or a vendor.</source>
+          <target>referenceTypeNo er aðeins fyrir viðskiptavin eða birgja.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=referenceTypeNo er aðeins fyrir viðskiptavin eða birgja.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondBarcodeTypeNo - NamedType TypeNoErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 4082714256 - NamedType 612072642" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Leave referenceTypeNo empty for barcodes.</source>
+          <target>Skildu referenceTypeNo eftir tómt fyrir strikamerki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skildu referenceTypeNo eftir tómt fyrir strikamerki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondBarcodeTypeNo - NamedType TypeNoNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3632409166 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The value has the wrong format.</source>
+          <target>Gildið er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3632409166 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send referenceNo as text, date as a date, and references as an array.</source>
+          <target>Sendu referenceNo sem texta, date sem dagsetningu og references sem fylki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceNo sem texta, date sem dagsetningu og references sem fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondFormat - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 223548439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>referenceNo is required.</source>
+          <target>referenceNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=referenceNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondMissing - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 223548439 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send referenceNo, or send references with a referenceNo on each entry.</source>
+          <target>Sendu referenceNo, eða sendu references með referenceNo á hverri færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceNo, eða sendu references með referenceNo á hverri færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method RespondMissing - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3508874192 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one identifier form.</source>
+          <target>Sendu eitt auðkenni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt auðkenni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 556072390 - Method 3508874192 - NamedType 1132247979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send either referenceNo or references, not both.</source>
+          <target>Sendu annaðhvort referenceNo eða references, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
@@ -825,6 +1137,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort vöruverðsskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemPrice - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 1855876506 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether item reference message types are enabled for this company.</source>
+          <target>Tilgreinir hvort vörutilvísanaskilaboð séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort vörutilvísanaskilaboð séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemReference - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 2981724990 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether item tracking message types are enabled for this company.</source>
           <target>Tilgreinir hvort vörurakningarskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -890,6 +1208,12 @@
           <target>Vöruverð</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vöruverð</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemPrice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 1855876506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Reference</source>
+          <target>Vörutilvísun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemReference - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2981724990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>

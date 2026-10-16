@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added (2026-10-16) - Inventory.ItemReference.Resolve
+
+- Item Ref. Resolve Impl ori (70013489) adds `Inventory.ItemReference.Resolve` (enum value 70013437, enum extension 70013479). A caller sends `referenceNo` or `references`, with optional `referenceType` (`barCode`, `customer`, `vendor`, or blank), `referenceTypeNo`, and `date`. The type reads Item Reference (5777) with the same date window Business Central uses, then the item number and GTIN when no reference matches. It does not write.
+- Several items answer `AmbiguousRecord`. A barcode or blank type with `referenceTypeNo` answers `InvalidParameter`. Nothing matched answers `RecordNotFound`. A blocked item answers success with `blocked` true. An ending date before `date` is ignored.
+- Inventory Domain ori value `ItemReference` and Inventory Setup ori field "Item Reference" (21) gate the type. Inventory Upgrade ori turns the field on for companies that already have a setup row. BIFROST InvAttrRead ori (10036915) and BIFROST InvAttrWrite ori (10036916) grant read on Item and Item Reference. BIFROST InvRead ori and BIFROST InvWrite ori include those sets and execute Item Ref. Resolve Impl ori. No new assignable permission set is added.
+- Item Ref. Resolve Tests (96922) and Item Ref. Resolve Perm (96923) cover a barcode, a customer reference, item number, GTIN, a batch, missing and unknown keys, a format error, conflicting identifiers, an unknown type, ambiguity, a barcode type number, an ended reference, a blocked item, and a caller without read permission.
+- Inventory Contract Batch Tests (96921) expects 45 message types registered by this app. The LCID 1033/1039 catalogue census includes this type, so that scoped count is 36.
+
 ### Fixed (2026-10-16) - runtime catalogue localization
 
 - Replace literal catalogue descriptions with translatable labels for the 35 scoped message types, including TransferOrder.Release. Convert the remaining 17 literal keyword lists and 17 selection descriptions; preserve all existing English text and existing translated labels. Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the compiler output.
