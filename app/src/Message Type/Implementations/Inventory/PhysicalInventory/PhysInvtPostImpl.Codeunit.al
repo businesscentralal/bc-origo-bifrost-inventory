@@ -22,18 +22,24 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Posts a physical inventory journal batch through Item Jnl.-Post.', Comment = 'is-IS=Bókar birgðatalningarbókarkeyrslu með Item Jnl.-Post.';
     begin
-        exit('Posts a physical inventory journal batch through Item Jnl.-Post.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'post physical inventory, post count journal', Comment = 'is-IS=bóka birgðatalningu, bóka talningarbók';
     begin
-        exit('post physical inventory, post count journal');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Posts the physical inventory journal batch after the count is entered.', Comment = 'is-IS=Bókar birgðatalningarbókarkeyrslu eftir að talning hefur verið skráð.';
     begin
-        exit('Posts the physical inventory journal batch after the count is entered.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

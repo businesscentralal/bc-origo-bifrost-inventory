@@ -23,8 +23,10 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Returns item attribute definitions and assigned values for one or more items.', Comment = 'is-IS=Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.';
     begin
-        exit('Returns item attribute definitions and assigned values for one or more items.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

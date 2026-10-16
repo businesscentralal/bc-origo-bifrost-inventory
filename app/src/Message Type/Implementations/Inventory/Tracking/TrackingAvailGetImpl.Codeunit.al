@@ -22,18 +22,24 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads remaining quantity by lot, serial, and package.', Comment = 'is-IS=Les eftirstandandi magn eftir lotu, raðnúmeri og pakka.';
     begin
-        exit('Reads remaining quantity by lot, serial, and package.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'tracking availability, lot availability, serial availability, package', Comment = 'is-IS=rakningarráðstöfun, loturáðstöfun, raðnúmeraráðstöfun, pakki';
     begin
-        exit('tracking availability, lot availability, serial availability, package');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reads open item ledger quantity for an item by tracking number.', Comment = 'is-IS=Les opið magn vörufærslna fyrir vöru eftir rakningarnúmeri.';
     begin
-        exit('Reads open item ledger quantity for an item by tracking number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

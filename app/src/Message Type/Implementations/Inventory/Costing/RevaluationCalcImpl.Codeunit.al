@@ -21,18 +21,24 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Calculates remaining inventory quantity and value for an item.', Comment = 'is-IS=Reiknar eftirstandandi birgðamagn og birgðavirði vöru.';
     begin
-        exit('Calculates remaining inventory quantity and value for an item.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'revaluation, calculate inventory value', Comment = 'is-IS=endurmat, reikna birgðavirði';
     begin
-        exit('revaluation, calculate inventory value');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Calculates remaining quantity and inventory value. Does not post a revaluation journal.', Comment = 'is-IS=Reiknar eftirstandandi magn og birgðavirði. Bókar ekki endurmatsbók.';
     begin
-        exit('Calculates remaining quantity and inventory value. Does not post a revaluation journal.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

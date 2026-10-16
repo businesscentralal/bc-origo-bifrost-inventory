@@ -23,18 +23,24 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads item application entries for an item ledger entry.', Comment = 'is-IS=Les vörujöfnunarfærslur fyrir vörufærslu.';
     begin
-        exit('Reads item application entries for an item ledger entry.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'item application, applied entries', Comment = 'is-IS=vörujöfnun, jafnaðar færslur';
     begin
-        exit('item application, applied entries');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reads application entries. Unapply and reapply are separate types.', Comment = 'is-IS=Les jöfnunarfærslur. Afturköllun og endurjöfnun eru aðskildar tegundir.';
     begin
-        exit('Reads application entries. Unapply and reapply are separate types.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

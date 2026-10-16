@@ -25,8 +25,10 @@ codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.';
     begin
-        exit('Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text

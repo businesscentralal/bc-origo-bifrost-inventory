@@ -20,8 +20,10 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.', Comment = 'is-IS=Býr til nýjan haus samsetningarpöntunar fyrir móðurvöru og getur endurnýjað íhlutalínur úr uppskrift.';
     begin
-        exit('Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
