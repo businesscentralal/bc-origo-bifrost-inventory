@@ -110,7 +110,7 @@ codeunit 96923 "Reservation Create Tests"
         RequestJson.Add('entryNo', EntryNo);
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'cancel status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Cancel should work on the created entry');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Cancel should work on the created entry. ' + JsonText(ResponseJson));
         ReservationEntry.SetRange("Entry No.", EntryNo);
         Assert.IsFalse(ReservationEntry.FindFirst(), 'Reservation entry should be removed');
     end;

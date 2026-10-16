@@ -149,7 +149,7 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Full receive must not return an error after the posting committed. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
         ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
-        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
+        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated. ' + JsonText(ResponseJson));
         Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
         Assert.IsFalse(TransferHeader.Get(DocumentNo), 'A full receive deletes the transfer order');
     end;

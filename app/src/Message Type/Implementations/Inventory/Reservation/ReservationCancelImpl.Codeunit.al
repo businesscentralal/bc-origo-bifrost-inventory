@@ -154,7 +154,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         end;
 
         ReservationManagement.SetReservSource(ReservationEntry);
-        ReservWriteRunner.SetCancel(ReservationManagement);
+        ReservWriteRunner.SetCancel(ReservationManagement, ReservationEntry);
         Commit();
         if not ReservWriteRunner.Run() then begin
             Argument.RespondWithError(GetLastErrorText());

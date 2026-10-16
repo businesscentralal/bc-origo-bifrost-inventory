@@ -11,11 +11,13 @@ codeunit 70013479 "Reserv. Write Runner ori"
     Access = Internal;
 
     var
+        ReservationEntry: Record "Reservation Entry";
         ReservationManagement: Codeunit "Reservation Management";
         AvailabilityDate: Date;
         Quantity: Decimal;
         QuantityBase: Decimal;
         FullAutoReservation: Boolean;
+        HasCancelEntry: Boolean;
         Mode: Option Reserve,Cancel;
         Description: Text[100];
 
@@ -25,7 +27,14 @@ codeunit 70013479 "Reserv. Write Runner ori"
             Mode::Reserve:
                 ReservationManagement.AutoReserve(FullAutoReservation, Description, AvailabilityDate, Quantity, QuantityBase);
             Mode::Cancel:
-                ReservationManagement.DeleteReservEntries(true, 0);
+                if HasCancelEntry then begin
+                    ReservationManagement.SetReservSource(ReservationEntry);
+                    ReservationManagement.DeleteReservEntries(true, 0);
+                    ReservationEntry.SetRange("Entry No.", ReservationEntry."Entry No.");
+                    if not ReservationEntry.IsEmpty() then
+                        ReservationEntry.DeleteAll(true);
+                end else
+                    ReservationManagement.DeleteReservEntries(true, 0);
         end;
     end;
 
@@ -40,10 +49,12 @@ codeunit 70013479 "Reserv. Write Runner ori"
         FullAutoReservation := false;
     end;
 
-    internal procedure SetCancel(var ReservMgt: Codeunit "Reservation Management")
+    internal procedure SetCancel(var ReservMgt: Codeunit "Reservation Management"; CancelEntry: Record "Reservation Entry")
     begin
         Mode := Mode::Cancel;
         ReservationManagement := ReservMgt;
+        ReservationEntry := CancelEntry;
+        HasCancelEntry := true;
     end;
 
     internal procedure GetFullAutoReservation(): Boolean

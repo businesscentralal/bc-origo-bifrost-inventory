@@ -155,6 +155,8 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostedOk: Boolean;
         xLastShipmentNo: Code[20];
         xLastReceiptNo: Code[20];
+        TransferFromCode: Code[10];
+        TransferToCode: Code[10];
         LastErrorText: Text;
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Locked = true;
         InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value', Locked = true;
@@ -170,6 +172,8 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
         DocumentNo := TransferHeader."No.";
         DirectTransfer := TransferHeader."Direct Transfer";
+        TransferFromCode := TransferHeader."Transfer-from Code";
+        TransferToCode := TransferHeader."Transfer-to Code";
         xLastShipmentNo := TransferHeader."Last Shipment No.";
         xLastReceiptNo := TransferHeader."Last Receipt No.";
         RequestJson := Argument.GetRequestJson();
@@ -211,7 +215,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
         if not PostedOk then
             if HeaderPostedAndDeleted(DocumentNo) or PostedAndDeletedUi(LastErrorText) then
-                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson)
+                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, TransferFromCode, TransferToCode, xLastShipmentNo, xLastReceiptNo, ResponseJson)
             else begin
                 Argument.RespondWithError(LastErrorText);
                 exit;
@@ -220,7 +224,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             if TransferHeader.Get(DocumentNo) then
                 BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson)
             else
-                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson);
+                BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, TransferFromCode, TransferToCode, xLastShipmentNo, xLastReceiptNo, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -259,7 +263,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('postingDate', Format(TransferHeader."Posting Date", 0, 9));
     end;
 
-    local procedure BuildSuccessResponseAfterDeletedHeader(DocumentNo: Code[20]; PostingTypeText: Text; DirectTransfer: Boolean; var ResponseJson: JsonObject)
+    local procedure BuildSuccessResponseAfterDeletedHeader(DocumentNo: Code[20]; PostingTypeText: Text; DirectTransfer: Boolean; TransferFromCode: Code[10]; TransferToCode: Code[10]; xLastShipmentNo: Code[20]; xLastReceiptNo: Code[20]; var ResponseJson: JsonObject)
     var
         TransferReceiptHeader: Record "Transfer Receipt Header";
         TransferShipmentHeader: Record "Transfer Shipment Header";
@@ -284,6 +288,10 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             FindPostedTransferDocument(DocumentNo, "Item Ledger Document Type"::"Transfer Receipt", PostedReceiptNo, PostingDate);
         if PostedShipmentNo = '' then
             FindPostedTransferDocument(DocumentNo, "Item Ledger Document Type"::"Transfer Shipment", PostedShipmentNo, PostingDate);
+        if PostedReceiptNo = '' then
+            FindLatestReceipt(TransferFromCode, TransferToCode, xLastReceiptNo, PostedReceiptNo, PostingDate);
+        if PostedShipmentNo = '' then
+            FindLatestShipment(TransferFromCode, TransferToCode, xLastShipmentNo, PostedShipmentNo, PostingDate);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('postingType', PostingTypeText);
@@ -320,6 +328,44 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostedDocumentNo := ItemLedgerEntry."Document No.";
         if PostingDate = 0D then
             PostingDate := ItemLedgerEntry."Posting Date";
+    end;
+
+    local procedure FindLatestReceipt(TransferFromCode: Code[10]; TransferToCode: Code[10]; xLastReceiptNo: Code[20]; var PostedReceiptNo: Code[20]; var PostingDate: Date)
+    var
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+    begin
+        if TransferFromCode <> '' then
+            TransferReceiptHeader.SetRange("Transfer-from Code", TransferFromCode);
+        if TransferToCode <> '' then
+            TransferReceiptHeader.SetRange("Transfer-to Code", TransferToCode);
+        if xLastReceiptNo <> '' then
+            TransferReceiptHeader.SetFilter("No.", '<>%1', xLastReceiptNo);
+        if not TransferReceiptHeader.FindLast() then
+            exit;
+        if TransferReceiptHeader."No." = xLastReceiptNo then
+            exit;
+        PostedReceiptNo := TransferReceiptHeader."No.";
+        if PostingDate = 0D then
+            PostingDate := TransferReceiptHeader."Posting Date";
+    end;
+
+    local procedure FindLatestShipment(TransferFromCode: Code[10]; TransferToCode: Code[10]; xLastShipmentNo: Code[20]; var PostedShipmentNo: Code[20]; var PostingDate: Date)
+    var
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+    begin
+        if TransferFromCode <> '' then
+            TransferShipmentHeader.SetRange("Transfer-from Code", TransferFromCode);
+        if TransferToCode <> '' then
+            TransferShipmentHeader.SetRange("Transfer-to Code", TransferToCode);
+        if xLastShipmentNo <> '' then
+            TransferShipmentHeader.SetFilter("No.", '<>%1', xLastShipmentNo);
+        if not TransferShipmentHeader.FindLast() then
+            exit;
+        if TransferShipmentHeader."No." = xLastShipmentNo then
+            exit;
+        PostedShipmentNo := TransferShipmentHeader."No.";
+        if PostingDate = 0D then
+            PostingDate := TransferShipmentHeader."Posting Date";
     end;
 
     local procedure PostedAndDeletedUi(LastErrorText: Text): Boolean
