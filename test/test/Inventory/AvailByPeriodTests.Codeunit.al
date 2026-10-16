@@ -32,6 +32,7 @@ codeunit 96924 "Avail. By Period Tests"
         FromText: Text;
     begin
         Library.Initialize();
+        EnableAvailability();
         CreateItem(Item, Item.Type::Inventory);
         PostPositiveAdjustment(Item."No.", 7);
         FromText := Format(WorkDate(), 0, 9);
@@ -66,6 +67,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         CreateItem(FirstItem, FirstItem.Type::Inventory);
         CreateItem(SecondItem, SecondItem.Type::Inventory);
         Items.Add(FirstItem."No.");
@@ -90,6 +92,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         RequestJson.Add('periodType', 'month');
         RequestJson.Add('from', Format(WorkDate(), 0, 9));
         RequestJson.Add('periods', 1);
@@ -105,6 +108,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         RequestJson.Add('itemNo', 'ANY');
         RequestJson.Add('warehouse', 'BLUE');
         RequestJson.Add('periodType', 'month');
@@ -122,6 +126,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         RequestJson.Add('itemNo', 123);
         RequestJson.Add('periodType', 'month');
         RequestJson.Add('from', Format(WorkDate(), 0, 9));
@@ -139,6 +144,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         Items.Add('ONE');
         RequestJson.Add('itemNo', 'ONE');
         RequestJson.Add('items', Items);
@@ -158,6 +164,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         CreateItem(Item, Item.Type::Inventory);
         RequestJson.Add('itemNo', Item."No.");
         RequestJson.Add('periodType', 'decade');
@@ -175,6 +182,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         RequestJson.Add('itemNo', 'NO-SUCH-ITEM-ZZZ');
         RequestJson.Add('periodType', 'month');
         RequestJson.Add('from', Format(WorkDate(), 0, 9));
@@ -192,6 +200,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         CreateItem(Item, Item.Type::Inventory);
         RequestJson.Add('itemNo', Item."No.");
         RequestJson.Add('periodType', 'day');
@@ -211,6 +220,7 @@ codeunit 96924 "Avail. By Period Tests"
         Index: Integer;
     begin
         Library.Initialize();
+        EnableAvailability();
         for Index := 1 to 21 do
             Items.Add('ITEM-' + Format(Index));
         RequestJson.Add('items', Items);
@@ -229,6 +239,7 @@ codeunit 96924 "Avail. By Period Tests"
         MessageType: Enum "Message Type ori";
     begin
         Library.Initialize();
+        EnableAvailability();
         CreateItem(ServiceItem, ServiceItem.Type::Service);
         CreateItem(NonInventoryItem, NonInventoryItem.Type::"Non-Inventory");
         AssertResponseError(CallItem(MessageType, ServiceItem."No."), 'PreconditionFailed', 'Use an inventory item.');
@@ -246,13 +257,26 @@ codeunit 96924 "Avail. By Period Tests"
         ResponseJson := Library.ExecuteType(MessageType, ItemNo, RequestJson, false);
     end;
 
+    local procedure EnableAvailability()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // Same-version publish does not run the upgrade that turns this domain on.
+        if not InventorySetup.Get() then
+            InventorySetup.InsertIfNotExists();
+        if InventorySetup.Availability then
+            exit;
+        InventorySetup.Validate(Availability, true);
+        InventorySetup.Modify(true);
+    end;
+
     local procedure CreateItem(var Item: Record Item; ItemType: Enum "Item Type")
     begin
-        Item.Init();
-        Item.Validate("No.", CopyStr('AP' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, MaxStrLen(Item."No.")));
-        Item.Validate(Description, Item."No.");
+        LibraryInventory.CreateItem(Item);
+        if Item.Type = ItemType then
+            exit;
         Item.Validate(Type, ItemType);
-        Item.Insert(true);
+        Item.Modify(true);
     end;
 
     local procedure PostPositiveAdjustment(ItemNo: Code[20]; Qty: Decimal)
