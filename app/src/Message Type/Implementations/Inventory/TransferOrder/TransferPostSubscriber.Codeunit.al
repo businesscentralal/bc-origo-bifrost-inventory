@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Transfer;
 
 /// <summary>
@@ -48,6 +49,30 @@ codeunit 70013420 "Transfer Post Subscriber ori"
             CapturedReceiptNo := Rec."Last Receipt No.";
         if Rec."Last Shipment No." <> '' then
             CapturedShipmentNo := Rec."Last Shipment No.";
+        if Rec."Posting Date" <> 0D then
+            CapturedPostingDate := Rec."Posting Date";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Transfer Receipt Header", 'OnAfterInsertEvent', '', false, false)]
+    local procedure CaptureInsertedReceipt(var Rec: Record "Transfer Receipt Header"; RunTrigger: Boolean)
+    begin
+        if Rec.IsTemporary() then
+            exit;
+        CapturedReceiptNo := Rec."No.";
+        if Rec."Posting Date" <> 0D then
+            CapturedPostingDate := Rec."Posting Date";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Ledger Entry", 'OnAfterInsertEvent', '', false, false)]
+    local procedure CaptureInsertedTransferReceiptLedger(var Rec: Record "Item Ledger Entry"; RunTrigger: Boolean)
+    begin
+        if Rec.IsTemporary() then
+            exit;
+        if Rec."Document Type" <> Rec."Document Type"::"Transfer Receipt" then
+            exit;
+        if Rec."Document No." = '' then
+            exit;
+        CapturedReceiptNo := Rec."Document No.";
         if Rec."Posting Date" <> 0D then
             CapturedPostingDate := Rec."Posting Date";
     end;
