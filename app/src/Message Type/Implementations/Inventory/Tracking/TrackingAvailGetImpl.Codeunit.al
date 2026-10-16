@@ -74,6 +74,7 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Item SystemId alias.'));
         Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Item SystemId alias; document-line selectors are not supported by this operation.'));
         Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Item SystemId alias.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Business Central Item table view in SetView syntax. Used after subject and item identifiers; reads availability for the first matching item. Filter to one item for an exact selection.'));
         Parameters.Add(ContractMgt.Parameter('locationFilter', 'string', false, 'Business Central location filter.'));
         Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, 'Exact location code; intersects locationFilter.'));
         Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant code, including blank.'));

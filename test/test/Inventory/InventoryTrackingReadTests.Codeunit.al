@@ -153,6 +153,144 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(Row, 'lotNo', 'READ-ITEM');
     end;
 
+    /// <summary>The declared Item table view selects only the requested pending tracking.</summary>
+    [Test]
+    procedure Scenario_AC2_TrackingTableViewReadsOnlySelectedItem()
+    var
+        PurchaseLine: Record "Purchase Line";
+        OtherLine: Record "Purchase Line";
+        Item: Record Item;
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        EntryCount: Integer;
+    begin
+        // Stories #5 AC2 / #30 | Time: native WorkDate fixture | Risk: undocumented Item selector widens tracking reads.
+        AssertTableViewParameter("Message Type ori"::"Inventory.Tracking.Get");
+        CreateTrackedLine(PurchaseLine, 'XVIEW-SELECTED', '', '', 2);
+        CreateTrackedLine(OtherLine, 'XVIEW-OTHER', '', '', 3);
+        Item.SetRange("No.", PurchaseLine."No.");
+        Request.Add('tableView', Item.GetView(true));
+        EntryCount := Entry.Count();
+
+        ExecuteRead(Request, 0, Response);
+
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'itemNo', PurchaseLine."No.");
+        AssertText(Row, 'lotNo', 'XVIEW-SELECTED');
+        AssertDecimal(Row, 'quantityBase', 2);
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Selecting tracking does not change reservation rows.');
+    end;
+
+    /// <summary>The declared Item table view selects only the requested posted stock.</summary>
+    [Test]
+    procedure Scenario_AC4_AvailabilityTableViewReadsOnlySelectedItem()
+    var
+        PurchaseLine: Record "Purchase Line";
+        OtherLine: Record "Purchase Line";
+        Header: Record "Purchase Header";
+        Item: Record Item;
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        LedgerCount: Integer;
+        EntryCount: Integer;
+    begin
+        // Stories #5 AC4 / #30 | Time: native WorkDate fixture | Risk: undocumented Item selector widens availability reads.
+        AssertTableViewParameter("Message Type ori"::"Inventory.TrackingAvailability.Get");
+        CreateTrackedLine(PurchaseLine, 'XVIEW-STOCK', '', '', 2);
+        Header.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
+        LibraryPurchase.PostPurchaseDocument(Header, true, false);
+        CreateTrackedLine(OtherLine, 'XVIEW-OTHER', '', '', 3);
+        Header.Get(OtherLine."Document Type", OtherLine."Document No.");
+        LibraryPurchase.PostPurchaseDocument(Header, true, false);
+        Item.SetRange("No.", PurchaseLine."No.");
+        Request.Add('tableView', Item.GetView(true));
+        LedgerCount := Ledger.Count();
+        EntryCount := Entry.Count();
+
+        ExecuteRead(Request, 2, Response);
+
+        AssertSuccess(Response);
+        AssertText(Response, 'itemNo', PurchaseLine."No.");
+        Row := SingleRow(Response, 'availability');
+        AssertText(Row, 'lotNo', 'XVIEW-STOCK');
+        AssertDecimal(Row, 'inventory', 2);
+        AssertDecimal(Row, 'availableQuantity', 2);
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Availability selection does not post stock.');
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Availability selection does not change reservations.');
+    end;
+
+    /// <summary>Wrong-typed Item table views are refused rather than selecting unrelated tracking.</summary>
+    [Test]
+    procedure Scenario_AC3_TrackingTableViewWrongTypeIsRefused()
+    begin
+        // Stories #5 AC3 / #30 | Time: no date dependency | Risk: invalid selection falls back to all items.
+        AssertWrongTypedTableView(0);
+    end;
+
+    /// <summary>Wrong-typed Item table views are refused rather than selecting unrelated stock.</summary>
+    [Test]
+    procedure Scenario_AC4_AvailabilityTableViewWrongTypeIsRefused()
+    begin
+        // Stories #5 AC4 / #30 | Time: no date dependency | Risk: invalid selection falls back to all items.
+        AssertWrongTypedTableView(2);
+    end;
+
+    local procedure AssertWrongTypedTableView(Mode: Integer)
+    var
+        Ledger: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        LedgerCount: Integer;
+        EntryCount: Integer;
+    begin
+        LedgerCount := Ledger.Count();
+        EntryCount := Entry.Count();
+        Request.Add('tableView', 123);
+        ExecuteRead(Request, Mode, Response);
+        AssertText(Response, 'status', 'Error');
+        AssertText(Response, 'code', 'InvalidParameterFormat');
+        AssertText(Response, 'parameter', 'tableView');
+        Assert.IsFalse(Response.Contains('trackingLines'), 'Invalid selection returns no tracking.');
+        Assert.IsFalse(Response.Contains('availability'), 'Invalid selection returns no availability.');
+        Assert.AreEqual(LedgerCount, Ledger.Count(), 'Invalid selection leaves ledger rows unchanged.');
+        Assert.AreEqual(EntryCount, Entry.Count(), 'Invalid selection leaves reservation rows unchanged.');
+    end;
+
+    local procedure AssertTableViewParameter(MessageType: Enum "Message Type ori")
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameter: JsonObject;
+        Parameters: JsonArray;
+        Token: JsonToken;
+        Value: JsonToken;
+        Matches: Integer;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Tracking contract exists.');
+        Assert.IsTrue(Contract.Get('parameters', Token), 'Parameters chapter exists.');
+        Parameters := Token.AsArray();
+        foreach Token in Parameters do begin
+            Parameter := Token.AsObject();
+            Parameter.Get('name', Value);
+            if Value.AsValue().AsText() = 'tableView' then begin
+                Matches += 1;
+                AssertText(Parameter, 'type', 'string');
+                Parameter.Get('required', Value);
+                Assert.IsFalse(Value.AsValue().AsBoolean(), 'Item table view is optional.');
+                Parameter.Get('description', Value);
+                Assert.IsTrue(Value.AsValue().AsText().Contains('Item table view'), 'Help names the Item table rather than the result table.');
+            end;
+        end;
+        Assert.AreEqual(1, Matches, 'Help declares the consumed tableView exactly once.');
+    end;
+
     /// <summary>Missing document lines produce a structured error without falling back to unrelated item records.</summary>
     [Test]
     procedure Scenario_AC3_UnknownDocumentReturnsError()

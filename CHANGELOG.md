@@ -1,5 +1,7 @@
 # Changelog
 
+- Declare the existing Item `tableView` selector in Tracking.Get and TrackingAvailability.Get Help, including identifier precedence and first-matching-item behavior. Cover filtered native reads and wrong-typed refusal without data changes (codeunits 10036919/70013473, test codeunit 96927; issues #5/#30).
+
 - Cover mixed dated/undated lot and package availability in both entry orders without writing posted ledgers (test codeunit 96927; issue #5). Assert explicit-zero and subsequent omitted physical-count response semantics while preserving native shortage quantities (test codeunit 96962; issue #6).
 
 - Preserve existing attribute Read/Full access through nonassignable included permission sets, integrating the published PR #96 permission repair without changing native functional grants. Add restricted-role read/no-write and full-write regressions (permission sets/extensions 10036915/10036916, test codeunit 96918; issue #26).
