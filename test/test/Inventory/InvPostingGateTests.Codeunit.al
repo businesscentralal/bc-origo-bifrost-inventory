@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -19,6 +20,42 @@ codeunit 96918 "Inv. Posting Gate Tests"
 
     var
         Assert: Codeunit "Library Assert";
+
+    [Test]
+    procedure InventoryRead_PreservesAttributeReadOnlyPermissions()
+    var
+        ItemAttribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        AttributeMapping: Record "Item Attribute Value Mapping";
+        AttributeTranslation: Record "Item Attr. Value Translation";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
+        Assert.IsTrue(ItemAttribute.ReadPermission(), 'Read role must retain attribute read.');
+        Assert.IsTrue(AttributeValue.ReadPermission(), 'Read role must retain value read.');
+        Assert.IsTrue(AttributeMapping.ReadPermission(), 'Read role must retain mapping read.');
+        Assert.IsTrue(AttributeTranslation.ReadPermission(), 'Read role must retain translation read.');
+        Assert.IsFalse(ItemAttribute.WritePermission(), 'Read role must not gain attribute writes.');
+        Assert.IsFalse(AttributeValue.WritePermission(), 'Read role must not gain value writes.');
+        Assert.IsFalse(AttributeMapping.WritePermission(), 'Read role must not gain mapping writes.');
+        Assert.IsFalse(AttributeTranslation.WritePermission(), 'Read role must not gain translation writes.');
+    end;
+
+    [Test]
+    procedure InventoryFull_PreservesAttributeWritePermissions()
+    var
+        ItemAttribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        AttributeMapping: Record "Item Attribute Value Mapping";
+        AttributeTranslation: Record "Item Attr. Value Translation";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        Assert.IsTrue(ItemAttribute.WritePermission(), 'Full role must retain attribute writes.');
+        Assert.IsTrue(AttributeValue.WritePermission(), 'Full role must retain value writes.');
+        Assert.IsTrue(AttributeMapping.WritePermission(), 'Full role must retain mapping writes.');
+        Assert.IsTrue(AttributeTranslation.WritePermission(), 'Full role must retain translation writes.');
+    end;
 
     [Test]
     procedure TransferPost_WithoutInvPost_IsDisabled()
@@ -49,7 +86,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssertCanPost_WithoutInvPost_NamesInvPostSet()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         ResponseJson: JsonObject;
@@ -58,14 +95,14 @@ codeunit 96918 "Inv. Posting Gate Tests"
     begin
         // [SCENARIO] Denial names BIFROST InvPost ori, carries PermissionDenied, and does not mention BIFROST ItemPost ori.
         LowerToInvWrite(LibraryLowerPermissions);
-        Argument.Init();
-        Argument.Version := "Message Version ori"::"1.0";
-        Argument.Insert(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
 
-        Assert.IsFalse(PostingGate.AssertCanPost(Argument), 'AssertCanPost should deny without the token');
+        Assert.IsFalse(PostingGate.AssertCanPost(TempArgument), 'AssertCanPost should deny without the token');
         Assert.IsFalse(PostingGate.HasPostingPermission(), 'HasPostingPermission should be false without the token');
 
-        ResponseJson := Argument.GetResponseJson();
+        ResponseJson := TempArgument.GetResponseJson();
         Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
         Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('error', ErrorToken), 'error missing');
@@ -76,7 +113,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPreview_WithoutInvPost_StaysEnabled()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
@@ -84,8 +121,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Transfer preview should stay enabled without BIFROST InvPost ori');
 
-        PrepareUnlicensedArgument(Argument);
-        asserterror PreviewImpl.ExecuteBifrostTask(Argument);
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror PreviewImpl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check, not a posting-gate denial');
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
     end;
@@ -93,7 +130,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssemblyPreview_WithoutInvPost_StaysEnabled()
     var
-        Argument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
@@ -101,8 +138,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Assembly preview should stay enabled without BIFROST InvPost ori');
 
-        PrepareUnlicensedArgument(Argument);
-        asserterror PreviewImpl.ExecuteBifrostTask(Argument);
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror PreviewImpl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check, not a posting-gate denial');
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
     end;
@@ -114,10 +151,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LibraryLowerPermissions.AddPermissionSet('Inv Post Gate Test');
     end;
 
-    local procedure PrepareUnlicensedArgument(var Argument: Record "Message Argument ori")
+    local procedure PrepareUnlicensedArgument(var TempArgument: Record "Message Argument ori")
     begin
-        Argument.Init();
-        Argument.Version := "Message Version ori"::"1.0";
-        Argument.Insert(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
     end;
 }

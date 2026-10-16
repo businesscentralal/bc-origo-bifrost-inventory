@@ -20,8 +20,10 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Returns assembly order statistics: header info, line counts, quantities and cost breakdown.', Comment = 'is-IS=Skilar tölfræði samsetningarpöntunar: upplýsingum úr haus, fjölda lína, magni og sundurliðun kostnaðar.';
     begin
-        exit('Returns assembly order statistics: header info, line counts, quantities and cost breakdown.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -127,9 +129,9 @@ codeunit 70013422 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         CostsJson: JsonObject;

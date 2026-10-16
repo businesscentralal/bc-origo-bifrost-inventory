@@ -31,7 +31,7 @@ codeunit 96902 "Inventory Test Library ori"
         Dispatcher: Codeunit "Dispatcher ori";
         RequestContent: BigText;
         ResponseContent: BigText;
-        ResponseContentType: Text[50];
+        ResponseContentType: Text[100];
         MessageVersion: Enum "Message Version ori";
         RequestText: Text;
         ResponseText: Text;
@@ -70,7 +70,7 @@ codeunit 96902 "Inventory Test Library ori"
     procedure EnsureInventoryItem(var Item: Record Item)
     begin
         Item.Reset();
-        Item.SetLoadFields("No.", SystemId, Blocked, Type);
+        Item.SetLoadFields("No.", SystemId, Blocked, Type, Description);
         Item.SetRange(Blocked, false);
         Item.SetRange(Type, Item.Type::Inventory);
         if Item.FindFirst() then
@@ -85,7 +85,7 @@ codeunit 96902 "Inventory Test Library ori"
     procedure EnsureServiceItem(var Item: Record Item)
     begin
         Item.Reset();
-        Item.SetLoadFields("No.", SystemId, Blocked, Type);
+        Item.SetLoadFields("No.", SystemId, Blocked, Type, Description);
         Item.SetRange(Blocked, false);
         Item.SetRange(Type, Item.Type::Service);
         if Item.FindFirst() then

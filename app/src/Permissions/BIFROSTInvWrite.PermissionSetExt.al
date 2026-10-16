@@ -1,18 +1,15 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using Microsoft.Inventory.Item.Attribute;
 
 /// <summary>
 /// Extends Foundation <c>BIFROST Full ori</c> with write access for Item Attribute message types.
 /// </summary>
 permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori"
 {
+    IncludedPermissionSets = "BIFROST InvAttrWrite ori";
+
     Permissions =
-        tabledata "Item Attribute" = RIMD,
-        tabledata "Item Attribute Value" = RIMD,
-        tabledata "Item Attribute Value Mapping" = RIMD,
-        tabledata "Item Attr. Value Translation" = RIMD,
         tabledata "Inventory Setup ori" = R,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Create Impl ori" = X,

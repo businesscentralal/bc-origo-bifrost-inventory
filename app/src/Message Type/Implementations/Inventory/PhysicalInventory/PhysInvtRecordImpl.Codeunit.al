@@ -20,18 +20,24 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Records the counted quantity on a physical inventory journal line.', Comment = 'is-IS=Skráir talið magn á línu í birgðatalningarbók.';
     begin
-        exit('Records the counted quantity on a physical inventory journal line.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'record physical inventory, count quantity', Comment = 'is-IS=skrá birgðatalningu, talið magn';
     begin
-        exit('record physical inventory, count quantity');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Sets Qty. (Phys. Inventory) on a physical inventory journal line.', Comment = 'is-IS=Stillir talið magn á línu í birgðatalningarbók.';
     begin
-        exit('Sets Qty. (Phys. Inventory) on a physical inventory journal line.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

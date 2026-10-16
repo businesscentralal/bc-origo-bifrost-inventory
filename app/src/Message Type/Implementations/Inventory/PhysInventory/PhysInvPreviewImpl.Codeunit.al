@@ -114,6 +114,7 @@ codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Clear(Notes);
         exit(false);
     end;
 
@@ -124,8 +125,8 @@ codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJournalLine: Record "Item Journal Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Lines: JsonArray;

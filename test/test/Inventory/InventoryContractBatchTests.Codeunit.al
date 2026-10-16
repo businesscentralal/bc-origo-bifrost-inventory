@@ -14,6 +14,118 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
     [Test]
+    procedure EmptyNotes_ClearPreviousOutput()
+    var
+        CalculateImpl: Codeunit "Phys. Inv. Calc Impl ori";
+        PreviewImpl: Codeunit "Phys. Inv. Preview Impl ori";
+        TrackingImpl: Codeunit "Tracking Avail. Get Impl ori";
+        Notes: Text;
+    begin
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(CalculateImpl.GetNotes(Notes), 'Calculate has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Calculate must clear previous output.');
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(PreviewImpl.GetNotes(Notes), 'Preview has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Preview must clear previous output.');
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(TrackingImpl.GetNotes(Notes), 'Tracking has no notes.');
+        LibraryAssert.AreEqual('', Notes, 'Tracking must clear previous output.');
+    end;
+
+    [Test]
+    procedure ScopedCatalogue_UsesIcelandicAt1039()
+    var
+        MessageType: Enum "Message Type ori";
+        MessageImpl: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        TypeNames: List of [Text];
+        TypeName: Text;
+        EnglishDescription: Text;
+        EnglishKeywords: Text;
+        EnglishSelection: Text;
+        IcelandicDescription: Text;
+        IcelandicKeywords: Text;
+        IcelandicSelection: Text;
+        PreviousLanguage: Integer;
+    begin
+        TypeNames.Add('Inventory.AssemblyOrder.Create');
+        TypeNames.Add('Inventory.AssemblyOrder.Post');
+        TypeNames.Add('Inventory.AssemblyOrder.PreviewPost');
+        TypeNames.Add('Inventory.AssemblyOrder.RefreshLines');
+        TypeNames.Add('Inventory.AssemblyOrder.Release');
+        TypeNames.Add('Inventory.AssemblyOrder.Reopen');
+        TypeNames.Add('Inventory.AssemblyOrder.Statistics');
+        TypeNames.Add('Inventory.Attribute.Create');
+        TypeNames.Add('Inventory.Attribute.Get');
+        TypeNames.Add('Inventory.Attribute.Update');
+        TypeNames.Add('Inventory.AttributeDefinition.Create');
+        TypeNames.Add('Inventory.Cost.Get');
+        TypeNames.Add('Inventory.CostToGL.Test');
+        TypeNames.Add('Inventory.ItemApplication.Get');
+        TypeNames.Add('Inventory.ItemApplication.Reapply');
+        TypeNames.Add('Inventory.ItemApplication.Unapply');
+        TypeNames.Add('Inventory.Period.Get');
+        TypeNames.Add('Inventory.PhysInventory.Calculate');
+        TypeNames.Add('Inventory.PhysInventory.Post');
+        TypeNames.Add('Inventory.PhysInventory.Record');
+        TypeNames.Add('Inventory.Price.Update');
+        TypeNames.Add('Inventory.Reclassification.Check');
+        TypeNames.Add('Inventory.Reclassification.PreviewPost');
+        TypeNames.Add('Inventory.Reservation.Cancel');
+        TypeNames.Add('Inventory.Reservation.Create');
+        TypeNames.Add('Inventory.Reservation.Get');
+        TypeNames.Add('Inventory.Revaluation.Calculate');
+        TypeNames.Add('Inventory.TrackingAvailability.Get');
+        TypeNames.Add('Inventory.Transfer.UndoReceipt');
+        TypeNames.Add('Inventory.TransferOrder.Create');
+        TypeNames.Add('Inventory.TransferOrder.Post');
+        TypeNames.Add('Inventory.TransferOrder.PreviewPost');
+        TypeNames.Add('Inventory.TransferOrder.Release');
+        TypeNames.Add('Inventory.TransferOrder.Reopen');
+        TypeNames.Add('Inventory.TransferOrder.Statistics');
+        LibraryAssert.AreEqual(35, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
+        foreach TypeName in TypeNames do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+            MessageImpl := MessageType;
+            Discovery := MessageType;
+            PreviousLanguage := GlobalLanguage();
+            GlobalLanguage(1033);
+            EnglishDescription := MessageImpl.GetDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(1039);
+            IcelandicDescription := MessageImpl.GetDescription();
+            IcelandicKeywords := Discovery.GetKeywords();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.IsFalse(EnglishDescription = '', TypeName + ' needs an English description.');
+            LibraryAssert.IsFalse(EnglishKeywords = '', TypeName + ' needs English keywords.');
+            LibraryAssert.IsFalse(EnglishSelection = '', TypeName + ' needs an English selection description.');
+            LibraryAssert.IsFalse(IcelandicDescription = '', TypeName + ' needs an Icelandic description.');
+            LibraryAssert.IsFalse(IcelandicKeywords = '', TypeName + ' needs Icelandic keywords.');
+            LibraryAssert.IsFalse(IcelandicSelection = '', TypeName + ' needs an Icelandic selection description.');
+            LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, TypeName + ' description must follow LCID 1039.');
+            LibraryAssert.AreNotEqual(EnglishKeywords, IcelandicKeywords, TypeName + ' keywords must follow LCID 1039.');
+            LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, TypeName + ' selection description must follow LCID 1039.');
+        end;
+    end;
+
+    [Test]
+    procedure PublicHelp_ClearsDeveloperNotes()
+    var
+        ReservationImpl: Codeunit "Reservation Create Impl ori";
+        CostToGLImpl: Codeunit "Cost To GL Test Impl ori";
+        Notes: Text;
+    begin
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(ReservationImpl.GetNotes(Notes), 'Reservation.Create must not expose developer notes.');
+        LibraryAssert.AreEqual('', Notes, 'Reservation.Create must clear previous notes.');
+        Notes := 'Previous message notes';
+        LibraryAssert.IsFalse(CostToGLImpl.GetNotes(Notes), 'CostToGL.Test must not expose developer notes.');
+        LibraryAssert.AreEqual('', Notes, 'CostToGL.Test must clear previous notes.');
+    end;
+
+    [Test]
     procedure AllInventoryTypes_HaveRequiredContractChapters()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -128,11 +240,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed()
     var
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Helper: Codeunit "Transfer Order Test Helper";
         LibraryInventory: Codeunit "Library - Inventory";
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalBatch: Record "Item Journal Batch";
         Contract: JsonObject;
         ErrorEntry: JsonObject;
         RequestJson: JsonObject;
@@ -408,6 +520,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Parameters.Count(), 'Exact parameter count; other chapters cannot donate fields.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Parameters.Get(Index, Token);
@@ -436,6 +549,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         Specs := Spec.Split(',');
         LibraryAssert.AreEqual(Specs.Count(), Fields.Count(), 'Exact response field count.');
+        Index := 0;
         foreach Expected in Specs do begin
             Parts := Expected.Split(':');
             Fields.Get(Index, Token);
@@ -473,6 +587,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Sources.Add('data.itemNo');
         Sources.Add('data.itemId, data.id, data.systemId, data.recordSystemId');
         Sources.Add('data.tableView');
+        Index := 0;
         foreach Source in Sources do begin
             Target.Get(Index, Token);
             Entry := Token.AsObject();

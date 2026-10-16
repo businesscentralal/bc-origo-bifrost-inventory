@@ -23,18 +23,24 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Updates an item unit price.', Comment = 'is-IS=Uppfærir einingarverð vöru.';
     begin
-        exit('Updates an item unit price.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'update item price, unit price', Comment = 'is-IS=uppfæra vöruverð, einingarverð';
     begin
-        exit('update item price, unit price');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Updates a sales price. Cost updates stay Inventory.Cost.Update.', Comment = 'is-IS=Uppfærir söluverð. Kostnaðaruppfærslur fara áfram í gegnum Inventory.Cost.Update.';
     begin
-        exit('Updates a sales price. Cost updates stay Inventory.Cost.Update.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -132,8 +138,8 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;

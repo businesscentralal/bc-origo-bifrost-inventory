@@ -36,6 +36,11 @@
       no-reads-seen      The contract declares at least one parameter and the guard sees no request read.
                          Listed as Type|no-reads-seen|* until a follow-up makes the read visible.
 
+    Shared chapter calls with a literal selector are narrowed to that case. JsonArray literal declarations and
+    attached parameter JsonObjects count only on the chapter output; clearing or replacing that output removes
+    earlier entries. Foundation typed readers read their literal key from the known request argument. Malformed
+    arrays and unresolved selectors/readers remain explicit offenders, never allow-list exemptions.
+
     Why a source guard and not a runtime recorder (#146 AMB-1): JsonObject.Get is a platform method, so a
     recorder on "Message Argument ori" never sees the direct reads, which are most of them, and a probe request only
     reaches the reads before its first error. The source sees every read on every path.
@@ -419,6 +424,7 @@ function Get-DeclaredKeys($Objects, [string]$ContractCodeunit) {
     foreach ($entry in $seen.Keys) {
         $parts = $entry -split '::', 2
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
+            Add-ContractDeclarations $body $keys
             foreach ($m in $parameterLiteral.Matches($body)) { [void]$keys.Add($m.Groups[1].Value) }
             # A parameter declared in a loop over a literal list: AdjustNames.AddRange('a', 'b') ... Parameter(AdjustNames.Get(i), ...)
             foreach ($loop in [regex]::Matches($body, '\.Parameter\(\s*(\w+)\.Get\(')) {
@@ -673,6 +679,7 @@ function Get-ReadKeys($Objects, [string]$Codeunit) {
         $parts = $entry -split '::', 2
         $requestNames = $requestVars[$entry]
         foreach ($body in $Objects[$parts[0]].Procedures[$parts[1]]) {
+            Add-TypedReaderKeys $Objects[$parts[0]] $body $requestNames $keys
             foreach ($m in $memberRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
             foreach ($m in $callRead.Matches($body)) { Add-CallRead $m $requestNames $keys }
             foreach ($m in $keySpec.Matches($body)) {
@@ -683,7 +690,121 @@ function Get-ReadKeys($Objects, [string]$Codeunit) {
     return ,$keys
 }
 
+# Bound source recognition to the selected contract chapter; unresolved dispatch remains an offender.
+function Get-SelectedObjects($Objects, [string]$Contract) {
+    $copy = @{}
+    foreach ($name in $Objects.Keys) {
+        $copy[$name] = $Objects[$name].Clone()
+        $copy[$name].Procedures = @{}
+        foreach ($proc in $Objects[$name].Procedures.Keys) { $copy[$name].Procedures[$proc] = @($Objects[$name].Procedures[$proc]) }
+    }
+    foreach ($root in @('getparameters','gettarget')) {
+        $seen = @{}; Get-Reach $Objects $Contract $root $seen
+        foreach ($entry in $seen.Keys) {
+            $parts = $entry -split '::',2
+            $obj = $Objects[$parts[0]]; $proc = $parts[1]
+            $bodies = @()
+            foreach ($body in $obj.Procedures[$proc]) {
+                $case = [regex]::Match($body, '(?i)\bcase\s+(\w+)\s+of\b')
+                if (-not $case.Success) { $bodies += $body; continue }
+                $params = Get-ParameterNames $body
+                $position = [array]::IndexOf($params, $case.Groups[1].Value.ToLowerInvariant())
+                $selectors = New-Object 'System.Collections.Generic.HashSet[string]'
+                $unknown = $position -lt 0
+                foreach ($caller in $seen.Keys) {
+                    $cp = $caller -split '::',2
+                    foreach ($cb in $Objects[$cp[0]].Procedures[$cp[1]]) {
+                        foreach ($call in $callWithArgs.Matches($cb)) {
+                            if ($call.Groups['callee'].Value -ine $proc) { continue }
+                            if ($cb.Substring(0,$call.Index) -match '(?i)\b(procedure|trigger)\s+$') { continue }
+                            $receiver = $call.Groups['receiver'].Value.ToLowerInvariant()
+                            $targets = if ($receiver -eq '') { @($cp[0]) } elseif ($Objects[$cp[0]].Variables.ContainsKey($receiver)) { @($Objects[$cp[0]].Variables[$receiver]) } else { @() }
+                            if ($targets -notcontains $parts[0]) { continue }
+                            # Tokenize arguments without splitting commas inside AL strings.
+                            $args = @([regex]::Matches($call.Groups['args'].Value, "'(?:[^']|'')*'|[^,]+") | ForEach-Object { $_.Value.Trim() })
+                            if ($position -ge 0 -and $position -lt $args.Count -and $args[$position] -match "^'((?:[^']|'')*)'$" ) { [void]$selectors.Add($Matches[1].Replace("''", "'")) } else { $unknown = $true }
+                        }
+                    }
+                }
+                if ($unknown -or $selectors.Count -ne 1) { $script:ContractDiagnostics.Add("dynamic-ambiguity|$entry"); $bodies += $body; continue }
+                $selector = @($selectors)[0]
+                # Match end of CASE using AL block tokens with string literals removed.
+                $tail = $body.Substring($case.Index + $case.Length)
+                $mask = [regex]::Replace($tail, "'(?:[^']|'')*'", { param($m) ' ' * $m.Length })
+                $depth = 1; $end = -1
+                foreach ($token in [regex]::Matches($mask, '(?i)\b(begin|case|end)\b')) {
+                    if ($token.Value -ieq 'end') { $depth-- } else { $depth++ }
+                    if ($depth -eq 0) { $end = $token.Index; break }
+                }
+                if ($end -lt 0) { $script:ContractDiagnostics.Add("dynamic-ambiguity|malformed-case:$entry"); $bodies += $body; continue }
+                $inside = $tail.Substring(0,$end)
+                $branches = @([regex]::Matches($inside, "(?m)^\s*((?:'(?:[^']|'')*'\s*,?\s*)+):"))
+                $chosen = ''
+                for ($i=0; $i -lt $branches.Count; $i++) {
+                    $labels = @($stringLiteral.Matches($branches[$i].Groups[1].Value) | ForEach-Object { $_.Groups[1].Value.Replace("''", "'") })
+                    if ($labels -ccontains $selector) {
+                        $start = $branches[$i].Index + $branches[$i].Length
+                        $stop = if ($i+1 -lt $branches.Count) { $branches[$i+1].Index } else { $inside.Length }
+                        $chosen = $inside.Substring($start,$stop-$start)
+                    }
+                }
+                if ($inside -match '(?im)^\s*else\b') { $script:ContractDiagnostics.Add("dynamic-ambiguity|case-else:$entry"); $bodies += $body; continue }
+                $bodies += $body.Substring(0,$case.Index) + $chosen + $tail.Substring($end+3)
+            }
+            $copy[$parts[0]].Procedures[$proc] = $bodies
+        }
+    }
+    return $copy
+}
+function Add-ContractDeclarations([string]$Body, $Keys) {
+    # Bind only to the chapter's JsonArray output (var parameter or named return value).
+    $outputs = @()
+    foreach ($m in [regex]::Matches($Body, '(?i)\bvar\s+(\w+)\s*:\s*JsonArray|\)\s*(\w+)\s*:\s*JsonArray')) {
+        $outputs += $(if ($m.Groups[1].Success) { $m.Groups[1].Value } else { $m.Groups[2].Value })
+    }
+    foreach ($output in $outputs) {
+        $escaped = [regex]::Escape($output)
+        # Track final chapter contents in statement order. A reset or replacement discards prior entries.
+        $state = @{}
+        $outputKeys = New-Object 'System.Collections.Generic.HashSet[string]'
+        $statements = "(?i)\bClear\(\s*(\w+)\s*\)|\b$escaped\.ReadFrom\(\s*'((?:[^']|'')*)'\s*\)|\b(\w+)\.Add\(\s*'name'\s*,\s*'((?:[^']|'')*)'\s*\)|\b$escaped\.Add\(\s*(\w+)\s*\)"
+        foreach ($m in [regex]::Matches($Body, $statements)) {
+            if ($m.Groups[1].Success) {
+                $state.Remove($m.Groups[1].Value.ToLowerInvariant())
+                if ($m.Groups[1].Value -ieq $output) { $outputKeys.Clear() }
+            } elseif ($m.Groups[2].Success) {
+                $outputKeys.Clear()
+                try {
+                    $json = $m.Groups[2].Value.Replace("''", "'")
+                    if (-not $json.TrimStart().StartsWith('[')) { throw 'Expected parameter array' }
+                    $entries = ConvertFrom-Json -InputObject $json -NoEnumerate -ErrorAction Stop
+                    foreach ($item in $entries) {
+                        if ($item.name -isnot [string] -or $item.name -eq '') { throw 'Missing parameter name' }
+                        [void]$outputKeys.Add($item.name)
+                    }
+                } catch { $script:ContractDiagnostics.Add('malformed-contract-json|'+$output) }
+            } elseif ($m.Groups[3].Success) {
+                $state[$m.Groups[3].Value.ToLowerInvariant()] = $m.Groups[4].Value.Replace("''", "'")
+            } elseif ($state.ContainsKey($m.Groups[5].Value.ToLowerInvariant())) {
+                [void]$outputKeys.Add($state[$m.Groups[5].Value.ToLowerInvariant()])
+            }
+        }
+        foreach ($key in $outputKeys) { [void]$Keys.Add($key) }
+    }
+}
+function Add-TypedReaderKeys($Object, [string]$Body, $RequestNames, $Keys) {
+    foreach ($call in $callWithArgs.Matches($Body)) {
+        $receiver = $call.Groups['receiver'].Value.ToLowerInvariant()
+        if (-not $Object.Variables.ContainsKey($receiver) -or $Object.Variables[$receiver] -notcontains 'Request Value Reader ori') { continue }
+        if ($call.Groups['callee'].Value -notmatch '^(?i:TryReadDate|TryReadDecimal|TryReadBoolean)$') { continue }
+        $args = @([regex]::Matches($call.Groups['args'].Value, "'(?:[^']|'')*'|[^,]+") | ForEach-Object { $_.Value.Trim() })
+        if ($args.Count -ge 5 -and $RequestNames.Contains($args[1].ToLowerInvariant()) -and $args[2] -match "^'((?:[^']|'')*)'$" ) { [void]$Keys.Add($Matches[1].Replace("''", "'")) }
+        else { $script:ContractDiagnostics.Add('dynamic-ambiguity|typed-reader:'+ $call.Value) }
+    }
+}
+
 function Find-Offenders([string]$AppFolder) {
+    $script:ContractDiagnostics = New-Object 'System.Collections.Generic.List[string]'
     $objects = Read-Source (Join-Path $AppFolder 'src')
     $types = Get-Types $objects
     $found = New-Object 'System.Collections.Generic.List[string]'
@@ -693,10 +814,13 @@ function Find-Offenders([string]$AppFolder) {
         if ($contractCodeunit -eq 'Default Contract ori') { continue }
         if (-not $objects.ContainsKey($contractCodeunit) -or -not $objects.ContainsKey($interfaceCodeunit)) { continue }
         if ($Explain -ne '' -and $typeName -ne $Explain) { continue }
-        $declared = Get-DeclaredKeys $objects $contractCodeunit
+        $script:ContractDiagnostics.Clear()
+        $selectedObjects = Get-SelectedObjects $objects $contractCodeunit
+        $declared = Get-DeclaredKeys $selectedObjects $contractCodeunit
         $literals = Get-ReachableLiterals $objects $interfaceCodeunit
         $reads = Get-ReadKeys $objects $interfaceCodeunit
-        $targetKeys = Get-TargetKeys $objects $contractCodeunit
+        $targetKeys = Get-TargetKeys $selectedObjects $contractCodeunit
+        foreach ($diagnostic in ($script:ContractDiagnostics | Sort-Object -Unique)) { $found.Add("$typeName|$diagnostic") }
         if ($Explain -ne '') {
             $script:Explained = $true
             Write-Host "contract codeunit : $contractCodeunit"

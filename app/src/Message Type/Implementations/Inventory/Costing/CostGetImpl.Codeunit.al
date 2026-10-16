@@ -20,18 +20,24 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.';
     begin
-        exit('Reads item cost fields that are not exposed by the foundation app.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'read item cost, unit cost, inventory value', Comment = 'is-IS=lesa vörukostnað, einingarkostnaður, birgðavirði';
     begin
-        exit('read item cost, unit cost, inventory value');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Returns unit cost, last direct cost, and inventory for an item.', Comment = 'is-IS=Skilar einingarkostnaði, síðasta beina kostnaði og birgðum vöru.';
     begin
-        exit('Returns unit cost, last direct cost, and inventory for an item.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

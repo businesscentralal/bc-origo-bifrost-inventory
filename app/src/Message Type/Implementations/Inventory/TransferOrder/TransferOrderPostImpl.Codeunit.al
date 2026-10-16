@@ -24,8 +24,10 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Posts a transfer order (ship/receive, or ship+receive for direct transfers).', Comment = 'is-IS=Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu).';
     begin
-        exit('Posts a transfer order (ship/receive, or ship+receive for direct transfers).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -136,8 +138,8 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
