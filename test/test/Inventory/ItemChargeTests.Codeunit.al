@@ -62,14 +62,11 @@ codeunit 96926 "Item Charge Tests"
     var
         PurchHeader: Record "Purchase Header";
         ChargeLine: Record "Purchase Line";
-        TempArgument: Record "Message Argument ori";
-        GetImpl: Codeunit "Item Charge Get Impl ori";
         ResponseJson: JsonObject;
     begin
         ChargeLine := CreatePurchaseCharge(PurchHeader, 4);
         AssignMethod(PurchHeader."No.", ChargeLine."Line No.", 'equally');
-        TempArgument := CallGet(GetImpl, PurchHeader."No.", ChargeLine."Line No.");
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := CallGet(PurchHeader."No.", ChargeLine."Line No.");
         Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'status');
         Assert.AreEqual(0, ReadDecimal(ResponseJson, 'unassignedQuantity'), 'unassigned');
         Assert.AreEqual(2, ReadArray(ResponseJson, 'assignments').Count(), 'rows');
@@ -139,8 +136,6 @@ codeunit 96926 "Item Charge Tests"
     [Test]
     procedure MissingDocumentType_ReturnsMissingParameter()
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
@@ -148,16 +143,13 @@ codeunit 96926 "Item Charge Tests"
         RequestJson.Add('documentNo', 'MISSING');
         RequestJson.Add('lineNo', 10000);
         RequestJson.Add('method', 'equally');
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
         Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), 'code');
     end;
 
     [Test]
     procedure UnknownKey_ReturnsUnknownParameter()
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
@@ -167,16 +159,13 @@ codeunit 96926 "Item Charge Tests"
         RequestJson.Add('lineNo', 10000);
         RequestJson.Add('method', 'equally');
         RequestJson.Add('warehouse', 'BLUE');
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
         Assert.AreEqual('UnknownParameter', ReadText(ResponseJson, 'code'), 'code');
     end;
 
     [Test]
     procedure MethodAndTargets_ReturnConflict()
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
         Targets: JsonArray;
         ResponseJson: JsonObject;
@@ -187,8 +176,7 @@ codeunit 96926 "Item Charge Tests"
         RequestJson.Add('lineNo', 10000);
         RequestJson.Add('method', 'equally');
         RequestJson.Add('targets', Targets);
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
         Assert.AreEqual('ConflictingIdentifiers', ReadText(ResponseJson, 'code'), 'code');
     end;
 
@@ -261,67 +249,53 @@ codeunit 96926 "Item Charge Tests"
 
     local procedure AssignMethod(DocumentNo: Code[20]; LineNo: Integer; Method: Text) ResponseJson: JsonObject
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
     begin
         RequestJson.Add('documentType', 'purchase');
         RequestJson.Add('documentNo', DocumentNo);
         RequestJson.Add('lineNo', LineNo);
         RequestJson.Add('method', Method);
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
     end;
 
     local procedure AssignSalesMethod(DocumentNo: Code[20]; LineNo: Integer; Method: Text) ResponseJson: JsonObject
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
     begin
         RequestJson.Add('documentType', 'sales');
         RequestJson.Add('documentNo', DocumentNo);
         RequestJson.Add('lineNo', LineNo);
         RequestJson.Add('method', Method);
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
     end;
 
     local procedure AssignTargets(DocumentNo: Code[20]; LineNo: Integer; Targets: JsonArray) ResponseJson: JsonObject
     var
-        TempArgument: Record "Message Argument ori";
-        AssignImpl: Codeunit "Item Charge Assign Impl ori";
         RequestJson: JsonObject;
     begin
         RequestJson.Add('documentType', 'purchase');
         RequestJson.Add('documentNo', DocumentNo);
         RequestJson.Add('lineNo', LineNo);
         RequestJson.Add('targets', Targets);
-        TempArgument := ExecuteAssign(AssignImpl, RequestJson);
-        ResponseJson := TempArgument.GetResponseJson();
+        ResponseJson := ExecuteAssign(RequestJson);
     end;
 
-    local procedure CallGet(GetImpl: Codeunit "Item Charge Get Impl ori"; DocumentNo: Code[20]; LineNo: Integer) TempArgument: Record "Message Argument ori"
+    local procedure CallGet(DocumentNo: Code[20]; LineNo: Integer) ResponseJson: JsonObject
     var
+        Library: Codeunit "Inventory Test Library ori";
         RequestJson: JsonObject;
     begin
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
         RequestJson.Add('documentType', 'purchase');
         RequestJson.Add('documentNo', DocumentNo);
         RequestJson.Add('lineNo', LineNo);
-        TempArgument.SetRequestJson(RequestJson);
-        GetImpl.ExecuteBifrostTask(TempArgument);
+        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCharge.Get", DocumentNo, RequestJson, true);
     end;
 
-    local procedure ExecuteAssign(AssignImpl: Codeunit "Item Charge Assign Impl ori"; RequestJson: JsonObject) TempArgument: Record "Message Argument ori"
+    local procedure ExecuteAssign(RequestJson: JsonObject) ResponseJson: JsonObject
+    var
+        Library: Codeunit "Inventory Test Library ori";
     begin
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
-        TempArgument.SetRequestJson(RequestJson);
-        AssignImpl.ExecuteBifrostTask(TempArgument);
+        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCharge.Assign", '', RequestJson, true);
     end;
 
     local procedure EnableItemCharge()
