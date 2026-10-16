@@ -8,7 +8,7 @@ Document types that resolve an identifier list these error codes:
 - `InvalidParameterFormat` on the identifier key
 - one `MultipleErrors` entry
 
-This applies to transfer order, assembly order, undo, and reservation create lookups. Contract tests still have to assert those codes after the Foundation publish.
+This applies to the eleven TransferOrder and AssemblyOrder lookups listed in #27. Codeunit 96922 asserts the public errors chapters, including exactly one MultipleErrors and no spread to document Create or Item readers. Codeunit 96923 exercises malformed data, wrong identifier types, aggregation order, empty identifiers and valid subjects with wrong keys through the public dispatcher. Foundation 28.0.2.0 is the minimum dependency. Test source is not runtime acceptance; exact-tip results remain required.
 
 ## Issue status on main 147e8a6
 
@@ -20,7 +20,7 @@ This applies to transfer order, assembly order, undo, and reservation create loo
 - #39 undo shipment, receipt, and assembly call the standard undo codeunits.
 - #40 item application unapply and reapply call `Item Jnl.-Post Line`.
 - #30-#33 stay unwired in SourceGuards.yaml until the guards pass and infrastructure review approves them.
-- #27 contract tests are not written yet. They wait for the Foundation publish.
+- #27 has contract tests in 96922 and shipping dispatcher tests in 96923. Current-tip full-suite/UI/MCP verification and independent review remain pending.
 
 ## Costing metadata (PR #90 draft)
 

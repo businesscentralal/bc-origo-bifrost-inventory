@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed — strict document lookup error contracts (#27, #32)
+
+- Inventory Contract Parts ori (70013445) declares malformed data and identifier keys plus one MultipleErrors entry for the eleven TransferOrder/AssemblyOrder lookups; Create and Item range contracts keep their existing behavior.
+- Regenerate the Icelandic translation artifact from this branch’s build to remove orphan units and include existing translatable labels (#32); source guard wiring remains separately owned.
+- Add chapter tests (96922) and public-dispatch malformed-input regressions (96923). Raise the Foundation dependency floor to 28.0.2.0 without changing app versions. Test execution and runtime acceptance are tracked separately.
+
+
 ### Fixed (2026-10-12) - related help entries name existing message types
 
 - Cost Get Impl ori (70013468) added `Inventory.AdjustCost.Run` and `Inventory.Revaluation.Calculate` as plain strings. Foundation reads a string related entry as message type "", so `Help.Implementation.Get` failed and the UAT roster refresh dropped 50 help documents.
