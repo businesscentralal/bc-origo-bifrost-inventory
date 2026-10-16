@@ -42,6 +42,5 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Inventory Contract Parts ori" = X,
         codeunit "Item Charge Assign Impl ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
-        codeunit "Item Charge Runner ori" = X,
         codeunit "Item Charge Restrict ori" = X;
 }

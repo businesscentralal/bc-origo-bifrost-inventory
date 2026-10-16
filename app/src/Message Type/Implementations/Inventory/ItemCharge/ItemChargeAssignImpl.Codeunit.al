@@ -170,7 +170,6 @@ codeunit 70013495 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Runner: Codeunit "Item Charge Runner ori";
         RequestJson: JsonObject;
     begin
         if not AssertCanRun(Argument) then
@@ -183,9 +182,7 @@ codeunit 70013495 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
             exit;
         if not ValidateRequest(Argument, RequestJson) then
             exit;
-        ClearLastError();
-        if not Runner.Run(Argument) then
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, CopyStr(GetLastErrorText(), 1, 250), '', '', '', 'Check the charge line and the item lines, then try again.');
+        RunAssign(Argument);
     end;
 
     /// <summary>
