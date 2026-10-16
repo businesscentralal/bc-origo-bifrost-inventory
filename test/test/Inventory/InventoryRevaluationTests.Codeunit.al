@@ -431,16 +431,21 @@ codeunit 96941 "Inventory Revaluation Tests"
         Request: JsonObject;
         Token: JsonToken;
         Parts: List of [Text];
+        CalculatePer: Enum "Inventory Value Calc. Per";
     begin
         Parts := Argument.Subject.Split('|');
         Batch.Get(Parts.Get(1), Parts.Get(2));
         Request := Argument.GetRequestJson();
         Request.Get('itemNo', Token);
         Item.SetRange("No.", Token.AsValue().AsText());
+        CalculatePer := "Inventory Value Calc. Per"::"Item Ledger Entry";
+        if Request.Get('calculatePer', Token) then
+            if Token.AsValue().AsText() = 'Item' then
+                CalculatePer := "Inventory Value Calc. Per"::Item;
         Line."Journal Template Name" := Batch."Journal Template Name";
         Line."Journal Batch Name" := Batch.Name;
         CalculateValue.SetItemJnlLine(Line);
-        CalculateValue.SetParameters(WorkDate(), 'REVAL-TEST', false, "Inventory Value Calc. Per"::"Item Ledger Entry", false, false, false, "Inventory Value Calc. Base"::" ", false);
+        CalculateValue.SetParameters(WorkDate(), 'REVAL-TEST', false, CalculatePer, false, false, false, "Inventory Value Calc. Base"::" ", false);
         CalculateValue.SetTableView(Item);
         CalculateValue.UseRequestPage(false);
         CalculateValue.Run();
