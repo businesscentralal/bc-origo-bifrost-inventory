@@ -306,7 +306,8 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
             exit(false);
         if not RequestJson.Get(ReferencesKeyTok, Token) then
             exit(ReadText(Argument, RequestJson, ReferenceNoKeyTok, false, Ignored));
-        if Token.IsValue() and Token.AsValue().IsNull() then
+        // AL does not short-circuit and. AsValue throws when references is an array.
+        if IsNullToken(Token) then
             exit(ReadText(Argument, RequestJson, ReferenceNoKeyTok, false, Ignored));
         if not Token.IsArray() then begin
             RespondFormat(Argument, ReferencesKeyTok, '', ArrayExpectedTok);
@@ -437,6 +438,8 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
             Argument.RespondWithError("Bifrost Error Code ori"::AmbiguousRecord, AmbiguousErr, ReferenceNoKeyTok, ReferenceNo, '', AmbiguousNextStepLbl);
             exit(false);
         end;
+        if FoundByNo and (GtinCount = 1) then
+            ItemByGtin.FindFirst();
         if FoundByNo and (GtinCount = 1) and (ItemByNo."No." <> ItemByGtin."No.") then begin
             Argument.RespondWithError("Bifrost Error Code ori"::AmbiguousRecord, AmbiguousErr, ReferenceNoKeyTok, ReferenceNo, '', AmbiguousNextStepLbl);
             exit(false);
@@ -446,6 +449,7 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
             exit(true);
         end;
         if GtinCount = 1 then begin
+            ItemByGtin.FindFirst();
             WriteResult(ResultJson, ItemByGtin, 'gtin', EmptyReference, false);
             exit(true);
         end;
@@ -609,7 +613,9 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
 
     local procedure IsNullToken(Token: JsonToken): Boolean
     begin
-        exit(Token.IsValue() and Token.AsValue().IsNull());
+        if not Token.IsValue() then
+            exit(false);
+        exit(Token.AsValue().IsNull());
     end;
 
     local procedure AnswerNotFound(var Argument: Record "Message Argument ori"): Boolean
