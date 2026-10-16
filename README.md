@@ -43,6 +43,8 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
+| `Inventory.ItemCharge.Get` | Inbound | Read item charge assignment rows and the unassigned quantity |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
 | `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |

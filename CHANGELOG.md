@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added (2026-10-16) - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
+
+- Item Charge Assign Impl ori (70013495) and Item Charge Get Impl ori (70013497) add Inventory.ItemCharge.Assign (70013414) and Inventory.ItemCharge.Get (70013413) through enum extension 70013463. Assign spreads a purchase or sales Charge (Item) line equally, by amount, by weight, or by volume, or onto explicit order, receipt, or shipment lines, through the item charge assignment codeunits. Assigning again replaces that charge line's rows and reports how many were replaced. Get returns the rows and the unassigned quantity. Neither call posts the document.
+- Domain Item Charge is value 13 on Inventory Domain ori (70013450) and field 23 on Inventory Setup ori (70013451). Upgrade tag Origo.Bifrost.Inventory-ItemChargeDomain-20261016 turns the domain on for an existing company. Item Charge Restrict ori (70013446) blocks generic writes to Item Charge Assignment (Purch) and Item Charge Assignment (Sales). Item Charge Runner ori (70013499) isolates the assignment write. Execute rights for the new codeunits are on BIFROST InvRead ori and BIFROST InvWrite ori (10036915 and 10036916). Standard document and assignment tables stay on the caller's Business Central role; a missing right returns PermissionDenied and names the Bifrost set. Tests 96926 and 96927. The app registers 46 Inventory types and the scoped catalogue has 37.
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.

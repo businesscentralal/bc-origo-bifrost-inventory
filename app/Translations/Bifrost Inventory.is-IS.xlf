@@ -51,6 +51,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörujöfnun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Application - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 151375497 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Charge</source>
+          <target>Vörugjald</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörugjald</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Charge - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 475596436 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Price</source>
           <target>Vöruverð</target>
@@ -416,6 +422,96 @@
           <target>Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Charge domain is turned off for this company.</source>
+          <target>Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assigns an item charge across purchase or sales item lines.</source>
+          <target>Úthlutar vörugjaldi á vörulínur í innkaupum eða sölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar vörugjaldi á vörulínur í innkaupum eða sölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item charge, assign, freight</source>
+          <target>vörugjald, úthluta, flutningsgjald</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörugjald, úthluta, flutningsgjald</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Spread a charge by quantity, amount, weight, or volume.</source>
+          <target>Dreifðu gjaldi eftir magni, upphæð, þyngd eða rúmmáli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dreifðu gjaldi eftir magni, upphæð, þyngd eða rúmmáli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 1373522056 - NamedType 2640785247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The items have no weight or volume to assign by.</source>
+          <target>Vörurnar hafa enga þyngd eða rúmmál til að úthluta eftir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörurnar hafa enga þyngd eða rúmmál til að úthluta eftir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method MeasureOk - NamedType MeasureErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 2514145490 - NamedType 1405722854" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The target line cannot take this item charge.</source>
+          <target>Marklínan getur ekki tekið við þessu vörugjaldi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Marklínan getur ekki tekið við þessu vörugjaldi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method PurchaseTargetOk - NamedType InvalidLineErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188006982 - Method 951452487 - NamedType 1405722854" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The target line cannot take this item charge.</source>
+          <target>Marklínan getur ekki tekið við þessu vörugjaldi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Marklínan getur ekki tekið við þessu vörugjaldi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method SalesTargetOk - NamedType InvalidLineErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Charge domain is turned off for this company.</source>
+          <target>Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads item charge assignment rows for one charge line.</source>
+          <target>Les úthlutunarlínur vörugjalds fyrir eina gjaldlínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les úthlutunarlínur vörugjalds fyrir eina gjaldlínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item charge, assignment, unassigned</source>
+          <target>vörugjald, úthlutun, óúthlutað</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörugjald, úthlutun, óúthlutað</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show how a charge is spread and what is still unassigned.</source>
+          <target>Sýndu hvernig gjaldi er dreift og hvað er enn óúthlutað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýndu hvernig gjaldi er dreift og hvað er enn óúthlutað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3587490879 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
@@ -819,6 +915,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort vörujöfnunarskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemApplication - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 1000821545 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether item charge assignment message types are enabled for this company.</source>
+          <target>Tilgreinir hvort skilaboð um úthlutun vörugjalds séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort skilaboð um úthlutun vörugjalds séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemCharge - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 2406459892 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether item price update message types are enabled for this company.</source>
           <target>Tilgreinir hvort vöruverðsskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -884,6 +986,12 @@
           <target>Vörujöfnun</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörujöfnun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemApplication - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 1000821545 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Charge</source>
+          <target>Vörugjald</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörugjald</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemCharge - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2406459892 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Price</source>
