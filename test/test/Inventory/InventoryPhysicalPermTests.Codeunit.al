@@ -62,9 +62,9 @@ codeunit 96963 "Inventory Physical Perm Tests"
         Assert.IsTrue(PostImpl.IsEnabled(), 'Physical Post uses the Foundation item capability, with no new posting token.');
     end;
 
-    /// <summary>Preview remains available to a journal writer without the posting token.</summary>
+    /// <summary>Preview uses the same existing posting capability as Foundation ItemJournal.PreviewPost.</summary>
     [Test]
-    procedure Scenario_AC07_PreviewDoesNotRequireItemPost()
+    procedure Scenario_AC07_PreviewMirrorsFoundationItemPostGate()
     var
         NativeJournal: Codeunit "Inventory Native Journal ori";
         PreviewImpl: Codeunit "Phys. Inv. Preview Impl ori";
@@ -74,8 +74,10 @@ codeunit 96963 "Inventory Physical Perm Tests"
         LowerToNativeWriter(LowerPermissions);
         Assert.IsFalse(NativeJournal.HasItemPostingPermission(), 'The test caller has no item-posting capability.');
 
-        // [WHEN/THEN] Preview discovery remains enabled; licensed execution is separate acceptance.
-        Assert.IsTrue(PreviewImpl.IsEnabled(), 'Physical preview does not require permission to commit item posting.');
+        // [WHEN/THEN] Foundation preview requires the existing item-posting capability too.
+        Assert.IsFalse(PreviewImpl.IsEnabled(), 'Preview mirrors Foundation ItemJournal.PreviewPost permission denial.');
+        LowerPermissions.AddPermissionSet('BIFROST ItemPost ori');
+        Assert.IsTrue(PreviewImpl.IsEnabled(), 'The existing Foundation capability enables physical preview.');
     end;
 
     local procedure LowerToNativeWriter(var LowerPermissions: Codeunit "Library - Lower Permissions")

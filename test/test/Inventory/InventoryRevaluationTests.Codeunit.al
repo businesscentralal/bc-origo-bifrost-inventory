@@ -422,7 +422,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         TempArgument.Insert(true);
         TempArgument.SetRequestJson(Request);
     end;
-    local procedure CreateNativeProposal(Argument: Record "Message Argument ori")
+    local procedure CreateNativeProposal(var Argument: Record "Message Argument ori")
     var
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";

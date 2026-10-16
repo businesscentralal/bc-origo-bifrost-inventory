@@ -173,6 +173,8 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertTableViewParameter("Message Type ori"::"Inventory.Tracking.Get");
         CreateTrackedLine(PurchaseLine, 'XVIEW-SELECTED', '', '', 2);
         CreateTrackedLine(OtherLine, 'XVIEW-OTHER', '', '', 3);
+        OtherLine.Validate("Qty. to Receive", 3);
+        OtherLine.Modify(true);
         Item.SetRange("No.", PurchaseLine."No.");
         Request.Add('tableView', Item.GetView(true));
         EntryCount := Entry.Count();
@@ -206,9 +208,13 @@ codeunit 96927 "Inventory Tracking Read Tests"
         // Stories #5 AC4 / #30 | Time: native WorkDate fixture | Risk: undocumented Item selector widens availability reads.
         AssertTableViewParameter("Message Type ori"::"Inventory.TrackingAvailability.Get");
         CreateTrackedLine(PurchaseLine, 'XVIEW-STOCK', '', '', 2);
+        PurchaseLine.Validate("Qty. to Receive", 2);
+        PurchaseLine.Modify(true);
         Header.Get(PurchaseLine."Document Type", PurchaseLine."Document No.");
         LibraryPurchase.PostPurchaseDocument(Header, true, false);
         CreateTrackedLine(OtherLine, 'XVIEW-OTHER', '', '', 3);
+        OtherLine.Validate("Qty. to Receive", 3);
+        OtherLine.Modify(true);
         Header.Get(OtherLine."Document Type", OtherLine."Document No.");
         LibraryPurchase.PostPurchaseDocument(Header, true, false);
         Item.SetRange("No.", PurchaseLine."No.");
@@ -894,11 +900,26 @@ codeunit 96927 "Inventory Tracking Read Tests"
     procedure Scenario_AC7_ReadTypes_DoNotAddTableWriteRestrictions()
     var
         TempArgument: Record "Message Argument ori" temporary;
+        PurchaseLine: Record "Purchase Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        ReservationRestricted: Boolean;
+        LedgerRestricted: Boolean;
+        SpecificationRestricted: Boolean;
     begin
-        // Story #5 AC7 | Time: independent | Risk: read projection accidentally installs write policy.
-        Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false), 'Read-only tracking adds no reservation table restriction.');
-        Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Ledger Entry", false), 'Read-only tracking adds no item ledger table restriction.');
-        Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Tracking Specification", false), 'Read-only tracking adds no tracking specification table restriction.');
+        // Story #5 AC7: preserve the installed Foundation policy before and after the read.
+        CreateTrackedLine(PurchaseLine, 'READ-POLICY', '', '', 2);
+        ReservationRestricted := TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false);
+        LedgerRestricted := TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Ledger Entry", false);
+        SpecificationRestricted := TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Tracking Specification", false);
+        Request.Add('documentType', 'Purchase.Order');
+        Request.Add('documentNo', PurchaseLine."Document No.");
+        Request.Add('lineNo', PurchaseLine."Line No.");
+        ExecuteRead(Request, 0, Response);
+        AssertSuccess(Response);
+        Assert.AreEqual(ReservationRestricted, TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false), 'Tracking read preserves reservation write policy.');
+        Assert.AreEqual(LedgerRestricted, TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Ledger Entry", false), 'Tracking read preserves ledger write policy.');
+        Assert.AreEqual(SpecificationRestricted, TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Tracking Specification", false), 'Tracking read preserves specification write policy.');
     end;
 
     local procedure CreateAvailabilityItem(var Item: Record Item; UseExpirationDates: Boolean)

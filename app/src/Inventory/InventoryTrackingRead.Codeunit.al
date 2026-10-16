@@ -4,6 +4,7 @@ using Microsoft.Foundation.Enums;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
 /// <summary>Read-only projections of native tracking and reservation records with explicit source identities.</summary>
@@ -33,7 +34,9 @@ codeunit 10036916 "Inventory Tracking Read ori"
         Ledger: Record "Item Ledger Entry";
         Specification: Record "Tracking Specification";
         SourceSpec: Record "Tracking Specification";
+        TransferLine: Record "Transfer Line";
         ItemResolve: Codeunit "Item Attribute Resolve ori";
+        TransferReserve: Codeunit "Transfer Line-Reserve";
         SourceRef: RecordRef;
         Direction: Enum "Transfer Direction";
         Request: JsonObject;
@@ -55,6 +58,11 @@ codeunit 10036916 "Inventory Tracking Read ori"
                 exit;
             Entry.TransferFields(SourceSpec);
             Entry.SetPointerFilter();
+            if (SourceRef.Number = Database::"Transfer Line") and (Direction = Direction::Inbound) then begin
+                SourceRef.SetTable(TransferLine);
+                // Native receipt tracking belongs to derived transfer lines after shipment.
+                TransferReserve.FindInboundReservEntry(TransferLine, Entry);
+            end;
             Specification.SetSourceFilter(SourceSpec."Source Type", SourceSpec."Source Subtype", SourceSpec."Source ID", SourceSpec."Source Ref. No.", true);
             Specification.SetSourceFilter(SourceSpec."Source Batch Name", SourceSpec."Source Prod. Order Line");
             Item."No." := SourceSpec."Item No.";

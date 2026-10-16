@@ -1,5 +1,7 @@
 # Changelog
 
+- Inventory #5: resolve inbound tracking through native derived transfer lines (codeunit 10036916); repair native fixtures and preserve Foundation preview/write-policy contracts in tests 96921/96927/96941/96963.
+
 ## Unreleased — eligible Inventory acceptance (#4, #5, #6, #30)
 
 - Add native cost snapshots, guarded Item cost/price updates, and revaluation post/preview contracts with native rollback tests (codeunits 70013400, 70013402–70013404, 70013432–70013435, 70013437–70013439, 70013468, 70013486).
