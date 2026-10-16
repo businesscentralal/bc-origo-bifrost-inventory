@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-16) - integrate contract tooling after product acceptance
+
+- Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.
+
 ### Fixed (2026-10-16) - runtime catalogue localization
 
 - Replace literal catalogue descriptions with translatable labels for the 35 scoped message types, including TransferOrder.Release. Convert the remaining 17 literal keyword lists and 17 selection descriptions; preserve all existing English text and existing translated labels. Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the compiler output.
@@ -13,6 +17,33 @@
 
 - Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the current build: include all 85 generated units using the existing Icelandic source comments and replace the three obsolete numeric-ID entries. Inventory Setup captions, domain captions, posting refusals, assembly/transfer descriptions and attribute help now have matching runtime translation IDs. English source text and AL behavior are unchanged.
 - Explicitly mark the five already-temporary Message Argument test variables as `temporary` in `ItemAttributeTestsori.Codeunit.al` (96900), `InvPostingGateTests.Codeunit.al` (96918) and `InvPostingGateGrantTests.Codeunit.al` (96919). This preserves the Foundation table's `TableType = Temporary` behavior and lets the BC 28 analyzer recognize the existing temporary-variable names without AA0237 warnings.
+
+### Fixed (2026-10-15) - contract reads retain payload generation and source position
+
+- `tools/Test-ContractParameterKeys.ps1` versions JSON snapshots and the underlying request payload, applies exhaustive validators at individual read/call sites, and unions conditional paths. Source-checked normalization retains removed keys in the original payload constraint; replacements, streams, unknown effects, implicit calls and try-function/codeunit return boundaries discard stale proof. Unsupported regions retain their reads. JSON key comparisons remain case sensitive (#30).
+- The AL statement parser preserves CASE/IF/ELSE ownership across terminators and loop statements. Portable source-proof fixtures, branch parser controls and an independent bounded concrete source oracle retain the counterexamples behind this repair.
+- Remaining `tableView` source discrepancies stay visible. Issues #30–33 remain acceptance-open, and production guard wiring stays off. No AL object IDs, contracts, allow-lists, workflow files or app versions change in this tooling repair.
+
+### Fixed (2026-10-15) - preserve request context in contract source checks
+
+- `tools/Test-ContractParameterKeys.ps1` follows nested JSON records through array iteration and helper arguments, while cleared or replaced tokens retain ambiguity diagnostics. It narrows runtime branches only from source-proven literal selectors, fresh local codeunit modes, or an unchanged message envelope at an entry dispatch. Unknown consumers, shared instances, mutation and ambiguous calls retain both paths (#30).
+- Dependency source can be supplied with `-DependencyAppFolders`; only the selected app's registrations are scanned. Duplicate object names fail, and invocation evidence must identify the dependency commit and official artifact. Rejection-only checks are reported separately only when a void helper's sole action is a read-only nonempty-value check followed by `Error`; real reads and incorrect declarations remain findings.
+- `tools/tests/test-contract-parameter-keys.py` covers positive and negative request lineage, dispatch, dependency and rejection scenarios. The functional candidate's remaining journal-validation findings and newly exposed `tableView` discrepancies remain visible; this does not close #30–33 or enable production workflow wiring. No AL object IDs, contracts, allow-lists or workflow files changed in this tooling repair.
+
+### Fixed (2026-10-15) - typed-reader keys retain literal caller bindings
+
+- `tools/Test-ContractParameterKeys.ps1` resolves a forwarded typed-reader key only when every reached source call supplies a literal for that parameter. Unknown receivers, nested or dynamic arguments, mutable keys, unknown key consumers and overloaded procedures retain the ambiguity diagnostic (#30). This recognizes the existing `skip` and `take` wrapper without a key-name exception.
+- `tools/tests/test-contract-parameter-keys.py` adds fifteen caller-binding cases, including undocumented literal keys, multiple callers and unresolved bindings. The remaining production guard findings stay visible; no workflow is enabled.
+
+### Fixed (2026-10-15) - operation selectors are not request parameters
+
+- `tools/Test-ContractParameterKeys.ps1` excludes a literal operation selector only when the resolved callee's source proves that its parameter is used solely in `case` selectors (#30). Unknown calls, additional parameter uses and ambiguous overloads retain the conservative request-key check. No method-name exception or allow-list was added.
+- `tools/tests/test-contract-parameter-keys.py` adds eight operation-selector regressions. The full production scan still reports the existing four contract discrepancies at this product base; this repair does not close #30 or enable the production guard.
+
+### Fixed (2026-10-15) - label property scanner respects quoted comments
+
+- `tools/Test-MixedLanguageLabels.ps1` now reads the `Locked` property outside quoted strings and comments. Protocol text such as `allowBlocked=true` in an Icelandic translation comment no longer reports a translated refusal as locked (#33). Actual `Locked = true` labels remain findings.
+- `tools/tests/test-mixed-language-labels.py` checks both local and global labels, escaped quotes, property order, case and whitespace, explicit false, and real locked properties. No AL objects, allow-lists or workflow jobs changed.
 
 ### Fixed (2026-10-15) - zero-warning Inventory verification
 
