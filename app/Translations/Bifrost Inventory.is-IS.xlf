@@ -585,6 +585,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir lokunarmerki tiltekins birgðatímabils; opið tímabil er óbreytt. Keyrir ekki innbyggða enduropnunaraðgerð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1357197818 - NamedType 3832473495" size-unit="char" translate="yes" xml:space="preserve">
+          <source>journalBatchName is required.</source>
+          <target>journalBatchName er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Calc Impl ori - NamedType MissingBatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1357197818 - NamedType 1342401987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>journalTemplateName is required.</source>
+          <target>journalTemplateName er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=journalTemplateName er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Calc Impl ori - NamedType MissingTemplateErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reclassification journal, change item location, change lot</source>
           <target>endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu</target>
