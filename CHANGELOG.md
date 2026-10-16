@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-16) - Icelandic translation resources
+
+- Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the current build: include all 85 generated units using the existing Icelandic source comments and replace the three obsolete numeric-ID entries. Inventory Setup captions, domain captions, posting refusals, assembly/transfer descriptions and attribute help now have matching runtime translation IDs. English source text and AL behavior are unchanged.
+- Explicitly mark the five already-temporary Message Argument test variables as `temporary` in `ItemAttributeTestsori.Codeunit.al` (96900), `InvPostingGateTests.Codeunit.al` (96918) and `InvPostingGateGrantTests.Codeunit.al` (96919). This preserves the Foundation table's `TableType = Temporary` behavior and lets the BC 28 analyzer recognize the existing temporary-variable names without AA0237 warnings.
+
 ### Fixed (2026-10-15) - zero-warning Inventory verification
 
 - Preserve the attribute-table grants from `BIFROSTInvRead.PermissionSetExt.al` (10036915) and `BIFROSTInvWrite.PermissionSetExt.al` (10036916) in the included, nonassignable `BIFROSTInvAttrRead.PermissionSet.al` (10036915) and `BIFROSTInvAttrWrite.PermissionSet.al` (10036916). Read and Full roles retain their original access; no posting or Foundation Setup grants are added.

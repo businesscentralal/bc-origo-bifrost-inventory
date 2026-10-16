@@ -86,7 +86,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssertCanPost_WithoutInvPost_NamesInvPostSet()
     var
-        TempArgument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         ResponseJson: JsonObject;
@@ -113,7 +113,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPreview_WithoutInvPost_StaysEnabled()
     var
-        TempArgument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
@@ -130,7 +130,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssemblyPreview_WithoutInvPost_StaysEnabled()
     var
-        TempArgument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin

@@ -58,7 +58,7 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure AssertCanPost_WithInvPost_WritesNoError()
     var
-        TempArgument: Record "Message Argument ori";
+        TempArgument: Record "Message Argument ori" temporary;
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
