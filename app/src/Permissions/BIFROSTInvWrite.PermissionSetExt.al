@@ -8,11 +8,9 @@ using Microsoft.Inventory.Item.Attribute;
 /// </summary>
 permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori"
 {
+    IncludedPermissionSets = "BIFROST InvAttrWrite ori";
+
     Permissions =
-        tabledata "Item Attribute" = RIMD,
-        tabledata "Item Attribute Value" = RIMD,
-        tabledata "Item Attribute Value Mapping" = RIMD,
-        tabledata "Item Attr. Value Translation" = RIMD,
         tabledata "Inventory Setup ori" = R,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Create Impl ori" = X,
@@ -42,5 +40,23 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Asm. Doc Prev. Post Impl ori" = X,
         codeunit "Asm. Order RefreshLn Impl ori" = X,
         codeunit "Asm. Order Statistics Impl ori" = X,
-        codeunit "Inventory Contract Parts ori" = X;
+        codeunit "Inventory Contract Parts ori" = X,
+        codeunit "Inventory Native Journal ori" = X,
+        codeunit "Inv Native Journal Process ori" = X,
+        codeunit "Phys. Inv. Calc Impl ori" = X,
+        codeunit "Phys. Invt. Record Impl ori" = X,
+        codeunit "Phys. Invt. Post Impl ori" = X,
+        codeunit "Inventory Revaluation ori" = X,
+        codeunit "Inv Reval Post Process ori" = X,
+        codeunit "Revaluation Post Impl ori" = X,
+        codeunit "Reval Preview Impl ori" = X,
+        codeunit "Inventory Cost Write ori" = X,
+        codeunit "Inventory Cost Write Proc. ori" = X,
+        codeunit "Cost Update Impl ori" = X,
+        codeunit "Inventory Price Write ori" = X,
+        codeunit "Inv. Price Write Process ori" = X,
+        codeunit "Price Update Impl ori" = X,
+        codeunit "Inventory Cost Data Guard ori" = X,
+        codeunit "Inventory Domain Gate ori" = X,
+        codeunit "Inv. Posting Gate ori" = X;
 }

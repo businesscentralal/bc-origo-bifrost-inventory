@@ -3,173 +3,188 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
+/// <summary>Previews native physical-inventory posting with rollback and captured ledger entries.</summary>
 codeunit 70013472 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Previews native physical-inventory posting with rollback and captured ledger entries.', Comment = 'is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur.';
+        SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
+        KeywordsLbl: Label 'inventory journal physical count calculate check preview post', Comment = 'is-IS=birgðir bók talning reikna athuga forskoða bóka';
+        OverviewLbl: Label 'Previews native physical-inventory posting with rollback and captured ledger entries. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Preview entries are rolled back; selected journal lines remain unchanged. Licensed dispatch and company domain gates apply.', Comment = 'is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.';
+
+    /// <summary>Checks the company domain and the native permissions required by this operation.</summary>
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Gate: Codeunit "Inventory Domain Gate ori";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) and NativeJournal.HasItemPostingPermission());
     end;
 
+    /// <summary>Returns the batch selection table.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Journal Line");
+        exit(Database::"Item Journal Batch");
     end;
 
-    procedure GetDescription(): Text[250]
+    /// <summary>Physical inventory requests use inbound dispatch.</summary>
+    procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
-        exit('Previews physical inventory differences. Does not post.');
+        exit("Msg Direction ori"::Inbound);
     end;
-
-    procedure GetKeywords(): Text
-    begin
-        exit('physical inventory preview, count difference');
-    end;
-
-    procedure GetSelectionDescription(): Text
-    begin
-        exit('Returns physical inventory lines where counted quantity differs from calculated quantity.');
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('dataRequired', true);
-        Envelope.Add('version', '1.0');
-        Envelope.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        Parameter: JsonObject;
-    begin
-        Parameter.Add('name', 'journalTemplateName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Physical inventory journal template.');
-        Parameters.Add(Parameter);
-        Clear(Parameter);
-        Parameter.Add('name', 'journalBatchName');
-        Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Physical inventory journal batch.');
-        Parameters.Add(Parameter);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('contentType', 'text/json');
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Post', 'Post the physical inventory journal after the preview is correct.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Reads physical inventory differences without posting.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
-    begin
-        exit(Enum::"Msg Direction ori"::Outbound);
-    end;
-
+    /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJournalLine: Record "Item Journal Line";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Lines: JsonArray;
-        LineJson: JsonObject;
-        Token: JsonToken;
-        JournalTemplateName: Code[10];
-        JournalBatchName: Code[10];
-        MissingTemplateErr: Label 'journalTemplateName and journalBatchName are required.', Locked = true;
+        Gate: Codeunit "Inventory Domain Gate ori";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
+        Journal: Codeunit "Inventory Native Journal ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
+            exit;
+        if not NativeJournal.AssertItemPostingPermission(Argument) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError(MissingTemplateErr);
-            exit;
-        end;
-        JournalTemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(JournalTemplateName));
-        if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError(MissingTemplateErr);
-            exit;
-        end;
-        JournalBatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(JournalBatchName));
-        ItemJournalLine.SetRange("Journal Template Name", JournalTemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", JournalBatchName);
-        if ItemJournalLine.FindSet() then
-            repeat
-                if ItemJournalLine."Qty. (Phys. Inventory)" = ItemJournalLine."Qty. (Calculated)" then
-                    continue;
-                Clear(LineJson);
-                LineJson.Add('lineNo', ItemJournalLine."Line No.");
-                LineJson.Add('itemNo', ItemJournalLine."Item No.");
-                LineJson.Add('locationCode', ItemJournalLine."Location Code");
-                LineJson.Add('qtyCalculated', ItemJournalLine."Qty. (Calculated)");
-                LineJson.Add('qtyPhysical', ItemJournalLine."Qty. (Phys. Inventory)");
-                Lines.Add(LineJson);
-            until ItemJournalLine.Next() = 0;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.PhysInventory.Preview');
-        ResponseJson.Add('journalTemplateName', JournalTemplateName);
-        ResponseJson.Add('journalBatchName', JournalBatchName);
-        ResponseJson.Add('lines', Lines);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        Journal.Preview(Argument, "Item Journal Template Type"::"Phys. Inventory");
+    end;
+
+
+
+    /// <summary>Returns the native journal envelope contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal target contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    begin
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Phys. Inventory template batch."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal parameters contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Existing journal template name, at most 10 characters. Supply with batchName unless subject identifies the same batch.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Existing journal batch name, at most 10 characters. All supplied selectors must agree.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Legacy alias for templateName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Legacy alias for batchName; conflicting aliases are refused.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct line SystemIds in the selected batch. Omit to select the whole batch.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal response contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
+        Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'Number of selected lines included in the rollback preview.'));
+        Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True: native preview entries have been rolled back.'));
+        Fields.Add(ContractMgt.ResponseField('preview', 'array', 'Captured native preview entries grouped by table.'));
+        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Selected lines: systemId, lineNo, itemNo, quantity, locationCode/newLocationCode, binCode/newBinCode, lotNo/newLotNo, serialNo/newSerialNo and packageNo/newPackageNo.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('totals', 'object', 'Native preview G/L totals.'));
+        Fields.Add(ContractMgt.ResponseField('entryCount', 'integer', 'Total native preview entry count.'));
+        Fields.Add(ContractMgt.ResponseField('glEntryCount', 'integer', 'Native preview G/L entry count.'));
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal errors contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.TextErrorEntry('Native journal selection or validation error.', 'Missing or conflicting batch selectors, invalid template, recurring batch, malformed line selection, unsupported parameters or native validation failure.', 'Select an existing batch of the required template type and correct the native error before retrying.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, native table or item-posting permission is missing.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company domain is disabled or a typed request value is invalid.', 'Enable the domain or correct the indicated request value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected journal contains no lines.', 'Select a nonempty journal batch or valid line subset.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native posting preview error.', 'Native posting preview fails or produces no acceptable preview entries.', 'Correct the native posting error before retrying; preview does not retain ledger changes.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal effect contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.ReadFrom('{"writes":false,"posts":false,"rollback":true}');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal related contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    begin
+        Clear(Related);
+        Related.ReadFrom('[{"name":"Inventory.PhysInventory.Calculate","useInsteadWhen":"Calculate the physical inventory journal."},{"name":"Inventory.PhysInventory.RecordCount","useInsteadWhen":"RecordCount the physical inventory journal."},{"name":"Inventory.PhysInventory.Check","useInsteadWhen":"Check the physical inventory journal."},{"name":"Inventory.PhysInventory.Post","useInsteadWhen":"Post the physical inventory journal."}]');
+        exit(true);
+    end;
+
+    /// <summary>Returns the native journal examples contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    begin
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Previews native physical-inventory posting with rollback and captured ledger entries. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.PreviewPost","subject":"PHYS|OWNED"}}]');
+        exit(true);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetMetering(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>No override is provided.</summary>
+    procedure GetWorkflow(var Value: JsonObject): Boolean
+    begin
+        Clear(Value);
+        exit(false);
+    end;
+
+    /// <summary>Describes native journal behavior.</summary>
+    procedure GetDescription(): Text[250]
+    begin
+        exit(DescriptionLbl);
+    end;
+
+    /// <summary>Describes native journal behavior.</summary>
+    procedure GetSelectionDescription(): Text
+    begin
+        exit(SelectionLbl);
+    end;
+
+    /// <summary>Describes native journal behavior.</summary>
+    procedure GetKeywords(): Text
+    begin
+        exit(KeywordsLbl);
+    end;
+
+    /// <summary>Explains native journal constraints.</summary>
+    procedure GetOverview(var Value: Text): Boolean
+    begin
+        Value := OverviewLbl;
+        exit(true);
+    end;
+
+    /// <summary>Explains native journal constraints.</summary>
+    procedure GetNotes(var Value: Text): Boolean
+    begin
+        Value := OverviewLbl;
+        exit(true);
     end;
 }

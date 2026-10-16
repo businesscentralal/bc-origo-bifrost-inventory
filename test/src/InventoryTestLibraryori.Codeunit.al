@@ -31,7 +31,7 @@ codeunit 96902 "Inventory Test Library ori"
         Dispatcher: Codeunit "Dispatcher ori";
         RequestContent: BigText;
         ResponseContent: BigText;
-        ResponseContentType: Text[50];
+        ResponseContentType: Text[100];
         MessageVersion: Enum "Message Version ori";
         RequestText: Text;
         ResponseText: Text;
@@ -70,7 +70,7 @@ codeunit 96902 "Inventory Test Library ori"
     procedure EnsureInventoryItem(var Item: Record Item)
     begin
         Item.Reset();
-        Item.SetLoadFields("No.", SystemId, Blocked, Type);
+        Item.SetLoadFields("No.", SystemId, Blocked, Type, Description);
         Item.SetRange(Blocked, false);
         Item.SetRange(Type, Item.Type::Inventory);
         if Item.FindFirst() then
@@ -85,7 +85,7 @@ codeunit 96902 "Inventory Test Library ori"
     procedure EnsureServiceItem(var Item: Record Item)
     begin
         Item.Reset();
-        Item.SetLoadFields("No.", SystemId, Blocked, Type);
+        Item.SetLoadFields("No.", SystemId, Blocked, Type, Description);
         Item.SetRange(Blocked, false);
         Item.SetRange(Type, Item.Type::Service);
         if Item.FindFirst() then
@@ -104,5 +104,58 @@ codeunit 96902 "Inventory Test Library ori"
     begin
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'Response missing status');
         Assert.AreEqual(Expected, StatusToken.AsValue().AsText(), 'Unexpected status');
+    end;
+    /// <summary>Checks actual native success responses against the shipped typed contract, including every returned key.</summary>
+    procedure AssertResponseContract(MessageType: Enum "Message Type ori"; Response: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Chapter: JsonObject;
+        Field: JsonObject;
+        Token: JsonToken;
+        Value: JsonToken;
+        Fields: JsonArray;
+        Keys: List of [Text];
+        Names: List of [Text];
+        ResponseKey: Text;
+        Name: Text;
+        JsonType: Text;
+        Serialized: Text;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Public contract must exist.');
+        Assert.IsTrue(Contract.Get('response', Token), 'Response chapter must exist.');
+        Chapter := Token.AsObject();
+        Assert.IsTrue(Chapter.Get('fields', Token), 'Response must declare fields, not a sample payload.');
+        Fields := Token.AsArray();
+        Assert.IsTrue(Fields.Count() > 0, 'Success response schema cannot be empty.');
+        foreach Token in Fields do begin
+            Field := Token.AsObject();
+            Field.Get('name', Value);
+            Name := Value.AsValue().AsText();
+            Assert.IsFalse(Names.Contains(Name), 'Duplicate response field ' + Name);
+            Names.Add(Name);
+            Field.Get('type', Value);
+            JsonType := Value.AsValue().AsText();
+            if Response.Get(Name, Value) then begin
+                Value.WriteTo(Serialized);
+                case JsonType of
+                    'array':
+                        Assert.IsTrue(Value.IsArray(), Name + ' must be an array.');
+                    'object':
+                        Assert.IsTrue(Value.IsObject(), Name + ' must be an object.');
+                    'string':
+                        Assert.IsTrue(Serialized.StartsWith('"'), Name + ' must be a JSON string.');
+                    'boolean':
+                        Assert.IsTrue(Serialized in ['true', 'false'], Name + ' must be a JSON Boolean.');
+                    'integer', 'decimal':
+                        Assert.IsTrue(Value.IsValue() and not Serialized.StartsWith('"') and not (Serialized in ['true', 'false', 'null']), Name + ' must be a JSON number.');
+                    else
+                        Assert.Fail('Unsupported response schema type ' + JsonType);
+                end;
+            end;
+        end;
+        Keys := Response.Keys();
+        foreach ResponseKey in Keys do
+            Assert.IsTrue(Names.Contains(ResponseKey), 'Returned key is missing from the public schema: ' + ResponseKey);
     end;
 }
