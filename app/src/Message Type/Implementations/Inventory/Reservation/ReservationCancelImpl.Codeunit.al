@@ -131,6 +131,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         ReservationManagement: Codeunit "Reservation Management";
+        ReservWriteRunner: Codeunit "Reserv. Write Runner ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
@@ -153,8 +154,12 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         end;
 
         ReservationManagement.SetReservSource(ReservationEntry);
+        ReservWriteRunner.SetCancel(ReservationManagement);
         Commit();
-        ReservationManagement.DeleteReservEntries(true, 0);
+        if not ReservWriteRunner.Run() then begin
+            Argument.RespondWithError(GetLastErrorText());
+            exit;
+        end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
         ResponseJson.Add('itemNo', ReservationEntry."Item No.");

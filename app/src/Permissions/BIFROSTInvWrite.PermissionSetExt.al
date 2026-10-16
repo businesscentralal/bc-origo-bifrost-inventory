@@ -32,6 +32,7 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Transfer Order Reopen Impl ori" = X,
         codeunit "Transf. Order Reopen Proc. ori" = X,
         codeunit "Transfer Post Subscriber ori" = X,
+        codeunit "Reserv. Write Runner ori" = X,
         codeunit "Transf Doc Prev. Post Impl ori" = X,
         codeunit "Transfer Order Stats Impl ori" = X,
         codeunit "Assembly Order Create Impl ori" = X,

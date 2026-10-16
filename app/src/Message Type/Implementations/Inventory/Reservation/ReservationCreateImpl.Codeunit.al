@@ -167,6 +167,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
+        ReservWriteRunner: Codeunit "Reserv. Write Runner ori";
         ReservationManagement: Codeunit "Reservation Management";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -239,11 +240,13 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
             AvailabilityDate := WorkDate();
         if QtyPerUOM = 0 then
             QtyPerUOM := 1;
+        ReservWriteRunner.SetReserve(ReservationManagement, ItemNo, AvailabilityDate, Quantity, Quantity * QtyPerUOM);
         Commit();
-        if not TryAutoReserve(ReservationManagement, FullAutoReservation, ItemNo, AvailabilityDate, Quantity, Quantity * QtyPerUOM) then begin
+        if not ReservWriteRunner.Run() then begin
             Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
+        FullAutoReservation := ReservWriteRunner.GetFullAutoReservation();
 
         ReservationEntry.SetRange("Source Type", SourceType);
         ReservationEntry.SetRange("Source Subtype", SourceSubtype);
@@ -374,11 +377,5 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         if QtyPerUOM = 0 then
             QtyPerUOM := 1;
         exit(true);
-    end;
-
-    [TryFunction]
-    local procedure TryAutoReserve(var ReservationManagement: Codeunit "Reservation Management"; var FullAutoReservation: Boolean; Description: Text[100]; AvailabilityDate: Date; Quantity: Decimal; QuantityBase: Decimal)
-    begin
-        ReservationManagement.AutoReserve(FullAutoReservation, Description, AvailabilityDate, Quantity, QuantityBase);
     end;
 }

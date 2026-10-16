@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
@@ -266,17 +267,23 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostedReceiptNo: Code[20];
         PostingDate: Date;
     begin
+        TransferReceiptHeader.SetCurrentKey("Transfer Order No.");
         TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
         if TransferReceiptHeader.FindLast() then begin
             PostedReceiptNo := TransferReceiptHeader."No.";
             PostingDate := TransferReceiptHeader."Posting Date";
         end;
+        TransferShipmentHeader.SetCurrentKey("Transfer Order No.");
         TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
         if TransferShipmentHeader.FindLast() then begin
             PostedShipmentNo := TransferShipmentHeader."No.";
             if PostingDate = 0D then
                 PostingDate := TransferShipmentHeader."Posting Date";
         end;
+        if PostedReceiptNo = '' then
+            FindPostedTransferDocument(DocumentNo, "Item Ledger Document Type"::"Transfer Receipt", PostedReceiptNo, PostingDate);
+        if PostedShipmentNo = '' then
+            FindPostedTransferDocument(DocumentNo, "Item Ledger Document Type"::"Transfer Shipment", PostedShipmentNo, PostingDate);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('postingType', PostingTypeText);
@@ -299,6 +306,20 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             exit(true);
         TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
         exit(not TransferShipmentHeader.IsEmpty());
+    end;
+
+    local procedure FindPostedTransferDocument(DocumentNo: Code[20]; DocumentType: Enum "Item Ledger Document Type"; var PostedDocumentNo: Code[20]; var PostingDate: Date)
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+    begin
+        ItemLedgerEntry.SetRange("Document Type", DocumentType);
+        ItemLedgerEntry.SetRange("Order Type", ItemLedgerEntry."Order Type"::Transfer);
+        ItemLedgerEntry.SetRange("Order No.", DocumentNo);
+        if not ItemLedgerEntry.FindLast() then
+            exit;
+        PostedDocumentNo := ItemLedgerEntry."Document No.";
+        if PostingDate = 0D then
+            PostingDate := ItemLedgerEntry."Posting Date";
     end;
 
     local procedure PostedAndDeletedUi(LastErrorText: Text): Boolean
