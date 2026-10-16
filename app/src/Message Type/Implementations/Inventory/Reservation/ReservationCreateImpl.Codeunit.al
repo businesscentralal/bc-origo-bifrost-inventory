@@ -239,6 +239,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
             AvailabilityDate := WorkDate();
         if QtyPerUOM = 0 then
             QtyPerUOM := 1;
+        Commit();
         if not TryAutoReserve(ReservationManagement, FullAutoReservation, ItemNo, AvailabilityDate, Quantity, Quantity * QtyPerUOM) then begin
             Argument.RespondWithError(GetLastErrorText());
             exit;

@@ -209,7 +209,7 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         UnbindSubscription(TransferPostSubscriber);
 
         if not PostedOk then
-            if HeaderPostedAndDeleted(DocumentNo) then
+            if HeaderPostedAndDeleted(DocumentNo) or PostedAndDeletedUi(LastErrorText) then
                 BuildSuccessResponseAfterDeletedHeader(DocumentNo, PostingTypeText, DirectTransfer, ResponseJson)
             else begin
                 Argument.RespondWithError(LastErrorText);
@@ -299,5 +299,12 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             exit(true);
         TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
         exit(not TransferShipmentHeader.IsEmpty());
+    end;
+
+    local procedure PostedAndDeletedUi(LastErrorText: Text): Boolean
+    var
+        PostedDeletedTok: Label 'successfully posted and is now deleted', Locked = true;
+    begin
+        exit(LastErrorText.Contains(PostedDeletedTok));
     end;
 }
