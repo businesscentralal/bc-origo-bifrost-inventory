@@ -773,6 +773,19 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(Row, 'packageNo', 'RES-PACKAGE');
         AssertDecimal(Row, 'qtyReserved', 1);
         AssertDecimal(Row, 'availableQuantity', 0);
+
+        // The same owned reservation also proves the Sales document projection, not only item availability.
+        Clear(Request);
+        Request.Add('documentType', 'Sales.Order');
+        Request.Add('documentNo', SalesLine."Document No.");
+        Request.Add('lineNo', SalesLine."Line No.");
+        ExecuteRead(Request, 0, Response);
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'sourceType', 'SalesLine');
+        AssertText(Row, 'serialNo', 'RES-SERIAL');
+        AssertText(Row, 'packageNo', 'RES-PACKAGE');
+        AssertDecimal(Row, 'quantityBase', -1);
     end;
 
     /// <summary>Package-only disagreement stays blank; disabling the policy blanks even matching dates.</summary>
@@ -1108,6 +1121,99 @@ codeunit 96927 "Inventory Tracking Read Tests"
     begin
         // Story #5 AC1 | Time: WorkDate fixture only | Risk: transfer direction.
         AssertTransferAdapter("Transfer Direction"::Inbound);
+    end;
+
+    /// <summary>Outbound transfer reads project tracking created by the native page, without writes.</summary>
+    [Test]
+    procedure Scenario_AC1_TransferOutbound_ReadsNativeTracking()
+    begin
+        AssertTransferTrackingRead(false);
+    end;
+
+    /// <summary>Inbound transfer reads preserve the native tracking carried through shipment.</summary>
+    [Test]
+    procedure Scenario_AC1_TransferInbound_ReadsShippedTracking()
+    begin
+        AssertTransferTrackingRead(true);
+    end;
+
+    local procedure AssertTransferTrackingRead(Inbound: Boolean)
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Transfer Header";
+        Line: Record "Transfer Line";
+        SourceSpecification: Record "Tracking Specification";
+        TempSpecification: Record "Tracking Specification" temporary;
+        Entry: Record "Reservation Entry";
+        Ledger: Record "Item Ledger Entry";
+        Helper: Codeunit "Transfer Order Test Helper";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+        TransferReserve: Codeunit "Transfer Line-Reserve";
+        TrackingLines: Page "Item Tracking Lines";
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        AvailabilityDate: Date;
+        BeforeEntries: Integer;
+        BeforeLedgers: Integer;
+    begin
+        // [GIVEN] Self-created tracked supply at an owned source location and a native transfer line.
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 0);
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode."Lot Specific Tracking" := true;
+        TrackingCode.Modify(true);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Modify(true);
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        PurchaseHeader.Validate("Location Code", FromLocation.Code);
+        PurchaseHeader.Modify(true);
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 2);
+        AssignTracking(PurchaseLine, 'READ-TRANSFER', '', '', 2);
+        LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
+        Helper.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        LibraryWarehouse.CreateTransferLine(Header, Line, Item."No.", 2);
+        TransferReserve.InitFromTransLine(SourceSpecification, Line, AvailabilityDate, "Transfer Direction"::Outbound);
+        TempSpecification := SourceSpecification;
+        TempSpecification."Entry No." := 1;
+        TempSpecification."Lot No." := 'READ-TRANSFER';
+        TempSpecification."Quantity (Base)" := 2;
+        TempSpecification.Insert();
+        TrackingLines.SetBlockCommit(true);
+        TrackingLines.RegisterItemTrackingLines(SourceSpecification, AvailabilityDate, TempSpecification);
+        if Inbound then
+            LibraryWarehouse.PostTransferOrder(Header, true, false);
+        BeforeEntries := Entry.Count();
+        BeforeLedgers := Ledger.Count();
+        Request.Add('documentType', 'Transfer.Order');
+        Request.Add('documentNo', Header."No.");
+        Request.Add('lineNo', Line."Line No.");
+        if Inbound then
+            Request.Add('transferDirection', 'Inbound');
+
+        // [WHEN] The eligible read implementation resolves the real transfer source.
+        ExecuteRead(Request, 0, Response);
+
+        // [THEN] Its native lot and direction remain visible, with no persistent read effects.
+        AssertSuccess(Response);
+        Row := SingleRow(Response, 'trackingLines');
+        AssertText(Row, 'sourceType', 'TransferLine');
+        AssertText(Row, 'documentNo', Header."No.");
+        AssertText(Row, 'lotNo', 'READ-TRANSFER');
+        if Inbound then begin
+            AssertText(Row, 'locationCode', ToLocation.Code);
+            AssertDecimal(Row, 'quantityBase', 2);
+        end else begin
+            AssertText(Row, 'locationCode', FromLocation.Code);
+            AssertDecimal(Row, 'quantityBase', -2);
+        end;
+        Assert.AreEqual(BeforeEntries, Entry.Count(), 'Transfer read cannot write tracking entries.');
+        Assert.AreEqual(BeforeLedgers, Ledger.Count(), 'Transfer read cannot post inventory.');
     end;
 
     local procedure AssertTransferAdapter(Direction: Enum "Transfer Direction")

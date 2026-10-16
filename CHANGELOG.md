@@ -3,7 +3,7 @@
 ## Unreleased — eligible Inventory acceptance (#4, #5, #6, #30)
 
 - Add native cost snapshots, guarded Item cost/price updates, and revaluation post/preview contracts with native rollback tests (codeunits 70013400, 70013402–70013404, 70013432–70013435, 70013437–70013439, 70013468, 70013486).
-- Add read-only document/item tracking and grouped availability, typed Item table-view selectors, native expiration policy and paging (codeunits 10036913, 10036916, 10036919, 70013473; enum value 70013450). Sales, purchase and transfer adapters retain full records at their documented native InitFrom boundaries; regressions compare every specification field.
+- Add read-only document/item tracking and grouped availability, typed Item table-view selectors, native expiration policy and paging (codeunits 10036913, 10036916, 10036919, 70013473; enum value 70013450). Sales, purchase and transfer adapters retain full records at their documented native InitFrom boundaries; regressions compare every specification field and read native Sales reservations plus outbound/inbound Transfer tracking.
 - Use native physical inventory calculation, count validation, readiness checks, preview and posting. Preserve explicit zero versus omitted counts and both native ledger ranges (codeunits 70013463, 70013465, 70013466, 70013469, 70013472, 70013479, 70013496; enum values 70013460–70013462).
 - Preserve existing attribute-table permissions through nonassignable included sets 10036915/10036916 while adding execute grants for the eligible types.
 - This cut retains existing main implementations outside the eligible families. Suspended feature changes stay in the original private checkpoint; this entry does not claim their acceptance or any runtime pass.
