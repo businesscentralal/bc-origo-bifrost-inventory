@@ -20,18 +20,24 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads reservation entries for an item.', Comment = 'is-IS=Les frátekningarfærslur fyrir vöru.';
     begin
-        exit('Reads reservation entries for an item.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'reservation, reserved quantity', Comment = 'is-IS=frátekning, frátekið magn';
     begin
-        exit('reservation, reserved quantity');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reads reservation entries. Cancel is a separate type.', Comment = 'is-IS=Les frátekningarfærslur. Afturköllun er aðskilin tegund.';
     begin
-        exit('Reads reservation entries. Cancel is a separate type.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -123,8 +129,8 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ReservationEntry: Record "Reservation Entry";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Entries: JsonArray;

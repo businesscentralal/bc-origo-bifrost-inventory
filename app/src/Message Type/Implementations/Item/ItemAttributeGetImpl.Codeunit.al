@@ -23,8 +23,10 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Returns item attribute definitions and assigned values for one or more items.', Comment = 'is-IS=Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.';
     begin
-        exit('Returns item attribute definitions and assigned values for one or more items.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -138,8 +140,8 @@ codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         Resolve: Codeunit "Item Attribute Resolve ori";
         RequestJson: JsonObject;

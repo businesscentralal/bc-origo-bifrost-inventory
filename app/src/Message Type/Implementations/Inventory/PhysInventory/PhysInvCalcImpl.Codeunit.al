@@ -21,18 +21,24 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Calculates inventory into a physical inventory journal. Does not post.', Comment = 'is-IS=Reiknar birgðir inn í birgðatalningarbók. Bókar ekki.';
     begin
-        exit('Calculates inventory into a physical inventory journal. Does not post.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'physical inventory, calculate inventory', Comment = 'is-IS=birgðatalning, reikna birgðir';
     begin
-        exit('physical inventory, calculate inventory');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Fills a physical inventory batch. Posting is Inventory.PhysInventory.Post.', Comment = 'is-IS=Fyllir birgðatalningarbókarkeyrslu. Bókun fer fram með Inventory.PhysInventory.Post.';
     begin
-        exit('Fills a physical inventory batch. Posting is Inventory.PhysInventory.Post.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -115,6 +121,7 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
+        Clear(Notes);
         exit(false);
     end;
 
@@ -125,8 +132,8 @@ codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJournalLine: Record "Item Journal Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;

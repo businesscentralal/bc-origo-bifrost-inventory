@@ -9,6 +9,30 @@
 - Regenerate the Icelandic translation artifact from this branch’s build to remove orphan units and include existing translatable labels (#32); source guard wiring remains separately owned.
 - Add chapter tests (96922) and public-dispatch malformed-input regressions (96923). Raise the Foundation dependency floor to 28.0.2.0 without changing app versions. Test execution and runtime acceptance are tracked separately.
 
+### Fixed (2026-10-16) - runtime catalogue localization
+
+- Replace literal catalogue descriptions with translatable labels for the 35 scoped message types, including TransferOrder.Release. Convert the remaining 17 literal keyword lists and 17 selection descriptions; preserve all existing English text and existing translated labels. Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the compiler output.
+- Remove compiler/developer instructions from public Reservation.Create and CostToGL.Test notes and clear reused notes outputs. Message execution and wire identifiers are unchanged.
+- `InventoryContractBatchTests.Codeunit.al` (96921) adds a language-switch regression over all 35 scoped catalogue entries in LCIDs 1033/1039 and checks both removed notes outputs. The existing nonempty discovery check alone did not detect English literals at LCID 1039.
+- Amended implementation files and codeunit IDs: `ReclassCheckImpl.Codeunit.al` (70013475); `AsmDocPrevPostImpl.Codeunit.al` (70013423); `AsmOrderRefreshLnImpl.Codeunit.al` (70013421); `AsmOrderReleaseImpl.Codeunit.al` (70013426); `AsmOrderStatisticsImpl.Codeunit.al` (70013422); `AssemblyOrderCreateImpl.Codeunit.al` (70013424); `AssemblyOrderPostImpl.Codeunit.al` (70013425); `AssemblyOrderReopenImpl.Codeunit.al` (70013427); `CostGetImpl.Codeunit.al` (70013468); `CostToGLTestImpl.Codeunit.al` (70013467); `RevaluationCalcImpl.Codeunit.al` (70013488); `ItemApplGetImpl.Codeunit.al` (70013490); `ItemApplReapplyImpl.Codeunit.al` (70013492); `ItemApplUnapplyImpl.Codeunit.al` (70013491); `PeriodGetImpl.Codeunit.al` (70013483); `PhysInvtPostImpl.Codeunit.al` (70013465); `PhysInvtRecordImpl.Codeunit.al` (70013466); `PhysInvCalcImpl.Codeunit.al` (70013496); `PriceUpdateImpl.Codeunit.al` (70013486); `ReclassPreviewImpl.Codeunit.al` (70013474); `ReservationCancelImpl.Codeunit.al` (70013478); `ReservationCreateImpl.Codeunit.al` (70013476); `ReservationGetImpl.Codeunit.al` (70013477); `TrackingAvailGetImpl.Codeunit.al` (70013473); `TransfDocPrevPostImpl.Codeunit.al` (70013413); `TransferOrderCreateImpl.Codeunit.al` (70013414); `TransferOrderPostImpl.Codeunit.al` (70013415); `TransferOrderReopenImpl.Codeunit.al` (70013417); `TransferOrderStatsImpl.Codeunit.al` (70013419); `TransfOrderReleaseImpl.Codeunit.al` (70013416); `TransfUndoRcptImpl.Codeunit.al` (70013481); `ItemAttrDefCreateImpl.Codeunit.al` (10036900); `ItemAttributeCreateImpl.Codeunit.al` (10036898); `ItemAttributeGetImpl.Codeunit.al` (10036897); `ItemAttributeUpdateImpl.Codeunit.al` (10036899).
+
+### Fixed (2026-10-16) - Icelandic translation resources
+
+- Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the current build: include all 85 generated units using the existing Icelandic source comments and replace the three obsolete numeric-ID entries. Inventory Setup captions, domain captions, posting refusals, assembly/transfer descriptions and attribute help now have matching runtime translation IDs. English source text and AL behavior are unchanged.
+- Explicitly mark the five already-temporary Message Argument test variables as `temporary` in `ItemAttributeTestsori.Codeunit.al` (96900), `InvPostingGateTests.Codeunit.al` (96918) and `InvPostingGateGrantTests.Codeunit.al` (96919). This preserves the Foundation table's `TableType = Temporary` behavior and lets the BC 28 analyzer recognize the existing temporary-variable names without AA0237 warnings.
+
+### Fixed (2026-10-15) - zero-warning Inventory verification
+
+- Preserve the attribute-table grants from `BIFROSTInvRead.PermissionSetExt.al` (10036915) and `BIFROSTInvWrite.PermissionSetExt.al` (10036916) in the included, nonassignable `BIFROSTInvAttrRead.PermissionSet.al` (10036915) and `BIFROSTInvAttrWrite.PermissionSet.al` (10036916). Read and Full roles retain their original access; no posting or Foundation Setup grants are added.
+- Align AL filenames with object names and order record declarations before codeunits without changing message execution. `PhysInvCalcImpl.Codeunit.al` (70013496), `PhysInvPreviewImpl.Codeunit.al` (70013472) and `TrackingAvailGetImpl.Codeunit.al` (70013473) clear the notes output when they report no notes.
+- Fix test helper content-type buffer lengths, load the item Description field, initialize JSON-array indexes explicitly and name temporary arguments consistently. `InvPostingGateTests.Codeunit.al` (96918) verifies preserved read-only/write attribute access, and `InventoryContractBatchTests.Codeunit.al` (96921) verifies stale notes are cleared. Existing tests and assertions remain enabled.
+
+### Fixed (2026-10-13) - contract source guard recognizes Inventory chapters
+
+- `Test-ContractParameterKeys.ps1` follows a literal shared-chapter selector, literal JSON parameter arrays, attached parameter objects and the typed request readers in Foundation Request Value Reader ori. Unresolved selectors and malformed arrays fail with explicit diagnostics; undeclared and unread keys still fail. Regression fixtures cover valid chapters, mismatches, unrelated objects, cleared objects and dynamic calls. No AL object or message implementation changes.
+
+- `.github/workflows/SourceGuards.yaml` adds the `ContractParameterKeysRegression` job for the guard self-test and Python regression fixtures. Its comments identify the remaining production contract, localization, translation and help-link checks.
+- `tools/tests/test-contract-parameter-keys.py` adds 26 regression fixtures for contract selectors, declarations and typed readers, including mismatches and malformed inputs.
 
 ### Fixed (2026-10-12) - related help entries name existing message types
 

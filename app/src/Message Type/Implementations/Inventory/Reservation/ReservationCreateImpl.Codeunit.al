@@ -20,18 +20,24 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Creates a reservation through Reservation Management.', Comment = 'is-IS=Býr til frátekningu með Reservation Management.';
     begin
-        exit('Creates a reservation through Reservation Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'create reservation, auto reserve, reserve item', Comment = 'is-IS=búa til frátekningu, taka sjálfvirkt frá, taka vöru frá';
     begin
-        exit('create reservation, auto reserve, reserve item');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reserves quantity for an item through Reservation Management.', Comment = 'is-IS=Tekur frá magn vöru með Reservation Management.';
     begin
-        exit('Reserves quantity for an item through Reservation Management.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -127,8 +133,8 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Source document fields can be added by the compiler pass if AutoReserve needs a source record.';
-        exit(true);
+        Clear(Notes);
+        exit(false);
     end;
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"

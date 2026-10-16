@@ -20,8 +20,10 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).', Comment = 'is-IS=Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift móðurvörunnar (RefreshBOM).';
     begin
-        exit('Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -127,9 +129,9 @@ codeunit 70013421 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         AssemblyHeader: Record "Assembly Header";
         AssemblyLine: Record "Assembly Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         ResponseJson: JsonObject;
         LinesBefore: Integer;

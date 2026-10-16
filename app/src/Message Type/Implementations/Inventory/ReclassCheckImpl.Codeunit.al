@@ -23,8 +23,10 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Checks a reclassification journal. Does not post.', Comment = 'is-IS=Athugar endurflokkunarbók. Bókar ekki.';
     begin
-        exit('Checks a reclassification journal. Does not post.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -133,9 +135,9 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJournalTemplate: Record "Item Journal Template";
         ItemJournalLine: Record "Item Journal Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;

@@ -21,18 +21,24 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reapplies an item ledger entry through Item Jnl.-Post Line.', Comment = 'is-IS=Jafnar vörufærslu aftur með Item Jnl.-Post Line.';
     begin
-        exit('Reapplies an item ledger entry through Item Jnl.-Post Line.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'reapply item application, apply item ledger entry', Comment = 'is-IS=jafna vöru aftur, jafna vörufærslu';
     begin
-        exit('reapply item application, apply item ledger entry');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reapplies an outbound item ledger entry to an inbound entry.', Comment = 'is-IS=Jafnar útleiðandi vörufærslu aftur við innleiðandi færslu.';
     begin
-        exit('Reapplies an outbound item ledger entry to an inbound entry.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
