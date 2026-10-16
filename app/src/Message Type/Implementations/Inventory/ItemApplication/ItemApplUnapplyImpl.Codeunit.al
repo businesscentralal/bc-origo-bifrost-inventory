@@ -21,18 +21,24 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Unapplies an item application entry through Item Jnl.-Post Line.', Comment = 'is-IS=Afturkallar vörujöfnun með Item Jnl.-Post Line.';
     begin
-        exit('Unapplies an item application entry through Item Jnl.-Post Line.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'unapply item application, undo application', Comment = 'is-IS=afturkalla vörujöfnun, afturkalla jöfnun';
     begin
-        exit('unapply item application, undo application');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Unapplies one item application entry by entry number.', Comment = 'is-IS=Afturkallar eina vörujöfnunarfærslu eftir færslunúmeri.';
     begin
-        exit('Unapplies one item application entry by entry number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

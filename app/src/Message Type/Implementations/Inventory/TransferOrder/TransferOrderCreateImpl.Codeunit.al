@@ -23,8 +23,10 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.', Comment = 'is-IS=Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum.';
     begin
-        exit('Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -141,8 +143,8 @@ codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;

@@ -1,7 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using Microsoft.Inventory.Item.Attribute;
 
 /// <summary>
 /// Extends Foundation <c>BIFROST Read ori</c> with execute rights for Item.Attribute.Get and helpers.

@@ -24,18 +24,24 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Reads inventory periods.', Comment = 'is-IS=Les birgðatímabil.';
     begin
-        exit('Reads inventory periods.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'inventory period, closed period', Comment = 'is-IS=birgðatímabil, lokað tímabil';
     begin
-        exit('inventory period, closed period');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Reads inventory periods. Close and reopen are separate types.', Comment = 'is-IS=Les birgðatímabil. Lokun og enduropnun eru aðskildar tegundir.';
     begin
-        exit('Reads inventory periods. Close and reopen are separate types.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -121,8 +127,8 @@ codeunit 70013483 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         InventoryPeriod: Record "Inventory Period";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         ResponseJson: JsonObject;
         Periods: JsonArray;
         PeriodJson: JsonObject;

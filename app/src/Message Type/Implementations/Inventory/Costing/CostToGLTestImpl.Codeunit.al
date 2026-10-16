@@ -20,18 +20,24 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Tests posting inventory cost to G/L for the requested item filter without posting.', Comment = 'is-IS=Prófar bókun birgðakostnaðar í fjárhag fyrir umbeðna vörusíu án þess að bóka.';
     begin
-        exit('Tests posting inventory cost to G/L for the requested item filter without posting.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'test post inventory cost to gl, cost to gl test', Comment = 'is-IS=prófa bókun birgðakostnaðar í fjárhag, prófun kostnaðarbókunar í fjárhag';
     begin
-        exit('test post inventory cost to gl, cost to gl test');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Returns the item filter that the inventory cost to G/L test would use.', Comment = 'is-IS=Skilar vörusíunni sem prófun á bókun birgðakostnaðar í fjárhag myndi nota.';
     begin
-        exit('Returns the item filter that the inventory cost to G/L test would use.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -122,8 +128,8 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Report 1002 test path. The compiler pass should bind the report request page filters if a headless test report exists.';
-        exit(true);
+        Clear(Notes);
+        exit(false);
     end;
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"

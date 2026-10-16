@@ -20,18 +20,24 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Undoes a posted transfer receipt by writing corrective item ledger entries.', Comment = 'is-IS=Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum.';
     begin
-        exit('Undoes a posted transfer receipt by writing corrective item ledger entries.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'undo transfer receipt', Comment = 'is-IS=afturkalla millifærslumóttöku';
     begin
-        exit('undo transfer receipt');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Undoes a posted transfer receipt. Does not delete the posted document.', Comment = 'is-IS=Afturkallar bókaða millifærslumóttöku. Eyðir ekki bókaða skjalinu.';
     begin
-        exit('Undoes a posted transfer receipt. Does not delete the posted document.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -133,8 +139,8 @@ codeunit 70013481 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         ReceiptHeader: Record "Transfer Receipt Header";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];

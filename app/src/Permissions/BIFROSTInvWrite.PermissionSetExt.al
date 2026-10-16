@@ -1,7 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using Microsoft.Inventory.Item.Attribute;
 
 /// <summary>
 /// Extends Foundation <c>BIFROST Full ori</c> with write access for Item Attribute message types.

@@ -20,18 +20,24 @@ codeunit 70013474 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Previews a reclassification journal batch without posting it.', Comment = 'is-IS=Forskoðar endurflokkunarbókarkeyrslu án þess að bóka hana.';
     begin
-        exit('Previews a reclassification journal batch without posting it.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'preview reclassification, reclass journal preview', Comment = 'is-IS=forskoða endurflokkun, forskoðun endurflokkunarbókar';
     begin
-        exit('preview reclassification, reclass journal preview');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Returns the reclassification journal lines that Post would process.', Comment = 'is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.';
     begin
-        exit('Returns the reclassification journal lines that Post would process.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

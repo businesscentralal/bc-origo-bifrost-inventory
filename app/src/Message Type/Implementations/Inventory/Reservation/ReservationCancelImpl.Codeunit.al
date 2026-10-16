@@ -20,18 +20,24 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Cancels a reservation entry through Reservation Management.', Comment = 'is-IS=Afturkallar frátekningarfærslu með Reservation Management.';
     begin
-        exit('Cancels a reservation entry through Reservation Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'cancel reservation, delete reservation', Comment = 'is-IS=afturkalla frátekningu, eyða frátekningu';
     begin
-        exit('cancel reservation, delete reservation');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Cancels one reservation entry by entry number.', Comment = 'is-IS=Afturkallar eina frátekningarfærslu eftir færslunúmeri.';
     begin
-        exit('Cancels one reservation entry by entry number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

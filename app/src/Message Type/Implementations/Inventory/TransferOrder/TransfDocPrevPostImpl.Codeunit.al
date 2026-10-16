@@ -25,8 +25,10 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetDescription() Description: Text[250]
+    var
+        DescriptionLbl: Label 'Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.', Comment = 'is-IS=Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.';
     begin
-        exit('Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
@@ -140,11 +142,11 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TransferHeader: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
         GLSetup: Record "General Ledger Setup";
         TempDocumentEntry: Record "Document Entry" temporary;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
