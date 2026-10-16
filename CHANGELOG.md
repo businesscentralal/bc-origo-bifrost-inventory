@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-16) - remaining Icelandic catalogue and refusal text
+
+- Make the description, keyword list and selection description of the nine message types left in English at LCID 1039 into labels with is-IS translations, using the same pattern as the 35 types already converted. English source text is unchanged. Types and codeunits: `AdjustCostRunImpl.Codeunit.al` (70013460) `Inventory.AdjustCost.Run`; `CostToGLPostImpl.Codeunit.al` (70013462) `Inventory.CostToGL.Post`; `PeriodCloseImpl.Codeunit.al` (70013485) `Inventory.Period.Close`; `PeriodReopenImpl.Codeunit.al` (70013484) `Inventory.Period.Reopen`; `TrackingAssignImpl.Codeunit.al` (70013470) `Inventory.Tracking.Assign`; `TrackingDeleteImpl.Codeunit.al` (70013471) `Inventory.Tracking.Delete`; `TransferUndoShptImpl.Codeunit.al` (70013480) `Inventory.Transfer.UndoShipment`; `AssemblyUndoPostImpl.Codeunit.al` (70013482) `Inventory.Assembly.UndoPost`; `ReclassPostImpl.Codeunit.al` (70013493) `Inventory.Reclassification.Post`.
+- Translate the Reclassification domain-off `nextStep` in `InventoryDomainGate.Codeunit.al` (70013453) and the three refusal texts that stayed English at LCID 1039: assembly quantity in `AssemblyOrderCreateImpl.Codeunit.al` (70013424), unknown item in `RevaluationCalcImpl.Codeunit.al` (70013488), and the missing physical-inventory line in `PhysInvtRecordImpl.Codeunit.al` (70013466). English wording is unchanged. `InventoryContractBatchTests.Codeunit.al` (96921) checks the nine catalogue entries in LCIDs 1033 and 1039.
+
 ### Fixed (2026-10-16) - runtime catalogue localization
 
 - Replace literal catalogue descriptions with translatable labels for the 35 scoped message types, including TransferOrder.Release. Convert the remaining 17 literal keyword lists and 17 selection descriptions; preserve all existing English text and existing translated labels. Regenerate `app/Translations/Bifrost Inventory.is-IS.xlf` from the compiler output.

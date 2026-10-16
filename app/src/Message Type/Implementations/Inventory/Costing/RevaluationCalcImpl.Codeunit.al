@@ -150,7 +150,7 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         RemainingQty: Decimal;
         InventoryValue: Decimal;
         MissingItemErr: Label 'itemNo must be specified.', Locked = true;
-        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.', Locked = true;
+        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no., is-IS=Vara %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false) then
             exit;

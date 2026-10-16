@@ -39,20 +39,26 @@ codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.', Comment = 'is-IS=Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.';
     begin
-        exit('Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.');
+        exit(SelectionDescriptionLbl);
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'adjust cost,item entry correction,post to g/l,report 795', Comment = 'is-IS=leiðrétta kostnað,leiðrétting vörufærslu,bóka á fjárhag,skýrsla 795';
     begin
-        exit('adjust cost,item entry correction,post to g/l,report 795');
+        exit(KeywordsLbl);
     end;
 
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Runs report 795 with optional item or category filter and explicit postToGL option.', Comment = 'is-IS=Keyrir skýrslu 795 með valkvæmri vöru- eða flokkssíu og skýru postToGL-vali.';
     begin
-        exit('Runs report 795 with optional item or category filter and explicit postToGL option.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>
