@@ -225,6 +225,12 @@ codeunit 70013489 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         if not ValidateTopLevelShape(Argument, RequestJson, HasReferences) then
             exit;
         if HasReferences then begin
+            if not RequestJson.Get(ReferencesKeyTok, ReferencesToken) then
+                exit;
+            if not ReferencesToken.IsArray() then begin
+                RespondFormat(Argument, ReferencesKeyTok, '', ArrayExpectedTok);
+                exit;
+            end;
             foreach ReferenceToken in ReferencesToken.AsArray() do begin
                 if not ReferenceToken.IsObject() then begin
                     RespondFormat(Argument, ReferencesKeyTok, '', ArrayExpectedTok);
