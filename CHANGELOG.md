@@ -1,5 +1,7 @@
 # Changelog
 
+- Inventory #5/#30: advertise Item (27) as the filter table for both tracking reads, matching their implemented Item tableView selector; regression in codeunit 96927.
+
 - Inventory #5: resolve inbound tracking through native derived transfer lines (codeunit 10036916); repair native fixtures and preserve Foundation preview/write-policy contracts in tests 96921/96927/96941/96963.
 
 ## Unreleased — eligible Inventory acceptance (#4, #5, #6, #30)

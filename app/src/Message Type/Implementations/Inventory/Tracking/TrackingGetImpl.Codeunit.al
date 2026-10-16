@@ -28,7 +28,7 @@ codeunit 10036919 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides GetFilterTableNo for Inventory.Tracking.Get.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Reservation Entry");
+        exit(Database::Item);
     end;
 
     /// <summary>Provides GetDescription for Inventory.Tracking.Get.</summary>

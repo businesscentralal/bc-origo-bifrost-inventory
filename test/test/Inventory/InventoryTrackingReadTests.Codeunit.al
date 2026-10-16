@@ -275,6 +275,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
     local procedure AssertTableViewParameter(MessageType: Enum "Message Type ori")
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Implementation: Interface "Msg Interface ori";
         Contract: JsonObject;
         Parameter: JsonObject;
         Parameters: JsonArray;
@@ -282,6 +283,8 @@ codeunit 96927 "Inventory Tracking Read Tests"
         Value: JsonToken;
         Matches: Integer;
     begin
+        Implementation := MessageType;
+        Assert.AreEqual(Database::Item, Implementation.GetFilterTableNo(), 'Discovery must select Item, matching the declared and implemented tableView.');
         Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Tracking contract exists.');
         Assert.IsTrue(Contract.Get('parameters', Token), 'Parameters chapter exists.');
         Parameters := Token.AsArray();

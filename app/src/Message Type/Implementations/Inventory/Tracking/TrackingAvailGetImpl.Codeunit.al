@@ -28,7 +28,7 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     /// <summary>Provides GetFilterTableNo for Inventory.TrackingAvailability.Get.</summary>
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Item Ledger Entry");
+        exit(Database::Item);
     end;
 
     /// <summary>Provides GetDescription for Inventory.TrackingAvailability.Get.</summary>
