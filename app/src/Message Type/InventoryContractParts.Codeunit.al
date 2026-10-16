@@ -352,27 +352,19 @@ codeunit 70013445 "Inventory Contract Parts ori"
     local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        MissingIdentifierLbl: Label 'No %1 identifier in subject or data.', Comment = '%1 = document table name||is-IS=Auðkenni fyrir %1 vantar í subject eða data.';
-        SendIdentifierLbl: Label 'Send subject or an identifier key under data.', Comment = 'is-IS=Sendu subject eða auðkennislykil undir data.';
-        IdentifierNotFoundLbl: Label 'An identifier was given but matches no %1.', Comment = '%1 = document table name||is-IS=Auðkenni var gefið en engin færsla í %1 samsvarar því.';
-        CheckIdentifierLbl: Label 'Check the value or look the record up first.', Comment = 'is-IS=Athugaðu gildið eða flettu færslunni upp fyrst.';
-        ConflictingIdentifiersLbl: Label 'Two identifiers were given that point to different records.', Comment = 'is-IS=Tvö auðkenni voru gefin sem vísa á mismunandi færslur.';
-        SendOneIdentifierLbl: Label 'Send one identifier.', Comment = 'is-IS=Sendu eitt auðkenni.';
-        InvalidIdentifierFormatLbl: Label 'data is not a JSON object (parameter data); an identifier key under data (documentNo, %1, no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.', Comment = '%1 = document identifier alias||is-IS=data er ekki JSON-hlutur (parameter data); auðkennislykill undir data (documentNo, %1, no, systemId, recordSystemId, id) er ekki JSON-strengur (null, tala, boole-gildi, hlutur eða fylki); eða SystemId er ekki GUID. parameter tilgreinir lykilinn.';
-        CorrectIdentifierFormatLbl: Label 'Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.', Comment = 'is-IS=Sendu data sem JSON-hlut, hvert auðkenni sem JSON-streng og SystemId sem GUID. Ekkert er sótt á meðan eitthvert gildi er rangt.';
-        MultipleIdentifierErrorsLbl: Label 'More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.', Comment = 'is-IS=Fleiri en einn auðkennislykill er af rangri gerð; errors[] telur þá upp í þeirri röð sem lyklarnir eru lesnir. Ekkert er sótt á meðan eitthvert gildi er rangt.';
-        CorrectAllIdentifiersLbl: Label 'Fix every listed key and send the request again.', Comment = 'is-IS=Leiðréttu alla upptalda lykla og sendu beiðnina aftur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter,
-            StrSubstNo(MissingIdentifierLbl, RecordName), SendIdentifierLbl));
+            'No ' + RecordName + ' identifier in subject or data.', 'Send subject or an identifier key under data.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound,
-            StrSubstNo(IdentifierNotFoundLbl, RecordName), CheckIdentifierLbl));
+            'An identifier was given but matches no ' + RecordName + '.', 'Check the value or look the record up first.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers,
-            ConflictingIdentifiersLbl, SendOneIdentifierLbl));
+            'Two identifiers were given that point to different records.', 'Send one identifier.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat,
-            StrSubstNo(InvalidIdentifierFormatLbl, DocumentAlias), CorrectIdentifierFormatLbl));
+            'data is not a JSON object (parameter data); an identifier key under data (documentNo, ' + DocumentAlias + ', no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.',
+            'Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors,
-            MultipleIdentifierErrorsLbl, CorrectAllIdentifiersLbl));
+            'More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.',
+            'Fix every listed key and send the request again.'));
     end;
 
     local procedure AddLookupErrors(var Errors: JsonArray; RecordName: Text)

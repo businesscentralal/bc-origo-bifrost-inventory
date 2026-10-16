@@ -108,9 +108,9 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         Assert.AreEqual('Varan "W8-LOCALE" er lokuð. Sendu allowBlocked: true til að leyfa breytinguna.', Icelandic, 'Icelandic refusal');
     end;
 
-    /// <summary>Every strict lookup translates its explanations while preserving error codes and identifier keys.</summary>
+    /// <summary>Every strict lookup keeps Foundation contract chapters English and restores the caller language.</summary>
     [Test]
-    procedure AllLookupTypes_BothLanguages_TranslateLookupErrors()
+    procedure AllLookupTypes_BothLanguages_KeepEnglishContract()
     var
         Names: List of [Text];
         Codes: List of [Text];
@@ -134,18 +134,20 @@ codeunit 96922 "Inv. Lookup Contract Tests"
             // [WHEN] The public contract reader runs under each supported UI language.
             GlobalLanguage(1033);
             EnglishErrors := ReadErrors(Name);
+            Assert.AreEqual(1033, GlobalLanguage(), Name + ': preserves English caller language');
             GlobalLanguage(1039);
             IcelandicErrors := ReadErrors(Name);
+            Assert.AreEqual(1039, GlobalLanguage(), Name + ': restores Icelandic caller language');
             GlobalLanguage(PreviousLanguage);
-            // [THEN] Explanations and next steps translate; protocol codes remain invariant.
+            // [THEN] Foundation GetContract intentionally forces English (#777); it restores the caller language.
             foreach Code in Codes do begin
                 EnglishEntry := ErrorByCode(EnglishErrors, Code);
                 IcelandicEntry := ErrorByCode(IcelandicErrors, Code);
-                Assert.AreNotEqual(EntryText(EnglishEntry, 'when'), EntryText(IcelandicEntry, 'when'), Name + ': translated ' + Code);
-                Assert.AreNotEqual(EntryText(EnglishEntry, 'fix'), EntryText(IcelandicEntry, 'fix'), Name + ': translated next step ' + Code);
+                Assert.AreEqual(EntryText(EnglishEntry, 'when'), EntryText(IcelandicEntry, 'when'), Name + ': stable English explanation ' + Code);
+                Assert.AreEqual(EntryText(EnglishEntry, 'fix'), EntryText(IcelandicEntry, 'fix'), Name + ': stable English next step ' + Code);
             end;
             IcelandicEntry := ErrorByCode(IcelandicErrors, 'InvalidParameterFormat');
-            Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('data er ekki JSON-hlutur'), Name + ': Icelandic data explanation');
+            Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('data is not a JSON object'), Name + ': English contract explanation');
             Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('no, systemId, recordSystemId, id'), Name + ': invariant identifier keys');
             if Name.StartsWith('Inventory.TransferOrder.') then
                 Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('documentNo, transferOrderNo'), Name + ': transfer alias')

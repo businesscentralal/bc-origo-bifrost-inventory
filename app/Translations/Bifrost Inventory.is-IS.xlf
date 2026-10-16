@@ -429,66 +429,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les línufjölda, magn, pakkafjölda, þyngd og rúmmál flutningspöntunar án þess að breyta gögnum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferStatisticsOverviewLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 237149879" size-unit="char" translate="yes" xml:space="preserve">
-          <source>No %1 identifier in subject or data.</source>
-          <target>Auðkenni fyrir %1 vantar í subject eða data.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document table name||is-IS=Auðkenni fyrir %1 vantar í subject eða data.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType MissingIdentifierLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 2542015807" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send subject or an identifier key under data.</source>
-          <target>Sendu subject eða auðkennislykil undir data.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu subject eða auðkennislykil undir data.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType SendIdentifierLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 1071117358" size-unit="char" translate="yes" xml:space="preserve">
-          <source>An identifier was given but matches no %1.</source>
-          <target>Auðkenni var gefið en engin færsla í %1 samsvarar því.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document table name||is-IS=Auðkenni var gefið en engin færsla í %1 samsvarar því.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType IdentifierNotFoundLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 2449554865" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Check the value or look the record up first.</source>
-          <target>Athugaðu gildið eða flettu færslunni upp fyrst.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu gildið eða flettu færslunni upp fyrst.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType CheckIdentifierLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 2788520648" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Two identifiers were given that point to different records.</source>
-          <target>Tvö auðkenni voru gefin sem vísa á mismunandi færslur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tvö auðkenni voru gefin sem vísa á mismunandi færslur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType ConflictingIdentifiersLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 1352350011" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send one identifier.</source>
-          <target>Sendu eitt auðkenni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt auðkenni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType SendOneIdentifierLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 1235279477" size-unit="char" translate="yes" xml:space="preserve">
-          <source>data is not a JSON object (parameter data); an identifier key under data (documentNo, %1, no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.</source>
-          <target>data er ekki JSON-hlutur (parameter data); auðkennislykill undir data (documentNo, %1, no, systemId, recordSystemId, id) er ekki JSON-strengur (null, tala, boole-gildi, hlutur eða fylki); eða SystemId er ekki GUID. parameter tilgreinir lykilinn.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document identifier alias||is-IS=data er ekki JSON-hlutur (parameter data); auðkennislykill undir data (documentNo, %1, no, systemId, recordSystemId, id) er ekki JSON-strengur (null, tala, boole-gildi, hlutur eða fylki); eða SystemId er ekki GUID. parameter tilgreinir lykilinn.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType InvalidIdentifierFormatLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 3637987336" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.</source>
-          <target>Sendu data sem JSON-hlut, hvert auðkenni sem JSON-streng og SystemId sem GUID. Ekkert er sótt á meðan eitthvert gildi er rangt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu data sem JSON-hlut, hvert auðkenni sem JSON-streng og SystemId sem GUID. Ekkert er sótt á meðan eitthvert gildi er rangt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType CorrectIdentifierFormatLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 1394882678" size-unit="char" translate="yes" xml:space="preserve">
-          <source>More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.</source>
-          <target>Fleiri en einn auðkennislykill er af rangri gerð; errors[] telur þá upp í þeirri röð sem lyklarnir eru lesnir. Ekkert er sótt á meðan eitthvert gildi er rangt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fleiri en einn auðkennislykill er af rangri gerð; errors[] telur þá upp í þeirri röð sem lyklarnir eru lesnir. Ekkert er sótt á meðan eitthvert gildi er rangt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType MultipleIdentifierErrorsLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 2929770969 - NamedType 1707994895" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Fix every listed key and send the request again.</source>
-          <target>Leiðréttu alla upptalda lykla og sendu beiðnina aftur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu alla upptalda lykla og sendu beiðnina aftur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddDocumentLookupErrors - NamedType CorrectAllIdentifiersLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
           <target>%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.</target>

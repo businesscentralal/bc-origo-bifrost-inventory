@@ -4,7 +4,7 @@
 
 ### Changed — strict document lookup errors and Icelandic responses (#27, #32, #33)
 
-- Translate the five shared document-lookup error explanations and next steps in `InventoryContractParts.Codeunit.al` (70013445). `InvLookupContractTests.Codeunit.al` (96922) now switches en-US/is-IS for all eleven types and checks translated text with unchanged error codes and identifier aliases.
+- `InvLookupContractTests.Codeunit.al` (96922) checks all eleven lookup contracts from en-US/is-IS sessions: Foundation keeps contract chapters in English, preserves identifier aliases and restores the caller language. UI descriptions and runtime refusals remain subject to their separate translation checks.
 
 - Inventory Contract Parts ori (70013445) declares malformed data and identifier keys plus one MultipleErrors entry for the eleven TransferOrder/AssemblyOrder lookups; Create and Item range contracts keep their existing behavior.
 - Translate existing Item attribute, inherited physical-calculation and inventory-period refusals plus shared attribute/TransferOrder/AssemblyOrder overview/notes (10036905–10036906, 10036908, 70013445, 70013464, 70013484–70013485). Add an exact en-US/is-IS blocked-item refusal regression in 96922. Machine keys and existing message-type names stay unchanged.
