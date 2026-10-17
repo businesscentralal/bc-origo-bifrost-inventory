@@ -42,6 +42,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         Assert.AreEqual(true, ReadBoolean(ResponseJson, 'fullyReserved'), 'fullyReserved');
         Assert.IsTrue(ReadDecimal(ResponseJson, 'reserved') > 0, 'reserved');
         SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        SalesLine.CalcFields("Reserved Quantity");
         Assert.AreEqual(2, SalesLine."Reserved Quantity", 'line reserved quantity');
 
         Clear(RequestJson);

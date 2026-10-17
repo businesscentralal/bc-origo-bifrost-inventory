@@ -31,6 +31,7 @@ codeunit 70013432 "Reserv. AutoReserve Proc ori"
             Rec.RespondWithError("Bifrost Error Code ori"::RecordNotFound, 'The sales line was not found.', 'documentNo', ReadText(RequestJson, 'documentNo'), '', 'Check the document and line no.');
             exit;
         end;
+        CalcReservationQuantities(SalesLine);
         if not LineCanBeReserved(SalesLine, Item) then begin
             Rec.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, 'The line cannot be reserved.', 'documentNo', SalesLine."Document No.", 'a reservable item line', 'Change the item''s Reserve setting or reserve manually.');
             exit;
@@ -64,6 +65,7 @@ codeunit 70013432 "Reserv. AutoReserve Proc ori"
             Error(PartialErr);
 
         SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
+        CalcReservationQuantities(SalesLine);
         CollectEntries(SalesLine, Entries);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('reserved', SalesLine."Reserved Quantity" - ReservedBefore);
@@ -108,6 +110,11 @@ codeunit 70013432 "Reserv. AutoReserve Proc ori"
         if (SalesLine."Outstanding Qty. (Base)" <= 0) and (SalesLine."Reserved Qty. (Base)" <= 0) then
             exit(false);
         exit(true);
+    end;
+
+    local procedure CalcReservationQuantities(var SalesLine: Record "Sales Line")
+    begin
+        SalesLine.CalcFields("Reserved Quantity", "Reserved Qty. (Base)");
     end;
 
     local procedure RemainingQuantity(SalesLine: Record "Sales Line"): Decimal
