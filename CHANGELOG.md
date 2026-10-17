@@ -4,7 +4,7 @@
 
 ### Fixed (2026-10-17) - missing item number uses MissingParameter
 
-- `Inventory.Cost.Get` and `Inventory.TrackingAvailability.Get` answer a missing `data.itemNo` with `MissingParameter`, including `parameter`, `expected` and `nextStep`, in en-US and is-IS. Cost Get Impl ori (70013468) and Tracking Avail. Get Impl ori (70013473). Inventory Item Refusal Tests (96922) covers LCIDs 1033 and 1039 (#128).
+- `Inventory.Cost.Get` and `Inventory.TrackingAvailability.Get` answer a missing `data.itemNo` with `MissingParameter`, including `parameter`, `expected` and `nextStep`, in en-US and is-IS. Cost Get Impl ori (70013468) and Tracking Avail. Get Impl ori (70013473). Inventory Item Refusal Tests (96922) covers LCIDs 1033 and 1039. Assembly Order Test Helper (96903) passes the current Windows language into the dispatcher, because language id 0 resets to the company default and returned the English labels at 1039 (#128).
 
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
