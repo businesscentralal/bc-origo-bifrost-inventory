@@ -12,6 +12,7 @@ Local help target for the Bifrost Inventory message types. The external document
 - Inventory.Tracking.Assign, Delete, and TrackingAvailability.Get
 - Inventory.Reservation.Get, Create, and Cancel
 - Inventory.ItemApplication.Get, Unapply, and Reapply
+- Inventory.ItemCategory.Get and Inventory.ItemCategory.Set
 - Inventory.Reclassification.Check, PreviewPost, and Post
 - Inventory.Period.Get, Close, and Reopen
 - Inventory.Price.Update

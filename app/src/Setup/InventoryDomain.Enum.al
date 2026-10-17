@@ -52,4 +52,8 @@ enum 70013450 "Inventory Domain ori"
     {
         Caption = 'Item Price', Comment = 'is-IS=Vöruverð';
     }
+    value(14; ItemCategory)
+    {
+        Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
+    }
 }

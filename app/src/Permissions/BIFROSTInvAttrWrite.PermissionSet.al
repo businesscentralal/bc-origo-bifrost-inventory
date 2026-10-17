@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 
 /// <summary>
@@ -11,6 +12,7 @@ permissionset 10036916 "BIFROST InvAttrWrite ori"
     Assignable = false;
 
     Permissions =
+        tabledata "Item Category" = RIMD,
         tabledata "Item Attribute" = RIMD,
         tabledata "Item Attribute Value" = RIMD,
         tabledata "Item Attribute Value Mapping" = RIMD,

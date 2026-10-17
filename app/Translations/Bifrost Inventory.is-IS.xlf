@@ -51,6 +51,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörujöfnun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Application - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 1487222247 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Category</source>
+          <target>Vöruflokkur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Category - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 475596436 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Price</source>
           <target>Vöruverð</target>
@@ -416,6 +422,192 @@
           <target>Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Category domain is turned off for this company.</source>
+          <target>Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads item categories and their default attributes.</source>
+          <target>Les vöruflokka og sjálfgefna eiginleika þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les vöruflokka og sjálfgefna eiginleika þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item category, parent, attribute, inherited</source>
+          <target>vöruflokkur, foreldri, eiginleiki, erft</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruflokkur, foreldri, eiginleiki, erft</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show the item category tree and the default attributes on each category.</source>
+          <target>Sýndu vöruflokkatréð og sjálfgefna eiginleika hvers flokks.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýndu vöruflokkatréð og sjálfgefna eiginleika hvers flokks.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 1174568155 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be true or false.</source>
+          <target>%1 verður að vera true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method RequireBoolean - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 1380282473 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>code is longer than %1 characters.</source>
+          <target>kóði er lengri en %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length, is-IS=kóði er lengri en %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method ValidateRequest - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3279967377 - Method 1506114554 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item category matched.</source>
+          <target>Enginn vöruflokkur fannst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Enginn vöruflokkur fannst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method WriteResponse - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Category domain is turned off for this company.</source>
+          <target>Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 1246678659 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The attribute does not exist.</source>
+          <target>Eiginleikinn er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikinn er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method FindAttribute - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 1246678659 - NamedType 246402019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the attribute with Inventory.AttributeDefinition.Create first.</source>
+          <target>Búðu fyrst til eiginleikann með Inventory.AttributeDefinition.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Búðu fyrst til eiginleikann með Inventory.AttributeDefinition.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method FindAttribute - NamedType CreateNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 4155179418 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The attribute value does not exist.</source>
+          <target>Gildi eiginleikans er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildi eiginleikans er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method FindValue - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 4155179418 - NamedType 246402019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the attribute with Inventory.AttributeDefinition.Create first.</source>
+          <target>Búðu fyrst til eiginleikann með Inventory.AttributeDefinition.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Búðu fyrst til eiginleikann með Inventory.AttributeDefinition.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method FindValue - NamedType CreateNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates or updates an item category and its default attributes.</source>
+          <target>Býr til eða uppfærir vöruflokk og sjálfgefna eiginleika hans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til eða uppfærir vöruflokk og sjálfgefna eiginleika hans.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item category, parent, attribute, default value</source>
+          <target>vöruflokkur, foreldri, eiginleiki, sjálfgefið gildi</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruflokkur, foreldri, eiginleiki, sjálfgefið gildi</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create or change an item category and the default attributes stored on it.</source>
+          <target>Búðu til eða breyttu vöruflokki og sjálfgefnum eiginleikum sem geymdir eru á honum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Búðu til eða breyttu vöruflokki og sjálfgefnum eiginleikum sem geymdir eru á honum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 1067610360 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item category matched.</source>
+          <target>Enginn vöruflokkur fannst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Enginn vöruflokkur fannst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ReadCategoryIdentity - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3978078080 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be an array.</source>
+          <target>%1 verður að vera fylki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method RequireArray - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 1174568155 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be true or false.</source>
+          <target>%1 verður að vera true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method RequireBoolean - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3151916237 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a number.</source>
+          <target>%1 verður að vera tala.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method RequireInteger - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3010654867 - NamedType 1264649167" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Each attributes entry must be an object.</source>
+          <target>Hver eiginleikafærsla verður að vera hlutur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hver eiginleikafærsla verður að vera hlutur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateAttributes - NamedType NotObjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 447717210 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The attribute entry contains an unknown key.</source>
+          <target>Eiginleikafærslan inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikafærslan inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateOneAttribute - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3954485822 - NamedType 967214943" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parent category does not exist.</source>
+          <target>Foreldrisflokkurinn er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Foreldrisflokkurinn er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateParent - NamedType ParentMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3954485822 - NamedType 1498788595" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parent would put this category inside its own subtree.</source>
+          <target>Foreldrið myndi setja þennan flokk inn í sitt eigið undirtré.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Foreldrið myndi setja þennan flokk inn í sitt eigið undirtré.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateParent - NamedType LoopErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 3954485822 - NamedType 2961131818" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Changing the parent of an existing category is not part of this call.</source>
+          <target>Það er ekki hluti af þessu kalli að breyta foreldri flokks sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Það er ekki hluti af þessu kalli að breyta foreldri flokks sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateParent - NamedType ReparentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 790683013 - Method 424435654 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method ValidateShapes - NamedType TooLongErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
@@ -819,6 +1011,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort vörujöfnunarskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemApplication - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 2140734087 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether item category message types are enabled for this company.</source>
+          <target>Tilgreinir hvort vöruflokkaskilaboð séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort vöruflokkaskilaboð séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control ItemCategory - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 2406459892 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether item price update message types are enabled for this company.</source>
           <target>Tilgreinir hvort vöruverðsskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -884,6 +1082,12 @@
           <target>Vörujöfnun</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörujöfnun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemApplication - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 2140734087 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Category</source>
+          <target>Vöruflokkur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemCategory - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2406459892 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Price</source>

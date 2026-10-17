@@ -29,6 +29,8 @@ codeunit 10036909 "Inventory Install ori"
     begin
         if not UpgradeTag.HasUpgradeTag(GetInitialReleaseTag()) then
             UpgradeTag.SetUpgradeTag(GetInitialReleaseTag());
+        if not UpgradeTag.HasUpgradeTag(GetItemCategoryDomainTag()) then
+            UpgradeTag.SetUpgradeTag(GetItemCategoryDomainTag());
     end;
 
     procedure GetInitialReleaseTag(): Code[250]
@@ -36,9 +38,15 @@ codeunit 10036909 "Inventory Install ori"
         exit('Origo.Bifrost.Inventory-Initial-20260911');
     end;
 
+    procedure GetItemCategoryDomainTag(): Code[250]
+    begin
+        exit('Origo.Bifrost.Inventory-ItemCategoryDomain-20261017');
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Upgrade Tag", OnGetPerCompanyUpgradeTags, '', false, false)]
     local procedure RegisterPerCompanyTags(var PerCompanyUpgradeTags: List of [Code[250]])
     begin
         PerCompanyUpgradeTags.Add(GetInitialReleaseTag());
+        PerCompanyUpgradeTags.Add(GetItemCategoryDomainTag());
     end;
 }
