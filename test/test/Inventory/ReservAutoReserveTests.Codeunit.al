@@ -33,6 +33,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         Entries: JsonArray;
         Token: JsonToken;
     begin
+        EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Optional, 5);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 2);
         RequestJson := LineRequest(SalesLine);
@@ -72,6 +73,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         ReservationEntry: Record "Reservation Entry";
         ResponseJson: JsonObject;
     begin
+        EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Never, 5);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 1);
         ResponseJson := CallAuto(LineRequest(SalesLine));
@@ -88,6 +90,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
+        EnableReservations();
         RequestJson.Add('documentType', 'Order');
         RequestJson.Add('documentNo', 'MISSING112');
         RequestJson.Add('lineNo', 10000);
@@ -102,6 +105,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
+        EnableReservations();
         RequestJson.Add('documentType', 'Order');
         RequestJson.Add('documentNo', 'MISSING112');
         RequestJson.Add('lineNo', 10000);
@@ -119,6 +123,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         ReservationEntry: Record "Reservation Entry";
         ResponseJson: JsonObject;
     begin
+        EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Optional, 1);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 5);
         ResponseJson := CallAuto(LineRequest(SalesLine));
@@ -135,6 +140,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
+        EnableReservations();
         RequestJson.Add('sourceKind', 'Purchase');
         RequestJson.Add('documentType', 'Order');
         RequestJson.Add('documentNo', 'MISSING112');
@@ -154,6 +160,7 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Optional, 2);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 1);
         RequestJson.Add('sourceKind', 'Sales');
@@ -165,6 +172,67 @@ codeunit 96930 "Reserv. AutoReserve Tests"
         Assert.IsTrue(ResponseJson.Get('entries', Token), 'entries');
         Assert.AreEqual(0, Token.AsArray().Count(), 'empty chain');
         Cleanup(SalesHeader, Item."No.");
+    end;
+
+    [Test]
+    procedure AutoReserve_MissingKeys_ReturnsMissingParameter()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), 'code');
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send documentType, documentNo and lineNo, or systemId.'), ReadText(ResponseJson, 'nextStep'));
+    end;
+
+    [Test]
+    procedure AutoReserve_BadLineNo_ReturnsInvalidParameterFormat()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('documentType', 'Order');
+        RequestJson.Add('documentNo', 'MISSING112');
+        RequestJson.Add('lineNo', 'nope');
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('InvalidParameterFormat', ReadText(ResponseJson, 'code'), 'code');
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send lineNo as an integer.'), ReadText(ResponseJson, 'nextStep'));
+    end;
+
+    [Test]
+    procedure AutoReserve_SystemIdAndDocument_ReturnsConflictingIdentifiers()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('systemId', '00000000-0000-0000-0000-000000000001');
+        RequestJson.Add('documentNo', 'MISSING112');
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('ConflictingIdentifiers', ReadText(ResponseJson, 'code'), 'code');
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send systemId or the document keys, not both.'), ReadText(ResponseJson, 'nextStep'));
+    end;
+
+    [Test]
+    procedure ReservationEntry_RemainsWriteRestricted()
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+    begin
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false), 'Reservation Entry stays behind Reservation WriteGuard ori');
+    end;
+
+    local procedure EnableReservations()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        if not InventorySetup.Get() then
+            InventorySetup.InsertIfNotExists();
+        if InventorySetup.Reservations then
+            exit;
+        InventorySetup.Validate(Reservations, true);
+        InventorySetup.Modify(true);
     end;
 
     local procedure CreateStockedItem(var Item: Record Item; ReserveMethod: Enum "Reserve Method"; Qty: Decimal)

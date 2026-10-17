@@ -65,7 +65,7 @@ codeunit 70013431 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     var
         TargetJson: JsonObject;
     begin
-        TargetJson.Add('codeunit', 'OrderTrackingManagement');
+        TargetJson.Add('codeunit', 'Order Tracking Management');
         Target.Add(TargetJson);
         exit(true);
     end;
