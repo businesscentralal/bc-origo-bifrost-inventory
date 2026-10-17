@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-17) - missing item number uses MissingParameter
+
+- `Inventory.Cost.Get` and `Inventory.TrackingAvailability.Get` answer a missing `data.itemNo` with `MissingParameter`, including `parameter`, `expected` and `nextStep`, in en-US and is-IS. Cost Get Impl ori (70013468) and Tracking Avail. Get Impl ori (70013473). Inventory Item Refusal Tests (96922) covers LCIDs 1033 and 1039 (#128).
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.

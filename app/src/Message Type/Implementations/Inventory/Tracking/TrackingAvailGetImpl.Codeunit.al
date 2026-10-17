@@ -77,11 +77,10 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemNo is missing');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo must be specified.', 'data.itemNo was not sent.', 'Send the item number in data.itemNo.'));
         exit(true);
     end;
 
@@ -142,7 +141,9 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         EntryJson: JsonObject;
         Token: JsonToken;
         ItemNo: Code[20];
-        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then
             exit;
@@ -150,7 +151,7 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
         ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));

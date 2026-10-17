@@ -237,6 +237,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 2778129220" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is required.</source>
+          <target>itemNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType ItemNoRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A non-empty item number in data.itemNo.</source>
+          <target>Ótómt vörunúmer í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ótómt vörunúmer í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType ItemNoExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item number in data.itemNo.</source>
+          <target>Sendu vörunúmerið í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType ItemNoNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1869433643 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item cost fields that are not exposed by the foundation app.</source>
           <target>Les kostnaðarreiti vöru sem grunnforritið birtir ekki.</target>
@@ -614,6 +632,24 @@
           <target>Reiknar eftirstandandi magn og birgðavirði. Bókar ekki endurmatsbók.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Reiknar eftirstandandi magn og birgðavirði. Bókar ekki endurmatsbók.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - Method 3571782927 - NamedType 4243124488" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo must be specified.</source>
+          <target>itemNo verður að vera tilgreint.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera tilgreint.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - Method ExecuteBifrostTask - NamedType MissingItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - Method 3571782927 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A non-empty item number in data.itemNo.</source>
+          <target>Ótómt vörunúmer í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ótómt vörunúmer í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - Method ExecuteBifrostTask - NamedType ItemNoExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 174414020 - Method 3571782927 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item number in data.itemNo.</source>
+          <target>Sendu vörunúmerið í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Avail. Get Impl ori - Method ExecuteBifrostTask - NamedType ItemNoNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 174414020 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads remaining quantity by lot, serial, and package.</source>
