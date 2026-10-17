@@ -5,6 +5,7 @@
 ### Added (2026-10-17) - Inventory.ItemCategory.Get and Inventory.ItemCategory.Set
 
 - Add `Inventory.ItemCategory.Get` and `Inventory.ItemCategory.Set` for the item category tree and the default attributes stored on a category. A parent that would create a loop is refused, an unknown attribute or value is refused before anything is written, and deleting or moving an existing category is refused. A value equal to the inherited parent value stays inherited. Object IDs: enumextension `MsgType.ItemCat.EnumExt ori` (70013447) values 70013415 and 70013416; codeunits `Item Category Get Impl ori` (70013448), `Item Category Set Impl ori` (70013449), `Item Category Set Proc ori` (70013499) and `Item Category Restrict ori` (70013441); domain `ItemCategory` (14) and Inventory Setup field `Item Category` (24). Tests `Item Category Tests` (96928) and `Item Category Perm` (96929). Issue #111.
+- Category insert and modify go through the table triggers inside `Codeunit.Run` of `Item Category Set Proc ori` (70013499). The tests commit before that run. Skipping the commit left the write inside the open test transaction, and the platform stopped that transaction.
 
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 

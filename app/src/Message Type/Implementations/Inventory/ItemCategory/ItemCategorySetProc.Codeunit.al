@@ -56,47 +56,14 @@ codeunit 70013499 "Item Category Set Proc ori"
                 if ParentCode <> '' then
                     ItemCategory.Validate("Parent Category", ParentCode);
             end;
-            // OnInsert calls OnPrem UpdateIndentationTree and CalcPresentationOrder, which abort the transaction in this sandbox.
-            SetTreePosition(ItemCategory);
-            ItemCategory."Last Modified Date Time" := CurrentDateTime();
-            ItemCategory.Insert(false);
+            ItemCategory.Insert(true);
         end else
             if RequestJson.Contains('description') then begin
                 DescriptionText := ReadText(RequestJson, 'description');
                 ItemCategory.Validate(Description, CopyStr(DescriptionText, 1, MaxStrLen(ItemCategory.Description)));
-                ItemCategory."Last Modified Date Time" := CurrentDateTime();
-                ItemCategory.Modify(false);
+                ItemCategory.Modify(true);
             end;
         CategoryCode := ItemCategory.Code;
-    end;
-
-    local procedure SetTreePosition(var ItemCategory: Record "Item Category")
-    var
-        ParentCategory: Record "Item Category";
-        Sibling: Record "Item Category";
-        ParentCode: Code[20];
-        Level: Integer;
-    begin
-        ParentCode := ItemCategory."Parent Category";
-        Level := 0;
-        while (ParentCode <> '') and ParentCategory.Get(ParentCode) and (Level < 100) do begin
-            Level += 1;
-            ParentCode := ParentCategory."Parent Category";
-        end;
-        ItemCategory.Indentation := Level;
-        ItemCategory."Has Children" := false;
-        if ItemCategory."Parent Category" <> '' then
-            if ParentCategory.Get(ItemCategory."Parent Category") then
-                if not ParentCategory."Has Children" then begin
-                    ParentCategory."Has Children" := true;
-                    ParentCategory.Modify(false);
-                end;
-        Sibling.SetCurrentKey("Presentation Order");
-        Sibling.SetRange("Parent Category", ItemCategory."Parent Category");
-        if Sibling.FindLast() then
-            ItemCategory."Presentation Order" := Sibling."Presentation Order" + 10000
-        else
-            ItemCategory."Presentation Order" := 10000;
     end;
 
     local procedure ApplyAttributes(RequestJson: JsonObject; CategoryCode: Code[20])
