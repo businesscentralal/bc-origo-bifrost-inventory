@@ -253,13 +253,15 @@ codeunit 70013430 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, 'systemId must be a GUID.', 'systemId', ReadText(RequestJson, 'systemId'), 'a GUID', 'Send systemId as a GUID.');
             exit(false);
         end;
-        if RequestJson.Contains('quantity') and not IsDecimal(RequestJson, 'quantity') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, 'quantity must be a number.', 'quantity', ReadText(RequestJson, 'quantity'), 'a number', 'Send quantity as a number.');
-            exit(false);
-        end;
-        if RequestJson.Contains('quantity') and (ReadDecimal(RequestJson, 'quantity') <= 0) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, 'quantity must be greater than zero.', 'quantity', ReadText(RequestJson, 'quantity'), 'greater than zero', 'Send a quantity greater than zero, or omit quantity.');
-            exit(false);
+        if RequestJson.Contains('quantity') then begin
+            if not IsDecimal(RequestJson, 'quantity') then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, 'quantity must be a number.', 'quantity', ReadText(RequestJson, 'quantity'), 'a number', 'Send quantity as a number.');
+                exit(false);
+            end;
+            if ReadDecimal(RequestJson, 'quantity') <= 0 then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, 'quantity must be greater than zero.', 'quantity', ReadText(RequestJson, 'quantity'), 'greater than zero', 'Send a quantity greater than zero, or omit quantity.');
+                exit(false);
+            end;
         end;
         exit(true);
     end;
@@ -308,8 +310,12 @@ codeunit 70013430 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         Token: JsonToken;
         Result: Decimal;
     begin
-        if RequestJson.Get(KeyName, Token) and Token.IsValue() and Evaluate(Result, Token.AsValue().AsText()) then
-            exit(Result);
-        exit(0);
+        if not RequestJson.Get(KeyName, Token) then
+            exit(0);
+        if not Token.IsValue() then
+            exit(0);
+        if not Evaluate(Result, Token.AsValue().AsText()) then
+            exit(0);
+        exit(Result);
     end;
 }

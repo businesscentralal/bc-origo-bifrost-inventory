@@ -178,9 +178,13 @@ codeunit 70013432 "Reserv. AutoReserve Proc ori"
         Token: JsonToken;
         Result: Decimal;
     begin
-        if RequestJson.Get(KeyName, Token) and Token.IsValue() and Evaluate(Result, Token.AsValue().AsText()) then
-            exit(Result);
-        exit(0);
+        if not RequestJson.Get(KeyName, Token) then
+            exit(0);
+        if not Token.IsValue() then
+            exit(0);
+        if not Evaluate(Result, Token.AsValue().AsText()) then
+            exit(0);
+        exit(Result);
     end;
 
     local procedure ReadInteger(RequestJson: JsonObject; KeyName: Text): Integer

@@ -281,14 +281,11 @@ codeunit 96930 "Reserv. AutoReserve Tests"
     local procedure Cleanup(var SalesHeader: Record "Sales Header"; ItemNo: Code[20])
     var
         ReservationEntry: Record "Reservation Entry";
-        Item: Record Item;
     begin
         ReservationEntry.SetRange("Item No.", ItemNo);
         ReservationEntry.DeleteAll(true);
         if SalesHeader.Get(SalesHeader."Document Type", SalesHeader."No.") then
             SalesHeader.Delete(true);
-        if Item.Get(ItemNo) then
-            Item.Delete(true);
     end;
 
     local procedure ReadText(ResponseJson: JsonObject; KeyName: Text): Text
