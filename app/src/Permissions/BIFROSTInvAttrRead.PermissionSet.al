@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Item.Attribute;
+using Microsoft.Inventory.Tracking;
 
 /// <summary>
 /// Preserves the existing Inventory read grants to standard attribute tables.
@@ -14,5 +15,6 @@ permissionset 10036915 "BIFROST InvAttrRead ori"
         tabledata "Item Attribute" = R,
         tabledata "Item Attribute Value" = R,
         tabledata "Item Attribute Value Mapping" = R,
-        tabledata "Item Attr. Value Translation" = R;
+        tabledata "Item Attr. Value Translation" = R,
+        tabledata "Reservation Entry" = R;
 }

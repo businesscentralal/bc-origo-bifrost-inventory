@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-10-17) - Inventory.Reservation.AutoReserve and Inventory.OrderTracking.Get
+
+- Add `Inventory.Reservation.AutoReserve` for one sales line. Reservation Management chooses the supply. A line that is already fully reserved returns reserved 0. A partial reserve is rolled back. `Inventory.OrderTracking.Get` reads the tracking chain for a sales, purchase or assembly line, or one item ledger entry, and does not write. A transfer line is accepted, but the base `OrderTrackingManagement` codeunit has no transfer subscriber, so that chain is empty. Object IDs: enumextension `MsgType.ReservAuto.Ext ori` (70013429) values 70013417 and 70013418; codeunits `Reserv. AutoReserve Impl ori` (70013430), `Order Tracking Get Impl ori` (70013431) and `Reserv. AutoReserve Proc ori` (70013432). Reservation Entry read and write grants sit on the non-assignable sets `BIFROST InvAttrRead ori` (10036915) and `BIFROST InvAttrWrite ori` (10036916), which the Inventory read and write extensions already include. The existing `Reservation WriteGuard ori` (70013498) still restricts Reservation Entry. `Inventory.Reservation.Create` is unchanged. The scoped catalogue count is 37 and this app registers 46 Inventory types. Tests `Reserv. AutoReserve Tests` (96930) and `Reserv. AutoReserve Perm` (96931). Issue #112.
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.

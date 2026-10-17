@@ -417,6 +417,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Update Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1637251085 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the order tracking chain for a line.</source>
+          <target>Les rakningarkeðju pöntunar fyrir línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les rakningarkeðju pöntunar fyrir línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1637251085 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>order tracking, supply, demand</source>
+          <target>pöntunarrakning, framboð, eftirspurn</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=pöntunarrakning, framboð, eftirspurn</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1637251085 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads which supply is tracked against a demand line.</source>
+          <target>Les hvaða framboð er rakið við eftirspurnarlínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les hvaða framboð er rakið við eftirspurnarlínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
           <target>Les birgðatímabil.</target>
@@ -542,6 +560,24 @@
           <target>Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4208932804 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserves a sales line from available supply.</source>
+          <target>Tekur sölulínu frá úr tiltæku magni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tekur sölulínu frá úr tiltæku magni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4208932804 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>auto reserve, sales line, reservation</source>
+          <target>sjálfvirk frátekning, sölulína, frátekning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=sjálfvirk frátekning, sölulína, frátekning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4208932804 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserves the outstanding quantity of one sales line.</source>
+          <target>Tekur útistandandi magn einnar sölulínu frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tekur útistandandi magn einnar sölulínu frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cancels a reservation entry through Reservation Management.</source>
