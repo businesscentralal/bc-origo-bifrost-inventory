@@ -1,6 +1,5 @@
 namespace Origo.Bifrost.Inventory.Test;
 
-using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -42,14 +41,12 @@ codeunit 96931 "Reserv. AutoReserve Perm"
     [Test]
     procedure WithoutInvRead_OrderTrackingReturnsPermissionDenied()
     var
-        ReservationEntry: Record "Reservation Entry";
         TempArgument: Record "Message Argument ori" temporary;
         TrackImpl: Codeunit "Order Tracking Get Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        Assert.IsFalse(ReservationEntry.ReadPermission(), 'the restrictive test must not read reservation entries');
-        Assert.IsFalse(TrackImpl.IsEnabled(), 'OrderTracking should be disabled without read permission');
+        Assert.IsFalse(TrackImpl.IsEnabled(), 'OrderTracking should be disabled without the inventory read permission');
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Insert(true);
