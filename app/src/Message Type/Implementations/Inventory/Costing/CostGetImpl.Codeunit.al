@@ -59,10 +59,12 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ParameterJson: JsonObject;
+        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur.';
     begin
         ParameterJson.Add('name', 'itemNo');
         ParameterJson.Add('type', 'code');
         ParameterJson.Add('required', true);
+        ParameterJson.Add('description', ItemNoDescriptionTxt);
         Parameters.Add(ParameterJson);
         exit(true);
     end;
@@ -78,11 +80,13 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'itemNo was not found');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo is required.', 'Neither data.itemNo nor subject was sent.', 'Send data.itemNo or the item number as subject.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'subject and itemNo name different items.', 'subject and data.itemNo were both sent and do not match.', 'Send one item number, or make them the same.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'itemNo must be a JSON value.', 'data.itemNo is an object or an array.', 'Send the item number as text.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item {itemNo} was not found.', 'The item number matches no item.', 'Check the item number.'));
         exit(true);
     end;
 
@@ -118,14 +122,18 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewTxt: Label 'Reads item cost and inventory for one item.', Comment = 'is-IS=Les kostnað og birgðir fyrir eina vöru.';
     begin
-        Overview := 'Reads item cost and inventory for one item.';
+        Overview := OverviewTxt;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesTxt: Label 'Read only. Intentional cost writes stay on the revaluation journal. data.itemNo or subject names the item.', Comment = 'is-IS=Aðeins lestur. Viljandi kostnaðarfærslur fara á endurmatsbókina. data.itemNo eða subject nefnir vöruna.';
     begin
-        Notes := 'Read only. Intentional cost writes stay on the revaluation journal.';
+        Notes := NotesTxt;
         exit(true);
     end;
 
@@ -138,23 +146,23 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     var
         Item: Record Item;
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ContractParts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         ItemNo: Code[20];
+        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.||is-IS=Vara %1 fannst ekki.';
+        NotFoundExpectedTxt: Label 'The number of an existing item.', Comment = 'is-IS=Númer vöru sem er til.';
+        NotFoundNextStepTxt: Label 'Check the item number, then send it as data.itemNo or subject.', Comment = 'is-IS=Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError('itemNo is required.');
+        if not ContractParts.TryResolveItemNo(Argument, RequestJson, true, ItemNo) then
             exit;
-        end;
-        ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
         if not Item.Get(ItemNo) then begin
-            Argument.RespondWithError('Item ' + ItemNo + ' was not found.');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, ItemNo), 'itemNo', ItemNo, NotFoundExpectedTxt, NotFoundNextStepTxt);
             exit;
         end;
         ResponseJson.Add('status', 'Success');

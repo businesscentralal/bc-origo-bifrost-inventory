@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-17) - subject names the item on reservation and cost reads
+
+- `Inventory.Reservation.Get` and `Inventory.Cost.Get` honour the message subject as the item number when `data.itemNo` is omitted. Different values return `ConflictingIdentifiers`. A missing item number on Cost.Get returns `MissingParameter` with `parameter`, `expected` and `nextStep`. Inventory Contract Parts ori (70013445), Reservation Get Impl ori (70013477) and Cost Get Impl ori (70013468). Inventory Item Subject Tests (96923) covers the subject filter and the conflict (#129).
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.

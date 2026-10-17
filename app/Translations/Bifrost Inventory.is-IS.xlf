@@ -237,6 +237,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 was not found.</source>
+          <target>Vara %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no.||is-IS=Vara %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 148014647" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The number of an existing item.</source>
+          <target>Númer vöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer vöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType NotFoundExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3571782927 - NamedType 2610336122" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number, then send it as data.itemNo or subject.</source>
+          <target>Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method ExecuteBifrostTask - NamedType NotFoundNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1869433643 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item cost fields that are not exposed by the foundation app.</source>
           <target>Les kostnaðarreiti vöru sem grunnforritið birtir ekki.</target>
@@ -248,6 +266,24 @@
           <target>lesa vörukostnað, einingarkostnaður, birgðavirði</target>
           <note from="Developer" annotates="general" priority="2">is-IS=lesa vörukostnað, einingarkostnaður, birgðavirði</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3650283039 - NamedType 774924109" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Intentional cost writes stay on the revaluation journal. data.itemNo or subject names the item.</source>
+          <target>Aðeins lestur. Viljandi kostnaðarfærslur fara á endurmatsbókina. data.itemNo eða subject nefnir vöruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Viljandi kostnaðarfærslur fara á endurmatsbókina. data.itemNo eða subject nefnir vöruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetNotes - NamedType NotesTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 2340569551 - NamedType 2024792173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads item cost and inventory for one item.</source>
+          <target>Les kostnað og birgðir fyrir eina vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les kostnað og birgðir fyrir eina vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetOverview - NamedType OverviewTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1869433643 - Method 3615801952 - NamedType 3522853230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number. The message subject is the same item number when this key is omitted.</source>
+          <target>Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1869433643 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Returns unit cost, last direct cost, and inventory for an item.</source>
@@ -278,6 +314,60 @@
           <target>Bókun hafnað: vantar '%1' heimildasett.</target>
           <note from="Developer" annotates="general" priority="2">%1 = permission set name, is-IS=Bókun hafnað: vantar '%1' heimildasett.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inv. Posting Gate ori - Method AssertCanPost - NamedType PostingDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 2778129220" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is required.</source>
+          <target>itemNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A non-empty item number in data.itemNo or subject.</source>
+          <target>Ótómt vörunúmer í data.itemNo eða subject.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ótómt vörunúmer í data.itemNo eða subject.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send data.itemNo or the item number as subject.</source>
+          <target>Sendu data.itemNo eða vörunúmerið sem subject.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu data.itemNo eða vörunúmerið sem subject.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 2939025630" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo must be a JSON value.</source>
+          <target>itemNo verður að vera JSON-gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera JSON-gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 3312263147" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string or number.</source>
+          <target>JSON-strengur eða tala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-strengur eða tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoFormatExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 3078257006" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item number as text in data.itemNo.</source>
+          <target>Sendu vörunúmerið sem texta í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið sem texta í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoFormatNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>subject %1 and itemNo %2 name different items.</source>
+          <target>subject %1 og itemNo %2 nefna ólíkar vörur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = subject, %2 = item no.||is-IS=subject %1 og itemNo %2 nefna ólíkar vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 1157201780" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The same item number in subject and data.itemNo, or only one of them.</source>
+          <target>Sama vörunúmer í subject og data.itemNo, eða aðeins annað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sama vörunúmer í subject og data.itemNo, eða aðeins annað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ConflictExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 1628813333" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one item number, or make subject and data.itemNo the same.</source>
+          <target>Sendu eitt vörunúmer, eða láttu subject og data.itemNo vera eins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt vörunúmer, eða láttu subject og data.itemNo vera eins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ConflictNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
@@ -590,6 +680,24 @@
           <target>frátekning, frátekið magn</target>
           <note from="Developer" annotates="general" priority="2">is-IS=frátekning, frátekið magn</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - Method 3650283039 - NamedType 774924109" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Cancel is a separate message type. data.itemNo or subject limits the entries to that item.</source>
+          <target>Aðeins lestur. Afpöntun er sérstök skilaboðategund. data.itemNo eða subject takmarkar færslurnar við þá vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Afpöntun er sérstök skilaboðategund. data.itemNo eða subject takmarkar færslurnar við þá vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetNotes - NamedType NotesTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - Method 2340569551 - NamedType 2024792173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads reservation entries for the item named by data.itemNo or subject, or every entry when both are omitted.</source>
+          <target>Les bókanir fyrir vöruna sem data.itemNo eða subject nefnir, eða allar færslur þegar hvorugt er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les bókanir fyrir vöruna sem data.itemNo eða subject nefnir, eða allar færslur þegar hvorugt er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetOverview - NamedType OverviewTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - Method 3615801952 - NamedType 3522853230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number. The message subject is the same item number when this key is omitted. Without either, every reservation entry is returned.</source>
+          <target>Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 870418814 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads reservation entries. Cancel is a separate type.</source>
