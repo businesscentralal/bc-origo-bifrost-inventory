@@ -157,6 +157,8 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
             Argument.RespondWithError('Item ' + ItemNo + ' was not found.');
             exit;
         end;
+        // Inventory (field 68) is a FlowField. Item.Get does not calculate it.
+        Item.CalcFields(Inventory);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemNo', Item."No.");
         ResponseJson.Add('unitCost', Item."Unit Cost");
