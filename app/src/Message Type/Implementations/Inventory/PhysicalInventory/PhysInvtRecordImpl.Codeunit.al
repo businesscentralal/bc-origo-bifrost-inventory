@@ -158,6 +158,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         BatchName: Code[10];
         LineNo: Integer;
         Quantity: Decimal;
+        LineNotFoundErr: Label 'Physical inventory line was not found.', Comment = 'is-IS=Lína birgðatalningar fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;
@@ -185,7 +186,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         end;
         Quantity := Token.AsValue().AsDecimal();
         if not ItemJournalLine.Get(TemplateName, BatchName, LineNo) then begin
-            Argument.RespondWithError('Physical inventory line was not found.');
+            Argument.RespondWithError(LineNotFoundErr);
             exit;
         end;
         ItemJournalLine.Validate("Qty. (Phys. Inventory)", Quantity);

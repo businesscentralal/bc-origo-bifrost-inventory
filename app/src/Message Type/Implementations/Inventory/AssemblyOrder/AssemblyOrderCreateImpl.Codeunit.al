@@ -160,7 +160,7 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         QuantityToAssemble: Decimal;
         RefreshLines: Boolean;
         MissingItemErr: Label 'itemNo must be specified in the request JSON.', Locked = true;
-        MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Locked = true;
+        MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Comment = 'is-IS=Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.';
         FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
         ReadOk: Boolean;
     begin

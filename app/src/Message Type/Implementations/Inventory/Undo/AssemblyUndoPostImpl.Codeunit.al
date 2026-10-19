@@ -21,18 +21,24 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Undoes a posted assembly document through the standard posted assembly undo.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar.';
     begin
-        exit('Undoes a posted assembly document through the standard posted assembly undo.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'undo assembly, reverse posted assembly', Comment = 'is-IS=afturkalla samsetningu, bakfæra bókaða samsetningu';
     begin
-        exit('undo assembly, reverse posted assembly');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Undoes a posted assembly by document number.', Comment = 'is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri.';
     begin
-        exit('Undoes a posted assembly by document number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
