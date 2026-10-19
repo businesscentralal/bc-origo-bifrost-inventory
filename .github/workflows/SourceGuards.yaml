@@ -10,6 +10,8 @@ name: Source Guards
 # Icelandic xlf parity needs compiler-generated translations and is checked after compilation (issue #32).
 # Help links need the external Inventory help folders in businesscentralal/bifrost (issue #31).
 # These open acceptance items remain separate from the passing guard regression tests.
+# Unique object IDs, build inputs and the symbol-alias gate were ported from Bifrost Attachments (19.10.2026);
+# the AppSource build gate itself runs inside the AL-Go build (tools/AppSourceBuildGate.md).
 
 on:
   pull_request:
@@ -74,6 +76,46 @@ jobs:
         run: ./tools/Test-PermissionCoverage.ps1
 
 
+
+  UniqueObjectIds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: The guard checks itself
+        shell: pwsh
+        run: ./tools/Test-UniqueObjectIds.ps1 -SelfTest
+
+      - name: No object or enum value ID is declared twice in the app
+        shell: pwsh
+        run: ./tools/Test-UniqueObjectIds.ps1
+
+      - name: No object or enum value ID is declared twice in the test app
+        shell: pwsh
+        run: ./tools/Test-UniqueObjectIds.ps1 -AppFolder ./test
+
+  BuildInputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Object allocations and the Foundation floor
+        run: |
+          python3 -m unittest discover -s tools/tests -p test_build_inputs.py -v
+          python3 tools/check_build_inputs.py --root .
+
+  SymbolDuplicateGate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Equivalent compiler symbol aliases
+        run: |
+          python3 -m unittest discover -s tools/tests -p test_symbol_duplicates.py -v
+          python3 -m unittest discover -s tools/tests -p test_foundation_restore.py -v
 
   IcelandicKeywordCounts:
     runs-on: ubuntu-latest
