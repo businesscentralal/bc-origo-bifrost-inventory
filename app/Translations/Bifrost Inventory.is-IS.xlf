@@ -33,6 +33,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikar</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Attributes - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 2336152139 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Availability</source>
+          <target>Framboð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Availability - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 415390853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Costing</source>
           <target>Kostnaður</target>
@@ -242,6 +248,366 @@
           <target>Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Availability domain is turned off for this company.</source>
+          <target>Framboðssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn the domain on from the Inventory Setup page.</source>
+          <target>Kveiktu á sviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign BIFROST InvRead ori, the extension of BIFROST Read ori.</source>
+          <target>Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads projected item availability by day, week, month, quarter, or year.</source>
+          <target>Les áætlað framboð vöru eftir degi, viku, mánuði, ársfjórðungi eða ári.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les áætlað framboð vöru eftir degi, viku, mánuði, ársfjórðungi eða ári.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing and items was not sent, or periodType, from, or periods is missing.</source>
+          <target>itemNo vantar og items var ekki sent, eða periodType, from eða periods vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar og items var ekki sent, eða periodType, from eða periods vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, or send items with at most 20 item numbers. Also send periodType, from, and periods.</source>
+          <target>Sendu itemNo, eða sendu items með í mesta lagi 20 vörunúmerum. Sendu einnig periodType, from og periods.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, eða sendu items með í mesta lagi 20 vörunúmerum. Sendu einnig periodType, from og periods.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo as text, from as a date, periods as a whole number, and items as an array of item numbers.</source>
+          <target>Sendu itemNo sem texta, from sem dagsetningu, periods sem heila tölu og items sem fylki vörunúmera.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem texta, from sem dagsetningu, periods sem heila tölu og items sem fylki vörunúmera.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from and periods.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number, variant, or location does not exist.</source>
+          <target>Vörunúmerið, afbrigðið eða staðsetningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið, afbrigðið eða staðsetningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no.</source>
+          <target>Athugaðu vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo and items were both sent.</source>
+          <target>itemNo og items voru bæði send.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo og items voru bæði send.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send either itemNo or items, not both.</source>
+          <target>Sendu annaðhvort itemNo eða items, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort itemNo eða items, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 122744493" size-unit="char" translate="yes" xml:space="preserve">
+          <source>periodType is not day, week, month, quarter, or year.</source>
+          <target>periodType er ekki day, week, month, quarter eða year.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=periodType er ekki day, week, month, quarter eða year.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PeriodTypeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 2463331476" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use day, week, month, quarter or year.</source>
+          <target>Notaðu day, week, month, quarter eða year.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu day, week, month, quarter eða year.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PeriodTypeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 1041621829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>periods is above 53, or more than 20 items were sent.</source>
+          <target>periods er yfir 53, eða fleiri en 20 vörur voru sendar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=periods er yfir 53, eða fleiri en 20 vörur voru sendar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType LimitWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 1813551948" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Split the call.</source>
+          <target>Skiptu kallinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skiptu kallinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType LimitFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 3783082890" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item is Service or Non-Inventory, so it has no availability.</source>
+          <target>Varan er þjónusta eða ekki birgðavara, svo hún hefur ekkert framboð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er þjónusta eða ekki birgðavara, svo hún hefur ekkert framboð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType StockWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 2643944519" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an inventory item.</source>
+          <target>Notaðu birgðavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu birgðavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType StockFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items, variants, or locations.</source>
+          <target>Kallandinn getur ekki lesið vörur, afbrigði eða staðsetningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur, afbrigði eða staðsetningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign BIFROST InvRead ori, the extension of BIFROST Read ori.</source>
+          <target>Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST InvRead ori, viðbótinni við BIFROST Read ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read two months for one item</source>
+          <target>Lesa tvo mánuði fyrir eina vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa tvo mánuði fyrir eina vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>availability, period, gross requirement, projected available balance, inventory</source>
+          <target>framboð, tímabil, heildarþörf, áætlað tiltækt magn, birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=framboð, tímabil, heildarþörf, áætlað tiltækt magn, birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The first period is the calendar period that contains from. Amounts use net change for that period, and projected available balance is the balance at the period end. Inventory is the on-hand quantity. A service or non-inventory item is refused. At most 53 periods and 20 items are returned.</source>
+          <target>Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Upphæðir nota nettóbreytingu tímabilsins og áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Upphæðir nota nettóbreytingu tímabilsins og áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads projected availability by calendar period: gross requirement, scheduled receipt, planned order receipt, projected available balance, and inventory. It does not change supply or demand.</source>
+          <target>Les áætlað framboð eftir dagatals tímabili: heildarþörf, áætlaða móttöku, áætlaða pöntunarmóttöku, áætlað tiltækt magn og birgðir. Hún breytir hvorki framboði né eftirspurn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les áætlað framboð eftir dagatals tímabili: heildarþörf, áætlaða móttöku, áætlaða pöntunarmóttöku, áætlað tiltækt magn og birgðir. Hún breytir hvorki framboði né eftirspurn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One item number. Omit it when items is sent.</source>
+          <target>Eitt vörunúmer. Slepptu því þegar items er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eitt vörunúmer. Slepptu því þegar items er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 1569653016" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Up to 20 item numbers. Do not also send itemNo.</source>
+          <target>Allt að 20 vörunúmer. Ekki senda itemNo líka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Allt að 20 vörunúmer. Ekki senda itemNo líka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType ItemsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Variant filter. Leave it empty to include every variant.</source>
+          <target>Sía afbrigðis. Skildu hana eftir tóma til að taka öll afbrigði með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sía afbrigðis. Skildu hana eftir tóma til að taka öll afbrigði með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location filter. Leave it empty to include every location.</source>
+          <target>Sía staðsetningar. Skildu hana eftir tóma til að taka allar staðsetningar með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sía staðsetningar. Skildu hana eftir tóma til að taka allar staðsetningar með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType LocationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 1591550825" size-unit="char" translate="yes" xml:space="preserve">
+          <source>day, week, month, quarter, or year.</source>
+          <target>day, week, month, quarter eða year.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=day, week, month, quarter eða year.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType PeriodTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 901740384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A date inside the first calendar period.</source>
+          <target>Dagsetning innan fyrsta dagatals tímabilsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning innan fyrsta dagatals tímabilsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType FromLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 1031476272" size-unit="char" translate="yes" xml:space="preserve">
+          <source>How many periods to return, from 1 to 53.</source>
+          <target>Hversu mörg tímabil eiga að koma til baka, frá 1 til 53.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hversu mörg tímabil eiga að koma til baka, frá 1 til 53.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType PeriodsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads projected availability for one or more items across calendar periods.</source>
+          <target>Les áætlað framboð fyrir eina eða fleiri vörur yfir dagatals tímabil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les áætlað framboð fyrir eina eða fleiri vörur yfir dagatals tímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item whose availability is read. Use items when several items are sent.</source>
+          <target>Varan sem framboð er lesið fyrir. Notaðu items þegar nokkrar vörur eru sendar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem framboð er lesið fyrir. Notaðu items þegar nokkrar vörur eru sendar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from and periods.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 186450105 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo and items cannot both be sent.</source>
+          <target>Ekki er hægt að senda bæði itemNo og items.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að senda bæði itemNo og items.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondConflict - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 186450105 - NamedType 1132247979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send either itemNo or items, not both.</source>
+          <target>Sendu annaðhvort itemNo eða items, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort itemNo eða items, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondConflict - NamedType ConflictNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3632409166 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The value has the wrong format.</source>
+          <target>Gildið er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3632409166 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo as text, from as a date, periods as a whole number, and items as an array of item numbers.</source>
+          <target>Sendu itemNo sem texta, from sem dagsetningu, periods sem heila tölu og items sem fylki vörunúmera.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem texta, from sem dagsetningu, periods sem heila tölu og items sem fylki vörunúmera.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondFormat - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1671162417 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item does not exist.</source>
+          <target>Varan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondItemNotFound - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1671162417 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no.</source>
+          <target>Athugaðu vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondItemNotFound - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1403578304 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request is above the limit for one call.</source>
+          <target>Beiðnin er yfir hámarki eins kalls.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin er yfir hámarki eins kalls.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondLimit - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1403578304 - NamedType 3414125030" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Split the call.</source>
+          <target>Skiptu kallinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skiptu kallinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondLimit - NamedType LimitNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 442913465 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The location does not exist.</source>
+          <target>Staðsetningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondLocationNotFound - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 442913465 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the location code.</source>
+          <target>Athugaðu staðsetningarkóðann.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu staðsetningarkóðann.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondLocationNotFound - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 223548439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required key is missing.</source>
+          <target>Nauðsynlegur lykill vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegur lykill vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondMissing - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 223548439 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, or send items with at most 20 item numbers. Also send periodType, from, and periods.</source>
+          <target>Sendu itemNo, eða sendu items með í mesta lagi 20 vörunúmerum. Sendu einnig periodType, from og periods.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, eða sendu items með í mesta lagi 20 vörunúmerum. Sendu einnig periodType, from og periods.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondMissing - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3591147570 - NamedType 1122067359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Service and non-inventory items have no availability.</source>
+          <target>Þjónustuvörur og vörur sem eru ekki birgðavörur hafa ekkert framboð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þjónustuvörur og vörur sem eru ekki birgðavörur hafa ekkert framboð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondNonStock - NamedType StockErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3591147570 - NamedType 3583173545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an inventory item.</source>
+          <target>Notaðu birgðavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu birgðavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondNonStock - NamedType StockNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1419869943 - NamedType 2115605064" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The calendar could not build every requested period.</source>
+          <target>Dagatalið gat ekki byggt öll umbeðin tímabil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagatalið gat ekki byggt öll umbeðin tímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondPeriodBounds - NamedType BoundsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1419869943 - NamedType 3938319106" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a from date inside a supported calendar period and at most 53 periods.</source>
+          <target>Notaðu from innan studds dagatals tímabils og í mesta lagi 53 tímabil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu from innan studds dagatals tímabils og í mesta lagi 53 tímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondPeriodBounds - NamedType BoundsNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1679679232 - NamedType 3936054356" size-unit="char" translate="yes" xml:space="preserve">
+          <source>periodType is not a supported period.</source>
+          <target>periodType er ekki stutt tímabil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=periodType er ekki stutt tímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondPeriodType - NamedType PeriodTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 1679679232 - NamedType 140726382" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use day, week, month, quarter or year.</source>
+          <target>Notaðu day, week, month, quarter eða year.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu day, week, month, quarter eða year.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondPeriodType - NamedType PeriodTypeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 4101735855 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The variant does not exist on the item.</source>
+          <target>Afbrigðið er ekki til á vörunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðið er ekki til á vörunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondVariantNotFound - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 4101735855 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the variant code.</source>
+          <target>Athugaðu afbrigðiskóðann.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu afbrigðiskóðann.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method RespondVariantNotFound - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3110594708 - NamedType 1377788994" size-unit="char" translate="yes" xml:space="preserve">
+          <source>periods must be from 1 to 53.</source>
+          <target>periods verður að vera frá 1 til 53.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=periods verður að vera frá 1 til 53.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method ValidatePeriodCount - NamedType CountErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1409812153 - Method 3110594708 - NamedType 4107638392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a periods count from 1 to 53.</source>
+          <target>Notaðu periods frá 1 til 53.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu periods frá 1 til 53.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method ValidatePeriodCount - NamedType CountNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1869433643 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item cost fields that are not exposed by the foundation app.</source>
@@ -1113,6 +1479,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort eiginleikaskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control Attributes - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 2336152139 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether availability by period message types are enabled for this company.</source>
+          <target>Tilgreinir hvort framboðsskilaboð eftir tímabili séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort framboðsskilaboð eftir tímabili séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control Availability - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 415390853 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether costing message types are enabled for this company.</source>
           <target>Tilgreinir hvort kostnaðarskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -1184,6 +1556,12 @@
           <target>Eiginleikar</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikar</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue Attributes - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 2336152139 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Availability</source>
+          <target>Framboð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue Availability - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 415390853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Costing</source>
