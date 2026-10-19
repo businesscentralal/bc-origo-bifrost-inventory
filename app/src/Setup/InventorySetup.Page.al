@@ -10,6 +10,7 @@ page 70013452 "Inventory Setup ori"
     PageType = Card;
     SourceTable = "Inventory Setup ori";
     UsageCategory = Administration;
+    ContextSensitiveHelpPage = 'inventory-setup';
 
     layout
     {

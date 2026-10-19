@@ -17,6 +17,10 @@ Local help target for the Bifrost Inventory message types. The external document
 - Inventory.Price.Update
 - Inventory.Cost.Get, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
 - Inventory.Revaluation.Calculate
-- Inventory.PhysInventory.Calculate, Record, Check, Preview, and Post
+- Inventory.PhysInventory.Calculate, Record, Preview, and Post
+
+The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product page) and
+`https://docs.bifrost.origo.is/{locale}/help/inventory/inventory-setup` (context-sensitive help for
+the Inventory Setup page).
 
 Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. SourceGuards.yaml is not enabled for HelpLinks, IcelandicXlfInSync, or MixedLanguageLabels in this change. Those jobs stay unwired until the guards pass and infrastructure review approves them.

@@ -24,6 +24,16 @@
 ### Fixed (2026-10-17) - cost reads calculate inventory quantity and value
 
 - `Inventory.Cost.Get` calculates the Item Inventory flow field before it returns `inventory`. `Inventory.Revaluation.Calculate` calculates `Cost Amount (Actual)` and `Cost Amount (Expected)` before remaining inventory value, so an open quantity is no longer reported with value 0. Cost Get Impl ori (70013468) and Revaluation Calc Impl ori (70013488). Inventory Item Quantity Tests (96924) posts its own stock and checks the quantity and value (#127).
+### Changed (2026-10-19) - AppSource preparation
+
+- The app and the test app now require Bifrost Foundation **28.0.3.530** (was 28.0.1.0) and `application` **28.3.0.0** (was 28.0.0.0). Both compile against the Foundation 28.0.3 release package with CodeCop, UICop and AppSourceCop at 0 errors and 0 warnings. CI probes that release (`release_status: release`, `version: 28.0.3`) instead of the latest build.
+- `app.json`: brief and description cover the whole app; help, privacy statement and EULA point at docs.bifrost.origo.is; `contextSensitiveHelpUrl` is `https://docs.bifrost.origo.is/{0}/help/inventory/`. The obsolete `NoImplicitWith` feature is removed.
+- Inventory Setup (page 70013452) sets `ContextSensitiveHelpPage = 'inventory-setup'`. The help page is added to the documentation site separately.
+- `BIFROST InvPost ori` (70013444) stays assignable: it is the only grant of the posting gate and of the Inventory Setup page. AGENTS.md and `.claude/CLAUDE.md` no longer say the app has no assignable permission set, and no longer say that cost and price message types are out of scope.
+- The build runs CodeCop and UICop on the app and the test app, AppSourceCop on the test app, and fails on warnings. The test app gets `test/AppSourceCop.json` and suppresses the AppSource-only manifest rules AS0015, AS0051, AS0054, AS0084 and AS0092, as in the sibling apps.
+- The AppSource build gate from Bifrost Attachments (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/stage_foundation_inputs.py`, the `.AL-Go` compile hooks and the Pipeline stage in `_BuildALGoProject.yaml`) runs in every build; see `tools/AppSourceBuildGate.md`. The Signed stage stays deferred.
+- Source Guards add unique object/enum value IDs (`tools/Test-UniqueObjectIds.ps1`), build inputs (`tools/check_build_inputs.py`: allocations and the Foundation floor) and the compiler symbol-alias gate.
+- README follows the Origo template. The AppSource listing moves from branch `appsource/listing` to `app/docs/appsource/` and now covers the whole app, with a release checklist and the market list. The product sheet and three more screenshots still need to be made.
 
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
