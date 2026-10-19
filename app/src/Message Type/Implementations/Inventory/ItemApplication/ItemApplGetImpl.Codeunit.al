@@ -146,7 +146,7 @@ codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         EntryJson: JsonObject;
         Token: JsonToken;
         ItemLedgerEntryNo: Integer;
-        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Locked = true;
+        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Comment = 'is-IS=itemLedgerEntryNo er nauðsynlegt.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", false, false) then
             exit;

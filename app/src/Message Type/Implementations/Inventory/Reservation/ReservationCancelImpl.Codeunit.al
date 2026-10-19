@@ -149,7 +149,7 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         EntryNoFormatErr: Label 'entryNo must be a positive whole number.', Comment = 'is-IS=entryNo verður að vera jákvæð heiltala.';
         NotFoundErr: Label 'Reservation entry %1 was not found.', Comment = '%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.';
         NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
-        IntegerExpectedTok: Label 'a positive JSON integer', Locked = true;
+        IntegerExpectedTok: Label 'a positive JSON integer', Comment = 'is-IS=jákvæð JSON-heiltala';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
             exit;

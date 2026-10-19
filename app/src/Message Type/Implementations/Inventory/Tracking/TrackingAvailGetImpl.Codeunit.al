@@ -192,29 +192,10 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         // #128: no item selection at all (or a blank itemNo alone) is MissingParameter on itemNo.
-        if not HasItemSelection(Argument) then begin
+        if not TrackingRead.HasItemSelection(Argument) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
         TrackingRead.ReadAvailability(Argument);
-    end;
-
-    local procedure HasItemSelection(var Argument: Record "Message Argument ori"): Boolean
-    var
-        Request: JsonObject;
-        Token: JsonToken;
-    begin
-        if DelChr(Argument.Subject, '<>', ' ') <> '' then
-            exit(true);
-        Request := Argument.GetRequestJson();
-        if Request.Contains('itemId') or Request.Contains('id') or Request.Contains('systemId') or Request.Contains('recordSystemId') or Request.Contains('tableView') then
-            exit(true);
-        if not Request.Get('itemNo', Token) then
-            exit(false);
-        if not Token.IsValue() then
-            exit(true);
-        if Token.AsValue().IsNull() then
-            exit(false);
-        exit(DelChr(Token.AsValue().AsText(), '<>', ' ') <> '');
     end;
 }

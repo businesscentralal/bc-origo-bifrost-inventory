@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-19) - contract parameter keys, mixed-language refusals and Icelandic xlf parity in CI (#97, #30, #32, #33)
+
+- Contract parameters (#97, #30): `tools/Test-ContractParameterKeys.ps1` now passes the full scan with an empty allow-list. On main 9f0188f it reported 11 problems under pwsh 7. The 7 extra findings seen under Windows PowerShell 5.1 (`malformed-contract-json` and the read-not-declared keys of `Inventory.AdjustCost.Run` and `Inventory.CostToGL.Post`) come from its missing `ConvertFrom-Json -NoEnumerate`; those contracts were valid.
+  - `Inventory.CostToGL.Test` no longer declares `postingDateFilter`, which it never read; `itemNoFilter` gets a description.
+  - `Inventory.Transfer.UndoShipment` declares its required `documentNo`.
+  - `Inventory.Reclassification.Check` declares the `journalTemplateName` / `journalBatchName` aliases it reads. `templateName` and `batchName` are optional in the contract, because either name of each pair is accepted.
+  - `Inventory.PhysInventory.Calculate`, `RecordCount` and `Record` no longer reach the `lineSystemIds` line selection, which only `Check`, `PreviewPost` and `Post` accept (Calculate and RecordCount already refused the key). No behaviour change.
+  - `Inventory.Tracking.Get` in item mode now answers `MissingParameter` on `itemNo` when the request has no source, no subject and no item selector, or only a blank `itemNo`. Before, Foundation's item range had no filter and the first item in the company was read. The check is the one `Inventory.TrackingAvailability.Get` uses (#128), now shared as `HasItemSelection` in `Inventory Tracking Read ori`.
+- Mixed-language refusals (#33): the refusals of Assembly.UndoPost, ItemApplication.Get/Reapply/Unapply, Period.Close/Reopen, Reclassification.Check/PreviewPost/Post, Reservation.Create/Cancel (expected values), Tracking.Assign/Delete, TransferOrder.Create/Post/PreviewPost and Transfer.UndoShipment/UndoReceipt are translated labels instead of Locked labels or string literals. The English text is unchanged. `tools/Test-MixedLanguageLabels.ps1` passes with an empty allow-list (main: 19 procedures and 28 Locked refusal labels).
+- Source Guards runs the full ContractParameterKeys and MixedLanguageLabels scans, with their self-tests and python regression tests, and the IcelandicXlfInSync self-test.
+- Icelandic xlf parity (#32): `.AL-Go/PostCompileApp.ps1` runs `tools/Test-IcelandicXlfInSync.ps1` on the g.xlf of the final app compile, so Pull Request Build and CI/CD fail when the committed `is-IS.xlf` is not what `tools/Update-IcelandicXlf.ps1` generates. `app/Translations/Bifrost Inventory.is-IS.xlf` is regenerated; main was in sync before this change.
+- Help links (#31) stay unwired. The app side is in place (`contextSensitiveHelpUrl`, slug `inventory-setup` on `Inventory Setup ori`) and `tools/Test-HelpLinks.ps1` passes against the help pages of businesscentralal/bifrost#108, which is not merged yet.
+- Tests: Inventory Tracking Read Tests (96927) adds `Scenario_AC3_NoItemSelectionIsRefused` and `Scenario_AC3_BlankItemNoIsRefused`.
+
 ### Added (2026-10-19) - costing, item tracking reads and physical inventory (#4, #5, #6)
 
 - Costing (#4): `Inventory.Cost.Update` changes Unit Cost, Last Direct Cost or Standard Cost on one item card through native validation and refuses Standard-costed items with a pointer to `Inventory.Revaluation.Post`. `Inventory.Revaluation.PreviewPost` and `Inventory.Revaluation.Post` preview and post a Revaluation journal batch with Item Jnl.-Post Batch. `Inventory.Cost.Get` returns a native cost snapshot and `Inventory.Price.Update` writes Unit Price through native validation. Data.Records.Set refuses the Item cost and price fields and names the dedicated type.

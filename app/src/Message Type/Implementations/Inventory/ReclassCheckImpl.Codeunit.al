@@ -62,14 +62,26 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Parameter.Add('name', 'templateName');
         Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Item journal template. journalTemplateName is also accepted.');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Item journal template of type Transfer. Required unless journalTemplateName is sent; templateName wins when both are sent.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'journalTemplateName');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Alias of templateName, read only when templateName is absent.');
         Parameters.Add(Parameter);
         Clear(Parameter);
         Parameter.Add('name', 'batchName');
         Parameter.Add('type', 'string');
-        Parameter.Add('required', true);
-        Parameter.Add('description', 'Item journal batch. journalBatchName is also accepted.');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Item journal batch. Required unless journalBatchName is sent; batchName wins when both are sent.');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter.Add('name', 'journalBatchName');
+        Parameter.Add('type', 'string');
+        Parameter.Add('required', false);
+        Parameter.Add('description', 'Alias of batchName, read only when batchName is absent.');
         Parameters.Add(Parameter);
         exit(true);
     end;
@@ -144,9 +156,9 @@ codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         TemplateName: Code[10];
         BatchName: Code[10];
         LineCount: Integer;
-        MissingBatchErr: Label 'templateName and batchName are required.', Locked = true;
-        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name', Locked = true;
-        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name', Locked = true;
+        MissingBatchErr: Label 'templateName and batchName are required.', Comment = 'is-IS=templateName og batchName eru nauðsynleg.';
+        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
+        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

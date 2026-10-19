@@ -149,6 +149,9 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Token: JsonToken;
         ItemLedgerEntryNo: Integer;
         ApplyToEntryNo: Integer;
+        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Comment = 'is-IS=itemLedgerEntryNo er nauðsynlegt.';
+        MissingApplyToErr: Label 'applyToEntryNo is required.', Comment = 'is-IS=applyToEntryNo er nauðsynlegt.';
+        EntryNotFoundErr: Label 'Item ledger entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörufærsla %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
@@ -156,21 +159,21 @@ codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
-            Argument.RespondWithError('itemLedgerEntryNo is required.');
+            Argument.RespondWithError(MissingEntryErr);
             exit;
         end;
         ItemLedgerEntryNo := Token.AsValue().AsInteger();
         if not RequestJson.Get('applyToEntryNo', Token) then begin
-            Argument.RespondWithError('applyToEntryNo is required.');
+            Argument.RespondWithError(MissingApplyToErr);
             exit;
         end;
         ApplyToEntryNo := Token.AsValue().AsInteger();
         if not ItemLedgerEntry.Get(ItemLedgerEntryNo) then begin
-            Argument.RespondWithError('Item ledger entry ' + Format(ItemLedgerEntryNo) + ' was not found.');
+            Argument.RespondWithError(StrSubstNo(EntryNotFoundErr, Format(ItemLedgerEntryNo)));
             exit;
         end;
         if not ApplyToItemLedgerEntry.Get(ApplyToEntryNo) then begin
-            Argument.RespondWithError('Item ledger entry ' + Format(ApplyToEntryNo) + ' was not found.');
+            Argument.RespondWithError(StrSubstNo(EntryNotFoundErr, Format(ApplyToEntryNo)));
             exit;
         end;
 

@@ -144,6 +144,8 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         ResponseJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];
+        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
+        NotFoundErr: Label 'Posted assembly %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
             exit;
@@ -152,12 +154,12 @@ codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError('documentNo is required.');
+            Argument.RespondWithError(MissingDocErr);
             exit;
         end;
         DocumentNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(DocumentNo));
         if not PostedAssemblyHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError('Posted assembly ' + DocumentNo + ' was not found.');
+            Argument.RespondWithError(StrSubstNo(NotFoundErr, DocumentNo));
             exit;
         end;
 

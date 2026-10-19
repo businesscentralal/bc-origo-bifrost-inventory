@@ -141,6 +141,8 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         ResponseJson: JsonObject;
         Token: JsonToken;
         EntryNo: Integer;
+        MissingEntryErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
+        NotFoundErr: Label 'Tracking specification %1 was not found.', Comment = '%1 = entry no., is-IS=Rakningarforskrift %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
             exit;
@@ -148,12 +150,12 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
+            Argument.RespondWithError(MissingEntryErr);
             exit;
         end;
         EntryNo := Token.AsValue().AsInteger();
         if not TrackingSpecification.Get(EntryNo) then begin
-            Argument.RespondWithError('Tracking specification ' + Format(EntryNo) + ' was not found.');
+            Argument.RespondWithError(StrSubstNo(NotFoundErr, Format(EntryNo)));
             exit;
         end;
 

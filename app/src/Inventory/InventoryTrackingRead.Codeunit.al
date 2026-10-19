@@ -35,6 +35,9 @@ codeunit 70013410 "Inventory Tracking Read ori"
         InvalidFilterErr: Label 'The tracking filter or paging value is invalid.', Comment = 'is-IS=Rakningarsía eða síðugildi er ógilt.';
         NoTrackingErr: Label 'No item tracking found matching the specified criteria.', Comment = 'is-IS=Engin vörurakning fannst sem passar við tilgreind skilyrði.';
         PermissionErr: Label 'Permission denied for the requested tracking data.', Comment = 'is-IS=Heimild hafnað fyrir umbeðin rakningargögn.';
+        MissingSelectionErr: Label 'Select an item or a source line.', Comment = 'is-IS=Veldu vöru eða upprunalínu.';
+        SelectionExpectedTxt: Label 'A non-empty item number in data.itemNo, an item SystemId, a tableView, or a source line.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo, SystemId vöru, tableView eða upprunalína.';
+        SelectionNextStepTxt: Label 'Send data.itemNo, or select a sales, purchase or transfer line in data.source.', Comment = 'is-IS=Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.';
 
     /// <summary>Reads tracked document positions or open item positions without changing ledger or tracking tables.</summary>
     procedure ReadTracking(var Argument: Record "Message Argument ori")
@@ -80,6 +83,11 @@ codeunit 70013410 "Inventory Tracking Read ori"
         end else begin
             if not CheckRead(Argument, Database::Item) or not CheckRead(Argument, Database::"Item Ledger Entry") or not CheckRead(Argument, Database::"Reservation Entry") then
                 exit;
+            // Without a selector Foundation's item range is every item, and the first item would be read silently.
+            if not HasItemSelection(Argument) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingSelectionErr, 'itemNo', '', SelectionExpectedTxt, SelectionNextStepTxt);
+                exit;
+            end;
             if not ItemResolve.ResolveSingleItem(Argument, Item) then
                 exit;
             Ledger.SetRange("Item No.", Item."No.");
@@ -134,6 +142,28 @@ codeunit 70013410 "Inventory Tracking Read ori"
         Response.Add('itemNo', Item."No.");
         Response.Add('quantityBase', TotalQuantity);
         RespondPage(Argument, Response, 'trackingLines', Lines);
+    end;
+
+    /// <summary>Tells whether the request selects an item: a subject, an item SystemId alias, a tableView or a non-blank itemNo.</summary>
+    /// <param name="Argument">The message argument with the subject and the request.</param>
+    /// <returns>True when Foundation's item selection has something to select by.</returns>
+    procedure HasItemSelection(var Argument: Record "Message Argument ori"): Boolean
+    var
+        Request: JsonObject;
+        Token: JsonToken;
+    begin
+        if DelChr(Argument.Subject, '<>', ' ') <> '' then
+            exit(true);
+        Request := Argument.GetRequestJson();
+        if Request.Contains('itemId') or Request.Contains('id') or Request.Contains('systemId') or Request.Contains('recordSystemId') or Request.Contains('tableView') then
+            exit(true);
+        if not Request.Get('itemNo', Token) then
+            exit(false);
+        if not Token.IsValue() then
+            exit(true);
+        if Token.AsValue().IsNull() then
+            exit(false);
+        exit(DelChr(Token.AsValue().AsText(), '<>', ' ') <> '');
     end;
 
     /// <summary>Groups open posted stock by all tracking dimensions and subtracts only its native reserved quantity.</summary>

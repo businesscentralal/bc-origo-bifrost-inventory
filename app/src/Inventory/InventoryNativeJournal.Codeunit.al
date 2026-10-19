@@ -71,7 +71,7 @@ codeunit 70013409 "Inventory Native Journal ori"
         Verdict: Text;
     begin
         CheckParameters(Argument.GetRequestJson(), '');
-        if not Resolve(Argument, JournalType, Batch, Line) then
+        if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         LineCount := Line.Count();
         ErrorManagement.Activate(ErrorHandler);
@@ -121,7 +121,7 @@ codeunit 70013409 "Inventory Native Journal ori"
     begin
         Line.LockTable();
         CheckParameters(Argument.GetRequestJson(), '');
-        if not Resolve(Argument, JournalType, Batch, Line) then
+        if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
@@ -163,7 +163,7 @@ codeunit 70013409 "Inventory Native Journal ori"
         Balanced: Boolean;
     begin
         CheckParameters(Argument.GetRequestJson(), '');
-        if not Resolve(Argument, JournalType, Batch, Line) then
+        if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
@@ -462,7 +462,15 @@ codeunit 70013409 "Inventory Native Journal ori"
         JournalTemplate.TestField(Recurring, false);
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
         Line.SetRange("Journal Batch Name", Batch.Name);
-        SelectLines(Request, Batch, Line);
+        exit(true);
+    end;
+
+    local procedure ResolveSelection(var Argument: Record "Message Argument ori"; JournalType: Enum "Item Journal Template Type"; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"): Boolean
+    begin
+        // Only Check, Post and Preview accept lineSystemIds; Calculate and RecordCount reject it in CheckParameters.
+        if not Resolve(Argument, JournalType, Batch, Line) then
+            exit(false);
+        SelectLines(Argument.GetRequestJson(), Batch, Line);
         exit(true);
     end;
 
