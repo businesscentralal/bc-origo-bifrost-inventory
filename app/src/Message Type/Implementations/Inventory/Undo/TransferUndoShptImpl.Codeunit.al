@@ -23,18 +23,24 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Undoes a posted transfer shipment with corrective entries.', Comment = 'is-IS=Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.';
     begin
-        exit('Undoes a posted transfer shipment with corrective entries.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'undo transfer shipment', Comment = 'is-IS=afturkalla millifærsluafhendingu';
     begin
-        exit('undo transfer shipment');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Same action as Undo Shipment on a posted transfer shipment.', Comment = 'is-IS=Sama aðgerð og Afturkalla afhendingu á bókaðri millifærsluafhendingu.';
     begin
-        exit('Same action as Undo Shipment on a posted transfer shipment.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

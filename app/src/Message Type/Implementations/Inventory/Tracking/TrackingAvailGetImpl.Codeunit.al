@@ -107,9 +107,12 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        MissingItemWhenTxt: Label 'data.itemNo was not sent or is blank.', Comment = 'is-IS=data.itemNo var ekki sent eða er autt.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required source, document identifier or quantity is absent.', 'Supply the required selector and data described in parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingItemErr, MissingItemWhenTxt, ItemNoNextStepTxt));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A source object, identifier, number, date, filter or array has an invalid type or range.', 'Use the declared JSON types and valid ranges.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, quantity is unavailable, the source is closed, or the company domain is disabled.', 'Correct the selection and quantity; check Inventory Setup and native source rules.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'A requested item identifier cannot be resolved by Foundation.', 'Correct the item selector; no tracked stock is a successful empty page.'));
@@ -180,11 +183,38 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
         TrackingRead: Codeunit "Inventory Tracking Read ori";
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        // #128: no item selection at all (or a blank itemNo alone) is MissingParameter on itemNo.
+        if not HasItemSelection(Argument) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
+            exit;
+        end;
         TrackingRead.ReadAvailability(Argument);
+    end;
+
+    local procedure HasItemSelection(var Argument: Record "Message Argument ori"): Boolean
+    var
+        Request: JsonObject;
+        Token: JsonToken;
+    begin
+        if DelChr(Argument.Subject, '<>', ' ') <> '' then
+            exit(true);
+        Request := Argument.GetRequestJson();
+        if Request.Contains('itemId') or Request.Contains('id') or Request.Contains('systemId') or Request.Contains('recordSystemId') or Request.Contains('tableView') then
+            exit(true);
+        if not Request.Get('itemNo', Token) then
+            exit(false);
+        if not Token.IsValue() then
+            exit(true);
+        if Token.AsValue().IsNull() then
+            exit(false);
+        exit(DelChr(Token.AsValue().AsText(), '<>', ' ') <> '');
     end;
 }

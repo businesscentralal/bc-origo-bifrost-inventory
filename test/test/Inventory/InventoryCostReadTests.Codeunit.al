@@ -77,7 +77,7 @@ codeunit 96936 "Inventory Cost Read Tests"
         end;
     end;
 
-    /// <summary>Subject wins over a different valid data identifier, for both No. and SystemId.</summary>
+    /// <summary>A different item number in subject and data.itemNo is ConflictingIdentifiers (#129); a SystemId subject still wins over data.</summary>
     [Test]
     procedure Scenario_AC01_SubjectPrecedesData_SelectsSubject()
     var
@@ -94,7 +94,7 @@ codeunit 96936 "Inventory Cost Read Tests"
         TempArgument.SetRequestJson(Request);
         TempArgument.Subject := Item."No.";
         CostRead.ReadCosts(TempArgument);
-        AssertText(FirstItem(TempArgument), 'itemNo', Item."No.");
+        AssertText(TempArgument.GetResponseJson(), 'code', 'ConflictingIdentifiers');
         TempArgument.Subject := Format(Item.SystemId, 0, 4);
         CostRead.ReadCosts(TempArgument);
         AssertText(FirstItem(TempArgument), 'itemNo', Item."No.");

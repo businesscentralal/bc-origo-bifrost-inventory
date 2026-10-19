@@ -58,14 +58,18 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Returns the existing costing selection description.</summary>
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Post inventory value entries that are not yet posted to the general ledger.', Comment = 'is-IS=Bókar virðisfærslur birgða sem ekki hafa verið bókaðar á fjárhag.';
     begin
-        exit('Post inventory value entries that are not yet posted to the general ledger.');
+        exit(SelectionDescriptionLbl);
     end;
 
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'post inventory cost,general ledger,report 1002', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,skýrsla 1002';
     begin
-        exit('post inventory cost,general ledger,report 1002');
+        exit(KeywordsLbl);
     end;
 
     local procedure ReadText(RequestJson: JsonObject; Name: Text): Text
@@ -81,8 +85,10 @@ codeunit 70013462 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.', Comment = 'is-IS=Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.';
     begin
-        exit('Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.');
+        exit(DescriptionLbl);
     end;
 
     /// <summary>Identifies this operation as an inbound write.</summary>

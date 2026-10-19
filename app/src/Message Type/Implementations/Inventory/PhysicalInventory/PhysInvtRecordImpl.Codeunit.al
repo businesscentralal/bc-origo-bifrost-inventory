@@ -43,6 +43,8 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        if not LegacyLineExists(Argument) then
+            exit;
         Process.SetOperation('RecordCount');
         if Argument."Omit Commit" then
             Process.Run(Argument)
@@ -52,6 +54,47 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     end;
 
 
+
+    /// <summary>The single-line Record form names its line by template, batch and lineNo; an unknown line is a coded refusal before any write.</summary>
+    local procedure LegacyLineExists(var Argument: Record "Message Argument ori"): Boolean
+    var
+        ItemJournalLine: Record "Item Journal Line";
+        Request: JsonObject;
+        TemplateToken: JsonToken;
+        BatchToken: JsonToken;
+        LineToken: JsonToken;
+        LineNo: Integer;
+        LineNotFoundErr: Label 'Physical inventory line was not found.', Comment = 'is-IS=Lína birgðatalningar fannst ekki.';
+        LineNotFoundExpectedTxt: Label 'The line number of an existing line in the journal batch.', Comment = 'is-IS=Línunúmer línu sem er til í bókarkeyrslunni.';
+        LineNotFoundNextStepTxt: Label 'Check journalTemplateName, journalBatchName and lineNo, or run Inventory.PhysInventory.Calculate first.', Comment = 'is-IS=Athugaðu journalTemplateName, journalBatchName og lineNo, eða keyrðu fyrst Inventory.PhysInventory.Calculate.';
+    begin
+        if Argument.Type <> "Message Type ori"::"Inventory.PhysInventory.Record" then
+            exit(true);
+        Request := Argument.GetRequestJson();
+        if not Request.Get('journalTemplateName', TemplateToken) then
+            if not Request.Get('templateName', TemplateToken) then
+                exit(true);
+        if not Request.Get('journalBatchName', BatchToken) then
+            if not Request.Get('batchName', BatchToken) then
+                exit(true);
+        if not Request.Get('lineNo', LineToken) then
+            exit(true);
+        if not (TemplateToken.IsValue() and BatchToken.IsValue() and LineToken.IsValue()) then
+            exit(true);
+        if not TryGetLineNo(LineToken, LineNo) then
+            exit(true);
+        ItemJournalLine.SetLoadFields("Line No.");
+        if ItemJournalLine.Get(CopyStr(TemplateToken.AsValue().AsText(), 1, 10), CopyStr(BatchToken.AsValue().AsText(), 1, 10), LineNo) then
+            exit(true);
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, LineNotFoundErr, 'lineNo', Format(LineNo, 0, 9), LineNotFoundExpectedTxt, LineNotFoundNextStepTxt);
+        exit(false);
+    end;
+
+    [TryFunction]
+    local procedure TryGetLineNo(LineToken: JsonToken; var LineNo: Integer)
+    begin
+        LineNo := LineToken.AsValue().AsInteger();
+    end;
 
     /// <summary>Returns the native journal envelope contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

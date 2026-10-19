@@ -12,6 +12,9 @@ codeunit 70013432 "Inventory Cost Read ori"
     var
         InvalidTextErr: Label 'Parameter %1 must be text.', Comment = '%1 = parameter; is-IS=Færibreytan %1 verður að vera texti.';
         ReadDeniedErr: Label 'Permission denied for item costing data.', Comment = 'is-IS=Heimild hafnað fyrir kostnaðargögn vöru.';
+        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.; is-IS=Vara %1 fannst ekki.';
+        NotFoundExpectedTxt: Label 'The number of an existing item.', Comment = 'is-IS=Númer vöru sem er til.';
+        NotFoundNextStepTxt: Label 'Check the item number, then send it as data.itemNo or subject.', Comment = 'is-IS=Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject.';
 
     /// <summary>Returns current card costs and filtered inventory; asOfDate limits stock entries, never rewrites card costs historically.</summary>
     procedure ReadCosts(var Argument: Record "Message Argument ori")
@@ -19,9 +22,14 @@ codeunit 70013432 "Inventory Cost Read ori"
         Item: Record Item;
         Lookup: Codeunit "Document Lookup ori";
         Reader: Codeunit "Request Value Reader ori";
+        ContractParts: Codeunit "Inventory Contract Parts ori";
         Request: JsonObject;
         Response: JsonObject;
         Items: JsonArray;
+        RowToken: JsonToken;
+        FieldToken: JsonToken;
+        FieldName: Text;
+        ItemNo: Code[20];
         LocationFilter: Text;
         VariantCode: Text;
         AsOfDate: Date;
@@ -36,16 +44,47 @@ codeunit 70013432 "Inventory Cost Read ori"
            not Reader.TryReadDate(Argument, Request, 'asOfDate', false, AsOfDate)
         then
             exit;
-        if not Lookup.FindItemRange(Argument, Item) then
-            exit;
+        if UsesFoundationSelection(Argument, Request) then begin
+            if not Lookup.FindItemRange(Argument, Item) then
+                exit;
+        end else begin
+            // An item number in data.itemNo or subject (#129): a missing number is MissingParameter,
+            // a different number in each is ConflictingIdentifiers, an unknown number is RecordNotFound (#128).
+            if not ContractParts.TryResolveItemNo(Argument, Request, true, ItemNo) then
+                exit;
+            Item.SetRange("No.", ItemNo);
+            if Item.IsEmpty() then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, ItemNo), 'itemNo', ItemNo, NotFoundExpectedTxt, NotFoundNextStepTxt);
+                exit;
+            end;
+        end;
         if not TryCollectCosts(Item, Request, LocationFilter, VariantCode, AsOfDate, Items) then begin
             Argument.RespondWithError(GetLastErrorText());
             exit;
         end;
         Response.Add('status', 'Success');
+        // One selected item also answers its fields at the top level, the single-item form of the response.
+        if Items.Count() = 1 then begin
+            Items.Get(0, RowToken);
+            foreach FieldName in RowToken.AsObject().Keys() do begin
+                RowToken.AsObject().Get(FieldName, FieldToken);
+                Response.Add(FieldName, FieldToken);
+            end;
+        end;
         Response.Add('items', Items);
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    /// <summary>A SystemId subject or a SystemId/tableView key selects through Foundation's item lookup; otherwise the call names one item number.</summary>
+    local procedure UsesFoundationSelection(var Argument: Record "Message Argument ori"; Request: JsonObject): Boolean
+    var
+        SubjectId: Guid;
+    begin
+        if Argument.Subject <> '' then
+            if Evaluate(SubjectId, Argument.Subject) then
+                exit(true);
+        exit(Request.Contains('itemId') or Request.Contains('id') or Request.Contains('systemId') or Request.Contains('recordSystemId') or Request.Contains('tableView'));
     end;
 
     [TryFunction]
