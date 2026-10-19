@@ -62,6 +62,10 @@ page 70013452 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether item price update message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort vöruverðsskilaboð séu virk fyrir þetta fyrirtæki.';
                 }
+                field(ItemReference; Rec."Item Reference")
+                {
+                    ToolTip = 'Specifies whether item reference message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort vörutilvísanaskilaboð séu virk fyrir þetta fyrirtæki.';
+                }
             }
         }
     }
