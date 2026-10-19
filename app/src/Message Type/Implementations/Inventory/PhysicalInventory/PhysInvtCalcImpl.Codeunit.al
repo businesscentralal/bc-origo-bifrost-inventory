@@ -156,12 +156,12 @@ codeunit 70013464 "Phys. Invt. Calc Impl ori" implements "Msg Interface ori", "M
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError('journalTemplateName is required.');
+            Argument.RespondWithError(MissingTemplateErr);
             exit;
         end;
         TemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(TemplateName));
         if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError('journalBatchName is required.');
+            Argument.RespondWithError(MissingBatchErr);
             exit;
         end;
         BatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(BatchName));
@@ -187,4 +187,7 @@ codeunit 70013464 "Phys. Invt. Calc Impl ori" implements "Msg Interface ori", "M
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
+    var
+        MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er nauðsynlegt.';
+        MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er nauðsynlegt.';
 }
