@@ -549,4 +549,53 @@ codeunit 70013445 "Inventory Contract Parts ori"
                 Notes := 'The preview is rolled back and does not create posted documents or ledger entries.';
         end;
     end;
+
+    /// <summary>
+    /// Resolves one item number from data.itemNo and the message subject.
+    /// The subject is the item number when itemNo is omitted. Different values are refused.
+    /// </summary>
+    /// <param name="Argument">The message argument. An error response is set when resolution fails.</param>
+    /// <param name="RequestJson">The data object.</param>
+    /// <param name="Required">True when a call with neither value must be MissingParameter.</param>
+    /// <param name="ItemNo">The resolved item number, or blank when the call does not require one.</param>
+    /// <returns>False when the response is already an error.</returns>
+    procedure TryResolveItemNo(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; Required: Boolean; var ItemNo: Code[20]): Boolean
+    var
+        Token: JsonToken;
+        DataItemNo: Code[20];
+        SubjectItemNo: Code[20];
+        ItemNoRequiredErr: Label 'itemNo is required.', Comment = 'is-IS=itemNo er nauðsynlegt.';
+        ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo or subject.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo eða subject.';
+        ItemNoNextStepTxt: Label 'Send data.itemNo or the item number as subject.', Comment = 'is-IS=Sendu data.itemNo eða vörunúmerið sem subject.';
+        ItemNoFormatErr: Label 'itemNo must be a JSON value.', Comment = 'is-IS=itemNo verður að vera JSON-gildi.';
+        ItemNoFormatExpectedTxt: Label 'A JSON string or number.', Comment = 'is-IS=JSON-strengur eða tala.';
+        ItemNoFormatNextStepTxt: Label 'Send the item number as text in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið sem texta í data.itemNo.';
+        ConflictErr: Label 'subject %1 and itemNo %2 name different items.', Comment = '%1 = subject, %2 = item no.||is-IS=subject %1 og itemNo %2 nefna ólíkar vörur.';
+        ConflictExpectedTxt: Label 'The same item number in subject and data.itemNo, or only one of them.', Comment = 'is-IS=Sama vörunúmer í subject og data.itemNo, eða aðeins annað.';
+        ConflictNextStepTxt: Label 'Send one item number, or make subject and data.itemNo the same.', Comment = 'is-IS=Sendu eitt vörunúmer, eða láttu subject og data.itemNo vera eins.';
+    begin
+        Clear(ItemNo);
+        if RequestJson.Get('itemNo', Token) then begin
+            if not Token.IsValue() then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, 'itemNo', '', ItemNoFormatExpectedTxt, ItemNoFormatNextStepTxt);
+                exit(false);
+            end;
+            DataItemNo := CopyStr(DelChr(Token.AsValue().AsText(), '<>', ' '), 1, MaxStrLen(DataItemNo));
+        end;
+        SubjectItemNo := CopyStr(DelChr(Argument.Subject, '<>', ' '), 1, MaxStrLen(SubjectItemNo));
+        if (DataItemNo <> '') and (SubjectItemNo <> '') and (DataItemNo <> SubjectItemNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::ConflictingIdentifiers, StrSubstNo(ConflictErr, SubjectItemNo, DataItemNo), 'itemNo', DataItemNo, ConflictExpectedTxt, ConflictNextStepTxt);
+            exit(false);
+        end;
+        if DataItemNo <> '' then
+            ItemNo := DataItemNo
+        else
+            ItemNo := SubjectItemNo;
+        if ItemNo <> '' then
+            exit(true);
+        if not Required then
+            exit(true);
+        Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, ItemNoRequiredErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
+        exit(false);
+    end;
 }
