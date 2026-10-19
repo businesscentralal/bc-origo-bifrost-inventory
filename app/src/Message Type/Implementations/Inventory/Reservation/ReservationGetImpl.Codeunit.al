@@ -59,10 +59,12 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ParameterJson: JsonObject;
+        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted. Without either, every reservation entry is returned.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.';
     begin
         ParameterJson.Add('name', 'itemNo');
         ParameterJson.Add('type', 'code');
         ParameterJson.Add('required', false);
+        ParameterJson.Add('description', ItemNoDescriptionTxt);
         Parameters.Add(ParameterJson);
         exit(true);
     end;
@@ -75,8 +77,12 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Clear(Errors);
+        ContractParts.AddItemNoSubjectErrors(Errors, false);
+        exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
@@ -111,14 +117,18 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewTxt: Label 'Reads reservation entries for the item named by data.itemNo or subject, or every entry when both are omitted.', Comment = 'is-IS=Les bókanir fyrir vöruna sem data.itemNo eða subject nefnir, eða allar færslur þegar hvorugt er sent.';
     begin
-        Overview := 'Reads reservation entries, optionally for one item.';
+        Overview := OverviewTxt;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesTxt: Label 'Read only. Cancel is a separate message type. data.itemNo or subject limits the entries to that item.', Comment = 'is-IS=Aðeins lestur. Afpöntun er sérstök skilaboðategund. data.itemNo eða subject takmarkar færslurnar við þá vöru.';
     begin
-        Notes := 'Read only. Cancel is a separate message type.';
+        Notes := NotesTxt;
         exit(true);
     end;
 
@@ -131,11 +141,11 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     var
         ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        ContractParts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Entries: JsonArray;
         EntryJson: JsonObject;
-        Token: JsonToken;
         ItemNo: Code[20];
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", false, false) then
@@ -143,8 +153,8 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('itemNo', Token) then
-            ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
+        if not ContractParts.TryResolveItemNo(Argument, RequestJson, false, ItemNo) then
+            exit;
         if ItemNo <> '' then
             ReservationEntry.SetRange("Item No.", ItemNo);
         if ReservationEntry.FindSet() then

@@ -106,7 +106,7 @@ codeunit 96903 "Assembly Order Test Helper"
             '',
             RequestContent,
             EmptyTaskId,
-            0,
+            GlobalLanguage(),
             MessageId,
             ResponseContent,
             ResponseContentType,

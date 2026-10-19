@@ -30,10 +30,11 @@ codeunit 70013453 "Inventory Domain Gate ori"
     var
         InventorySetup: Record "Inventory Setup ori";
         DomainDisabledErr: Label 'The %1 domain is turned off for this company. Turn it on from Inventory Setup.', Comment = '%1 = domain, is-IS=%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.';
+        DomainDisabledNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
     begin
         if not InventorySetup.IsDomainEnabled(Domain) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', 'Turn the domain on from the Inventory Setup page.');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', DomainDisabledNextStepLbl);
             exit(false);
         end;
         if IsEnabled(Domain, FilterTableNo, NeedWrite, NeedPost) then

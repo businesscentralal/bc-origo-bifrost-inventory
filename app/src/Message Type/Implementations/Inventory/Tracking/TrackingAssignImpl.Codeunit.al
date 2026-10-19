@@ -20,18 +20,24 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Assigns lot, serial, or package tracking through Item Tracking Management.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarekjanleika í gegnum vörurekjanleikastjórnun.';
     begin
-        exit('Assigns lot, serial, or package tracking through Item Tracking Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'assign lot, assign serial, assign package, item tracking', Comment = 'is-IS=úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki';
     begin
-        exit('assign lot, assign serial, assign package, item tracking');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Assigns item tracking through codeunit 6500.', Comment = 'is-IS=Úthlutar vörurekjanleika með kóðaeiningu 6500.';
     begin
-        exit('Assigns item tracking through codeunit 6500.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
