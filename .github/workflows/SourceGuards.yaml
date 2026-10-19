@@ -5,11 +5,12 @@ name: Source Guards
 # tableView is validated before SetView, the parameter names a contract declares are the keys the code reads and the
 # other way round, nothing is declared obsolete, every page, query and report is granted by an assignable permission
 # set, no answer mixes a Locked English sentence with translated text, and every Icelandic keyword list is complete.
-# The full contract parameter scan awaits the remaining AL contract repairs (issue #30); its
-# regression fixtures run below. The mixed-language source scan awaits AL localization (issue #33).
-# Icelandic xlf parity needs compiler-generated translations and is checked after compilation (issue #32).
-# Help links need the external Inventory help folders in businesscentralal/bifrost (issue #31).
-# These open acceptance items remain separate from the passing guard regression tests.
+# The full contract parameter scan (#30, #97) and the mixed-language scan (#33) run here since 19.10.2026, when both
+# passed with an empty allow-list.
+# Icelandic xlf parity (#32) needs the compiler-generated g.xlf, so the build runs it: .AL-Go/PostCompileApp.ps1 calls
+# tools/Test-IcelandicXlfInSync.ps1 after the final app compile. Its self-test runs here.
+# Help links (tools/Test-HelpLinks.ps1, #31) stay unwired until businesscentralal/bifrost main has help/inventory/
+# in both locales (businesscentralal/bifrost#108).
 # Unique object IDs, build inputs and the symbol-alias gate were ported from Bifrost Attachments (19.10.2026);
 # the AppSource build gate itself runs inside the AL-Go build (tools/AppSourceBuildGate.md).
 
@@ -19,6 +20,7 @@ on:
       - 'app/src/**'
       - 'app/Translations/**'
       - 'tools/**'
+      - '.AL-Go/PostCompileApp.ps1'
       - '.github/workflows/SourceGuards.yaml'
   workflow_dispatch:
 
@@ -131,7 +133,7 @@ jobs:
         shell: pwsh
         run: ./tools/Test-IcelandicKeywordCounts.ps1
 
-  ContractParameterKeysRegression:
+  ContractParameterKeys:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -143,3 +145,34 @@ jobs:
 
       - name: Contract selectors, declarations and typed readers retain mismatch detection
         run: python3 tools/tests/test-contract-parameter-keys.py
+
+      - name: Contract parameters and the keys the code reads agree
+        shell: pwsh
+        run: ./tools/Test-ContractParameterKeys.ps1
+
+  MixedLanguageLabels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: The guard checks itself
+        shell: pwsh
+        run: ./tools/Test-MixedLanguageLabels.ps1 -SelfTest
+
+      - name: Locked properties are told apart from translated comment text
+        run: python3 tools/tests/test-mixed-language-labels.py
+
+      - name: No answer mixes a Locked English sentence with translated text
+        shell: pwsh
+        run: ./tools/Test-MixedLanguageLabels.ps1
+
+  IcelandicXlfInSync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: The xlf guard checks itself (the build compares the real g.xlf)
+        shell: pwsh
+        run: ./tools/Test-IcelandicXlfInSync.ps1 -SelfTest

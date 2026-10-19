@@ -164,6 +164,9 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         SerialNo: Code[50];
         PackageNo: Code[50];
         Quantity: Decimal;
+        MissingItemErr: Label 'itemNo is required.', Comment = 'is-IS=itemNo er nauðsynlegt.';
+        MissingQuantityErr: Label 'quantity is required.', Comment = 'is-IS=quantity er nauðsynlegt.';
+        MissingTrackingErr: Label 'lotNo, serialNo, or packageNo is required.', Comment = 'is-IS=lotNo, serialNo eða packageNo er nauðsynlegt.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
             exit;
@@ -171,12 +174,12 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError('itemNo is required.');
+            Argument.RespondWithError(MissingItemErr);
             exit;
         end;
         ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
         if not RequestJson.Get('quantity', Token) then begin
-            Argument.RespondWithError('quantity is required.');
+            Argument.RespondWithError(MissingQuantityErr);
             exit;
         end;
         Quantity := Token.AsValue().AsDecimal();
@@ -187,7 +190,7 @@ codeunit 70013470 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         if RequestJson.Get('packageNo', Token) then
             PackageNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(PackageNo));
         if (LotNo = '') and (SerialNo = '') and (PackageNo = '') then begin
-            Argument.RespondWithError('lotNo, serialNo, or packageNo is required.');
+            Argument.RespondWithError(MissingTrackingErr);
             exit;
         end;
 

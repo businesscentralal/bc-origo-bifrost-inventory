@@ -142,6 +142,8 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         ResponseJson: JsonObject;
         Token: JsonToken;
         EntryNo: Integer;
+        MissingEntryErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
+        NotFoundErr: Label 'Item application entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörujöfnunarfærsla %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
@@ -149,12 +151,12 @@ codeunit 70013491 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
+            Argument.RespondWithError(MissingEntryErr);
             exit;
         end;
         EntryNo := Token.AsValue().AsInteger();
         if not ItemApplicationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError('Item application entry ' + Format(EntryNo) + ' was not found.');
+            Argument.RespondWithError(StrSubstNo(NotFoundErr, Format(EntryNo)));
             exit;
         end;
 

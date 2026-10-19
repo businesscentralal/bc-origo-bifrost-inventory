@@ -150,6 +150,8 @@ codeunit 70013474 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         TemplateName: Code[10];
         BatchName: Code[10];
         LineCount: Integer;
+        MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er nauðsynlegt.';
+        MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er nauðsynlegt.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then
             exit;
@@ -157,12 +159,12 @@ codeunit 70013474 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError('journalTemplateName is required.');
+            Argument.RespondWithError(MissingTemplateErr);
             exit;
         end;
         TemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(TemplateName));
         if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError('journalBatchName is required.');
+            Argument.RespondWithError(MissingBatchErr);
             exit;
         end;
         BatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(BatchName));

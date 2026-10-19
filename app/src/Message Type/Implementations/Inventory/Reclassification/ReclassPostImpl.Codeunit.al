@@ -160,9 +160,9 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Token: JsonToken;
         TemplateName: Code[10];
         BatchName: Code[10];
-        MissingTemplateErr: Label 'journalTemplateName is required.', Locked = true;
-        MissingBatchErr: Label 'journalBatchName is required.', Locked = true;
-        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch', Locked = true;
+        MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er nauðsynlegt.';
+        MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er nauðsynlegt.';
+        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then
             exit;

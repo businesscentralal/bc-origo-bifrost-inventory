@@ -470,7 +470,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Number: Decimal;
         MissingErr: Label '%1 is required.', Comment = '%1 = parameter name; is-IS=%1 er nauðsynlegt.';
         FormatErr: Label '%1 must be a whole number of 0 or more.', Comment = '%1 = parameter name; is-IS=%1 verður að vera heiltala, 0 eða stærri.';
-        IntegerExpectedTok: Label 'a JSON integer', Locked = true;
+        IntegerExpectedTok: Label 'a JSON integer', Comment = 'is-IS=JSON-heiltala';
     begin
         if not RequestJson.Get(KeyName, Token) then begin
             if Required then
@@ -497,7 +497,7 @@ codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Raw: Text;
         MissingErr: Label '%1 is required.', Comment = '%1 = parameter name; is-IS=%1 er nauðsynlegt.';
         FormatErr: Label '%1 must be text of at most %2 characters.', Comment = '%1 = parameter name; %2 = maximum length; is-IS=%1 verður að vera texti að hámarki %2 stafir.';
-        StringExpectedTok: Label 'a JSON string', Locked = true;
+        StringExpectedTok: Label 'a JSON string', Comment = 'is-IS=JSON-strengur';
     begin
         if not RequestJson.Get(KeyName, Token) then begin
             if Required then

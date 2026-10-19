@@ -172,8 +172,8 @@ codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         PreviewFieldNames: List of [Text];
         NoLinesToPostErr: Label 'Transfer order %1 has no lines to post.', Comment = '%1 = Document No., is-IS=Millifærslupöntun %1 hefur engar línur til að bóka.';
         PreviewFailedErr: Label 'Posting preview failed and no entries were captured. The transfer order cannot be posted in its current state.', Comment = 'is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.';
-        MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Locked = true;
-        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value', Locked = true;
+        MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
+        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1';
         NothingToPostNextStepTok: Label 'No line has a quantity to ship or receive. Review with Inventory.TransferOrder.Statistics.', Comment = 'is-IS=Engin lína hefur magn til að senda eða móttaka. Skoðið með Inventory.TransferOrder.Statistics.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, false) then

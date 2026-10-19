@@ -57,7 +57,11 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo. Every line that is not a correction line is undone.'));
         exit(true);
     end;
 
@@ -124,9 +128,9 @@ codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ResponseJson: JsonObject;
         Token: JsonToken;
         DocumentNo: Code[20];
-        MissingDocErr: Label 'documentNo is required.', Locked = true;
-        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no.', Locked = true;
-        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no.', Locked = true;
+        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
+        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.';
+        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.';
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
             exit;

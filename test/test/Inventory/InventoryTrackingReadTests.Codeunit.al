@@ -319,6 +319,45 @@ codeunit 96927 "Inventory Tracking Read Tests"
         AssertText(Response, 'status', 'Error');
     end;
 
+    /// <summary>An item read with no source and no item selector is refused instead of reading the first item (#97).</summary>
+    [Test]
+    procedure Scenario_AC3_NoItemSelectionIsRefused()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [GIVEN] A request with paging only: no source, no subject and no item selector.
+        Request.Add('take', 10);
+
+        // [WHEN] Tracking is read.
+        ExecuteRead(Request, 0, Response);
+
+        // [THEN] The read is refused on itemNo and returns no rows.
+        AssertText(Response, 'status', 'Error');
+        AssertText(Response, 'code', 'MissingParameter');
+        AssertText(Response, 'parameter', 'itemNo');
+        Assert.IsFalse(Response.Contains('trackingLines'), 'A refused read returns no tracking.');
+    end;
+
+    /// <summary>A blank itemNo is no item selection either (#97).</summary>
+    [Test]
+    procedure Scenario_AC3_BlankItemNoIsRefused()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [GIVEN] A request whose only selector is a blank itemNo.
+        Request.Add('itemNo', ' ');
+
+        // [WHEN] Tracking is read.
+        ExecuteRead(Request, 0, Response);
+
+        // [THEN] The read is refused on itemNo.
+        AssertText(Response, 'status', 'Error');
+        AssertText(Response, 'code', 'MissingParameter');
+        AssertText(Response, 'parameter', 'itemNo');
+    end;
+
     /// <summary>An existing item with no tracking returns RecordNotFound without changing native rows.</summary>
     [Test]
     procedure Scenario_AC3_UntrackedItemReturnsNotFoundWithoutWrites()

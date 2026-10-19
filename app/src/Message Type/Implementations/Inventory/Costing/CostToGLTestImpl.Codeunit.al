@@ -63,11 +63,7 @@ codeunit 70013467 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
         ParameterJson.Add('name', 'itemNoFilter');
         ParameterJson.Add('type', 'text');
         ParameterJson.Add('required', false);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'postingDateFilter');
-        ParameterJson.Add('type', 'text');
-        ParameterJson.Add('required', false);
+        ParameterJson.Add('description', 'Business Central Item No. filter. The response counts the matching items; nothing is posted.');
         Parameters.Add(ParameterJson);
         exit(true);
     end;
