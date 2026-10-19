@@ -8,7 +8,7 @@ Document types that resolve an identifier list these error codes:
 - `InvalidParameterFormat` on the identifier key
 - one `MultipleErrors` entry
 
-This applies to the eleven TransferOrder and AssemblyOrder lookups listed in #27. Codeunit 96922 asserts the public errors chapters, including exactly one MultipleErrors and no spread to document Create or Item readers. Codeunit 96923 exercises malformed data, wrong identifier types, aggregation order, empty identifiers and valid subjects with wrong keys through the public dispatcher. Foundation 28.0.2.0 is the minimum dependency. Test source is not runtime acceptance; exact-tip results remain required.
+This applies to the eleven TransferOrder and AssemblyOrder types that look up a Transfer Header or Assembly Header through Foundation's `Document Lookup ori` (Release, Reopen, Post, PreviewPost and Statistics; Assembly also RefreshLines). Undo, reservation, tracking and the other types read their keys directly and are not covered. Inv. Lookup Contract Tests (96922) asserts the errors chapters, including exactly one `MultipleErrors` entry and none on the Create and Item types. Inv. Lookup Format Tests (96923) sends malformed `data`, wrong-typed identifiers, two wrong keys, an empty identifier and a valid subject with a wrong key through the public dispatcher. The runtime answers need a Foundation build with core#711 (28.0.2 or later).
 
 ## Issue status on main 147e8a6
 
@@ -20,7 +20,7 @@ This applies to the eleven TransferOrder and AssemblyOrder lookups listed in #27
 - #39 undo shipment, receipt, and assembly call the standard undo codeunits.
 - #40 item application unapply and reapply call `Item Jnl.-Post Line`.
 - #30-#33 stay unwired in SourceGuards.yaml until the guards pass and infrastructure review approves them.
-- #27 has contract tests in 96922 and shipping dispatcher tests in 96923. Current-tip full-suite/UI/MCP verification and independent review remain pending.
+- #27 contract tests are 96922 (errors chapters) and 96923 (runtime answers).
 
 ## Costing metadata (PR #90 draft)
 
