@@ -84,6 +84,7 @@ codeunit 96936 "Inventory Cost Read Tests"
         Item: Record Item;
         OtherItem: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        TempSystemIdArgument: Record "Message Argument ori" temporary;
         Request: JsonObject;
     begin
         // Story #4 AC1 | Time: independent | Risk: contradictory identifiers must follow documented precedence.
@@ -95,9 +96,11 @@ codeunit 96936 "Inventory Cost Read Tests"
         TempArgument.Subject := Item."No.";
         CostRead.ReadCosts(TempArgument);
         AssertText(TempArgument.GetResponseJson(), 'code', 'ConflictingIdentifiers');
-        TempArgument.Subject := Format(Item.SystemId, 0, 4);
-        CostRead.ReadCosts(TempArgument);
-        AssertText(FirstItem(TempArgument), 'itemNo', Item."No.");
+        InitArgument(TempSystemIdArgument);
+        TempSystemIdArgument.SetRequestJson(Request);
+        TempSystemIdArgument.Subject := Format(Item.SystemId, 0, 4);
+        CostRead.ReadCosts(TempSystemIdArgument);
+        AssertText(FirstItem(TempSystemIdArgument), 'itemNo', Item."No.");
     end;
 
     /// <summary>A native tableView returns both selected items, without widening to other data.</summary>

@@ -30,6 +30,10 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | Type | Direction | Purpose |
 |------|-----------|---------|
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
+| `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
+| `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
+| `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -68,12 +72,16 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
+| `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
 | `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
 | `Inventory.Reservation.Create` | Inbound | Reserve supply for a sales, purchase, transfer or assembly line (`sourceType`, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) through Reservation Management AutoReserve; returns `entryNo` |
 | `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
+| `Inventory.Reservation.AutoReserve` | Inbound | Reserve a sales line from available supply |
+| `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
 | `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
 | `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
@@ -115,9 +123,9 @@ own them.
 - **Posting is separate from writing.** Posting, cost adjustment, cost to G/L and posting previews
   need their own permission set, so an integration can create and release documents without being
   able to post them.
-- **Safe generic writes.** Item attribute tables, Inventory Setup, Tracking Specification and
-  Reservation Entry are closed to `Data.Records.Set`, so callers use the typed message types that
-  keep Microsoft's validation.
+- **Safe generic writes.** Item attribute tables, Inventory Setup, Tracking Specification,
+  Reservation Entry, Item Category and the two Item Charge Assignment tables are closed to
+  `Data.Records.Set`, so callers use the typed message types that keep Microsoft's validation.
 - **Self-describing.** Every type publishes its parameters, response, errors, effect and related
   types at runtime, in English and Icelandic.
 
@@ -150,12 +158,21 @@ Types that need the posting permission: `Inventory.TransferOrder.Post`, `Invento
    company, and Bifröst Setup lists the app with **Inventory Setup** as its setup page.
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
-   Physical Inventory, Costing, Reclassification, Item Application, Inventory Period and Item Price.
+   Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
+   Item Reference, Availability, Item Charge and Item Category.
    All domains start on except **Reclassification**, which starts off once the setup record exists.
+   Item Reference, Availability, Item Charge and Item Category start on in a new company; a company
+   that already had an Inventory Setup record before they were added gets them off after the
+   upgrade, so turn them on here.
 4. Grant permissions:
    - Foundation's `BIFROST Read ori` and `BIFROST Full ori` roles are extended by
      `BIFROST InvRead ori` and `BIFROST InvWrite ori`; no separate assignment is needed for reads
      and writes.
+   - Apart from the item attribute tables, the app grants no standard table data. The item
+     reference, availability, item charge, item category, auto-reserve and order tracking types
+     need the caller's own Business Central permissions on the tables they touch (Item, Item
+     Variant, Item Reference, Location, Item Category, Item Charge Assignment, Reservation Entry and
+     the documents involved); they answer `PermissionDenied` when one is missing.
    - Assign **`BIFROST InvPost ori`** (*Inv. Posting Gate*) to users or service principals that may
      post, run cost adjustment or post to G/L. It also grants the Inventory Setup page and table.
 5. The underlying Business Central setup still applies: locations and transfer routes, assembly
@@ -199,7 +216,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 70013450 | `Inventory Domain ori` | The eleven domains |
+| 70013450 | `Inventory Domain ori` | The fifteen domains |
 | 10036892 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
 | 70013455 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
 | 70013456 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
@@ -207,6 +224,11 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 70013459 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
 | 70013469 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 70013492 | `MsgType.Reserv.EnumExt ori` | Reservation types |
+| 10036917 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
+| 10036918 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
+| 10036919 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
+| 10036920 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
+| 10036921 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
 
 ### Codeunits
 
@@ -227,6 +249,11 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 70013480–70013482 | Undo | Transfer shipment, transfer receipt, assembly |
 | 70013483–70013486 | Periods and price | Period Get/Reopen/Close, Price Update |
 | 70013490–70013492 | Item application | Get, Unapply, Reapply |
+| 10036917 | Item references | `Item Ref. Resolve Impl ori` |
+| 10036918 | Availability | `Avail. By Period Impl ori` |
+| 10036919–10036921, 10036927 | Item charges | Assign (+ process), Get, `Item Charge Restrict ori` |
+| 10036922–10036924, 70013499 | Item categories | Get, Set (+ process), `Item Category Restrict ori` |
+| 10036925, 10036926, 10036929, 70013439 | Reservations | Auto Reserve (+ process), Order Tracking Get, `Order Tracking Transfer ori` |
 
 ### Permission sets
 

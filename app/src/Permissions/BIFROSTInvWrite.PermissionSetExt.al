@@ -3,7 +3,9 @@ namespace Origo.Bifrost.Inventory;
 using Origo.Bifrost;
 
 /// <summary>
-/// Extends Foundation <c>BIFROST Full ori</c> with write access for Item Attribute message types.
+/// Extends Foundation <c>BIFROST Full ori</c> with write access for the Inventory message types.
+/// Standard-table data for the item reference, availability, item charge, item category, auto-reserve
+/// and order tracking types comes from the caller's own Business Central permissions; IsEnabled and Execute check it.
 /// </summary>
 permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori"
 {
@@ -52,5 +54,19 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Price Update Impl ori" = X,
         codeunit "Inventory Cost Data Guard ori" = X,
         codeunit "Inventory Domain Gate ori" = X,
-        codeunit "Inv. Posting Gate ori" = X;
+        codeunit "Inv. Posting Gate ori" = X,
+        codeunit "Item Ref. Resolve Impl ori" = X,
+        codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Item Charge Assign Impl ori" = X,
+        codeunit "Item Charge Assign Proc ori" = X,
+        codeunit "Item Charge Get Impl ori" = X,
+        codeunit "Item Charge Restrict ori" = X,
+        codeunit "Item Category Get Impl ori" = X,
+        codeunit "Item Category Set Impl ori" = X,
+        codeunit "Item Category Set Proc ori" = X,
+        codeunit "Item Category Restrict ori" = X,
+        codeunit "Reserv. AutoReserve Impl ori" = X,
+        codeunit "Reserv. AutoReserve Proc ori" = X,
+        codeunit "Order Tracking Get Impl ori" = X,
+        codeunit "Order Tracking Transfer ori" = X;
 }

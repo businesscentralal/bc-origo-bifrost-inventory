@@ -5,13 +5,18 @@ Local help target for the Bifrost Inventory message types. The external document
 ## Message types
 
 - Inventory.Attribute.Get, Create, Update, and AttributeDefinition.Create
+- Inventory.ItemReference.Resolve
+- Inventory.AvailabilityByPeriod.Get
+- Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
 - Inventory.TransferOrder.Create, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.Transfer.UndoShipment and Inventory.Transfer.UndoReceipt
 - Inventory.Assembly.UndoPost
 - Inventory.Tracking.Get, Assign, Delete, and TrackingAvailability.Get
-- Inventory.Reservation.Get, Create, and Cancel
+- Inventory.Reservation.Get, Create, Cancel, and AutoReserve
+- Inventory.OrderTracking.Get
 - Inventory.ItemApplication.Get, Unapply, and Reapply
+- Inventory.ItemCategory.Get and Inventory.ItemCategory.Set
 - Inventory.Reclassification.Check, PreviewPost, and Post
 - Inventory.Period.Get, Close, and Reopen
 - Inventory.Price.Update
