@@ -3,7 +3,9 @@ namespace Origo.Bifrost.Inventory;
 using Origo.Bifrost;
 
 /// <summary>
-/// Extends Foundation <c>BIFROST Read ori</c> with execute rights for Item.Attribute.Get and helpers.
+/// Extends Foundation <c>BIFROST Read ori</c> with execute rights for the read-only Inventory message types and helpers.
+/// Standard-table data for the item reference, availability, item charge, item category and order
+/// tracking types comes from the caller's own Business Central permissions; IsEnabled and Execute check it.
 /// </summary>
 permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
 {
@@ -19,5 +21,13 @@ permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inventory Upgrade ori" = X,
         codeunit "Transfer Order Stats Impl ori" = X,
         codeunit "Asm. Order Statistics Impl ori" = X,
-        codeunit "Inventory Contract Parts ori" = X;
+        codeunit "Inventory Contract Parts ori" = X,
+        codeunit "Item Ref. Resolve Impl ori" = X,
+        codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Item Charge Get Impl ori" = X,
+        codeunit "Item Charge Restrict ori" = X,
+        codeunit "Item Category Get Impl ori" = X,
+        codeunit "Item Category Restrict ori" = X,
+        codeunit "Order Tracking Get Impl ori" = X,
+        codeunit "Order Tracking Transfer ori" = X;
 }
