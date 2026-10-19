@@ -3,15 +3,15 @@
   "name": "Bifrost Inventory",
   "publisher": "Origo",
   "version": "28.1.0.0",
-  "brief": "Bifrost Inventory - item attribute message types",
-  "description": "Bifrost Inventory: first-class Item Attribute Get/Create/Update and Item AttributeDefinition Create message types on top of Bifrost Foundation.",
+  "brief": "Bifrost Inventory - message types for inventory operations",
+  "description": "Adds Bifrost message types for Microsoft Dynamics 365 Business Central inventory operations that Bifrost Foundation does not cover. Covers item attributes, transfer orders, assembly orders, item tracking, reservations, physical inventory, reclassification journals, item application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and unit price updates - so an agent or integration can run inventory work through one governed API. Each domain can be switched on or off per company, and transfer and assembly posting needs its own permission set.",
   "url": "https://www.origo.is/",
-  "help": "https://businesscentralal.github.io/bifrost/en-us/inventory/",
-  "privacyStatement": "https://businesscentralal.github.io/bifrost/en-us/foundation/privacy/",
-  "EULA": "https://businesscentralal.github.io/bifrost/en-us/foundation/eula/",
+  "help": "https://docs.bifrost.origo.is/en-us/inventory/",
+  "privacyStatement": "https://docs.bifrost.origo.is/en-us/licensing/privacy/",
+  "EULA": "https://docs.bifrost.origo.is/en-us/licensing/eula/",
   "logo": "assets/Logo250x250.png",
   "applicationInsightsConnectionString": "InstrumentationKey=af411133-5e22-486f-b23a-081b79ed4168;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=c4476f32-5dfb-490a-8ad0-fb8ffad1c050",
-  "contextSensitiveHelpUrl": "https://businesscentralal.github.io/bifrost/{0}/help/inventory/",
+  "contextSensitiveHelpUrl": "https://docs.bifrost.origo.is/{0}/help/inventory/",
   "supportedLocales": [
     "en-US",
     "is-IS"
@@ -21,11 +21,11 @@
       "id": "7505e808-6e52-4b96-a328-82573391297a",
       "name": "Bifrost Foundation",
       "publisher": "Origo",
-      "version": "28.0.1.0"
+      "version": "28.0.3.530"
     }
   ],
   "screenshots": [],
-  "application": "28.0.0.0",
+  "application": "28.3.0.0",
   "platform": "28.0.0.0",
   "internalsVisibleTo": [
     {
@@ -51,7 +51,6 @@
   },
   "target": "Cloud",
   "features": [
-    "NoImplicitWith",
     "TranslationFile"
   ],
   "runtime": "17.0",

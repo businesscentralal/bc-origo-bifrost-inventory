@@ -1,0 +1,2 @@
+# Source custody hashes must use identical AL bytes on Windows and Linux.
+*.al text eol=lf
