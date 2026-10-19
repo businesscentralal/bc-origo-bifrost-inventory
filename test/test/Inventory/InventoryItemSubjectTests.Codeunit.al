@@ -9,7 +9,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.Reservation.Get and Inventory.Cost.Get treat subject as the item number.
 /// </summary>
-codeunit 96923 "Inventory Item Subject Tests"
+codeunit 96931 "Inventory Item Subject Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

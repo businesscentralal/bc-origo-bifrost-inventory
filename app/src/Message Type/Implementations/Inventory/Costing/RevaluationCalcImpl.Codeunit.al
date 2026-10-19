@@ -149,22 +149,33 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         Token: JsonToken;
         RemainingQty: Decimal;
         InventoryValue: Decimal;
-        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
+        ItemNo: Code[20];
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
         NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no., is-IS=Vara %1 fannst ekki.';
+        NotFoundExpectedTxt: Label 'The number of an existing item.', Comment = 'is-IS=Númer vöru sem er til.';
+        NotFoundNextStepTxt: Label 'Check the item number and send it again.', Comment = 'is-IS=Athugaðu vörunúmerið og sendu það aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Ledger Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
+        if RequestJson.Get('itemNo', Token) then
+            if Token.IsValue() then
+                if not Token.AsValue().IsNull() then
+                    ItemNo := CopyStr(DelChr(Token.AsValue().AsCode(), '<>', ' '), 1, MaxStrLen(ItemNo));
+        if ItemNo = '' then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
-        if not Item.Get(CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(Item."No."))) then begin
-            Argument.RespondWithError(StrSubstNo(NotFoundErr, Token.AsValue().AsCode()));
+        Item.SetLoadFields("No.");
+        if not Item.Get(ItemNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, ItemNo), 'itemNo', ItemNo, NotFoundExpectedTxt, NotFoundNextStepTxt);
             exit;
         end;
+        ItemLedgerEntry.SetLoadFields("Item No.", "Remaining Quantity", Quantity);
         ItemLedgerEntry.SetRange("Item No.", Item."No.");
         ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
         if ItemLedgerEntry.FindSet() then

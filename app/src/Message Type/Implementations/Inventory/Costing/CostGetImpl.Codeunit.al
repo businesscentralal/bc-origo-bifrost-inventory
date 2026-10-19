@@ -81,12 +81,14 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ContractParts: Codeunit "Inventory Contract Parts ori";
+        NotFoundErr: Label 'Item {itemNo} was not found.', Comment = 'is-IS=Vara {itemNo} fannst ekki.';
+        NotFoundWhenTxt: Label 'The item number matches no item.', Comment = 'is-IS=Vörunúmerið passar ekki við neina vöru.';
+        NotFoundFixTxt: Label 'Check the item number.', Comment = 'is-IS=Athugaðu vörunúmerið.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo is required.', 'Neither data.itemNo nor subject was sent.', 'Send data.itemNo or the item number as subject.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'subject and itemNo name different items.', 'subject and data.itemNo were both sent and do not match.', 'Send one item number, or make them the same.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'itemNo must be a JSON value.', 'data.itemNo is an object or an array.', 'Send the item number as text.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item {itemNo} was not found.', 'The item number matches no item.', 'Check the item number.'));
+        ContractParts.AddItemNoSubjectErrors(Errors, true);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, NotFoundWhenTxt, NotFoundFixTxt));
         exit(true);
     end;
 
@@ -161,6 +163,7 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
         RequestJson := Argument.GetRequestJson();
         if not ContractParts.TryResolveItemNo(Argument, RequestJson, true, ItemNo) then
             exit;
+        Item.SetLoadFields("No.", "Unit Cost", "Last Direct Cost", "Standard Cost");
         if not Item.Get(ItemNo) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, ItemNo), 'itemNo', ItemNo, NotFoundExpectedTxt, NotFoundNextStepTxt);
             exit;

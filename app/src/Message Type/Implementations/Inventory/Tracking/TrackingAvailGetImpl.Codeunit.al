@@ -78,9 +78,12 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        MissingItemWhenTxt: Label 'data.itemNo was not sent or is blank.', Comment = 'is-IS=data.itemNo var ekki sent eða er autt.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo must be specified.', 'data.itemNo was not sent.', 'Send the item number in data.itemNo.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingItemErr, MissingItemWhenTxt, ItemNoNextStepTxt));
         exit(true);
     end;
 
@@ -150,11 +153,14 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
+        if RequestJson.Get('itemNo', Token) then
+            if Token.IsValue() then
+                if not Token.AsValue().IsNull() then
+                    ItemNo := CopyStr(DelChr(Token.AsValue().AsCode(), '<>', ' '), 1, MaxStrLen(ItemNo));
+        if ItemNo = '' then begin
             Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
-        ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
         ItemLedgerEntry.SetRange("Item No.", ItemNo);
         ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
         if RequestJson.Get('locationCode', Token) then

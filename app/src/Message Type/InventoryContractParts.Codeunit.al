@@ -551,6 +551,30 @@ codeunit 70013445 "Inventory Contract Parts ori"
     end;
 
     /// <summary>
+    /// Adds the error entries of TryResolveItemNo to an errors chapter.
+    /// </summary>
+    /// <param name="Errors">The errors chapter to extend.</param>
+    /// <param name="Required">True when the message type refuses a call with neither data.itemNo nor subject.</param>
+    procedure AddItemNoSubjectErrors(var Errors: JsonArray; Required: Boolean)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ItemNoRequiredErr: Label 'itemNo is required.', Comment = 'is-IS=itemNo er nauðsynlegt.';
+        ItemNoRequiredWhenTxt: Label 'Neither data.itemNo nor subject was sent.', Comment = 'is-IS=Hvorki data.itemNo né subject var sent.';
+        ItemNoNextStepTxt: Label 'Send data.itemNo or the item number as subject.', Comment = 'is-IS=Sendu data.itemNo eða vörunúmerið sem subject.';
+        ConflictErr: Label 'subject and itemNo name different items.', Comment = 'is-IS=subject og itemNo nefna ólíkar vörur.';
+        ConflictWhenTxt: Label 'subject and data.itemNo were both sent and do not match.', Comment = 'is-IS=Bæði subject og data.itemNo voru send og þau passa ekki saman.';
+        ConflictNextStepTxt: Label 'Send one item number, or make subject and data.itemNo the same.', Comment = 'is-IS=Sendu eitt vörunúmer, eða láttu subject og data.itemNo vera eins.';
+        ItemNoFormatErr: Label 'itemNo must be a JSON value.', Comment = 'is-IS=itemNo verður að vera JSON-gildi.';
+        ItemNoFormatWhenTxt: Label 'data.itemNo is an object or an array.', Comment = 'is-IS=data.itemNo er hlutur eða fylki.';
+        ItemNoFormatNextStepTxt: Label 'Send the item number as text in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið sem texta í data.itemNo.';
+    begin
+        if Required then
+            Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ItemNoRequiredErr, ItemNoRequiredWhenTxt, ItemNoNextStepTxt));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictErr, ConflictWhenTxt, ConflictNextStepTxt));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, ItemNoFormatWhenTxt, ItemNoFormatNextStepTxt));
+    end;
+
+    /// <summary>
     /// Resolves one item number from data.itemNo and the message subject.
     /// The subject is the item number when itemNo is omitted. Different values are refused.
     /// </summary>
@@ -580,7 +604,8 @@ codeunit 70013445 "Inventory Contract Parts ori"
                 Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, 'itemNo', '', ItemNoFormatExpectedTxt, ItemNoFormatNextStepTxt);
                 exit(false);
             end;
-            DataItemNo := CopyStr(DelChr(Token.AsValue().AsText(), '<>', ' '), 1, MaxStrLen(DataItemNo));
+            if not Token.AsValue().IsNull() then
+                DataItemNo := CopyStr(DelChr(Token.AsValue().AsText(), '<>', ' '), 1, MaxStrLen(DataItemNo));
         end;
         SubjectItemNo := CopyStr(DelChr(Argument.Subject, '<>', ' '), 1, MaxStrLen(SubjectItemNo));
         if (DataItemNo <> '') and (SubjectItemNo <> '') and (DataItemNo <> SubjectItemNo) then begin

@@ -78,11 +78,10 @@ codeunit 70013477 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'subject and itemNo name different items.', 'subject and data.itemNo were both sent and do not match.', 'Send one item number, or make them the same.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'itemNo must be a JSON value.', 'data.itemNo is an object or an array.', 'Send the item number as text.'));
+        ContractParts.AddItemNoSubjectErrors(Errors, false);
         exit(true);
     end;
 

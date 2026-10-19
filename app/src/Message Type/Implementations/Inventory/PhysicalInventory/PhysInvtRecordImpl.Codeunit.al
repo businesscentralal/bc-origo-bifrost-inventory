@@ -159,6 +159,8 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         LineNo: Integer;
         Quantity: Decimal;
         LineNotFoundErr: Label 'Physical inventory line was not found.', Comment = 'is-IS=Lína birgðatalningar fannst ekki.';
+        LineNotFoundExpectedTxt: Label 'The line number of an existing line in the journal batch.', Comment = 'is-IS=Línunúmer línu sem er til í bókarkeyrslunni.';
+        LineNotFoundNextStepTxt: Label 'Check journalTemplateName, journalBatchName and lineNo, or run Inventory.PhysInventory.Calculate first.', Comment = 'is-IS=Athugaðu journalTemplateName, journalBatchName og lineNo, eða keyrðu fyrst Inventory.PhysInventory.Calculate.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;
@@ -186,7 +188,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         end;
         Quantity := Token.AsValue().AsDecimal();
         if not ItemJournalLine.Get(TemplateName, BatchName, LineNo) then begin
-            Argument.RespondWithError(LineNotFoundErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, LineNotFoundErr, 'lineNo', Format(LineNo, 0, 9), LineNotFoundExpectedTxt, LineNotFoundNextStepTxt);
             exit;
         end;
         ItemJournalLine.Validate("Qty. (Phys. Inventory)", Quantity);

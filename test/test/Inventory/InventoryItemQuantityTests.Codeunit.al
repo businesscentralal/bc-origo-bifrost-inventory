@@ -10,7 +10,7 @@ using System.TestLibraries.Utilities;
 /// Inventory.Cost.Get returns calculated inventory and Inventory.Revaluation.Calculate
 /// returns remaining value from calculated ledger cost.
 /// </summary>
-codeunit 96924 "Inventory Item Quantity Tests"
+codeunit 96932 "Inventory Item Quantity Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

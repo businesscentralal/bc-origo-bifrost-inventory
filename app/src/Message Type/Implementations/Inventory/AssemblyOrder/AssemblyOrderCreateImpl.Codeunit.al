@@ -159,9 +159,13 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         Quantity: Decimal;
         QuantityToAssemble: Decimal;
         RefreshLines: Boolean;
-        MissingItemErr: Label 'itemNo must be specified in the request JSON.', Locked = true;
+        MissingItemErr: Label 'itemNo must be specified in the request JSON.', Comment = 'is-IS=itemNo verður að vera tilgreint í JSON-beiðninni.';
+        ItemNoExpectedTxt: Label 'The number of the item to assemble in data.itemNo.', Comment = 'is-IS=Númer vörunnar sem á að setja saman í data.itemNo.';
+        ItemNoNextStepTxt: Label 'Send the parent item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmer yfirvörunnar í data.itemNo.';
         MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Comment = 'is-IS=Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.';
-        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value', Locked = true;
+        QuantityExpectedTxt: Label 'A quantity greater than 0 in data.quantity.', Comment = 'is-IS=Magn stærra en 0 í data.quantity.';
+        QuantityNextStepTxt: Label 'Send the quantity to assemble in data.quantity.', Comment = 'is-IS=Sendu magnið sem á að setja saman í data.quantity.';
+        FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value, is-IS=Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið ''%2''.';
         ReadOk: Boolean;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
@@ -172,13 +176,13 @@ codeunit 70013424 "Assembly Order Create Impl ori" implements "Msg Interface ori
         if RequestJson.Get('itemNo', Token) then
             ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo))
         else begin
-            Argument.RespondWithError(MissingItemErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
         if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
             exit;
         if Quantity <= 0 then begin
-            Argument.RespondWithError(MissingQuantityErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTxt, QuantityNextStepTxt);
             exit;
         end;
         if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
