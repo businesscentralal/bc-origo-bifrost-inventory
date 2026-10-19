@@ -66,6 +66,18 @@ page 70013452 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether item reference message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort vörutilvísanaskilaboð séu virk fyrir þetta fyrirtæki.';
                 }
+                field(Availability; Rec.Availability)
+                {
+                    ToolTip = 'Specifies whether availability by period message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð framboðs eftir tímabilum séu virk fyrir þetta fyrirtæki.';
+                }
+                field(ItemCharge; Rec."Item Charge")
+                {
+                    ToolTip = 'Specifies whether item charge assignment message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð úthlutunar vörugjalda séu virk fyrir þetta fyrirtæki.';
+                }
+                field(ItemCategory; Rec."Item Category")
+                {
+                    ToolTip = 'Specifies whether item category message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð vöruflokka séu virk fyrir þetta fyrirtæki.';
+                }
             }
         }
     }

@@ -8,7 +8,7 @@ using System.TestLibraries.Utilities;
 /// Inventory.AvailabilityByPeriod.Get denies a caller who cannot read items.
 /// BIFROST Read ori includes the InvRead extension, which grants Item, so this test keeps the caller on no permission set.
 /// </summary>
-codeunit 96925 "Avail. By Period Perm"
+codeunit 96953 "Avail. By Period Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

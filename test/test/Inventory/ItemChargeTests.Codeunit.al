@@ -12,7 +12,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get.
 /// </summary>
-codeunit 96926 "Item Charge Tests"
+codeunit 96954 "Item Charge Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

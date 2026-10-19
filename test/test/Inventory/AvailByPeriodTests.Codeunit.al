@@ -10,7 +10,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Unit tests for Inventory.AvailabilityByPeriod.Get.
 /// </summary>
-codeunit 96924 "Avail. By Period Tests"
+codeunit 96952 "Avail. By Period Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

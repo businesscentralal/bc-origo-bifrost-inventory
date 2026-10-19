@@ -9,7 +9,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.ItemCategory.Get and Inventory.ItemCategory.Set.
 /// </summary>
-codeunit 96928 "Item Category Tests"
+codeunit 96956 "Item Category Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

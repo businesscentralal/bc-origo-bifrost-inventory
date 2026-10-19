@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.ItemCategory.Get. Returns the category tree and, when asked, each category's attributes.
 /// </summary>
-codeunit 70013448 "Item Category Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -96,7 +96,7 @@ codeunit 70013448 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No category matched.', 'Check the category code.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'code and systemId were both sent.', 'Send code or systemId, not both.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The category code is too long, or the Item Category domain is off.', 'Send a code of at most 20 characters, or turn the domain on from Inventory Setup.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change item categories.', 'Use the BIFROST InvWrite ori permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change item categories.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.'));
         exit(true);
     end;
 
@@ -203,7 +203,7 @@ codeunit 70013448 "Item Category Get Impl ori" implements "Msg Interface ori", "
         DomainDisabledErr: Label 'The Item Category domain is turned off for this company.', Comment = 'is-IS=Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.';
     begin
         if (not InventorySetup.ReadPermission()) or (not ItemCategory.WritePermission()) or (not Mapping.WritePermission()) or (not ItemAttribute.ReadPermission()) or (not ItemAttributeValue.ReadPermission()) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvWrite ori', 'Use the BIFROST InvWrite ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvWrite ori', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.');
             exit(false);
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCategory) then begin

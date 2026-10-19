@@ -12,7 +12,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.OrderTracking.Get reads the supply and demand tracked against one line or item ledger entry.
 /// </summary>
-codeunit 70013431 "Order Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10036926 "Order Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -123,7 +123,7 @@ codeunit 70013431 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::UnknownParameter, 'The request has an unknown key.', 'Remove the unknown key.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'systemId was sent with document keys.', 'Send systemId or the document keys, not both.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The source line was not found.', 'Check the document and line no.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read reservation entries.', 'Use the BIFROST InvRead ori permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read reservation entries.', 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.'));
         exit(true);
     end;
 
@@ -194,11 +194,11 @@ codeunit 70013431 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         SourceRecord: Variant;
     begin
         if not ReservationEntry.ReadPermission() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Use the BIFROST InvRead ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.');
             exit;
         end;
         if not InventorySetup.ReadPermission() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Use the BIFROST InvRead ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.');
             exit;
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::Reservations) then begin

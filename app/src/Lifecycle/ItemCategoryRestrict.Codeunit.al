@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Refuses generic Data.Records.Set against item categories and their attribute mappings.
 /// Callers use Inventory.ItemCategory.Get and Inventory.ItemCategory.Set. Reads stay allowed.
 /// </summary>
-codeunit 70013441 "Item Category Restrict ori"
+codeunit 10036924 "Item Category Restrict ori"
 {
     Access = Internal;
 

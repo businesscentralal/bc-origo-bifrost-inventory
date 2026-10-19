@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.ItemCharge.Get. Returns the assignment rows for one charge line and the quantity still unassigned.
 /// </summary>
-codeunit 70013497 "Item Charge Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10036920 "Item Charge Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -99,7 +99,7 @@ codeunit 70013497 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No document or line matched.', 'Check the document and the line no.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'documentNo and systemId were both sent.', 'Send documentNo or systemId, not both.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The line is not a charge line.', 'Pass the line no. of a Charge (Item) line.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read item charge assignments.', 'Use the BIFROST InvRead ori permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read item charge assignments.', 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.'));
         exit(true);
     end;
 
@@ -189,7 +189,7 @@ codeunit 70013497 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.';
     begin
         if (not InventorySetup.ReadPermission()) or (not PurchAssignment.ReadPermission()) or (not SalesAssignment.ReadPermission()) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvRead ori', 'Use the BIFROST InvRead ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvRead ori', 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.');
             exit(false);
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCharge) then begin

@@ -9,7 +9,7 @@ using System.TestLibraries.Utilities;
 /// BIFROST Read ori includes the InvRead extension, which grants Item and Item Reference,
 /// so this test keeps the caller on no permission set.
 /// </summary>
-codeunit 96923 "Item Ref. Resolve Perm"
+codeunit 96951 "Item Ref. Resolve Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

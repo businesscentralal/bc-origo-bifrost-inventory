@@ -10,7 +10,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.ItemCharge.Assign. Spreads a charge line over item lines the way Item Charge Assignment does.
 /// </summary>
-codeunit 70013495 "Item Charge Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10036919 "Item Charge Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -106,7 +106,7 @@ codeunit 70013495 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The line is not a charge line.', 'Pass the line no. of a Charge (Item) line.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'A target is not an item line or belongs to another vendor or customer.', 'Use lines from the same vendor/customer.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'byWeight or byVolume was requested and the items have no weight or volume.', 'Use equally or byAmount, or fill the item''s weight/volume.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write item charge assignments.', 'Use the BIFROST InvWrite ori permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write item charge assignments.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.'));
         exit(true);
     end;
 
@@ -223,7 +223,7 @@ codeunit 70013495 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Vörugjaldssviðið er slökkt fyrir þetta fyrirtæki.';
     begin
         if (not InventorySetup.ReadPermission()) or (not PurchAssignment.WritePermission()) or (not SalesAssignment.WritePermission()) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvWrite ori', 'Use the BIFROST InvWrite ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvWrite ori', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.');
             exit(false);
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCharge) then begin

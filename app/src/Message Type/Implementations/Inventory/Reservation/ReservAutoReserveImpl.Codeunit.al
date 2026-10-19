@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Reservation.AutoReserve lets a caller reserve a sales line. Supply is chosen by Reservation Management.
 /// </summary>
-codeunit 70013430 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10036925 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -115,7 +115,7 @@ codeunit 70013430 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The sales line was not found.', 'Check the document and line no.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The item reserve setting is Never, or the line cannot be reserved.', 'Change the item''s Reserve setting or reserve manually.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LinesSkipped, 'Only part of the quantity could be reserved.', 'Read Inventory.Reservation.Get for what was reserved.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write reservation entries.', 'Use the BIFROST InvWrite ori permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.'));
         exit(true);
     end;
 
@@ -184,11 +184,11 @@ codeunit 70013430 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         RequestJson: JsonObject;
     begin
         if not ReservationEntry.WritePermission() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Use the BIFROST InvWrite ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.');
             exit;
         end;
         if not InventorySetup.ReadPermission() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Use the BIFROST InvWrite ori permission set.');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, 'Permission denied for this inventory message type.', '', '', '', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.');
             exit;
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::Reservations) then begin

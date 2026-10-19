@@ -12,7 +12,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.Reservation.AutoReserve and Inventory.OrderTracking.Get.
 /// </summary>
-codeunit 96930 "Reserv. AutoReserve Tests"
+codeunit 96958 "Reserv. AutoReserve Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

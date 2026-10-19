@@ -7,7 +7,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.ItemCategory.Get and Set deny a caller without write permission.
 /// </summary>
-codeunit 96929 "Item Category Perm"
+codeunit 96957 "Item Category Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

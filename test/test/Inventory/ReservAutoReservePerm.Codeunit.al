@@ -7,7 +7,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// AutoReserve and OrderTracking.Get deny a caller without the reservation permission.
 /// </summary>
-codeunit 96931 "Reserv. AutoReserve Perm"
+codeunit 96959 "Reserv. AutoReserve Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

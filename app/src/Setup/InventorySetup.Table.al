@@ -76,6 +76,21 @@ table 70013451 "Inventory Setup ori"
             Caption = 'Item Reference', Comment = 'is-IS=Vörutilvísun';
             InitValue = true;
         }
+        field(22; Availability; Boolean)
+        {
+            Caption = 'Availability', Comment = 'is-IS=Framboð';
+            InitValue = true;
+        }
+        field(23; "Item Charge"; Boolean)
+        {
+            Caption = 'Item Charge', Comment = 'is-IS=Vörugjald';
+            InitValue = true;
+        }
+        field(24; "Item Category"; Boolean)
+        {
+            Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
+            InitValue = true;
+        }
     }
 
     keys
@@ -123,6 +138,12 @@ table 70013451 "Inventory Setup ori"
                 exit("Item Price");
             Domain::ItemReference:
                 exit("Item Reference");
+            Domain::Availability:
+                exit(Availability);
+            Domain::ItemCharge:
+                exit("Item Charge");
+            Domain::ItemCategory:
+                exit("Item Category");
         end;
         exit(true);
     end;

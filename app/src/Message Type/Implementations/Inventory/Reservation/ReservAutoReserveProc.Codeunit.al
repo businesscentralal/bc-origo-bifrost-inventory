@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Isolated write for Inventory.Reservation.AutoReserve. The caller has already checked the request shape.
 /// </summary>
-codeunit 70013432 "Reserv. AutoReserve Proc ori"
+codeunit 70013439 "Reserv. AutoReserve Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

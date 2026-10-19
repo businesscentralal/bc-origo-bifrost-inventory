@@ -7,7 +7,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.ItemCharge.Assign and Get deny a caller without the inventory permission sets.
 /// </summary>
-codeunit 96927 "Item Charge Perm"
+codeunit 96955 "Item Charge Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

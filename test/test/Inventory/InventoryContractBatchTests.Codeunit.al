@@ -65,7 +65,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.ItemApplication.Get');
         TypeNames.Add('Inventory.ItemApplication.Reapply');
         TypeNames.Add('Inventory.ItemApplication.Unapply');
+        TypeNames.Add('Inventory.ItemCategory.Get');
+        TypeNames.Add('Inventory.ItemCategory.Set');
+        TypeNames.Add('Inventory.ItemCharge.Assign');
+        TypeNames.Add('Inventory.ItemCharge.Get');
         TypeNames.Add('Inventory.ItemReference.Resolve');
+        TypeNames.Add('Inventory.OrderTracking.Get');
         TypeNames.Add('Inventory.Period.Get');
         TypeNames.Add('Inventory.PhysInventory.Calculate');
         TypeNames.Add('Inventory.PhysInventory.Post');
@@ -73,6 +78,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.Price.Update');
         TypeNames.Add('Inventory.Reclassification.Check');
         TypeNames.Add('Inventory.Reclassification.PreviewPost');
+        TypeNames.Add('Inventory.Reservation.AutoReserve');
         TypeNames.Add('Inventory.Reservation.Cancel');
         TypeNames.Add('Inventory.Reservation.Create');
         TypeNames.Add('Inventory.Reservation.Get');
@@ -85,7 +91,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.TransferOrder.Release');
         TypeNames.Add('Inventory.TransferOrder.Reopen');
         TypeNames.Add('Inventory.TransferOrder.Statistics');
-        LibraryAssert.AreEqual(36, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
+        LibraryAssert.AreEqual(43, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
         foreach TypeName in TypeNames do begin
             MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             MessageImpl := MessageType;
@@ -224,9 +230,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         LibraryAssert.AreEqual(4, ItemJournalNames.Count(), 'Exactly four Inventory.ItemJournal types are registered.');
-        LibraryAssert.AreEqual(45, CheckedCount - ItemJournalNames.Count(), 'This app registers 45 Inventory types.');
+        LibraryAssert.AreEqual(52, CheckedCount - ItemJournalNames.Count(), 'This app registers 52 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(45, AppTypes.Count(), 'The registered Inventory type list for this app has 45 names.');
+        LibraryAssert.AreEqual(52, AppTypes.Count(), 'The registered Inventory type list for this app has 52 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -381,6 +387,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.PhysInventory.Record');
         Types.Add('Inventory.PhysInventory.Post');
         Types.Add('Inventory.ItemReference.Resolve');
+        Types.Add('Inventory.ItemCharge.Assign');
+        Types.Add('Inventory.ItemCharge.Get');
+        Types.Add('Inventory.ItemCategory.Get');
+        Types.Add('Inventory.ItemCategory.Set');
+        Types.Add('Inventory.Reservation.AutoReserve');
+        Types.Add('Inventory.OrderTracking.Get');
     end;
 
     local procedure RequiredChapters(TypeName: Text) Chapters: List of [Text]

@@ -9,7 +9,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Unit tests for Inventory.ItemReference.Resolve.
 /// </summary>
-codeunit 96922 "Item Ref. Resolve Tests"
+codeunit 96950 "Item Ref. Resolve Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;
