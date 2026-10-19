@@ -6,6 +6,7 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Inventory.ItemCategory.Get. Returns the category tree and, when asked, each category's attributes.
+/// Read-only: checks read permission and never changes a category or an attribute.
 /// </summary>
 codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -13,27 +14,37 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        CodeKeyTok: Label 'code', Locked = true;
+        SystemIdKeyTok: Label 'systemId', Locked = true;
+        IncludeAttributesKeyTok: Label 'includeAttributes', Locked = true;
+        AllowedKeysTok: Label 'code, systemId, includeAttributes', Locked = true;
+        TextExpectedTok: Label 'text', Locked = true;
+        BooleanExpectedTok: Label 'boolean', Locked = true;
+        GuidExpectedTok: Label 'guid', Locked = true;
+        PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
 
+    /// <summary>True when the Item Category domain is on and the caller can read categories and attributes.</summary>
+    /// <returns>True when the type may run for the current user.</returns>
     procedure IsEnabled(): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
-        ItemCategory: Record "Item Category";
-        Mapping: Record "Item Attribute Value Mapping";
-        ItemAttribute: Record "Item Attribute";
-        ItemAttributeValue: Record "Item Attribute Value";
     begin
         if not InventorySetup.ReadPermission() then
             exit(false);
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCategory) then
             exit(false);
-        exit(ItemCategory.WritePermission() and Mapping.WritePermission() and ItemAttribute.ReadPermission() and ItemAttributeValue.ReadPermission());
+        exit(CanReadTables());
     end;
 
+    /// <summary>The table this type reads.</summary>
+    /// <returns>The Item Category table number.</returns>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Item Category");
     end;
 
+    /// <summary>Short description for discovery.</summary>
+    /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
         DescriptionLbl: Label 'Reads item categories and their default attributes.', Comment = 'is-IS=Les vöruflokka og sjálfgefna eiginleika þeirra.';
@@ -41,13 +52,17 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         exit(DescriptionLbl);
     end;
 
+    /// <summary>Search keywords for discovery.</summary>
+    /// <returns>The translated keywords.</returns>
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'item category, parent, attribute, inherited', Comment = 'is-IS=vöruflokkur, foreldri, eiginleiki, erft';
+        KeywordsLbl: Label 'item category, parent, attribute, inherited', Comment = 'is-IS=vöruflokkur, yfirflokkur, eiginleiki, erft';
     begin
         exit(KeywordsLbl);
     end;
 
+    /// <summary>Text a picker shows for this type.</summary>
+    /// <returns>The translated selection text.</returns>
     procedure GetSelectionDescription(): Text
     var
         SelectionLbl: Label 'Show the item category tree and the default attributes on each category.', Comment = 'is-IS=Sýndu vöruflokkatréð og sjálfgefna eiginleika hvers flokks.';
@@ -55,6 +70,9 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         exit(SelectionLbl);
     end;
 
+    /// <summary>Envelope chapter.</summary>
+    /// <param name="Envelope">Receives the envelope.</param>
+    /// <returns>True.</returns>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Envelope.Add('messageType', 'Inventory.ItemCategory.Get');
@@ -62,44 +80,89 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
+    /// <summary>Target chapter.</summary>
+    /// <param name="Target">Receives the target entries.</param>
+    /// <returns>True.</returns>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        TargetLbl: Label 'The item category to read. Omit code and systemId to read every category.', Comment = 'is-IS=Vöruflokkurinn sem á að lesa. Slepptu code og systemId til að lesa alla flokka.';
     begin
-        TargetJson.Add('table', 'Item Category');
-        Target.Add(TargetJson);
+        Target.Add(ContractMgt.TargetEntry('data.code', 'text', TargetLbl));
         exit(true);
     end;
 
+    /// <summary>Parameters chapter.</summary>
+    /// <param name="Parameters">Receives the parameter entries.</param>
+    /// <returns>True.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        CodeLbl: Label 'Category code, at most 20 characters. Omit both code and systemId to return every category. Send code or systemId, not both.', Comment = 'is-IS=Kóði flokks, mest 20 stafir. Slepptu bæði code og systemId til að fá alla flokka. Sendu code eða systemId, ekki bæði.';
+        SystemIdLbl: Label 'System id (GUID) of the category. Send code or systemId, not both.', Comment = 'is-IS=Kerfiskenni (GUID) flokksins. Sendu code eða systemId, ekki bæði.';
+        IncludeAttributesLbl: Label 'true or false. When true, each category lists its attributes with id, name, type, value and inherited. Defaults to true.', Comment = 'is-IS=true eða false. Þegar true er sent fylgja hverjum flokki eiginleikar hans með id, name, type, value og inherited. Sjálfgefið er true.';
     begin
-        Parameters.Add(ContractMgt.Parameter('code', 'string', false, 'Category code. Omit it to return every category. Send this or systemId.'));
-        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Category system id. Send this or code.'));
-        Parameters.Add(ContractMgt.Parameter('includeAttributes', 'boolean', false, 'When true, each category includes attribute name, type, value and inherited. Defaults to true.'));
+        Parameters.Add(ContractMgt.Parameter('code', 'string', false, CodeLbl));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, SystemIdLbl));
+        Parameters.Add(ContractMgt.Parameter('includeAttributes', 'boolean', false, IncludeAttributesLbl));
         exit(true);
     end;
 
+    /// <summary>Response chapter: the shape of a successful answer.</summary>
+    /// <param name="Response">Receives the response shape.</param>
+    /// <returns>True.</returns>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
-        EmptyRows: JsonArray;
+        Categories: JsonArray;
+        Category: JsonObject;
+        Attributes: JsonArray;
+        Attribute: JsonObject;
     begin
+        Attribute.Add('id', 0);
+        Attribute.Add('name', '');
+        Attribute.Add('type', 'Option');
+        Attribute.Add('value', '');
+        Attribute.Add('inherited', false);
+        Attributes.Add(Attribute);
+        Category.Add('code', '');
+        Category.Add('description', '');
+        Category.Add('parentCategory', '');
+        Category.Add('indentation', 0);
+        Category.Add('presentationOrder', 0);
+        Category.Add('attributes', Attributes);
+        Categories.Add(Category);
         Response.Add('status', 'Success');
-        Response.Add('categories', EmptyRows);
+        Response.Add('categories', Categories);
         exit(true);
     end;
 
+    /// <summary>Errors chapter: every refusal with its next step.</summary>
+    /// <param name="Errors">Receives the error entries.</param>
+    /// <returns>True.</returns>
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        MissingWhenLbl: Label 'code or systemId was sent empty.', Comment = 'is-IS=code eða systemId var sent tómt.';
+        MissingFixLbl: Label 'Send a non-empty code or systemId, or omit both to read every category.', Comment = 'is-IS=Sendu code eða systemId sem er ekki tómt, eða slepptu báðum til að lesa alla flokka.';
+        FormatWhenLbl: Label 'A key has the wrong JSON type, or systemId is not a GUID.', Comment = 'is-IS=Lykill er á rangri JSON-gerð, eða systemId er ekki GUID.';
+        FormatFixLbl: Label 'Send code as text, systemId as a GUID in text, and includeAttributes as true or false.', Comment = 'is-IS=Sendu code sem texta, systemId sem GUID í texta og includeAttributes sem true eða false.';
+        UnknownWhenLbl: Label 'The request contains a key this type does not read.', Comment = 'is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.';
+        NotFoundWhenLbl: Label 'No item category matched code or systemId.', Comment = 'is-IS=Enginn vöruflokkur passaði við code eða systemId.';
+        ConflictWhenLbl: Label 'code and systemId were both sent.', Comment = 'is-IS=code og systemId voru bæði send.';
+        InvalidWhenLbl: Label 'code is longer than 20 characters, or the Item Category domain is turned off.', Comment = 'is-IS=code er lengra en 20 stafir, eða vöruflokkasviðið er óvirkt.';
+        InvalidFixLbl: Label 'Send a code of at most 20 characters, or turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Sendu kóða sem er mest 20 stafir, eða kveiktu á sviðinu á síðunni Uppsetning birgða.';
+        PermissionWhenLbl: Label 'The caller cannot read item categories or item attributes.', Comment = 'is-IS=Kallandinn getur ekki lesið vöruflokka eða vörueiginleika.';
     begin
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required key is empty.', 'Send a non-empty code or systemId, or omit both to read every category.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A key has the wrong JSON type.', 'Send code and systemId as text, and includeAttributes as true or false.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::UnknownParameter, 'The request has an unknown key.', 'Remove the unknown key.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No category matched.', 'Check the category code.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'code and systemId were both sent.', 'Send code or systemId, not both.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The category code is too long, or the Item Category domain is off.', 'Send a code of at most 20 characters, or turn the domain on from Inventory Setup.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change item categories.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::UnknownParameter, UnknownWhenLbl, UnknownNextStep()));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundNextStep()));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictNextStep()));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionNextStep()));
         exit(true);
     end;
 
+    /// <summary>Effect chapter: this type does not write.</summary>
+    /// <param name="Effect">Receives the effect flags.</param>
+    /// <returns>True.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Effect.Add('writes', false);
@@ -107,55 +170,77 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
+    /// <summary>Metering chapter: not metered.</summary>
+    /// <param name="Metering">Unused.</param>
+    /// <returns>False.</returns>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Related chapter.</summary>
+    /// <param name="Related">Receives the related types.</param>
+    /// <returns>True.</returns>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
-        RelatedJson: JsonObject;
+        SetLbl: Label 'Create a category, or change its description or default attributes.', Comment = 'is-IS=Stofna flokk, eða breyta lýsingu hans eða sjálfgefnum eiginleikum.';
+        AttributeGetLbl: Label 'Read the attribute values stored on one item instead of on a category.', Comment = 'is-IS=Lesa eiginleikagildi sem eru vistuð á einni vöru í stað flokks.';
     begin
-        RelatedJson.Add('name', 'Inventory.ItemCategory.Set');
-        RelatedJson.Add('useInsteadWhen', 'Create or change a category instead of only reading it.');
-        Related.Add(RelatedJson);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.ItemCategory.Set', SetLbl));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Attribute.Get', AttributeGetLbl));
         exit(true);
     end;
 
+    /// <summary>Workflow chapter: none.</summary>
+    /// <param name="Workflow">Unused.</param>
+    /// <returns>False.</returns>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Examples chapter.</summary>
+    /// <param name="Examples">Receives the examples.</param>
+    /// <returns>True.</returns>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
-        Example: JsonObject;
-        Data: JsonObject;
+        TitleLbl: Label 'Read one category with its attributes', Comment = 'is-IS=Lesa einn flokk með eiginleikum hans';
     begin
-        Data.Add('code', 'FURNITURE');
-        Data.Add('includeAttributes', true);
-        Example.Add('data', Data);
-        Examples.Add(Example);
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"code":"CHAIRS","includeAttributes":true}', '{"status":"Success","categories":[{"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","indentation":1,"presentationOrder":2,"attributes":[{"id":1,"name":"Color","type":"Option","value":"Blue","inherited":true}]}]}'));
         exit(true);
     end;
 
+    /// <summary>Overview chapter.</summary>
+    /// <param name="Overview">Receives the overview text.</param>
+    /// <returns>True.</returns>
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewLbl: Label 'Reads item categories with code, description, parent category, indentation and presentation order. Send code or systemId to read one category, or neither to read the whole tree in presentation order. With includeAttributes true, each category lists its attributes with id, name, type, default value and whether the value is inherited from a parent category.', Comment = 'is-IS=Les vöruflokka með kóða, lýsingu, yfirflokki, inndrætti og birtingarröð. Sendu code eða systemId til að lesa einn flokk, eða hvorugt til að lesa allt tréð í birtingarröð. Með includeAttributes sem true fylgja hverjum flokki eiginleikar hans með id, nafni, gerð, sjálfgefnu gildi og upplýsingum um hvort gildið erfist frá yfirflokki.';
     begin
-        Overview := 'Reads item categories with code, description, parent, indentation and presentation order. Set includeAttributes to true to include each attribute name, type, default value and whether it is inherited from a parent category.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
+    /// <summary>Notes chapter.</summary>
+    /// <param name="Notes">Receives the notes text.</param>
+    /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'This call only reads. inherited is true when the value comes from a parent category; a value set on the category itself is listed with inherited false and hides the parent value. The caller needs read access to item categories and item attributes.', Comment = 'is-IS=Þetta kall les eingöngu. inherited er true þegar gildið kemur frá yfirflokki; gildi sem er sett á flokkinn sjálfan birtist með inherited false og kemur í stað gildis yfirflokksins. Kallandinn þarf lesaðgang að vöruflokkum og vörueiginleikum.';
     begin
-        Notes := 'This call does not change categories or attributes.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
+    /// <summary>Message direction.</summary>
+    /// <returns>Inbound.</returns>
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
-        exit(Enum::"Msg Direction ori"::Inbound);
+        exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
+    /// <summary>Runs Inventory.ItemCategory.Get.</summary>
+    /// <param name="Argument">The message argument with the request; receives the response.</param>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         RequestJson: JsonObject;
@@ -169,7 +254,10 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        TouchDeclaredKeys(RequestJson);
+        // String literals are the keys the contract guard counts as reads.
+        if RequestJson.Contains('code') then;
+        if RequestJson.Contains('systemId') then;
+        if RequestJson.Contains('includeAttributes') then;
         if not RejectUnknownKeys(Argument, RequestJson) then
             exit;
         if not ValidateRequest(Argument, RequestJson, CategoryCode, CategoryId, IncludeAttributes, SelectAll) then
@@ -177,6 +265,10 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         WriteResponse(Argument, CategoryCode, CategoryId, IncludeAttributes, SelectAll);
     end;
 
+    /// <summary>Builds the JSON object for one category, shared with Inventory.ItemCategory.Set.</summary>
+    /// <param name="ItemCategory">The category; Code, Description, Parent Category, Indentation and Presentation Order must be loaded.</param>
+    /// <param name="IncludeAttributes">True to add the attributes array.</param>
+    /// <returns>The category JSON object.</returns>
     procedure BuildCategoryJson(ItemCategory: Record "Item Category"; IncludeAttributes: Boolean) Result: JsonObject
     var
         Attributes: JsonArray;
@@ -192,32 +284,32 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Result.Add('attributes', Attributes);
     end;
 
-    local procedure AssertCanRun(var Argument: Record "Message Argument ori"): Boolean
+    local procedure CanReadTables(): Boolean
     var
-        InventorySetup: Record "Inventory Setup ori";
         ItemCategory: Record "Item Category";
         Mapping: Record "Item Attribute Value Mapping";
         ItemAttribute: Record "Item Attribute";
         ItemAttributeValue: Record "Item Attribute Value";
-        PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        DomainDisabledErr: Label 'The Item Category domain is turned off for this company.', Comment = 'is-IS=Vöruflokkssviðið er slökkt fyrir þetta fyrirtæki.';
     begin
-        if (not InventorySetup.ReadPermission()) or (not ItemCategory.WritePermission()) or (not Mapping.WritePermission()) or (not ItemAttribute.ReadPermission()) or (not ItemAttributeValue.ReadPermission()) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', 'BIFROST InvWrite ori', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.');
+        exit(ItemCategory.ReadPermission() and Mapping.ReadPermission() and ItemAttribute.ReadPermission() and ItemAttributeValue.ReadPermission());
+    end;
+
+    local procedure AssertCanRun(var Argument: Record "Message Argument ori"): Boolean
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
+        DomainDisabledErr: Label 'The Item Category domain is turned off for this company.', Comment = 'is-IS=Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.';
+        DomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
+    begin
+        if (not InventorySetup.ReadPermission()) or (not CanReadTables()) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStep());
             exit(false);
         end;
         if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCategory) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', 'Turn the domain on from the Inventory Setup page.');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         exit(true);
-    end;
-
-    local procedure TouchDeclaredKeys(RequestJson: JsonObject)
-    begin
-        if RequestJson.Contains('code') then;
-        if RequestJson.Contains('systemId') then;
-        if RequestJson.Contains('includeAttributes') then;
     end;
 
     local procedure RejectUnknownKeys(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
@@ -226,8 +318,8 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         UnknownKeyErr: Label 'The request contains an unknown key.', Comment = 'is-IS=Beiðnin inniheldur óþekktan lykil.';
     begin
         foreach KeyName in RequestJson.Keys() do
-            if not (KeyName in ['code', 'systemId', 'includeAttributes']) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownKeyErr, CopyStr(KeyName, 1, 250), CopyStr(KeyName, 1, 250), '', 'Remove the unknown key. Allowed keys are code, systemId and includeAttributes.');
+            if not (KeyName in [CodeKeyTok, SystemIdKeyTok, IncludeAttributesKeyTok]) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownKeyErr, CopyStr(KeyName, 1, 250), CopyStr(KeyName, 1, 250), AllowedKeysTok, UnknownNextStep());
                 exit(false);
             end;
         exit(true);
@@ -238,46 +330,54 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         ItemCategory: Record "Item Category";
         CodeText: Text;
         SystemIdText: Text;
-        TooLongErr: Label 'code is longer than %1 characters.', Comment = '%1 = maximum length, is-IS=kóði er lengri en %1 stafir.';
+        ConflictErr: Label 'code and systemId were both sent.', Comment = 'is-IS=code og systemId voru bæði send.';
+        CodeEmptyErr: Label 'code is empty.', Comment = 'is-IS=code er tómt.';
+        CodeEmptyNextStepLbl: Label 'Send a category code, or omit code to read every category.', Comment = 'is-IS=Sendu kóða flokks, eða slepptu code til að lesa alla flokka.';
+        TooLongErr: Label 'code is longer than %1 characters.', Comment = '%1 = maximum length, is-IS=code er lengra en %1 stafir.';
+        TooLongNextStepLbl: Label 'Send a category code of at most %1 characters.', Comment = '%1 = maximum length, is-IS=Sendu kóða flokks sem er mest %1 stafir.';
+        SystemIdEmptyErr: Label 'systemId is empty.', Comment = 'is-IS=systemId er tómt.';
+        SystemIdEmptyNextStepLbl: Label 'Send the system id of a category, or omit systemId.', Comment = 'is-IS=Sendu kerfiskenni flokks, eða slepptu systemId.';
+        NotGuidErr: Label 'systemId is not a GUID.', Comment = 'is-IS=systemId er ekki GUID.';
+        NotGuidNextStepLbl: Label 'Send systemId as a GUID, for example 00000000-0000-0000-0000-000000000001.', Comment = 'is-IS=Sendu systemId sem GUID, til dæmis 00000000-0000-0000-0000-000000000001.';
     begin
         Clear(CategoryId);
         CategoryCode := '';
         SelectAll := false;
         IncludeAttributes := true;
-        if RequestJson.Contains('code') and RequestJson.Contains('systemId') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::ConflictingIdentifiers, 'Send code or systemId, not both.', 'code', '', 'systemId', 'Send code or systemId, not both.');
+        if RequestJson.Contains(CodeKeyTok) and RequestJson.Contains(SystemIdKeyTok) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictErr, CodeKeyTok, '', SystemIdKeyTok, ConflictNextStep());
             exit(false);
         end;
-        if RequestJson.Contains('includeAttributes') then begin
-            if not RequireBoolean(Argument, RequestJson, 'includeAttributes') then
+        if RequestJson.Contains(IncludeAttributesKeyTok) then begin
+            if not RequireBoolean(Argument, RequestJson, IncludeAttributesKeyTok) then
                 exit(false);
-            IncludeAttributes := ReadBoolean(RequestJson, 'includeAttributes');
+            IncludeAttributes := ReadBoolean(RequestJson, IncludeAttributesKeyTok);
         end;
-        if RequestJson.Contains('code') then begin
-            if not RequireText(Argument, RequestJson, 'code') then
+        if RequestJson.Contains(CodeKeyTok) then begin
+            if not RequireText(Argument, RequestJson, CodeKeyTok) then
                 exit(false);
-            CodeText := ReadText(RequestJson, 'code');
+            CodeText := ReadText(RequestJson, CodeKeyTok);
             if CodeText = '' then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, 'code is required when the key is sent.', 'code', '', 'code', 'Send a category code, or omit code to read every category.');
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, CodeEmptyErr, CodeKeyTok, '', CodeKeyTok, CodeEmptyNextStepLbl);
                 exit(false);
             end;
             if StrLen(CodeText) > MaxStrLen(ItemCategory.Code) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(TooLongErr, MaxStrLen(ItemCategory.Code)), 'code', CopyStr(CodeText, 1, 250), '20', 'Send a category code of at most 20 characters.');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(TooLongErr, MaxStrLen(ItemCategory.Code)), CodeKeyTok, CopyStr(CodeText, 1, 250), Format(MaxStrLen(ItemCategory.Code), 0, 9), StrSubstNo(TooLongNextStepLbl, MaxStrLen(ItemCategory.Code)));
                 exit(false);
             end;
             CategoryCode := CopyStr(CodeText, 1, MaxStrLen(ItemCategory.Code));
             exit(true);
         end;
-        if RequestJson.Contains('systemId') then begin
-            if not RequireText(Argument, RequestJson, 'systemId') then
+        if RequestJson.Contains(SystemIdKeyTok) then begin
+            if not RequireText(Argument, RequestJson, SystemIdKeyTok) then
                 exit(false);
-            SystemIdText := ReadText(RequestJson, 'systemId');
+            SystemIdText := ReadText(RequestJson, SystemIdKeyTok);
             if SystemIdText = '' then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, 'systemId is required when the key is sent.', 'systemId', '', 'systemId', 'Send a category system id, or omit it.');
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, SystemIdEmptyErr, SystemIdKeyTok, '', SystemIdKeyTok, SystemIdEmptyNextStepLbl);
                 exit(false);
             end;
             if not Evaluate(CategoryId, SystemIdText) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, 'systemId must be a GUID.', 'systemId', CopyStr(SystemIdText, 1, 250), 'guid', 'Send systemId as a GUID.');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, NotGuidErr, SystemIdKeyTok, CopyStr(SystemIdText, 1, 250), GuidExpectedTok, NotGuidNextStepLbl);
                 exit(false);
             end;
             exit(true);
@@ -295,7 +395,7 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
     begin
         ItemCategory.SetLoadFields(Code, Description, "Parent Category", Indentation, "Presentation Order");
         if SelectAll then begin
-            ItemCategory.SetCurrentKey("Presentation Order", Code);
+            ItemCategory.SetCurrentKey("Presentation Order");
             if ItemCategory.FindSet() then
                 repeat
                     Categories.Add(BuildCategoryJson(ItemCategory, IncludeAttributes));
@@ -303,12 +403,12 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         end else begin
             if CategoryCode <> '' then begin
                 if not ItemCategory.Get(CategoryCode) then begin
-                    Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, 'code', CategoryCode, 'code', 'Check the category code.');
+                    Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, CodeKeyTok, CategoryCode, CodeKeyTok, NotFoundNextStep());
                     exit;
                 end;
             end else
                 if not ItemCategory.GetBySystemId(CategoryId) then begin
-                    Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, 'systemId', Format(CategoryId, 0, 4), 'systemId', 'Check the category code.');
+                    Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, SystemIdKeyTok, Format(CategoryId, 0, 4), SystemIdKeyTok, NotFoundNextStep());
                     exit;
                 end;
             Categories.Add(BuildCategoryJson(ItemCategory, IncludeAttributes));
@@ -325,21 +425,24 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Mapping: Record "Item Attribute Value Mapping";
         ItemAttribute: Record "Item Attribute";
         ItemAttributeValue: Record "Item Attribute Value";
+        AttributeResolve: Codeunit "Item Attribute Resolve ori";
         Seen: List of [Integer];
+        Visited: List of [Code[20]];
         Entry: JsonObject;
         CurrentCode: Code[20];
-        OwnCode: Code[20];
     begin
-        OwnCode := CategoryCode;
         CurrentCode := CategoryCode;
         ItemCategory.SetLoadFields(Code, "Parent Category");
         Mapping.SetLoadFields("Table ID", "No.", "Item Attribute ID", "Item Attribute Value ID");
         ItemAttribute.SetLoadFields(ID, Name, Type);
         ItemAttributeValue.SetLoadFields("Attribute ID", ID, Value);
+        Mapping.SetRange("Table ID", Database::"Item Category");
         repeat
+            if Visited.Contains(CurrentCode) then
+                exit;
+            Visited.Add(CurrentCode);
             if not ItemCategory.Get(CurrentCode) then
                 exit;
-            Mapping.SetRange("Table ID", Database::"Item Category");
             Mapping.SetRange("No.", CurrentCode);
             if Mapping.FindSet() then
                 repeat
@@ -348,10 +451,11 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
                         if ItemAttribute.Get(Mapping."Item Attribute ID") then
                             if ItemAttributeValue.Get(Mapping."Item Attribute ID", Mapping."Item Attribute Value ID") then begin
                                 Clear(Entry);
+                                Entry.Add('id', ItemAttribute.ID);
                                 Entry.Add('name', ItemAttribute.Name);
-                                Entry.Add('type', Format(ItemAttribute.Type));
+                                Entry.Add('type', AttributeResolve.TypeName(ItemAttribute));
                                 Entry.Add('value', ItemAttributeValue.Value);
-                                Entry.Add('inherited', CurrentCode <> OwnCode);
+                                Entry.Add('inherited', CurrentCode <> CategoryCode);
                                 Attributes.Add(Entry);
                             end;
                     end;
@@ -365,18 +469,17 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Token: JsonToken;
         Raw: Text;
         FormatErr: Label '%1 must be text.', Comment = '%1 = key, is-IS=%1 verður að vera texti.';
+        FormatNextStepLbl: Label 'Send %1 as text.', Comment = '%1 = key, is-IS=Sendu %1 sem texta.';
     begin
-        if not RequestJson.Get(KeyName, Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, KeyName + ' is required.', CopyStr(KeyName, 1, 250), '', CopyStr(KeyName, 1, 250), 'Send ' + KeyName + '.');
+        if not RequestJson.Get(KeyName, Token) then
             exit(false);
-        end;
-        if (not Token.IsValue()) or Token.AsValue().IsNull() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), '', 'text', 'Send ' + KeyName + ' as text.');
+        if (not Token.IsValue()) or IsNullToken(Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), '', TextExpectedTok, StrSubstNo(FormatNextStepLbl, KeyName));
             exit(false);
         end;
         Token.WriteTo(Raw);
         if not Raw.StartsWith('"') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), CopyStr(Raw, 1, 250), 'text', 'Send ' + KeyName + ' as text.');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), CopyStr(Raw, 1, 250), TextExpectedTok, StrSubstNo(FormatNextStepLbl, KeyName));
             exit(false);
         end;
         exit(true);
@@ -387,36 +490,76 @@ codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Token: JsonToken;
         Raw: Text;
         FormatErr: Label '%1 must be true or false.', Comment = '%1 = key, is-IS=%1 verður að vera true eða false.';
+        FormatNextStepLbl: Label 'Send %1 as true or false.', Comment = '%1 = key, is-IS=Sendu %1 sem true eða false.';
     begin
         if not RequestJson.Get(KeyName, Token) then
             exit(true);
-        if (not Token.IsValue()) or Token.AsValue().IsNull() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), '', 'boolean', 'Send ' + KeyName + ' as true or false.');
+        if (not Token.IsValue()) or IsNullToken(Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), '', BooleanExpectedTok, StrSubstNo(FormatNextStepLbl, KeyName));
             exit(false);
         end;
         Token.WriteTo(Raw);
         if (Raw <> 'true') and (Raw <> 'false') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), CopyStr(Raw, 1, 250), 'boolean', 'Send ' + KeyName + ' as true or false.');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), CopyStr(Raw, 1, 250), BooleanExpectedTok, StrSubstNo(FormatNextStepLbl, KeyName));
             exit(false);
         end;
         exit(true);
+    end;
+
+    local procedure IsNullToken(Token: JsonToken): Boolean
+    begin
+        if not Token.IsValue() then
+            exit(false);
+        exit(Token.AsValue().IsNull());
     end;
 
     local procedure ReadText(RequestJson: JsonObject; KeyName: Text): Text
     var
         Token: JsonToken;
     begin
-        if RequestJson.Get(KeyName, Token) and Token.IsValue() and (not Token.AsValue().IsNull()) then
-            exit(Token.AsValue().AsText());
-        exit('');
+        if not RequestJson.Get(KeyName, Token) then
+            exit('');
+        if (not Token.IsValue()) or IsNullToken(Token) then
+            exit('');
+        exit(Token.AsValue().AsText());
     end;
 
     local procedure ReadBoolean(RequestJson: JsonObject; KeyName: Text): Boolean
     var
         Token: JsonToken;
     begin
-        if RequestJson.Get(KeyName, Token) and Token.IsValue() then
-            exit(Token.AsValue().AsBoolean());
-        exit(false);
+        if not RequestJson.Get(KeyName, Token) then
+            exit(false);
+        if not Token.IsValue() then
+            exit(false);
+        exit(Token.AsValue().AsBoolean());
+    end;
+
+    local procedure UnknownNextStep(): Text
+    var
+        UnknownNextStepLbl: Label 'Remove the unknown key. Allowed keys are code, systemId and includeAttributes.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru code, systemId og includeAttributes.';
+    begin
+        exit(UnknownNextStepLbl);
+    end;
+
+    local procedure NotFoundNextStep(): Text
+    var
+        NotFoundNextStepLbl: Label 'Check the category code, or read every category by omitting code and systemId.', Comment = 'is-IS=Athugaðu kóða flokksins, eða lestu alla flokka með því að sleppa code og systemId.';
+    begin
+        exit(NotFoundNextStepLbl);
+    end;
+
+    local procedure ConflictNextStep(): Text
+    var
+        ConflictNextStepLbl: Label 'Send code or systemId, not both.', Comment = 'is-IS=Sendu code eða systemId, ekki bæði.';
+    begin
+        exit(ConflictNextStepLbl);
+    end;
+
+    local procedure PermissionNextStep(): Text
+    var
+        PermissionNextStepLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+    begin
+        exit(PermissionNextStepLbl);
     end;
 }

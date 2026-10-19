@@ -62,7 +62,7 @@ enum 70013450 "Inventory Domain ori"
     }
     value(13; ItemCharge)
     {
-        Caption = 'Item Charge', Comment = 'is-IS=Vörugjald';
+        Caption = 'Item Charge', Comment = 'is-IS=Kostnaðarauki';
     }
     value(14; ItemCategory)
     {

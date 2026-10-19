@@ -5,6 +5,9 @@ Local help target for the Bifrost Inventory message types. The external document
 ## Message types
 
 - Inventory.Attribute.Get, Create, Update, and AttributeDefinition.Create
+- Inventory.ItemReference.Resolve
+- Inventory.AvailabilityByPeriod.Get
+- Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
 - Inventory.TransferOrder.Create, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.Transfer.UndoShipment and Inventory.Transfer.UndoReceipt

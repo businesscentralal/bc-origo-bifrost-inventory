@@ -24,12 +24,14 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         PeriodTypeKeyTok: Label 'periodType', Locked = true;
         FromKeyTok: Label 'from', Locked = true;
         PeriodsKeyTok: Label 'periods', Locked = true;
+        AmountTypeKeyTok: Label 'amountType', Locked = true;
         TextExpectedTok: Label 'text', Locked = true;
         DateExpectedTok: Label 'date', Locked = true;
         IntegerExpectedTok: Label 'integer', Locked = true;
         ArrayExpectedTok: Label 'array', Locked = true;
         PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
         NetChangeTok: Label 'netChange', Locked = true;
+        BalanceAtDateTok: Label 'balanceAtDate', Locked = true;
 
     procedure IsEnabled(): Boolean
     var
@@ -97,6 +99,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         PeriodTypeLbl: Label 'day, week, month, quarter, or year.', Comment = 'is-IS=day, week, month, quarter eða year.';
         FromLbl: Label 'A date inside the first calendar period.', Comment = 'is-IS=Dagsetning innan fyrsta dagatals tímabilsins.';
         PeriodsLbl: Label 'How many periods to return, from 1 to 53.', Comment = 'is-IS=Hversu mörg tímabil eiga að koma til baka, frá 1 til 53.';
+        AmountTypeLbl: Label 'netChange (default) reads each period on its own. balanceAtDate reads everything up to the period end.', Comment = 'is-IS=netChange (sjálfgefið) les hvert tímabil fyrir sig. balanceAtDate les allt fram að lokum tímabilsins.';
     begin
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoLbl));
         Parameters.Add(ContractMgt.Parameter('items', 'array', false, ItemsLbl));
@@ -105,6 +108,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         Parameters.Add(ContractMgt.Parameter('periodType', 'string', true, PeriodTypeLbl));
         Parameters.Add(ContractMgt.Parameter('from', 'string', true, FromLbl));
         Parameters.Add(ContractMgt.Parameter('periods', 'integer', true, PeriodsLbl));
+        Parameters.Add(ContractMgt.Parameter('amountType', 'string', false, AmountTypeLbl));
         exit(true);
     end;
 
@@ -114,6 +118,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         Response.Add('itemNo', '');
         Response.Add('description', '');
         Response.Add('periodType', 'month');
+        Response.Add('amountType', 'netChange');
         Response.Add('periods', 'one row per period: periodStart, periodEnd, grossRequirement, scheduledReceipt, plannedOrderReceipt, projectedAvailableBalance, inventory, amountType');
         Response.Add('items', 'the same item fields when items is sent');
         exit(true);
@@ -127,13 +132,13 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         FormatWhenLbl: Label 'A key has the wrong JSON type.', Comment = 'is-IS=Lykill er á rangri JSON-gerð.';
         FormatFixLbl: Label 'Send itemNo as text, from as a date, periods as a whole number, and items as an array of item numbers.', Comment = 'is-IS=Sendu itemNo sem texta, from sem dagsetningu, periods sem heila tölu og items sem fylki vörunúmera.';
         UnknownWhenLbl: Label 'The request contains a key this type does not read.', Comment = 'is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.';
-        UnknownFixLbl: Label 'Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from and periods.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.';
+        UnknownFixLbl: Label 'Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from, periods and amountType.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from, periods og amountType.';
         NotFoundWhenLbl: Label 'The item number, variant, or location does not exist.', Comment = 'is-IS=Vörunúmerið, afbrigðið eða staðsetningin er ekki til.';
         NotFoundFixLbl: Label 'Check the item no.', Comment = 'is-IS=Athugaðu vörunúmerið.';
         ConflictWhenLbl: Label 'itemNo and items were both sent.', Comment = 'is-IS=itemNo og items voru bæði send.';
         ConflictFixLbl: Label 'Send either itemNo or items, not both.', Comment = 'is-IS=Sendu annaðhvort itemNo eða items, ekki bæði.';
-        PeriodTypeWhenLbl: Label 'periodType is not day, week, month, quarter, or year.', Comment = 'is-IS=periodType er ekki day, week, month, quarter eða year.';
-        PeriodTypeFixLbl: Label 'Use day, week, month, quarter or year.', Comment = 'is-IS=Notaðu day, week, month, quarter eða year.';
+        PeriodTypeWhenLbl: Label 'periodType is not day, week, month, quarter, or year, or amountType is not netChange or balanceAtDate.', Comment = 'is-IS=periodType er ekki day, week, month, quarter eða year, eða amountType er ekki netChange eða balanceAtDate.';
+        PeriodTypeFixLbl: Label 'Use day, week, month, quarter or year. Use netChange or balanceAtDate for amountType.', Comment = 'is-IS=Notaðu day, week, month, quarter eða year. Notaðu netChange eða balanceAtDate fyrir amountType.';
         LimitWhenLbl: Label 'periods is above 53, or more than 20 items were sent.', Comment = 'is-IS=periods er yfir 53, eða fleiri en 20 vörur voru sendar.';
         LimitFixLbl: Label 'Split the call.', Comment = 'is-IS=Skiptu kallinu.';
         StockWhenLbl: Label 'The item is Service or Non-Inventory, so it has no availability.', Comment = 'is-IS=Varan er þjónusta eða ekki birgðavara, svo hún hefur ekkert framboð.';
@@ -180,7 +185,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TitleLbl: Label 'Read two months for one item', Comment = 'is-IS=Lesa tvo mánuði fyrir eina vöru';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"itemNo":"ITEM","periodType":"month","from":"2026-10-16","periods":2}', '{"status":"Success","itemNo":"ITEM","description":"Item","variant":"","location":"","periodType":"month","periods":[{"periodStart":"2026-10-01","periodEnd":"2026-10-31","grossRequirement":0,"scheduledReceipt":0,"plannedOrderReceipt":0,"projectedAvailableBalance":0,"inventory":0,"amountType":"netChange"}]}'));
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"itemNo":"ITEM","periodType":"month","from":"2026-10-16","periods":2}', '{"status":"Success","itemNo":"ITEM","description":"Item","variant":"","location":"","periodType":"month","amountType":"netChange","periods":[{"periodStart":"2026-10-01","periodEnd":"2026-10-31","grossRequirement":0,"scheduledReceipt":0,"plannedOrderReceipt":0,"projectedAvailableBalance":0,"inventory":0,"amountType":"netChange"}]}'));
         exit(true);
     end;
 
@@ -194,7 +199,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'The first period is the calendar period that contains from. Amounts use net change for that period, and projected available balance is the balance at the period end. Inventory is the on-hand quantity. A service or non-inventory item is refused. At most 53 periods and 20 items are returned.', Comment = 'is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Upphæðir nota nettóbreytingu tímabilsins og áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.';
+        NotesLbl: Label 'The first period is the calendar period that contains from. With amountType netChange (the default) amounts cover that period only; with balanceAtDate they cover everything up to the period end. Projected available balance is the balance at the period end. Inventory is the on-hand quantity. A service or non-inventory item is refused. At most 53 periods and 20 items are returned.', Comment = 'is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -216,6 +221,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         VariantCode: Text;
         LocationCode: Text;
         HasItems: Boolean;
+        BalanceAtDate: Boolean;
     begin
         if not AssertCanRead(Argument) then
             exit;
@@ -232,13 +238,16 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         if RequestJson.Contains('periodType') then;
         if RequestJson.Contains('from') then;
         if RequestJson.Contains('periods') then;
+        if RequestJson.Contains('amountType') then;
         if not ReadCommon(Argument, RequestJson, HasItems, ItemNos, VariantCode, LocationCode, PeriodType, FromDate, PeriodCount) then
             exit;
+        if not ReadAmountType(Argument, RequestJson, BalanceAtDate) then
+            exit;
         if HasItems then begin
-            if not BuildItems(Argument, ItemNos, VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, ResponseJson) then
+            if not BuildItems(Argument, ItemNos, VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, BalanceAtDate, ResponseJson) then
                 exit;
         end else
-            if not BuildOne(Argument, ItemNos.Get(1), VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, ResponseJson, false) then
+            if not BuildOne(Argument, ItemNos.Get(1), VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, BalanceAtDate, ResponseJson, false) then
                 exit;
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
@@ -273,10 +282,10 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
     var
         KeyName: Text;
         UnknownKeyErr: Label 'The key is not part of this message type.', Comment = 'is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.';
-        UnknownNextStepLbl: Label 'Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from and periods.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from og periods.';
+        UnknownNextStepLbl: Label 'Remove the unknown key. Allowed keys are itemNo, items, variant, location, periodType, from, periods and amountType.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, items, variant, location, periodType, from, periods og amountType.';
     begin
         foreach KeyName in RequestJson.Keys() do
-            if not (KeyName in [ItemNoKeyTok, ItemsKeyTok, VariantKeyTok, LocationKeyTok, PeriodTypeKeyTok, FromKeyTok, PeriodsKeyTok]) then begin
+            if not (KeyName in [ItemNoKeyTok, ItemsKeyTok, VariantKeyTok, LocationKeyTok, PeriodTypeKeyTok, FromKeyTok, PeriodsKeyTok, AmountTypeKeyTok]) then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownKeyErr, KeyName, KeyName, '', UnknownNextStepLbl);
                 exit(false);
             end;
@@ -361,7 +370,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    local procedure BuildItems(var Argument: Record "Message Argument ori"; ItemNos: List of [Text]; VariantCode: Text; LocationCode: Text; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; var ResponseJson: JsonObject): Boolean
+    local procedure BuildItems(var Argument: Record "Message Argument ori"; ItemNos: List of [Text]; VariantCode: Text; LocationCode: Text; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; BalanceAtDate: Boolean; var ResponseJson: JsonObject): Boolean
     var
         Items: JsonArray;
         ItemJson: JsonObject;
@@ -369,19 +378,20 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
     begin
         foreach ItemNo in ItemNos do begin
             Clear(ItemJson);
-            if not BuildOne(Argument, ItemNo, VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, ItemJson, true) then
+            if not BuildOne(Argument, ItemNo, VariantCode, LocationCode, PeriodType, FromDate, PeriodCount, BalanceAtDate, ItemJson, true) then
                 exit(false);
             Items.Add(ItemJson);
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('periodType', PeriodTypeName(PeriodType));
+        ResponseJson.Add('amountType', AmountTypeName(BalanceAtDate));
         ResponseJson.Add('variant', VariantCode);
         ResponseJson.Add('location', LocationCode);
         ResponseJson.Add('items', Items);
         exit(true);
     end;
 
-    local procedure BuildOne(var Argument: Record "Message Argument ori"; ItemNo: Text; VariantCode: Text; LocationCode: Text; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; var ResponseJson: JsonObject; Nested: Boolean): Boolean
+    local procedure BuildOne(var Argument: Record "Message Argument ori"; ItemNo: Text; VariantCode: Text; LocationCode: Text; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; BalanceAtDate: Boolean; var ResponseJson: JsonObject; Nested: Boolean): Boolean
     var
         Item: Record Item;
         Periods: JsonArray;
@@ -392,7 +402,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
             exit(false);
         Description := Item.Description;
         ItemNoText := Item."No.";
-        if not BuildPeriods(Argument, Item, PeriodType, FromDate, PeriodCount, Periods) then
+        if not BuildPeriods(Argument, Item, PeriodType, FromDate, PeriodCount, BalanceAtDate, Periods) then
             exit(false);
         if Nested then begin
             ResponseJson.Add('itemNo', ItemNoText);
@@ -406,6 +416,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         ResponseJson.Add('variant', VariantCode);
         ResponseJson.Add('location', LocationCode);
         ResponseJson.Add('periodType', PeriodTypeName(PeriodType));
+        ResponseJson.Add('amountType', AmountTypeName(BalanceAtDate));
         ResponseJson.Add('periods', Periods);
         exit(true);
     end;
@@ -457,7 +468,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         exit(true);
     end;
 
-    local procedure BuildPeriods(var Argument: Record "Message Argument ori"; var Item: Record Item; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; var Periods: JsonArray): Boolean
+    local procedure BuildPeriods(var Argument: Record "Message Argument ori"; var Item: Record Item; PeriodType: Enum "Analysis Period Type"; FromDate: Date; PeriodCount: Integer; BalanceAtDate: Boolean; var Periods: JsonArray): Boolean
     var
         Calendar: Record Date;
         PeriodPageMgt: Codeunit PeriodPageManagement;
@@ -479,10 +490,13 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
             exit(false);
         end;
         for PeriodIndex := 1 to PeriodCount do begin
-            Item.SetRange("Date Filter", Calendar."Period Start", Calendar."Period End");
+            if BalanceAtDate then
+                Item.SetRange("Date Filter", 0D, Calendar."Period End")
+            else
+                Item.SetRange("Date Filter", Calendar."Period Start", Calendar."Period End");
             ItemAvailFormsMgt.CalcAvailQuantities(
                 Item,
-                false,
+                BalanceAtDate,
                 GrossRequirement,
                 PlannedOrderReceipt,
                 ScheduledReceipt,
@@ -499,7 +513,7 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
             PeriodJson.Add('plannedOrderReceipt', PlannedOrderReceipt);
             PeriodJson.Add('projectedAvailableBalance', ProjectedAvailableBalance);
             PeriodJson.Add('inventory', Item.Inventory);
-            PeriodJson.Add('amountType', NetChangeTok);
+            PeriodJson.Add('amountType', AmountTypeName(BalanceAtDate));
             Periods.Add(PeriodJson);
             if PeriodIndex = PeriodCount then
                 exit(true);
@@ -546,6 +560,32 @@ codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
             exit(false);
         end;
         exit(true);
+    end;
+
+    local procedure ReadAmountType(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; var BalanceAtDate: Boolean): Boolean
+    var
+        AmountTypeText: Text;
+        AmountTypeErr: Label 'amountType is not a supported amount type.', Comment = 'is-IS=amountType er ekki studd tegund upphæðar.';
+        AmountTypeNextStepLbl: Label 'Use netChange or balanceAtDate for amountType.', Comment = 'is-IS=Notaðu netChange eða balanceAtDate fyrir amountType.';
+    begin
+        BalanceAtDate := false;
+        if not ReadText(Argument, RequestJson, AmountTypeKeyTok, false, AmountTypeText) then
+            exit(false);
+        if (AmountTypeText = '') or (LowerCase(AmountTypeText) = LowerCase(NetChangeTok)) then
+            exit(true);
+        if LowerCase(AmountTypeText) = LowerCase(BalanceAtDateTok) then begin
+            BalanceAtDate := true;
+            exit(true);
+        end;
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, AmountTypeErr, AmountTypeKeyTok, CopyStr(AmountTypeText, 1, 250), 'netChange|balanceAtDate', AmountTypeNextStepLbl);
+        exit(false);
+    end;
+
+    local procedure AmountTypeName(BalanceAtDate: Boolean): Text
+    begin
+        if BalanceAtDate then
+            exit(BalanceAtDateTok);
+        exit(NetChangeTok);
     end;
 
     local procedure PeriodTypeName(PeriodType: Enum "Analysis Period Type"): Text

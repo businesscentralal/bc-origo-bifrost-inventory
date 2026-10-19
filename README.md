@@ -1,6 +1,8 @@
 # Bifrost Inventory
 
-Bifrost feature app for inventory message types that are not covered by Bifrost Foundation. Each company can turn domains on or off in Inventory Setup. `IsEnabled` checks the domain flag and the matching permission. Message types use the `Inventory.*.*` pattern. Inventory Setup is not exposed as a main-app message type and is protected from `Data.Records.Set`. Tracking Specification and Reservation Entry are also blocked from `Data.Records.Set`.
+Bifrost feature app for inventory message types that are not covered by Bifrost Foundation. Each company can turn domains on or off in Inventory Setup. `IsEnabled` checks the domain flag and the matching permission. Message types use the `Inventory.*.*` pattern. Inventory Setup is not exposed as a main-app message type and is protected from `Data.Records.Set`. Tracking Specification and Reservation Entry are also blocked from `Data.Records.Set`, and so are Item Category, Item Attribute Value Mapping and the two Item Charge Assignment tables (use `Inventory.ItemCategory.Set` and `Inventory.ItemCharge.Assign`).
+
+The Item Reference, Availability, Item Charge and Item Category domains are new switches on Inventory Setup. A new company gets them on. A company that already has an Inventory Setup row gets them off after the upgrade; turn them on from the Inventory Setup page.
 
 ## Message types
 
@@ -8,6 +10,9 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 |------|-----------|---------|
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
+| `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
+| `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -45,7 +50,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
-| `Inventory.ItemCharge.Get` | Inbound | Read item charge assignment rows and the unassigned quantity |
+| `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
 | `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
@@ -67,7 +72,7 @@ Update this table in the same change as any new or renamed message type.
 
 ## Ranges
 
-- App: 10036885–10036934
+- App: 10036885–10036934 and 70013400–70013499
 - Tests: 96900–96999
 
 ## Dependencies
@@ -76,4 +81,10 @@ Update this table in the same change as any new or renamed message type.
 
 ## Permissions
 
-Ships only as PermissionSetExtension onto `BIFROST Read ori` / `BIFROST Full ori`.
+Ships only as PermissionSetExtension onto `BIFROST Read ori` / `BIFROST Full ori`:
+
+- `BIFROST InvRead ori` (extends `BIFROST Read ori`): execute rights for the read-only types and helpers. Includes the nonassignable `BIFROST InvAttrRead ori` (read on the item attribute tables only).
+- `BIFROST InvWrite ori` (extends `BIFROST Full ori`): execute rights for every type and helper. Includes the nonassignable `BIFROST InvAttrWrite ori` (write on the item attribute tables only).
+- `BIFROST InvPost ori` (assignable): posting gate, assign explicitly.
+
+The attribute sets hold only the attribute-table grants. Item reference, availability, item charge, item category, auto-reserve and order tracking types grant no standard table data: the caller needs a Business Central permission set that can read (or change) Item, Item Variant, Item Reference, Location, Item Category, Item Charge Assignment (Purch)/(Sales), Reservation Entry and the documents involved. IsEnabled and Execute check those permissions and answer `PermissionDenied` with a nextStep that names both sets. Adding standard-table grants through a Foundation role extension raises AppSourceCop AS0110/AS0112.

@@ -245,6 +245,56 @@ codeunit 96952 "Avail. By Period Tests"
         AssertResponseError(CallItem("Message Type ori"::"Inventory.AvailabilityByPeriod.Get", NonInventoryItem."No."), 'PreconditionFailed', 'Use an inventory item.');
     end;
 
+    [Test]
+    procedure BalanceAtDate_ReturnsCumulativeBalance()
+    var
+        Item: Record Item;
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        PeriodsToken: JsonToken;
+        PeriodToken: JsonToken;
+        MessageType: Enum "Message Type ori";
+    begin
+        Library.Initialize();
+        EnableAvailability();
+        CreateItem(Item, Item.Type::Inventory);
+        PostPositiveAdjustment(Item."No.", 5);
+        RequestJson.Add('itemNo', Item."No.");
+        RequestJson.Add('periodType', 'week');
+        RequestJson.Add('from', Format(WorkDate(), 0, 9));
+        RequestJson.Add('periods', 1);
+        RequestJson.Add('amountType', 'balanceAtDate');
+
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.AvailabilityByPeriod.Get", Item."No.", RequestJson, false);
+
+        Library.AssertStatus(ResponseJson, 'Success');
+        AssertText(ResponseJson, 'amountType', 'balanceAtDate');
+        Assert.IsTrue(ResponseJson.Get('periods', PeriodsToken), 'periods missing');
+        PeriodsToken.AsArray().Get(0, PeriodToken);
+        AssertText(PeriodToken.AsObject(), 'amountType', 'balanceAtDate');
+        AssertDecimal(PeriodToken.AsObject(), 'projectedAvailableBalance', 5);
+    end;
+
+    [Test]
+    procedure UnknownAmountType_ReturnsInvalidParameter()
+    var
+        Item: Record Item;
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        MessageType: Enum "Message Type ori";
+    begin
+        Library.Initialize();
+        EnableAvailability();
+        CreateItem(Item, Item.Type::Inventory);
+        RequestJson.Add('itemNo', Item."No.");
+        RequestJson.Add('periodType', 'month');
+        RequestJson.Add('from', Format(WorkDate(), 0, 9));
+        RequestJson.Add('periods', 1);
+        RequestJson.Add('amountType', 'average');
+        ResponseJson := Library.ExecuteType(MessageType::"Inventory.AvailabilityByPeriod.Get", Item."No.", RequestJson, false);
+        AssertResponseError(ResponseJson, 'InvalidParameter', 'Use netChange or balanceAtDate for amountType.');
+    end;
+
     local procedure CallItem(MessageType: Enum "Message Type ori"; ItemNo: Code[20]) ResponseJson: JsonObject
     var
         RequestJson: JsonObject;
@@ -260,7 +310,7 @@ codeunit 96952 "Avail. By Period Tests"
     var
         InventorySetup: Record "Inventory Setup ori";
     begin
-        // Same-version publish does not run the upgrade that turns this domain on.
+        // New domains are opt-in for companies that already have a setup row.
         if not InventorySetup.Get() then
             InventorySetup.InsertIfNotExists();
         if InventorySetup.Availability then

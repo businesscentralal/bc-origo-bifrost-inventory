@@ -419,10 +419,9 @@ codeunit 10036917 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
             exit(false);
         end;
         ItemReference.FindFirst();
+        Item.SetLoadFields("No.", Description, Blocked, "Base Unit of Measure", GTIN);
         if not Item.Get(ItemReference."Item No.") then
             exit(AnswerNotFound(Argument));
-        Item.SetLoadFields("No.", Description, Blocked, "Base Unit of Measure", GTIN);
-        Item.Get(ItemReference."Item No.");
         WriteResult(ResultJson, Item, 'reference', ItemReference, true);
         exit(true);
     end;

@@ -83,7 +83,7 @@ table 70013451 "Inventory Setup ori"
         }
         field(23; "Item Charge"; Boolean)
         {
-            Caption = 'Item Charge', Comment = 'is-IS=Vörugjald';
+            Caption = 'Item Charge', Comment = 'is-IS=Kostnaðarauki';
             InitValue = true;
         }
         field(24; "Item Category"; Boolean)

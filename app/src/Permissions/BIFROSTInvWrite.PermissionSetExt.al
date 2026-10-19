@@ -45,6 +45,7 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Item Ref. Resolve Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
         codeunit "Item Charge Assign Impl ori" = X,
+        codeunit "Item Charge Assign Proc ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
         codeunit "Item Charge Restrict ori" = X,
         codeunit "Item Category Get Impl ori" = X,
@@ -53,5 +54,6 @@ permissionsetextension 10036916 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Item Category Restrict ori" = X,
         codeunit "Reserv. AutoReserve Impl ori" = X,
         codeunit "Reserv. AutoReserve Proc ori" = X,
-        codeunit "Order Tracking Get Impl ori" = X;
+        codeunit "Order Tracking Get Impl ori" = X,
+        codeunit "Order Tracking Transfer ori" = X;
 }

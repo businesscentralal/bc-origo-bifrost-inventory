@@ -5,7 +5,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
-/// Inventory.ItemCategory.Get and Set deny a caller without write permission.
+/// Inventory.ItemCategory.Get denies a caller without read permission and Set a caller without write permission (AC08).
 /// </summary>
 codeunit 96957 "Item Category Perm"
 {
@@ -17,14 +17,14 @@ codeunit 96957 "Item Category Perm"
         Assert: Codeunit "Library Assert";
 
     [Test]
-    procedure WithoutInvWrite_GetReturnsPermissionDenied()
+    procedure WithoutInvRead_GetReturnsPermissionDenied()
     var
         TempArgument: Record "Message Argument ori" temporary;
         GetImpl: Codeunit "Item Category Get Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        Assert.IsFalse(GetImpl.IsEnabled(), 'Get should be disabled without write permission');
+        Assert.IsFalse(GetImpl.IsEnabled(), 'Get should be disabled without read permission');
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Insert(true);
@@ -33,7 +33,7 @@ codeunit 96957 "Item Category Perm"
         GetImpl.ExecuteBifrostTask(TempArgument);
         ResponseJson := TempArgument.GetResponseJson();
         Assert.AreEqual('PermissionDenied', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvWrite ori'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvRead ori'), ReadText(ResponseJson, 'nextStep'));
     end;
 
     [Test]

@@ -10,7 +10,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
-/// Inventory.Reservation.AutoReserve and Inventory.OrderTracking.Get.
+/// Inventory.Reservation.AutoReserve: happy path, edge cases, refusals and help.
 /// </summary>
 codeunit 96958 "Reserv. AutoReserve Tests"
 {
@@ -23,45 +23,83 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         LibrarySales: Codeunit "Library - Sales";
 
     [Test]
-    procedure AutoReserve_SalesLineWithStock_ReservesAndTracks()
+    procedure AutoReserve_SalesLineWithStock_ReservesFully()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ResponseJson: JsonObject;
+        Entries: JsonArray;
+        EntryToken: JsonToken;
+    begin
+        // [GIVEN] An item with 5 in stock and a sales order line for 2.
+        EnableReservations();
+        CreateStockedItem(Item, Item.Reserve::Optional, 5);
+        CreateSalesLine(SalesHeader, SalesLine, Item."No.", 2);
+        // [WHEN] The line is auto-reserved.
+        ResponseJson := CallAuto(LineRequest(SalesLine));
+        // [THEN] All 2 are reserved from the item ledger entry, and the entry made is listed.
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual(2, ReadDecimal(ResponseJson, 'reserved'), 'reserved');
+        Assert.AreEqual(2, ReadDecimal(ResponseJson, 'reservedQuantity'), 'reservedQuantity');
+        Assert.IsTrue(ReadBoolean(ResponseJson, 'fullyReserved'), 'fullyReserved');
+        Assert.AreEqual(Format(SalesLine.SystemId, 0, 4), ReadText(ResponseJson, 'systemId'), 'systemId');
+        Entries := ReadArray(ResponseJson, 'entries');
+        Assert.AreEqual(1, Entries.Count(), 'entries made');
+        Entries.Get(0, EntryToken);
+        Assert.AreEqual(Database::"Item Ledger Entry", ReadDecimal(EntryToken.AsObject(), 'supplyType'), 'supply is inventory');
+        Assert.AreEqual(Item."No.", ReadText(EntryToken.AsObject(), 'itemNo'), 'itemNo');
+        SalesLine.Find();
+        SalesLine.CalcFields("Reserved Quantity");
+        Assert.AreEqual(2, SalesLine."Reserved Quantity", 'line reserved quantity');
+        Cleanup(SalesHeader, Item."No.");
+    end;
+
+    [Test]
+    procedure AutoReserve_BySystemIdWithQuantity_ReservesPart()
     var
         Item: Record Item;
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Entries: JsonArray;
-        Token: JsonToken;
     begin
+        // [GIVEN] An item with 5 in stock and a sales order line for 3.
+        EnableReservations();
+        CreateStockedItem(Item, Item.Reserve::Optional, 5);
+        CreateSalesLine(SalesHeader, SalesLine, Item."No.", 3);
+        // [WHEN] Only 1 is requested, by SystemId.
+        RequestJson.Add('systemId', Format(SalesLine.SystemId, 0, 4));
+        RequestJson.Add('quantity', 1);
+        ResponseJson := CallAuto(RequestJson);
+        // [THEN] 1 is reserved and the line is not fully reserved.
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual(1, ReadDecimal(ResponseJson, 'reserved'), 'reserved');
+        Assert.IsFalse(ReadBoolean(ResponseJson, 'fullyReserved'), 'fullyReserved');
+        Cleanup(SalesHeader, Item."No.");
+    end;
+
+    [Test]
+    procedure AutoReserve_AlreadyFullyReserved_ReturnsZero()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ResponseJson: JsonObject;
+    begin
+        // [GIVEN] A sales order line that is already fully reserved.
         EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Optional, 5);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 2);
-        RequestJson := LineRequest(SalesLine);
-        ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'status');
-        Assert.AreEqual(true, ReadBoolean(ResponseJson, 'fullyReserved'), 'fullyReserved');
-        Assert.IsTrue(ReadDecimal(ResponseJson, 'reserved') > 0, 'reserved');
-        SalesLine.Get(SalesLine."Document Type", SalesLine."Document No.", SalesLine."Line No.");
-        SalesLine.CalcFields("Reserved Quantity");
-        Assert.AreEqual(2, SalesLine."Reserved Quantity", 'line reserved quantity');
-
-        Clear(RequestJson);
-        RequestJson := LineRequest(SalesLine);
-        ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'second status');
-        Assert.AreEqual(0, ReadDecimal(ResponseJson, 'reserved'), 'second reserved');
-        Assert.AreEqual(true, ReadBoolean(ResponseJson, 'fullyReserved'), 'second fullyReserved');
-
-        Clear(RequestJson);
-        RequestJson.Add('sourceKind', 'Sales');
-        RequestJson.Add('documentType', 'Order');
-        RequestJson.Add('documentNo', SalesLine."Document No.");
-        RequestJson.Add('lineNo', SalesLine."Line No.");
-        ResponseJson := CallTrack(RequestJson);
-        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'tracking status');
-        Assert.IsTrue(ResponseJson.Get('entries', Token), 'entries');
-        Entries := Token.AsArray();
-        Assert.IsTrue(Entries.Count() > 0, 'tracking chain');
+        ResponseJson := CallAuto(LineRequest(SalesLine));
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        // [WHEN] It is auto-reserved again.
+        ResponseJson := CallAuto(LineRequest(SalesLine));
+        // [THEN] Success with reserved 0, fullyReserved true and no new entries.
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual(0, ReadDecimal(ResponseJson, 'reserved'), 'reserved');
+        Assert.IsTrue(ReadBoolean(ResponseJson, 'fullyReserved'), 'fullyReserved');
+        Assert.AreEqual(0, ReadArray(ResponseJson, 'entries').Count(), 'no new entries');
         Cleanup(SalesHeader, Item."No.");
     end;
 
@@ -71,17 +109,62 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         Item: Record Item;
         SalesHeader: Record "Sales Header";
         SalesLine: Record "Sales Line";
-        ReservationEntry: Record "Reservation Entry";
         ResponseJson: JsonObject;
     begin
+        // [GIVEN] An item with Reserve = Never.
         EnableReservations();
         CreateStockedItem(Item, Item.Reserve::Never, 5);
         CreateSalesLine(SalesHeader, SalesLine, Item."No.", 1);
+        // [WHEN] Its sales line is auto-reserved.
         ResponseJson := CallAuto(LineRequest(SalesLine));
-        Assert.AreEqual('PreconditionFailed', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Change the item''s Reserve setting or reserve manually.'), ReadText(ResponseJson, 'nextStep'));
-        ReservationEntry.SetRange("Item No.", Item."No.");
-        Assert.AreEqual(0, ReservationEntry.Count(), 'nothing written');
+        // [THEN] PreconditionFailed with the nextStep, and nothing is written.
+        Assert.AreEqual('PreconditionFailed', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Change the item''s Reserve setting or reserve manually.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+        Assert.AreEqual(0, CountReservations(Item."No."), 'nothing written');
+        Cleanup(SalesHeader, Item."No.");
+    end;
+
+    [Test]
+    procedure AutoReserve_SalesQuoteLine_ReturnsPreconditionFailed()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [GIVEN] A sales quote line, identified by SystemId.
+        EnableReservations();
+        CreateStockedItem(Item, Item.Reserve::Optional, 5);
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Quote, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 1);
+        RequestJson.Add('systemId', Format(SalesLine.SystemId, 0, 4));
+        // [WHEN] It is auto-reserved.
+        ResponseJson := CallAuto(RequestJson);
+        // [THEN] PreconditionFailed: only sales order lines are reserved. Nothing is written.
+        Assert.AreEqual('PreconditionFailed', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual(0, CountReservations(Item."No."), 'nothing written');
+        Cleanup(SalesHeader, Item."No.");
+    end;
+
+    [Test]
+    procedure AutoReserve_PartialSupply_ReturnsLinesSkippedAndRollsBack()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ResponseJson: JsonObject;
+    begin
+        // [GIVEN] 1 in stock and a sales order line for 5.
+        EnableReservations();
+        CreateStockedItem(Item, Item.Reserve::Optional, 1);
+        CreateSalesLine(SalesHeader, SalesLine, Item."No.", 5);
+        // [WHEN] The line is auto-reserved.
+        ResponseJson := CallAuto(LineRequest(SalesLine));
+        // [THEN] LinesSkipped with the nextStep, and the partial reservation of 1 is rolled back.
+        Assert.AreEqual('LinesSkipped', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Read Inventory.Reservation.Get for what was reserved.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+        Assert.AreEqual(0, CountReservations(Item."No."), 'partial reservation was rolled back');
         Cleanup(SalesHeader, Item."No.");
     end;
 
@@ -96,8 +179,21 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         RequestJson.Add('documentNo', 'MISSING112');
         RequestJson.Add('lineNo', 10000);
         ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Check the document and line no.'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Check the document and line no.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure AutoReserve_UnknownSystemId_ReturnsRecordNotFound()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('systemId', Format(CreateGuid(), 0, 4));
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('systemId', ReadText(ResponseJson, 'parameter'), 'parameter');
     end;
 
     [Test]
@@ -112,67 +208,8 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         RequestJson.Add('lineNo', 10000);
         RequestJson.Add('extra', 'no');
         ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('UnknownParameter', ReadText(ResponseJson, 'code'), 'code');
-    end;
-
-    [Test]
-    procedure AutoReserve_PartialSupply_RollsBack()
-    var
-        Item: Record Item;
-        SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        ReservationEntry: Record "Reservation Entry";
-        ResponseJson: JsonObject;
-    begin
-        EnableReservations();
-        CreateStockedItem(Item, Item.Reserve::Optional, 1);
-        CreateSalesLine(SalesHeader, SalesLine, Item."No.", 5);
-        ResponseJson := CallAuto(LineRequest(SalesLine));
-        Assert.AreEqual('LinesSkipped', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Read Inventory.Reservation.Get for what was reserved.'), ReadText(ResponseJson, 'nextStep'));
-        ReservationEntry.SetRange("Source ID", SalesHeader."No.");
-        Assert.AreEqual(0, ReservationEntry.Count(), 'partial reserve was rolled back');
-        Cleanup(SalesHeader, Item."No.");
-    end;
-
-    [Test]
-    procedure OrderTracking_MissingLine_ReturnsRecordNotFound()
-    var
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-    begin
-        EnableReservations();
-        RequestJson.Add('sourceKind', 'Purchase');
-        RequestJson.Add('documentType', 'Order');
-        RequestJson.Add('documentNo', 'MISSING112');
-        RequestJson.Add('lineNo', 10000);
-        ResponseJson := CallTrack(RequestJson);
-        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Check the document and line no.'), ReadText(ResponseJson, 'nextStep'));
-    end;
-
-    [Test]
-    procedure OrderTracking_UnreservedLine_ReturnsEmptyChain()
-    var
-        Item: Record Item;
-        SalesHeader: Record "Sales Header";
-        SalesLine: Record "Sales Line";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-    begin
-        EnableReservations();
-        CreateStockedItem(Item, Item.Reserve::Optional, 2);
-        CreateSalesLine(SalesHeader, SalesLine, Item."No.", 1);
-        RequestJson.Add('sourceKind', 'Sales');
-        RequestJson.Add('documentType', 'Order');
-        RequestJson.Add('documentNo', SalesLine."Document No.");
-        RequestJson.Add('lineNo', SalesLine."Line No.");
-        ResponseJson := CallTrack(RequestJson);
-        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'status');
-        Assert.IsTrue(ResponseJson.Get('entries', Token), 'entries');
-        Assert.AreEqual(0, Token.AsArray().Count(), 'empty chain');
-        Cleanup(SalesHeader, Item."No.");
+        Assert.AreEqual('UnknownParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep');
     end;
 
     [Test]
@@ -183,8 +220,22 @@ codeunit 96958 "Reserv. AutoReserve Tests"
     begin
         EnableReservations();
         ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send documentType, documentNo and lineNo, or systemId.'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Send documentType, documentNo and lineNo, or systemId.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure AutoReserve_MissingLineNo_ReturnsMissingParameter()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('documentType', 'Order');
+        RequestJson.Add('documentNo', 'MISSING112');
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('lineNo', ReadText(ResponseJson, 'parameter'), 'parameter');
     end;
 
     [Test]
@@ -198,8 +249,39 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         RequestJson.Add('documentNo', 'MISSING112');
         RequestJson.Add('lineNo', 'nope');
         ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('InvalidParameterFormat', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send lineNo as an integer.'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreEqual('InvalidParameterFormat', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Send lineNo as an integer.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure AutoReserve_ZeroQuantity_ReturnsInvalidParameter()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('documentType', 'Order');
+        RequestJson.Add('documentNo', 'MISSING112');
+        RequestJson.Add('lineNo', 10000);
+        RequestJson.Add('quantity', 0);
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('quantity', ReadText(ResponseJson, 'parameter'), 'parameter');
+    end;
+
+    [Test]
+    procedure AutoReserve_QuoteDocumentType_ReturnsInvalidParameter()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        EnableReservations();
+        RequestJson.Add('documentType', 'Quote');
+        RequestJson.Add('documentNo', 'MISSING112');
+        RequestJson.Add('lineNo', 10000);
+        ResponseJson := CallAuto(RequestJson);
+        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('documentType', ReadText(ResponseJson, 'parameter'), 'parameter');
     end;
 
     [Test]
@@ -212,8 +294,42 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         RequestJson.Add('systemId', '00000000-0000-0000-0000-000000000001');
         RequestJson.Add('documentNo', 'MISSING112');
         ResponseJson := CallAuto(RequestJson);
-        Assert.AreEqual('ConflictingIdentifiers', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Send systemId or the document keys, not both.'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreEqual('ConflictingIdentifiers', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('Send systemId or the document keys, not both.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure AutoReserve_Help_CoversRefusalsInBothLanguages()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        AutoImpl: Codeunit "Reserv. AutoReserve Impl ori";
+        Contract: JsonObject;
+        ContractText: Text;
+        EnglishNotes: Text;
+        IcelandicNotes: Text;
+        PreviousLanguage: Integer;
+    begin
+        // [WHEN] The help contract is read.
+        Assert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.Reservation.AutoReserve", Contract), 'contract');
+        Contract.WriteTo(ContractText);
+        // [THEN] Every refusal code and the parameters are documented, and no AL object is named.
+        Assert.IsTrue(ContractText.Contains('PreconditionFailed'), 'PreconditionFailed');
+        Assert.IsTrue(ContractText.Contains('LinesSkipped'), 'LinesSkipped');
+        Assert.IsTrue(ContractText.Contains('RecordNotFound'), 'RecordNotFound');
+        Assert.IsTrue(ContractText.Contains('ConflictingIdentifiers'), 'ConflictingIdentifiers');
+        Assert.IsTrue(ContractText.Contains('PermissionDenied'), 'PermissionDenied');
+        Assert.IsTrue(ContractText.Contains('Read Inventory.Reservation.Get for what was reserved.'), 'LinesSkipped nextStep');
+        Assert.IsTrue(Contract.Contains('examples'), 'examples');
+        Assert.IsFalse(ContractText.Contains('Reservation Management'), 'no codeunit names');
+        Assert.IsFalse(ContractText.Contains(' ori"'), 'no object names');
+        // [THEN] The notes follow the language of the call.
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        Assert.IsTrue(AutoImpl.GetNotes(EnglishNotes), 'English notes');
+        GlobalLanguage(1039);
+        Assert.IsTrue(AutoImpl.GetNotes(IcelandicNotes), 'Icelandic notes');
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNotes, IcelandicNotes, 'notes follow LCID 1039');
     end;
 
     [Test]
@@ -221,7 +337,7 @@ codeunit 96958 "Reserv. AutoReserve Tests"
     var
         TempArgument: Record "Message Argument ori" temporary;
     begin
-        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false), 'Reservation Entry stays behind Reservation WriteGuard ori');
+        Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Reservation Entry", false), 'Reservation Entry stays behind the reservation write guard');
     end;
 
     local procedure EnableReservations()
@@ -272,11 +388,13 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.Reservation.AutoReserve", '', RequestJson, false);
     end;
 
-    local procedure CallTrack(RequestJson: JsonObject) ResponseJson: JsonObject
+    local procedure CountReservations(ItemNo: Code[20]): Integer
     var
-        Library: Codeunit "Inventory Test Library ori";
+        ReservationEntry: Record "Reservation Entry";
     begin
-        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.OrderTracking.Get", '', RequestJson, false);
+        ReservationEntry.SetRange("Item No.", ItemNo);
+        ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
+        exit(ReservationEntry.Count());
     end;
 
     local procedure Cleanup(var SalesHeader: Record "Sales Header"; ItemNo: Code[20])
@@ -293,17 +411,18 @@ codeunit 96958 "Reserv. AutoReserve Tests"
     var
         Token: JsonToken;
     begin
-        if ResponseJson.Get(KeyName, Token) and Token.IsValue() then
-            exit(Token.AsValue().AsText());
-        exit('');
+        if not ResponseJson.Get(KeyName, Token) then
+            exit('');
+        if not Token.IsValue() then
+            exit('');
+        exit(Token.AsValue().AsText());
     end;
 
     local procedure ReadDecimal(ResponseJson: JsonObject; KeyName: Text): Decimal
     var
-        Token: JsonToken;
         Result: Decimal;
     begin
-        if ResponseJson.Get(KeyName, Token) and Token.IsValue() and Evaluate(Result, Token.AsValue().AsText()) then
+        if Evaluate(Result, ReadText(ResponseJson, KeyName), 9) then
             exit(Result);
         exit(0);
     end;
@@ -312,8 +431,22 @@ codeunit 96958 "Reserv. AutoReserve Tests"
     var
         Token: JsonToken;
     begin
-        if ResponseJson.Get(KeyName, Token) and Token.IsValue() then
-            exit(Token.AsValue().AsBoolean());
-        exit(false);
+        if not ResponseJson.Get(KeyName, Token) then
+            exit(false);
+        if not Token.IsValue() then
+            exit(false);
+        exit(Token.AsValue().AsBoolean());
+    end;
+
+    local procedure ReadArray(ResponseJson: JsonObject; KeyName: Text): JsonArray
+    var
+        Token: JsonToken;
+        Empty: JsonArray;
+    begin
+        if not ResponseJson.Get(KeyName, Token) then
+            exit(Empty);
+        if not Token.IsArray() then
+            exit(Empty);
+        exit(Token.AsArray());
     end;
 }
