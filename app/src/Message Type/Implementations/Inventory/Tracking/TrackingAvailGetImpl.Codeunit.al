@@ -77,11 +77,13 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        MissingItemWhenTxt: Label 'data.itemNo was not sent or is blank.', Comment = 'is-IS=data.itemNo var ekki sent eða er autt.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemNo is missing');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingItemErr, MissingItemWhenTxt, ItemNoNextStepTxt));
         exit(true);
     end;
 
@@ -142,18 +144,23 @@ codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         EntryJson: JsonObject;
         Token: JsonToken;
         ItemNo: Code[20];
-        MissingItemErr: Label 'itemNo must be specified.', Locked = true;
+        MissingItemErr: Label 'itemNo must be specified.', Comment = 'is-IS=itemNo verður að vera tilgreint.';
+        ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo.';
+        ItemNoNextStepTxt: Label 'Send the item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið í data.itemNo.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
+        if RequestJson.Get('itemNo', Token) then
+            if Token.IsValue() then
+                if not Token.AsValue().IsNull() then
+                    ItemNo := CopyStr(DelChr(Token.AsValue().AsCode(), '<>', ' '), 1, MaxStrLen(ItemNo));
+        if ItemNo = '' then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
             exit;
         end;
-        ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo));
         ItemLedgerEntry.SetRange("Item No.", ItemNo);
         ItemLedgerEntry.SetFilter("Remaining Quantity", '<>0');
         if RequestJson.Get('locationCode', Token) then

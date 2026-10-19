@@ -119,6 +119,52 @@ codeunit 96921 "Inventory Contract Batch Tests"
     end;
 
     [Test]
+    procedure RemainingCatalogue_UsesIcelandicAt1039()
+    var
+        MessageType: Enum "Message Type ori";
+        MessageImpl: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        TypeNames: List of [Text];
+        TypeName: Text;
+        EnglishDescription: Text;
+        EnglishKeywords: Text;
+        EnglishSelection: Text;
+        IcelandicDescription: Text;
+        IcelandicKeywords: Text;
+        IcelandicSelection: Text;
+        PreviousLanguage: Integer;
+    begin
+        TypeNames.Add('Inventory.AdjustCost.Run');
+        TypeNames.Add('Inventory.CostToGL.Post');
+        TypeNames.Add('Inventory.Period.Close');
+        TypeNames.Add('Inventory.Period.Reopen');
+        TypeNames.Add('Inventory.Tracking.Assign');
+        TypeNames.Add('Inventory.Tracking.Delete');
+        TypeNames.Add('Inventory.Transfer.UndoShipment');
+        TypeNames.Add('Inventory.Assembly.UndoPost');
+        TypeNames.Add('Inventory.Reclassification.Post');
+        LibraryAssert.AreEqual(9, TypeNames.Count(), 'The remaining catalogue census must stay the nine types from issue 126.');
+        foreach TypeName in TypeNames do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+            MessageImpl := MessageType;
+            Discovery := MessageType;
+            PreviousLanguage := GlobalLanguage();
+            GlobalLanguage(1033);
+            EnglishDescription := MessageImpl.GetDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            EnglishSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(1039);
+            IcelandicDescription := MessageImpl.GetDescription();
+            IcelandicKeywords := Discovery.GetKeywords();
+            IcelandicSelection := Discovery.GetSelectionDescription();
+            GlobalLanguage(PreviousLanguage);
+            LibraryAssert.AreNotEqual(EnglishDescription, IcelandicDescription, TypeName + ' description must follow LCID 1039.');
+            LibraryAssert.AreNotEqual(EnglishKeywords, IcelandicKeywords, TypeName + ' keywords must follow LCID 1039.');
+            LibraryAssert.AreNotEqual(EnglishSelection, IcelandicSelection, TypeName + ' selection description must follow LCID 1039.');
+        end;
+    end;
+
+    [Test]
     procedure PublicHelp_ClearsDeveloperNotes()
     var
         ReservationImpl: Codeunit "Reservation Create Impl ori";
@@ -229,7 +275,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Create'), 'Inventory.ItemJournal.Create is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
-        LibraryAssert.AreEqual(4, ItemJournalNames.Count(), 'Exactly four Inventory.ItemJournal types are registered.');
+        // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
+        LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
         LibraryAssert.AreEqual(52, CheckedCount - ItemJournalNames.Count(), 'This app registers 52 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
         LibraryAssert.AreEqual(52, AppTypes.Count(), 'The registered Inventory type list for this app has 52 names.');

@@ -20,18 +20,24 @@ codeunit 70013471 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Deletes an item tracking specification through Item Tracking Management.', Comment = 'is-IS=Eyðir vörurekjanleikaforskrift í gegnum vörurekjanleikastjórnun.';
     begin
-        exit('Deletes an item tracking specification through Item Tracking Management.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'delete tracking, delete lot, delete serial, delete package', Comment = 'is-IS=eyða rekjanleika, eyða lotu, eyða raðnúmeri, eyða pakka';
     begin
-        exit('delete tracking, delete lot, delete serial, delete package');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Deletes one tracking specification by entry number.', Comment = 'is-IS=Eyðir einni rekjanleikaforskrift eftir færslunúmeri.';
     begin
-        exit('Deletes one tracking specification by entry number.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

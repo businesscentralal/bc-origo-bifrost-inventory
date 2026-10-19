@@ -24,18 +24,24 @@ codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Closes inventory periods through an ending date, matching the inventory period close action.', Comment = 'is-IS=Lokar birgðatímabilum eftir lokadagsetningu, eins og aðgerðin Loka birgðatímabili.';
     begin
-        exit('Closes inventory periods through an ending date, matching the inventory period close action.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'close inventory period, lock inventory period', Comment = 'is-IS=loka birgðatímabili, læsa birgðatímabili';
     begin
-        exit('close inventory period, lock inventory period');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Closes an inventory period. An already closed period returns success.', Comment = 'is-IS=Lokar birgðatímabili. Tímabil sem er þegar lokað skilar árangri.';
     begin
-        exit('Closes an inventory period. An already closed period returns success.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean

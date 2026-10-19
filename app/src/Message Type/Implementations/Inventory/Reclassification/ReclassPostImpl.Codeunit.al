@@ -24,18 +24,24 @@ codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     procedure GetDescription(): Text[250]
+    var
+        DescriptionLbl: Label 'Posts an item reclassification journal. This is not a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.';
     begin
-        exit('Posts an item reclassification journal. This is not a transfer order.');
+        exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
+    var
+        KeywordsLbl: Label 'reclassification journal, post reclassification', Comment = 'is-IS=endurflokkunarbók, bóka endurflokkun';
     begin
-        exit('reclassification journal, post reclassification');
+        exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
+    var
+        SelectionDescriptionLbl: Label 'Posts a reclassification journal. Does not create a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.';
     begin
-        exit('Posts a reclassification journal. Does not create a transfer order.');
+        exit(SelectionDescriptionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
