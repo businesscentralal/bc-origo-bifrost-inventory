@@ -121,8 +121,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Notes: Text;
     begin
         Notes := 'Previous message notes';
-        LibraryAssert.IsFalse(ReservationImpl.GetNotes(Notes), 'Reservation.Create must not expose developer notes.');
-        LibraryAssert.AreEqual('', Notes, 'Reservation.Create must clear previous notes.');
+        // Reservation.Create publishes caller notes (#122); they replace previous output and carry no compiler instructions.
+        LibraryAssert.IsTrue(ReservationImpl.GetNotes(Notes), 'Reservation.Create publishes its caller notes.');
+        LibraryAssert.IsFalse(Notes.Contains('Previous message notes'), 'Reservation.Create must replace previous notes.');
+        LibraryAssert.IsFalse(Notes.Contains('compiler'), 'Reservation.Create must not expose developer notes.');
+        LibraryAssert.IsTrue(Notes.Contains('Inventory.Reservation.Cancel'), 'Reservation.Create notes name the cancel type.');
         Notes := 'Previous message notes';
         LibraryAssert.IsFalse(CostToGLImpl.GetNotes(Notes), 'CostToGL.Test must not expose developer notes.');
         LibraryAssert.AreEqual('', Notes, 'CostToGL.Test must clear previous notes.');
