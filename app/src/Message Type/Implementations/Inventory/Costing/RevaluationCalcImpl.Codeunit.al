@@ -170,7 +170,7 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         if ItemLedgerEntry.FindSet() then
             repeat
                 RemainingQty += ItemLedgerEntry."Remaining Quantity";
-                InventoryValue += ItemLedgerEntry."Remaining Quantity" * ItemLedgerEntry."Cost Amount (Actual)" / ItemLedgerEntry.Quantity;
+                InventoryValue += RemainingValue(ItemLedgerEntry);
             until ItemLedgerEntry.Next() = 0;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemNo', Item."No.");
@@ -178,5 +178,15 @@ codeunit 70013488 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         ResponseJson.Add('inventoryValue', InventoryValue);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure RemainingValue(var ItemLedgerEntry: Record "Item Ledger Entry"): Decimal
+    begin
+        if ItemLedgerEntry.Quantity = 0 then
+            exit(0);
+        // Cost Amount (Actual) and Cost Amount (Expected) are FlowFields. An unread FlowField is 0.
+        // They are not both posted for the same value, so the sum is the entry cost.
+        ItemLedgerEntry.CalcFields("Cost Amount (Actual)", "Cost Amount (Expected)");
+        exit(ItemLedgerEntry."Remaining Quantity" * (ItemLedgerEntry."Cost Amount (Actual)" + ItemLedgerEntry."Cost Amount (Expected)") / ItemLedgerEntry.Quantity);
     end;
 }

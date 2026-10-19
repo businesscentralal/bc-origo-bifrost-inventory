@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-17) - cost reads calculate inventory quantity and value
+
+- `Inventory.Cost.Get` calculates the Item Inventory flow field before it returns `inventory`. `Inventory.Revaluation.Calculate` calculates `Cost Amount (Actual)` and `Cost Amount (Expected)` before remaining inventory value, so an open quantity is no longer reported with value 0. Cost Get Impl ori (70013468) and Revaluation Calc Impl ori (70013488). Inventory Item Quantity Tests (96924) posts its own stock and checks the quantity and value (#127).
+
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 
 - Reconcile the existing contract and mixed-language guard repairs with merged PR96 on main. Preserve its product, test and translation files unchanged; retain request-lineage, payload-generation, branch-parser and label-property regression coverage (#30–33). Production guard wiring and whole-issue acceptance remain pending. No AL object IDs, app versions, permissions or workflows change relative to main.
