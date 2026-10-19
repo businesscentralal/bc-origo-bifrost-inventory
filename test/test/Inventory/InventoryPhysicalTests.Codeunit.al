@@ -12,7 +12,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Self-created native stock verifies dedicated journal selection, checks, preview and posting isolation.</summary>
-codeunit 96962 "Inventory Physical Tests"
+codeunit 96944 "Inventory Physical Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;
@@ -60,6 +60,36 @@ codeunit 96962 "Inventory Physical Tests"
         asserterror Journal.Calculate(TempArgument);
         Assert.ExpectedError('empty physical');
         Assert.AreEqual(1, Line.Count(), 'Repeat cannot append duplicate count lines.');
+    end;
+
+    /// <summary>Calculate without the required postingDate answers an error naming postingDate and writes no lines (#122 F2).</summary>
+    [Test]
+    procedure Scenario_AC01_Calculate_MissingPostingDate_Refuses()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] Stock and an empty physical inventory batch.
+        CreateStock(Item);
+        CreateBatch(Batch, "Item Journal Template Type"::"Phys. Inventory");
+        // [WHEN] Calculate runs with a document number and item filter but no postingDate.
+        Request.Add('documentNo', 'COUNT-NODATE');
+        Request.Add('itemNo', Item."No.");
+        InitArgument(TempArgument, Batch, Request);
+        Journal.Calculate(TempArgument);
+        // [THEN] The response is an error on postingDate and the batch stays empty.
+        Response := TempArgument.GetResponseJson();
+        Assert.IsTrue(Response.Get('status', Token), 'status missing');
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'postingDate is required.');
+        Assert.IsTrue(Response.Get('parameter', Token), 'parameter missing');
+        Assert.AreEqual('postingDate', Token.AsValue().AsText(), 'The error names postingDate.');
+        FilterBatch(Batch, Line);
+        Assert.IsTrue(Line.IsEmpty(), 'No journal line is created without a posting date.');
     end;
 
     /// <summary>Omitted count leaves the native value untouched and explicit zero runs Validate to produce the full shortage.</summary>
@@ -201,7 +231,7 @@ codeunit 96962 "Inventory Physical Tests"
         PhysicalEntries: Record "Phys. Inventory Ledger Entry";
         Register: Record "Item Register";
         TempArgument: Record "Message Argument ori" temporary;
-        Process: Codeunit "Inv Native Journal Process ori";
+        Process: Codeunit "Inventory Write Process ori";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -266,7 +296,7 @@ codeunit 96962 "Inventory Physical Tests"
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
         TempArgument: Record "Message Argument ori" temporary;
-        Process: Codeunit "Inv Native Journal Process ori";
+        Process: Codeunit "Inventory Write Process ori";
         Request: JsonObject;
         Count: JsonObject;
         Counts: JsonArray;
@@ -353,7 +383,7 @@ codeunit 96962 "Inventory Physical Tests"
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
         TempArgument: Record "Message Argument ori" temporary;
-        Process: Codeunit "Inv Native Journal Process ori";
+        Process: Codeunit "Inventory Write Process ori";
         Observer: Codeunit "Inv Journal Write Observer";
         Request: JsonObject;
         BeforeQuantity: Decimal;

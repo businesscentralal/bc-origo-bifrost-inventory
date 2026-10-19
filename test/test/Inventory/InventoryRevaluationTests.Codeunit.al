@@ -24,7 +24,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryCosting: Codeunit "Library - Costing";
-        Revaluation: Codeunit "Inventory Revaluation ori";
+        Revaluation: Codeunit "Inventory Native Journal ori";
 
     /// <summary>Native preview captures revaluation value entries and preserves journal/ledger rows exactly.</summary>
     [Test]
@@ -50,7 +50,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         RegistersBefore := Register.Count();
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        Revaluation.Preview(TempArgument);
+        Revaluation.PreviewRevaluation(TempArgument);
         Response := TempArgument.GetResponseJson();
         ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.PreviewPost", Response);
         Response.Get('status', Token);
@@ -81,6 +81,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         ValueEntry: Record "Value Entry";
         Register: Record "Item Register";
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -89,7 +90,8 @@ codeunit 96941 "Inventory Revaluation Tests"
         CreateProposal(OtherItem, OtherBatch, OtherLine);
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        Assert.IsTrue(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), GetLastErrorText());
+        Process.SetOperation('RevaluationPost');
+        Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
         Response := TempArgument.GetResponseJson();
         ContractLibrary.AssertResponseContract("Message Type ori"::"Inventory.Revaluation.Post", Response);
         Response.Get('itemRegisterNo', Token);
@@ -125,6 +127,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         ValueEntry: Record "Value Entry";
         Register: Record "Item Register";
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Request: JsonObject;
         ValuesBefore: Integer;
         RegistersBefore: Integer;
@@ -138,7 +141,8 @@ codeunit 96941 "Inventory Revaluation Tests"
         RegistersBefore := Register.Count();
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), 'Native invalid date fails the whole process.');
+        Process.SetOperation('RevaluationPost');
+        Assert.IsFalse(Process.Run(TempArgument), 'Native invalid date fails the whole process.');
         Assert.IsTrue(GetLastErrorText() <> '', 'Actual native failure retained.');
         Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'No partial ledger write.');
         Assert.AreEqual(RegistersBefore, Register.Count(), 'No partial register.');
@@ -157,7 +161,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         CreateBatch(Batch, Batch."Template Type"::Item);
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        asserterror Revaluation.Post(TempArgument);
+        asserterror Revaluation.PostRevaluation(TempArgument);
         Assert.ExpectedError('Revaluation');
     end;
 
@@ -172,7 +176,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         CreateBatch(Batch, Batch."Template Type"::Item);
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        asserterror Revaluation.Preview(TempArgument);
+        asserterror Revaluation.PreviewRevaluation(TempArgument);
         Assert.ExpectedError('Revaluation');
     end;
 
@@ -185,6 +189,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Line: Record "Item Journal Line";
         ValueEntry: Record "Value Entry";
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Observer: Codeunit "Inv Revaluation Observer";
         Request: JsonObject;
         ValuesBefore: Integer;
@@ -195,7 +200,8 @@ codeunit 96941 "Inventory Revaluation Tests"
         Observer.SetItem(Item."No.");
         BindSubscription(Observer);
         Commit();
-        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), 'Post-insert failure rolls back the process.');
+        Process.SetOperation('RevaluationPost');
+        Assert.IsFalse(Process.Run(TempArgument), 'Post-insert failure rolls back the process.');
         Assert.ExpectedError('Owned revaluation failure after native value entry insertion');
         UnbindSubscription(Observer);
         Assert.AreEqual(ValuesBefore, ValueEntry.Count(), 'The real inserted value entry was rolled back.');
@@ -239,6 +245,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         ValueEntry: Record "Value Entry";
         Ledger: Record "Item Ledger Entry";
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -277,7 +284,7 @@ codeunit 96941 "Inventory Revaluation Tests"
         Clear(Request);
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        Revaluation.Preview(TempArgument);
+        Revaluation.PreviewRevaluation(TempArgument);
         Response := TempArgument.GetResponseJson();
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native preview succeeds for the costing method.');
@@ -292,7 +299,8 @@ codeunit 96941 "Inventory Revaluation Tests"
             Assert.AreEqual(1, Line.Count(), 'Preview preserves the proposed journal line.');
         InitArgument(TempArgument, Batch, Request);
         Commit();
-        Assert.IsTrue(Codeunit.Run(Codeunit::"Inv Reval Post Process ori", TempArgument), GetLastErrorText());
+        Process.SetOperation('RevaluationPost');
+        Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
         ValueEntry.SetRange("Item No.", Item."No.");
         ValueEntry.SetRange("Entry Type", ValueEntry."Entry Type"::Revaluation);
         ValueEntry.CalcSums("Cost Amount (Actual)");

@@ -178,6 +178,7 @@ codeunit 70013445 "Inventory Contract Parts ori"
                     Fields.Add(ContractMgt.ResponseField('directTransfer', 'boolean', 'Whether the order was direct.'));
                     Fields.Add(ContractMgt.ResponseField('postedShipmentNo', 'string', 'Posted shipment number when one was created.'));
                     Fields.Add(ContractMgt.ResponseField('postedReceiptNo', 'string', 'Posted receipt number when one was created.'));
+                    Fields.Add(ContractMgt.ResponseField('orderDeleted', 'boolean', 'True when the posting completed the order and Business Central deleted it (a full receive or a direct transfer).'));
                     Fields.Add(ContractMgt.ResponseField('postingDate', 'string', 'Posting date in YYYY-MM-DD format.'));
                 end;
             'Inventory.TransferOrder.PreviewPost':
@@ -538,7 +539,7 @@ codeunit 70013445 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Create':
                 Notes := 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.';
             'Inventory.TransferOrder.Post':
-                Notes := 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration.';
+                Notes := 'Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true.';
             'Inventory.TransferOrder.PreviewPost':
                 Notes := 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.';
             'Inventory.AssemblyOrder.Create':

@@ -1,19 +1,22 @@
 # Changelog
 
-- Inventory #5/#30: advertise Item (27) as the filter table for both tracking reads, matching their implemented Item tableView selector; regression in codeunit 96927.
-
-- Inventory #5: resolve inbound tracking through native derived transfer lines (codeunit 10036916); repair native fixtures and preserve Foundation preview/write-policy contracts in tests 96921/96927/96941/96963.
-
-## Unreleased — eligible Inventory acceptance (#4, #5, #6, #30)
-
-- Add native cost snapshots, guarded Item cost/price updates, and revaluation post/preview contracts with native rollback tests (codeunits 70013400, 70013402–70013404, 70013432–70013435, 70013437–70013439, 70013468, 70013486).
-- Add read-only document/item tracking and grouped availability, typed Item table-view selectors, native expiration policy and paging (codeunits 10036913, 10036916, 10036919, 70013473; enum value 70013450). Sales, purchase and transfer adapters retain full records at their documented native InitFrom boundaries; regressions compare every specification field and read native Sales reservations plus outbound/inbound Transfer tracking.
-- Use native physical inventory calculation, count validation, readiness checks, preview and posting. Preserve explicit zero versus omitted counts and both native ledger ranges (codeunits 70013463, 70013465, 70013466, 70013469, 70013472, 70013479, 70013496; enum values 70013460–70013462).
-- Preserve existing attribute-table permissions through nonassignable included sets 10036915/10036916 while adding execute grants for the eligible types.
-- This cut retains existing main implementations outside the eligible families. Suspended feature changes stay in the original private checkpoint; this entry does not claim their acceptance or any runtime pass.
-
-
 ## [Unreleased]
+
+### Added (2026-10-19) - costing, item tracking reads and physical inventory (#4, #5, #6)
+
+- Costing (#4): `Inventory.Cost.Update` changes Unit Cost, Last Direct Cost or Standard Cost on one item card through native validation and refuses Standard-costed items with a pointer to `Inventory.Revaluation.Post`. `Inventory.Revaluation.PreviewPost` and `Inventory.Revaluation.Post` preview and post a Revaluation journal batch with Item Jnl.-Post Batch. `Inventory.Cost.Get` returns a native cost snapshot and `Inventory.Price.Update` writes Unit Price through native validation. Data.Records.Set refuses the Item cost and price fields and names the dedicated type.
+- Item tracking (#5): `Inventory.Tracking.Get` reads the lot, serial and package tracking of a document line or the open item ledger entries of an item; `Inventory.TrackingAvailability.Get` groups availability with native expiration dates (blank unless the item tracking code uses expiration dates) and paging.
+- Physical inventory (#6): `Inventory.PhysInventory.Calculate` runs report 790 into an empty batch and requires `postingDate` and `documentNo` (`itemNo`, `locationCode`, `variantCode` filter the items). `RecordCount` records several counts (an omitted `qtyCounted` leaves the line uncounted, 0 records zero), `Check` reports readiness, `PreviewPost` previews, and `Post` returns the item register and both ledger entry ranges. Item Journal Line stays writable through Data.Records.Set.
+- New objects: codeunits 70013406 `Revaluation Post Impl ori`, 70013407 `Reval Preview Impl ori`, 70013408 `Cost Update Impl ori`, 70013409 `Inventory Native Journal ori`, 70013410 `Inventory Tracking Read ori`, 70013411 `Tracking Get Impl ori`, 70013412 `Inventory Write Process ori`, 70013432 `Inventory Cost Read ori`, 70013437 `Inventory Cost Data Guard ori`, 70013438 `Inventory Card Write ori`, 70013479 `Phys. Inv. Check Impl ori`; message type values 70013437 `Inventory.Cost.Update`, 70013438 `Inventory.Revaluation.Post`, 70013413 `Inventory.Revaluation.PreviewPost`, 70013414-70013416 `Inventory.PhysInventory.Check/PreviewPost/RecordCount`, 70013417 `Inventory.Tracking.Get`. Execute grants go to the `BIFROST InvRead ori` / `BIFROST InvWrite ori` permission set extensions; the attribute permission sets are unchanged.
+- Tests: codeunits 96927, 96933, 96936-96946 and permission sets 96934-96936.
+
+### Fixed (2026-10-19) - message types that always failed (#122, #123, #124, #125)
+
+- `Inventory.TransferOrder.Post` with `postingType` Receive no longer answers "The Transfer Header does not exist" after a receive that completes the order: the posting runs in batch mode (no "posted and deleted" message) and the posted shipment, receipt or direct transfer number is captured from the posting events. The response adds `orderDeleted`.
+- `Inventory.PhysInventory.Calculate` takes the required `postingDate`, and `Inventory.PhysInventory.Post` posts the positioned batch; an empty batch is `PreconditionFailed` with the batch name as `received` and "at least one journal line" as `expected`.
+- `Inventory.Reservation.Create` reserves against a real source line (`sourceType` 37/39/5741/901, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) and returns `entryNo`/`entryNos`; nothing available is `PreconditionFailed`. `Inventory.Reservation.Cancel` cancels the pair through Reservation Engine Mgt. Both write through `Inventory Write Process ori` so a native error rolls the write back.
+- `Inventory Contract Batch Tests` no longer requires exactly four Foundation `Inventory.ItemJournal.*` types (Foundation 28.0.7 registers five).
+
 
 ### Fixed (2026-10-16) - integrate contract tooling after product acceptance
 

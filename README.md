@@ -13,7 +13,7 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.TransferOrder.Create` | Inbound | Create a transfer order |
 | `Inventory.TransferOrder.Release` | Inbound | Release a transfer order |
 | `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
-| `Inventory.TransferOrder.Post` | Inbound | Post a transfer order |
+| `Inventory.TransferOrder.Post` | Inbound | Post a transfer order (Ship or Receive). A Receive that completes the order returns Success with `postedReceiptNo` and `orderDeleted: true` |
 | `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
 | `Inventory.TransferOrder.Statistics` | Outbound | Read transfer order statistics |
 | `Inventory.AssemblyOrder.Create` | Inbound | Create an assembly order |
@@ -25,10 +25,12 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
+| `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
 | `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
 | `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
@@ -44,13 +46,17 @@ Bifrost feature app for inventory message types that are not covered by Bifrost 
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
+| `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
+| `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
-| `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
-| `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation through Reservation Management |
-| `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
-| `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on a physical inventory line |
-| `Inventory.PhysInventory.Preview` | Outbound | Preview a physical inventory batch without posting |
-| `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
+| `Inventory.Reservation.Create` | Inbound | Reserve supply for a sales, purchase, transfer or assembly line (`sourceType`, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) through Reservation Management AutoReserve; returns `entryNo` |
+| `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
+| `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
+| `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
+| `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
+| `Inventory.PhysInventory.Check` | Outbound | Check a physical inventory batch and list errors and warnings without posting |
+| `Inventory.PhysInventory.PreviewPost` | Inbound | Preview posting a physical inventory batch; nothing is kept |
+| `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch and return the item register and ledger entry ranges. An empty batch is `PreconditionFailed` |
 
 Update this table in the same change as any new or renamed message type.
 
@@ -62,7 +68,7 @@ Update this table in the same change as any new or renamed message type.
 
 ## Ranges
 
-- App: 10036885–10036934
+- App: 10036885–10036934 and 70013400–70013499
 - Tests: 96900–96999
 
 ## Dependencies

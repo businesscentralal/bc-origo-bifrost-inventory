@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>Intentional non-Standard card-cost writes behind company, native permission, license and transaction boundaries.</summary>
-codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013408 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -38,13 +38,15 @@ codeunit 70013435 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     /// <summary>Runs native validation through Codeunit.Run; no licensing or company-gate bypass.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not Codeunit.Run(Codeunit::"Inventory Cost Write Proc. ori", Argument) then
+        Process.SetOperation('CostUpdate');
+        if not Process.Run(Argument) then
             Argument.RespondWithError(GetLastErrorText());
     end;
 

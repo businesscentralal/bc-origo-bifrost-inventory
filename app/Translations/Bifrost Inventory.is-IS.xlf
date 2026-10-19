@@ -321,6 +321,72 @@
           <note from="Developer" annotates="general" priority="2">%1 = permission set name, is-IS=Bókun hafnað: vantar '%1' heimildasett.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inv. Posting Gate ori - Method AssertCanPost - NamedType PostingDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
+          <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 558155080" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to update item costs.</source>
+          <target>Heimild hafnað til að uppfæra vörukostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra vörukostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType CostWriteDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2195463964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to write item cost field %1.</source>
+          <target>Heimild hafnað til að breyta kostnaðarreit vöru %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = field number; is-IS=Heimild hafnað til að breyta kostnaðarreit vöru %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType FieldDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2813169322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item selection parameter %1 must be nonempty text.</source>
+          <target>Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType IdentifierErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 160901118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCostingMethod does not match the current costing method %1.</source>
+          <target>expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = current method; is-IS=expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType MethodErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 3660386871" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Supply unitCost, lastDirectCost or standardCost.</source>
+          <target>Tilgreindu unitCost, lastDirectCost eða standardCost.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu unitCost, lastDirectCost eða standardCost.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType NoFieldsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported price parameter %1.</source>
+          <target>Verðfæribreytan %1 er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Verðfæribreytan %1 er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType ParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 1648259694" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied to update item unit price.</source>
+          <target>Heimild hafnað til að uppfæra einingarverð vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra einingarverð vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType PriceWriteDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select exactly one item using subject, an item identifier or tableView.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType SelectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2278941802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard-costed items require Inventory.Revaluation.Post. No item-card cost was changed.</source>
+          <target>Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType StandardErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCostingMethod must be text.</source>
+          <target>expectedCostingMethod verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCostingMethod verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType TextErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1835610377 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
           <source>Parameter %1 must be text.</source>
           <target>Færibreytan %1 verður að vera texti.</target>
@@ -332,54 +398,6 @@
           <target>Heimild hafnað fyrir kostnaðargögn vöru.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir kostnaðargögn vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Read ori - NamedType ReadDeniedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
-          <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType BlockedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 2195463964" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Permission denied to write item cost field %1.</source>
-          <target>Heimild hafnað til að breyta kostnaðarreit vöru %1.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = field number; is-IS=Heimild hafnað til að breyta kostnaðarreit vöru %1.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType FieldDeniedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 160901118" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCostingMethod does not match the current costing method %1.</source>
-          <target>expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = current method; is-IS=expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType MethodErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 3660386871" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Supply unitCost, lastDirectCost or standardCost.</source>
-          <target>Tilgreindu unitCost, lastDirectCost eða standardCost.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu unitCost, lastDirectCost eða standardCost.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType NoFieldsErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select exactly one item using subject, an item identifier or tableView.</source>
-          <target>Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType SelectionErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 2278941802" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Standard-costed items require Inventory.Revaluation.Post. No item-card cost was changed.</source>
-          <target>Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType StandardErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCostingMethod must be text.</source>
-          <target>expectedCostingMethod verður að vera texti.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCostingMethod verður að vera texti.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType TextErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1739476244 - NamedType 2509391145" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Permission denied to update item costs.</source>
-          <target>Heimild hafnað til að uppfæra vörukostnað.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra vörukostnað.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Write ori - NamedType WriteDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
@@ -411,6 +429,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Valin bók inniheldur engar línur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1159766507" size-unit="char" translate="yes" xml:space="preserve">
+          <source>at least one journal line</source>
+          <target>a.m.k. ein bókarlína</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=a.m.k. ein bókarlína</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyExpectedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 2828025725" size-unit="char" translate="yes" xml:space="preserve">
           <source>Line %1 has a future posting date.</source>
           <target>Lína %1 hefur bókunardagsetningu í framtíðinni.</target>
@@ -441,6 +465,30 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 416719055" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
+          <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RevalBatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2616979424" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The revaluation batch has no lines to post.</source>
+          <target>Endurmatskeyrslan hefur engar línur til að bóka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurmatskeyrslan hefur engar línur til að bóka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RevalEmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3027222973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the revaluation journal lines before posting.</source>
+          <target>Farðu yfir línur endurmatsbókarinnar áður en bókað er.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir línur endurmatsbókarinnar áður en bókað er.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RevalNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2738392596" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported revaluation parameter %1.</source>
+          <target>Endurmatsfæribreytan %1 er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Endurmatsfæribreytan %1 er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RevalParameterErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
           <source>lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.</source>
           <target>lineSystemIds verður að vera fylki sem er ekki tómt með aðgreindum SystemId sem tilheyra auðkenndri bókarkeyrslu.</target>
@@ -458,108 +506,6 @@
           <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2249393538 - NamedType 3621259247" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.</source>
-          <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType BlockedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2249393538 - NamedType 2813169322" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item selection parameter %1 must be nonempty text.</source>
-          <target>Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType IdentifierErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2249393538 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unsupported price parameter %1.</source>
-          <target>Verðfæribreytan %1 er ekki studd.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Verðfæribreytan %1 er ekki studd.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType ParameterErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2249393538 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select exactly one item using subject, an item identifier or tableView.</source>
-          <target>Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, vöruauðkenni eða tableView.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType SelectionErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2249393538 - NamedType 2509391145" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Permission denied to update item unit price.</source>
-          <target>Heimild hafnað til að uppfæra einingarverð vöru.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað til að uppfæra einingarverð vöru.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Price Write ori - NamedType WriteDeniedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
-          <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType BatchErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The revaluation batch has no lines to post.</source>
-          <target>Endurmatskeyrslan hefur engar línur til að bóka.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Endurmatskeyrslan hefur engar línur til að bóka.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType EmptyErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Review the revaluation journal lines before posting.</source>
-          <target>Farðu yfir línur endurmatsbókarinnar áður en bókað er.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir línur endurmatsbókarinnar áður en bókað er.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType NextStepLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 567304435" size-unit="char" translate="yes" xml:space="preserve">
-          <source>No native item register was produced.</source>
-          <target>Engin innbyggð vöruskrá var mynduð.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Engin innbyggð vöruskrá var mynduð.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType NothingPostedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unsupported revaluation parameter %1.</source>
-          <target>Endurmatsfæribreytan %1 er ekki studd.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Endurmatsfæribreytan %1 er ekki studd.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType ParameterErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3100648654 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Parameter %1 must be nonempty text of at most %2 characters.</source>
-          <target>Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Revaluation ori - NamedType TextErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 11078697 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specify %1 as text.</source>
-          <target>Tilgreindu %1 sem texta.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = request property, is-IS=Tilgreindu %1 sem texta.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method ReadText - NamedType InvalidTextErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 2721639112 - NamedType 1465600059" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specify %1 with a supported type and systemId.</source>
-          <target>Tilgreindu %1 með studdri tegund og systemId.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = request property, is-IS=Tilgreindu %1 með studdri tegund og systemId.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method Resolve - NamedType InvalidSourceErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 2721639112 - NamedType 845101464" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The requested source record does not exist.</source>
-          <target>Umbeðin upprunafærsla er ekki til.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Umbeðin upprunafærsla er ekki til.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method Resolve - NamedType MissingSourceErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 2721639112 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Permission denied for the source record.</source>
-          <target>Heimild hafnað fyrir upprunafærsluna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method Resolve - NamedType PermissionErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 384696941 - NamedType 4122250990" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specify a supported document type and an existing item line.</source>
-          <target>Tilgreindu studda skjalategund og fyrirliggjandi vörulínu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu studda skjalategund og fyrirliggjandi vörulínu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method ResolveDocument - NamedType DocumentErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1196884345 - Method 384696941 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Permission denied for the source record.</source>
-          <target>Heimild hafnað fyrir upprunafærsluna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Source Resolve ori - Method ResolveDocument - NamedType PermissionErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
           <source>integer in range</source>
@@ -584,6 +530,48 @@
           <target>Heimild hafnað fyrir umbeðin rakningargögn.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir umbeðin rakningargögn.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 11078697 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specify %1 as text.</source>
+          <target>Tilgreindu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request property, is-IS=Tilgreindu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ReadText - NamedType InvalidTextErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 2721639112 - NamedType 1465600059" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specify %1 with a supported type and systemId.</source>
+          <target>Tilgreindu %1 með studdri tegund og systemId.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request property, is-IS=Tilgreindu %1 með studdri tegund og systemId.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method Resolve - NamedType InvalidSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 2721639112 - NamedType 845101464" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The requested source record does not exist.</source>
+          <target>Umbeðin upprunafærsla er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Umbeðin upprunafærsla er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method Resolve - NamedType MissingSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 2721639112 - NamedType 2377214757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for the source record.</source>
+          <target>Heimild hafnað fyrir upprunafærsluna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method Resolve - NamedType SourcePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 384696941 - NamedType 4122250990" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specify a supported document type and an existing item line.</source>
+          <target>Tilgreindu studda skjalategund og fyrirliggjandi vörulínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu studda skjalategund og fyrirliggjandi vörulínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ResolveDocument - NamedType DocumentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - Method 384696941 - NamedType 2377214757" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for the source record.</source>
+          <target>Heimild hafnað fyrir upprunafærsluna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ResolveDocument - NamedType SourcePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - NamedType 2230270348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown inventory write operation.</source>
+          <target>Óþekkt birgðaskrifaðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðaskrifaðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - NamedType UnknownOperationErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item application entries for an item ledger entry.</source>
@@ -915,6 +903,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3981522027" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is required.</source>
+          <target>entryNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType EntryNoRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 2118104085" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo must be a positive whole number.</source>
+          <target>entryNo verður að vera jákvæð heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo verður að vera jákvæð heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType EntryNoFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservation entry %1 was not found.</source>
+          <target>Frátekningarfærsla %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3816499092" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.</source>
+          <target>Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType NotReservationErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cancels a reservation entry through Reservation Management.</source>
           <target>Afturkallar frátekningarfærslu með Reservation Management.</target>
@@ -927,29 +939,257 @@
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla frátekningu, eyða frátekningu</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cancels both sides of the reservation pair through the native Reservation Engine Mgt. CancelReservation, the same action as Cancel Reservation on the Reservation Entries page. Only entries with status Reservation can be cancelled.</source>
+          <target>Afturkallar báðar hliðar frátekningarparsins með innbyggða CancelReservation í Reservation Engine Mgt., sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar báðar hliðar frátekningarparsins með innbyggða CancelReservation í Reservation Engine Mgt., sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cancels one reservation entry by entry number.</source>
           <target>Afturkallar eina frátekningarfærslu eftir færslunúmeri.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar eina frátekningarfærslu eftir færslunúmeri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1820331447" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity must be greater than zero.</source>
+          <target>quantity verður að vera stærra en núll.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity verður að vera stærra en núll.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType QuantityPositiveErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 4084272599" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a quantity greater than 0</source>
+          <target>magn stærra en 0</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=magn stærra en 0</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType QuantityExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1895704" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No reservation entry was created for the source line. No supply is available to reserve.</source>
+          <target>Engin frátekningarfærsla var búin til fyrir upprunalínuna. Ekkert framboð er tiltækt til frátekningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin frátekningarfærsla var búin til fyrir upprunalínuna. Ekkert framboð er tiltækt til frátekningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType NothingReservedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1136361737" size-unit="char" translate="yes" xml:space="preserve">
+          <source>available supply for the source line</source>
+          <target>tiltækt framboð fyrir upprunalínuna</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=tiltækt framboð fyrir upprunalínuna</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType NothingReservedExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1999404040" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check inventory at the source location, then retry Inventory.Reservation.Create.</source>
+          <target>Athugaðu birgðir á staðsetningu upprunalínunnar og reyndu svo Inventory.Reservation.Create aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu birgðir á staðsetningu upprunalínunnar og reyndu svo Inventory.Reservation.Create aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType NothingReservedNextStepTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates a reservation through Reservation Management.</source>
-          <target>Býr til frátekningu með Reservation Management.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til frátekningu með Reservation Management.</note>
+          <source>Reserves supply for a source document line through Reservation Management.</source>
+          <target>Tekur frá framboð fyrir línu upprunaskjals með Reservation Management.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tekur frá framboð fyrir línu upprunaskjals með Reservation Management.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>sourceType, sourceNo, sourceLineNo or quantity is missing.</source>
+          <target>sourceType, sourceNo, sourceLineNo eða quantity vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=sourceType, sourceNo, sourceLineNo eða quantity vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name the source table, document, line and the quantity to reserve.</source>
+          <target>Tilgreindu upprunatöflu, skjal, línu og magn til frátekningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunatöflu, skjal, línu og magn til frátekningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The source line does not exist.</source>
+          <target>Upprunalínan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Upprunalínan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check sourceType, sourceSubtype, sourceNo and sourceLineNo.</source>
+          <target>Athugaðu sourceType, sourceSubtype, sourceNo og sourceLineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu sourceType, sourceSubtype, sourceNo og sourceLineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unsupported sourceType or sourceSubtype, quantity not above 0, or itemNo/locationCode differ from the source line.</source>
+          <target>Óstudd sourceType eða sourceSubtype, quantity ekki yfir 0, eða itemNo/locationCode stemma ekki við upprunalínuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óstudd sourceType eða sourceSubtype, quantity ekki yfir 0, eða itemNo/locationCode stemma ekki við upprunalínuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the indicated parameter.</source>
+          <target>Leiðréttu viðkomandi færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu viðkomandi færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 3827452805" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No supply is available, so nothing was reserved.</source>
+          <target>Ekkert framboð er tiltækt svo ekkert var tekið frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekkert framboð er tiltækt svo ekkert var tekið frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType NothingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1158096087 - NamedType 3300499212" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check inventory or incoming supply at the source location, then retry.</source>
+          <target>Athugaðu birgðir eða væntanlegt framboð á staðsetningunni og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu birgðir eða væntanlegt framboð á staðsetningunni og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetErrors - NamedType NothingFixLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>create reservation, auto reserve, reserve item</source>
-          <target>búa til frátekningu, taka sjálfvirkt frá, taka vöru frá</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=búa til frátekningu, taka sjálfvirkt frá, taka vöru frá</note>
+          <source>create reservation, auto reserve, reserve item, source line</source>
+          <target>búa til frátekningu, taka sjálfvirkt frá, taka vöru frá, upprunalína</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=búa til frátekningu, taka sjálfvirkt frá, taka vöru frá, upprunalína</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>AutoReserve runs on the loaded source line and reserves at most the requested quantity from the available supply; a partial reservation returns fullAutoReservation false. Cancel an entry with Inventory.Reservation.Cancel.</source>
+          <target>AutoReserve keyrir á hlaðinni upprunalínu og tekur að hámarki frá umbeðið magn af tiltæku framboði; hlutafrátekning skilar fullAutoReservation false. Afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=AutoReserve keyrir á hlaðinni upprunalínu og tekur að hámarki frá umbeðið magn af tiltæku framboði; hlutafrátekning skilar fullAutoReservation false. Afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserves supply for a real source line with Reservation Management AutoReserve and returns the reservation entry numbers.</source>
+          <target>Tekur frá framboð fyrir raunverulega upprunalínu með AutoReserve í Reservation Management og skilar númerum frátekningarfærslnanna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tekur frá framboð fyrir raunverulega upprunalínu með AutoReserve í Reservation Management og skilar númerum frátekningarfærslnanna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line.</source>
+          <target>Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2182983805" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source subtype: the sales, purchase or assembly document type ordinal (1 = Order), or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly and 0 for transfer lines.</source>
+          <target>Undirtegund uppruna: raðtala skjalategundar sölu, innkaupa eða samsetningar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu, innkaup og samsetningu og 0 fyrir millifærslulínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Undirtegund uppruna: raðtala skjalategundar sölu, innkaupa eða samsetningar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu, innkaup og samsetningu og 0 fyrir millifærslulínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceSubtypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 1598139322" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source document number.</source>
+          <target>Númer upprunaskjals.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunaskjals.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2478746436" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source document line number.</source>
+          <target>Línunúmer upprunaskjals.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer upprunaskjals.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceLineNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity to reserve, in the source line unit of measure. Greater than 0.</source>
+          <target>Magn til frátekningar, í mælieiningu upprunalínunnar. Stærra en 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn til frátekningar, í mælieiningu upprunalínunnar. Stærra en 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional item number; must match the source line when sent.</source>
+          <target>Valfrjálst vörunúmer; verður að passa við upprunalínuna ef það er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst vörunúmer; verður að passa við upprunalínuna ef það er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 1907782198" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional location code; must match the source line location when sent.</source>
+          <target>Valfrjáls staðsetningarkóði; verður að passa við staðsetningu upprunalínunnar ef hann er sendur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls staðsetningarkóði; verður að passa við staðsetningu upprunalínunnar ef hann er sendur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType LocationCodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 3193096050" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success when at least one reservation entry was created.</source>
+          <target>Success þegar a.m.k. ein frátekningarfærsla var búin til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success þegar a.m.k. ein frátekningarfærsla var búin til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType StatusLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 3367215521" size-unit="char" translate="yes" xml:space="preserve">
+          <source>First created reservation entry number. Pass it to Inventory.Reservation.Cancel.</source>
+          <target>Númer fyrstu frátekningarfærslunnar sem var búin til. Sendu það í Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer fyrstu frátekningarfærslunnar sem var búin til. Sendu það í Inventory.Reservation.Cancel.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType EntryNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 2034244912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>All created reservation entry numbers (one per reserved supply).</source>
+          <target>Öll númer frátekningarfærslna sem voru búnar til (eitt fyrir hvert frátekið framboð).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Öll númer frátekningarfærslna sem voru búnar til (eitt fyrir hvert frátekið framboð).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType EntryNosLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity reserved by this call, in the source line unit of measure.</source>
+          <target>Magn sem þetta kall tók frá, í mælieiningu upprunalínunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn sem þetta kall tók frá, í mælieiningu upprunalínunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 3249684267" size-unit="char" translate="yes" xml:space="preserve">
+          <source>True when the full requested quantity was reserved.</source>
+          <target>True þegar allt umbeðið magn var tekið frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=True þegar allt umbeðið magn var tekið frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType FullLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reserves quantity for an item through Reservation Management.</source>
-          <target>Tekur frá magn vöru með Reservation Management.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tekur frá magn vöru með Reservation Management.</note>
+          <source>Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer or assembly line).</source>
+          <target>Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 2546409665 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required.</source>
+          <target>%1 er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadCode - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 2546409665 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text of at most %2 characters.</source>
+          <target>%1 verður að vera texti að hámarki %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=%1 verður að vera texti að hámarki %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadCode - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1481450256 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required.</source>
+          <target>%1 er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadInteger - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1481450256 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a whole number of 0 or more.</source>
+          <target>%1 verður að vera heiltala, 0 eða stærri.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera heiltala, 0 eða stærri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadInteger - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 1105599607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>sourceType %1 is not a supported reservation source. Use 37 (Sales Line), 39 (Purchase Line), 5741 (Transfer Line) or 901 (Assembly Line).</source>
+          <target>sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37 (sölulína), 39 (innkaupalína), 5741 (millifærslulína) eða 901 (samsetningarlína).</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37 (sölulína), 39 (innkaupalína), 5741 (millifærslulína) eða 901 (samsetningarlína).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType UnsupportedSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 2524456475" size-unit="char" translate="yes" xml:space="preserve">
+          <source>sourceSubtype %1 is not valid for sourceType %2.</source>
+          <target>sourceSubtype %1 á ekki við sourceType %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = subtype; %2 = source table number; is-IS=sourceSubtype %1 á ekki við sourceType %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType SubtypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 1672472045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source line %1 %2 %3 was not found.</source>
+          <target>Upprunalína %1 %2 %3 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType SourceNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source line %1 %2 %3 is not an item line.</source>
+          <target>Upprunalína %1 %2 %3 er ekki vörulína.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 er ekki vörulína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType NotItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 3963436064" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo %1 does not match the source line item %2.</source>
+          <target>itemNo %1 passar ekki við vöru upprunalínunnar %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = requested item; %2 = source item; is-IS=itemNo %1 passar ekki við vöru upprunalínunnar %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType ItemMismatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 3794945912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>locationCode %1 does not match the source line location %2.</source>
+          <target>locationCode %1 passar ekki við staðsetningu upprunalínunnar %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = requested location; %2 = source location; is-IS=locationCode %1 passar ekki við staðsetningu upprunalínunnar %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType LocationMismatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 870418814 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads reservation entries for an item.</source>

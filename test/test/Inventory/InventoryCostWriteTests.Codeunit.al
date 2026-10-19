@@ -16,7 +16,7 @@ codeunit 96937 "Inventory Cost Write Tests"
     var
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
-        CostWrite: Codeunit "Inventory Cost Write ori";
+        CostWrite: Codeunit "Inventory Card Write ori";
 
     /// <summary>FIFO supports native card changes and truthful before/after.</summary>
     [Test]
@@ -227,6 +227,7 @@ codeunit 96937 "Inventory Cost Write Tests"
     var
         Item: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Observer: Codeunit "Inventory Cost Write Observer";
         Request: JsonObject;
         PreviousDescription: Text;
@@ -241,7 +242,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Observer.SetItem(Item."No.", true);
         BindSubscription(Observer);
         Commit();
-        Assert.IsFalse(Codeunit.Run(Codeunit::"Inventory Cost Write Proc. ori", TempArgument), 'Native subscriber failure must fail the transaction boundary.');
+        Process.SetOperation('CostUpdate');
+        Assert.IsFalse(Process.Run(TempArgument), 'Native subscriber failure must fail the transaction boundary.');
         Assert.ExpectedError('Owned native cost validation failure');
         UnbindSubscription(Observer);
         Item.Get(Item."No.");

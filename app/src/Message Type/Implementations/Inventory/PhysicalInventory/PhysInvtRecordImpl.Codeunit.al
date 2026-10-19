@@ -37,7 +37,7 @@ codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Gate: Codeunit "Inventory Domain Gate ori";
-        Process: Codeunit "Inv Native Journal Process ori";
+        Process: Codeunit "Inventory Write Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;

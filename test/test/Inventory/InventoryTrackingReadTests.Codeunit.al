@@ -1266,7 +1266,7 @@ codeunit 96927 "Inventory Tracking Read Tests"
     var
         Actual: Record "Tracking Specification";
         TempArgument: Record "Message Argument ori" temporary;
-        Resolver: Codeunit "Inventory Source Resolve ori";
+        Resolver: Codeunit "Inventory Tracking Read ori";
         SourceRef: RecordRef;
         ExpectedRef: RecordRef;
         ActualRef: RecordRef;

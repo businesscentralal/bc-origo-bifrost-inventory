@@ -174,16 +174,18 @@ codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Runs the licensed native price transaction.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        Process: Codeunit "Inventory Write Process ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemPrice, Database::Item, true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        Process.SetOperation('PriceUpdate');
         if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Inv. Price Write Process ori", Argument)
+            Process.Run(Argument)
         else
-            if not Codeunit.Run(Codeunit::"Inv. Price Write Process ori", Argument) then
+            if not Process.Run(Argument) then
                 Argument.RespondWithError(GetLastErrorText());
     end;
 }

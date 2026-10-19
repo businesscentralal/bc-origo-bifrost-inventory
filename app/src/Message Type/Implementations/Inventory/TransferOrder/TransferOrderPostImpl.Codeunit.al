@@ -153,8 +153,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostShipment: Boolean;
         PostReceipt: Boolean;
         PostTransfer: Boolean;
-        xLastShipmentNo: Code[20];
-        xLastReceiptNo: Code[20];
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Locked = true;
         InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value', Locked = true;
     begin
@@ -169,8 +167,6 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
         DocumentNo := TransferHeader."No.";
         DirectTransfer := TransferHeader."Direct Transfer";
-        xLastShipmentNo := TransferHeader."Last Shipment No.";
-        xLastReceiptNo := TransferHeader."Last Receipt No.";
         RequestJson := Argument.GetRequestJson();
 
         if DirectTransfer then begin
@@ -210,8 +206,9 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         end;
         UnbindSubscription(TransferPostSubscriber);
 
-        TransferHeader.Find();
-        BuildSuccessResponse(TransferHeader, DocumentNo, PostingTypeText, xLastShipmentNo, xLastReceiptNo, ResponseJson);
+        // A full receive (or a direct transfer) deletes the order, so the posted numbers come from the
+        // bound subscriber rather than from the order header.
+        BuildSuccessResponse(TransferPostSubscriber, DocumentNo, PostingTypeText, DirectTransfer, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -232,21 +229,24 @@ codeunit 70013415 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         end;
     end;
 
-    local procedure BuildSuccessResponse(TransferHeader: Record "Transfer Header"; DocumentNo: Code[20]; PostingTypeText: Text; xLastShipmentNo: Code[20]; xLastReceiptNo: Code[20]; var ResponseJson: JsonObject)
+    local procedure BuildSuccessResponse(var TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori"; DocumentNo: Code[20]; PostingTypeText: Text; DirectTransfer: Boolean; var ResponseJson: JsonObject)
     var
-        PostedShipmentNo: Code[20];
-        PostedReceiptNo: Code[20];
+        TransferHeader: Record "Transfer Header";
+        PostingDate: Date;
+        OrderExists: Boolean;
     begin
-        if TransferHeader."Last Shipment No." <> xLastShipmentNo then
-            PostedShipmentNo := TransferHeader."Last Shipment No.";
-        if TransferHeader."Last Receipt No." <> xLastReceiptNo then
-            PostedReceiptNo := TransferHeader."Last Receipt No.";
+        TransferHeader.SetLoadFields("Posting Date");
+        OrderExists := TransferHeader.Get(DocumentNo);
+        PostingDate := TransferPostSubscriber.GetPostingDate();
+        if (PostingDate = 0D) and OrderExists then
+            PostingDate := TransferHeader."Posting Date";
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('postingType', PostingTypeText);
-        ResponseJson.Add('directTransfer', TransferHeader."Direct Transfer");
-        ResponseJson.Add('postedShipmentNo', PostedShipmentNo);
-        ResponseJson.Add('postedReceiptNo', PostedReceiptNo);
-        ResponseJson.Add('postingDate', Format(TransferHeader."Posting Date", 0, 9));
+        ResponseJson.Add('directTransfer', DirectTransfer);
+        ResponseJson.Add('postedShipmentNo', TransferPostSubscriber.GetPostedShipmentNo());
+        ResponseJson.Add('postedReceiptNo', TransferPostSubscriber.GetPostedReceiptNo());
+        ResponseJson.Add('orderDeleted', not OrderExists);
+        ResponseJson.Add('postingDate', Format(PostingDate, 0, 9));
     end;
 }

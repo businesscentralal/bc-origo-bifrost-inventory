@@ -6,7 +6,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Issue 6 permission boundaries using actual restricted callers and Foundation's native item posting capability.</summary>
-codeunit 96963 "Inventory Physical Perm Tests"
+codeunit 96945 "Inventory Physical Perm Tests"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

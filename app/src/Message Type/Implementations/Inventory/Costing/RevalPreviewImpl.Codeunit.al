@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Runs native revaluation posting preview and returns captured entries without committing.</summary>
-codeunit 70013404 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013407 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -39,13 +39,13 @@ codeunit 70013404 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Gate: Codeunit "Inventory Domain Gate ori";
-        Revaluation: Codeunit "Inventory Revaluation ori";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Journal Line", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        Revaluation.Preview(Argument);
+        NativeJournal.PreviewRevaluation(Argument);
     end;
 
     /// <summary>Returns the native revaluation envelope contract.</summary>

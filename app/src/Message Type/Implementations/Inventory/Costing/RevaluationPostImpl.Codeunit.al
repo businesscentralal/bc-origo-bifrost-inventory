@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Posts a revaluation journal through native Item Jnl.-Post Batch.</summary>
-codeunit 70013403 "Revaluation Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 70013406 "Revaluation Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -38,16 +38,18 @@ codeunit 70013403 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Journal Line", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        Process.SetOperation('RevaluationPost');
         if Argument."Omit Commit" then
-            Codeunit.Run(Codeunit::"Inv Reval Post Process ori", Argument)
+            Process.Run(Argument)
         else
-            if not Codeunit.Run(Codeunit::"Inv Reval Post Process ori", Argument) then
+            if not Process.Run(Argument) then
                 Argument.RespondWithError(GetLastErrorText());
     end;
 

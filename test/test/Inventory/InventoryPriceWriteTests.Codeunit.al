@@ -15,7 +15,7 @@ codeunit 96939 "Inventory Price Write Tests"
         Assert: Codeunit "Library Assert";
         ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
-        PriceWrite: Codeunit "Inventory Price Write ori";
+        PriceWrite: Codeunit "Inventory Card Write ori";
 
     /// <summary>Actual native validation updates the selected item and returns stored before/after prices.</summary>
     [Test]
@@ -117,6 +117,7 @@ codeunit 96939 "Inventory Price Write Tests"
     var
         Item: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
         Observer: Codeunit "Inventory Price Write Observer";
         Request: JsonObject;
         PreviousDescription: Text;
@@ -128,7 +129,8 @@ codeunit 96939 "Inventory Price Write Tests"
         Observer.SetItem(Item."No.", true);
         BindSubscription(Observer);
         Commit();
-        Assert.IsFalse(Codeunit.Run(Codeunit::"Inv. Price Write Process ori", TempArgument), 'Native validation fails the transaction.');
+        Process.SetOperation('PriceUpdate');
+        Assert.IsFalse(Process.Run(TempArgument), 'Native validation fails the transaction.');
         Assert.ExpectedError('Owned native price validation failure');
         UnbindSubscription(Observer);
         Item.Get(Item."No.");

@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Inventory.Journal;
 
 /// <summary>Fails after a physical-count modification to prove the native transaction rolls back.</summary>
-codeunit 96961 "Inv Journal Write Observer"
+codeunit 96943 "Inv Journal Write Observer"
 {
     EventSubscriberInstance = Manual;
 

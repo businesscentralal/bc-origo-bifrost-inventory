@@ -40,7 +40,7 @@ codeunit 70013465 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     var
         Gate: Codeunit "Inventory Domain Gate ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
-        Process: Codeunit "Inv Native Journal Process ori";
+        Process: Codeunit "Inventory Write Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", true, false) then
             exit;

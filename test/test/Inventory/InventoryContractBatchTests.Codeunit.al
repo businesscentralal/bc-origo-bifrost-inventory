@@ -219,12 +219,13 @@ codeunit 96921 "Inventory Contract Batch Tests"
                     end;
                 end;
             end;
-        // [THEN] Foundation's four item journal types are present, and the other walked names are this app's registered types.
+        // [THEN] Foundation's item journal types are present, and the other walked names are this app's registered types.
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Check'), 'Inventory.ItemJournal.Check is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Create'), 'Inventory.ItemJournal.Create is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
-        LibraryAssert.AreEqual(4, ItemJournalNames.Count(), 'Exactly four Inventory.ItemJournal types are registered.');
+        // Foundation owns the Inventory.ItemJournal family and may add types (28.0.7 added a fifth); only the four used here are required.
+        LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'At least the four Inventory.ItemJournal types are registered.');
         LibraryAssert.AreEqual(51, CheckedCount - ItemJournalNames.Count(), 'This app registers 51 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
         LibraryAssert.AreEqual(51, AppTypes.Count(), 'The registered Inventory type list for this app has 51 names.');
@@ -271,6 +272,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Empty batch code.');
         LibraryAssert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
         LibraryAssert.AreEqual('journalBatchName', Token.AsValue().AsText(), 'parameter');
+        LibraryAssert.IsTrue(ResponseJson.Get('received', Token), 'received missing');
+        LibraryAssert.AreEqual(ItemJournalBatch.Name, Token.AsValue().AsText(), 'received is the batch name');
+        LibraryAssert.IsTrue(ResponseJson.Get('expected', Token), 'expected missing');
+        LibraryAssert.AreEqual('at least one journal line', Token.AsValue().AsText(), 'expected names a non-empty batch');
         LibraryAssert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
         LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'nextStep');
     end;
