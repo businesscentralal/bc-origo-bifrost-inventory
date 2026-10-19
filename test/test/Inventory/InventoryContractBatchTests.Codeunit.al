@@ -14,7 +14,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
     [Test]
-    procedure EmptyNotes_ClearPreviousOutput()
+    procedure CurrentNotes_ReplacePreviousOutput()
     var
         CalculateImpl: Codeunit "Phys. Inv. Calc Impl ori";
         PreviewImpl: Codeunit "Phys. Inv. Preview Impl ori";
@@ -22,14 +22,17 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Notes: Text;
     begin
         Notes := 'Previous message notes';
-        LibraryAssert.IsFalse(CalculateImpl.GetNotes(Notes), 'Calculate has no notes.');
-        LibraryAssert.AreEqual('', Notes, 'Calculate must clear previous output.');
+        LibraryAssert.IsTrue(CalculateImpl.GetNotes(Notes), 'Calculate publishes its current behavior.');
+        LibraryAssert.AreNotEqual('', Notes, 'Calculate notes must describe the operation.');
+        LibraryAssert.IsFalse(Notes.Contains('Previous message notes'), 'Calculate must replace previous output.');
         Notes := 'Previous message notes';
-        LibraryAssert.IsFalse(PreviewImpl.GetNotes(Notes), 'Preview has no notes.');
-        LibraryAssert.AreEqual('', Notes, 'Preview must clear previous output.');
+        LibraryAssert.IsTrue(PreviewImpl.GetNotes(Notes), 'Preview publishes its current behavior.');
+        LibraryAssert.AreNotEqual('', Notes, 'Preview notes must describe the operation.');
+        LibraryAssert.IsFalse(Notes.Contains('Previous message notes'), 'Preview must replace previous output.');
         Notes := 'Previous message notes';
-        LibraryAssert.IsFalse(TrackingImpl.GetNotes(Notes), 'Tracking has no notes.');
-        LibraryAssert.AreEqual('', Notes, 'Tracking must clear previous output.');
+        LibraryAssert.IsTrue(TrackingImpl.GetNotes(Notes), 'Tracking publishes its current behavior.');
+        LibraryAssert.AreNotEqual('', Notes, 'Tracking notes must describe the operation.');
+        LibraryAssert.IsFalse(Notes.Contains('Previous message notes'), 'Tracking must replace previous output.');
     end;
 
     [Test]
@@ -172,8 +175,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Notes: Text;
     begin
         Notes := 'Previous message notes';
-        LibraryAssert.IsFalse(ReservationImpl.GetNotes(Notes), 'Reservation.Create must not expose developer notes.');
-        LibraryAssert.AreEqual('', Notes, 'Reservation.Create must clear previous notes.');
+        // Reservation.Create publishes caller notes (#122); they replace previous output and carry no compiler instructions.
+        LibraryAssert.IsTrue(ReservationImpl.GetNotes(Notes), 'Reservation.Create publishes its caller notes.');
+        LibraryAssert.IsFalse(Notes.Contains('Previous message notes'), 'Reservation.Create must replace previous notes.');
+        LibraryAssert.IsFalse(Notes.Contains('compiler'), 'Reservation.Create must not expose developer notes.');
+        LibraryAssert.IsTrue(Notes.Contains('Inventory.Reservation.Cancel'), 'Reservation.Create notes name the cancel type.');
         Notes := 'Previous message notes';
         LibraryAssert.IsFalse(CostToGLImpl.GetNotes(Notes), 'CostToGL.Test must not expose developer notes.');
         LibraryAssert.AreEqual('', Notes, 'CostToGL.Test must clear previous notes.');
@@ -270,16 +276,16 @@ codeunit 96921 "Inventory Contract Batch Tests"
                     end;
                 end;
             end;
-        // [THEN] Foundation's four item journal types are present, and the other walked names are this app's registered types.
+        // [THEN] Foundation's item journal types are present, and the other walked names are this app's registered types.
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Check'), 'Inventory.ItemJournal.Check is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Create'), 'Inventory.ItemJournal.Create is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.Post'), 'Inventory.ItemJournal.Post is registered.');
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(52, CheckedCount - ItemJournalNames.Count(), 'This app registers 52 Inventory types.');
+        LibraryAssert.AreEqual(59, CheckedCount - ItemJournalNames.Count(), 'This app registers 59 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(52, AppTypes.Count(), 'The registered Inventory type list for this app has 52 names.');
+        LibraryAssert.AreEqual(59, AppTypes.Count(), 'The registered Inventory type list for this app has 59 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -323,6 +329,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Empty batch code.');
         LibraryAssert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
         LibraryAssert.AreEqual('journalBatchName', Token.AsValue().AsText(), 'parameter');
+        LibraryAssert.IsTrue(ResponseJson.Get('received', Token), 'received missing');
+        LibraryAssert.AreEqual(ItemJournalBatch.Name, Token.AsValue().AsText(), 'received is the batch name');
+        LibraryAssert.IsTrue(ResponseJson.Get('expected', Token), 'expected missing');
+        LibraryAssert.AreEqual('at least one journal line', Token.AsValue().AsText(), 'expected names a non-empty batch');
         LibraryAssert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
         LibraryAssert.AreNotEqual('', Token.AsValue().AsText(), 'nextStep');
     end;
@@ -388,6 +398,14 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AppRegisteredInventoryTypes() Types: List of [Text]
     begin
+        Types.Add('Inventory.Cost.Update');
+        Types.Add('Inventory.Revaluation.Post');
+        Types.Add('Inventory.Revaluation.PreviewPost');
+        Types.Add('Inventory.Tracking.Get');
+        Types.Add('Inventory.PhysInventory.Check');
+        Types.Add('Inventory.PhysInventory.PreviewPost');
+        Types.Add('Inventory.PhysInventory.RecordCount');
+
         Types.Add('Inventory.Attribute.Get');
         Types.Add('Inventory.Attribute.Create');
         Types.Add('Inventory.Attribute.Update');

@@ -29,3 +29,15 @@
 - Free in this block: 10036928, 10036930-10036934, 96960-96961, 96963-96979.
 - Reserved for other PRs, do not use here: app codeunits 70013432, 70013479; enum values 70013437, 70013438;
   test codeunits 96922-96924, 96927, 96930-96949.
+
+## Object IDs used by #4, #5, #6 and #122 (PR #139, claude/inv-costing)
+
+- App codeunits: 70013406 `Revaluation Post Impl ori`, 70013407 `Reval Preview Impl ori`, 70013408 `Cost Update Impl ori`,
+  70013409 `Inventory Native Journal ori` (physical inventory and revaluation journals), 70013410 `Inventory Tracking Read ori`,
+  70013411 `Tracking Get Impl ori`, 70013412 `Inventory Write Process ori` (one Codeunit.Run write boundary selected by
+  SetOperation), 70013432 `Inventory Cost Read ori`, 70013437 `Inventory Cost Data Guard ori`, 70013438 `Inventory Card Write ori`,
+  70013479 `Phys. Inv. Check Impl ori`.
+- Message type enum values: 70013437 Cost.Update, 70013438 Revaluation.Post (both in enum extension 70013469 with Cost.Get),
+  70013413 Revaluation.PreviewPost, 70013414-70013416 PhysInventory.Check/PreviewPost/RecordCount, 70013417 Tracking.Get.
+- Tests: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
+- Free in block 2 after this PR: codeunits 70013400-70013405, 70013429-70013431, 70013433-70013436; enum values 70013418-70013419.

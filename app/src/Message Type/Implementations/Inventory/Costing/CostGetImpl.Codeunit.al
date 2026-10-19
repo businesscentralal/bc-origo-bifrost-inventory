@@ -7,6 +7,13 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 {
     Access = Internal;
 
+    var
+        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.';
+        SelectionLbl: Label 'Returns current costing fields and native filtered inventory for one or more items.', Comment = 'is-IS=Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.';
+        KeywordsLbl: Label 'read item cost, unit cost, inventory value', Comment = 'is-IS=lesa vörukostnað,kostnaðarverð,birgðavirði';
+        OverviewLbl: Label 'Reads current item costs and filtered inventory for one or more items.', Comment = 'is-IS=Les núverandi vörukostnað og síað birgðamagn fyrir eina eða fleiri vörur.';
+        NotesLbl: Label 'Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.', Comment = 'is-IS=Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.';
+
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -20,61 +27,56 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     end;
 
     procedure GetDescription(): Text[250]
-    var
-        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.';
     begin
         exit(DescriptionLbl);
     end;
 
     procedure GetKeywords(): Text
-    var
-        KeywordsLbl: Label 'read item cost, unit cost, inventory value', Comment = 'is-IS=lesa vörukostnað, einingarkostnaður, birgðavirði';
     begin
         exit(KeywordsLbl);
     end;
 
     procedure GetSelectionDescription(): Text
-    var
-        SelectionDescriptionLbl: Label 'Returns unit cost, last direct cost, and inventory for an item.', Comment = 'is-IS=Skilar einingarkostnaði, síðasta beina kostnaði og birgðum vöru.';
     begin
-        exit(SelectionDescriptionLbl);
+        exit(SelectionLbl);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('messageType', 'Inventory.Cost.Get');
-        Envelope.Add('version', 1);
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["itemNo","systemId"],"description":"Subject wins over data identifiers and tableView."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
     begin
-        TargetJson.Add('table', 'Item');
-        Target.Add(TargetJson);
+        Clear(Target);
+        Target.ReadFrom('[{"table":"Item","selection":"subject, itemNo, itemId/id/systemId/recordSystemId, tableView, otherwise unblocked items"}]');
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
-        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur.';
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted; a different item number in subject and itemNo is refused. Required unless a SystemId or tableView selects the items.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur; ólík vörunúmer í subject og itemNo er hafnað. Nauðsynlegt nema SystemId eða tableView velji vörurnar.';
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        ParameterJson.Add('description', ItemNoDescriptionTxt);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoDescriptionTxt));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId; used after itemNo.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias for Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Foundation Item table view; supports multiple items.'));
+        Parameters.Add(ContractMgt.Parameter('locationFilter', 'string', false, 'Native Location Filter applied to inventory; does not change card costs.'));
+        Parameters.Add(ContractMgt.Parameter('variantCode', 'string', false, 'Exact variant selection for inventory; does not change card costs.'));
+        Parameters.Add(ContractMgt.Parameter('asOfDate', 'string', false, 'ISO posting-date upper bound for inventory quantity only. Costs and adjustment/G/L flags remain current.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
-        Response.Add('status', 'Success');
-        Response.Add('unitCost', 0);
-        Response.Add('lastDirectCost', 0);
-        Response.Add('inventory', 0);
+        Clear(Response);
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success."},{"name":"itemNo","type":"string","description":"Item number; only when exactly one item is selected."},{"name":"itemId","type":"string","description":"Item SystemId; only when exactly one item is selected."},{"name":"costingMethod","type":"string","description":"Invariant costing-method member name; only when exactly one item is selected."},{"name":"unitCost","type":"decimal","description":"Current Item Unit Cost; only when exactly one item is selected."},{"name":"standardCost","type":"decimal","description":"Current Item Standard Cost; only when exactly one item is selected."},{"name":"lastDirectCost","type":"decimal","description":"Current Item Last Direct Cost; only when exactly one item is selected."},{"name":"indirectCostPct","type":"decimal","description":"Current Item Indirect Cost %; only when exactly one item is selected."},{"name":"costIsAdjusted","type":"boolean","description":"Current Item adjustment flag; only when exactly one item is selected."},{"name":"costIsPostedToGL","type":"boolean","description":"Native current pending-cost FlowField; only when exactly one item is selected."},{"name":"inventory","type":"decimal","description":"Calculated stock quantity with location/variant and optional asOfDate; only when exactly one item is selected."},{"name":"locationFilter","type":"string","description":"Effective native location filter; only when exactly one item is selected."},{"name":"variantFilter","type":"string","description":"Effective native variant filter; only when exactly one item is selected."},{"name":"asOfDate","type":"string","description":"Optional ISO upper posting date for inventory only; only when exactly one item is selected."},{"name":"items","type":"array","description":"One current cost snapshot per selected item.","children":[{"name":"itemNo","type":"string","description":"Item number."},{"name":"itemId","type":"string","description":"Item SystemId."},{"name":"costingMethod","type":"string","description":"Invariant costing-method member name."},{"name":"unitCost","type":"number","description":"Current Item Unit Cost."},{"name":"standardCost","type":"number","description":"Current Item Standard Cost."},{"name":"lastDirectCost","type":"number","description":"Current Item Last Direct Cost."},{"name":"indirectCostPct","type":"number","description":"Current Item Indirect Cost %."},{"name":"costIsAdjusted","type":"boolean","description":"Current Item adjustment flag."},{"name":"costIsPostedToGL","type":"boolean","description":"Native current pending-cost FlowField."},{"name":"inventory","type":"number","description":"Native stock quantity with location/variant and optional asOfDate."},{"name":"locationFilter","type":"string","description":"Effective native location filter."},{"name":"variantFilter","type":"string","description":"Effective native variant filter."},{"name":"asOfDate","type":"string","description":"Optional ISO upper posting date for inventory only."}]}]}');
         exit(true);
     end;
 
@@ -83,19 +85,23 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ContractParts: Codeunit "Inventory Contract Parts ori";
         NotFoundErr: Label 'Item {itemNo} was not found.', Comment = 'is-IS=Vara {itemNo} fannst ekki.';
-        NotFoundWhenTxt: Label 'The item number matches no item.', Comment = 'is-IS=Vörunúmerið passar ekki við neina vöru.';
-        NotFoundFixTxt: Label 'Check the item number.', Comment = 'is-IS=Athugaðu vörunúmerið.';
+        NotFoundWhenTxt: Label 'The item number, SystemId or tableView matches no item.', Comment = 'is-IS=Vörunúmerið, SystemId eða tableView passar ekki við neina vöru.';
+        NotFoundFixTxt: Label 'Check the item number or the selection.', Comment = 'is-IS=Athugaðu vörunúmerið eða valið.';
     begin
         Clear(Errors);
         ContractParts.AddItemNoSubjectErrors(Errors, true);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundErr, NotFoundWhenTxt, NotFoundFixTxt));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Invalid optional text parameter.', 'Send text filters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'Invalid date or identifier.', 'Use ISO date and valid identifiers.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item read permission is absent.', 'Assign the appropriate read role.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Native inventory filter error.','A location or inventory filter cannot be applied.','Correct the native filter syntax.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
+        Clear(Effect);
+        Effect.ReadFrom('{"effect":"readOnly","writes":false,"posts":false,"idempotent":true,"changes":"None. Reads current Item costs and filtered native inventory quantities."}');
         exit(true);
     end;
 
@@ -120,22 +126,20 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.ReadFrom('[{"title":"Read current cost and filtered inventory for one item","request":{"type":"Inventory.Cost.Get","subject":"OWNED-ITEM","data":{"asOfDate":"2026-10-14"}}}]');
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
-    var
-        OverviewTxt: Label 'Reads item cost and inventory for one item.', Comment = 'is-IS=Les kostnað og birgðir fyrir eina vöru.';
     begin
-        Overview := OverviewTxt;
+        Overview := OverviewLbl;
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
-    var
-        NotesTxt: Label 'Read only. Intentional cost writes stay on the revaluation journal. data.itemNo or subject names the item.', Comment = 'is-IS=Aðeins lestur. Viljandi kostnaðarfærslur fara á endurmatsbókina. data.itemNo eða subject nefnir vöruna.';
     begin
-        Notes := NotesTxt;
+        Notes := NotesLbl;
         exit(true);
     end;
 
@@ -146,37 +150,13 @@ codeunit 70013468 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Item: Record Item;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ContractParts: Codeunit "Inventory Contract Parts ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        ItemNo: Code[20];
-        NotFoundErr: Label 'Item %1 was not found.', Comment = '%1 = item no.||is-IS=Vara %1 fannst ekki.';
-        NotFoundExpectedTxt: Label 'The number of an existing item.', Comment = 'is-IS=Númer vöru sem er til.';
-        NotFoundNextStepTxt: Label 'Check the item number, then send it as data.itemNo or subject.', Comment = 'is-IS=Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject.';
+        CostRead: Codeunit "Inventory Cost Read ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not ContractParts.TryResolveItemNo(Argument, RequestJson, true, ItemNo) then
-            exit;
-        Item.SetLoadFields("No.", "Unit Cost", "Last Direct Cost", "Standard Cost");
-        if not Item.Get(ItemNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, ItemNo), 'itemNo', ItemNo, NotFoundExpectedTxt, NotFoundNextStepTxt);
-            exit;
-        end;
-        // Inventory (field 68) is a FlowField. Item.Get does not calculate it.
-        Item.CalcFields(Inventory);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNo', Item."No.");
-        ResponseJson.Add('unitCost', Item."Unit Cost");
-        ResponseJson.Add('lastDirectCost', Item."Last Direct Cost");
-        ResponseJson.Add('standardCost', Item."Standard Cost");
-        ResponseJson.Add('inventory', Item.Inventory);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        CostRead.ReadCosts(Argument);
     end;
 }

@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Added (2026-10-19) - costing, item tracking reads and physical inventory (#4, #5, #6)
+
+- Costing (#4): `Inventory.Cost.Update` changes Unit Cost, Last Direct Cost or Standard Cost on one item card through native validation and refuses Standard-costed items with a pointer to `Inventory.Revaluation.Post`. `Inventory.Revaluation.PreviewPost` and `Inventory.Revaluation.Post` preview and post a Revaluation journal batch with Item Jnl.-Post Batch. `Inventory.Cost.Get` returns a native cost snapshot and `Inventory.Price.Update` writes Unit Price through native validation. Data.Records.Set refuses the Item cost and price fields and names the dedicated type.
+- Cost.Get keeps #140's single-item contract (data.itemNo or subject, MissingParameter, ConflictingIdentifiers, RecordNotFound, calculated inventory) and also accepts a SystemId subject, SystemId keys or a tableView; one selected item answers its fields at the top level as well as in `items`. TrackingAvailability.Get keeps #128's MissingParameter on a missing itemNo.
+- Item tracking (#5): `Inventory.Tracking.Get` reads the lot, serial and package tracking of a document line or the open item ledger entries of an item; `Inventory.TrackingAvailability.Get` groups availability with native expiration dates (blank unless the item tracking code uses expiration dates) and paging.
+- Physical inventory (#6): `Inventory.PhysInventory.Calculate` runs report 790 into an empty batch and requires `postingDate` and `documentNo` (`itemNo`, `locationCode`, `variantCode` filter the items). `RecordCount` records several counts (an omitted `qtyCounted` leaves the line uncounted, 0 records zero), `Check` reports readiness, `PreviewPost` previews, and `Post` returns the item register and both ledger entry ranges. Item Journal Line stays writable through Data.Records.Set.
+- New objects: codeunits 70013406 `Revaluation Post Impl ori`, 70013407 `Reval Preview Impl ori`, 70013408 `Cost Update Impl ori`, 70013409 `Inventory Native Journal ori`, 70013410 `Inventory Tracking Read ori`, 70013411 `Tracking Get Impl ori`, 70013412 `Inventory Write Process ori`, 70013432 `Inventory Cost Read ori`, 70013437 `Inventory Cost Data Guard ori`, 70013438 `Inventory Card Write ori`, 70013479 `Phys. Inv. Check Impl ori`; message type values 70013437 `Inventory.Cost.Update`, 70013438 `Inventory.Revaluation.Post`, 70013413 `Inventory.Revaluation.PreviewPost`, 70013414-70013416 `Inventory.PhysInventory.Check/PreviewPost/RecordCount`, 70013417 `Inventory.Tracking.Get`. Execute grants go to the `BIFROST InvRead ori` / `BIFROST InvWrite ori` permission set extensions; the attribute permission sets are unchanged.
+- Tests: codeunits 96927, 96933, 96936-96946 and permission sets 96934-96936.
+
+### Fixed (2026-10-19) - message types that always failed (#122, #123, #124, #125)
+
+- `Inventory.TransferOrder.Post` with `postingType` Receive no longer answers "The Transfer Header does not exist" after a receive that completes the order: the posting runs in batch mode (no "posted and deleted" message) and the posted shipment, receipt or direct transfer number is captured from the posting events. The response adds `orderDeleted`.
+- `Inventory.PhysInventory.Calculate` takes the required `postingDate`, and `Inventory.PhysInventory.Post` posts the positioned batch; an empty batch is `PreconditionFailed` with the batch name as `received` and "at least one journal line" as `expected`.
+- `Inventory.Reservation.Create` reserves against a real source line (`sourceType` 37/39/5741/901, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) and returns `entryNo`/`entryNos`; nothing available is `PreconditionFailed`. `Inventory.Reservation.Cancel` cancels the pair through Reservation Engine Mgt. Both write through `Inventory Write Process ori` so a native error rolls the write back.
+
 ### Added (2026-10-19) - item reference, availability by period, item charge, item category, auto-reserve and order tracking types (#101, #103, #108, #111, #112)
 
 - `Inventory.ItemReference.Resolve` (Item Ref. Resolve Impl ori, 10036917) resolves `referenceNo` or `references[]` with optional `referenceType` (barCode, customer, vendor, blank), `referenceTypeNo` and `date` to item, description, variant, unit of measure, reference type and the matched reference row. When no reference matches it checks the item number and then the item GTIN and says which `source` matched. No match answers `RecordNotFound`, several items `AmbiguousRecord`, `referenceTypeNo` with a barcode or blank type `InvalidParameter`. An ended reference is ignored; a blocked item answers `blocked: true`.
@@ -35,6 +50,7 @@
 ### Fixed (2026-10-17) - cost reads calculate inventory quantity and value
 
 - `Inventory.Cost.Get` calculates the Item Inventory flow field before it returns `inventory`. `Inventory.Revaluation.Calculate` calculates `Cost Amount (Actual)` and `Cost Amount (Expected)` before remaining inventory value, so an open quantity is no longer reported with value 0. Cost Get Impl ori (70013468) and Revaluation Calc Impl ori (70013488). Inventory Item Quantity Tests (96924) posts its own stock and checks the quantity and value (#127).
+
 ### Changed (2026-10-19) - AppSource preparation
 
 - The app and the test app now require Bifrost Foundation **28.0.3.530** (was 28.0.1.0) and `application` **28.3.0.0** (was 28.0.0.0). Both compile against the Foundation 28.0.3 release package with CodeCop, UICop and AppSourceCop at 0 errors and 0 warnings. CI probes that release (`release_status: release`, `version: 28.0.3`) instead of the latest build.

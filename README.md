@@ -40,7 +40,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.TransferOrder.Create` | Inbound | Create a transfer order |
 | `Inventory.TransferOrder.Release` | Inbound | Release a transfer order |
 | `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
-| `Inventory.TransferOrder.Post` | Inbound | Post a transfer order |
+| `Inventory.TransferOrder.Post` | Inbound | Post a transfer order (Ship or Receive). A Receive that completes the order returns Success with `postedReceiptNo` and `orderDeleted: true` |
 | `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
 | `Inventory.TransferOrder.Statistics` | Outbound | Read transfer order statistics |
 | `Inventory.AssemblyOrder.Create` | Inbound | Create an assembly order |
@@ -52,10 +52,12 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
+| `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
 | `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
 | `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
@@ -73,15 +75,19 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
+| `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
+| `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
-| `Inventory.Reservation.Create` | Inbound | Create a reservation through Reservation Management |
-| `Inventory.Reservation.Cancel` | Inbound | Cancel a reservation through Reservation Management |
+| `Inventory.Reservation.Create` | Inbound | Reserve supply for a sales, purchase, transfer or assembly line (`sourceType`, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) through Reservation Management AutoReserve; returns `entryNo` |
+| `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
 | `Inventory.Reservation.AutoReserve` | Inbound | Reserve a sales line from available supply |
 | `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |
-| `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into a physical inventory journal |
-| `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on a physical inventory line |
-| `Inventory.PhysInventory.Preview` | Outbound | Preview a physical inventory batch without posting |
-| `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch |
+| `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
+| `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
+| `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
+| `Inventory.PhysInventory.Check` | Outbound | Check a physical inventory batch and list errors and warnings without posting |
+| `Inventory.PhysInventory.PreviewPost` | Inbound | Preview posting a physical inventory batch; nothing is kept |
+| `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch and return the item register and ledger entry ranges. An empty batch is `PreconditionFailed` |
 
 Update this table in the same change as any new or renamed message type. Foundation itself
 registers `Inventory.ItemJournal.Check`, `.Create`, `.Post` and `.PreviewPost`; this app does not
@@ -135,11 +141,13 @@ own them.
 | Posting gate | `Inv. Posting Gate ori` (70013443), `Inv. Posting ori` (70013442) | Write permission on the token table `Inv. Posting ori` is the posting permission; only `BIFROST InvPost ori` grants it. |
 | Contracts | `Inventory Contract Parts ori` (70013445) | Shared contract chapters used by the implementation codeunits. |
 | Write restrictions | `Item Attr. Data Restrict ori` (10036911), `Inventory Setup Restrict ori` (70013454), `Tracking Data Restrict ori` (70013457), `Reservation WriteGuard ori` (70013498) | Subscribe to Foundation's `OnAfterIsTableWriteRestrictedForDataRecords` and close their tables to `Data.Records.Set`. |
+| Field restrictions | `Inventory Cost Data Guard ori` (70013437) | Subscribes to `OnAfterIsFieldWriteRestrictedForDataRecords` and closes Item Unit Cost, Standard Cost, Last Direct Cost and Unit Price to `Data.Records.Set`; the refusal names `Inventory.Cost.Update` or `Inventory.Price.Update`. |
+| Write process | `Inventory Write Process ori` (70013412) | One `Codeunit.Run` boundary for the journal, card-cost, price and reservation writes, so a native error rolls the whole write back. |
 
 Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`,
-`Inventory.Reclassification.PreviewPost` and `Inventory.Transfer.UndoReceipt`.
+`Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` and `Inventory.Transfer.UndoReceipt`.
 
 ---
 
@@ -210,11 +218,11 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | --- | --- | --- |
 | 70013450 | `Inventory Domain ori` | The fifteen domains |
 | 10036892 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
-| 70013455 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get` |
+| 70013455 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
 | 70013456 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 70013458 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 70013459 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
-| 70013469 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get` |
+| 70013469 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 70013492 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10036917 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
 | 10036918 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
@@ -232,7 +240,9 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 70013421–70013428 | Assembly orders | Create, Refresh Lines, Release, Reopen (+ process), Post, Preview Post, Statistics |
 | 70013443, 70013445, 70013453, 70013454, 70013457, 70013498 | Shared | Posting gate, contract parts, domain gate, setup/tracking/reservation write restrictions |
 | 70013460–70013462, 70013467, 70013468, 70013488 | Costing | Adjust Cost Run (+ process), Cost To GL Post/Test, Cost Get, Revaluation Calc |
-| 70013464–70013466, 70013472, 70013496 | Physical inventory | Calculate, Record, Preview, Post |
+| 70013406–70013409, 70013432, 70013437, 70013438 | Costing and journals | Revaluation Post, Reval Preview, Cost Update, `Inventory Native Journal ori` (physical inventory and revaluation), `Inventory Cost Read ori`, `Inventory Cost Data Guard ori`, `Inventory Card Write ori` |
+| 70013410–70013412 | Tracking reads and writes | `Inventory Tracking Read ori`, Tracking Get, `Inventory Write Process ori` |
+| 70013464–70013466, 70013472, 70013479, 70013496 | Physical inventory | Calculate, Record/RecordCount, Preview Post, Check, Post |
 | 70013470, 70013471, 70013473 | Item tracking | Assign, Delete, Availability Get |
 | 70013474, 70013475, 70013493 | Reclassification | Check, Preview, Post |
 | 70013476–70013478 | Reservations | Create, Get, Cancel |

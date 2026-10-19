@@ -12,7 +12,7 @@ Local help target for the Bifrost Inventory message types. The external document
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.Transfer.UndoShipment and Inventory.Transfer.UndoReceipt
 - Inventory.Assembly.UndoPost
-- Inventory.Tracking.Assign, Delete, and TrackingAvailability.Get
+- Inventory.Tracking.Get, Assign, Delete, and TrackingAvailability.Get
 - Inventory.Reservation.Get, Create, Cancel, and AutoReserve
 - Inventory.OrderTracking.Get
 - Inventory.ItemApplication.Get, Unapply, and Reapply
@@ -20,9 +20,9 @@ Local help target for the Bifrost Inventory message types. The external document
 - Inventory.Reclassification.Check, PreviewPost, and Post
 - Inventory.Period.Get, Close, and Reopen
 - Inventory.Price.Update
-- Inventory.Cost.Get, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
-- Inventory.Revaluation.Calculate
-- Inventory.PhysInventory.Calculate, Record, Preview, and Post
+- Inventory.Cost.Get, Cost.Update, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
+- Inventory.Revaluation.Calculate, PreviewPost, and Post
+- Inventory.PhysInventory.Calculate, RecordCount, Record, Check, PreviewPost, and Post
 
 The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product page) and
 `https://docs.bifrost.origo.is/{locale}/help/inventory/inventory-setup` (context-sensitive help for

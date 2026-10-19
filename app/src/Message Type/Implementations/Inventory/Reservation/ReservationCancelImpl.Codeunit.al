@@ -122,8 +122,10 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Cancels both sides of the reservation pair through the native Reservation Engine Mgt. CancelReservation, the same action as Cancel Reservation on the Reservation Entries page. Only entries with status Reservation can be cancelled.', Comment = 'is-IS=Afturkallar báðar hliðar frátekningarparsins með innbyggða CancelReservation í Reservation Engine Mgt., sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
     begin
-        Notes := 'Calls Reservation Management.SetReservSource before cancel. It does not delete the entry directly.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
@@ -136,11 +138,18 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     var
         ReservationEntry: Record "Reservation Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ReservationManagement: Codeunit "Reservation Management";
+        Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
+        Serialized: Text;
+        Number: Decimal;
         EntryNo: Integer;
+        EntryNoRequiredErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
+        EntryNoFormatErr: Label 'entryNo must be a positive whole number.', Comment = 'is-IS=entryNo verður að vera jákvæð heiltala.';
+        NotFoundErr: Label 'Reservation entry %1 was not found.', Comment = '%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.';
+        NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
+        IntegerExpectedTok: Label 'a positive JSON integer', Locked = true;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
             exit;
@@ -148,20 +157,40 @@ codeunit 70013478 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError('entryNo is required.');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, EntryNoRequiredErr, 'entryNo', '', IntegerExpectedTok, '');
             exit;
         end;
-        EntryNo := Token.AsValue().AsInteger();
-        if not ReservationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError('Reservation entry ' + Format(EntryNo) + ' was not found.');
+        Token.WriteTo(Serialized);
+        if not Token.IsValue() or Serialized.StartsWith('"') or not Evaluate(Number, Serialized, 9) then
+            Number := 0;
+        if (Number <= 0) or (Number > 2147483647) or (Number <> Round(Number, 1)) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, EntryNoFormatErr, 'entryNo', Serialized, IntegerExpectedTok, '');
+            exit;
+        end;
+        EntryNo := Number;
+        ReservationEntry.SetRange("Entry No.", EntryNo);
+        if not ReservationEntry.FindFirst() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', '');
+            exit;
+        end;
+        if ReservationEntry."Reservation Status" <> ReservationEntry."Reservation Status"::Reservation then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(NotReservationErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', '');
             exit;
         end;
 
-        ReservationManagement.SetReservSource(ReservationEntry);
-        ReservationManagement.DeleteReservEntries(true, 0);
+        Process.SetOperation('ReservationCancel');
+        Process.SetCancelReservation(EntryNo);
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                Argument.RespondWithError(GetLastErrorText());
+                exit;
+            end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
         ResponseJson.Add('itemNo', ReservationEntry."Item No.");
+        ResponseJson.Add('quantity', Abs(ReservationEntry.Quantity));
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
