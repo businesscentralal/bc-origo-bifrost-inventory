@@ -42,7 +42,7 @@ codeunit 10036905 "Item Attr. Create Process ori"
         for i := 0 to AttributesArray.Count() - 1 do begin
             AttributesArray.Get(i, AttrToken);
             if not AttrToken.IsObject() then
-                Error('Each attributes[] element must be an object.');
+                Error(AttributeObjectErr);
             AttrRequest := AttrToken.AsObject();
             Resolve.ResolveAttributeFromRequest(AttrRequest, ItemAttribute);
             CreateValueIfMissing := Resolve.GetBool(AttrRequest, 'createValueIfMissing', false);
@@ -60,4 +60,6 @@ codeunit 10036905 "Item Attr. Create Process ori"
         Rec.SetResponseJson(ResponseJson);
         Rec."Content Type" := Rec.GetContentTypeJson();
     end;
+    var
+        AttributeObjectErr: Label 'Each attributes[] element must be an object.', Comment = 'is-IS=Hvert stak í attributes[] verður að vera hlutur.';
 }
