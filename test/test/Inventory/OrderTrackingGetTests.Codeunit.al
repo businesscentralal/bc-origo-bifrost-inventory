@@ -58,7 +58,7 @@ codeunit 96962 "Order Tracking Get Tests"
         Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
         Assert.AreEqual('Sales', ReadText(ResponseJson, 'sourceKind'), 'sourceKind');
         Assert.IsTrue(FindEntry(ResponseJson, Database::"Sales Line", SalesLine."Document No.", SalesLine."Line No.", Database::"Item Ledger Entry", Entry), 'sales line tracked against inventory');
-        Assert.AreEqual(2, ReadDecimal(Entry, 'quantity'), 'quantity');
+        Assert.AreEqual(2, Abs(ReadDecimal(Entry, 'quantity')), 'quantity (demand side is negative)');
         Assert.AreEqual('Item Ledger Entry', ReadText(Entry, 'fromTypeName'), 'fromTypeName');
         Assert.AreEqual('Sales Line', ReadText(Entry, 'forTypeName'), 'forTypeName');
         Assert.AreEqual(Format(SalesLine."Shipment Date", 0, 9), ReadText(Entry, 'shipmentDate'), 'shipmentDate');
@@ -155,6 +155,7 @@ codeunit 96962 "Order Tracking Get Tests"
         // [GIVEN] A transfer line for 2 whose shipment side is reserved from stock at the from-location.
         EnableReservations();
         Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 5);
+        Item.Get(Item."No.");
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
         Helper.CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
@@ -172,7 +173,7 @@ codeunit 96962 "Order Tracking Get Tests"
         // [THEN] The chain links the shipment side of the transfer line to the item ledger entry.
         Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
         Assert.IsTrue(FindEntry(ResponseJson, Database::"Transfer Line", TransferLine."Document No.", TransferLine."Line No.", Database::"Item Ledger Entry", Entry), 'transfer line tracked against inventory');
-        Assert.AreEqual(2, ReadDecimal(Entry, 'quantity'), 'quantity');
+        Assert.AreEqual(2, Abs(ReadDecimal(Entry, 'quantity')), 'quantity (demand side is negative)');
     end;
 
     [Test]
@@ -192,6 +193,7 @@ codeunit 96962 "Order Tracking Get Tests"
         // [GIVEN] An assembly order whose component line is reserved from stock.
         EnableReservations();
         Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
+        ComponentItem.Get(ComponentItem."No.");
         ComponentItem.Validate(Reserve, ComponentItem.Reserve::Optional);
         ComponentItem.Modify(true);
         Helper.CreatePositiveAdjustment(ComponentItem."No.", 5);
@@ -418,6 +420,7 @@ codeunit 96962 "Order Tracking Get Tests"
         ItemJournalLine: Record "Item Journal Line";
     begin
         LibraryInventory.CreateItem(Item);
+        Item.Get(Item."No.");
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
         if Qty <= 0 then
