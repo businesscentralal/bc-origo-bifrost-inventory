@@ -177,6 +177,7 @@ codeunit 96962 "Order Tracking Get Tests"
     end;
 
     [Test]
+    [HandlerFunctions('MessageHandler')]
     procedure OrderTracking_ReservedAssemblyLine_ReturnsChain()
     var
         ParentItem: Record Item;
@@ -509,5 +510,11 @@ codeunit 96962 "Order Tracking Get Tests"
         if not Token.IsArray() then
             exit(Empty);
         exit(Token.AsArray());
+    end;
+
+    [MessageHandler]
+    procedure MessageHandler(Message: Text[1024])
+    begin
+        // Swallow the assembly due-date warning the base app shows when the due date is before the work date.
     end;
 }
