@@ -495,7 +495,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure AttributeGet_RegisteredContract_DeclaresReadChapters()
     begin
-        AssertAttributeContract('Inventory.Attribute.Get', 10036893,
+        AssertAttributeContract('Inventory.Attribute.Get', Enum::"Message Type ori"::"Inventory.Attribute.Get".AsInteger(),
             'includeUnassigned:boolean:false,attributeNames:array:false,attributeIds:array:false',
             'status:string,items:array', 'read', true, 5, 3, 1,
             'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', '');
@@ -505,7 +505,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure AttributeCreate_RegisteredContract_DeclaresWriteChapters()
     begin
-        AssertAttributeContract('Inventory.Attribute.Create', 10036894,
+        AssertAttributeContract('Inventory.Attribute.Create', Enum::"Message Type ori"::"Inventory.Attribute.Create".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
             'write', false, 7, 2, 0,
             'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.',
@@ -516,7 +516,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure AttributeUpdate_RegisteredContract_DeclaresWriteChapters()
     begin
-        AssertAttributeContract('Inventory.Attribute.Update', 10036895,
+        AssertAttributeContract('Inventory.Attribute.Update', Enum::"Message Type ori"::"Inventory.Attribute.Update".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
             'write', false, 6, 2, 0,
             'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.',
@@ -527,7 +527,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     [Test]
     procedure AttributeDefinition_RegisteredContract_HasNoTarget()
     begin
-        AssertAttributeContract('Inventory.AttributeDefinition.Create', 10036896,
+        AssertAttributeContract('Inventory.AttributeDefinition.Create', Enum::"Message Type ori"::"Inventory.AttributeDefinition.Create".AsInteger(),
             'name:string:true,type:string:true,unitOfMeasure:string:false,optionValues:array:false',
             'status:string,attributeId:integer,attributeName:string,type:string,createdValues:array',
             'write', false, 4, 2, 1,

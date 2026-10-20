@@ -9,6 +9,10 @@
 - Earlier entries below keep the IDs that were valid when they were written.
 - An installation from an earlier build stores the old enum values: uninstall it with its data before publishing this build.
 
+### Fixed (2026-10-20) - test ordinals after the range move
+
+- Inventory Contract Batch Tests (96921) no longer hard-code the Message Type ordinals of the four Inventory.Attribute types; they read them from the named enum values, so the Test build passes after the move to 10076835–10077034 and a later renumber cannot break them.
+
 ### Fixed (2026-10-19) - contract parameter keys, mixed-language refusals and Icelandic xlf parity in CI (#97, #30, #32, #33)
 
 - Contract parameters (#97, #30): `tools/Test-ContractParameterKeys.ps1` now passes the full scan with an empty allow-list. On main 9f0188f it reported 11 problems under pwsh 7. The 7 extra findings seen under Windows PowerShell 5.1 (`malformed-contract-json` and the read-not-declared keys of `Inventory.AdjustCost.Run` and `Inventory.CostToGL.Post`) come from its missing `ConvertFrom-Json -NoEnumerate`; those contracts were valid.
