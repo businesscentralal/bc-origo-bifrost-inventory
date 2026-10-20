@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed (2026-10-20) - version 28.3.0.0 for the first AppSource release
+
+- `app/app.json` and `test/app.json` (including the test app's dependency on Bifrost Inventory) go from 28.1.0.0 to **28.3.0.0**, matching the app's Business Central application minimum, 28.3 (Gunnar, 20.10.2026).
+
 ### Changed (2026-10-20) - object IDs moved to 10076835–10077034
 
 - Every app object now uses the single range 10076835–10077034; `app.json` drops 10036885–10036934 and 70013400–70013499. Names, behaviour and the test range 96900–96999 are unchanged. README lists the new IDs.
