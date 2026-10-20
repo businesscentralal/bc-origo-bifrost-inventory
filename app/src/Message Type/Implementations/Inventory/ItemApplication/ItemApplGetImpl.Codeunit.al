@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.ItemApplication.Get. Reads Item Application Entry.
 /// </summary>
-codeunit 70013490 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

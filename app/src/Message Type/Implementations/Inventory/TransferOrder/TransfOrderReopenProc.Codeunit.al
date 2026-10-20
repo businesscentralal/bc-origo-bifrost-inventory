@@ -7,7 +7,7 @@ using Microsoft.Inventory.Transfer;
 /// outer ProcessIncomingMessage TryFunction context (LockTable is not allowed inside
 /// a TryFunction, but is allowed inside a Codeunit.Run).
 /// </summary>
-codeunit 70013418 "Transf. Order Reopen Proc. ori"
+codeunit 10076908 "Transf. Order Reopen Proc. ori"
 {
     Access = Internal;
     TableNo = "Transfer Header";

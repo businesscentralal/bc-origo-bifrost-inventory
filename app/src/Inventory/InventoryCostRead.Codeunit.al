@@ -5,7 +5,7 @@ using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 
 /// <summary>Reads current item cost snapshots using Foundation item selection and native stock filters.</summary>
-codeunit 70013432 "Inventory Cost Read ori"
+codeunit 10076839 "Inventory Cost Read ori"
 {
     Access = Internal;
 

@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.AdjustCost.Run. Runs report 795 with the same filters as the job queue request page.
 /// </summary>
-codeunit 70013460 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

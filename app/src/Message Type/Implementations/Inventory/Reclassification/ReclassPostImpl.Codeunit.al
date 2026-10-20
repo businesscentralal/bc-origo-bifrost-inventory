@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Reclassification.Post. Posts a reclassification journal batch through Item Jnl.-Post Batch.
 /// </summary>
-codeunit 70013493 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

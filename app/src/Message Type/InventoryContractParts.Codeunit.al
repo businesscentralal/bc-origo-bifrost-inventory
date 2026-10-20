@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Origo.Bifrost;
 
 /// <summary>Builds shared contract chapters for the Inventory message types.</summary>
-codeunit 70013445 "Inventory Contract Parts ori"
+codeunit 10076919 "Inventory Contract Parts ori"
 {
     Access = Internal;
 

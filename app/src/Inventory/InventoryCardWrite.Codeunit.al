@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>Validates intentional item-card cost and unit price changes before native field validation and one modify.</summary>
-codeunit 70013438 "Inventory Card Write ori"
+codeunit 10076837 "Inventory Card Write ori"
 {
     Access = Internal;
 

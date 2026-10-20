@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Period.Close. Closes an inventory period through the Inventory Period record.
 /// </summary>
-codeunit 70013485 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

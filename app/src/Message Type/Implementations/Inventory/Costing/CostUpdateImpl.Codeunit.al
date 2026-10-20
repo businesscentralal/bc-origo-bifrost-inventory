@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>Intentional non-Standard card-cost writes behind company, native permission, license and transaction boundaries.</summary>
-codeunit 70013408 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

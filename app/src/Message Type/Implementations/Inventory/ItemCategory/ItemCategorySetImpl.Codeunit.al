@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Inventory.ItemCategory.Set. Creates or updates a category and its own attribute defaults.
 /// Refusals are answered before the write process runs, so nothing is saved.
 /// </summary>
-codeunit 10036923 "Item Category Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

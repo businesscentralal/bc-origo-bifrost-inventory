@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Implementation of Inventory.AttributeDefinition.Create.
 /// </summary>
-codeunit 10036900 "Item AttrDef Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

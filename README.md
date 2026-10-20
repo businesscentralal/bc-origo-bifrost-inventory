@@ -3,7 +3,7 @@
 **App name:** Bifrost Inventory (display form *Bifröst birgðir*)  
 **Publisher:** Origo — **Version:** 28.1.0.0 — **Target:** Cloud (BC 28.3 or later, runtime 17.0)  
 **App ID:** `02701c94-c962-4825-92c7-ef9f70311a2b` — **Test app ID:** `a886b2cb-7da0-4784-8163-42956dbdd5ec`  
-**Object ID ranges:** 10036885–10036934 and 70013400–70013499 (tests 96900–96999) — **Namespace:** `Origo.Bifrost.Inventory`  
+**Object ID range:** 10076835–10077034 (tests 96900–96999) — **Namespace:** `Origo.Bifrost.Inventory`  
 **Environments:** Business Central online (SaaS) and the COSMO Alpaca development containers `bc28-is` (CRONUS IS) and `bc28-w1` (CRONUS International Ltd.)
 
 ---
@@ -135,14 +135,14 @@ own them.
 
 | Step | Object | What happens |
 | --- | --- | --- |
-| Registration | `Inventory Registration ori` (10036912) | Answers Foundation's `App Registry ori` `OnRegisterApps` and registers `Inventory Setup ori` as the app setup page. |
-| Install / upgrade | `Inventory Install ori` (10036909), `Inventory Upgrade ori` (10036910) | Sets the initial-release upgrade tag; install inserts the Inventory Setup record per company. |
-| Domain gate | `Inventory Domain Gate ori` (70013453) | `IsEnabled` / `AssertEnabled`: the domain flag must be on (a missing setup row counts as on) and the caller needs read, write or posting permission for the domain. |
-| Posting gate | `Inv. Posting Gate ori` (70013443), `Inv. Posting ori` (70013442) | Write permission on the token table `Inv. Posting ori` is the posting permission; only `BIFROST InvPost ori` grants it. |
-| Contracts | `Inventory Contract Parts ori` (70013445) | Shared contract chapters used by the implementation codeunits. |
-| Write restrictions | `Item Attr. Data Restrict ori` (10036911), `Inventory Setup Restrict ori` (70013454), `Tracking Data Restrict ori` (70013457), `Reservation WriteGuard ori` (70013498) | Subscribe to Foundation's `OnAfterIsTableWriteRestrictedForDataRecords` and close their tables to `Data.Records.Set`. |
-| Field restrictions | `Inventory Cost Data Guard ori` (70013437) | Subscribes to `OnAfterIsFieldWriteRestrictedForDataRecords` and closes Item Unit Cost, Standard Cost, Last Direct Cost and Unit Price to `Data.Records.Set`; the refusal names `Inventory.Cost.Update` or `Inventory.Price.Update`. |
-| Write process | `Inventory Write Process ori` (70013412) | One `Codeunit.Run` boundary for the journal, card-cost, price and reservation writes, so a native error rolls the whole write back. |
+| Registration | `Inventory Registration ori` (10076845) | Answers Foundation's `App Registry ori` `OnRegisterApps` and registers `Inventory Setup ori` as the app setup page. |
+| Install / upgrade | `Inventory Install ori` (10076835), `Inventory Upgrade ori` (10076836) | Sets the initial-release upgrade tag; install inserts the Inventory Setup record per company. |
+| Domain gate | `Inventory Domain Gate ori` (10076922) | `IsEnabled` / `AssertEnabled`: the domain flag must be on (a missing setup row counts as on) and the caller needs read, write or posting permission for the domain. |
+| Posting gate | `Inv. Posting Gate ori` (10076921), `Inv. Posting ori` (10076835) | Write permission on the token table `Inv. Posting ori` is the posting permission; only `BIFROST InvPost ori` grants it. |
+| Contracts | `Inventory Contract Parts ori` (10076919) | Shared contract chapters used by the implementation codeunits. |
+| Write restrictions | `Item Attr. Data Restrict ori` (10076846), `Inventory Setup Restrict ori` (10076923), `Tracking Data Restrict ori` (10076920), `Reservation WriteGuard ori` (10076843) | Subscribe to Foundation's `OnAfterIsTableWriteRestrictedForDataRecords` and close their tables to `Data.Records.Set`. |
+| Field restrictions | `Inventory Cost Data Guard ori` (10076838) | Subscribes to `OnAfterIsFieldWriteRestrictedForDataRecords` and closes Item Unit Cost, Standard Cost, Last Direct Cost and Unit Price to `Data.Records.Set`; the refusal names `Inventory.Cost.Update` or `Inventory.Price.Update`. |
+| Write process | `Inventory Write Process ori` (10076842) | One `Codeunit.Run` boundary for the journal, card-cost, price and reservation writes, so a native error rolls the whole write back. |
 
 Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
@@ -203,67 +203,70 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 70013442 | `Inv. Posting ori` | Permission token for the posting gate; stores no records |
-| 70013451 | `Inventory Setup ori` | Per-company domain switches |
+| 10076835 | `Inv. Posting ori` | Permission token for the posting gate; stores no records |
+| 10076836 | `Inventory Setup ori` | Per-company domain switches |
 
 ### Pages
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 70013452 | `Inventory Setup ori` | Domain switches; context-sensitive help slug `inventory-setup` |
+| 10076835 | `Inventory Setup ori` | Domain switches; context-sensitive help slug `inventory-setup` |
 
 ### Enums and enum extensions
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 70013450 | `Inventory Domain ori` | The fifteen domains |
-| 10036892 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
-| 70013455 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
-| 70013456 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
-| 70013458 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
-| 70013459 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
-| 70013469 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
-| 70013492 | `MsgType.Reserv.EnumExt ori` | Reservation types |
-| 10036917 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
-| 10036918 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
-| 10036919 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
-| 10036920 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
-| 10036921 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
+| 10076835 | `Inventory Domain ori` | The fifteen domains |
+| 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
+| 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
+| 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
+| 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
+| 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
+| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
+| 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
+| 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
+| 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
+| 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
+| 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
+| 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+
+Each message type value is the ID of its implementation codeunit. The exception is
+`Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
+`Inventory.PhysInventory.Record` (10076882).
 
 ### Codeunits
 
 | IDs | Area | Codeunits |
 | --- | --- | --- |
-| 10036897–10036900, 10036905–10036908 | Item attributes | `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits, `Item Attribute Resolve ori` |
-| 10036909–10036912 | Lifecycle | `Inventory Install ori`, `Inventory Upgrade ori`, `Item Attr. Data Restrict ori`, `Inventory Registration ori` |
-| 70013413–70013420 | Transfer orders | Create, Release, Reopen (+ process), Post, Preview Post, Statistics, `Transfer Post Subscriber ori` |
-| 70013421–70013428 | Assembly orders | Create, Refresh Lines, Release, Reopen (+ process), Post, Preview Post, Statistics |
-| 70013443, 70013445, 70013453, 70013454, 70013457, 70013498 | Shared | Posting gate, contract parts, domain gate, setup/tracking/reservation write restrictions |
-| 70013460–70013462, 70013467, 70013468, 70013488 | Costing | Adjust Cost Run (+ process), Cost To GL Post/Test, Cost Get, Revaluation Calc |
-| 70013406–70013409, 70013432, 70013437, 70013438 | Costing and journals | Revaluation Post, Reval Preview, Cost Update, `Inventory Native Journal ori` (physical inventory and revaluation), `Inventory Cost Read ori`, `Inventory Cost Data Guard ori`, `Inventory Card Write ori` |
-| 70013410–70013412 | Tracking reads and writes | `Inventory Tracking Read ori`, Tracking Get, `Inventory Write Process ori` |
-| 70013464–70013466, 70013472, 70013479, 70013496 | Physical inventory | Calculate, Record/RecordCount, Preview Post, Check, Post |
-| 70013470, 70013471, 70013473 | Item tracking | Assign, Delete, Availability Get |
-| 70013474, 70013475, 70013493 | Reclassification | Check, Preview, Post |
-| 70013476–70013478 | Reservations | Create, Get, Cancel |
-| 70013480–70013482 | Undo | Transfer shipment, transfer receipt, assembly |
-| 70013483–70013486 | Periods and price | Period Get/Reopen/Close, Price Update |
-| 70013490–70013492 | Item application | Get, Unapply, Reapply |
-| 10036917 | Item references | `Item Ref. Resolve Impl ori` |
-| 10036918 | Availability | `Avail. By Period Impl ori` |
-| 10036919–10036921, 10036927 | Item charges | Assign (+ process), Get, `Item Charge Restrict ori` |
-| 10036922–10036924, 70013499 | Item categories | Get, Set (+ process), `Item Category Restrict ori` |
-| 10036925, 10036926, 10036929, 70013439 | Reservations | Auto Reserve (+ process), Order Tracking Get, `Order Tracking Transfer ori` |
+| 10076835, 10076836, 10076845 | Lifecycle | `Inventory Install ori`, `Inventory Upgrade ori`, `Inventory Registration ori` |
+| 10076837–10076843 | Shared reads and writes | `Inventory Card Write ori`, `Inventory Cost Data Guard ori`, `Inventory Cost Read ori`, `Inventory Native Journal ori` (physical inventory and revaluation), `Inventory Tracking Read ori`, `Inventory Write Process ori`, `Reservation WriteGuard ori` |
+| 10076846–10076848 | Write restrictions | `Item Attr. Data Restrict ori`, `Item Category Restrict ori`, `Item Charge Restrict ori` |
+| 10076919–10076923 | Shared | Contract parts, tracking write restriction, posting gate, domain gate, setup write restriction |
+| 10076844, 10076912–10076918 | Item attributes | `Item Attribute Resolve ori`, `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits |
+| 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
+| 10076857 | Availability | `Avail. By Period Impl ori` |
+| 10076858–10076866 | Costing | Adjust Cost Run (+ process), Cost Get, Cost To GL Post/Test, Cost Update, Reval Preview, Revaluation Calc, Revaluation Post |
+| 10076867–10076869 | Item application | Get, Reapply, Unapply |
+| 10076870–10076872 | Item categories | Get, Set (+ process) |
+| 10076873–10076875 | Item charges | Assign (+ process), Get |
+| 10076876 | Item references | `Item Ref. Resolve Impl ori` |
+| 10076877–10076879, 10076886 | Periods and price | Period Close/Get/Reopen, Price Update |
+| 10076880–10076885 | Physical inventory | Calculate (journal and count), Post, Record/RecordCount, Check, Preview Post |
+| 10076887–10076889 | Reclassification | Check, Post, Preview |
+| 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
+| 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
+| 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
+| 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 
 ### Permission sets
 
 | ID | Name | Assignable | Purpose |
 | --- | --- | --- | --- |
-| 70013444 | `BIFROST InvPost ori` | Yes | Posting gate, Inventory Setup page and table |
-| 10036915 | `BIFROST InvAttrRead ori` | No | Read grants on the standard item attribute tables |
-| 10036916 | `BIFROST InvAttrWrite ori` | No | Write grants on the standard item attribute tables |
-| 10036915 | `BIFROST InvRead ori` (extension) | — | Extends Foundation's `BIFROST Read ori` |
-| 10036916 | `BIFROST InvWrite ori` (extension) | — | Extends Foundation's `BIFROST Full ori` |
+| 10076837 | `BIFROST InvPost ori` | Yes | Posting gate, Inventory Setup page and table |
+| 10076835 | `BIFROST InvAttrRead ori` | No | Read grants on the standard item attribute tables |
+| 10076836 | `BIFROST InvAttrWrite ori` | No | Write grants on the standard item attribute tables |
+| 10076835 | `BIFROST InvRead ori` (extension) | — | Extends Foundation's `BIFROST Read ori` |
+| 10076836 | `BIFROST InvWrite ori` (extension) | — | Extends Foundation's `BIFROST Full ori` |
 
 ---
 

@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// Runs report 795. itemNoFilter and itemCategoryFilter map to InitializeRequest.
 /// postToGL maps to SetPostToGL and posts the correction in the same run. It does not also run report 1002.
 /// </summary>
-codeunit 70013461 "Adjust Cost Run Process ori"
+codeunit 10076859 "Adjust Cost Run Process ori"
 {
     Access = Internal;
 

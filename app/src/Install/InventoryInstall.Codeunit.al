@@ -5,7 +5,7 @@ using System.Upgrade;
 /// <summary>
 /// Fresh install entry point for Bifrost Inventory. Sets the initial-release upgrade tag.
 /// </summary>
-codeunit 10036909 "Inventory Install ori"
+codeunit 10076835 "Inventory Install ori"
 {
     Subtype = Install;
     Access = Internal;

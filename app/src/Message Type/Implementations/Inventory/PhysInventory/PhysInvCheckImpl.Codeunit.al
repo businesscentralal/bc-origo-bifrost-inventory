@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Checks physical-inventory journal lines through native Item Jnl.-Check Line.</summary>
-codeunit 70013479 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

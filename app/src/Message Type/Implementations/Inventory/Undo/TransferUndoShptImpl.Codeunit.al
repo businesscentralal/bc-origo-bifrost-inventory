@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Transfer.UndoShipment. Runs codeunit 5815 Undo Transfer Shipment.
 /// </summary>
-codeunit 70013480 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

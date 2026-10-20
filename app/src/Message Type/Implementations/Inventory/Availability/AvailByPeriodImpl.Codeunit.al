@@ -12,7 +12,7 @@ using System.Utilities;
 /// Inventory.AvailabilityByPeriod.Get. Reads projected availability the way Item Availability by Periods does.
 /// Does not write.
 /// </summary>
-codeunit 10036918 "Avail. By Period Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

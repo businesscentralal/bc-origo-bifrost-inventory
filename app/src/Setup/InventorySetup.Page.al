@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 /// <summary>
 /// Company page for turning Bifrost Inventory domains on or off.
 /// </summary>
-page 70013452 "Inventory Setup ori"
+page 10076835 "Inventory Setup ori"
 {
     ApplicationArea = All;
     Caption = 'Inventory Setup', Comment = 'is-IS=Uppsetning birgða';

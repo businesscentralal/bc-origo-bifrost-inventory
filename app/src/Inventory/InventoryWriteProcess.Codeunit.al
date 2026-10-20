@@ -14,7 +14,7 @@ using Origo.Bifrost;
 /// failure rolls back every change of that write and the dispatcher can answer with the error.
 /// Select the write with SetOperation (and the related setter) before Run.
 /// </summary>
-codeunit 70013412 "Inventory Write Process ori"
+codeunit 10076842 "Inventory Write Process ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

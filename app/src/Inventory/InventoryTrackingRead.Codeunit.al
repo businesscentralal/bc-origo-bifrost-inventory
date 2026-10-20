@@ -19,7 +19,7 @@ using Microsoft.Service.Document;
 using Origo.Bifrost;
 
 /// <summary>Read-only projections of native tracking and reservation records with explicit source identities; also resolves the sales, purchase, transfer and other tracking sources.</summary>
-codeunit 70013410 "Inventory Tracking Read ori"
+codeunit 10076841 "Inventory Tracking Read ori"
 {
     Access = Internal;
 

@@ -10,7 +10,7 @@ using Microsoft.Inventory.Transfer;
 /// receive deletes the order and would otherwise show a message), and captures the numbers of the
 /// posted shipment, receipt or direct transfer, which stay available after the order is deleted.
 /// </summary>
-codeunit 70013420 "Transfer Post Subscriber ori"
+codeunit 10076906 "Transfer Post Subscriber ori"
 {
     Access = Internal;
     EventSubscriberInstance = Manual;

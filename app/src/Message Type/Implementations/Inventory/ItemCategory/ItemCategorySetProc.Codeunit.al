@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Isolated write for Inventory.ItemCategory.Set, run through Codeunit.Run so a failure rolls back and
 /// answers a clean error. Validation in the Impl has already refused bad requests.
 /// </summary>
-codeunit 70013499 "Item Category Set Proc ori"
+codeunit 10076872 "Item Category Set Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

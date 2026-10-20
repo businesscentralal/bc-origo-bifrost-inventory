@@ -5,7 +5,7 @@ namespace Origo.Bifrost.Inventory;
 /// No records are stored. WritePermission() on this table is the inventory posting gate
 /// for Inventory.TransferOrder.Post and Inventory.AssemblyOrder.Post.
 /// </summary>
-table 70013442 "Inv. Posting ori"
+table 10076835 "Inv. Posting ori"
 {
     Extensible = false;
     Access = Internal;

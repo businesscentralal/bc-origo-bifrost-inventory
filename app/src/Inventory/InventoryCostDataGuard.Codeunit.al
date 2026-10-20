@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>Blocks only dedicated Item cost/price fields in generic writers; unrelated Item and journal fields remain available.</summary>
-codeunit 70013437 "Inventory Cost Data Guard ori"
+codeunit 10076838 "Inventory Cost Data Guard ori"
 {
     Access = Internal;
 

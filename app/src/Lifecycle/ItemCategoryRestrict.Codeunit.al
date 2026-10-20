@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// dedicated types in the refusal. Callers use Inventory.ItemCategory.Get and Inventory.ItemCategory.Set.
 /// Reads stay allowed.
 /// </summary>
-codeunit 10036924 "Item Category Restrict ori"
+codeunit 10076847 "Item Category Restrict ori"
 {
     Access = Internal;
 

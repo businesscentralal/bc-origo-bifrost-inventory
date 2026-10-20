@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// Standard-table data for the item reference, availability, item charge, item category and order
 /// tracking types comes from the caller's own Business Central permissions; IsEnabled and Execute check it.
 /// </summary>
-permissionsetextension 10036915 "BIFROST InvRead ori" extends "BIFROST Read ori"
+permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
 {
     IncludedPermissionSets = "BIFROST InvAttrRead ori";
 

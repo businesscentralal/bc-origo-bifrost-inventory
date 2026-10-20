@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-codeunit 70013498 "Reservation WriteGuard ori"
+codeunit 10076843 "Reservation WriteGuard ori"
 {
     Access = Internal;
 

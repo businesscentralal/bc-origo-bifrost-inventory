@@ -7,7 +7,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Implementation of Inventory.Attribute.Update.
 /// </summary>
-codeunit 10036899 "Item Attribute Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076917 "Item Attribute Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

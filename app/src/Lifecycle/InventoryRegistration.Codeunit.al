@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// Registers Bifrost Inventory with Foundation's application registry.
 /// Registers the Inventory Setup page as the app setup page.
 /// </summary>
-codeunit 10036912 "Inventory Registration ori"
+codeunit 10076845 "Inventory Registration ori"
 {
     Access = Internal;
 

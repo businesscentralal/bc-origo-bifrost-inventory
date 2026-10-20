@@ -11,7 +11,7 @@ using Microsoft.Inventory.Transfer;
 /// no order tracking source for transfer lines, so this subscriber sets the reservation entry filter for one
 /// side of the line. It is bound manually for the duration of one call and is inactive otherwise.
 /// </summary>
-codeunit 10036929 "Order Tracking Transfer ori"
+codeunit 10076891 "Order Tracking Transfer ori"
 {
     Access = Internal;
     EventSubscriberInstance = Manual;

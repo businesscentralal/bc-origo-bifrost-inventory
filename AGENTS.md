@@ -10,7 +10,7 @@
   decision from inventory#3 was reversed). README lists every type.
 - Permissions: reads and writes extend Foundation's `BIFROST Read ori` / `BIFROST Full ori`
   (`BIFROST InvRead ori`, `BIFROST InvWrite ori`, with the non-assignable attribute sets).
-  The one assignable set is `BIFROST InvPost ori` (70013444): the posting gate
+  The one assignable set is `BIFROST InvPost ori` (10076837): the posting gate
   (`Inv. Posting Gate ori` checks write permission on the token table `Inv. Posting ori`) and the
   Inventory Setup page/table. It must stay assignable: nothing else grants posting, and the
   permission-coverage guard needs an assignable set for the setup page. No Foundation `Setup ori`

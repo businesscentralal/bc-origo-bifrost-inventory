@@ -23,3 +23,6 @@ cache_*
 # Python bytecode from tools/tests
 __pycache__/
 *.pyc
+
+# Local dev container connections
+**/.vscode/launch.json

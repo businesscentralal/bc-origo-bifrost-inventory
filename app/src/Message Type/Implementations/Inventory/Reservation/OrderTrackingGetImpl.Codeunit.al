@@ -13,7 +13,7 @@ using Origo.Bifrost;
 /// Inventory.OrderTracking.Get reads the supply and demand tracked against one source line or item ledger entry,
 /// as the Order Tracking page shows it. It only reads: the chain is built in temporary records.
 /// </summary>
-codeunit 10036926 "Order Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
