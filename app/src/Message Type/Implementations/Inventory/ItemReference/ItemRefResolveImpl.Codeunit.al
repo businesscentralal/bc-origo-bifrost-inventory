@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Inventory.ItemReference.Resolve. Reads an item reference, item number, or GTIN.
 /// Does not create or change references.
 /// </summary>
-codeunit 10036917 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 /// <summary>
 /// Company-level inventory domains that can be turned off on Inventory Setup.
 /// </summary>
-enum 70013450 "Inventory Domain ori"
+enum 10076835 "Inventory Domain ori"
 {
     Extensible = false;
     Access = Internal;

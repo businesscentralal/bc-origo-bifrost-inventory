@@ -13,7 +13,7 @@ using Origo.Bifrost;
 /// by a suggest method over the document's own item lines, or over explicit target lines.
 /// The write runs in Item Charge Assign Proc ori so a failure rolls back and answers a clean error.
 /// </summary>
-codeunit 10036919 "Item Charge Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

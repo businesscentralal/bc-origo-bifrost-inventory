@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Reclassification.Check. Validates a reclassification journal. Does not post.
 /// </summary>
-codeunit 70013475 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

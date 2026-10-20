@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Origo.Bifrost;
 
 /// <summary>Costing message types: cost read, guarded card-cost writes and native revaluation posting and preview.</summary>
-enumextension 70013469 "MsgType.CostGet.EnumExt ori" extends "Message Type ori"
+enumextension 10076836 "MsgType.CostGet.EnumExt ori" extends "Message Type ori"
 {
     value(70013448; "Inventory.Cost.Get")
     {

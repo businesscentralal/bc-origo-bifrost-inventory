@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Inventory.Price.Update. Validates Item.Unit Price. This is not a cost update.
 /// </summary>
-codeunit 70013486 "Price Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

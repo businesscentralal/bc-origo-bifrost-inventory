@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Refuses generic Data.Records.Set against item charge assignment tables and points the caller to
 /// Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get. Reads stay allowed.
 /// </summary>
-codeunit 10036921 "Item Charge Restrict ori"
+codeunit 10076848 "Item Charge Restrict ori"
 {
     Access = Internal;
 

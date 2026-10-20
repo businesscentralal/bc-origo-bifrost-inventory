@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// Posting gate for Bifrost Inventory.
 /// Transfer Order Post and Assembly Order Post both require write permission on Inv. Posting ori.
 /// </summary>
-codeunit 70013443 "Inv. Posting Gate ori"
+codeunit 10076921 "Inv. Posting Gate ori"
 {
     Access = Internal;
 

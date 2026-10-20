@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero.</summary>
-codeunit 70013466 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// Extends Bifrost Foundation Message Type ori with inventory message types.
 /// Captions are Locked because message identifiers are part of the public wire contract.
 /// </summary>
-enumextension 10036892 "MsgType.EnumExt ori" extends "Message Type ori"
+enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
 {
     value(10036893; "Inventory.Attribute.Get")
     {

@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</summary>
-codeunit 70013496 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

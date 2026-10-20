@@ -13,7 +13,7 @@ using Origo.Bifrost;
 using System.Utilities;
 
 /// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory and revaluation).</summary>
-codeunit 70013409 "Inventory Native Journal ori"
+codeunit 10076840 "Inventory Native Journal ori"
 {
     Access = Internal;
 

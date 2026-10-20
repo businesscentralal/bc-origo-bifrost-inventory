@@ -4,7 +4,7 @@ using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Origo.Bifrost;
 
-codeunit 70013482 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

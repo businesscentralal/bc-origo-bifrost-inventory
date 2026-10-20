@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Implementation of Inventory.Attribute.Get.
 /// </summary>
-codeunit 10036897 "Item Attribute Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076916 "Item Attribute Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

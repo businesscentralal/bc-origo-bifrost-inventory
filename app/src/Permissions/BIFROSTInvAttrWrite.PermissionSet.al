@@ -6,7 +6,7 @@ using Microsoft.Inventory.Item.Attribute;
 /// Preserves the existing Inventory write grants to standard attribute tables.
 /// Included only through the corresponding Foundation role extension.
 /// </summary>
-permissionset 10036916 "BIFROST InvAttrWrite ori"
+permissionset 10076836 "BIFROST InvAttrWrite ori"
 {
     Assignable = false;
 

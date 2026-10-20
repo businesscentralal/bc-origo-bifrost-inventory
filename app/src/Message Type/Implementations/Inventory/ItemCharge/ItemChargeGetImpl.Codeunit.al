@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Inventory.ItemCharge.Get. Returns the assignment rows for one charge line and the quantity still unassigned.
 /// Also holds the request checks and row builders that Inventory.ItemCharge.Assign shares.
 /// </summary>
-codeunit 10036920 "Item Charge Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

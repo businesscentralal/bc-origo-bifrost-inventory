@@ -5,7 +5,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Refuses Data.Records.Set against Inventory Setup. Reads via Data.Records.Get stay allowed.
 /// </summary>
-codeunit 70013454 "Inventory Setup Restrict ori"
+codeunit 10076923 "Inventory Setup Restrict ori"
 {
     Access = Internal;
 

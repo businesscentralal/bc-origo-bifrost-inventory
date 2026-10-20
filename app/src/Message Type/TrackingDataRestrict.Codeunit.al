@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
-codeunit 70013457 "Tracking Data Restrict ori"
+codeunit 10076920 "Tracking Data Restrict ori"
 {
     Access = Internal;
 

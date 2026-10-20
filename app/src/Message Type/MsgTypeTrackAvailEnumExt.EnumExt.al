@@ -2,7 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 70013455 "MsgType.TrackAvail.EnumExt ori" extends "Message Type ori"
+enumextension 10076846 "MsgType.TrackAvail.EnumExt ori" extends "Message Type ori"
 {
     value(70013449; "Inventory.TrackingAvailability.Get")
     {

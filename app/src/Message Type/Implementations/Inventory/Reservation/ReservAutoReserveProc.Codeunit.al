@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// Isolated write for Inventory.Reservation.AutoReserve, run with Codeunit.Run so that a partial
 /// reservation is rolled back. The caller has already checked the request shape.
 /// </summary>
-codeunit 70013439 "Reserv. AutoReserve Proc ori"
+codeunit 10076896 "Reserv. AutoReserve Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

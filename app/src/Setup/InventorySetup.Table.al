@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory;
 /// <summary>
 /// Per-company switches for Bifrost Inventory domains. A missing row counts as every domain on.
 /// </summary>
-table 70013451 "Inventory Setup ori"
+table 10076836 "Inventory Setup ori"
 {
     Access = Internal;
     Caption = 'Inventory Setup', Comment = 'is-IS=Uppsetning birgða';

@@ -2,7 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 10036919 "MsgType.ItemChg.EnumExt ori" extends "Message Type ori"
+enumextension 10076839 "MsgType.ItemChg.EnumExt ori" extends "Message Type ori"
 {
     value(10036920; "Inventory.ItemCharge.Get")
     {

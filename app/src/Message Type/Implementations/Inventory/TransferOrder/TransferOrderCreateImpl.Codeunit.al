@@ -6,7 +6,7 @@ using Origo.Bifrost;
 /// <summary>
 /// Implementation of Inventory.TransferOrder.Create.
 /// </summary>
-codeunit 70013414 "Transfer Order Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

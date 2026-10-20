@@ -4,7 +4,7 @@ using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 
 /// <summary>Posts a revaluation journal through native Item Jnl.-Post Batch.</summary>
-codeunit 70013406 "Revaluation Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

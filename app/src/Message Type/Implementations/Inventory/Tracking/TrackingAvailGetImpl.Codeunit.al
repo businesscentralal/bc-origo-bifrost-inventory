@@ -6,7 +6,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>Reads tracked stock, reserved quantities and availability by location and variant.</summary>
-codeunit 70013473 "Tracking Avail. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

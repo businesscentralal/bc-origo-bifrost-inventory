@@ -8,7 +8,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
-codeunit 70013416 "Transf. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076907 "Transf. Order Release Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
     procedure IsEnabled(): Boolean

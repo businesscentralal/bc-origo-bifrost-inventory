@@ -4,7 +4,7 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
-codeunit 70013492 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

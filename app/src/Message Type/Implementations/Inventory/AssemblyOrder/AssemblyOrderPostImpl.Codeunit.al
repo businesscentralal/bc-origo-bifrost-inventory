@@ -5,7 +5,7 @@ using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Origo.Bifrost;
 
-codeunit 70013425 "Assembly Order Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

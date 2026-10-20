@@ -8,7 +8,7 @@ using Microsoft.Foundation.Navigate;
 using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 
-codeunit 70013423 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

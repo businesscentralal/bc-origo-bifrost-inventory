@@ -2,7 +2,7 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 10036918 "MsgType.AvailPer.EnumExt ori" extends "Message Type ori"
+enumextension 10076835 "MsgType.AvailPer.EnumExt ori" extends "Message Type ori"
 {
     value(10036918; "Inventory.AvailabilityByPeriod.Get")
     {

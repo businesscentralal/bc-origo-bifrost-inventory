@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Inventory.ItemCategory.Get. Returns the category tree and, when asked, each category's attributes.
 /// Read-only: checks read permission and never changes a category or an attribute.
 /// </summary>
-codeunit 10036922 "Item Category Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

@@ -10,7 +10,7 @@ using Origo.Bifrost;
 /// Business Central chooses the supply, as the Auto Reserve action on the Reservation page does.
 /// The write runs in its own transaction: a partial reservation is rolled back.
 /// </summary>
-codeunit 10036925 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

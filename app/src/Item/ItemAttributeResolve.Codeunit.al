@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// value coercion, and JSON attribute object building. Reuses base-app
 /// <c>Item Attribute Management</c> for mapping inserts where applicable.
 /// </summary>
-codeunit 10036908 "Item Attribute Resolve ori"
+codeunit 10076844 "Item Attribute Resolve ori"
 {
     Access = Internal;
 

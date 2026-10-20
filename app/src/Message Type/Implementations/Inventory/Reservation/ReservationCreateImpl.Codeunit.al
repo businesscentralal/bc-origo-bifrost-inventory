@@ -11,7 +11,7 @@ using Origo.Bifrost;
 /// Inventory.Reservation.Create: reserves supply for one source document line through Reservation Management
 /// AutoReserve, bound to that line, and returns the created reservation entry numbers.
 /// </summary>
-codeunit 70013476 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

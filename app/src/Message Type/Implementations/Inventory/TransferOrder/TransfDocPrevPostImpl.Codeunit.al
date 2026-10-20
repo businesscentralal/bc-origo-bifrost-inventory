@@ -8,7 +8,7 @@ using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
-codeunit 70013413 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

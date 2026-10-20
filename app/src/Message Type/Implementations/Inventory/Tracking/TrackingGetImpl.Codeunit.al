@@ -6,7 +6,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>Reads lot, serial and package tracking for an item or document line.</summary>
-codeunit 70013411 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
