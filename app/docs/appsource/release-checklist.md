@@ -36,7 +36,7 @@ alone is not enough.
 | Foundation | `7505e808-6e52-4b96-a328-82573391297a`, Origo, minimum 28.0.3.530 | Foundation must be published on AppSource at 28.0.3.530 or later before this app is submitted |
 | Markets | IS, GB, DK, NO, SE, FI, DE, FR, NL, AT, CH, IE, PT, ES | Offer owner: compare with Foundation's markets in Partner Center ([csv](partner-center-markets.csv)) |
 | Languages | en-US, is-IS | Release owner: UI and catalogue checked in both |
-| Suffix and ranges | `ori`; 10036885–10036934; 70013400–70013499 | Registration owner: allocation evidence (workbook Solution Allocations row 19) |
+| Suffix and range | `ori`; 10076835–10077034 | Registration owner: allocation evidence in the object-range workbook |
 | Offer and product ID | No offer yet | Gunnar / offer owner: separately authorized offer creation and ID mapping |
 
 ## Collect operator materials

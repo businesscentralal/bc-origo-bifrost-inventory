@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Changed (2026-10-20) - object IDs moved to 10076835–10077034
+
+- Every app object now uses the single range 10076835–10077034; `app.json` drops 10036885–10036934 and 70013400–70013499. Names, behaviour and the test range 96900–96999 are unchanged. README lists the new IDs.
+- Message type enum values follow: each value is the ID of its implementation codeunit (for example `Inventory.Cost.Get` 10076860 on `Cost Get Impl ori`). `Inventory.PhysInventory.Record` takes the ID of `Phys. Invt. Record Impl ori` (10076882); `Inventory.PhysInventory.RecordCount`, which shares that codeunit, is 10076924.
+- Earlier entries below keep the IDs that were valid when they were written.
+- An installation from an earlier build stores the old enum values: uninstall it with its data before publishing this build.
+
 ### Fixed (2026-10-19) - contract parameter keys, mixed-language refusals and Icelandic xlf parity in CI (#97, #30, #32, #33)
 
 - Contract parameters (#97, #30): `tools/Test-ContractParameterKeys.ps1` now passes the full scan with an empty allow-list. On main 9f0188f it reported 11 problems under pwsh 7. The 7 extra findings seen under Windows PowerShell 5.1 (`malformed-contract-json` and the read-not-declared keys of `Inventory.AdjustCost.Run` and `Inventory.CostToGL.Post`) come from its missing `ConvertFrom-Json -NoEnumerate`; those contracts were valid.
