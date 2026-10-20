@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [28.3.0.0] - 2026-10-20 (first AppSource version)
+
 ### Changed (2026-10-20) - version 28.3.0.0 for the first AppSource release
 
 - `app/app.json` and `test/app.json` (including the test app's dependency on Bifrost Inventory) go from 28.1.0.0 to **28.3.0.0**, matching the app's Business Central application minimum, 28.3 (Gunnar, 20.10.2026).
@@ -281,7 +283,6 @@
 
 - App manifest: privacy statement and EULA URLs now point at the published Bifröst Foundation pages; Application Insights connection string updated to the shared bc-cosmos-shared telemetry resource. Help and publisher URL unchanged.
 - App logo: new Bifröst wordmark with "Powered by origo." tagline; app-name line unchanged.
-
 
 ## Bifrost Inventory 28.0.0.0
 
