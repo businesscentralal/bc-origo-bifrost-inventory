@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed (2026-10-21) - AppSource delivery
+
+- `.AL-Go/settings.json`: `deliverToAppSource` names the Partner Center offer for Bifrost Inventory (productId abaae78a-1f83-40fe-b345-b34634b8724b, main app folder `app`, branch main, no continuous delivery), so the Publish To AppSource workflow can deliver new versions to the offer.
+
 ### Changed (2026-10-20) - version 28.3.0.0 for the first AppSource release
 
 - `app/app.json` and `test/app.json` (including the test app's dependency on Bifrost Inventory) go from 28.1.0.0 to **28.3.0.0**, matching the app's Business Central application minimum, 28.3 (Gunnar, 20.10.2026).
