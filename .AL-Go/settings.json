@@ -66,5 +66,13 @@
     ".github/workflows/**",
     "tools/**"
   ],
+  "deliverToAppSource": {
+    "productId": "abaae78a-1f83-40fe-b345-b34634b8724b",
+    "mainAppFolder": "app",
+    "branches": [
+      "main"
+    ],
+    "continuousDelivery": false
+  },
   "repoVersion": "1.0.1"
 }
