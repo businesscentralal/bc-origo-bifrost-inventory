@@ -13,7 +13,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
         KeywordsLbl: Label 'item cost, unit cost, last direct cost, standard cost, intentional cost update', Comment = 'is-IS=vörukostnaður,kostnaðarverð,síðasta beina kostnaðarverð,staðlað kostnaðarverð,kostnaðaruppfærsla';
         OverviewLbl: Label 'Writes current Item card costs through Validate. It does not revalue inventory or post ledger entries.', Comment = 'is-IS=Skráir núverandi kostnað á vöruspjald með Validate. Endurmetur ekki birgðir og bókar engar fjárhagsfærslur.';
-        NotesLbl: Label 'Standard-costed items always refuse with a revaluation instruction. Native field restrictions, blocked-item opt-in and expectedCostingMethod are checked before any validation. Missing or multi-item selections refuse. Failures use the Codeunit.Run boundary; direct internal invocation can raise.', Comment = 'is-IS=Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.';
+        NotesLbl: Label 'Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted.', Comment = 'is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.';
 
     /// <summary>Requires native Item write permission and the company Costing flag.</summary>
     procedure IsEnabled(): Boolean
@@ -78,9 +78,15 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
 
     /// <summary>Returns the target contract for guarded cost writes.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Target);
-        Target.ReadFrom('[{"table":"Item","selection":"Exactly one native Item."}]');
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'item no.', 'The No. of the Item.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item; used when subject is empty.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemId, data.id, data.systemId, data.recordSystemId', 'guid', 'The SystemId of the Item; any one of the four keys.'));
+        Target.Add(ContractMgt.TargetEntry('data.tableView', 'table view', 'An Item table view that selects the item it must select exactly one item.'));
         exit(true);
     end;
 
@@ -90,25 +96,42 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Exact item number.'));
-        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Item SystemId.'));
-        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'SystemId alias.'));
-        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'SystemId alias.'));
-        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'SystemId alias.'));
-        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Must resolve exactly one Item.'));
-        Parameters.Add(ContractMgt.Parameter('unitCost', 'number', false, 'Validate Item Unit Cost.'));
-        Parameters.Add(ContractMgt.Parameter('lastDirectCost', 'number', false, 'Validate Item Last Direct Cost.'));
-        Parameters.Add(ContractMgt.Parameter('standardCost', 'number', false, 'Validate Item Standard Cost on non-Standard items only.'));
-        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Explicitly permit a blocked Item; default false.'));
-        Parameters.Add(ContractMgt.Parameter('expectedCostingMethod', 'string', false, 'Optional case-insensitive native costing-method name guard.'));
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'The No. of the Item; used when subject is empty.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'The SystemId of the Item; used after the subject and itemNo.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'An Item table view; it must select exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('unitCost', 'number', false, 'The new Unit Cost of the item, as a JSON number or an invariant decimal text such as 12.5.'));
+        Parameters.Add(ContractMgt.Parameter('lastDirectCost', 'number', false, 'The new Last Direct Cost of the item, as a JSON number or an invariant decimal text.'));
+        Parameters.Add(ContractMgt.Parameter('standardCost', 'number', false, 'The new Standard Cost of the item, as a JSON number or an invariant decimal text. Items with the Standard costing method are refused whatever you send.'));
+        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'true permits changing a blocked item; default false.'));
+        Parameters.Add(ContractMgt.Parameter('expectedCostingMethod', 'string', false, 'Optional guard: the costing method the item must have, for example FIFO or Average; the comparison ignores case.'));
         exit(true);
     end;
 
     /// <summary>Returns the response contract for guarded cost writes.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        Before: JsonObject;
+        After: JsonObject;
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success."},{"name":"itemNo","type":"string","description":"Updated Item No."},{"name":"itemId","type":"string","description":"Updated Item SystemId."},{"name":"costingMethod","type":"string","description":"Native invariant method name."},{"name":"before","type":"object","description":"Card unitCost, lastDirectCost and standardCost before native validation."},{"name":"after","type":"object","description":"The same card fields after native validation."},{"name":"warnings","type":"array","description":"Empty on success; no Standard-cost waiver."}]}');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The No. of the updated Item.'));
+        Fields.Add(ContractMgt.ResponseField('itemId', 'string', 'The SystemId of the updated Item.'));
+        Fields.Add(ContractMgt.ResponseField('costingMethod', 'string', 'The costing method name of the item, for example FIFO or Average.'));
+        Before := ContractMgt.ResponseField('before', 'object', 'The three card cost fields before the change.');
+        Before.Add('children', CostFieldChildren());
+        Fields.Add(Before);
+        After := ContractMgt.ResponseField('after', 'object', 'The same three card cost fields after the change.');
+        After.Add('children', CostFieldChildren());
+        Fields.Add(After);
+        Fields.Add(ContractMgt.ResponseField('warnings', 'array', 'Always empty on a successful call.'));
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -118,36 +141,57 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item selection finds nothing.', 'Supply an existing item.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Company/native write gate refuses caller.', 'Review permissions and company setup.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Standard-costed or blocked Item, method mismatch, field restriction, ambiguous selection or native validation failure. The direct native call may raise; the process wrapper returns text without a typed code.','Use native revaluation for Standard-costed items; otherwise correct the request.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or request parameters are malformed.', 'Enable the domain or correct the request.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A date, decimal or Boolean request value has the wrong format.', 'Use ISO dates, invariant decimals and JSON Booleans.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A supplied required cost value is null or empty.', 'Supply a numeric cost value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The subject, itemNo, SystemId key or tableView matches no item.', 'Supply an existing item.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on items.', 'Review the permissions of the caller.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitCost, lastDirectCost, standardCost or allowBlocked has the wrong format, or an item selection key is invalid.', 'Use JSON numbers or invariant decimal text for the costs, JSON true or false for allowBlocked, and valid identifiers.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitCost, lastDirectCost or standardCost is present but null or empty.', 'Supply a numeric cost value or leave the key out.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, none of the three cost keys is sent, the item is Standard-costed, or blocked without allowBlocked, expectedCostingMethod is not text or does not match, a cost field is restricted, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Use Inventory.Revaluation.Post for Standard-costed items; otherwise correct the request.'));
         exit(true);
     end;
 
     /// <summary>Returns the effect contract for guarded cost writes.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"write","writes":true,"posts":false,"idempotent":false,"changes":"Validates supplied Item cost fields and modifies the Item. No ledger revaluation or posting.","preconditions":["Exactly one Item selected.","Non-Standard costing method.","Native Item write access and each supplied field permission.","Costing domain and normal licensed dispatch."]}');
+        Effect.Add('effect', 'write');
+        Effect.Add('writes', true);
+        Effect.Add('posts', false);
+        Effect.Add('changes', 'Changes the unit cost, last direct cost and standard cost you send on one Item card. No revaluation, no value entries and no ledger entries are created. All checks run before the first field is changed, and a failure changes nothing. Business Central commits the change when the call finishes.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Preconditions.Add('Exactly one Item selected.');
+        Preconditions.Add('Non-Standard costing method.');
+        Preconditions.Add('Native Item write access and each supplied field permission.');
+        Preconditions.Add('Costing domain and normal licensed dispatch.');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
     /// <summary>Returns the related contract for guarded cost writes.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.Cost.Get","useInsteadWhen":"Read current costs without writing."}]');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Cost.Get', 'Use it to read the current costs before or after the update; it changes nothing.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Revaluation.Post', 'Use it to change the value of Standard-costed items, which this type refuses.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Price.Update', 'Use it to change the unit price; this type never changes prices.'));
         exit(true);
     end;
 
     /// <summary>Returns the examples contract for guarded cost writes.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Update FIFO card costs with a method guard","request":{"type":"Inventory.Cost.Update","subject":"OWNED-ITEM","data":{"unitCost":12,"lastDirectCost":10,"expectedCostingMethod":"FIFO"}}}]');
+        Examples.Add(ContractMgt.Example(
+            'Update the unit cost and last direct cost of item 1000, guarded by its costing method',
+            '{"type":"Inventory.Cost.Update","data":{"itemNo":"1000","unitCost":12,"lastDirectCost":10,"expectedCostingMethod":"FIFO"}}',
+            '{"status":"Success","itemNo":"1000","itemId":"6f1c1d2e-0000-0000-0000-000000000001","costingMethod":"FIFO","before":{"unitCost":11,"lastDirectCost":9,"standardCost":0},"after":{"unitCost":12,"lastDirectCost":10,"standardCost":0},"warnings":[]}'));
         exit(true);
     end;
 
@@ -160,9 +204,15 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
 
     /// <summary>No workflow override is supplied.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
         Clear(Workflow);
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Cost.Get', 'Read the current costs and the costing method of the item.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Cost.Update', 'Change the card cost fields of a non-Standard item.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Explains intentional cost-write behavior.</summary>
@@ -177,5 +227,14 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     begin
         Notes := NotesLbl;
         exit(true);
+    end;
+
+    local procedure CostFieldChildren() Children: JsonArray
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Children.Add(ContractMgt.ResponseField('unitCost', 'decimal', 'The Unit Cost of the item.'));
+        Children.Add(ContractMgt.ResponseField('lastDirectCost', 'decimal', 'The Last Direct Cost of the item.'));
+        Children.Add(ContractMgt.ResponseField('standardCost', 'decimal', 'The Standard Cost of the item.'));
     end;
 }

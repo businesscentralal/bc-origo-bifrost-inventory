@@ -99,13 +99,19 @@ codeunit 10076853 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Statistics');
+        exit(Workflow.Keys().Count() > 0);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.AssemblyOrder.Statistics');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
@@ -117,9 +123,11 @@ codeunit 10076853 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        Notes := '';
-        exit(false);
+        Notes := Parts.GetNotes('Inventory.AssemblyOrder.Statistics');
+        exit(Notes <> '');
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"

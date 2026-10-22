@@ -21,7 +21,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Previews a reclassification journal batch without posting it.', Comment = 'is-IS=Forskoðar endurflokkunarbókarkeyrslu án þess að bóka hana.';
+        DescriptionLbl: Label 'Lists the lines of a reclassification journal batch that Post would process, without posting. It does not simulate the ledger entries.', Comment = 'is-IS=Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.';
     begin
         exit(DescriptionLbl);
     end;
@@ -38,99 +38,6 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         SelectionDescriptionLbl: Label 'Returns the reclassification journal lines that Post would process.', Comment = 'is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.';
     begin
         exit(SelectionDescriptionLbl);
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('messageType', 'Inventory.Reclassification.PreviewPost');
-        Envelope.Add('version', 1);
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
-    begin
-        TargetJson.Add('table', 'Item Journal Line');
-        Target.Add(TargetJson);
-        exit(true);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
-    begin
-        ParameterJson.Add('name', 'journalTemplateName');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        Clear(ParameterJson);
-        ParameterJson.Add('name', 'journalBatchName');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('status', 'Success');
-        Response.Add('lineCount', 0);
-        Response.Add('rollback', true);
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ErrorJson: JsonObject;
-    begin
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'journal template or batch is missing');
-        Errors.Add(ErrorJson);
-        exit(true);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Post', 'Post the reclassification journal after the preview is correct.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Check', 'Check the reclassification journal before previewing it.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Reads the reclassification journal batch and returns the lines without posting.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Notes := 'Does not commit. Post remains Inventory.Reclassification.Post.';
-        exit(true);
     end;
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"
@@ -189,5 +96,135 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         ResponseJson.Add('lines', Lines);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject is used; the template and the batch are sent in data."},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('data.journalTemplateName, data.journalBatchName', 'journal template and batch name', 'The item journal template and batch that hold the reclassification lines.'));
+        exit(true);
+    end;
+
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters. The template is not looked up.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', true, 'Name of the journal batch whose lines are listed, at most 10 characters.'));
+        exit(true);
+    end;
+
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Field: JsonObject;
+        Fields: JsonArray;
+        Children: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the lines were read.'));
+        Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'Always true. Nothing is written, so there is nothing to roll back; no posting is simulated.'));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of lines in the batch; 0 when the batch has no lines or does not exist.'));
+        Field := ContractMgt.ResponseField('lines', 'array', 'Every line of the batch.');
+        Clear(Children);
+        Children.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Line number in the batch.'));
+        Children.Add(ContractMgt.ResponseField('itemNo', 'string', 'Item number of the line.'));
+        Children.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Quantity of the line.'));
+        Children.Add(ContractMgt.ResponseField('locationCode', 'string', 'Location code of the line.'));
+        Children.Add(ContractMgt.ResponseField('newLocationCode', 'string', 'New location code of the line.'));
+        Field.Add('children', Children);
+        Fields.Add(Field);
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the posting permission set BIFROST InvPost ori, which this type requires although it only reads.', 'Ask an administrator for BIFROST InvPost ori.'));
+        Errors.Add(ContractMgt.TextErrorEntry('journalTemplateName is required.', 'journalTemplateName is absent. The answer carries the error text and no code.', 'Send journalTemplateName.'));
+        Errors.Add(ContractMgt.TextErrorEntry('journalBatchName is required.', 'journalBatchName is absent. The answer carries the error text and no code.', 'Send journalBatchName.'));
+        exit(true);
+    end;
+
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing is written or posted. The lines of the journal batch are read and returned.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori and BIFROST InvPost ori');
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        exit(true);
+    end;
+
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Check', 'Use it to confirm that the template is a reclassification template.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Post', 'Use it to post the reclassification batch.'));
+        exit(true);
+    end;
+
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
+    begin
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Confirm that the template is a reclassification template and see how many transfer lines the batch has.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'List the lines the posting would process.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Post', 'Post the batch; the lines are written to the item ledger.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
+    end;
+
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'List the lines of the reclassification batch DEFAULT',
+            '{"type":"Inventory.Reclassification.PreviewPost","data":{"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}}',
+            '{"status":"Success","rollback":true,"lineCount":1,"lines":[{"lineNo":10000,"itemNo":"1000","quantity":5,"locationCode":"BLUE","newLocationCode":"RED"}]}'));
+        exit(true);
+    end;
+
+    procedure GetOverview(var Overview: Text): Boolean
+    begin
+        Overview := 'Lists the lines of an item journal batch that Inventory.Reclassification.Post would process. It does not simulate the posting.';
+        exit(true);
+    end;
+
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := 'Despite its name this type only reads the lines of the batch. It runs no posting preview, validates no line and creates no ledger entry, so it cannot show the resulting entries or predict posting errors; rollback is true in every answer only as a marker. ' +
+            'The template is not looked up and its type is not checked, and every line of the batch is listed whatever its entry type. An unknown batch is answered Success with lineCount 0. ' +
+            'journalTemplateName and journalBatchName are required; a missing one is answered with the error text and no code. The type requires the BIFROST InvPost ori permission set although it only reads, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'Use Inventory.Reclassification.Check to confirm the template type and Inventory.Reclassification.Post to post.';
+        exit(true);
     end;
 }

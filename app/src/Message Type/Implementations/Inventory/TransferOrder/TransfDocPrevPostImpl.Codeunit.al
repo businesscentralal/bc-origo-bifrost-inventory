@@ -115,8 +115,11 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.TransferOrder.PreviewPost');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean

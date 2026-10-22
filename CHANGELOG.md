@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Changed (2026-10-22) - message type contract and discovery up to Foundation parity
+
+- All 59 Inventory message types now declare the chapters Foundation's own types declare: envelope, target, parameters (with `children` on every array of objects), response (with `children` on arrays), errors with a machine code (or the error text) and a fix, effect with `effect` (read, write or irreversible), `changes`, `idempotent` and `permissionSet`, related, workflow for every type that is not a plain read, examples with a request and a response, overview and notes. Texts were rewritten from the implementation; where the help contradicted the code it was corrected (error codes, response fields, parameter types, commit behaviour of the Post types). `Inventory.Cost.Get` declared the effect `readOnly`, now `read`; `Inventory.CostToGL.Test` named an error code and chapter shapes that no caller could get, now standard.
+- No message type, public procedure, object ID, enum value, field or runtime behaviour changed, and no direction was narrowed or widened. `ExecuteBifrostTask` and all helpers are untouched. Labels whose English text changed carry updated `is-IS=` comments; `app/Translations/Bifrost Inventory.is-IS.xlf` is regenerated with `tools/Update-IcelandicXlf.ps1` and passes `tools/Test-IcelandicXlfInSync.ps1`.
+- No root `strict` option in the envelopes: the Foundation floor is 28.0.3.530 and the option was added to Foundation later (core#923, 06.10.2026).
+- Existing tests that pin the absence of a chapter were not changed, so these chapters stay absent: workflow of `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.Attribute.Create/Update` and `Inventory.AttributeDefinition.Create`; notes of `Inventory.Attribute.Get`, `Inventory.AttributeDefinition.Create` and `Inventory.CostToGL.Test`; examples of `Inventory.Attribute.Create/Update`; target of `Inventory.AttributeDefinition.Create`.
+- Tests: new `Inv. Contract Parity Tests ori` (96970) walks every Inventory type and fails on a missing chapter, an error without a code or text, a direction that does not match the effect, discovery texts that are empty or not translated at 1039, an example that is not a request of its own type, and AL object names in notes or overview. `Inventory Test Library ori` accepts `number` as a response schema type.
+
 ### Fixed (2026-10-21) - Pipeline: AppSource build gate after the first AppSource release
 
 - Pipeline: the AppSource build gate no longer fails after the first AppSource release (previous self-app removed from the compile symbol cache; AppSourceCop baseline kept). New `tools/prune_self_symbols.py`, called from `tools/Assert-AppSourceBuild.ps1` before the gate; regression tests in `tools/tests/test_foundation_restore.py`. Port of attachments#174.

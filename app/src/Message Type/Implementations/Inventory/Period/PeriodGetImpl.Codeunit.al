@@ -44,82 +44,6 @@ codeunit 10076878 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
         exit(SelectionDescriptionLbl);
     end;
 
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('messageType', 'Inventory.Period.Get');
-        Envelope.Add('version', 1);
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
-    begin
-        TargetJson.Add('table', 'Inventory Period');
-        Target.Add(TargetJson);
-        exit(true);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('status', 'Success');
-        Response.Add('periods', 'array');
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', false);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Close', 'Close an inventory period instead of only reading it.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Reopen', 'Reopen a closed inventory period instead of only reading it.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Reads inventory periods.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Notes := 'Read only. Close and reopen are separate message types.';
-        exit(true);
-    end;
-
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Outbound);
@@ -149,5 +73,115 @@ codeunit 10076878 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
         ResponseJson.Add('periods', Periods);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject is used; every inventory period is returned."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('none', 'all inventory periods', 'No single record is addressed and no identifier is read; every Inventory Period is returned.'));
+        exit(true);
+    end;
+
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Field: JsonObject;
+        Fields: JsonArray;
+        Children: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the periods were read.'));
+        Field := ContractMgt.ResponseField('periods', 'array', 'Every inventory period, in the order of the ending date; empty when the company has none.');
+        Clear(Children);
+        Children.Add(ContractMgt.ResponseField('endingDate', 'string', 'Ending date of the period, YYYY-MM-DD.'));
+        Children.Add(ContractMgt.ResponseField('name', 'string', 'Name of the period.'));
+        Children.Add(ContractMgt.ResponseField('closed', 'boolean', 'True when the period is closed.'));
+        Field.Add('children', Children);
+        Fields.Add(Field);
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Inventory Period domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
+        exit(true);
+    end;
+
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing. The inventory periods are only read.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        exit(true);
+    end;
+
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Close', 'Use it to close an inventory period that this call shows as open.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Reopen', 'Use it to reopen a period that this call shows as closed.'));
+        exit(true);
+    end;
+
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'Read all inventory periods',
+            '{"type":"Inventory.Period.Get"}',
+            '{"status":"Success","periods":[{"endingDate":"2026-09-30","name":"September 2026","closed":true},{"endingDate":"2026-10-31","name":"October 2026","closed":false}]}'));
+        exit(true);
+    end;
+
+    procedure GetOverview(var Overview: Text): Boolean
+    begin
+        Overview := 'Returns every inventory period with its ending date, name and whether it is closed. It reads only and takes no parameters.';
+        exit(true);
+    end;
+
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := 'Read only. Every Inventory Period of the company is returned in the order of the ending date, with no filter and no limit; a company without periods gets an empty periods array. ' +
+            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs read permission on the Inventory Period table. ' +
+            'Use Inventory.Period.Close or Inventory.Period.Reopen to change a period.';
+        exit(true);
     end;
 }

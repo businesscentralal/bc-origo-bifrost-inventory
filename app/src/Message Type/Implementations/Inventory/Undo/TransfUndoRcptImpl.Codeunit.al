@@ -41,59 +41,65 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.Transfer.UndoReceipt');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The posted transfer receipt is named under data.documentNo; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('table', 'Transfer Receipt Header');
-        Target.Add(TargetJson);
+        Target.Add(ContractMgt.TargetEntry('data.documentNo', 'document no.', 'The No. of the Transfer Receipt Header. It is looked up only to tell a missing receipt from one that exists but cannot be undone.'));
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ParameterJson.Add('name', 'documentNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer receipt, at most 20 characters; a longer value is cut to 20.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'This type never answers Success: a call that passes the checks is answered with the error status and the text that receipt undo is not available.'));
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'documentNo must be specified.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the posted transfer receipt was not found.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'InvalidParameter');
-        ErrorJson.Add('when', 'this Business Central version cannot undo a posted transfer receipt.');
-        Errors.Add(ErrorJson);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Assign BIFROST InvPost ori. Note that the type refuses every receipt anyway.'));
+        Errors.Add(ContractMgt.TextErrorEntry('documentNo must be specified.', 'documentNo was not sent. The answer carries the error text and no code.', 'Send documentNo, the number of the posted transfer receipt.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipt %1 was not found.', 'No Transfer Receipt Header has that number. The answer carries the error text and no code.', 'Check the number of the posted transfer receipt.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipts cannot be undone in this Business Central version.', 'The posted transfer receipt exists. Every such call is refused. The answer carries the error text and no code.', 'Do not call this type for a correction. Undo the shipment with Inventory.Transfer.UndoShipment, or correct the stock with a new posting.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Nothing. The call only looks up the posted transfer receipt and then always answers an error, because receipt undo is not available in this Business Central version.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
         exit(true);
     end;
 
@@ -107,28 +113,43 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.Transfer.UndoShipment', 'Undo a posted transfer shipment. Receipt undo is not available in this version.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.TransferOrder.Post', 'Post the transfer order when the receipt was posted wrongly and a new posting is the way to correct it.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Transfer.UndoReceipt', 'Ask to undo the posted receipt; the answer is always an error because this version cannot undo a transfer receipt.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Create', 'Move the goods back with a new transfer order from the receiving location to the sending one.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Post', 'Ship and receive the new transfer order.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Examples.Add(ContractMgt.Example('Ask to undo posted transfer receipt 109001 (always refused)', '{"type":"Inventory.Transfer.UndoReceipt","data":{"documentNo":"109001"}}', '{"status":"Error","error":"Posted transfer receipts cannot be undone in this Business Central version."}'));
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Refuses to undo a posted transfer receipt in this Business Central version.';
+        Overview := 'Refuses to undo a posted transfer receipt in this Business Central version. A receipt that exists is answered with an error, and nothing is changed.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'A posted transfer receipt that exists is answered with an error. Success is not returned.';
+        Notes := 'Success is never returned: a posted transfer receipt that exists is answered with an error, and one that does not exist is answered with a not found error. Neither answer carries an error code. ' +
+            'Nothing is changed, so nothing is committed and the call can be repeated. ' +
+            'The caller needs the Transfer Orders domain turned on in Inventory Setup and the BIFROST InvPost ori permission set, although nothing is posted. ' +
+            'Use Inventory.Transfer.UndoShipment to undo a posted transfer shipment. The type does not read subject.';
         exit(true);
     end;
 

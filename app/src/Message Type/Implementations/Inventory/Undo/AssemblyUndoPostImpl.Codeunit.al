@@ -42,57 +42,71 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.Assembly.UndoPost');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The posted assembly is named under data.documentNo; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('table', 'Posted Assembly Header');
-        Target.Add(TargetJson);
+        Target.Add(ContractMgt.TargetEntry('data.documentNo', 'document no.', 'The No. of the Posted Assembly Header to undo. It is the posted assembly number, not the number of the assembly order.'));
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ParameterJson.Add('name', 'documentNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters; a longer value is cut to 20.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('documentNo', '');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted assembly No. that was undone, as sent (cut to 20 characters).'));
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'documentNo is required.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the posted assembly was not found.');
-        Errors.Add(ErrorJson);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Assembly domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write Posted Assembly Header records.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted assembly tables.'));
+        Errors.Add(ContractMgt.TextErrorEntry('documentNo is required.', 'documentNo was not sent. The answer carries the error text and no code.', 'Send documentNo, the number of the posted assembly.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted assembly %1 was not found.', 'No Posted Assembly Header has that number. The answer carries the error text and no code.', 'Check the number. It is the posted assembly number, not the assembly order number.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The error text of Business Central', 'Business Central refuses the undo, for example when the posted assembly cannot be undone. The answer carries Business Central''s own error text and no code.', 'Read the text, correct the cause in Business Central and send the call again.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The posted assembly exists.');
+        Preconditions.Add('The undo checks of Business Central pass.');
+        Effect.Add('effect', 'irreversible');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
+        Effect.Add('changes', 'Undoes the posted assembly with the standard Business Central undo of a posted assembly, which posts the reversing entries. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
+        Effect.Add('idempotent', false);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -106,28 +120,43 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.AssemblyOrder.Post', 'Post an assembly order instead of undoing a posted assembly.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.AssemblyOrder.Create', 'Create a new assembly order with the corrected data after the posted assembly was undone.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.AssemblyOrder.Post', 'Post the assembly order; the answer carries the posted document number in postedDocumentNo.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Assembly.UndoPost', 'Undo that posted assembly when the posting was wrong, with the posted document number as documentNo.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.AssemblyOrder.Create', 'Create a new assembly order with the corrected data.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Examples.Add(ContractMgt.Example('Undo posted assembly 132001', '{"type":"Inventory.Assembly.UndoPost","data":{"documentNo":"132001"}}', '{"status":"Success","documentNo":"132001"}'));
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Undoes a posted assembly by document number.';
+        Overview := 'Undoes a posted assembly by its posted document number with the standard Business Central undo. Business Central posts the reversing entries, so the call changes inventory and cannot itself be undone.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Calls Assembly-Post.Undo. A failed undo is returned as an error.';
+        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
+            'documentNo is the number of the posted assembly (the posted document), not the number of the assembly order; the type looks it up in the Posted Assembly Header table only. ' +
+            'The caller needs the Assembly domain turned on in Inventory Setup and write permission on the posted assembly table. Unlike Inventory.AssemblyOrder.Post this type does not check the BIFROST InvPost ori permission set. ' +
+            'A refusal from Business Central is answered with its error text and no error code. The type does not read subject. ' +
+            'Post the assembly again with Inventory.AssemblyOrder.Post, or create a new assembly order with Inventory.AssemblyOrder.Create, once the posted assembly is undone.';
         exit(true);
     end;
 

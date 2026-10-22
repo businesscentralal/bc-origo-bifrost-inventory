@@ -112,8 +112,11 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.AssemblyOrder.PreviewPost');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean

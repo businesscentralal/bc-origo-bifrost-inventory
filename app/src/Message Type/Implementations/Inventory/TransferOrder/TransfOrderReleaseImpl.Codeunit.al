@@ -94,12 +94,18 @@ codeunit 10076907 "Transf. Order Release Impl ori" implements "Msg Interface ori
         exit(true);
     end;
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Workflow := Parts.GetWorkflow('Inventory.TransferOrder.Release');
+        exit(Workflow.Keys().Count() > 0);
     end;
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.TransferOrder.Release');
+        exit(Examples.Count() > 0);
     end;
     procedure GetOverview(var Overview: Text): Boolean
     var
@@ -109,9 +115,11 @@ codeunit 10076907 "Transf. Order Release Impl ori" implements "Msg Interface ori
         exit(Overview <> '');
     end;
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        Notes := '';
-        exit(false);
+        Notes := Parts.GetNotes('Inventory.TransferOrder.Release');
+        exit(Notes <> '');
     end;
 
     procedure GetMessageDirection() MessageDirection: Enum "Msg Direction ori"

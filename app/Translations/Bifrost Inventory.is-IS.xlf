@@ -286,9 +286,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2987745232 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.</source>
-          <target>Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.</note>
+          <source>Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.</source>
+          <target>Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2987745232 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -502,9 +502,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The first period is the calendar period that contains from. With amountType netChange (the default) amounts cover that period only; with balanceAtDate they cover everything up to the period end. Projected available balance is the balance at the period end. Inventory is the on-hand quantity. A service or non-inventory item is refused. At most 53 periods and 20 items are returned.</source>
-          <target>Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.</note>
+          <source>The first period is the calendar period that contains from. With amountType netChange (the default) the amounts cover that period only; with balanceAtDate they cover everything up to the period end. Projected available balance is the balance at the period end in both modes. Inventory is the item ledger quantity within the same dates: the net change of the period with netChange, and the on-hand quantity at the period end with balanceAtDate. One item (itemNo) is answered at the top level; several items (items) are answered in items, each with its own periods. variant and location are exact codes, not filter expressions, and drop shipments are always left out. A service or non-inventory item is refused. At most 53 periods and 20 items are returned. The type only reads, so it can be repeated freely.</source>
+          <target>Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins í báðum stillingum. Birgðir (inventory) eru vörufærslumagn innan sömu dagsetninga: nettóbreyting tímabilsins með netChange og magn á hendi í lok tímabilsins með balanceAtDate. Ein vara (itemNo) er svarað á efsta stigi; fleiri vörur (items) eru svaraðar í items, hver með sín tímabil. variant og location eru nákvæmir kóðar, ekki síutjáningar, og beinar sendingar eru alltaf undanskildar. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka. Gerðin les aðeins og því má endurtaka kallið að vild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins í báðum stillingum. Birgðir (inventory) eru vörufærslumagn innan sömu dagsetninga: nettóbreyting tímabilsins með netChange og magn á hendi í lok tímabilsins með balanceAtDate. Ein vara (itemNo) er svarað á efsta stigi; fleiri vörur (items) eru svaraðar í items, hver með sín tímabil. variant og location eru nákvæmir kóðar, ekki síutjáningar, og beinar sendingar eru alltaf undanskildar. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka. Gerðin les aðeins og því má endurtaka kallið að vild.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -526,15 +526,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType ItemsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Variant filter. Leave it empty to include every variant.</source>
-          <target>Sía afbrigðis. Skildu hana eftir tóma til að taka öll afbrigði með.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sía afbrigðis. Skildu hana eftir tóma til að taka öll afbrigði með.</note>
+          <source>A variant code of the item. Leave it out to include every variant. A variant that does not exist on the item is refused.</source>
+          <target>Afbrigðiskóði vörunnar. Slepptu honum til að taka öll afbrigði með. Afbrigði sem er ekki til á vörunni er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði vörunnar. Slepptu honum til að taka öll afbrigði með. Afbrigði sem er ekki til á vörunni er hafnað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType VariantLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Location filter. Leave it empty to include every location.</source>
-          <target>Sía staðsetningar. Skildu hana eftir tóma til að taka allar staðsetningar með.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sía staðsetningar. Skildu hana eftir tóma til að taka allar staðsetningar með.</note>
+          <source>A location code. Leave it out to include every location. A location that does not exist is refused.</source>
+          <target>Staðsetningarkóði. Slepptu honum til að taka allar staðsetningar með. Staðsetningu sem er ekki til er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði. Slepptu honum til að taka allar staðsetningar með. Staðsetningu sem er ekki til er hafnað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType LocationLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 1591550825" size-unit="char" translate="yes" xml:space="preserve">
@@ -544,9 +544,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType PeriodTypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 901740384" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A date inside the first calendar period.</source>
-          <target>Dagsetning innan fyrsta dagatals tímabilsins.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning innan fyrsta dagatals tímabilsins.</note>
+          <source>A date inside the first calendar period, as YYYY-MM-DD.</source>
+          <target>Dagsetning innan fyrsta dagatals tímabilsins, á forminu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning innan fyrsta dagatals tímabilsins, á forminu YYYY-MM-DD.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetParameters - NamedType FromLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3615801952 - NamedType 1031476272" size-unit="char" translate="yes" xml:space="preserve">
@@ -742,9 +742,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1869433643 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Foundation item selection order applies. Card costs and adjustment/G/L flags are current values. locationFilter, variantCode and asOfDate constrain inventory quantity only; no historical card cost or SKU-cost claim. No item, ledger, or posting data is written.</source>
-          <target>Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Valröð vara í grunnforritinu gildir. Kostnaður á vöruspjaldi og stöður kostnaðarleiðréttingar og fjárhagsbókunar sýna núverandi gildi. locationFilter, variantCode og asOfDate takmarka aðeins birgðamagn; þau sýna ekki sögulegan spjaldkostnað eða kostnað birgðahaldseiningar. Engum vöru-, fjárhags- eða bókunargögnum er breytt.</note>
+          <source>Select the item with the message subject (an item number or SystemId), data.itemNo, an item SystemId key or data.tableView; a call with none of them is refused. One selected item is also answered at the top level, several items only in items. Unit cost, standard cost, last direct cost, indirect cost percent and both flags are current card values. locationFilter, variantCode and asOfDate change the inventory quantity only: asOfDate counts item ledger entries up to that posting date, and no historical card cost is available. costIsAdjusted false means Inventory.AdjustCost.Run is due; costIsPostedToGL false means value entries are not yet posted to the general ledger. Nothing is changed.</source>
+          <target>Veldu vöruna með subject (vörunúmer eða SystemId), data.itemNo, SystemId-lykli vöru eða data.tableView; kalli án þessara er hafnað. Ef ein vara er valin er svarið einnig á efsta stigi, en ef fleiri vörur eru valdar eingöngu í items. Kostnaðarverð, staðalkostnaður, síðasta beina kostnaðarverð, óbeinn kostnaður í prósentum og báðar stöðurnar eru núverandi gildi á vöruspjaldi. locationFilter, variantCode og asOfDate breyta aðeins birgðamagni: asOfDate telur vörufærslur til og með bókunardagsetningunni og enginn sögulegur spjaldkostnaður er í boði. costIsAdjusted false þýðir að tímabært er að keyra Inventory.AdjustCost.Run; costIsPostedToGL false þýðir að virðisfærslur hafa ekki enn verið bókaðar á fjárhag. Engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vöruna með subject (vörunúmer eða SystemId), data.itemNo, SystemId-lykli vöru eða data.tableView; kalli án þessara er hafnað. Ef ein vara er valin er svarið einnig á efsta stigi, en ef fleiri vörur eru valdar eingöngu í items. Kostnaðarverð, staðalkostnaður, síðasta beina kostnaðarverð, óbeinn kostnaður í prósentum og báðar stöðurnar eru núverandi gildi á vöruspjaldi. locationFilter, variantCode og asOfDate breyta aðeins birgðamagni: asOfDate telur vörufærslur til og með bókunardagsetningunni og enginn sögulegur spjaldkostnaður er í boði. costIsAdjusted false þýðir að tímabært er að keyra Inventory.AdjustCost.Run; costIsPostedToGL false þýðir að virðisfærslur hafa ekki enn verið bókaðar á fjárhag. Engu er breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1869433643 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -802,9 +802,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2524329771 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Tests posting inventory cost to G/L for the requested item filter without posting.</source>
-          <target>Prófar bókun birgðakostnaðar í fjárhag fyrir umbeðna vörusíu án þess að bóka.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Prófar bókun birgðakostnaðar í fjárhag fyrir umbeðna vörusíu án þess að bóka.</note>
+          <source>Counts the items that match an item filter before inventory cost is posted to G/L; nothing is posted.</source>
+          <target>Telur vörurnar sem passa við vörusíu áður en birgðakostnaður er bókaður á fjárhag; ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Telur vörurnar sem passa við vörusíu áður en birgðakostnaður er bókaður á fjárhag; ekkert er bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2524329771 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -814,9 +814,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2524329771 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Returns the item filter that the inventory cost to G/L test would use.</source>
-          <target>Skilar vörusíunni sem prófun á bókun birgðakostnaðar í fjárhag myndi nota.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skilar vörusíunni sem prófun á bókun birgðakostnaðar í fjárhag myndi nota.</note>
+          <source>Returns the item filter and the number of items it matches. Nothing is posted and no value entries are read.</source>
+          <target>Skilar vörusíunni og fjölda vara sem hún passar við. Ekkert er bókað og engar virðisfærslur eru lesnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar vörusíunni og fjölda vara sem hún passar við. Ekkert er bókað og engar virðisfærslur eru lesnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Test Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1053516618 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -832,9 +832,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1053516618 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Standard-costed items always refuse with a revaluation instruction. Native field restrictions, blocked-item opt-in and expectedCostingMethod are checked before any validation. Missing or multi-item selections refuse. Failures use the Codeunit.Run boundary; direct internal invocation can raise.</source>
-          <target>Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörum með staðlað kostnaðarverð er alltaf hafnað með leiðbeiningu um endurmat. Innbyggðar reitatakmarkanir, samþykki fyrir lokaðri vöru og expectedCostingMethod eru athuguð áður en sannprófun hefst. Vöntun á vöruvali eða val margra vara er hafnað. Villur fara um Codeunit.Run; bein innri köll geta kastað villu.</note>
+          <source>Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1053516618 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -934,9 +934,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AssemblyCreateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 1153550289" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The posting gate requires BIFROST InvPost ori. Optional postingDate and quantityToAssemble are applied before posting.</source>
-          <target>Bókunarhlið krefst BIFROST InvPost ori. Valfrjáls postingDate og quantityToAssemble eru notuð fyrir bókun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókunarhlið krefst BIFROST InvPost ori. Valfrjáls postingDate og quantityToAssemble eru notuð fyrir bókun.</note>
+          <source>Requires BIFROST InvPost ori in addition to BIFROST Full ori. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.</source>
+          <target>Krefst BIFROST InvPost ori auk BIFROST Full ori. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst BIFROST InvPost ori auk BIFROST Full ori. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AssemblyPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 3670094209" size-unit="char" translate="yes" xml:space="preserve">
@@ -1030,9 +1030,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferCreateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 2000881134" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Non-direct orders require postingType Ship or Receive. Direct transfers use Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true.</source>
-          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive. Beinir flutningar nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive. Beinir flutningar nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true.</note>
+          <source>Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central's own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires BIFROST InvPost ori in addition to BIFROST Full ori. Use Inventory.TransferOrder.PreviewPost first to see the entries.</source>
+          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst BIFROST InvPost ori auk BIFROST Full ori. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst BIFROST InvPost ori auk BIFROST Full ori. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 457938070" size-unit="char" translate="yes" xml:space="preserve">
@@ -2632,9 +2632,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line, and replacedCount says how many rows were replaced; rows that are already partly invoiced keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them.</source>
-          <target>Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu, og replacedCount segir hve mörgum línum var skipt út; línur sem eru þegar reikningsfærðar að hluta halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu, og replacedCount segir hve mörgum línum var skipt út; línur sem eru þegar reikningsfærðar að hluta halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</note>
+          <source>The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them.</source>
+          <target>Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -3346,15 +3346,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
-          <source>referenceNo and references were both sent.</source>
-          <target>referenceNo og references voru bæði send.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=referenceNo og references voru bæði send.</note>
+          <source>references was sent together with referenceNo, referenceType, referenceTypeNo or date.</source>
+          <target>references var sent ásamt referenceNo, referenceType, referenceTypeNo eða date.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=references var sent ásamt referenceNo, referenceType, referenceTypeNo eða date.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send either referenceNo or references, not both.</source>
-          <target>Sendu annaðhvort referenceNo eða references, ekki bæði.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
+          <source>Send either referenceNo with its optional keys at the top level, or references; inside references each entry carries its own keys.</source>
+          <target>Sendu annaðhvort referenceNo með valkvæðu lyklunum sínum á efsta stigi, eða references; í references ber hver færsla sína eigin lykla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo með valkvæðu lyklunum sínum á efsta stigi, eða references; í references ber hver færsla sína eigin lykla.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 3805433198" size-unit="char" translate="yes" xml:space="preserve">
@@ -3406,9 +3406,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A blocked item is returned with blocked true. A reference whose ending date is before date is ignored. Send references to resolve several values, without referenceNo beside that array.</source>
-          <target>Lokuð vara kemur til baka með blocked true. Tilvísun sem lýkur fyrir date er hunsuð. Sendu references til að leysa nokkur gildi, án referenceNo við hliðina á fylkinu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lokuð vara kemur til baka með blocked true. Tilvísun sem lýkur fyrir date er hunsuð. Sendu references til að leysa nokkur gildi, án referenceNo við hliðina á fylkinu.</note>
+          <source>The lookup order is: item references with that reference number first, then the item number, then the GTIN. source says which one matched: reference, itemNo or gtin. Without date no date filter is applied; with date, a reference is ignored when it starts after date or ended before it. A blocked item is returned with blocked true and is not refused. When several different items match, the call is refused as ambiguous. References of a customer or vendor are searched only when referenceType says so; barCode, blank or no type search barcode references and references without a type. With references the answer is results, one result per entry in the order sent; the first problem stops the call, and referenceNo, referenceType, referenceTypeNo and date go inside each entry, not beside the array. An empty references array answers an empty results array. Only digits are tried as a GTIN.</source>
+          <target>Leitarröðin er: vörutilvísanir með því tilvísunarnúmeri fyrst, síðan vörunúmerið og síðast GTIN. source segir hvað passaði: reference, itemNo eða gtin. Án date er engin dagsetningarsía notuð; með date er tilvísun hunsuð ef hún hefst eftir date eða lauk fyrir það. Lokuð vara kemur til baka með blocked true og er ekki hafnað. Ef nokkrar ólíkar vörur passa er kallinu hafnað sem tvíræðu. Tilvísanir viðskiptavinar eða birgis eru aðeins leitaðar þegar referenceType segir til um það; barCode, blank eða engin tegund leita í strikamerkjatilvísunum og tilvísunum án tegundar. Með references er svarið results, ein niðurstaða fyrir hverja færslu í þeirri röð sem hún var send; fyrsta vandamálið stöðvar kallið og referenceNo, referenceType, referenceTypeNo og date fara inn í hverja færslu, ekki við hliðina á fylkinu. Tómt references fylki gefur tómt results fylki. Aðeins tölustafir eru reyndir sem GTIN.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leitarröðin er: vörutilvísanir með því tilvísunarnúmeri fyrst, síðan vörunúmerið og síðast GTIN. source segir hvað passaði: reference, itemNo eða gtin. Án date er engin dagsetningarsía notuð; með date er tilvísun hunsuð ef hún hefst eftir date eða lauk fyrir það. Lokuð vara kemur til baka með blocked true og er ekki hafnað. Ef nokkrar ólíkar vörur passa er kallinu hafnað sem tvíræðu. Tilvísanir viðskiptavinar eða birgis eru aðeins leitaðar þegar referenceType segir til um það; barCode, blank eða engin tegund leita í strikamerkjatilvísunum og tilvísunum án tegundar. Með references er svarið results, ein niðurstaða fyrir hverja færslu í þeirri röð sem hún var send; fyrsta vandamálið stöðvar kallið og referenceNo, referenceType, referenceTypeNo og date fara inn í hverja færslu, ekki við hliðina á fylkinu. Tómt references fylki gefur tómt results fylki. Aðeins tölustafir eru reyndir sem GTIN.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -3424,9 +3424,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 844981987" size-unit="char" translate="yes" xml:space="preserve">
-          <source>barCode, customer, vendor, or blank. Blank searches barcodes and blank references.</source>
-          <target>barCode, customer, vendor eða tómt. Tómt leitar í strikamerkjum og tómum tilvísunum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=barCode, customer, vendor eða tómt. Tómt leitar í strikamerkjum og tómum tilvísunum.</note>
+          <source>barCode, customer, vendor or blank. barCode and blank, also when it is omitted, both search barcode references and references without a type; customer and vendor search only references of that type. Case does not matter.</source>
+          <target>barCode, customer, vendor eða blank. barCode og blank, líka þegar það er sleppt, leita bæði í strikamerkjatilvísunum og tilvísunum án tegundar; customer og vendor leita aðeins í tilvísunum af þeirri tegund. Há- og lágstafir skipta ekki máli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=barCode, customer, vendor eða blank. barCode og blank, líka þegar það er sleppt, leita bæði í strikamerkjatilvísunum og tilvísunum án tegundar; customer og vendor leita aðeins í tilvísunum af þeirri tegund. Há- og lágstafir skipta ekki máli.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceTypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 946568340" size-unit="char" translate="yes" xml:space="preserve">
@@ -3436,15 +3436,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferenceTypeNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Date the reference must be valid on. An ending date before this date is ignored.</source>
-          <target>Dagsetning sem tilvísunin verður að gilda á. Lokadagur fyrir þessa dagsetningu er hunsaður.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning sem tilvísunin verður að gilda á. Lokadagur fyrir þessa dagsetningu er hunsaður.</note>
+          <source>Date the reference must be valid on, as yyyy-mm-dd. A reference is ignored when its starting date is after this date or its ending date is before it. Without date no date filter is applied, so references that have expired or not started yet are found too.</source>
+          <target>Dagsetning sem tilvísunin verður að gilda á, á forminu yyyy-mm-dd. Tilvísun er hunsuð ef upphafsdagur hennar er eftir þessa dagsetningu eða lokadagur hennar er á undan henni. Án date er engin dagsetningarsía notuð, svo tilvísanir sem eru útrunnar eða ekki gildar enn finnast líka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning sem tilvísunin verður að gilda á, á forminu yyyy-mm-dd. Tilvísun er hunsuð ef upphafsdagur hennar er eftir þessa dagsetningu eða lokadagur hennar er á undan henni. Án date er engin dagsetningarsía notuð, svo tilvísanir sem eru útrunnar eða ekki gildar enn finnast líka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType DateLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3615801952 - NamedType 1321635566" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Several references. Each entry uses referenceNo and the same optional keys. Do not also send referenceNo.</source>
-          <target>Margar tilvísanir. Hver færsla notar referenceNo og sömu valkvæða lykla. Ekki senda referenceNo líka.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Margar tilvísanir. Hver færsla notar referenceNo og sömu valkvæða lykla. Ekki senda referenceNo líka.</note>
+          <source>Several values to resolve in one call. Each entry is an object with referenceNo and the optional referenceType, referenceTypeNo and date. Do not send referenceNo, referenceType, referenceTypeNo or date beside this array.</source>
+          <target>Mörg gildi sem á að leysa í einu kalli. Hver færsla er hlutur með referenceNo og valkvæðu lyklunum referenceType, referenceTypeNo og date. Ekki senda referenceNo, referenceType, referenceTypeNo eða date við hliðina á fylkinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Mörg gildi sem á að leysa í einu kalli. Hver færsla er hlutur með referenceNo og valkvæðu lyklunum referenceType, referenceTypeNo og date. Ekki senda referenceNo, referenceType, referenceTypeNo eða date við hliðina á fylkinu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetParameters - NamedType ReferencesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
@@ -3652,9 +3652,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Each entry is one link of the chain. for is the line or entry on that level, at level 1 the one you asked about, and from is the line or entry it is linked to. suppliedBy and demandedBy name the supply and the demand in words; CURRENT LINE marks the line you asked about. fromType and forType are table numbers, fromTypeName and forTypeName their names, fromNo and forNo the document or batch, fromLineNo and forLineNo the line or entry number, and quantity is in the base unit of measure. A line without reservations or order tracking answers an empty entries list, and so does a sales or purchase line that is not an item line. For Transfer, direction picks the shipment side (Outbound) or the receipt side (Inbound).</source>
-          <target>Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound).</note>
+          <source>Each entry is one link of the chain. for is the line or entry on that level, at level 1 the one you asked about, and from is the line or entry it is linked to. suppliedBy and demandedBy name the supply and the demand in words; CURRENT LINE marks the line you asked about. fromType and forType are table numbers, fromTypeName and forTypeName their names, fromNo and forNo the document or batch, fromLineNo and forLineNo the line or entry number, and quantity is in the base unit of measure. A line without reservations or order tracking answers an empty entries list, and so does a sales or purchase line that is not an item line. For Transfer, direction picks the shipment side (Outbound) or the receipt side (Inbound). Send only the keys that fit the sourceKind: documentType, documentNo and lineNo for Sales, Purchase and Assembly (documentType defaults to Order), documentNo, lineNo and direction for Transfer, entryNo for ItemLedgerEntry. systemId replaces the other identifiers. A key that does not fit the sourceKind is refused as InvalidParameter. The call only reads; the Reservations domain must be turned on in Inventory Setup.</source>
+          <target>Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound). Sendu aðeins lyklana sem eiga við sourceKind: documentType, documentNo og lineNo fyrir Sales, Purchase og Assembly (documentType er sjálfgefið Order), documentNo, lineNo og direction fyrir Transfer, entryNo fyrir ItemLedgerEntry. systemId kemur í stað hinna auðkennanna. Lykli sem á ekki við sourceKind er hafnað sem InvalidParameter. Kallið les aðeins; frátekningasviðið þarf að vera kveikt í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound). Sendu aðeins lyklana sem eiga við sourceKind: documentType, documentNo og lineNo fyrir Sales, Purchase og Assembly (documentType er sjálfgefið Order), documentNo, lineNo og direction fyrir Transfer, entryNo fyrir ItemLedgerEntry. systemId kemur í stað hinna auðkennanna. Lykli sem á ekki við sourceKind er hafnað sem InvalidParameter. Kallið les aðeins; frátekningasviðið þarf að vera kveikt í birgðauppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -3904,9 +3904,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Closes inventory periods through an ending date, matching the inventory period close action.</source>
-          <target>Lokar birgðatímabilum eftir lokadagsetningu, eins og aðgerðin Loka birgðatímabili.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lokar birgðatímabilum eftir lokadagsetningu, eins og aðgerðin Loka birgðatímabili.</note>
+          <source>Closes the inventory period that ends on the given ending date.</source>
+          <target>Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -3970,21 +3970,21 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790.</source>
-          <target>Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790.</note>
+          <source>Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.</source>
+          <target>Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>inventory journal physical count calculate check preview post</source>
-          <target>birgðir bók talning reikna athuga forskoða bóka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <source>calculate inventory, physical count, stock take, count journal, fill count journal</source>
+          <target>reikna birgðir, birgðatalning, vörutalning, talningarbók, fylla talningarbók</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=reikna birgðir, birgðatalning, vörutalning, talningarbók, fylla talningarbók</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Calculates expected stock into an existing empty physical-inventory journal with native report 790. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires an empty batch, postingDate and documentNo. Calculation writes journal lines without posting. Licensed dispatch and company domain gates apply.</source>
-          <target>Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst tómrar keyrslu, postingDate og documentNo. Útreikningur stofnar bókarlínur án bókunar. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar væntar birgðir í tóma talningarbók með innbyggðri keyrslu 790. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst tómrar keyrslu, postingDate og documentNo. Útreikningur stofnar bókarlínur án bókunar. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <source>Fills an empty Phys. Inventory journal batch with one line per eligible item, using the Calculate Inventory function; nothing is posted. postingDate and documentNo are required.</source>
+          <target>Fyllir tóma bókarkeyrslu af gerðinni Phys. Inventory (talningarbók) með einni línu fyrir hverja gjaldgenga vöru með aðgerðinni Reikna birgðir; ekkert er bókað. postingDate og documentNo eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyllir tóma bókarkeyrslu af gerðinni Phys. Inventory (talningarbók) með einni línu fyrir hverja gjaldgenga vöru með aðgerðinni Reikna birgðir; ekkert er bókað. postingDate og documentNo eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -3994,21 +3994,21 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Calc Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 449648083 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Checks physical-inventory journal lines through native Item Jnl.-Check Line.</source>
-          <target>Athugar línur talningarbókar með innbyggðri sannprófun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur talningarbókar með innbyggðri sannprófun.</note>
+          <source>Checks the lines of a physical inventory journal with the standard item journal line checks, without writing or posting.</source>
+          <target>Athugar línur talningarbókar með stöðluðum athugunum á vörubókarlínum án þess að skrifa eða bóka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur talningarbókar með stöðluðum athugunum á vörubókarlínum án þess að skrifa eða bóka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 449648083 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>inventory journal physical count calculate check preview post</source>
-          <target>birgðir bók talning reikna athuga forskoða bóka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <source>check physical count, validate count journal, count journal errors, ready to post count</source>
+          <target>athuga birgðatalningu, sannprófa talningarbók, villur í talningarbók, talning tilbúin til bókunar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=athuga birgðatalningu, sannprófa talningarbók, villur í talningarbók, talning tilbúin til bókunar</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 449648083 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Checks physical-inventory journal lines through native Item Jnl.-Check Line. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Checks selected lines without writes. Invalid lines return NotReady with errors; future dates can return ReadyWithWarnings. Licensed dispatch and company domain gates apply.</source>
-          <target>Athugar línur talningarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Athugar línur talningarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <source>Runs the standard item journal line checks on the lines of one Phys. Inventory journal batch and answers Ready, ReadyWithWarnings or NotReady. Nothing is written or posted.</source>
+          <target>Keyrir stöðluðu athuganirnar á vörubókarlínum fyrir línur einnar bókarkeyrslu af gerðinni Phys. Inventory og svarar Ready, ReadyWithWarnings eða NotReady. Ekkert er skrifað eða bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir stöðluðu athuganirnar á vörubókarlínum fyrir línur einnar bókarkeyrslu af gerðinni Phys. Inventory og svarar Ready, ReadyWithWarnings eða NotReady. Ekkert er skrifað eða bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 449648083 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -4018,21 +4018,21 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1026798855 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Previews native physical-inventory posting with rollback and captured ledger entries.</source>
-          <target>Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur.</note>
+          <source>Previews posting a physical inventory journal: returns the ledger entries it would create, then rolls everything back.</source>
+          <target>Forskoðar bókun talningarbókar: skilar þeim færslum sem hún myndi stofna og bakfærir síðan allt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun talningarbókar: skilar þeim færslum sem hún myndi stofna og bakfærir síðan allt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1026798855 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>inventory journal physical count calculate check preview post</source>
-          <target>birgðir bók talning reikna athuga forskoða bóka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <source>preview physical count posting, preview count journal, count journal ledger entries, simulate stock take posting</source>
+          <target>forskoða bókun birgðatalningar, forskoða talningarbók, færslur talningarbókar, líkja eftir bókun vörutalningar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=forskoða bókun birgðatalningar, forskoða talningarbók, færslur talningarbókar, líkja eftir bókun vörutalningar</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1026798855 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Previews native physical-inventory posting with rollback and captured ledger entries. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Preview entries are rolled back; selected journal lines remain unchanged. Licensed dispatch and company domain gates apply.</source>
-          <target>Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar bókun talningarbókar án þess að varðveita bókaðar færslur. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Forskoðunarfærslum er bakfært og bókarlínur haldast óbreyttar. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <source>Runs the posting of one Phys. Inventory journal batch as a preview, returns the entries it would create and rolls everything back. It needs the item posting permission.</source>
+          <target>Keyrir bókun einnar bókarkeyrslu af gerðinni Phys. Inventory sem forskoðun, skilar þeim færslum sem hún myndi stofna og bakfærir allt. Krefst heimildar til vörubókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir bókun einnar bókarkeyrslu af gerðinni Phys. Inventory sem forskoðun, skilar þeim færslum sem hún myndi stofna og bakfærir allt. Krefst heimildar til vörubókunar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1026798855 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -4054,21 +4054,21 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Calc Impl ori - NamedType MissingTemplateErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posts native physical-inventory lines and returns item and physical inventory ledger ranges.</source>
-          <target>Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna.</note>
+          <source>Posts the lines of a physical inventory journal and returns the item register and the entry number ranges.</source>
+          <target>Bókar línur talningarbókar og skilar vörubókarskrá og númeraröðum færslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar línur talningarbókar og skilar vörubókarskrá og númeraröðum færslna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>inventory journal physical count calculate check preview post</source>
-          <target>birgðir bók talning reikna athuga forskoða bóka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <source>post physical count, post count journal, book stock take, post inventory count</source>
+          <target>bóka birgðatalningu, bóka talningarbók, færa vörutalningu, bóka talin birgðamagn</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðatalningu, bóka talningarbók, færa vörutalningu, bóka talin birgðamagn</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posts native physical-inventory lines and returns item and physical inventory ledger ranges. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Requires the native item-posting permission. Only selected lines are posted; native failure rolls back the operation. Licensed dispatch and company domain gates apply.</source>
-          <target>Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókar talningarbók og skilar númerum stofnaðra birgða- og talningarfærslna. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Krefst innbyggðrar heimildar til vörubókunar. Aðeins valdar línur eru bókaðar og villa bakfærir aðgerðina. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <source>Posts the lines of one Phys. Inventory journal batch, or only the lines in lineSystemIds, and returns the item register and the entry number ranges. Posting is permanent and needs the item posting permission.</source>
+          <target>Bókar línur einnar bókarkeyrslu af gerðinni Phys. Inventory, eða aðeins línurnar í lineSystemIds, og skilar vörubókarskrá og númeraröðum færslna. Bókun er varanleg og krefst heimildar til vörubókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar línur einnar bókarkeyrslu af gerðinni Phys. Inventory, eða aðeins línurnar í lineSystemIds, og skilar vörubókarskrá og númeraröðum færslna. Bókun er varanleg og krefst heimildar til vörubókunar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -4078,21 +4078,21 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero.</source>
-          <target>Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist.</note>
+          <source>Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.</source>
+          <target>Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
-          <source>inventory journal physical count calculate check preview post</source>
-          <target>birgðir bók talning reikna athuga forskoða bóka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=birgðir bók talning reikna athuga forskoða bóka</note>
+          <source>enter counted quantity, record count, record physical count, set counted quantity, count lines</source>
+          <target>skrá talið magn, skrá talningu, skrá birgðatalningu, setja talið magn, talningarlínur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=skrá talið magn, skrá talningu, skrá birgðatalningu, setja talið magn, talningarlínur</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. RecordCount requires counts. The legacy Record type also accepts lineNo and quantity when counts is absent. Each supplied count uses native validation and the operation is atomic. Licensed dispatch and company domain gates apply.</source>
-          <target>Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. RecordCount krefst counts. Eldri gerðin Record tekur einnig við lineNo og quantity þegar counts vantar. Innbyggð sannprófun gildir um hverja talningu og aðgerðin er óskipt. Leyfis- og sviðsheimildir fyrirtækis gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. RecordCount krefst counts. Eldri gerðin Record tekur einnig við lineNo og quantity þegar counts vantar. Innbyggð sannprófun gildir um hverja talningu og aðgerðin er óskipt. Leyfis- og sviðsheimildir fyrirtækis gilda.</note>
+          <source>Sets the counted quantity on lines of a Phys. Inventory journal batch, for both Inventory.PhysInventory.RecordCount and the legacy Inventory.PhysInventory.Record. An entry without qtyCounted leaves its line unchanged, zero is written as counted zero, and nothing is posted.</source>
+          <target>Stillir talið magn á línum í bókarkeyrslu af gerðinni Phys. Inventory, bæði fyrir Inventory.PhysInventory.RecordCount og eldri gerðina Inventory.PhysInventory.Record. Færsla án qtyCounted skilur línuna eftir óbreytta, núll er skráð sem talið núll og ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stillir talið magn á línum í bókarkeyrslu af gerðinni Phys. Inventory, bæði fyrir Inventory.PhysInventory.RecordCount og eldri gerðina Inventory.PhysInventory.Record. Færsla án qtyCounted skilur línuna eftir óbreytta, núll er skráð sem talið núll og ekkert er bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -4132,9 +4132,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2602827820 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Requires one explicit item selection, native Item and Unit Price field access, and unitPrice. Unsupported fields refuse. Uses Validate and Modify in a Codeunit.Run boundary. Writes no price list or inventory revaluation. Normal licensing and company setup apply.</source>
-          <target>Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.</note>
+          <source>Select exactly one item with the message subject, itemNo, an item SystemId key or tableView; a key other than those, unitPrice and allowBlocked is refused, and a selection key must be non-empty text. unitPrice is required. A blocked item is refused unless allowBlocked is true. Only the Unit Price of the Item card changes: price lists, discounts and costs are not touched. All checks run before the change, so a refusal changes nothing.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, itemNo, SystemId-lykli vöru eða tableView; lykli öðrum en þessum, unitPrice og allowBlocked er hafnað og valslykill verður að vera texti sem er ekki tómur. unitPrice er nauðsynlegt. Lokaðri vöru er hafnað nema allowBlocked sé true. Aðeins einingarverð á vöruspjaldi breytist: verðlistar, afslættir og kostnaður breytast ekki. Allar athuganir eru gerðar áður en breytt er, svo höfnun breytir engu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, itemNo, SystemId-lykli vöru eða tableView; lykli öðrum en þessum, unitPrice og allowBlocked er hafnað og valslykill verður að vera texti sem er ekki tómur. unitPrice er nauðsynlegt. Lokaðri vöru er hafnað nema allowBlocked sé true. Aðeins einingarverð á vöruspjaldi breytist: verðlistar, afslættir og kostnaður breytast ekki. Allar athuganir eru gerðar áður en breytt er, svo höfnun breytir engu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2602827820 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -4168,9 +4168,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method ExecuteBifrostTask - NamedType NotTransferErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Checks a reclassification journal. Does not post.</source>
-          <target>Athugar endurflokkunarbók. Bókar ekki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Athugar endurflokkunarbók. Bókar ekki.</note>
+          <source>Checks that a journal template is a reclassification template and counts the transfer lines of the batch. It does not validate the lines or post.</source>
+          <target>Athugar hvort bókarsniðmát sé endurflokkunarsniðmát og telur millifærslulínur keyrslunnar. Sannreynir ekki línurnar og bókar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugar hvort bókarsniðmát sé endurflokkunarsniðmát og telur millifærslulínur keyrslunnar. Sannreynir ekki línurnar og bókar ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -4180,9 +4180,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Validates a reclassification journal. Posting is a separate type.</source>
-          <target>Staðfestir endurflokkun. Bókun er sérstök tegund.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Staðfestir endurflokkun. Bókun er sérstök tegund.</note>
+          <source>Confirms the template type and counts transfer lines. Posting is a separate type.</source>
+          <target>Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 1342401987" size-unit="char" translate="yes" xml:space="preserve">
@@ -4234,9 +4234,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Previews a reclassification journal batch without posting it.</source>
-          <target>Forskoðar endurflokkunarbókarkeyrslu án þess að bóka hana.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar endurflokkunarbókarkeyrslu án þess að bóka hana.</note>
+          <source>Lists the lines of a reclassification journal batch that Post would process, without posting. It does not simulate the ledger entries.</source>
+          <target>Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -4732,9 +4732,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Cancels both sides of the reservation pair through the native Reservation Engine Mgt. CancelReservation, the same action as Cancel Reservation on the Reservation Entries page. Only entries with status Reservation can be cancelled.</source>
-          <target>Afturkallar báðar hliðar frátekningarparsins með innbyggða CancelReservation í Reservation Engine Mgt., sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar báðar hliðar frátekningarparsins með innbyggða CancelReservation í Reservation Engine Mgt., sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</note>
+          <source>Cancels both sides of the reservation pair, the same action as Cancel Reservation on the Reservation Entries page. Only entries with status Reservation can be cancelled; item tracking and surplus entries are refused as InvalidParameter. Bifrost commits the cancellation when the call finishes; under Omit Commit the caller's transaction commits instead. The answer gives the item and the reserved quantity of the entry as they were before the cancellation. Read the entry numbers with Inventory.Reservation.Get.</source>
+          <target>Afturkallar báðar hliðar frátekningarparsins, sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation; vörurakningar- og afgangsfærslum er hafnað sem InvalidParameter. Bifrost vistar afturköllunina þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Svarið gefur vöruna og frátekna magnið í færslunni eins og það var fyrir afturköllunina. Lestu færslunúmerin með Inventory.Reservation.Get.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar báðar hliðar frátekningarparsins, sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation; vörurakningar- og afgangsfærslum er hafnað sem InvalidParameter. Bifrost vistar afturköllunina þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Svarið gefur vöruna og frátekna magnið í færslunni eins og það var fyrir afturköllunina. Lestu færslunúmerin með Inventory.Reservation.Get.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
@@ -4834,15 +4834,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>AutoReserve runs on the loaded source line and reserves at most the requested quantity from the available supply; a partial reservation returns fullAutoReservation false. Cancel an entry with Inventory.Reservation.Cancel.</source>
-          <target>AutoReserve keyrir á hlaðinni upprunalínu og tekur að hámarki frá umbeðið magn af tiltæku framboði; hlutafrátekning skilar fullAutoReservation false. Afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=AutoReserve keyrir á hlaðinni upprunalínu og tekur að hámarki frá umbeðið magn af tiltæku framboði; hlutafrátekning skilar fullAutoReservation false. Afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
+          <source>Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
+          <target>Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reserves supply for a real source line with Reservation Management AutoReserve and returns the reservation entry numbers.</source>
-          <target>Tekur frá framboð fyrir raunverulega upprunalínu með AutoReserve í Reservation Management og skilar númerum frátekningarfærslnanna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tekur frá framboð fyrir raunverulega upprunalínu með AutoReserve í Reservation Management og skilar númerum frátekningarfærslnanna.</note>
+          <source>Reserves supply for one real source line with the same automatic reservation as the Auto Reserve action and returns the reservation entry numbers.</source>
+          <target>Tekur frá framboð fyrir eina raunverulega upprunalínu með sömu sjálfvirku frátekningu og aðgerðin Taka sjálfvirkt frá og skilar númerum frátekningarfærslnanna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tekur frá framboð fyrir eina raunverulega upprunalínu með sömu sjálfvirku frátekningu og aðgerðin Taka sjálfvirkt frá og skilar númerum frátekningarfærslnanna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
@@ -5021,8 +5021,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 870418814 - Method 3615801952 - NamedType 3522853230" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item number. The message subject is the same item number when this key is omitted. Without either, every reservation entry is returned.</source>
-          <target>Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.</note>
+          <target>Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án beggja eru allar frátekningarfærslur skilaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án beggja eru allar frátekningarfærslur skilaðar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 870418814 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
@@ -5044,9 +5044,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>PreviewPost requires native revaluation lines and posting permission. Preview entries are rolled back; journal lines remain unchanged. Normal licensing and company domain gates apply.</source>
-          <target>PreviewPost krefst innbyggðra endurmatslína og bókunarheimildar. Forskoðunarfærslur eru bakfærðar; bókarlínur haldast óbreyttar. Venjulegar leyfis- og fyrirtækisheimildir gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=PreviewPost krefst innbyggðra endurmatslína og bókunarheimildar. Forskoðunarfærslur eru bakfærðar; bókarlínur haldast óbreyttar. Venjulegar leyfis- og fyrirtækisheimildir gilda.</note>
+          <source>The batch is posted and rolled back, so nothing is committed and the journal lines stay unchanged; the answer carries rollback true, the entries grouped by table in preview, totals and the entry counts. The batch is identified as in Inventory.Revaluation.Post and must have Revaluation lines that have an item number. A preview that would create no entries is answered with NothingToPreview, and a refusal from Business Central is returned as BusinessCentralError with its own text. The call can be repeated freely. The caller needs BIFROST Full ori and BIFROST InvPost ori, as for posting, and the Costing domain must be on in Inventory Setup.</source>
+          <target>Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf BIFROST Full ori og BIFROST InvPost ori, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf BIFROST Full ori og BIFROST InvPost ori, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -5116,9 +5116,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Calc Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posts a revaluation journal through native Item Jnl.-Post Batch.</source>
-          <target>Bókar endurmatsbók með innbyggðri vörubókun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurmatsbók með innbyggðri vörubókun.</note>
+          <source>Posts all lines of a Revaluation item journal batch.</source>
+          <target>Bókar allar línur í endurmatsbókarkeyrslu vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar allar línur í endurmatsbókarkeyrslu vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -5128,15 +5128,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Post requires native revaluation lines and posting permission. The whole batch is posted atomically; no line subset is supported. Normal licensing and company domain gates apply.</source>
-          <target>Post krefst innbyggðra endurmatslína og bókunarheimildar. Öll keyrslan er bókuð sem ein heild; ekki er hægt að velja hluta línanna. Venjulegar leyfis- og fyrirtækisheimildir gilda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Post krefst innbyggðra endurmatslína og bókunarheimildar. Öll keyrslan er bókuð sem ein heild; ekki er hægt að velja hluta línanna. Venjulegar leyfis- og fyrirtækisheimildir gilda.</note>
+          <source>The whole batch is posted in one run; no subset of lines can be chosen, and a refusal posts nothing. The batch must be an existing non-recurring batch of a Revaluation journal template with Revaluation lines that have an item number. Name it with the subject (TEMPLATE|BATCH or the SystemId of the batch), one SystemId key, or templateName and batchName; with a subject the data keys are not used, and any other data key is refused. Posting commits: Business Central commits the posting when the call finishes, or the caller does under Omit Commit. It is irreversible and not idempotent: posted lines leave the batch, so a second call is refused. The caller needs BIFROST Full ori and BIFROST InvPost ori, and the Costing domain must be on in Inventory Setup. Use Inventory.Revaluation.PreviewPost first to see the entries.</source>
+          <target>Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf BIFROST Full ori og BIFROST InvPost ori og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf BIFROST Full ori og BIFROST InvPost ori og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posts a revaluation journal through native Item Jnl.-Post Batch. Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.</source>
-          <target>Bókar endurmatsbók með innbyggðri vörubókun. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurmatsbók með innbyggðri vörubókun. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
+          <source>Posts every line of an existing non-recurring Revaluation item journal batch in one run, and Business Central commits the posting. Name the batch with the subject (TEMPLATE|BATCH or a SystemId), a SystemId key, or templateName and batchName.</source>
+          <target>Bókar allar línur í fyrirliggjandi endurmatsbókarkeyrslu vöru, sem er ekki ítrekunarbók, í einu lagi og Business Central staðfestir bókunina. Auðkenndu keyrsluna með subject (TEMPLATE|BATCH eða SystemId), SystemId-lykli, eða templateName og batchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar allar línur í fyrirliggjandi endurmatsbókarkeyrslu vöru, sem er ekki ítrekunarbók, í einu lagi og Business Central staðfestir bókunina. Auðkenndu keyrsluna með subject (TEMPLATE|BATCH eða SystemId), SystemId-lykli, eða templateName og batchName.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -5164,9 +5164,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method ExecuteBifrostTask - NamedType MissingTrackingErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assigns lot, serial, or package tracking through Item Tracking Management.</source>
-          <target>Úthlutar lotu-, rað- eða pakkarekjanleika í gegnum vörurekjanleikastjórnun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarekjanleika í gegnum vörurekjanleikastjórnun.</note>
+          <source>Creates a tracking specification record with a lot, serial or package number and a quantity for an item.</source>
+          <target>Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -5176,9 +5176,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assigns item tracking through codeunit 6500.</source>
-          <target>Úthlutar vörurekjanleika með kóðaeiningu 6500.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar vörurekjanleika með kóðaeiningu 6500.</note>
+          <source>Creates one tracking specification from itemNo, quantity and a lot, serial or package number; it is not tied to a document line.</source>
+          <target>Stofnar eina rakningarforskrift út frá itemNo, quantity og lotu-, rað- eða pakkanúmeri; hún er ekki tengd skjalalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eina rakningarforskrift út frá itemNo, quantity og lotu-, rað- eða pakkanúmeri; hún er ekki tengd skjalalínu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 174414020 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -5260,9 +5260,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2461511710 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Deletes an item tracking specification through Item Tracking Management.</source>
-          <target>Eyðir vörurekjanleikaforskrift í gegnum vörurekjanleikastjórnun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Eyðir vörurekjanleikaforskrift í gegnum vörurekjanleikastjórnun.</note>
+          <source>Deletes a tracking specification record by its entry number.</source>
+          <target>Eyðir rakningarforskrift eftir færslunúmeri hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eyðir rakningarforskrift eftir færslunúmeri hennar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2461511710 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">

@@ -121,9 +121,18 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Parameters">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Parameter: JsonObject;
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNoFilter","type":"string","required":false,"description":"Echoed in the success response only; does not filter report 1002.","default":""},{"name":"documentNoFilter","type":"string","required":false,"description":"Echoed in the success response only; does not filter report 1002.","default":""}]');
+        Parameter := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Echoed in the success response only; it does not filter what the posting batch job handles.');
+        Parameter.Add('default', '');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter := ContractMgt.Parameter('documentNoFilter', 'string', false, 'Echoed in the success response only; it does not filter what the posting batch job handles.');
+        Parameter.Add('default', '');
+        Parameters.Add(Parameter);
         exit(true);
     end;
 
@@ -153,7 +162,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.","idempotent":false,"preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
         exit(true);
     end;
 
@@ -170,9 +179,11 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Related">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.AdjustCost.Run","useInsteadWhen":"Adjust item costs with report 795 first when that is the required operation."}]');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Use it first to adjust item costs; with postToGL true it also posts the adjustments to the general ledger in the same run.'));
         exit(true);
     end;
 
@@ -189,9 +200,14 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Examples">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Run report 1002; filters are response echoes and Success only means completion.","request":{"type":"Inventory.CostToGL.Post","version":"1.0","data":{"itemNoFilter":"1000","documentNoFilter":""}},"response":{"status":"Success","itemNoFilter":"1000","documentNoFilter":""}}]');
+        Examples.Add(ContractMgt.Example(
+            'Start the inventory cost posting; the filters are only echoed',
+            '{"type":"Inventory.CostToGL.Post","data":{"itemNoFilter":"1000","documentNoFilter":""}}',
+            '{"status":"Success","itemNoFilter":"1000","documentNoFilter":""}'));
         exit(true);
     end;
 
@@ -201,7 +217,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetOverview(var Overview: Text): Boolean
     begin
         Clear(Overview);
-        Overview := 'Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.';
+        Overview := 'Starts the Post Inventory Cost to G/L batch job without passing any option, so it does not post on its own. Success only means that the batch job finished.';
         exit(true);
     end;
 
@@ -211,7 +227,11 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Clear(Notes);
-        Notes := 'Absent or object/array-valued echo fields fall back to empty text in the local text reader. Scalar and null conversion outcomes require exact BC28/BC29 runtime tests. No preview, rollback, idempotence or safe-retry guarantee is declared. Request data is obtained before report execution, but filter echo conversion occurs after report 1002 completes. Malformed echoes are not preflight validation. Request filters do not select records. Post/PostMethod/saved-option/runtime effects remain unverified.';
+        Notes := 'The call starts the Post Inventory Cost to G/L batch job without passing any option: no posting method, no document number, and the Post switch stays off. itemNoFilter and documentNoFilter are only echoed in the answer; they do not select entries. ' +
+            'Because the Post switch is off the batch job does not post to the general ledger, and in standard Business Central it stops with its own error that asks for a document number, which is answered as BusinessCentralError. Success therefore proves only that the batch job finished. ' +
+            'To post cost adjustments to the general ledger use Inventory.AdjustCost.Run with postToGL true. ' +
+            'Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. No preview, idempotence or safe retry is promised. ' +
+            'The caller needs the BIFROST InvPost ori permission set, and the Costing domain must be on in Inventory Setup. Use Inventory.Cost.Get to read costIsPostedToGL.';
         exit(true);
     end;
 }

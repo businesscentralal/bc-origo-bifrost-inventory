@@ -9,10 +9,10 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero.', Comment = 'is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist.';
+        DescriptionLbl: Label 'Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.', Comment = 'is-IS=Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.';
         SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
-        KeywordsLbl: Label 'inventory journal physical count calculate check preview post', Comment = 'is-IS=birgðir bók talning reikna athuga forskoða bóka';
-        OverviewLbl: Label 'Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. RecordCount requires counts. The legacy Record type also accepts lineNo and quantity when counts is absent. Each supplied count uses native validation and the operation is atomic. Licensed dispatch and company domain gates apply.', Comment = 'is-IS=Skráir talið magn með innbyggðri sannprófun; núll merkir að ekkert hafi talist. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. RecordCount krefst counts. Eldri gerðin Record tekur einnig við lineNo og quantity þegar counts vantar. Innbyggð sannprófun gildir um hverja talningu og aðgerðin er óskipt. Leyfis- og sviðsheimildir fyrirtækis gilda.';
+        KeywordsLbl: Label 'enter counted quantity, record count, record physical count, set counted quantity, count lines', Comment = 'is-IS=skrá talið magn, skrá talningu, skrá birgðatalningu, setja talið magn, talningarlínur';
+        OverviewLbl: Label 'Sets the counted quantity on lines of a Phys. Inventory journal batch, for both Inventory.PhysInventory.RecordCount and the legacy Inventory.PhysInventory.Record. An entry without qtyCounted leaves its line unchanged, zero is written as counted zero, and nothing is posted.', Comment = 'is-IS=Stillir talið magn á línum í bókarkeyrslu af gerðinni Phys. Inventory, bæði fyrir Inventory.PhysInventory.RecordCount og eldri gerðina Inventory.PhysInventory.Record. Færsla án qtyCounted skilur línuna eftir óbreytta, núll er skráð sem talið núll og ekkert er bókað.';
 
     /// <summary>Checks the company domain and the native permissions required by this operation.</summary>
     procedure IsEnabled(): Boolean
@@ -96,107 +96,6 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         LineNo := LineToken.AsValue().AsInteger();
     end;
 
-    /// <summary>Returns the native journal envelope contract.</summary>
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal target contract.</summary>
-    procedure GetTarget(var Target: JsonArray): Boolean
-    begin
-        Clear(Target);
-        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Phys. Inventory template batch."}]');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal parameters contract.</summary>
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Existing journal template name, at most 10 characters. Supply with batchName unless subject identifies the same batch.'));
-        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Existing journal batch name, at most 10 characters. All supplied selectors must agree.'));
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Legacy alias for templateName; conflicting aliases are refused.'));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Legacy alias for batchName; conflicting aliases are refused.'));
-        Parameters.Add(ContractMgt.Parameter('counts', 'array', false, 'Nonempty array of {lineNo or systemId, qtyCounted?}. Distinct lines in the same batch; supplied selectors must agree. Omitted qtyCounted preserves the count; zero writes zero. Required for RecordCount; legacy Record may instead use lineNo and quantity.'));
-        Parameters.Add(ContractMgt.Parameter('lineNo', 'integer', false, 'Legacy Record only: positive line number when counts is absent. Not accepted by RecordCount.'));
-        Parameters.Add(ContractMgt.Parameter('quantity', 'decimal', false, 'Legacy Record only: nonnegative counted quantity when counts is absent. Omit to preserve the count. Not accepted by RecordCount.'));
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal response contract.</summary>
-    procedure GetResponse(var Response: JsonObject): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-        Fields: JsonArray;
-    begin
-        Clear(Response);
-        Response.Add('contentType', 'text/json');
-        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
-        Fields.Add(ContractMgt.ResponseField('result', 'array', 'Each selected line: systemId, lineNo, counted (whether qtyCounted was supplied), before, after, quantityCalculated and adjustmentQuantity.'));
-        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
-        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
-        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Legacy Record selected line number.'));
-        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Legacy Record resulting physical count.'));
-        Fields.Add(ContractMgt.ResponseField('quantityCalculated', 'decimal', 'Legacy Record calculated inventory quantity.'));
-        Response.Add('fields', Fields);
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal errors contract.</summary>
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Clear(Errors);
-        Errors.Add(ContractMgt.TextErrorEntry('Native journal selection or validation error.', 'Missing or conflicting batch selectors, invalid template, recurring batch, malformed line selection, unsupported parameters or native validation failure.', 'Select an existing batch of the required template type and correct the native error before retrying.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, native table or item-posting permission is missing.', 'Request the required permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company domain is disabled or a typed request value is invalid.', 'Enable the domain or correct the indicated request value.'));
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal effect contract.</summary>
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Clear(Effect);
-        Effect.ReadFrom('{"writes":true,"posts":false,"rollback":false}');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal related contract.</summary>
-    procedure GetRelated(var Related: JsonArray): Boolean
-    begin
-        Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.PhysInventory.Calculate","useInsteadWhen":"Calculate the physical inventory journal."},{"name":"Inventory.PhysInventory.Check","useInsteadWhen":"Check the physical inventory journal."},{"name":"Inventory.PhysInventory.PreviewPost","useInsteadWhen":"PreviewPost the physical inventory journal."},{"name":"Inventory.PhysInventory.Post","useInsteadWhen":"Post the physical inventory journal."}]');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal examples contract.</summary>
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        Clear(Examples);
-        Examples.ReadFrom('[{"title":"Records batched counted quantities through native Validate; omitted leaves unchanged and zero means counted zero. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.RecordCount","subject":"PHYS|OWNED","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}},{"title":"Legacy single-line count using Inventory.PhysInventory.Record.","request":{"type":"Inventory.PhysInventory.Record","subject":"PHYS|OWNED","data":{"lineNo":10000,"quantity":0}}}]');
-        exit(true);
-    end;
-
-    /// <summary>No override is provided.</summary>
-    procedure GetMetering(var Value: JsonObject): Boolean
-    begin
-        Clear(Value);
-        exit(false);
-    end;
-
-    /// <summary>No override is provided.</summary>
-    procedure GetWorkflow(var Value: JsonObject): Boolean
-    begin
-        Clear(Value);
-        exit(false);
-    end;
-
     /// <summary>Describes native journal behavior.</summary>
     procedure GetDescription(): Text[250]
     begin
@@ -215,17 +114,178 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         exit(KeywordsLbl);
     end;
 
-    /// <summary>Explains native journal constraints.</summary>
-    procedure GetOverview(var Value: Text): Boolean
+    /// <summary>Returns the envelope chapter of the contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Value := OverviewLbl;
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"],"description":"Identifies the journal batch as TEMPLATE|BATCH, or as the SystemId of the Item Journal Batch. Without a subject, send templateName and batchName in data. Every selector that is sent must name the same batch."},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
-    /// <summary>Explains native journal constraints.</summary>
-    procedure GetNotes(var Value: Text): Boolean
+    /// <summary>Returns the target chapter of the contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Value := OverviewLbl;
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('subject', 'TEMPLATE|BATCH', 'The journal template name and the batch name, each at most 10 characters, separated by a vertical bar. The template must be a Phys. Inventory template that is not recurring.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item Journal Batch.'));
+        Target.Add(ContractMgt.TargetEntry('data.templateName, data.batchName', 'journal template and batch name', 'The template and the batch together. data.journalTemplateName and data.journalBatchName are accepted as aliases.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the parameters chapter of the contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Parameter: JsonObject;
+        Children: JsonArray;
+    begin
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Name of an existing Phys. Inventory journal template that is not recurring, at most 10 characters. Send it with batchName unless subject identifies the batch.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Name of an existing journal batch of that template, at most 10 characters. Every selector that is sent must name the same batch.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName. A value that differs from templateName, ignoring case, is refused.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName. A value that differs from batchName, ignoring case, is refused.'));
+        Parameter := ContractMgt.Parameter('counts', 'array', false, 'Nonempty array of counted lines. Each entry names one line of the batch and optionally the counted quantity. The lines must be distinct. Required by Inventory.PhysInventory.RecordCount; Inventory.PhysInventory.Record may send lineNo and quantity instead.');
+        Clear(Children);
+        Children.Add(ContractMgt.Parameter('lineNo', 'integer', false, 'Positive line number in the batch. Send lineNo or systemId; when both are sent they must name the same line.'));
+        Children.Add(ContractMgt.Parameter('systemId', 'string', false, 'SystemId of the journal line, which must belong to the batch.'));
+        Children.Add(ContractMgt.Parameter('qtyCounted', 'number', false, 'Counted quantity, zero or more. Zero is written as a counted zero. Omit it to leave the line unchanged.'));
+        Parameter.Add('children', Children);
+        Parameters.Add(Parameter);
+        Parameters.Add(ContractMgt.Parameter('lineNo', 'integer', false, 'Inventory.PhysInventory.Record only, when counts is absent: positive line number of the line to count. Refused by Inventory.PhysInventory.RecordCount.'));
+        Parameters.Add(ContractMgt.Parameter('quantity', 'number', false, 'Inventory.PhysInventory.Record only, when counts is absent: counted quantity, zero or more. Omit it to leave the line unchanged. Refused by Inventory.PhysInventory.RecordCount.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the response chapter of the contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Field: JsonObject;
+        Fields: JsonArray;
+        Children: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when every count was applied.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The journal template of the selected batch.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The selected journal batch.'));
+        Field := ContractMgt.ResponseField('result', 'array', 'One entry per counted line, in the order of counts.');
+        Clear(Children);
+        Children.Add(ContractMgt.ResponseField('systemId', 'string', 'SystemId of the journal line.'));
+        Children.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Line number in the batch.'));
+        Children.Add(ContractMgt.ResponseField('counted', 'boolean', 'True when qtyCounted was sent for the line; false when the line was left unchanged.'));
+        Children.Add(ContractMgt.ResponseField('before', 'decimal', 'Counted quantity before the call.'));
+        Children.Add(ContractMgt.ResponseField('after', 'decimal', 'Counted quantity after the call.'));
+        Children.Add(ContractMgt.ResponseField('quantityCalculated', 'decimal', 'Calculated (expected) quantity of the line.'));
+        Children.Add(ContractMgt.ResponseField('adjustmentQuantity', 'decimal', 'Adjustment quantity of the line after the count.'));
+        Field.Add('children', Children);
+        Fields.Add(Field);
+        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Inventory.PhysInventory.Record only: line number of the last counted line.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'Inventory.PhysInventory.Record only: counted quantity of the last counted line.'));
+        Fields.Add(ContractMgt.ResponseField('quantityCalculated', 'decimal', 'Inventory.PhysInventory.Record only: calculated quantity of the last counted line.'));
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    /// <summary>Returns the errors chapter of the contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Inventory.PhysInventory.Record only: journalTemplateName (or templateName), journalBatchName (or batchName) and lineNo are sent in data and name a journal line that does not exist.', 'Check the batch and lineNo, or run Inventory.PhysInventory.Calculate first.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
+        Errors.Add(ContractMgt.TextErrorEntry('counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', 'counts is absent, not an array or empty, an entry is not an object or names a line outside the batch, a line is repeated, lineNo and systemId name different lines, or qtyCounted is negative or not a number. Nothing is changed.', 'Send a nonempty counts array of distinct lines of the batch.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Unsupported journal parameter %1.', 'A key is sent that this type does not read, including a key inside a counts entry, or lineNo and quantity at the top level of Inventory.PhysInventory.RecordCount.', 'Remove the key; Inventory.PhysInventory.RecordCount takes counts only.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Business Central validation error text', 'A line is not a valid physical inventory line, or Business Central refuses the counted quantity. Every count of the call is rolled back.', 'Correct the line or the quantity named in the text and retry.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the effect chapter of the contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.Add('effect', 'write');
+        Effect.Add('changes', 'Sets the counted quantity, Qty. (Phys. Inventory), on each line named in counts that has a qtyCounted, through the standard validation; Business Central then recalculates the adjustment quantity and entry type of the line. Lines without qtyCounted are left unchanged. Nothing is posted. The changes are committed with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('writes', true);
+        Effect.Add('posts', false);
+        Effect.Add('rollback', false);
+        exit(true);
+    end;
+
+    /// <summary>Returns the metering chapter of the contract.</summary>
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    /// <summary>Returns the related chapter of the contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Calculate', 'Use it to create the lines of an empty batch before counting.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Check', 'Use it to find line problems after the counts are entered.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.PreviewPost', 'Use it to see the entries a posting would create.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Post', 'Use it to post the counted lines.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the workflow chapter of the contract.</summary>
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
+    begin
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.Calculate', 'Create the lines of an empty batch from the expected stock.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.RecordCount', 'Enter the counted quantity on each line.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.Check', 'Find line problems before posting.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.Post', 'Post the count; the adjustments are written to the ledger.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
+    end;
+
+    /// <summary>Returns the examples chapter of the contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'Record a counted quantity of zero on line 10000',
+            '{"type":"Inventory.PhysInventory.RecordCount","subject":"PHYS. INV.|DEFAULT","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}',
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}]}'));
+        Examples.Add(ContractMgt.Example(
+            'Legacy single-line count with Inventory.PhysInventory.Record',
+            '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"lineNo":10000,"quantity":0}}',
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the overview chapter of the contract.</summary>
+    procedure GetOverview(var Overview: Text): Boolean
+    begin
+        Overview := OverviewLbl;
+        exit(true);
+    end;
+
+    /// <summary>Returns the notes chapter of the contract.</summary>
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := 'This help describes two types that share one implementation: Inventory.PhysInventory.RecordCount takes counts; the legacy type Inventory.PhysInventory.Record takes the same counts or, when counts is absent, one line as lineNo plus quantity. The two differ only where this text says so. ' +
+            'Only counted quantities are written; nothing is posted. Every counts entry is validated before any line changes and the call is atomic: if one entry fails, no line is changed. An entry without qtyCounted leaves its line unchanged, and zero is written as a counted zero. The lines must be distinct lines of the batch, and each must be a valid physical inventory line. ' +
+            'After the count is set Business Central recalculates the adjustment quantity (adjustmentQuantity) and the entry type of the line; result reports before, after, quantityCalculated and adjustmentQuantity per line. ' +
+            'Inventory.PhysInventory.RecordCount refuses lineNo and quantity at the top level as unsupported keys. Inventory.PhysInventory.Record adds lineNo, quantity and quantityCalculated of the last counted line to the answer, and answers InvalidParameter for lineNo when data names a template, a batch and a lineNo that do not exist. Any other key is refused. ' +
+            'The counts are committed with the answer; under Omit Commit the caller''s transaction commits instead. Under Omit Commit an error is raised to the caller instead of being answered with the error text. ' +
+            'The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs write permission on the Item Journal Line table. Use Inventory.PhysInventory.Calculate first to create the lines and Inventory.PhysInventory.Check afterwards.';
         exit(true);
     end;
 }

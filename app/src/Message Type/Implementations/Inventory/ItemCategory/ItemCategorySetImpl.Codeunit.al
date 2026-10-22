@@ -87,9 +87,15 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <param name="Envelope">Receives the envelope.</param>
     /// <returns>True.</returns>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.ItemCategory.Set');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The category is named under data.code or data.systemId; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -100,7 +106,8 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     var
         TargetLbl: Label 'The item category to create or update, by code or by system id.', Comment = 'is-IS=Vöruflokkurinn sem á að stofna eða uppfæra, eftir kóða eða kerfiskenni.';
     begin
-        Target.Add(ContractMgt.TargetEntry('data.code + data.systemId', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.code', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.systemId', 'guid', 'The system id of an existing item category, as an alternative to data.code. Send one of them, not both.'));
         exit(true);
     end;
 
@@ -114,6 +121,8 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         DescriptionLbl: Label 'Description of the category, at most 100 characters.', Comment = 'is-IS=Lýsing flokksins, mest 100 stafir.';
         ParentLbl: Label 'Parent category code. Used when the category is created. For an existing category it must equal the current parent; moving a category is refused.', Comment = 'is-IS=Kóði yfirflokks. Notaður þegar flokkurinn er stofnaður. Fyrir flokk sem er til verður hann að vera sá sami og núverandi yfirflokkur; ekki er hægt að færa flokk.';
         DeleteLbl: Label 'true or false. true is refused: this call does not delete categories.', Comment = 'is-IS=true eða false. true er hafnað: þetta kall eyðir ekki flokkum.';
+        AttributeChildren: JsonArray;
+        AttributesParameter: JsonObject;
         AttributesLbl: Label 'Array of attribute defaults to store on this category. Each entry is an object with name (text) or id (number) of an existing attribute, and value (text) naming an existing value of that attribute. Dates are yyyy-mm-dd and decimals use a period.', Comment = 'is-IS=Fylki sjálfgefinna eiginleika sem á að vista á flokknum. Hver færsla er hlutur með name (texti) eða id (tala) eiginleika sem er til, og value (texti) sem nefnir gildi sem er til fyrir þann eiginleika. Dagsetningar eru á forminu yyyy-mm-dd og tugabrot nota punkt.';
     begin
         Parameters.Add(ContractMgt.Parameter('code', 'string', false, CodeLbl));
@@ -121,7 +130,12 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         Parameters.Add(ContractMgt.Parameter('description', 'string', false, DescriptionLbl));
         Parameters.Add(ContractMgt.Parameter('parentCategory', 'string', false, ParentLbl));
         Parameters.Add(ContractMgt.Parameter('delete', 'boolean', false, DeleteLbl));
-        Parameters.Add(ContractMgt.Parameter('attributes', 'array', false, AttributesLbl));
+        AttributeChildren.Add(ContractMgt.Parameter('name', 'string', false, 'Name of an existing attribute. Send name or id, not both.'));
+        AttributeChildren.Add(ContractMgt.Parameter('id', 'integer', false, 'ID of an existing attribute. Send name or id, not both.'));
+        AttributeChildren.Add(ContractMgt.Parameter('value', 'string', true, 'An existing value of that attribute, as text. Dates are yyyy-mm-dd and decimals use a period.'));
+        AttributesParameter := ContractMgt.Parameter('attributes', 'array', false, AttributesLbl);
+        AttributesParameter.Add('children', AttributeChildren);
+        Parameters.Add(AttributesParameter);
         exit(true);
     end;
 
@@ -130,23 +144,27 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <returns>True.</returns>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
-        Attributes: JsonArray;
-        Attribute: JsonObject;
+        Fields: JsonArray;
+        AttributeField: JsonObject;
+        AttributeChildren: JsonArray;
     begin
-        Attribute.Add('id', 0);
-        Attribute.Add('name', '');
-        Attribute.Add('type', 'Option');
-        Attribute.Add('value', '');
-        Attribute.Add('inherited', false);
-        Attributes.Add(Attribute);
-        Response.Add('status', 'Success');
-        Response.Add('created', false);
-        Response.Add('code', '');
-        Response.Add('description', '');
-        Response.Add('parentCategory', '');
-        Response.Add('indentation', 0);
-        Response.Add('presentationOrder', 0);
-        Response.Add('attributes', Attributes);
+        AttributeChildren.Add(ContractMgt.ResponseField('id', 'integer', 'The ID of the item attribute.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('name', 'string', 'The name of the item attribute.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('type', 'string', 'The type of the attribute: Option, Text, Integer, Decimal or Date.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('value', 'string', 'The default value of the attribute for the category.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('inherited', 'boolean', 'True when the value comes from a parent category; false when it is set on the category itself.'));
+        AttributeField := ContractMgt.ResponseField('attributes', 'array', 'Every attribute of the saved category, own values first and then values inherited from parent categories, not only the ones in the request.');
+        AttributeField.Add('children', AttributeChildren);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('created', 'boolean', 'True when the call created the category, false when it updated an existing one.'));
+        Fields.Add(ContractMgt.ResponseField('code', 'string', 'The category code.'));
+        Fields.Add(ContractMgt.ResponseField('description', 'string', 'The category description after the save.'));
+        Fields.Add(ContractMgt.ResponseField('parentCategory', 'string', 'The code of the parent category; empty at the top of the tree.'));
+        Fields.Add(ContractMgt.ResponseField('indentation', 'integer', 'The indentation level in the category tree.'));
+        Fields.Add(ContractMgt.ResponseField('presentationOrder', 'integer', 'The position of the category in the tree.'));
+        Fields.Add(AttributeField);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -182,6 +200,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, PreconditionWhenLbl, DeletesNextStep()));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, BlockedWhenLbl, BlockedFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionNextStep()));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central refuses the save itself, after the request was checked. Nothing is saved.', 'Read the error text, correct the cause in Business Central and send the call again.'));
         exit(true);
     end;
 
@@ -189,9 +208,18 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <param name="Effect">Receives the effect flags.</param>
     /// <returns>True.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('Every attribute and attribute value named in attributes already exists and is not blocked.');
+        Preconditions.Add('A parent category named in parentCategory exists, and an existing category keeps the parent it has.');
+        Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Creates the item category, or changes the description of an existing one, and stores the listed attribute defaults on it. A value equal to the one inherited from a parent category removes the own row of the category for that attribute. Categories are never deleted or moved. The write is isolated: a refusal saves nothing.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -220,8 +248,14 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <param name="Workflow">Unused.</param>
     /// <returns>False.</returns>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.AttributeDefinition.Create', 'Create the attribute and its values when they do not exist yet.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemCategory.Set', 'Create the category or change its description and its attribute defaults.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemCategory.Get', 'Read the category back, with the attributes it inherits from its parents.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Examples chapter.</summary>
@@ -231,7 +265,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     var
         TitleLbl: Label 'Create a child category with a default color', Comment = 'is-IS=Stofna undirflokk með sjálfgefnum lit';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","attributes":[{"name":"Color","value":"Blue"}]}', '{"status":"Success","created":true,"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","indentation":1,"presentationOrder":2,"attributes":[{"id":1,"name":"Color","type":"Option","value":"Blue","inherited":false}]}'));
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"type":"Inventory.ItemCategory.Set","data":{"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","attributes":[{"name":"Color","value":"Blue"}]}}', '{"status":"Success","created":true,"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","indentation":1,"presentationOrder":2,"attributes":[{"id":1,"name":"Color","type":"Option","value":"Blue","inherited":false}]}'));
         exit(true);
     end;
 

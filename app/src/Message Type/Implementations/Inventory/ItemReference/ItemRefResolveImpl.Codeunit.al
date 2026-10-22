@@ -64,9 +64,15 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.ItemReference.Resolve');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The value to resolve is sent under data.referenceNo or data.references; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -76,6 +82,7 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         TargetLbl: Label 'The barcode, customer or vendor reference, item number, or GTIN to resolve.', Comment = 'is-IS=Strikamerkið, tilvísun viðskiptavinar eða birgja, vörunúmerið eða GTIN sem á að leysa.';
     begin
         Target.Add(ContractMgt.TargetEntry('data.referenceNo', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.references', 'array', 'Several values to resolve in one call, each an object with its own referenceNo. Send it instead of data.referenceNo.'));
         exit(true);
     end;
 
@@ -83,30 +90,73 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ReferenceNoLbl: Label 'One barcode, reference, item number, or GTIN. Omit it when references is sent.', Comment = 'is-IS=Eitt strikamerki, tilvísun, vörunúmer eða GTIN. Slepptu því þegar references er sent.';
-        ReferenceTypeLbl: Label 'barCode, customer, vendor, or blank. Blank searches barcodes and blank references.', Comment = 'is-IS=barCode, customer, vendor eða tómt. Tómt leitar í strikamerkjum og tómum tilvísunum.';
+        ReferenceTypeLbl: Label 'barCode, customer, vendor or blank. barCode and blank, also when it is omitted, both search barcode references and references without a type; customer and vendor search only references of that type. Case does not matter.', Comment = 'is-IS=barCode, customer, vendor eða blank. barCode og blank, líka þegar það er sleppt, leita bæði í strikamerkjatilvísunum og tilvísunum án tegundar; customer og vendor leita aðeins í tilvísunum af þeirri tegund. Há- og lágstafir skipta ekki máli.';
         ReferenceTypeNoLbl: Label 'Customer or vendor number. Leave it empty for barcodes.', Comment = 'is-IS=Númer viðskiptavinar eða birgja. Skildu það eftir tómt fyrir strikamerki.';
-        DateLbl: Label 'Date the reference must be valid on. An ending date before this date is ignored.', Comment = 'is-IS=Dagsetning sem tilvísunin verður að gilda á. Lokadagur fyrir þessa dagsetningu er hunsaður.';
-        ReferencesLbl: Label 'Several references. Each entry uses referenceNo and the same optional keys. Do not also send referenceNo.', Comment = 'is-IS=Margar tilvísanir. Hver færsla notar referenceNo og sömu valkvæða lykla. Ekki senda referenceNo líka.';
+        DateLbl: Label 'Date the reference must be valid on, as yyyy-mm-dd. A reference is ignored when its starting date is after this date or its ending date is before it. Without date no date filter is applied, so references that have expired or not started yet are found too.', Comment = 'is-IS=Dagsetning sem tilvísunin verður að gilda á, á forminu yyyy-mm-dd. Tilvísun er hunsuð ef upphafsdagur hennar er eftir þessa dagsetningu eða lokadagur hennar er á undan henni. Án date er engin dagsetningarsía notuð, svo tilvísanir sem eru útrunnar eða ekki gildar enn finnast líka.';
+        ReferenceChildren: JsonArray;
+        ReferencesParameter: JsonObject;
+        ReferencesLbl: Label 'Several values to resolve in one call. Each entry is an object with referenceNo and the optional referenceType, referenceTypeNo and date. Do not send referenceNo, referenceType, referenceTypeNo or date beside this array.', Comment = 'is-IS=Mörg gildi sem á að leysa í einu kalli. Hver færsla er hlutur með referenceNo og valkvæðu lyklunum referenceType, referenceTypeNo og date. Ekki senda referenceNo, referenceType, referenceTypeNo eða date við hliðina á fylkinu.';
     begin
         Parameters.Add(ContractMgt.Parameter('referenceNo', 'string', false, ReferenceNoLbl));
         Parameters.Add(ContractMgt.Parameter('referenceType', 'string', false, ReferenceTypeLbl));
         Parameters.Add(ContractMgt.Parameter('referenceTypeNo', 'string', false, ReferenceTypeNoLbl));
         Parameters.Add(ContractMgt.Parameter('date', 'string', false, DateLbl));
-        Parameters.Add(ContractMgt.Parameter('references', 'array', false, ReferencesLbl));
+        ReferenceChildren.Add(ContractMgt.Parameter('referenceNo', 'string', true, 'One barcode, reference, item number or GTIN to resolve.'));
+        ReferenceChildren.Add(ContractMgt.Parameter('referenceType', 'string', false, 'barCode, customer, vendor or blank, as for the top-level key.'));
+        ReferenceChildren.Add(ContractMgt.Parameter('referenceTypeNo', 'string', false, 'Customer or vendor number; leave it empty for barcodes.'));
+        ReferenceChildren.Add(ContractMgt.Parameter('date', 'string', false, 'Date the reference must be valid on, as for the top-level key.'));
+        ReferencesParameter := ContractMgt.Parameter('references', 'array', false, ReferencesLbl);
+        ReferencesParameter.Add('children', ReferenceChildren);
+        Parameters.Add(ReferencesParameter);
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        MatchedField: JsonObject;
+        ResultsField: JsonObject;
+        MatchedChildren: JsonArray;
+        ResultChildren: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('source', 'reference');
-        Response.Add('itemNo', '');
-        Response.Add('description', '');
-        Response.Add('variantCode', '');
-        Response.Add('unitOfMeasure', '');
-        Response.Add('referenceType', '');
-        Response.Add('blocked', false);
-        Response.Add('results', 'array of the same fields when references is sent');
+        MatchedChildren.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item of the matching item reference.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('variantCode', 'string', 'The variant code on the item reference.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('unitOfMeasure', 'string', 'The unit of measure on the item reference.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('referenceType', 'string', 'barCode, customer, vendor or blank.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('referenceTypeNo', 'string', 'The customer or vendor number of the item reference; empty for barcodes.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('referenceNo', 'string', 'The reference number as stored on the item reference.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('description', 'string', 'The description on the item reference.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('startingDate', 'string', 'The starting date of the item reference as yyyy-mm-dd; left out when it is blank.'));
+        MatchedChildren.Add(ContractMgt.ResponseField('endingDate', 'string', 'The ending date of the item reference as yyyy-mm-dd; left out when it is blank.'));
+        MatchedField := ContractMgt.ResponseField('matched', 'object', 'The item reference that matched. Present only when source is reference.');
+        MatchedField.Add('children', MatchedChildren);
+        ResultChildren.Add(ContractMgt.ResponseField('source', 'string', 'Where the match came from: reference, itemNo or gtin.'));
+        ResultChildren.Add(ContractMgt.ResponseField('itemNo', 'string', 'The No. of the resolved item.'));
+        ResultChildren.Add(ContractMgt.ResponseField('description', 'string', 'The description of the item.'));
+        ResultChildren.Add(ContractMgt.ResponseField('blocked', 'boolean', 'True when the item is blocked. A blocked item is returned, not refused.'));
+        ResultChildren.Add(ContractMgt.ResponseField('variantCode', 'string', 'The variant code of the item reference; empty when source is not reference.'));
+        ResultChildren.Add(ContractMgt.ResponseField('unitOfMeasure', 'string', 'The unit of measure of the item reference when source is reference (it can be empty), otherwise the base unit of measure of the item.'));
+        ResultChildren.Add(ContractMgt.ResponseField('referenceType', 'string', 'barCode, customer, vendor or blank for an item reference; empty when source is not reference.'));
+        ResultChildren.Add(ContractMgt.ResponseField('referenceTypeNo', 'string', 'The customer or vendor number of the item reference; empty otherwise.'));
+        ResultChildren.Add(ContractMgt.ResponseField('referenceNo', 'string', 'The reference number as stored on the item reference; empty when source is not reference.'));
+        ResultChildren.Add(MatchedField);
+        ResultsField := ContractMgt.ResponseField('results', 'array', 'One result per entry of references, in the order sent, each with the fields described for a single answer. Present only when references was sent; the single-answer fields are then not present.');
+        ResultsField.Add('children', ResultChildren);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('source', 'string', 'Where the match came from: reference (an item reference), itemNo or gtin. Present when referenceNo was sent.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The No. of the resolved item.'));
+        Fields.Add(ContractMgt.ResponseField('description', 'string', 'The description of the item.'));
+        Fields.Add(ContractMgt.ResponseField('blocked', 'boolean', 'True when the item is blocked. A blocked item is returned, not refused.'));
+        Fields.Add(ContractMgt.ResponseField('variantCode', 'string', 'The variant code of the item reference; empty when source is not reference.'));
+        Fields.Add(ContractMgt.ResponseField('unitOfMeasure', 'string', 'The unit of measure of the item reference when source is reference (it can be empty), otherwise the base unit of measure of the item.'));
+        Fields.Add(ContractMgt.ResponseField('referenceType', 'string', 'barCode, customer, vendor or blank for an item reference; empty when source is not reference.'));
+        Fields.Add(ContractMgt.ResponseField('referenceTypeNo', 'string', 'The customer or vendor number of the item reference; empty otherwise.'));
+        Fields.Add(ContractMgt.ResponseField('referenceNo', 'string', 'The reference number as stored on the item reference; empty when source is not reference.'));
+        Fields.Add(MatchedField);
+        Fields.Add(ResultsField);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -121,8 +171,8 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         UnknownFixLbl: Label 'Remove the unknown key. Allowed keys are referenceNo, referenceType, referenceTypeNo, date and references.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru referenceNo, referenceType, referenceTypeNo, date og references.';
         NotFoundWhenLbl: Label 'No reference, item number, or GTIN matched.', Comment = 'is-IS=Engin tilvísun, vörunúmer eða GTIN fannst.';
         NotFoundFixLbl: Label 'Check the barcode, or add the reference in BC (Item References).', Comment = 'is-IS=Athugaðu strikamerkið, eða bættu tilvísuninni við í BC (vörutilvísanir).';
-        ConflictWhenLbl: Label 'referenceNo and references were both sent.', Comment = 'is-IS=referenceNo og references voru bæði send.';
-        ConflictFixLbl: Label 'Send either referenceNo or references, not both.', Comment = 'is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.';
+        ConflictWhenLbl: Label 'references was sent together with referenceNo, referenceType, referenceTypeNo or date.', Comment = 'is-IS=references var sent ásamt referenceNo, referenceType, referenceTypeNo eða date.';
+        ConflictFixLbl: Label 'Send either referenceNo with its optional keys at the top level, or references; inside references each entry carries its own keys.', Comment = 'is-IS=Sendu annaðhvort referenceNo með valkvæðu lyklunum sínum á efsta stigi, eða references; í references ber hver færsla sína eigin lykla.';
         AmbiguousWhenLbl: Label 'Several items match the reference.', Comment = 'is-IS=Nokkrar vörur passa við tilvísunina.';
         AmbiguousFixLbl: Label 'Pass referenceType and referenceTypeNo to narrow it.', Comment = 'is-IS=Sendu referenceType og referenceTypeNo til að þrengja leitina.';
         TypeNoWhenLbl: Label 'referenceTypeNo was sent for a barcode or a blank reference type.', Comment = 'is-IS=referenceTypeNo var sent fyrir strikamerki eða tóma tegund tilvísunar.';
@@ -137,14 +187,20 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::AmbiguousRecord, AmbiguousWhenLbl, AmbiguousFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, TypeNoWhenLbl, TypeNoFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'referenceType is not barCode, customer, vendor or blank.', 'Send barCode, customer, vendor or blank, or leave referenceType out.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Reference domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Nothing. The call only reads item references, items and GTINs; it never creates or changes a reference.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         exit(true);
     end;
 
@@ -172,7 +228,8 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TitleLbl: Label 'Resolve one barcode', Comment = 'is-IS=Leysa eitt strikamerki';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"referenceNo":"5901234123457","referenceType":"barCode"}', '{"status":"Success","source":"reference","itemNo":"ITEM","description":"Item","variantCode":"","unitOfMeasure":"PCS","referenceType":"barCode","referenceTypeNo":"","referenceNo":"5901234123457","blocked":false}'));
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"type":"Inventory.ItemReference.Resolve","data":{"referenceNo":"5901234123457","referenceType":"barCode"}}', '{"status":"Success","source":"reference","itemNo":"ITEM","description":"Item","variantCode":"","unitOfMeasure":"PCS","referenceType":"barCode","referenceTypeNo":"","referenceNo":"5901234123457","blocked":false}'));
+        Examples.Add(ContractMgt.Example('Resolve a barcode and an item number in one call', '{"type":"Inventory.ItemReference.Resolve","data":{"references":[{"referenceNo":"5901234123457"},{"referenceNo":"1000"}]}}', '{"status":"Success","results":[{"source":"reference","itemNo":"1000","description":"Bicycle","blocked":false,"variantCode":"","unitOfMeasure":"PCS","referenceType":"barCode","referenceTypeNo":"","referenceNo":"5901234123457","matched":{"itemNo":"1000","variantCode":"","unitOfMeasure":"PCS","referenceType":"barCode","referenceTypeNo":"","referenceNo":"5901234123457","description":""}},{"source":"itemNo","itemNo":"1000","description":"Bicycle","blocked":false,"variantCode":"","unitOfMeasure":"PCS","referenceType":"","referenceTypeNo":"","referenceNo":""}]}'));
         exit(true);
     end;
 
@@ -186,7 +243,7 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'A blocked item is returned with blocked true. A reference whose ending date is before date is ignored. Send references to resolve several values, without referenceNo beside that array.', Comment = 'is-IS=Lokuð vara kemur til baka með blocked true. Tilvísun sem lýkur fyrir date er hunsuð. Sendu references til að leysa nokkur gildi, án referenceNo við hliðina á fylkinu.';
+        NotesLbl: Label 'The lookup order is: item references with that reference number first, then the item number, then the GTIN. source says which one matched: reference, itemNo or gtin. Without date no date filter is applied; with date, a reference is ignored when it starts after date or ended before it. A blocked item is returned with blocked true and is not refused. When several different items match, the call is refused as ambiguous. References of a customer or vendor are searched only when referenceType says so; barCode, blank or no type search barcode references and references without a type. With references the answer is results, one result per entry in the order sent; the first problem stops the call, and referenceNo, referenceType, referenceTypeNo and date go inside each entry, not beside the array. An empty references array answers an empty results array. Only digits are tried as a GTIN.', Comment = 'is-IS=Leitarröðin er: vörutilvísanir með því tilvísunarnúmeri fyrst, síðan vörunúmerið og síðast GTIN. source segir hvað passaði: reference, itemNo eða gtin. Án date er engin dagsetningarsía notuð; með date er tilvísun hunsuð ef hún hefst eftir date eða lauk fyrir það. Lokuð vara kemur til baka með blocked true og er ekki hafnað. Ef nokkrar ólíkar vörur passa er kallinu hafnað sem tvíræðu. Tilvísanir viðskiptavinar eða birgis eru aðeins leitaðar þegar referenceType segir til um það; barCode, blank eða engin tegund leita í strikamerkjatilvísunum og tilvísunum án tegundar. Með references er svarið results, ein niðurstaða fyrir hverja færslu í þeirri röð sem hún var send; fyrsta vandamálið stöðvar kallið og referenceNo, referenceType, referenceTypeNo og date fara inn í hverja færslu, ekki við hliðina á fylkinu. Tómt references fylki gefur tómt results fylki. Aðeins tölustafir eru reyndir sem GTIN.';
     begin
         Notes := NotesLbl;
         exit(true);

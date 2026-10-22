@@ -9,10 +9,10 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Checks physical-inventory journal lines through native Item Jnl.-Check Line.', Comment = 'is-IS=Athugar línur talningarbókar með innbyggðri sannprófun.';
+        DescriptionLbl: Label 'Checks the lines of a physical inventory journal with the standard item journal line checks, without writing or posting.', Comment = 'is-IS=Athugar línur talningarbókar með stöðluðum athugunum á vörubókarlínum án þess að skrifa eða bóka.';
         SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
-        KeywordsLbl: Label 'inventory journal physical count calculate check preview post', Comment = 'is-IS=birgðir bók talning reikna athuga forskoða bóka';
-        OverviewLbl: Label 'Checks physical-inventory journal lines through native Item Jnl.-Check Line. Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree. Checks selected lines without writes. Invalid lines return NotReady with errors; future dates can return ReadyWithWarnings. Licensed dispatch and company domain gates apply.', Comment = 'is-IS=Athugar línur talningarbókar með innbyggðri sannprófun. Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu. Athugar valdar línur án breytinga. Ógildar línur skila NotReady með villum; framtíðardagsetningar geta skilað ReadyWithWarnings. Leyfis- og sviðsheimildir fyrirtækis gilda.';
+        KeywordsLbl: Label 'check physical count, validate count journal, count journal errors, ready to post count', Comment = 'is-IS=athuga birgðatalningu, sannprófa talningarbók, villur í talningarbók, talning tilbúin til bókunar';
+        OverviewLbl: Label 'Runs the standard item journal line checks on the lines of one Phys. Inventory journal batch and answers Ready, ReadyWithWarnings or NotReady. Nothing is written or posted.', Comment = 'is-IS=Keyrir stöðluðu athuganirnar á vörubókarlínum fyrir línur einnar bókarkeyrslu af gerðinni Phys. Inventory og svarar Ready, ReadyWithWarnings eða NotReady. Ekkert er skrifað eða bókað.';
 
     /// <summary>Checks the company domain and the native permissions required by this operation.</summary>
     procedure IsEnabled(): Boolean
@@ -48,107 +48,6 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     end;
 
 
-    /// <summary>Returns the native journal envelope contract.</summary>
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"]},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal target contract.</summary>
-    procedure GetTarget(var Target: JsonArray): Boolean
-    begin
-        Clear(Target);
-        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Phys. Inventory template batch."}]');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal parameters contract.</summary>
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Existing journal template name, at most 10 characters. Supply with batchName unless subject identifies the same batch.'));
-        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Existing journal batch name, at most 10 characters. All supplied selectors must agree.'));
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Legacy alias for templateName; conflicting aliases are refused.'));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Legacy alias for batchName; conflicting aliases are refused.'));
-        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct line SystemIds in the selected batch. Omit to select the whole batch.'));
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal response contract.</summary>
-    procedure GetResponse(var Response: JsonObject): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-        Fields: JsonArray;
-    begin
-        Clear(Response);
-        Response.Add('contentType', 'text/json');
-        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
-        Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady from native line validation.'));
-        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of selected journal lines checked.'));
-        Fields.Add(ContractMgt.ResponseField('errorCount', 'integer', 'Number of collected native errors.'));
-        Fields.Add(ContractMgt.ResponseField('warningCount', 'integer', 'Number of collected warnings.'));
-        Fields.Add(ContractMgt.ResponseField('errors', 'array', 'Structured native validation errors.'));
-        Fields.Add(ContractMgt.ResponseField('warnings', 'array', 'Structured native validation warnings.'));
-        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
-        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
-        Response.Add('fields', Fields);
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal errors contract.</summary>
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Clear(Errors);
-        Errors.Add(ContractMgt.TextErrorEntry('Native journal selection or validation error.', 'Missing or conflicting batch selectors, invalid template, recurring batch, malformed line selection, unsupported parameters or native validation failure.', 'Select an existing batch of the required template type and correct the native error before retrying.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Required Inventory, native table or item-posting permission is missing.', 'Request the required permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The company domain is disabled or a typed request value is invalid.', 'Enable the domain or correct the indicated request value.'));
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal effect contract.</summary>
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Clear(Effect);
-        Effect.ReadFrom('{"writes":false,"posts":false,"rollback":false}');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal related contract.</summary>
-    procedure GetRelated(var Related: JsonArray): Boolean
-    begin
-        Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.PhysInventory.Calculate","useInsteadWhen":"Calculate the physical inventory journal."},{"name":"Inventory.PhysInventory.RecordCount","useInsteadWhen":"RecordCount the physical inventory journal."},{"name":"Inventory.PhysInventory.PreviewPost","useInsteadWhen":"PreviewPost the physical inventory journal."},{"name":"Inventory.PhysInventory.Post","useInsteadWhen":"Post the physical inventory journal."}]');
-        exit(true);
-    end;
-
-    /// <summary>Returns the native journal examples contract.</summary>
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        Clear(Examples);
-        Examples.ReadFrom('[{"title":"Checks physical-inventory journal lines through native Item Jnl.-Check Line. Replace example identifiers with your own batch and lines.","request":{"type":"Inventory.PhysInventory.Check","subject":"PHYS|OWNED"}}]');
-        exit(true);
-    end;
-
-    /// <summary>No override is provided.</summary>
-    procedure GetMetering(var Value: JsonObject): Boolean
-    begin
-        Clear(Value);
-        exit(false);
-    end;
-
-    /// <summary>No override is provided.</summary>
-    procedure GetWorkflow(var Value: JsonObject): Boolean
-    begin
-        Clear(Value);
-        exit(false);
-    end;
-
     /// <summary>Describes native journal behavior.</summary>
     procedure GetDescription(): Text[250]
     begin
@@ -167,17 +66,167 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
         exit(KeywordsLbl);
     end;
 
-    /// <summary>Explains native journal constraints.</summary>
-    procedure GetOverview(var Value: Text): Boolean
+    /// <summary>Returns the envelope chapter of the contract.</summary>
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Value := OverviewLbl;
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"optional","forms":["TEMPLATE|BATCH","systemId"],"description":"Identifies the journal batch as TEMPLATE|BATCH, or as the SystemId of the Item Journal Batch. Without a subject, send templateName and batchName in data. Every selector that is sent must name the same batch."},"dataRequired":false,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
-    /// <summary>Explains native journal constraints.</summary>
-    procedure GetNotes(var Value: Text): Boolean
+    /// <summary>Returns the target chapter of the contract.</summary>
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Value := OverviewLbl;
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('subject', 'TEMPLATE|BATCH', 'The journal template name and the batch name, each at most 10 characters, separated by a vertical bar. The template must be a Phys. Inventory template that is not recurring.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item Journal Batch.'));
+        Target.Add(ContractMgt.TargetEntry('data.templateName, data.batchName', 'journal template and batch name', 'The template and the batch together. data.journalTemplateName and data.journalBatchName are accepted as aliases.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the parameters chapter of the contract.</summary>
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Name of an existing Phys. Inventory journal template that is not recurring, at most 10 characters. Send it with batchName unless subject identifies the batch.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Name of an existing journal batch of that template, at most 10 characters. Every selector that is sent must name the same batch.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName. A value that differs from templateName, ignoring case, is refused.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName. A value that differs from batchName, ignoring case, is refused.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Nonempty array of distinct SystemIds of journal lines in the selected batch. Only those lines are used. Omit it to use every line of the batch.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the response chapter of the contract.</summary>
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Field: JsonObject;
+        Fields: JsonArray;
+        Children: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success whenever the check ran, whatever the verdict. Read validationResult.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The journal template of the selected batch.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The selected journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady.'));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of lines selected for the check.'));
+        Fields.Add(ContractMgt.ResponseField('errorCount', 'integer', 'Number of problems in errors.'));
+        Fields.Add(ContractMgt.ResponseField('warningCount', 'integer', 'Number of problems in warnings.'));
+        Field := ContractMgt.ResponseField('errors', 'array', 'Problems that stop posting.');
+        Clear(Children);
+        Children.Add(ContractMgt.ResponseField('code', 'string', 'BusinessCentralError for a failing line or a Business Central error message, PreconditionFailed for an empty batch.'));
+        Children.Add(ContractMgt.ResponseField('error', 'string', 'The text of the problem.'));
+        Children.Add(ContractMgt.ResponseField('parameter', 'string', 'line N for a problem of one line, otherwise empty or batchName.'));
+        Children.Add(ContractMgt.ResponseField('nextStep', 'string', 'What to do about it.'));
+        Field.Add('children', Children);
+        Fields.Add(Field);
+        Field := ContractMgt.ResponseField('warnings', 'array', 'Problems that do not stop posting, such as a posting date after the work date (code InvalidLine).');
+        Clear(Children);
+        Children.Add(ContractMgt.ResponseField('code', 'string', 'InvalidLine for a posting date after the work date, otherwise BusinessCentralError.'));
+        Children.Add(ContractMgt.ResponseField('error', 'string', 'The text of the problem.'));
+        Children.Add(ContractMgt.ResponseField('parameter', 'string', 'line N for a problem of one line, otherwise empty.'));
+        Children.Add(ContractMgt.ResponseField('nextStep', 'string', 'What to do about it.'));
+        Field.Add('children', Children);
+        Fields.Add(Field);
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    /// <summary>Returns the errors chapter of the contract.</summary>
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the effect chapter of the contract.</summary>
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing is written or posted. The selected journal lines are checked and the verdict is returned.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        Effect.Add('rollback', false);
+        exit(true);
+    end;
+
+    /// <summary>Returns the metering chapter of the contract.</summary>
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    /// <summary>Returns the related chapter of the contract.</summary>
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Calculate', 'Use it to create the journal lines before checking them.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.RecordCount', 'Use it to correct the counted quantities that the check flags.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.PreviewPost', 'Use it to see the entries a posting would create, not only the line problems.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.PhysInventory.Post', 'Use it to post the lines once the check is acceptable.'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the workflow chapter of the contract.</summary>
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
+    begin
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.RecordCount', 'Enter the counted quantities first.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.Check', 'Find line problems without writing anything.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.PreviewPost', 'See the entries the posting would create.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.PhysInventory.Post', 'Post the count when the check is acceptable.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
+    end;
+
+    /// <summary>Returns the examples chapter of the contract.</summary>
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'Check every line of the batch DEFAULT',
+            '{"type":"Inventory.PhysInventory.Check","subject":"PHYS. INV.|DEFAULT"}',
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","validationResult":"Ready","lineCount":2,"errorCount":0,"warningCount":0,"errors":[],"warnings":[]}'));
+        exit(true);
+    end;
+
+    /// <summary>Returns the overview chapter of the contract.</summary>
+    procedure GetOverview(var Overview: Text): Boolean
+    begin
+        Overview := OverviewLbl;
+        exit(true);
+    end;
+
+    /// <summary>Returns the notes chapter of the contract.</summary>
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := 'Read only: nothing is written, posted or rolled back. Every line of the batch, or only the lines in lineSystemIds, gets the standard item journal line checks and the physical inventory rules: the line has an item that is not blocked, is a physical inventory line, has the entry type Positive Adjmt. or Negative Adjmt., the value entry type Direct Cost and no item charge. ' +
+            'A failing line is added to errors with code BusinessCentralError and parameter line N, and the check continues with the next line. A posting date after the work date is added to warnings with code InvalidLine. ' +
+            'The answer is Success whatever the verdict: read validationResult (Ready, ReadyWithWarnings or NotReady), errorCount and warningCount. A batch without lines is not refused but answered NotReady with one PreconditionFailed entry in errors. ' +
+            'An unidentifiable batch, a template that is not a non-recurring Phys. Inventory template, a lineSystemIds value that does not fit the batch and any key that is not declared are refused with BusinessCentralError. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'Use Inventory.PhysInventory.PreviewPost to see the entries and Inventory.PhysInventory.Post to post.';
         exit(true);
     end;
 }
