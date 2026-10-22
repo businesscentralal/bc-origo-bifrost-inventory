@@ -5,6 +5,7 @@
 ### Changed (2026-10-21) - AppSource delivery
 
 - `.AL-Go/settings.json`: `deliverToAppSource` names the Partner Center offer for Bifrost Inventory (productId abaae78a-1f83-40fe-b345-b34634b8724b, main app folder `app`, branch main, no continuous delivery), so the Publish To AppSource workflow can deliver new versions to the offer.
+## [28.3.0.0] - 2026-10-20 (first AppSource version)
 
 ### Changed (2026-10-20) - version 28.3.0.0 for the first AppSource release
 
@@ -285,7 +286,6 @@
 
 - App manifest: privacy statement and EULA URLs now point at the published Bifröst Foundation pages; Application Insights connection string updated to the shared bc-cosmos-shared telemetry resource. Help and publisher URL unchanged.
 - App logo: new Bifröst wordmark with "Powered by origo." tagline; app-name line unchanged.
-
 
 ## Bifrost Inventory 28.0.0.0
 
