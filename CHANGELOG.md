@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-21) - Pipeline: AppSource build gate after the first AppSource release
+
+- Pipeline: the AppSource build gate no longer fails after the first AppSource release (previous self-app removed from the compile symbol cache; AppSourceCop baseline kept). New `tools/prune_self_symbols.py`, called from `tools/Assert-AppSourceBuild.ps1` before the gate; regression tests in `tools/tests/test_foundation_restore.py`. Port of attachments#174.
 ### Changed (2026-10-21) - AppSource delivery
 
 - `.AL-Go/settings.json`: `deliverToAppSource` names the Partner Center offer for Bifrost Inventory (productId abaae78a-1f83-40fe-b345-b34634b8724b, main app folder `app`, branch main, no continuous delivery), so the Publish To AppSource workflow can deliver new versions to the offer.
