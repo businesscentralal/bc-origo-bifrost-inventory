@@ -150,6 +150,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         PriceImpl: Codeunit "Price Update Impl ori";
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        // Prepare the company toggle before restoring the exact restricted caller below.
+        LowerPermissions.SetOutsideO365Scope();
         DomainSetup.EnableItemPrice();
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
@@ -170,6 +172,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        // Prepare the company toggle before restoring the exact restricted caller below.
+        LowerPermissions.SetOutsideO365Scope();
         DomainSetup.EnableItemPrice();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Cost Write Test');

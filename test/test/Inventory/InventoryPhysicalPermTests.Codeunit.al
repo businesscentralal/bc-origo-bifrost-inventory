@@ -83,6 +83,8 @@ codeunit 96945 "Inventory Physical Perm Tests"
 
     local procedure LowerToNativeWriter(var LowerPermissions: Codeunit "Library - Lower Permissions")
     begin
+        // Prepare the company toggle before restoring the exact restricted caller below.
+        LowerPermissions.SetOutsideO365Scope();
         DomainSetup.EnablePhysicalInventory();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Phys Native Test');
