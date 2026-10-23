@@ -60,7 +60,7 @@ codeunit 96900 "Item Attribute Tests ori"
     begin
         Item.SetRange("No.", 'ZZW8148-NO-ITEM');
         Assert.IsTrue(Item.IsEmpty(), 'The selected fixture range is empty.');
-        Request.Add('tableView', Item.GetView(false));
+        Request.Add('tableView', Item.GetView(true));
         OldLanguage := GlobalLanguage();
         GlobalLanguage(1033);
         Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
@@ -81,7 +81,7 @@ codeunit 96900 "Item Attribute Tests ori"
     begin
         Item.SetRange("No.", 'ZZW8148-NO-ITEM');
         Assert.IsTrue(Item.IsEmpty(), 'The selected fixture range is empty.');
-        Request.Add('tableView', Item.GetView(false));
+        Request.Add('tableView', Item.GetView(true));
         OldLanguage := GlobalLanguage();
         GlobalLanguage(1039);
         Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
