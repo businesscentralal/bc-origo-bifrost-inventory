@@ -1,7 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Assembly.History;
-using Microsoft.Assembly.Posting;
 using Origo.Bifrost;
 
 codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
@@ -153,7 +152,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
+        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. Native commits are suppressed inside one isolated undo transaction; a failure rolls back every reversing entry and document change. Chained Omit Commit calls remain in the caller transaction and propagate native failures. ' +
             'documentNo is the number of the posted assembly (the posted document), not the number of the assembly order; the type looks it up in the Posted Assembly Header table only. ' +
             'The caller needs the Assembly domain turned on in Inventory Setup and write permission on the posted assembly table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
             'A refusal from Business Central is answered with its error text and no error code. The type does not read subject. ' +
@@ -170,6 +169,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         PostedAssemblyHeader: Record "Posted Assembly Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
@@ -195,10 +195,15 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
             exit;
         end;
 
-        if not TryUndoPostedAssembly(PostedAssemblyHeader) then begin
-            Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
+        Process.SetOperation('AssemblyUndo');
+        Process.SetPostedAssemblyNo(DocumentNo);
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                Argument.RespondWithError(GetLastErrorText());
+                exit;
+            end;
 
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
@@ -206,11 +211,4 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    [TryFunction]
-    local procedure TryUndoPostedAssembly(var PostedAssemblyHeader: Record "Posted Assembly Header")
-    var
-        AssemblyPost: Codeunit "Assembly-Post";
-    begin
-        AssemblyPost.Undo(PostedAssemblyHeader, false);
-    end;
 }

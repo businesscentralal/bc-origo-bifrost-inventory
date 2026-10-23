@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
+using Microsoft.Assembly.Posting;
 using Microsoft.Foundation.Enums;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Tracking;
@@ -30,6 +32,7 @@ codeunit 10076842 "Inventory Write Process ori"
         ReserveQuantityBase: Decimal;
         AvailabilityDate: Date;
         ReserveDescription: Text[100];
+        PostedAssemblyNo: Code[20];
         CancelEntryNo: Integer;
         FullAutoReservation: Boolean;
         UnknownOperationErr: Label 'Unknown inventory write operation.', Comment = 'is-IS=Óþekkt birgðaskrifaðgerð.';
@@ -56,6 +59,8 @@ codeunit 10076842 "Inventory Write Process ori"
                 Reserve();
             'ReservationCancel':
                 CancelReservation();
+            'AssemblyUndo':
+                UndoAssembly();
             else
                 Error(UnknownOperationErr);
         end;
@@ -108,6 +113,23 @@ codeunit 10076842 "Inventory Write Process ori"
     procedure GetFullAutoReservation(): Boolean
     begin
         exit(FullAutoReservation);
+    end;
+
+    /// <summary>Selects the owned posted assembly for an atomic AssemblyUndo operation.</summary>
+    /// <param name="DocumentNo">The posted assembly number.</param>
+    procedure SetPostedAssemblyNo(DocumentNo: Code[20])
+    begin
+        PostedAssemblyNo := DocumentNo;
+    end;
+
+    local procedure UndoAssembly()
+    var
+        PostedAssembly: Record "Posted Assembly Header";
+        AssemblyPost: Codeunit "Assembly-Post";
+    begin
+        PostedAssembly.Get(PostedAssemblyNo);
+        AssemblyPost.SetSuppressCommit(true);
+        AssemblyPost.Undo(PostedAssembly, false);
     end;
 
     local procedure Reserve()

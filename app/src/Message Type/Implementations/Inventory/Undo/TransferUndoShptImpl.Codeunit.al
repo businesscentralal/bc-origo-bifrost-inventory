@@ -107,7 +107,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Preconditions.Add('The posted transfer shipment exists and has at least one line that is not a correction line.');
         Preconditions.Add('The undo checks of Business Central pass for every line.');
         Effect.Add('effect', 'irreversible');
-        Effect.Add('changes', 'Undoes every line of the posted transfer shipment that is not a correction line, one line after the other, with the standard Business Central undo of a transfer shipment line, which posts the corrective entries. The posted document is not deleted. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
+        Effect.Add('changes', 'Undoes every line of the posted transfer shipment that is not a correction line, as one filtered native undo operation, which posts the corrective entries. The posted document is not deleted. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
         Effect.Add('preconditions', Preconditions);
@@ -157,7 +157,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
-            'Every line that is not a correction line is undone, in line order, each as its own step. A refusal on one line stops the call and answers an error; lines that came before it may already be undone, so read the posted shipment before you send the call again. ' +
+            'Only lines of the selected posted shipment are passed to the native undo, as one transaction. A failure rolls back every line and reversing entry of that undo. Other shipments are not selected. Chained Omit Commit calls remain in the caller transaction and propagate native failures. ' +
             'A posted transfer shipment whose lines are all correction lines is refused. A refusal from Business Central is answered with its error text and no error code. ' +
             'The caller needs the Transfer Orders domain turned on in Inventory Setup and write permission on the posted transfer shipment table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
             'Receipt undo is a separate type, Inventory.Transfer.UndoReceipt, and is not available in this version. The type does not read subject.';
@@ -173,7 +173,6 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     var
         TransferShipmentHeader: Record "Transfer Shipment Header";
         TransferShipmentLine: Record "Transfer Shipment Line";
-        LineToUndo: Record "Transfer Shipment Line";
         Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
         RequestJson: JsonObject;
@@ -206,14 +205,14 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
             Argument.RespondWithError(StrSubstNo(NoLinesErr, DocumentNo));
             exit;
         end;
-        repeat
-            LineToUndo := TransferShipmentLine;
-            UndoShipment.SetHideDialog(true);
-            if not UndoShipment.Run(LineToUndo) then begin
+        UndoShipment.SetHideDialog(true);
+        if Argument."Omit Commit" then
+            UndoShipment.Run(TransferShipmentLine)
+        else
+            if not UndoShipment.Run(TransferShipmentLine) then begin
                 Argument.RespondWithError(GetLastErrorText());
                 exit;
             end;
-        until TransferShipmentLine.Next() = 0;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('documentNo', DocumentNo);
         Argument.SetResponseJson(ResponseJson);

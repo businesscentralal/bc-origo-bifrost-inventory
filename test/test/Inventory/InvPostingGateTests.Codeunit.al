@@ -28,12 +28,15 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Setup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
         Impl: Interface "Msg Interface ori";
         MessageType: Enum "Message Type ori";
         Types: List of [Enum "Message Type ori"];
         Response: JsonObject;
         Token: JsonToken;
     begin
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := false;
@@ -52,6 +55,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Types.Add("Message Type ori"::"Inventory.Transfer.UndoReceipt");
         Types.Add("Message Type ori"::"Inventory.Transfer.UndoShipment");
         LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        Assert.IsFalse(PostingGate.HasPostingPermission(), 'Fixture setup permission must be removed before exercising the shipping Full role.');
         foreach MessageType in Types do begin
             Clear(TempArgument);
             TempArgument.Init();
