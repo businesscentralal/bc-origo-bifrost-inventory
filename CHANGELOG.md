@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added (2026-10-23) - catalogue quality guard (inventory#152, AC1)
+
+- New test codeunit 96971 `Inv. Catalogue Quality Tests ori` (test range 96900-96999): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
 ### Changed (2026-10-22) - message type contract and discovery up to Foundation parity
 
 - All 59 Inventory message types now declare the chapters Foundation's own types declare: envelope, target, parameters (with `children` on every array of objects), response (with `children` on arrays), errors with a machine code (or the error text) and a fix, effect with `effect` (read, write or irreversible), `changes`, `idempotent` and `permissionSet`, related, workflow for every type that is not a plain read, examples with a request and a response, overview and notes. Texts were rewritten from the implementation; where the help contradicted the code it was corrected (error codes, response fields, parameter types, commit behaviour of the Post types). `Inventory.Cost.Get` declared the effect `readOnly`, now `read`; `Inventory.CostToGL.Test` named an error code and chapter shapes that no caller could get, now standard.
