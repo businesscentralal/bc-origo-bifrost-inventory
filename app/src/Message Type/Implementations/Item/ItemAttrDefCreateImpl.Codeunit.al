@@ -136,11 +136,14 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolve: Codeunit "Item Attribute Resolve ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, Database::"Item Attribute", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        if not Resolve.ValidateDefinition(Argument) then
+            exit;
 
         if not Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument) then begin
             Argument.RespondWithLastError();

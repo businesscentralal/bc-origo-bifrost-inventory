@@ -266,6 +266,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         BeforeQuantity: Decimal;
         CountedQuantity: Decimal;
         ParameterName: Text;
+        CountIndex: Integer;
     begin
         Request := Argument.GetRequestJson();
         NormalizeLegacyCount(Argument, Request);
@@ -280,6 +281,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             Error(CountsErr);
         // Validate every entry before any Modify; later native errors still roll back through the process codeunit.
         foreach Entry in Counts do begin
+            CountIndex += 1;
             if not Entry.IsObject() then
                 Error(CountsErr);
             Count := Entry.AsObject();
@@ -290,15 +292,22 @@ codeunit 10076840 "Inventory Native Journal ori"
             if Count.Contains('systemId') then begin
                 if not Evaluate(LineId, ReadText(Count, 'systemId', 50)) or IsNullGuid(LineId) then
                     Error(CountsErr);
-                if not Line.GetBySystemId(LineId) then
-                    Error(CountsErr);
+                if not Line.GetBySystemId(LineId) then begin
+                    RefuseMissingCount(Argument, Count, CountIndex);
+                    exit;
+                end;
             end else begin
                 LineNo := ReadLineNo(Count);
-                Line.Get(Batch."Journal Template Name", Batch.Name, LineNo);
+                if not Line.Get(Batch."Journal Template Name", Batch.Name, LineNo) then begin
+                    RefuseMissingCount(Argument, Count, CountIndex);
+                    exit;
+                end;
                 LineId := Line.SystemId;
             end;
-            if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then
-                Error(CountsErr);
+            if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then begin
+                RefuseMissingCount(Argument, Count, CountIndex);
+                exit;
+            end;
             if Count.Contains('lineNo') then begin
                 LineNo := ReadLineNo(Count);
                 if LineNo <> Line."Line No." then
@@ -452,17 +461,54 @@ codeunit 10076840 "Inventory Native Journal ori"
             Error(BatchErr);
         if not IsNullGuid(BatchId) then begin
             if not Batch.GetBySystemId(BatchId) then
-                Error(BatchErr);
+                exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
             if (TemplateName <> '') and ((TemplateName <> Batch."Journal Template Name") or (BatchName <> Batch.Name)) then
                 Error(BatchErr);
         end else
-            Batch.Get(TemplateName, BatchName);
+            if not Batch.Get(TemplateName, BatchName) then
+                exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
         JournalTemplate.Get(Batch."Journal Template Name");
         JournalTemplate.TestField(Type, JournalType);
         JournalTemplate.TestField(Recurring, false);
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
         Line.SetRange("Journal Batch Name", Batch.Name);
         exit(true);
+    end;
+
+    local procedure RefuseMissingBatch(var Argument: Record "Message Argument ori"; TemplateName: Text; BatchName: Text): Boolean
+    var
+        ParameterName: Text;
+        Identifier: Text;
+        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
+        ExpectedLbl: Label 'an existing physical inventory journal batch', Comment = 'is-IS=fyrirliggjandi birgðatalningarbókarkeyrsla';
+        NextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
+    begin
+        ParameterName := 'batchName';
+        Identifier := TemplateName + '|' + BatchName;
+        if Argument.Subject <> '' then begin
+            ParameterName := 'subject';
+            Identifier := Argument.Subject;
+        end;
+        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, NextLbl);
+        exit(false);
+    end;
+
+    local procedure RefuseMissingCount(var Argument: Record "Message Argument ori"; Count: JsonObject; CountIndex: Integer)
+    var
+        ParameterName: Text;
+        Received: Text;
+        MissingLineErr: Label 'The count line was not found in the selected journal batch.', Comment = 'is-IS=Talningarlínan fannst ekki í valinni bókarkeyrslu.';
+        ExpectedLbl: Label 'a line belonging to the selected batch', Comment = 'is-IS=lína sem tilheyrir valinni keyrslu';
+        NextLbl: Label 'Use a lineNo or systemId from the selected physical inventory batch.', Comment = 'is-IS=Notaðu lineNo eða systemId úr valinni birgðatalningarkeyrslu.';
+    begin
+        ParameterName := 'lineNo';
+        if Count.Contains('systemId') then begin
+            ParameterName := 'systemId';
+            Received := ReadText(Count, 'systemId', 50);
+        end else
+            Received := Format(ReadLineNo(Count), 0, 9);
+        ParameterName := 'counts[' + Format(CountIndex, 0, 9) + '].' + ParameterName;
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidLine, MissingLineErr, ParameterName, Received, ExpectedLbl, NextLbl);
     end;
 
     local procedure ResolveSelection(var Argument: Record "Message Argument ori"; JournalType: Enum "Item Journal Template Type"; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"): Boolean

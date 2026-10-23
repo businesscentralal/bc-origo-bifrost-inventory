@@ -156,9 +156,9 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table, which this type requires although it only reads.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('templateName and batchName are required.', 'The template or the batch name is absent or empty. The answer carries the error text and no code.', 'Send templateName and batchName, or their journal aliases.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Item journal template %1 was not found.', 'No item journal template has that name. The answer carries the error text and no code.', 'Check templateName.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer. The answer carries the error text and no code.', 'Use a reclassification template.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'templateName and batchName are required.', 'The template or the batch name is absent or empty. The answer carries the error text and no code.', 'Send templateName and batchName, or their journal aliases.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item journal template %1 was not found.', 'No item journal template has that name. The answer carries the error text and no code.', 'Check templateName.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer. The answer carries the error text and no code.', 'Use a reclassification template.'));
         exit(true);
     end;
 

@@ -144,8 +144,8 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalBatchName is absent.', 'Send journalBatchName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the posting permission set BIFROST InvPost ori.', 'Ask an administrator for BIFROST InvPost ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Reclassification batch %1 %2 has no lines.', 'The batch has no lines or does not exist. The answer carries the error text and no code.', 'Check journalTemplateName and journalBatchName, or create the lines first.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Business Central posting error text', 'The batch posting fails, for example because a line fails the item journal checks. The posting is rolled back and the answer carries the error text and no code.', 'Correct the line named in the text and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Reclassification batch %1 %2 has no lines.', 'The batch has no lines or does not exist. The answer carries the error text and no code.', 'Check journalTemplateName and journalBatchName, or create the lines first.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central posting error text', 'The batch posting fails, for example because a line fails the item journal checks. The posting is rolled back and the answer carries the error text and no code.', 'Correct the line named in the text and retry.'));
         exit(true);
     end;
 

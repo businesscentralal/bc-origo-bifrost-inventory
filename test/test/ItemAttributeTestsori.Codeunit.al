@@ -50,6 +50,48 @@ codeunit 96900 "Item Attribute Tests ori"
     end;
 
     [Test]
+    procedure Get_EmptyFilter_ReturnsEmptySuccess_1033()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OldLanguage: Integer;
+    begin
+        Item.SetRange("No.", 'ZZW8148-NO-ITEM');
+        Assert.IsTrue(Item.IsEmpty(), 'The selected fixture range is empty.');
+        Request.Add('tableView', Item.GetView(false));
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
+        GlobalLanguage(OldLanguage);
+        Library.AssertStatus(Response, 'Success');
+        Assert.IsTrue(Response.Get('items', Token), 'items exists.');
+        Assert.AreEqual(0, Token.AsArray().Count(), 'No matching item is an empty successful read.');
+    end;
+
+    [Test]
+    procedure Get_EmptyFilter_ReturnsEmptySuccess_1039()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OldLanguage: Integer;
+    begin
+        Item.SetRange("No.", 'ZZW8148-NO-ITEM');
+        Assert.IsTrue(Item.IsEmpty(), 'The selected fixture range is empty.');
+        Request.Add('tableView', Item.GetView(false));
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
+        GlobalLanguage(OldLanguage);
+        Library.AssertStatus(Response, 'Success');
+        Assert.IsTrue(Response.Get('items', Token), 'items exists.');
+        Assert.AreEqual(0, Token.AsArray().Count(), 'No matching item is an empty successful read.');
+    end;
+
+    [Test]
     procedure Get_MissingItem_ReturnsError()
     var
         RequestJson: JsonObject;

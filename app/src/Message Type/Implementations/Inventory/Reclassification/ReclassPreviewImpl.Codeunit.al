@@ -156,8 +156,8 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the posting permission set BIFROST InvPost ori, which this type requires although it only reads.', 'Ask an administrator for BIFROST InvPost ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('journalTemplateName is required.', 'journalTemplateName is absent. The answer carries the error text and no code.', 'Send journalTemplateName.'));
-        Errors.Add(ContractMgt.TextErrorEntry('journalBatchName is required.', 'journalBatchName is absent. The answer carries the error text and no code.', 'Send journalBatchName.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'journalTemplateName is required.', 'journalTemplateName is absent. The answer carries the error text and no code.', 'Send journalTemplateName.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'journalBatchName is required.', 'journalBatchName is absent. The answer carries the error text and no code.', 'Send journalBatchName.'));
         exit(true);
     end;
 

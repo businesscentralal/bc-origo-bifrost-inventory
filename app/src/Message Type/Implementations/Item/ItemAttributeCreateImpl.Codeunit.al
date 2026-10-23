@@ -139,11 +139,14 @@ codeunit 10076915 "Item Attribute Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolve: Codeunit "Item Attribute Resolve ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        if not Resolve.ValidateMappings(Argument, false) then
+            exit;
 
         if not Codeunit.Run(Codeunit::"Item Attr. Create Process ori", Argument) then begin
             Argument.RespondWithLastError();

@@ -1012,9 +1012,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AttributeUpdateNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 2079214824" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.</source>
-          <target>Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Item.Attribute.Create þegar tengingu vantar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Item.Attribute.Create þegar tengingu vantar.</note>
+          <source>Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.</source>
+          <target>Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Inventory.Attribute.Create þegar tengingu vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Inventory.Attribute.Create þegar tengingu vantar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AttributeUpdateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 3457204858" size-unit="char" translate="yes" xml:space="preserve">
@@ -1323,6 +1323,42 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 171807686 - NamedType 3832473495" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal batch %1 was not found.</source>
+          <target>Bókarkeyrslan %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingBatch - NamedType MissingBatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 171807686 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing physical inventory journal batch</source>
+          <target>fyrirliggjandi birgðatalningarbókarkeyrsla</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi birgðatalningarbókarkeyrsla</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingBatch - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 171807686 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the template and batch names or send the SystemId of an existing physical inventory batch.</source>
+          <target>Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingBatch - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 2729722439 - NamedType 666514337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The count line was not found in the selected journal batch.</source>
+          <target>Talningarlínan fannst ekki í valinni bókarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Talningarlínan fannst ekki í valinni bókarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingCount - NamedType MissingLineErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 2729722439 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a line belonging to the selected batch</source>
+          <target>lína sem tilheyrir valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lína sem tilheyrir valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingCount - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - Method 2729722439 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a lineNo or systemId from the selected physical inventory batch.</source>
+          <target>Notaðu lineNo eða systemId úr valinni birgðatalningarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu lineNo eða systemId úr valinni birgðatalningarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method RefuseMissingCount - NamedType NextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
           <source>integer in range</source>
           <target>heiltala innan marka</target>
@@ -1594,15 +1630,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType ItemBlockedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 3184723545" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Item.Attribute.Update.</source>
-          <target>Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.</note>
+          <source>Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Inventory.Attribute.Update.</source>
+          <target>Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType MappingConflictErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 2179025215" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.</source>
-          <target>Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.</note>
+          <source>Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.</source>
+          <target>Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Inventory.Attribute.Create fyrst.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Inventory.Attribute.Create fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType MappingMissingErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2673034515 - NamedType 1411243613" size-unit="char" translate="yes" xml:space="preserve">
@@ -1640,6 +1676,156 @@
           <target>Gildi er nauðsynlegt fyrir eigindina "%1".</target>
           <note from="Developer" annotates="general" priority="2">%1 = Attribute name||is-IS=Gildi er nauðsynlegt fyrir eigindina "%1".</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - NamedType ValueRequiredErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2269396757 - NamedType 611807707" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing item</source>
+          <target>fyrirliggjandi vara</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi vara</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ResolveSingleItem - NamedType ItemExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2269396757 - NamedType 504795836" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an item identifier or filter matching an existing item.</source>
+          <target>Sendu vöruauðkenni eða síu sem passar við fyrirliggjandi vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vöruauðkenni eða síu sem passar við fyrirliggjandi vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ResolveSingleItem - NamedType ItemNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2034142389 - NamedType 609238709" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a new non-empty attribute name</source>
+          <target>nýtt heiti eigindar sem er ekki tómt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=nýtt heiti eigindar sem er ekki tómt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateDefinition - NamedType NameExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2034142389 - NamedType 1720158118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a new name or use the existing attribute definition.</source>
+          <target>Sendu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu eigindar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu eigindar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateDefinition - NamedType NameNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2034142389 - NamedType 3894911200" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Option, Text, Integer, Decimal or Date</source>
+          <target>Option, Text, Integer, Decimal eða Date</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Option, Text, Integer, Decimal eða Date</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateDefinition - NamedType TypeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2034142389 - NamedType 3549482879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send Option, Text, Integer, Decimal or Date in data.type.</source>
+          <target>Sendu Option, Text, Integer, Decimal eða Date í data.type.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu Option, Text, Integer, Decimal eða Date í data.type.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateDefinition - NamedType TypeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 3753144309" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An attribute name or attributeId is required.</source>
+          <target>Heiti eigindar eða attributeId er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti eigindar eða attributeId er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType IdentityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 3824767198" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing attribute name or attributeId</source>
+          <target>heiti fyrirliggjandi eigindar eða attributeId</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=heiti fyrirliggjandi eigindar eða attributeId</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType IdentityExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 733790925" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an existing attribute or create it with Inventory.AttributeDefinition.Create.</source>
+          <target>Sendu fyrirliggjandi eigind eða stofnaðu hana með Inventory.AttributeDefinition.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu fyrirliggjandi eigind eða stofnaðu hana með Inventory.AttributeDefinition.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType IdentityNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>attributeId and name identify different attributes.</source>
+          <target>attributeId og name auðkenna ólíkar eigindir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=attributeId og name auðkenna ólíkar eigindir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 3299433917" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one identifier or identifiers for the same attribute.</source>
+          <target>Sendu eitt auðkenni eða auðkenni sömu eigindar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt auðkenni eða auðkenni sömu eigindar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType ConflictNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 2159195321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a value matching the attribute type</source>
+          <target>gildi sem passar við gerð eigindar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=gildi sem passar við gerð eigindar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType ValueExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 705330202" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send value, numericValue or dateValue matching the attribute type.</source>
+          <target>Sendu value, numericValue eða dateValue sem passar við gerð eigindar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu value, numericValue eða dateValue sem passar við gerð eigindar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType ValueNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 2045829370" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an existing option value or set createValueIfMissing true on this attribute.</source>
+          <target>Sendu fyrirliggjandi valkostsgildi eða stilltu createValueIfMissing true á þessari eigind.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu fyrirliggjandi valkostsgildi eða stilltu createValueIfMissing true á þessari eigind.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType OptionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 1316111428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing item attribute mapping</source>
+          <target>fyrirliggjandi tenging vörueigindar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi tenging vörueigindar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType MappingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 1184593699" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the mapping with Inventory.Attribute.Create first.</source>
+          <target>Stofnaðu tenginguna fyrst með Inventory.Attribute.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu tenginguna fyrst með Inventory.Attribute.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType MappingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 3165426241" size-unit="char" translate="yes" xml:space="preserve">
+          <source>the existing value or overwrite true</source>
+          <target>fyrirliggjandi gildi eða overwrite true</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi gildi eða overwrite true</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType OverwriteExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 2591697262 - NamedType 2498605842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set overwrite true on this attribute or use Inventory.Attribute.Update.</source>
+          <target>Stilltu overwrite true á þessari eigind eða notaðu Inventory.Attribute.Update.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stilltu overwrite true á þessari eigind eða notaðu Inventory.Attribute.Update.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMapping - NamedType OverwriteNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 2323544895" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a non-empty array of attribute objects</source>
+          <target>fylki eigindahluta sem er ekki tómt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fylki eigindahluta sem er ekki tómt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType ArrayExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 3032640080" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send at least one attribute object in data.attributes.</source>
+          <target>Sendu a.m.k. einn eigindahlut í data.attributes.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu a.m.k. einn eigindahlut í data.attributes.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType ArrayNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 1847743092" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Each attribute entry must be an object.</source>
+          <target>Hver eigindafærsla verður að vera hlutur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hver eigindafærsla verður að vera hlutur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType ObjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 3451652123" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an attribute object</source>
+          <target>eigindahlutur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=eigindahlutur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType ObjectExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 4248961788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send name or attributeId and a value in each attribute object.</source>
+          <target>Sendu name eða attributeId og gildi í hverjum eigindahlut.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu name eða attributeId og gildi í hverjum eigindahlut.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType ObjectNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 4032351320" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an unblocked item or allowBlocked true</source>
+          <target>ólokuð vara eða allowBlocked true</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ólokuð vara eða allowBlocked true</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType BlockedExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2673034515 - Method 233452667 - NamedType 3928552519" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unblock the item or send allowBlocked true for an intentional write.</source>
+          <target>Opnaðu vöruna eða sendu allowBlocked true fyrir fyrirhugaða breytingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu vöruna eða sendu allowBlocked true fyrir fyrirhugaða breytingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Resolve ori - Method ValidateMappings - NamedType BlockedNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1112021512 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Updates an existing item attribute mapping and returns before/after values.</source>

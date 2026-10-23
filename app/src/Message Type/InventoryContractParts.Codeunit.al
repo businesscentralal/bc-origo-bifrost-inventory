@@ -10,7 +10,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
     var
         AttributeGetOverviewLbl: Label 'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', Comment = 'is-IS=Les eigindaskilgreiningar og úthlutuð gildi fyrir eina eða fleiri vörur án þess að breyta gögnum í Business Central.';
         AttributeCreateOverviewLbl: Label 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.', Comment = 'is-IS=Úthlutar einu eða fleiri eigindagildum á vöru. Fyrirliggjandi tengingar með sama gildi eru óbreyttar; árekstrar krefjast yfirskriftar eða uppfærsluskilaboða.';
-        AttributeUpdateOverviewLbl: Label 'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.', Comment = 'is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Item.Attribute.Create þegar tengingu vantar.';
+        AttributeUpdateOverviewLbl: Label 'Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.', Comment = 'is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Inventory.Attribute.Create þegar tengingu vantar.';
         AttributeDefinitionOverviewLbl: Label 'Creates an Item Attribute definition and optional Option values independently of an Item.', Comment = 'is-IS=Stofnar eigindaskilgreiningu fyrir vörur og valfrjáls valkostagildi án tengingar við tiltekna vöru.';
         TransferCreateOverviewLbl: Label 'Creates a Transfer Order header and optional lines. The call allocates a new document number and is not idempotent.', Comment = 'is-IS=Stofnar haus flutningspöntunar og valfrjálsar línur. Kallið úthlutar nýju skjalanúmeri og endurtekið kall stofnar nýtt skjal.';
         TransferReleaseOverviewLbl: Label 'Releases an open Transfer Order so it can be posted.', Comment = 'is-IS=Útgefur opna flutningspöntun svo hægt sé að bóka hana.';
@@ -98,14 +98,14 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Attribute mapping objects containing name or id, value, and optional type-specific values.');
+                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Attribute objects containing name or attributeId and value, numericValue or dateValue. Each object may set overwrite (default false) and createValueIfMissing (default false for missing Option values).');
                     Parameter.Add('children', AttributeChildren(true));
                     Parameters.Add(Parameter);
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Existing attribute mapping objects containing name or id and the replacement value.');
+                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Existing mapping objects containing name or attributeId and value, numericValue or dateValue. Each object may set createValueIfMissing (default false for missing Option values).');
                     Parameter.Add('children', AttributeChildren(false));
                     Parameters.Add(Parameter);
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
@@ -570,25 +570,21 @@ codeunit 10076919 "Inventory Contract Parts ori"
             else
                 AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');
         case MessageType of
-            'Item.Attribute.Get', 'Inventory.Attribute.Get':
-                Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
-            'Item.Attribute.Create', 'Inventory.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" already has attribute "%2" with a different value.', 'The mapping conflicts and overwrite is false.', 'Set overwrite to true or use Item.Attribute.Update.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
-                end;
-            'Item.Attribute.Update', 'Inventory.Attribute.Update':
-                begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'attributes is absent, empty, not an array, or contains an entry that is not an object.', 'Send at least one attribute object in data.attributes.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'An attribute object has no name or attributeId, or no value.', 'Send name or attributeId and value, numericValue or dateValue in each object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The attribute, option value, or (for Update) item mapping does not exist.', 'Create the definition with Inventory.AttributeDefinition.Create; use createValueIfMissing for an option value, or Inventory.Attribute.Create for a missing mapping.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The requested type or value does not match the attribute type.', 'Send the actual type and a value of that type.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'attributeId and name identify different attributes.', 'Send one identifier or identifiers for the same attribute.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The item is blocked, or Create would replace a different value without overwrite.', 'Set allowBlocked only for an intentional write; set overwrite on the attribute or use Inventory.Attribute.Update.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unknown attribute type.', 'Use Option, Text, Integer, Decimal or Date.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The definition name is already used.', 'Use the existing definition or choose another name.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin
@@ -1027,6 +1023,10 @@ codeunit 10076919 "Inventory Contract Parts ori"
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Examples.Add(ContractMgt.Example('Read item attributes', '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
+                Examples.Add(ContractMgt.Example('Assign an attribute', '{"type":"Inventory.Attribute.Create","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Matte","overwrite":false,"createValueIfMissing":false}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Matte","changed":true,"attributeId":2,"valueId":1}]}'));
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
+                Examples.Add(ContractMgt.Example('Update an attribute', '{"type":"Inventory.Attribute.Update","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Gloss","createValueIfMissing":false}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","before":"Matte","after":"Gloss","attributeId":2,"valueId":2}]}'));
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 Examples.Add(ContractMgt.Example('Create an option definition', '{"type":"Inventory.AttributeDefinition.Create","data":{"name":"Finish","type":"Option","optionValues":["Matte","Gloss"]}}', '{"status":"Success","attributeId":2,"attributeName":"Finish","type":"Option","createdValues":[]}'));
             'Inventory.TransferOrder.Create':
