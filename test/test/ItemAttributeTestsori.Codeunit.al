@@ -50,7 +50,7 @@ codeunit 96900 "Item Attribute Tests ori"
     end;
 
     [Test]
-    procedure Get_EmptyFilter_ReturnsEmptySuccess_1033()
+    procedure Get_EmptyFilter_ReturnsRecordNotFound_1033()
     var
         Item: Record Item;
         Request: JsonObject;
@@ -65,13 +65,13 @@ codeunit 96900 "Item Attribute Tests ori"
         GlobalLanguage(1033);
         Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
         GlobalLanguage(OldLanguage);
-        Library.AssertStatus(Response, 'Success');
-        Assert.IsTrue(Response.Get('items', Token), 'items exists.');
-        Assert.AreEqual(0, Token.AsArray().Count(), 'No matching item is an empty successful read.');
+        Library.AssertStatus(Response, 'Error');
+        Assert.IsTrue(Response.Get('code', Token), 'The Foundation range resolver supplies a code.');
+        Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'The empty range uses the declared Foundation lookup refusal.');
     end;
 
     [Test]
-    procedure Get_EmptyFilter_ReturnsEmptySuccess_1039()
+    procedure Get_EmptyFilter_ReturnsRecordNotFound_1039()
     var
         Item: Record Item;
         Request: JsonObject;
@@ -86,9 +86,9 @@ codeunit 96900 "Item Attribute Tests ori"
         GlobalLanguage(1039);
         Response := Library.ExecuteType("Message Type ori"::"Inventory.Attribute.Get", '', Request, false);
         GlobalLanguage(OldLanguage);
-        Library.AssertStatus(Response, 'Success');
-        Assert.IsTrue(Response.Get('items', Token), 'items exists.');
-        Assert.AreEqual(0, Token.AsArray().Count(), 'No matching item is an empty successful read.');
+        Library.AssertStatus(Response, 'Error');
+        Assert.IsTrue(Response.Get('code', Token), 'The Foundation range resolver supplies a code.');
+        Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'The empty range uses the declared Foundation lookup refusal.');
     end;
 
     [Test]

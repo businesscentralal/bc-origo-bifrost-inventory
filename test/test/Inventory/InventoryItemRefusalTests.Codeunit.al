@@ -727,7 +727,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         MessageType := MessageType::"Inventory.Attribute.Create";
         if Updating then
             MessageType := MessageType::"Inventory.Attribute.Update";
-        Response := Library.ExecuteType(MessageType, Item."No.", Request, false);
+        Helper.ProcessMessage(MessageType, Item."No.", Request, Response);
         GlobalLanguage(OldLanguage);
         AssertRefusal(Response, ErrorCode, ParameterName, ErrorText, NextStep);
         Assert.IsTrue(Response.Get('expected', Token), 'Expected is present.');
@@ -789,7 +789,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         BeforeCount := Attribute.Count();
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.AttributeDefinition.Create", '', Request, false);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AttributeDefinition.Create", Request, Response);
         GlobalLanguage(OldLanguage);
         AssertRefusal(Response, ErrorCode, ParameterName, ErrorText, NextStep);
         Response.Get('expected', Token);
@@ -808,6 +808,9 @@ codeunit 96930 "Inventory Item Refusal Tests"
         ParameterName: Text;
         OldLanguage: Integer;
     begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         Identifier := 'ZZW8148|NONE';
         ParameterName := 'subject';
         case Selector of
@@ -954,7 +957,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Setup.Modify(true);
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
-        Response := Library.ExecuteType(MessageType, '', Request, false);
+        Helper.ProcessMessage(MessageType, Request, Response);
         GlobalLanguage(OldLanguage);
         Library.AssertStatus(Response, 'Error');
         Response.Get('code', Token);

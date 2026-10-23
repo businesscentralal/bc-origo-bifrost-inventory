@@ -89,7 +89,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal text of Business Central, for example Item ledger entry 99 was not found.', 'itemLedgerEntryNo or applyToEntryNo is not sent, is not an integer, or names an item ledger entry that does not exist, or the standard item application logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send both entry numbers as JSON integers of existing item ledger entries, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item ledger entry 99 was not found.', 'itemLedgerEntryNo or applyToEntryNo is not sent, is not an integer, or names an item ledger entry that does not exist, or the standard item application logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send both entry numbers as JSON integers of existing item ledger entries, and read the refusal text for anything else.'));
         exit(true);
     end;
 

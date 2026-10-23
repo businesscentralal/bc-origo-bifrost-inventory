@@ -88,7 +88,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal text of Business Central, for example Item application entry 99 was not found.', 'entryNo is not sent, is not an integer, or names an item application entry that does not exist, or the standard unapply logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send entryNo as a JSON integer taken from Inventory.ItemApplication.Get, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item application entry 99 was not found.', 'entryNo is not sent, is not an integer, or names an item application entry that does not exist, or the standard unapply logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send entryNo as a JSON integer taken from Inventory.ItemApplication.Get, and read the refusal text for anything else.'));
         exit(true);
     end;
 

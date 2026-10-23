@@ -5,8 +5,8 @@
 ### Fixed (2026-10-23) - coded attribute and physical inventory refusals (#148)
 
 - Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
-- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Help declares the actual codes, remedies and examples, including the older Reclassification and ItemApplication types; their runtime is unchanged.
-- Objects: codeunits 10076840, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076913, 10076915, 10076917 and 10076919; tests 96900, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Paired 1033/1039 regressions cover complete refusal texts and no-write behavior; empty Attribute.Get filters remain successful reads.
+- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Attribute and physical-inventory help declares the actual codes, remedies and examples. The older Reclassification and ItemApplication runtime remains unchanged; their uncoded refusal/help parity is pending the explicit #148/#155 scope disposition.
+- Objects: codeunits 10076840, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076913, 10076915, 10076917 and 10076919; tests 96900, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Paired 1033/1039 regressions cover complete refusal texts and no-write behavior; empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
 
 
 ### Changed (2026-10-22) - message type contract and discovery up to Foundation parity

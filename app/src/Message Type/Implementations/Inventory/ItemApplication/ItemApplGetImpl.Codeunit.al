@@ -99,7 +99,7 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemLedgerEntryNo is not sent.', 'Send the Entry No. of the item ledger entry in data.itemLedgerEntryNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read item application entries.', 'Request read permission on item application entries from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The conversion error text of Business Central.', 'itemLedgerEntryNo is not an integer, or is not a JSON value. The text is returned as it is, with code BusinessCentralError.', 'Send the entry number as a JSON integer.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The conversion error text of Business Central.', 'itemLedgerEntryNo is not an integer, or is not a JSON value. The text is returned as it is, with code BusinessCentralError.', 'Send the entry number as a JSON integer.'));
         exit(true);
     end;
 

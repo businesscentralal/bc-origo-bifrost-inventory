@@ -163,10 +163,10 @@ codeunit 10076919 "Inventory Contract Parts ori"
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Children.Add(ContractMgt.Parameter('attributeId', 'integer', false, 'Numeric id of the attribute definition. Tried first when it is not 0; the name is used when no attribute has that id.'));
+        Children.Add(ContractMgt.Parameter('attributeId', 'integer', false, 'Numeric id of the attribute definition. Tried first when it is not 0; the name is used when no attribute has that id. If both identify existing but different attributes, the request is refused.'));
         Children.Add(ContractMgt.Parameter('name', 'string', false, 'Name of the attribute definition. Send name or attributeId.'));
         Children.Add(ContractMgt.Parameter('attributeName', 'string', false, 'Alias of name; read only when name is empty.'));
-        Children.Add(ContractMgt.Parameter('type', 'string', false, 'Optional check: Option, Text, Integer, Decimal or Date. An element whose type differs from the definition is refused; an unrecognised type text is ignored.'));
+        Children.Add(ContractMgt.Parameter('type', 'string', false, 'Optional check: Option, Text, Integer, Decimal or Date. An element whose type differs from the definition, or whose type text is unrecognised, is refused.'));
         Children.Add(ContractMgt.Parameter('value', 'string', false, 'The value as text. Required for Option and Text. For Integer, Decimal and Date it is used when numericValue or dateValue is not sent (decimal point as separator, dates as YYYY-MM-DD).'));
         Children.Add(ContractMgt.Parameter('numericValue', 'number', false, 'Value of an Integer or Decimal attribute; takes precedence over value.'));
         Children.Add(ContractMgt.Parameter('dateValue', 'string', false, 'Value of a Date attribute in YYYY-MM-DD format; takes precedence over value.'));

@@ -111,8 +111,11 @@ codeunit 10076917 "Item Attribute Update Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := ContractParts.GetExamples('Inventory.Attribute.Update');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
