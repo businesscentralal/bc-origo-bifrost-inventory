@@ -2,6 +2,7 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Assembly.Document;
 using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 
@@ -13,11 +14,25 @@ codeunit 96938 "Inventory Cost Write Observer"
     var
         TargetShipmentNo: Code[20];
         TargetAssemblyNo: Code[20];
+        TargetAssemblyOrderNo: Code[20];
         UndoLineCount: Integer;
         TargetItemNo: Code[20];
         FailValidation: Boolean;
         UnitCostCount: Integer;
         DirectCostCount: Integer;
+
+    /// <summary>Injects a posting failure after native output writes for the selected owned assembly order.</summary>
+    procedure SetAssemblyPostFailure(OrderNo: Code[20])
+    begin
+        TargetAssemblyOrderNo := OrderNo;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Assembly-Post", OnAfterPostedAssemblyHeaderModify, '', false, false)]
+    local procedure FailAfterAssemblyOutput(var PostedAssemblyHeader: Record "Posted Assembly Header"; AssemblyHeader: Record "Assembly Header"; ItemLedgEntryNo: Integer)
+    begin
+        if (TargetAssemblyOrderNo <> '') and (AssemblyHeader."No." = TargetAssemblyOrderNo) then
+            Error('Owned assembly posting failure after output.');
+    end;
 
     /// <summary>Injects an undo failure after native writes in one explicitly owned posted document.</summary>
     procedure SetUndoFailure(ShipmentNo: Code[20]; AssemblyNo: Code[20])

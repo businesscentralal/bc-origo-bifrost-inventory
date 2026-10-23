@@ -21,6 +21,63 @@ codeunit 96909 "Assembly Order Post Tests"
 
     [Test]
     [HandlerFunctions('MessageHandler')]
+    procedure Post_FailureKeepsRequestedQuantity_ENU()
+    begin
+        VerifyFailedPostKeepsQuantity(1033);
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure Post_FailureKeepsRequestedQuantity_ISL()
+    begin
+        VerifyFailedPostKeepsQuantity(1039);
+    end;
+
+    local procedure VerifyFailedPostKeepsQuantity(LanguageId: Integer)
+    var
+        ParentItem: Record Item;
+        ComponentItem: Record Item;
+        Header: Record "Assembly Header";
+        PostedHeader: Record "Posted Assembly Header";
+        Entries: Record "Item Ledger Entry";
+        Observer: Codeunit "Inventory Cost Write Observer";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // #159 AC2: the public message deliberately commits the requested quantity before native posting.
+        Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
+        Helper.CreateAssemblyOrder(Header, ParentItem."No.", 2);
+        Helper.CreatePositiveAdjustment(ComponentItem."No.", 100);
+        Assert.AreEqual(2, Header."Quantity to Assemble", 'Fixture starts with a different quantity.');
+        Entries.SetFilter("Item No.", '%1|%2', ParentItem."No.", ComponentItem."No.");
+        BeforeCount := Entries.Count();
+        Observer.SetAssemblyPostFailure(Header."No.");
+        BindSubscription(Observer);
+        Request.Add('documentNo', Header."No.");
+        Request.Add('quantityToAssemble', 1);
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.Post", Request, Response);
+        GlobalLanguage(PreviousLanguage);
+        UnbindSubscription(Observer);
+
+        Assert.IsTrue(Response.Get('status', Token), 'Failed post returns a result.');
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'Native posting failure is returned.');
+        Response.Get('error', Token);
+        Assert.AreNotEqual(0, StrPos(Token.AsValue().AsText(), 'Owned assembly posting failure after output.'), 'Failure occurs after native output writes.');
+        Header.Get(Header."Document Type", Header."No.");
+        Assert.AreEqual(1, Header."Quantity to Assemble", 'Gunnar decision: the pre-post quantity survives failure.');
+        Assert.AreEqual(0, Header."Assembled Quantity", 'Failed native output is rolled back.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Failed posting leaves no new item entries.');
+        PostedHeader.SetRange("Order No.", Header."No.");
+        Assert.IsTrue(PostedHeader.IsEmpty(), 'Failed posting leaves no posted assembly header.');
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
     procedure UndoAssembly_NativeFailureRollsBackEntriesAndHeader()
     begin
         VerifyAssemblyUndo(true);

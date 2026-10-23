@@ -4,6 +4,7 @@
 
 ### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
 
+- Preserve Gunnar's AC2 decision: a failed `Inventory.AssemblyOrder.Post` keeps the requested `Quantity to Assemble` written before the isolated native post, as the existing bilingual help states. English/Icelandic dispatcher regressions fail after real native output writes and verify that the requested quantity survives while posted headers and item entries roll back (tests 96909, 96938; production codeunit 10076855 unchanged).
 - `Inventory.CostToGL.Post` initializes native per-entry posting with Post=true, applies item and document filters to pending value entries, accepts the mandatory G/L journal template/batch, and returns actual posted/remaining counts. It uses the existing isolated write process and the documented independent Post commit boundary. Native regressions verify real G/L entries and selected/unselected value-entry amounts (10076861, 10076842; test 96944).
 - `Inventory.Reclassification.Post` refuses missing templates and non-Transfer template types before any line is posted, with coded English/Icelandic recovery instructions. Help reflects the enforced template boundary (codeunit 10076888).
 - `Inventory.Assembly.UndoPost` and `Inventory.Transfer.UndoShipment` require the inventory posting token in addition to their existing document-write and company-domain gates, because undo creates reversing entries (codeunits 10076909, 10076910).
