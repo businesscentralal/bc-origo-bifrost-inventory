@@ -22,8 +22,7 @@ codeunit 96937 "Inventory Cost Write Tests"
     procedure UpdateCost_OmitCommit_PropagatesAndRollsBack()
     var
         Item: Record Item;
-        TempArgument: Record "Message Argument ori" temporary;
-        Impl: Codeunit "Cost Update Impl ori";
+        Library: Codeunit "Inventory Test Library ori";
         Observer: Codeunit "Inventory Cost Write Observer";
         Request: JsonObject;
         PreviousDescription: Text;
@@ -33,14 +32,12 @@ codeunit 96937 "Inventory Cost Write Tests"
         PreviousDescription := Item.Description;
         PreviousCost := Item."Last Direct Cost";
         Request.Add('lastDirectCost', 99);
-        InitArgument(TempArgument, Item."No.", Request);
-        TempArgument."Omit Commit" := true;
         Observer.SetItem(Item."No.", true);
         BindSubscription(Observer);
         Commit();
         Item.Description := 'Uncommitted caller change';
         Item.Modify(false);
-        asserterror Impl.ExecuteBifrostTask(TempArgument);
+        asserterror Library.ExecuteType("Message Type ori"::"Inventory.Cost.Update", Item."No.", Request, true);
         Assert.ExpectedError('Owned native cost validation failure');
         UnbindSubscription(Observer);
         Item.Get(Item."No.");

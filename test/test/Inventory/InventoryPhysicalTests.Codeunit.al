@@ -625,8 +625,7 @@ codeunit 96944 "Inventory Physical Tests"
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
         Entries: Record "Item Ledger Entry";
-        TempArgument: Record "Message Argument ori" temporary;
-        Impl: Codeunit "Reclass Post Impl ori";
+        Helper: Codeunit "Assembly Order Test Helper";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -646,13 +645,11 @@ codeunit 96944 "Inventory Physical Tests"
         Line.Insert(false);
         Request.Add('journalTemplateName', Batch."Journal Template Name");
         Request.Add('journalBatchName', Batch.Name);
-        InitArgument(TempArgument, Batch, Request);
         BeforeCount := Entries.Count();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
-        Impl.ExecuteBifrostTask(TempArgument);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Post", Request, Response);
         GlobalLanguage(PreviousLanguage);
-        Response := TempArgument.GetResponseJson();
         Assert.IsTrue(Response.Get('code', Token), 'Refusal must be coded before native posting runs.');
         Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Wrong journal type.');
         Response.Get('parameter', Token);
