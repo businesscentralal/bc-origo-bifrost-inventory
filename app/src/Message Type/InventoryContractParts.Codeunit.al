@@ -563,9 +563,12 @@ codeunit 10076919 "Inventory Contract Parts ori"
         if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then
             AddLookupErrors(Errors, 'Item');
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
-            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo');
+            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '');
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
-            AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo');
+            if MessageType = 'Inventory.AssemblyOrder.Post' then
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.')
+            else
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
@@ -653,7 +656,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.AssemblyOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number.', 'A request key has the wrong format. Nothing is posted.', 'Send the date as YYYY-MM-DD and the quantity as a JSON number.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the components are not available.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Assembly', 'the caller lacks BIFROST InvPost ori, which posting requires in addition to BIFROST Full ori');
                 end;
@@ -681,7 +683,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'The domain is on, but ' + PermissionReason + '.', 'Assign the missing permission set to the caller.'));
     end;
 
-    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text)
+    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
@@ -692,8 +694,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers,
             'Two identifiers were given that point to different records.', 'Send one identifier.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat,
-            'data is not a JSON object (parameter data); an identifier key under data (documentNo, ' + DocumentAlias + ', no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.',
-            'Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.'));
+            'data is not a JSON object (parameter data); an identifier key under data (documentNo, ' + DocumentAlias + ', no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.' + ExtraWhen,
+            'Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong.' + ExtraNextStep));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors,
             'More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.',
             'Fix every listed key and send the request again.'));
