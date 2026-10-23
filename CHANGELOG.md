@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-10-23) - catalogue quality guard (inventory#152, AC1)
+
+- New test codeunit 96971 `Inv. Catalogue Quality Tests ori` (test range 96900-96999): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
+
 ### Fixed (2026-10-21) - Pipeline: AppSource build gate after the first AppSource release
 
 - Pipeline: the AppSource build gate no longer fails after the first AppSource release (previous self-app removed from the compile symbol cache; AppSourceCop baseline kept). New `tools/prune_self_symbols.py`, called from `tools/Assert-AppSourceBuild.ps1` before the gate; regression tests in `tools/tests/test_foundation_restore.py`. Port of attachments#174.
