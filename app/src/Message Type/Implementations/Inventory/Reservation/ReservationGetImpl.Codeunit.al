@@ -41,38 +41,58 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
+        Forms: JsonArray;
     begin
-        Envelope.Add('messageType', 'Inventory.Reservation.Get');
-        Envelope.Add('version', 1);
+        Forms.Add('item no.');
+        Subject.Add('use', 'optional');
+        Subject.Add('forms', Forms);
+        Subject.Add('description', 'The No. of the Item whose reservation entries are read; data.itemNo is used when subject is blank, and with neither every reservation entry is read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', false);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('table', 'Reservation Entry');
-        Target.Add(TargetJson);
+        Target.Add(ContractMgt.TargetEntry('subject', 'item no.', 'The No. of the Item; it takes precedence over data.itemNo. A subject and a data.itemNo that name different items are refused.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item, used when subject is blank. Leave both out to read the reservation entries of every item.'));
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
-        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted. Without either, every reservation entry is returned.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án hvors tveggja koma allar bókanir.';
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ItemNoDescriptionTxt: Label 'Item number. The message subject is the same item number when this key is omitted. Without either, every reservation entry is returned.', Comment = 'is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur. Án beggja eru allar frátekningarfærslur skilaðar.';
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', false);
-        ParameterJson.Add('description', ItemNoDescriptionTxt);
-        Parameters.Add(ParameterJson);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoDescriptionTxt));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        EntryFields: JsonArray;
+        EntriesField: JsonObject;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('entries', 'array');
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the reservation entries were read.'));
+        EntryFields.Add(ContractMgt.ResponseField('entryNo', 'integer', 'The entry number of the reservation entry.'));
+        EntryFields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number of the entry.'));
+        EntryFields.Add(ContractMgt.ResponseField('locationCode', 'string', 'The location code of the entry.'));
+        EntryFields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'The signed quantity of the entry in the unit of the line; positive on the supply side, negative on the demand side.'));
+        EntryFields.Add(ContractMgt.ResponseField('reservationStatus', 'string', 'Reservation, Tracking, Surplus or Prospect.'));
+        EntryFields.Add(ContractMgt.ResponseField('sourceId', 'string', 'The document number of the source the entry belongs to.'));
+        EntriesField := ContractMgt.ResponseField('entries', 'array', 'The reservation entries of the item, or of every item when no item is selected, in entry number order. The array is empty when nothing matches.');
+        EntriesField.Add('children', EntryFields);
+        Fields.Add(EntriesField);
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -86,7 +106,16 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The Reservations domain is turned on in Inventory Setup.');
+        Preconditions.Add('The caller can read the Reservation Entry table.');
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing. The reservation entries are read as they are; nothing is reserved, cancelled or posted.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -112,8 +141,14 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Examples.Add(ContractMgt.Example(
+            'Read the reservation entries of item 1000',
+            '{"type":"Inventory.Reservation.Get","subject":"1000"}',
+            '{"status":"Success","entries":[{"entryNo":101,"itemNo":"1000","locationCode":"BLUE","quantity":-5,"reservationStatus":"Reservation","sourceId":"101005"}]}'));
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean

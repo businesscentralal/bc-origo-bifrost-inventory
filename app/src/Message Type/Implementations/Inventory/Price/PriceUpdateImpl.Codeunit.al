@@ -15,7 +15,7 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
         KeywordsLbl: Label 'update item price, unit price', Comment = 'is-IS=uppfæra vöruverð,einingarverð';
         OverviewLbl: Label 'Updates the unit price of one item.', Comment = 'is-IS=Uppfærir einingarverð einnar vöru.';
-        NotesLbl: Label 'Requires one explicit item selection, native Item and Unit Price field access, and unitPrice. Unsupported fields refuse. Uses Validate and Modify in a Codeunit.Run boundary. Writes no price list or inventory revaluation. Normal licensing and company setup apply.', Comment = 'is-IS=Krefst afdráttarlauss vals á einni vöru, innbyggðs aðgangs að vöru og einingarverði og unitPrice. Óstuddum reitum er hafnað. Notar Validate og Modify innan Codeunit.Run. Skráir hvorki verðlista né birgðaendurmat. Venjulegar leyfis- og fyrirtækisstillingar gilda.';
+        NotesLbl: Label 'Select exactly one item with the message subject, itemNo, an item SystemId key or tableView; a key other than those, unitPrice and allowBlocked is refused, and a selection key must be non-empty text. unitPrice is required. A blocked item is refused unless allowBlocked is true. Only the Unit Price of the Item card changes: price lists, discounts and costs are not touched. All checks run before the change, so a refusal changes nothing.', Comment = 'is-IS=Veldu nákvæmlega eina vöru með subject, itemNo, SystemId-lykli vöru eða tableView; lykli öðrum en þessum, unitPrice og allowBlocked er hafnað og valslykill verður að vera texti sem er ekki tómur. unitPrice er nauðsynlegt. Lokaðri vöru er hafnað nema allowBlocked sé true. Aðeins einingarverð á vöruspjaldi breytist: verðlistar, afslættir og kostnaður breytast ekki. Allar athuganir eru gerðar áður en breytt er, svo höfnun breytir engu.';
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure IsEnabled(): Boolean
@@ -60,10 +60,14 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('table', 'Item');
-        Target.Add(TargetJson);
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'item no.', 'The No. of the Item.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item; used when subject is empty.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemId, data.id, data.systemId, data.recordSystemId', 'guid', 'The SystemId of the Item; any one of the four keys.'));
+        Target.Add(ContractMgt.TargetEntry('data.tableView', 'table view', 'An Item table view that selects the item it must select exactly one item.'));
         exit(true);
     end;
 
@@ -73,14 +77,14 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'Nonempty native Item selection; must resolve exactly one item.'));
-        Parameters.Add(ContractMgt.Parameter('unitPrice', 'decimal', true, 'Native Item Unit Price; JSON number or invariant decimal string.'));
-        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Explicitly permit a blocked item; default false.'));
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'The No. of the Item; used when subject is empty. A selection key must be non-empty text.'));
+        Parameters.Add(ContractMgt.Parameter('itemId', 'string', false, 'The SystemId of the Item; used after the subject and itemNo. A selection key must be non-empty text.'));
+        Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias for the Item SystemId.'));
+        Parameters.Add(ContractMgt.Parameter('tableView', 'string', false, 'An Item table view; it must select exactly one item.'));
+        Parameters.Add(ContractMgt.Parameter('unitPrice', 'number', true, 'The new Unit Price of the item, as a JSON number or an invariant decimal text such as 25.5.'));
+        Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'true permits changing a blocked item; default false.'));
         exit(true);
     end;
 
@@ -108,20 +112,31 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitPrice is absent.', 'Supply the required value.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or a typed value is invalid; unsupported keys raise a native text error.', 'Enable the company domain or correct the request value.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item selection finds nothing.', 'Select an existing record.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item or Unit Price field permission refuses the caller.', 'Request the required native permission from an administrator.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Selection is ambiguous, item is blocked without opt-in or native validation fails. The direct native call may raise; the process wrapper returns text without a typed code.','Correct the selected batch, input or native validation error before retrying.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A date, decimal or Boolean request value has the wrong format.', 'Use ISO dates, invariant decimals and JSON Booleans.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitPrice is absent, null or empty.', 'Supply the new unit price.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Price domain is turned off in Inventory Setup.', 'Turn on the Item Price domain in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The subject, itemNo, SystemId key or tableView matches no item.', 'Select an existing item.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on items.', 'Request the required permission from an administrator.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitPrice is not a number or allowBlocked is not a Boolean.', 'Use a JSON number or invariant decimal text for unitPrice, and JSON true or false for allowBlocked.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, a selection key is not non-empty text, a key other than the selection keys, unitPrice and allowBlocked is sent, the item is blocked without allowBlocked, Unit Price is restricted for the caller, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Correct the selection or the request and send it again.'));
         exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Clear(Effect);
+        Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Sets the Unit Price on one Item card. No price list, no cost and no ledger entries are changed. All checks run before the change, and a failure changes nothing. Business Central commits the change when the call finishes; under Omit Commit the commit is left to the caller.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Preconditions.Add('The Item Price domain is turned on in Inventory Setup.');
+        Preconditions.Add('Exactly one item is selected, and it is not blocked unless allowBlocked is true.');
+        Preconditions.Add('The caller can write items and the Unit Price field.');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -133,21 +148,38 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Item.Price.Get', 'Use it to read the prices of items before or after the update; it changes nothing.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Cost.Update', 'Use it to change the cost fields of an item; this type changes only the Unit Price.'));
+        exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Item.Price.Get', 'Read the current unit price of the item.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Price.Update', 'Change the Unit Price on the Item card.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Provides the guarded single-item price contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Update one item price","request":{"type":"Inventory.Price.Update","subject":"OWNED-ITEM","data":{"unitPrice":25}}}]');
+        Examples.Add(ContractMgt.Example(
+            'Set the unit price of item 1000 to 25',
+            '{"type":"Inventory.Price.Update","data":{"itemNo":"1000","unitPrice":25}}',
+            '{"status":"Success","messageType":"Inventory.Price.Update","itemNo":"1000","itemId":"6f1c1d2e-0000-0000-0000-000000000001","previousUnitPrice":20,"unitPrice":25}'));
         exit(true);
     end;
 

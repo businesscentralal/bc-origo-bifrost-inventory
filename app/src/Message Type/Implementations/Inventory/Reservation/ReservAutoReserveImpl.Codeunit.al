@@ -57,9 +57,17 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
+        Forms: JsonArray;
     begin
-        Envelope.Add('messageType', 'Inventory.Reservation.AutoReserve');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('forms', Forms);
+        Subject.Add('description', 'The sales order line is named in data (documentType, documentNo and lineNo, or systemId); subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -92,18 +100,37 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        EntryFields: JsonArray;
+        EntriesField: JsonObject;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('documentType', 'Order');
-        Response.Add('documentNo', '');
-        Response.Add('lineNo', 0);
-        Response.Add('systemId', '');
-        Response.Add('itemNo', '');
-        Response.Add('reserved', 0);
-        Response.Add('reservedQuantity', 0);
-        Response.Add('outstandingQuantity', 0);
-        Response.Add('fullyReserved', true);
-        Response.Add('entries', 'one row per reservation made by this call: entryNo, itemNo, quantity, quantityBase, shipmentDate, supplyType, supplyTypeName, supplySubtype, supplyNo, supplyLineNo');
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the line is reserved as asked, or was already fully reserved.'));
+        Fields.Add(ContractMgt.ResponseField('documentType', 'string', 'Always Order.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The sales order number.'));
+        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'The line number on the sales order.'));
+        Fields.Add(ContractMgt.ResponseField('systemId', 'string', 'The SystemId of the sales line.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number of the line.'));
+        Fields.Add(ContractMgt.ResponseField('reserved', 'decimal', 'The quantity this call reserved, in the unit of measure of the line.'));
+        Fields.Add(ContractMgt.ResponseField('reservedQuantity', 'decimal', 'The total quantity reserved on the line after the call, in the unit of measure of the line.'));
+        Fields.Add(ContractMgt.ResponseField('outstandingQuantity', 'decimal', 'The outstanding quantity of the line, in the unit of measure of the line.'));
+        Fields.Add(ContractMgt.ResponseField('fullyReserved', 'boolean', 'True when the whole outstanding quantity of the line is reserved.'));
+        EntryFields.Add(ContractMgt.ResponseField('entryNo', 'integer', 'The reservation entry number.'));
+        EntryFields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number of the entry.'));
+        EntryFields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'The quantity of the entry; negative on the demand side.'));
+        EntryFields.Add(ContractMgt.ResponseField('quantityBase', 'decimal', 'The quantity of the entry in the base unit of measure.'));
+        EntryFields.Add(ContractMgt.ResponseField('shipmentDate', 'string', 'The shipment date of the entry in YYYY-MM-DD form; blank when there is none.'));
+        EntryFields.Add(ContractMgt.ResponseField('supplyType', 'integer', 'The table number of the supply, left out when the supply side cannot be read.'));
+        EntryFields.Add(ContractMgt.ResponseField('supplyTypeName', 'string', 'The name of that table, left out with supplyType.'));
+        EntryFields.Add(ContractMgt.ResponseField('supplySubtype', 'integer', 'The subtype of the supply, left out with supplyType.'));
+        EntryFields.Add(ContractMgt.ResponseField('supplyNo', 'string', 'The document or batch of the supply, left out with supplyType.'));
+        EntryFields.Add(ContractMgt.ResponseField('supplyLineNo', 'integer', 'The line or entry number of the supply, left out with supplyType.'));
+        EntriesField := ContractMgt.ResponseField('entries', 'array', 'One row per reservation entry this call made on the demand side; empty when nothing was reserved.');
+        EntriesField.Add('children', EntryFields);
+        Fields.Add(EntriesField);
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -138,11 +165,21 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, PreconditionWhenLbl, PreconditionFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LinesSkipped, PartialWhenLbl, PartialFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the line or the supply it names.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The Reservations domain is turned on in Inventory Setup.');
+        Preconditions.Add('The line is an item line on a sales order with a shipment date and an outstanding quantity, and Reserve is not Never.');
+        Effect.Add('effect', 'write');
+        Effect.Add('changes', 'Creates reservation entries that tie the sales order line to supply that Business Central picks. The reservation is all or nothing: when only part of the requested quantity can be reserved, nothing is kept. Nothing is posted.');
+        Effect.Add('idempotent', false);
+        Effect.Add('permissionSet', 'BIFROST Full ori permission set');
+        Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         exit(true);
@@ -167,8 +204,16 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.AutoReserve', 'Reserve the sales order line; all or nothing, so a partial reservation answers LinesSkipped.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.Get', 'Read the reservation entries the line now has.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.OrderTracking.Get', 'Read which supply is tracked against the line.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.Cancel', 'Cancel a reservation by its entryNo when it is no longer wanted.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
@@ -177,8 +222,8 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         TitleLbl: Label 'Reserve a sales order line from inventory', Comment = 'is-IS=Taka sölupöntunarlínu frá úr birgðum';
     begin
         Examples.Add(ContractMgt.Example(TitleLbl,
-            '{"messageType":"Inventory.Reservation.AutoReserve","version":1,"data":{"documentType":"Order","documentNo":"101005","lineNo":10000}}',
-            '{"status":"Success","documentType":"Order","documentNo":"101005","lineNo":10000,"systemId":"00000000-0000-0000-0000-000000000000","itemNo":"1896-S","reserved":2,"reservedQuantity":2,"outstandingQuantity":2,"fullyReserved":true,"entries":[{"entryNo":120,"itemNo":"1896-S","quantity":-2,"quantityBase":-2,"shipmentDate":"2026-10-20","supplyType":32,"supplyTypeName":"Item Ledger Entry","supplySubtype":0,"supplyNo":"","supplyLineNo":345}]}'));
+            '{"type":"Inventory.Reservation.AutoReserve","data":{"documentType":"Order","documentNo":"101005","lineNo":10000}}',
+            '{"status":"Success","documentType":"Order","documentNo":"101005","lineNo":10000,"systemId":"6f1c1d2e-0000-0000-0000-000000000011","itemNo":"1000","reserved":2,"reservedQuantity":2,"outstandingQuantity":2,"fullyReserved":true,"entries":[{"entryNo":120,"itemNo":"1000","quantity":-2,"quantityBase":-2,"shipmentDate":"2026-10-20","supplyType":32,"supplyTypeName":"Item Ledger Entry","supplySubtype":0,"supplyNo":"","supplyLineNo":345}]}'));
         exit(true);
     end;
 

@@ -25,7 +25,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Closes inventory periods through an ending date, matching the inventory period close action.', Comment = 'is-IS=Lokar birgðatímabilum eftir lokadagsetningu, eins og aðgerðin Loka birgðatímabili.';
+        DescriptionLbl: Label 'Closes the inventory period that ends on the given ending date.', Comment = 'is-IS=Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu.';
     begin
         exit(DescriptionLbl);
     end;
@@ -42,99 +42,6 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         SelectionDescriptionLbl: Label 'Closes an inventory period. An already closed period returns success.', Comment = 'is-IS=Lokar birgðatímabili. Tímabil sem er þegar lokað skilar árangri.';
     begin
         exit(SelectionDescriptionLbl);
-    end;
-
-    procedure GetEnvelope(var Envelope: JsonObject): Boolean
-    begin
-        Envelope.Add('messageType', 'Inventory.Period.Close');
-        Envelope.Add('version', 1);
-        exit(true);
-    end;
-
-    procedure GetTarget(var Target: JsonArray): Boolean
-    var
-        TargetJson: JsonObject;
-    begin
-        TargetJson.Add('table', 'Inventory Period');
-        Target.Add(TargetJson);
-        exit(true);
-    end;
-
-    procedure GetParameters(var Parameters: JsonArray): Boolean
-    var
-        ParameterJson: JsonObject;
-    begin
-        ParameterJson.Add('name', 'endingDate');
-        ParameterJson.Add('type', 'date');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
-        exit(true);
-    end;
-
-    procedure GetResponse(var Response: JsonObject): Boolean
-    begin
-        Response.Add('status', 'Success');
-        Response.Add('endingDate', '');
-        Response.Add('name', '');
-        Response.Add('closed', true);
-        exit(true);
-    end;
-
-    procedure GetErrors(var Errors: JsonArray): Boolean
-    var
-        ErrorJson: JsonObject;
-    begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'endingDate is required.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the inventory period was not found.');
-        Errors.Add(ErrorJson);
-        exit(true);
-    end;
-
-    procedure GetEffect(var Effect: JsonObject): Boolean
-    begin
-        Effect.Add('writes', true);
-        Effect.Add('posts', false);
-        exit(true);
-    end;
-
-    procedure GetMetering(var Metering: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetRelated(var Related: JsonArray): Boolean
-    var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
-    begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Get', 'Read inventory periods before closing one.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Reopen', 'Reopen a closed inventory period instead of closing it.'));
-        exit(true);
-    end;
-
-    procedure GetWorkflow(var Workflow: JsonObject): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetExamples(var Examples: JsonArray): Boolean
-    begin
-        exit(false);
-    end;
-
-    procedure GetOverview(var Overview: Text): Boolean
-    begin
-        Overview := 'Closes an inventory period. An already closed period returns success.';
-        exit(true);
-    end;
-
-    procedure GetNotes(var Notes: Text): Boolean
-    begin
-        Notes := 'Sets Inventory Period.Closed. It does not post inventory.';
-        exit(true);
     end;
 
     procedure GetMessageDirection(): Enum "Msg Direction ori"
@@ -177,5 +84,129 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         ResponseJson.Add('closed', InventoryPeriod.Closed);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    begin
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"No subject is used; the period is identified by data.endingDate."},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
+        exit(true);
+    end;
+
+    procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('data.endingDate', 'date', 'The Ending Date of the Inventory Period, which is the key of the period. The period must already exist.'));
+        exit(true);
+    end;
+
+    procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Parameter: JsonObject;
+    begin
+        Clear(Parameters);
+        Parameter := ContractMgt.Parameter('endingDate', 'string', true, 'Ending date of the inventory period to close, YYYY-MM-DD. An inventory period that ends on this date must exist.');
+        Parameter.Add('format', 'YYYY-MM-DD');
+        Parameters.Add(Parameter);
+        exit(true);
+    end;
+
+    procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+    begin
+        Clear(Response);
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the period is closed.'));
+        Fields.Add(ContractMgt.ResponseField('endingDate', 'string', 'Ending date of the period, YYYY-MM-DD.'));
+        Fields.Add(ContractMgt.ResponseField('name', 'string', 'Name of the period.'));
+        Fields.Add(ContractMgt.ResponseField('closed', 'boolean', 'Closed flag of the period after the call; true.'));
+        Response.Add('fields', Fields);
+        exit(true);
+    end;
+
+    procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'endingDate is absent.', 'Send endingDate as YYYY-MM-DD.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No inventory period ends on endingDate.', 'Read the periods with Inventory.Period.Get and send the ending date of one of them.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central error text', 'endingDate is not a date, or Business Central refuses the change of the period.', 'Send endingDate as YYYY-MM-DD, or correct the cause in the text and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Inventory Period domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
+        exit(true);
+    end;
+
+    procedure GetEffect(var Effect: JsonObject): Boolean
+    begin
+        Clear(Effect);
+        Effect.Add('effect', 'write');
+        Effect.Add('changes', 'Sets the Closed flag of the Inventory Period that ends on endingDate to true through the table validation. A period that is already closed is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('writes', true);
+        Effect.Add('posts', false);
+        exit(true);
+    end;
+
+    procedure GetMetering(var Metering: JsonObject): Boolean
+    begin
+        exit(false);
+    end;
+
+    procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Get', 'Use it to read the periods and their ending dates before changing one.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Period.Reopen', 'Use it to reopen the period instead.'));
+        exit(true);
+    end;
+
+    procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
+    begin
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Period.Get', 'Read the periods and pick the ending date to close.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Period.Close', 'Close the period.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Period.Reopen', 'Reopen the period if it was closed by mistake.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
+    end;
+
+    procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'Close the period that ends on 30 September 2026',
+            '{"type":"Inventory.Period.Close","data":{"endingDate":"2026-09-30"}}',
+            '{"status":"Success","endingDate":"2026-09-30","name":"September 2026","closed":true}'));
+        exit(true);
+    end;
+
+    procedure GetOverview(var Overview: Text): Boolean
+    begin
+        Overview := 'Closes the inventory period that ends on the given date. A period that is already closed is answered Success unchanged.';
+        exit(true);
+    end;
+
+    procedure GetNotes(var Notes: Text): Boolean
+    begin
+        Notes := 'Sets the Closed flag of the Inventory Period identified by endingDate and returns the period. It posts nothing and runs no other function; the change goes through the validation of the Inventory Period table. ' +
+            'The call is idempotent: a period that already has the requested state is not modified. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
+            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
+            'The change commits with the answer; under Omit Commit the caller''s transaction commits instead. ' +
+            'Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.';
+        exit(true);
     end;
 }

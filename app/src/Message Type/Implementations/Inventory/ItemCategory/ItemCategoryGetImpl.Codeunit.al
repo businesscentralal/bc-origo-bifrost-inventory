@@ -74,9 +74,15 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
     /// <param name="Envelope">Receives the envelope.</param>
     /// <returns>True.</returns>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.ItemCategory.Get');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The category is named under data.code or data.systemId; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', false);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -88,6 +94,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
         TargetLbl: Label 'The item category to read. Omit code and systemId to read every category.', Comment = 'is-IS=Vöruflokkurinn sem á að lesa. Slepptu code og systemId til að lesa alla flokka.';
     begin
         Target.Add(ContractMgt.TargetEntry('data.code', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.systemId', 'guid', 'The system id of the item category, as an alternative to data.code. Send one of them, not both.'));
         exit(true);
     end;
 
@@ -111,26 +118,31 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
     /// <returns>True.</returns>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
-        Categories: JsonArray;
-        Category: JsonObject;
-        Attributes: JsonArray;
-        Attribute: JsonObject;
+        Fields: JsonArray;
+        CategoryField: JsonObject;
+        AttributeField: JsonObject;
+        CategoryChildren: JsonArray;
+        AttributeChildren: JsonArray;
     begin
-        Attribute.Add('id', 0);
-        Attribute.Add('name', '');
-        Attribute.Add('type', 'Option');
-        Attribute.Add('value', '');
-        Attribute.Add('inherited', false);
-        Attributes.Add(Attribute);
-        Category.Add('code', '');
-        Category.Add('description', '');
-        Category.Add('parentCategory', '');
-        Category.Add('indentation', 0);
-        Category.Add('presentationOrder', 0);
-        Category.Add('attributes', Attributes);
-        Categories.Add(Category);
-        Response.Add('status', 'Success');
-        Response.Add('categories', Categories);
+        AttributeChildren.Add(ContractMgt.ResponseField('id', 'integer', 'The ID of the item attribute.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('name', 'string', 'The name of the item attribute.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('type', 'string', 'The type of the attribute: Option, Text, Integer, Decimal or Date.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('value', 'string', 'The default value of the attribute for the category.'));
+        AttributeChildren.Add(ContractMgt.ResponseField('inherited', 'boolean', 'True when the value comes from a parent category; false when it is set on the category itself.'));
+        AttributeField := ContractMgt.ResponseField('attributes', 'array', 'The attributes of the category, own values first and then values inherited from parent categories. Present only when includeAttributes is true, which is the default.');
+        AttributeField.Add('children', AttributeChildren);
+        CategoryChildren.Add(ContractMgt.ResponseField('code', 'string', 'The category code.'));
+        CategoryChildren.Add(ContractMgt.ResponseField('description', 'string', 'The category description.'));
+        CategoryChildren.Add(ContractMgt.ResponseField('parentCategory', 'string', 'The code of the parent category; empty at the top of the tree.'));
+        CategoryChildren.Add(ContractMgt.ResponseField('indentation', 'integer', 'The indentation level in the category tree.'));
+        CategoryChildren.Add(ContractMgt.ResponseField('presentationOrder', 'integer', 'The position of the category in the tree.'));
+        CategoryChildren.Add(AttributeField);
+        CategoryField := ContractMgt.ResponseField('categories', 'array', 'The categories read: one when code or systemId was sent, otherwise every category in presentation order.');
+        CategoryField.Add('children', CategoryChildren);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(CategoryField);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -165,8 +177,12 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
     /// <returns>True.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Nothing. The call only reads item categories and, when includeAttributes is true, their attribute values.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         exit(true);
     end;
 
@@ -206,7 +222,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
     var
         TitleLbl: Label 'Read one category with its attributes', Comment = 'is-IS=Lesa einn flokk með eiginleikum hans';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"code":"CHAIRS","includeAttributes":true}', '{"status":"Success","categories":[{"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","indentation":1,"presentationOrder":2,"attributes":[{"id":1,"name":"Color","type":"Option","value":"Blue","inherited":true}]}]}'));
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"type":"Inventory.ItemCategory.Get","data":{"code":"CHAIRS","includeAttributes":true}}', '{"status":"Success","categories":[{"code":"CHAIRS","description":"Chairs","parentCategory":"FURNITURE","indentation":1,"presentationOrder":2,"attributes":[{"id":1,"name":"Color","type":"Option","value":"Blue","inherited":true}]}]}'));
         exit(true);
     end;
 

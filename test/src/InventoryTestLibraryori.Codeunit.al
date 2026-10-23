@@ -147,7 +147,7 @@ codeunit 96902 "Inventory Test Library ori"
                         Assert.IsTrue(Serialized.StartsWith('"'), Name + ' must be a JSON string.');
                     'boolean':
                         Assert.IsTrue(Serialized in ['true', 'false'], Name + ' must be a JSON Boolean.');
-                    'integer', 'decimal':
+                    'integer', 'decimal', 'number':
                         Assert.IsTrue(Value.IsValue() and not Serialized.StartsWith('"') and not (Serialized in ['true', 'false', 'null']), Name + ' must be a JSON number.');
                     else
                         Assert.Fail('Unsupported response schema type ' + JsonType);

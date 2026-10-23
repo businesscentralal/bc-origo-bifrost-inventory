@@ -26,7 +26,7 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Posts an assembly order via codeunit 900 Assembly-Post and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með kóðaeiningu 900 Assembly-Post og skilar númeri bókaða samsetningarskjalsins.';
+        DescriptionLbl: Label 'Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.';
     begin
         exit(DescriptionLbl);
     end;
@@ -107,13 +107,19 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Workflow := Parts.GetWorkflow('Inventory.AssemblyOrder.Post');
+        exit(Workflow.Keys().Count() > 0);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.AssemblyOrder.Post');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean

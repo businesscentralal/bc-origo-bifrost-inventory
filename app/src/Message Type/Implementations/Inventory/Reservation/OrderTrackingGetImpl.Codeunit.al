@@ -64,9 +64,17 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
+        Forms: JsonArray;
     begin
-        Envelope.Add('messageType', 'Inventory.OrderTracking.Get');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('forms', Forms);
+        Subject.Add('description', 'The line or entry is named in data (sourceKind and its identifiers); subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -105,10 +113,39 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        EntryFields: JsonArray;
+        EntriesField: JsonObject;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('sourceKind', 'Sales');
-        Response.Add('entries', 'one row per link in the chain: level, itemNo, quantity, suppliedBy, demandedBy, fromType, fromTypeName, fromSubtype, fromNo, fromLineNo, forType, forTypeName, forSubtype, forNo, forLineNo, shipmentDate, expectedReceiptDate, startingDate, endingDate, warning');
+        Response.Add('contentType', 'text/json');
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the chain was read; the list is empty when the line has no chain.'));
+        Fields.Add(ContractMgt.ResponseField('sourceKind', 'string', 'The source kind in its canonical spelling: Sales, Purchase, Transfer, Assembly or ItemLedgerEntry.'));
+        EntryFields.Add(ContractMgt.ResponseField('level', 'integer', 'The level of the link in the chain; 1 is the line or entry you asked about.'));
+        EntryFields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number of the link.'));
+        EntryFields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'The tracked quantity of the link, in the base unit of measure.'));
+        EntryFields.Add(ContractMgt.ResponseField('suppliedBy', 'string', 'The supply, in words.'));
+        EntryFields.Add(ContractMgt.ResponseField('demandedBy', 'string', 'The demand, in words; CURRENT LINE marks the line you asked about.'));
+        EntryFields.Add(ContractMgt.ResponseField('fromType', 'integer', 'The table number of the line or entry this link comes from.'));
+        EntryFields.Add(ContractMgt.ResponseField('fromTypeName', 'string', 'The name of that table.'));
+        EntryFields.Add(ContractMgt.ResponseField('fromSubtype', 'integer', 'The subtype of the from line, for example the document type.'));
+        EntryFields.Add(ContractMgt.ResponseField('fromNo', 'string', 'The document or batch of the from line.'));
+        EntryFields.Add(ContractMgt.ResponseField('fromLineNo', 'integer', 'The line or entry number of the from line.'));
+        EntryFields.Add(ContractMgt.ResponseField('forType', 'integer', 'The table number of the line or entry on this level.'));
+        EntryFields.Add(ContractMgt.ResponseField('forTypeName', 'string', 'The name of that table.'));
+        EntryFields.Add(ContractMgt.ResponseField('forSubtype', 'integer', 'The subtype of the for line, for example the document type.'));
+        EntryFields.Add(ContractMgt.ResponseField('forNo', 'string', 'The document or batch of the for line.'));
+        EntryFields.Add(ContractMgt.ResponseField('forLineNo', 'integer', 'The line or entry number of the for line.'));
+        EntryFields.Add(ContractMgt.ResponseField('shipmentDate', 'string', 'The shipment date in YYYY-MM-DD form; blank when there is none.'));
+        EntryFields.Add(ContractMgt.ResponseField('expectedReceiptDate', 'string', 'The expected receipt date in YYYY-MM-DD form; blank when there is none.'));
+        EntryFields.Add(ContractMgt.ResponseField('startingDate', 'string', 'The starting date in YYYY-MM-DD form; blank when there is none.'));
+        EntryFields.Add(ContractMgt.ResponseField('endingDate', 'string', 'The ending date in YYYY-MM-DD form; blank when there is none.'));
+        EntryFields.Add(ContractMgt.ResponseField('warning', 'boolean', 'True when Business Central flags the link with a warning.'));
+        EntriesField := ContractMgt.ResponseField('entries', 'array', 'One row per link in the chain.');
+        EntriesField.Add('children', EntryFields);
+        Fields.Add(EntriesField);
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -137,11 +174,20 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native order tracking error text.', 'Business Central fails while it reads the chain; the answer carries its text.', 'Read the error text and check the line it names.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The Reservations domain is turned on in Inventory Setup.');
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing is changed. The order tracking chain is worked out for the call and returned; no reservation is created or changed.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -174,8 +220,8 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         TitleLbl: Label 'Read the tracking chain of a reserved sales order line', Comment = 'is-IS=Lesa rakningarkeðju frátekinnar sölupöntunarlínu';
     begin
         Examples.Add(ContractMgt.Example(TitleLbl,
-            '{"messageType":"Inventory.OrderTracking.Get","version":1,"data":{"sourceKind":"Sales","documentType":"Order","documentNo":"101005","lineNo":10000}}',
-            '{"status":"Success","sourceKind":"Sales","entries":[{"level":1,"itemNo":"1896-S","quantity":2,"suppliedBy":"Item Ledger Entry 345","demandedBy":"CURRENT LINE","fromType":32,"fromTypeName":"Item Ledger Entry","fromSubtype":0,"fromNo":"","fromLineNo":345,"forType":37,"forTypeName":"Sales Line","forSubtype":1,"forNo":"101005","forLineNo":10000,"shipmentDate":"2026-10-20","expectedReceiptDate":"","startingDate":"2026-10-20","endingDate":"2026-10-20","warning":false}]}'));
+            '{"type":"Inventory.OrderTracking.Get","data":{"sourceKind":"Sales","documentType":"Order","documentNo":"101005","lineNo":10000}}',
+            '{"status":"Success","sourceKind":"Sales","entries":[{"level":1,"itemNo":"1000","quantity":2,"suppliedBy":"Item Ledger Entry 345","demandedBy":"CURRENT LINE","fromType":32,"fromTypeName":"Item Ledger Entry","fromSubtype":0,"fromNo":"","fromLineNo":345,"forType":37,"forTypeName":"Sales Line","forSubtype":1,"forNo":"101005","forLineNo":10000,"shipmentDate":"2026-10-20","expectedReceiptDate":"","startingDate":"2026-10-20","endingDate":"2026-10-20","warning":false}]}'));
         exit(true);
     end;
 
@@ -189,7 +235,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Each entry is one link of the chain. for is the line or entry on that level, at level 1 the one you asked about, and from is the line or entry it is linked to. suppliedBy and demandedBy name the supply and the demand in words; CURRENT LINE marks the line you asked about. fromType and forType are table numbers, fromTypeName and forTypeName their names, fromNo and forNo the document or batch, fromLineNo and forLineNo the line or entry number, and quantity is in the base unit of measure. A line without reservations or order tracking answers an empty entries list, and so does a sales or purchase line that is not an item line. For Transfer, direction picks the shipment side (Outbound) or the receipt side (Inbound).', Comment = 'is-IS=Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound).';
+        NotesLbl: Label 'Each entry is one link of the chain. for is the line or entry on that level, at level 1 the one you asked about, and from is the line or entry it is linked to. suppliedBy and demandedBy name the supply and the demand in words; CURRENT LINE marks the line you asked about. fromType and forType are table numbers, fromTypeName and forTypeName their names, fromNo and forNo the document or batch, fromLineNo and forLineNo the line or entry number, and quantity is in the base unit of measure. A line without reservations or order tracking answers an empty entries list, and so does a sales or purchase line that is not an item line. For Transfer, direction picks the shipment side (Outbound) or the receipt side (Inbound). Send only the keys that fit the sourceKind: documentType, documentNo and lineNo for Sales, Purchase and Assembly (documentType defaults to Order), documentNo, lineNo and direction for Transfer, entryNo for ItemLedgerEntry. systemId replaces the other identifiers. A key that does not fit the sourceKind is refused as InvalidParameter. The call only reads; the Reservations domain must be turned on in Inventory Setup.', Comment = 'is-IS=Hver færsla er einn hlekkur í keðjunni. for er línan eða færslan á því stigi, á stigi 1 sú sem spurt var um, og from er línan eða færslan sem hún tengist. suppliedBy og demandedBy lýsa framboðinu og eftirspurninni í orðum; CURRENT LINE merkir línuna sem spurt var um. fromType og forType eru töflunúmer, fromTypeName og forTypeName heiti þeirra, fromNo og forNo fylgiskjalið eða bunkinn, fromLineNo og forLineNo línu- eða færslunúmerið, og quantity er í grunnmælieiningu. Lína án frátekninga eða pöntunarrakningar svarar tómum entries-lista, og það gerir einnig sölu- eða innkaupalína sem er ekki vörulína. Fyrir Transfer velur direction afhendingarhliðina (Outbound) eða móttökuhliðina (Inbound). Sendu aðeins lyklana sem eiga við sourceKind: documentType, documentNo og lineNo fyrir Sales, Purchase og Assembly (documentType er sjálfgefið Order), documentNo, lineNo og direction fyrir Transfer, entryNo fyrir ItemLedgerEntry. systemId kemur í stað hinna auðkennanna. Lykli sem á ekki við sourceKind er hafnað sem InvalidParameter. Kallið les aðeins; frátekningasviðið þarf að vera kveikt í birgðauppsetningu.';
     begin
         Notes := NotesLbl;
         exit(true);

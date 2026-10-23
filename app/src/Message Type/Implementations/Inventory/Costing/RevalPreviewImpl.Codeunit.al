@@ -13,7 +13,7 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
         SelectionLbl: Label 'Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.', Comment = 'is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.';
         KeywordsLbl: Label 'inventory,revaluation,inventory value,calculate,preview,post', Comment = 'is-IS=birgðir,endurmat,birgðavirði,reikna,forskoða,bóka';
         OverviewLbl: Label 'Runs native revaluation posting preview and returns captured entries without committing. Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.', Comment = 'is-IS=Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær. Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.';
-        NotesLbl: Label 'PreviewPost requires native revaluation lines and posting permission. Preview entries are rolled back; journal lines remain unchanged. Normal licensing and company domain gates apply.', Comment = 'is-IS=PreviewPost krefst innbyggðra endurmatslína og bókunarheimildar. Forskoðunarfærslur eru bakfærðar; bókarlínur haldast óbreyttar. Venjulegar leyfis- og fyrirtækisheimildir gilda.';
+        NotesLbl: Label 'The batch is posted and rolled back, so nothing is committed and the journal lines stay unchanged; the answer carries rollback true, the entries grouped by table in preview, totals and the entry counts. The batch is identified as in Inventory.Revaluation.Post and must have Revaluation lines that have an item number. A preview that would create no entries is answered with NothingToPreview, and a refusal from Business Central is returned as BusinessCentralError with its own text. The call can be repeated freely. The caller needs BIFROST Full ori and BIFROST InvPost ori, as for posting, and the Costing domain must be on in Inventory Setup.', Comment = 'is-IS=Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf BIFROST Full ori og BIFROST InvPost ori, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.';
 
     /// <summary>Requires company Costing, native journal writes and a posting token.</summary>
     procedure IsEnabled(): Boolean
@@ -58,9 +58,14 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Returns the native revaluation target contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Target);
-        Target.ReadFrom('[{"table":"Item Journal Batch","selection":"An explicitly identified Revaluation template batch."}]');
+        Target.Add(ContractMgt.TargetEntry('subject', 'TEMPLATE|BATCH', 'The template name and the batch name of the Revaluation journal batch, separated by a vertical bar; each part is at most 10 characters.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item Journal Batch.'));
+        Target.Add(ContractMgt.TargetEntry('data.batchId, data.id, data.systemId, data.recordSystemId', 'guid', 'The SystemId of the batch. Used only when subject is empty, and only one of the four keys may be sent.'));
+        Target.Add(ContractMgt.TargetEntry('data.templateName, data.batchName', 'template name and batch name', 'The Revaluation template and its batch, used when neither subject nor a SystemId key is sent.'));
         exit(true);
     end;
 
@@ -84,17 +89,24 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Fields: JsonArray;
+        Totals: JsonObject;
+        TotalsChildren: JsonArray;
     begin
         Clear(Response);
-        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success for a completed native operation.'));
-        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The resolved native journal template.'));
-        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The resolved native journal batch.'));
-        Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'Number of selected lines included in the rollback preview.'));
-        Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True: native preview entries have been rolled back.'));
-        Fields.Add(ContractMgt.ResponseField('preview', 'array', 'Captured native preview entries grouped by table.'));
-        Fields.Add(ContractMgt.ResponseField('totals', 'object', 'Native preview G/L totals.'));
-        Fields.Add(ContractMgt.ResponseField('entryCount', 'integer', 'Total native preview entry count.'));
-        Fields.Add(ContractMgt.ResponseField('glEntryCount', 'integer', 'Native preview G/L entry count.'));
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success.'));
+        Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The template of the identified journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The identified journal batch.'));
+        Fields.Add(ContractMgt.ResponseField('linesToPost', 'integer', 'The number of lines of the batch that the preview included.'));
+        Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'Always true: the previewed entries were rolled back and nothing is kept.'));
+        Fields.Add(ContractMgt.ResponseField('preview', 'array', 'The entries the posting would create, grouped by table.'));
+        TotalsChildren.Add(ContractMgt.ResponseField('balanced', 'boolean', 'True when debit and credit totals agree; present only when the preview has G/L entries.'));
+        TotalsChildren.Add(ContractMgt.ResponseField('totalDebitLCY', 'decimal', 'The total debit amount of the previewed G/L entries.'));
+        TotalsChildren.Add(ContractMgt.ResponseField('totalCreditLCY', 'decimal', 'The total credit amount of the previewed G/L entries.'));
+        Totals := ContractMgt.ResponseField('totals', 'object', 'The totals of the previewed G/L entries.');
+        Totals.Add('children', TotalsChildren);
+        Fields.Add(Totals);
+        Fields.Add(ContractMgt.ResponseField('entryCount', 'integer', 'The number of previewed entries in all tables.'));
+        Fields.Add(ContractMgt.ResponseField('glEntryCount', 'integer', 'The number of previewed G/L entries.'));
         Response.Add('contentType', 'text/json');
         Response.Add('fields', Fields);
         exit(true);
@@ -106,34 +118,54 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.TextErrorEntry('Native selection, validation or report error.','Wrong journal type, recurring or invalid batch, or native calculation/posting failure. The direct native call may raise; the process wrapper returns text without a typed code.','Correct the selected batch, input or native validation error before retrying.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Company/native permission or posting gate refuses caller.', 'Request the required native permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Company Costing is disabled or a typed request value is invalid.', 'Enable the company domain or correct the request value.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Native posting preview error.','Native preview fails or its captured entries cannot be accepted.','Correct the native posting error; failed preview retains no ledger changes.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Ask an administrator to assign BIFROST InvPost ori.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview would create no entries, so nothing would be posted.', 'Check the lines of the Revaluation batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The batch is not identified, is not a non-recurring batch of a Revaluation journal template, has no lines, has a line without an item or that is not a Revaluation line, a key other than the batch keys is sent, or Business Central refuses the posting in the preview. The text of Business Central is returned as it is, and nothing is kept.', 'Correct the batch or its journal lines and preview again.'));
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation effect contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"writes":false,"posts":false,"rollback":true,"changes":"Runs native revaluation posting preview and returns captured entries without committing."}');
+        Effect.Add('effect', 'read');
+        Effect.Add('writes', false);
+        Effect.Add('posts', false);
+        Effect.Add('rollback', true);
+        Effect.Add('changes', 'None. Runs the revaluation posting for the batch, returns the entries it would create, and rolls everything back. Nothing is committed and the journal lines stay unchanged.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
+        Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
+        Preconditions.Add('The batch is an existing non-recurring batch of a Revaluation journal template with at least one Revaluation line.');
+        Preconditions.Add('The caller holds BIFROST InvPost ori and can write item journal lines.');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation related contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.Revaluation.Calculate","useInsteadWhen":"Calculate the journal."},{"name":"Inventory.Revaluation.Post","useInsteadWhen":"Post the journal."}]');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Revaluation.Post', 'Use it to post the batch once the preview is acceptable.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Revaluation.Calculate', 'Use it to read the remaining quantity and value of an item; it does not touch the journal.'));
         exit(true);
     end;
 
     /// <summary>Returns the native revaluation examples contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Runs native revaluation posting preview and returns captured entries without committing.","request":{"type":"Inventory.Revaluation.PreviewPost","subject":"REVAL|OWNED"}}]');
+        Examples.Add(ContractMgt.Example(
+            'Preview the Revaluation batch DEFAULT of template REVAL',
+            '{"type":"Inventory.Revaluation.PreviewPost","data":{"templateName":"REVAL","batchName":"DEFAULT"}}',
+            '{"status":"Success","templateName":"REVAL","batchName":"DEFAULT","linesToPost":2,"rollback":true,"preview":[],"totals":{"balanced":true,"totalDebitLCY":120.5,"totalCreditLCY":120.5},"entryCount":6,"glEntryCount":4}'));
         exit(true);
     end;
 
@@ -146,9 +178,16 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>No override is provided.</summary>
     procedure GetWorkflow(var Value: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
         Clear(Value);
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Revaluation.Calculate', 'Read the remaining quantity and value of an item to decide the new value.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Revaluation.PreviewPost', 'Preview the entries the Revaluation batch would create.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Revaluation.Post', 'Post the batch once the preview is acceptable.'));
+        Value.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Describes native revaluation behavior.</summary>

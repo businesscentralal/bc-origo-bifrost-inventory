@@ -91,9 +91,22 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Parameters">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Parameter: JsonObject;
     begin
         Clear(Parameters);
-        Parameters.ReadFrom('[{"name":"itemNoFilter","type":"string","required":false,"description":"Optional itemNoFilter passed to report 795 after truncation to 250 characters. Only one effective item/category filter may be nonempty. Original text is echoed.","default":""},{"name":"itemCategoryFilter","type":"string","required":false,"description":"Optional itemCategoryFilter passed to report 795 after truncation to 250 characters. Only one effective item/category filter may be nonempty. Original text is echoed.","default":""},{"name":"postToGL","type":"boolean","required":false,"description":"Optional request to report 795 via SetPostToGL; false when absent or a non-value token. Actual posting depends on standard report/setup state.","default":false}]');
+        Parameter := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Optional item number filter in Business Central filter syntax, for example 1000 or 1000..2000. It is cut to 250 characters before it is used, and the answer echoes the text you sent. Leave it empty to adjust all items, and do not send it together with itemCategoryFilter.');
+        Parameter.Add('default', '');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter := ContractMgt.Parameter('itemCategoryFilter', 'string', false, 'Optional item category filter in Business Central filter syntax. It is cut to 250 characters before it is used, and the answer echoes the text you sent. Do not send it together with itemNoFilter.');
+        Parameter.Add('default', '');
+        Parameters.Add(Parameter);
+        Clear(Parameter);
+        Parameter := ContractMgt.Parameter('postToGL', 'boolean', false, 'true makes the batch job post the cost adjustments to the general ledger in the same run. false leaves the general ledger alone. A missing key, or a value that is not a JSON value, counts as false.');
+        Parameter.Add('default', false);
+        Parameters.Add(Parameter);
         exit(true);
     end;
 
@@ -113,7 +126,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The company Costing domain is disabled.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The existing inventory posting gate denies the caller.","fix":"Have the administrator review the existing inventory posting permission policy."},{"code":"PreconditionFailed","when":"The standard report Run returns false; response carries GetLastErrorText. A raised report error is a separate failure path.","fix":"Review the standard report error and current ledger state before deciding whether retry is safe."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Report 795 raises an error when both effective filters are nonempty. Direct invocation may raise instead; scalar/null conversion outcomes require supported-platform verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is turned off in Inventory Setup.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The caller does not hold the BIFROST InvPost ori permission set.","fix":"Ask an administrator to assign BIFROST InvPost ori."},{"error":"The error text of the Adjust Cost - Item Entries batch job.","when":"The batch job stops with an error, for example when itemNoFilter and itemCategoryFilter are both filled in or a filter is not valid. The error text is returned as it is, with code BusinessCentralError.","fix":"Correct the filters or the cost data named in the error text and check the item entries before you retry; no rollback or safe retry is promised."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Report 795 raises an error when both effective filters are nonempty. Direct invocation may raise instead; scalar/null conversion outcomes require supported-platform verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
         exit(true);
     end;
 
@@ -123,7 +136,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 795 adjusts item/value-entry costs. postToGL is passed to SetPostToGL; actual G/L changes depend on report/setup state.","idempotent":false,"preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Adjusts the cost of the matching item entries by running the Adjust Cost - Item Entries batch job. When postToGL is true the batch job also posts the adjustments to the general ledger in the same run. Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, and no rollback is promised if the job fails part way.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty."]}');
         exit(true);
     end;
 
@@ -140,9 +153,11 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Related">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Related);
-        Related.ReadFrom('[{"name":"Inventory.CostToGL.Post","useInsteadWhen":"Run report 1002 separately after adjustment; report completion alone does not prove posting."}]');
+        Related.Add(ContractMgt.RelatedEntry('Inventory.CostToGL.Post', 'Use it to start the inventory cost posting as a separate step when postToGL was false. It takes no item filter, so read its notes first.'));
         exit(true);
     end;
 
@@ -159,9 +174,14 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Examples">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Run report 795 without requesting G/L posting.","request":{"type":"Inventory.AdjustCost.Run","version":"1.0","data":{"itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}},"response":{"status":"Success","itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}}]');
+        Examples.Add(ContractMgt.Example(
+            'Adjust the costs of item 1000 without posting to the general ledger',
+            '{"type":"Inventory.AdjustCost.Run","data":{"itemNoFilter":"1000","postToGL":false}}',
+            '{"status":"Success","itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}'));
         exit(true);
     end;
 
@@ -171,7 +191,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetOverview(var Overview: Text): Boolean
     begin
         Clear(Overview);
-        Overview := 'Runs report 795 with optional item or category filter and explicit postToGL option.';
+        Overview := 'Adjusts item costs by running the Adjust Cost - Item Entries batch job for all items, or for one item or item category filter, and can post the adjustments to the general ledger in the same run.';
         exit(true);
     end;
 
@@ -181,7 +201,11 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Clear(Notes);
-        Notes := 'Absent or object/array-valued fields fall back to empty text or false in local readers. Scalar and null conversion outcomes require exact BC28/BC29 runtime tests. No preview, rollback, idempotence or safe-retry guarantee is declared. Filter selection is truncated to 250 characters, but response echoes full original values. Report 795 rejects both effective filters nonempty.';
+        Notes := 'With both filters empty the batch job runs for all items; send itemNoFilter or itemCategoryFilter to limit it, never both. Each filter is cut to 250 characters before it is used and the answer echoes the text you sent. ' +
+            'postToGL defaults to false. With true the batch job posts the adjustments to the general ledger in the same run, so Inventory.CostToGL.Post is not needed afterwards. ' +
+            'The batch job ends quietly when there are no item, application or value entries yet, and the answer is still Success: Success shows that the job finished, not that anything was adjusted or posted. ' +
+            'Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, the call is not idempotent, and no rollback or safe retry is promised if the job fails part way. ' +
+            'The caller needs the BIFROST InvPost ori permission set, and the Costing domain must be on in Inventory Setup. Read costIsAdjusted with Inventory.Cost.Get to see whether items still need an adjustment run.';
         exit(true);
     end;
 }

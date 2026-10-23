@@ -45,14 +45,23 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     var
-        ContractParts: Codeunit "Inventory Contract Parts ori";
+        Subject: JsonObject;
     begin
-        Envelope := ContractParts.GetEnvelope('Inventory.Transfer.UndoShipment');
+        // Own envelope: the shared one declares subject optional, but this type reads only data.documentNo.
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The posted transfer shipment is named under data.documentNo; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Target.Add(ContractMgt.TargetEntry('data.documentNo', 'document no.', 'The No. of the Transfer Shipment Header to undo.'));
         exit(true);
     end;
 
@@ -61,54 +70,96 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo. Every line that is not a correction line is undone.'));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters; a longer value is cut to 20. Every line that is not a correction line is undone.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted transfer shipment No. that was undone, as sent (cut to 20 characters).'));
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write Transfer Shipment Header records.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted transfer tables.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo was not sent.', 'Send documentNo, the number of the posted transfer shipment.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Transfer Shipment Header has that number.', 'Check the number of the posted transfer shipment.'));
+        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer shipment %1 has no lines to undo.', 'The posted transfer shipment has no line that is not a correction line, so there is nothing to undo. The answer carries the error text and no code.', 'Check that the shipment is the original posted shipment and not one that only holds correction lines.'));
+        Errors.Add(ContractMgt.TextErrorEntry('The error text of Business Central', 'Business Central refuses the undo of one line, for example because the line was already undone. The answer carries Business Central''s own error text and no code.', 'Read the text and correct the cause in Business Central. Lines that came before the refused line may already be undone: read the posted shipment before you send the call again.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The posted transfer shipment exists and has at least one line that is not a correction line.');
+        Preconditions.Add('The undo checks of Business Central pass for every line.');
+        Effect.Add('effect', 'irreversible');
+        Effect.Add('changes', 'Undoes every line of the posted transfer shipment that is not a correction line, one line after the other, with the standard Business Central undo of a transfer shipment line, which posts the corrective entries. The posted document is not deleted. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
+        Effect.Add('idempotent', false);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
-        exit(true);
+        exit(false);
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Transfer.UndoReceipt', 'Use it for a posted transfer receipt; it only answers that receipt undo is not available in this version.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.TransferOrder.Post', 'Post the transfer order instead of undoing a posted shipment.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Post', 'Ship the transfer order; the answer carries the posted shipment number in postedShipmentNo.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Transfer.UndoShipment', 'Undo that posted shipment when the shipping was wrong, with the posted shipment number as documentNo.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Post', 'Ship the transfer order again with the corrected data when it is still needed.'));
+        Workflow.Add('steps', Steps);
         exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
+        Examples.Add(ContractMgt.Example('Undo posted transfer shipment 108001', '{"type":"Inventory.Transfer.UndoShipment","data":{"documentNo":"108001"}}', '{"status":"Success","documentNo":"108001"}'));
         exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Calls codeunit 5815. Does not delete the posted document.';
+        Overview := 'Undoes a posted transfer shipment by its posted document number, line by line, with the standard Business Central undo of a transfer shipment line. The posted document is not deleted. The call changes inventory and cannot itself be undone.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Receipt undo is a separate type.';
+        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
+            'Every line that is not a correction line is undone, in line order, each as its own step. A refusal on one line stops the call and answers an error; lines that came before it may already be undone, so read the posted shipment before you send the call again. ' +
+            'A posted transfer shipment whose lines are all correction lines is refused. A refusal from Business Central is answered with its error text and no error code. ' +
+            'The caller needs the Transfer Orders domain turned on in Inventory Setup and write permission on the posted transfer shipment table. Unlike Inventory.TransferOrder.Post this type does not check the BIFROST InvPost ori permission set. ' +
+            'Receipt undo is a separate type, Inventory.Transfer.UndoReceipt, and is not available in this version. The type does not read subject.';
         exit(true);
     end;
 

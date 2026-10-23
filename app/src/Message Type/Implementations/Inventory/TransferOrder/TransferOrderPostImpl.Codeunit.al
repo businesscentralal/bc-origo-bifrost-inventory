@@ -106,13 +106,19 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Workflow := Parts.GetWorkflow('Inventory.TransferOrder.Post');
+        exit(Workflow.Keys().Count() > 0);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := Parts.GetExamples('Inventory.TransferOrder.Post');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean

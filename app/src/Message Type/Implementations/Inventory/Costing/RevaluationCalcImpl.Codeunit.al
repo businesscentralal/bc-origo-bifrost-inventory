@@ -43,58 +43,70 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('messageType', 'Inventory.Revaluation.Calculate');
-        Envelope.Add('version', 1);
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"Subject is not read; the item is named in data.itemNo."},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('table', 'Item Ledger Entry');
-        Target.Add(TargetJson);
+        Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item whose open item ledger entries are summed. Spaces around the number are ignored.'));
         exit(true);
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        ParameterJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ParameterJson.Add('name', 'itemNo');
-        ParameterJson.Add('type', 'code');
-        ParameterJson.Add('required', true);
-        Parameters.Add(ParameterJson);
+        Clear(Parameters);
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', true, 'The No. of an existing item, sent as JSON text.'));
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('itemNo', '');
-        Response.Add('remainingQuantity', 0);
-        Response.Add('inventoryValue', 0);
+        Clear(Response);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The No. of the item.'));
+        Fields.Add(ContractMgt.ResponseField('remainingQuantity', 'decimal', 'The sum of the remaining quantity of the open item ledger entries of the item, over all locations and variants.'));
+        Fields.Add(ContractMgt.ResponseField('inventoryValue', 'decimal', 'The sum, over those entries, of the remaining quantity times the cost per unit of the entry, where the cost per unit is the actual plus expected cost amount divided by the quantity of the entry.'));
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
-        ErrorJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        ErrorJson.Add('code', 'MissingParameter');
-        ErrorJson.Add('when', 'itemNo must be specified.');
-        Errors.Add(ErrorJson);
-        Clear(ErrorJson);
-        ErrorJson.Add('code', 'RecordNotFound');
-        ErrorJson.Add('when', 'the item was not found.');
-        Errors.Add(ErrorJson);
+        Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo is missing, empty, or not a JSON value.', 'Send the item number in data.itemNo.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No item has the number in itemNo.', 'Check the item number and send it again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot read item ledger entries.', 'Request read permission on item ledger entries from an administrator.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Clear(Effect);
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'None. Sums the remaining quantity and value of the open item ledger entries of one item. No revaluation journal line is created or changed.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
+        Preconditions.Add('The caller can read item ledger entries.');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -107,8 +119,10 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Cost.Get', 'Read the stored item cost instead of calculating remaining value.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Adjust item costs with report 795 instead of only calculating value.'));
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Cost.Get', 'Use it to read the current card costs of items instead of summing the value of open item ledger entries.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.AdjustCost.Run', 'Use it to bring item costs up to date; this type only sums entries and adjusts nothing.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Revaluation.Post', 'Use it to post a Revaluation journal batch that already exists; this type creates no journal lines.'));
         exit(true);
     end;
 
@@ -118,19 +132,30 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(
+            'Read the remaining quantity and value of item 1000',
+            '{"type":"Inventory.Revaluation.Calculate","data":{"itemNo":"1000"}}',
+            '{"status":"Success","itemNo":"1000","remainingQuantity":40,"inventoryValue":500}'));
+        exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Calculates remaining quantity and inventory value for one item.';
+        Clear(Overview);
+        Overview := 'Sums the remaining quantity of the open item ledger entries of one item and values it at the cost of each entry. Nothing is written and no revaluation journal line is created.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only. It does not post a revaluation journal.';
+        Clear(Notes);
+        Notes := 'Despite its name this type does not calculate a revaluation journal: it reads, and it creates or changes no journal line. It sums over all open item ledger entries of the item, so there is no filter on location, variant or date. ' +
+            'Each entry is valued at its actual plus expected cost amount, scaled by its remaining quantity, so the value is only as current as the last cost adjustment; run Inventory.AdjustCost.Run first when costIsAdjusted from Inventory.Cost.Get is false. ' +
+            'The item may be blocked. The caller needs BIFROST Read ori and read permission on item ledger entries, and the Costing domain must be on in Inventory Setup.';
         exit(true);
     end;
 

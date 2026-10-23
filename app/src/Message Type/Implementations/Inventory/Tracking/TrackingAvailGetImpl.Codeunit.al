@@ -51,16 +51,33 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     /// <summary>Provides GetEnvelope for Inventory.TrackingAvailability.Get.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
+        Forms: JsonArray;
     begin
-        Envelope.Add('messageType', 'Inventory.TrackingAvailability.Get');
-        Envelope.Add('version', 1);
+        Forms.Add('guid');
+        Forms.Add('item no.');
+        Subject.Add('use', 'optional');
+        Subject.Add('forms', Forms);
+        Subject.Add('description', 'The subject is the SystemId or No. of the Item; data selects the same item when subject is blank.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', false);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
     /// <summary>Provides GetTarget for Inventory.TrackingAvailability.Get.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Target.Add(ContractMgt.TargetEntry('subject', 'guid', 'The SystemId of the Item.'));
+        Target.Add(ContractMgt.TargetEntry('subject', 'item no.', 'The No. of the Item; it takes precedence over the item identifiers in data.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item, used when subject is blank.'));
+        Target.Add(ContractMgt.TargetEntry('data.itemId, data.id, data.systemId, data.recordSystemId', 'guid', 'The SystemId of the Item, tried in this order after itemNo. Document line SystemIds are not accepted.'));
+        Target.Add(ContractMgt.TargetEntry('data.tableView', 'table view', 'An Item table view; the first matching item is read, so filter to one item for an exact selection.'));
+        exit(true);
     end;
 
     /// <summary>Provides GetParameters for Inventory.TrackingAvailability.Get.</summary>
@@ -91,12 +108,26 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Fields: JsonArray;
+        GroupFields: JsonArray;
+        GroupsField: JsonObject;
     begin
         Clear(Response);
         Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the operation completes.'));
         Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'Selected item.'));
-        Fields.Add(ContractMgt.ResponseField('availability', 'array', 'Groups contain lotNo, serialNo, packageNo, locationCode, variantCode, expirationDate, inventory, remainingQuantity, qtyReserved and availableQuantity. Quantities are base units; availability subtracts reserved from remaining quantity.'));
+        GroupFields.Add(ContractMgt.ResponseField('lotNo', 'string', 'The lot number of the group; blank when the group has none.'));
+        GroupFields.Add(ContractMgt.ResponseField('serialNo', 'string', 'The serial number of the group; blank when the group has none.'));
+        GroupFields.Add(ContractMgt.ResponseField('packageNo', 'string', 'The package number of the group; blank when the group has none.'));
+        GroupFields.Add(ContractMgt.ResponseField('locationCode', 'string', 'The location code of the group.'));
+        GroupFields.Add(ContractMgt.ResponseField('variantCode', 'string', 'The variant code of the group.'));
+        GroupFields.Add(ContractMgt.ResponseField('expirationDate', 'string', 'The expiration date in YYYY-MM-DD form when the item tracking code uses expiration dates and the grouped entries agree; otherwise blank.'));
+        GroupFields.Add(ContractMgt.ResponseField('inventory', 'decimal', 'The remaining quantity of the group in the base unit of measure.'));
+        GroupFields.Add(ContractMgt.ResponseField('remainingQuantity', 'decimal', 'The remaining quantity of the group; the same as inventory.'));
+        GroupFields.Add(ContractMgt.ResponseField('qtyReserved', 'decimal', 'The quantity of the group that is reserved, in the base unit of measure.'));
+        GroupFields.Add(ContractMgt.ResponseField('availableQuantity', 'decimal', 'The remaining quantity less the reserved quantity.'));
+        GroupsField := ContractMgt.ResponseField('availability', 'array', 'One group per location, variant, lot, serial and package of open positive tracked item ledger entries. Quantities are base units; availability subtracts reserved from remaining quantity.');
+        GroupsField.Add('children', GroupFields);
+        Fields.Add(GroupsField);
         Fields.Add(ContractMgt.ResponseField('noOfLines', 'integer', 'Rows returned after skip and take.'));
         Fields.Add(ContractMgt.ResponseField('totalNoOfLines', 'integer', 'All matching rows before paging.'));
         Response.Add('fields', Fields);
@@ -124,6 +155,10 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     /// <summary>Provides GetEffect for Inventory.TrackingAvailability.Get.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Effect.Add('effect', 'read');
+        Effect.Add('changes', 'Nothing is changed. Reads the open tracked item ledger entries of the item and the quantity reserved against them.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
         exit(true);
     end;
@@ -139,8 +174,10 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Assign item tracking after reading availability.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete an item tracking specification instead of reading availability.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Get', 'Read the tracking rows (ledger entries, reservations and specifications) of an item or a document line instead of availability per lot.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Create a tracking specification instead of reading availability.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete a tracking specification instead of reading availability.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Get', 'Read the reservations of the item when you need the demand behind qtyReserved.'));
         exit(true);
     end;
 
@@ -152,9 +189,17 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
 
     /// <summary>Provides GetExamples for Inventory.TrackingAvailability.Get.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Example: JsonObject;
     begin
         Clear(Examples);
-        Examples.ReadFrom('[{"title":"Read an owned lot availability","description":"Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply.","request":{"type":"Inventory.TrackingAvailability.Get","data":{"itemNo":"OWNED-ITEM","lotNo":"OWNED-LOT","take":100}}}]');
+        Example := ContractMgt.Example(
+            'Read an owned lot availability',
+            '{"type":"Inventory.TrackingAvailability.Get","data":{"itemNo":"OWNED-ITEM","lotNo":"OWNED-LOT","take":100}}',
+            '{"status":"Success","itemNo":"OWNED-ITEM","availability":[{"lotNo":"OWNED-LOT","serialNo":"","packageNo":"","locationCode":"BLUE","variantCode":"","expirationDate":"","inventory":2,"remainingQuantity":2,"qtyReserved":0,"availableQuantity":2}],"noOfLines":1,"totalNoOfLines":1}');
+        Example.Add('description', 'Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply.');
+        Examples.Add(Example);
         exit(true);
     end;
 

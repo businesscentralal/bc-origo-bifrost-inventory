@@ -75,8 +75,8 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
-        Envelope.Add('messageType', 'Inventory.AvailabilityByPeriod.Get');
-        Envelope.Add('version', 1);
+        Clear(Envelope);
+        Envelope.ReadFrom('{"subject":{"use":"notUsed","forms":[],"description":"Subject is not read; the items are named in data.itemNo or data.items."},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
@@ -86,6 +86,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         TargetLbl: Label 'The item whose availability is read. Use items when several items are sent.', Comment = 'is-IS=Varan sem framboð er lesið fyrir. Notaðu items þegar nokkrar vörur eru sendar.';
     begin
         Target.Add(ContractMgt.TargetEntry('data.itemNo', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.items', 'array of item nos.', 'Up to 20 item numbers; use it instead of itemNo, never both.'));
         exit(true);
     end;
 
@@ -94,10 +95,10 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ItemNoLbl: Label 'One item number. Omit it when items is sent.', Comment = 'is-IS=Eitt vörunúmer. Slepptu því þegar items er sent.';
         ItemsLbl: Label 'Up to 20 item numbers. Do not also send itemNo.', Comment = 'is-IS=Allt að 20 vörunúmer. Ekki senda itemNo líka.';
-        VariantLbl: Label 'Variant filter. Leave it empty to include every variant.', Comment = 'is-IS=Sía afbrigðis. Skildu hana eftir tóma til að taka öll afbrigði með.';
-        LocationLbl: Label 'Location filter. Leave it empty to include every location.', Comment = 'is-IS=Sía staðsetningar. Skildu hana eftir tóma til að taka allar staðsetningar með.';
+        VariantLbl: Label 'A variant code of the item. Leave it out to include every variant. A variant that does not exist on the item is refused.', Comment = 'is-IS=Afbrigðiskóði vörunnar. Slepptu honum til að taka öll afbrigði með. Afbrigði sem er ekki til á vörunni er hafnað.';
+        LocationLbl: Label 'A location code. Leave it out to include every location. A location that does not exist is refused.', Comment = 'is-IS=Staðsetningarkóði. Slepptu honum til að taka allar staðsetningar með. Staðsetningu sem er ekki til er hafnað.';
         PeriodTypeLbl: Label 'day, week, month, quarter, or year.', Comment = 'is-IS=day, week, month, quarter eða year.';
-        FromLbl: Label 'A date inside the first calendar period.', Comment = 'is-IS=Dagsetning innan fyrsta dagatals tímabilsins.';
+        FromLbl: Label 'A date inside the first calendar period, as YYYY-MM-DD.', Comment = 'is-IS=Dagsetning innan fyrsta dagatals tímabilsins, á forminu YYYY-MM-DD.';
         PeriodsLbl: Label 'How many periods to return, from 1 to 53.', Comment = 'is-IS=Hversu mörg tímabil eiga að koma til baka, frá 1 til 53.';
         AmountTypeLbl: Label 'netChange (default) reads each period on its own. balanceAtDate reads everything up to the period end.', Comment = 'is-IS=netChange (sjálfgefið) les hvert tímabil fyrir sig. balanceAtDate les allt fram að lokum tímabilsins.';
     begin
@@ -113,14 +114,35 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        ItemChildren: JsonArray;
+        Periods: JsonObject;
+        NestedPeriods: JsonObject;
+        Items: JsonObject;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('itemNo', '');
-        Response.Add('description', '');
-        Response.Add('periodType', 'month');
-        Response.Add('amountType', 'netChange');
-        Response.Add('periods', 'one row per period: periodStart, periodEnd, grossRequirement, scheduledReceipt, plannedOrderReceipt, projectedAvailableBalance, inventory, amountType');
-        Response.Add('items', 'the same item fields when items is sent');
+        Clear(Response);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success.'));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number; present when itemNo was sent.'));
+        Fields.Add(ContractMgt.ResponseField('description', 'string', 'The item description; present when itemNo was sent.'));
+        Fields.Add(ContractMgt.ResponseField('variant', 'string', 'The variant code that was sent; empty when none was sent.'));
+        Fields.Add(ContractMgt.ResponseField('location', 'string', 'The location code that was sent; empty when none was sent.'));
+        Fields.Add(ContractMgt.ResponseField('periodType', 'string', 'day, week, month, quarter or year, in lower case.'));
+        Fields.Add(ContractMgt.ResponseField('amountType', 'string', 'netChange or balanceAtDate.'));
+        Periods := ContractMgt.ResponseField('periods', 'array', 'One row per period; present when itemNo was sent.');
+        Periods.Add('children', PeriodChildren());
+        Fields.Add(Periods);
+        ItemChildren.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number.'));
+        ItemChildren.Add(ContractMgt.ResponseField('description', 'string', 'The item description.'));
+        NestedPeriods := ContractMgt.ResponseField('periods', 'array', 'One row per period.');
+        NestedPeriods.Add('children', PeriodChildren());
+        ItemChildren.Add(NestedPeriods);
+        Items := ContractMgt.ResponseField('items', 'array', 'One entry per item, in the order sent; present when items was sent.');
+        Items.Add('children', ItemChildren);
+        Fields.Add(Items);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -152,6 +174,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, PeriodTypeWhenLbl, PeriodTypeFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Availability domain is turned off in Inventory Setup, periods is below 1, or the calendar cannot build every requested period.', 'Turn on the Availability domain, or use a periods value from 1 to 53 and a from date inside the calendar.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LimitExceeded, LimitWhenLbl, LimitFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, StockWhenLbl, StockFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
@@ -159,9 +182,19 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Clear(Effect);
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'None. Reads projected availability by calendar period for one or more items.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Preconditions.Add('The Availability domain is turned on in Inventory Setup.');
+        Preconditions.Add('The caller can read items, item variants and locations.');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -171,8 +204,13 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
     end;
 
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        exit(false);
+        Clear(Related);
+        Related.Add(ContractMgt.RelatedEntry('Item.Availability.Get', 'Use it for the availability of items per location on one delivery date, instead of per calendar period.'));
+        Related.Add(ContractMgt.RelatedEntry('Item.Inventory.Get', 'Use it for the physical stock on hand per location, without any projection.'));
+        exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
@@ -185,7 +223,12 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TitleLbl: Label 'Read two months for one item', Comment = 'is-IS=Lesa tvo mánuði fyrir eina vöru';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"itemNo":"ITEM","periodType":"month","from":"2026-10-16","periods":2}', '{"status":"Success","itemNo":"ITEM","description":"Item","variant":"","location":"","periodType":"month","amountType":"netChange","periods":[{"periodStart":"2026-10-01","periodEnd":"2026-10-31","grossRequirement":0,"scheduledReceipt":0,"plannedOrderReceipt":0,"projectedAvailableBalance":0,"inventory":0,"amountType":"netChange"}]}'));
+        Clear(Examples);
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"type":"Inventory.AvailabilityByPeriod.Get","data":{"itemNo":"ITEM","periodType":"month","from":"2026-10-16","periods":2}}', '{"status":"Success","itemNo":"ITEM","description":"Item","variant":"","location":"","periodType":"month","amountType":"netChange","periods":[{"periodStart":"2026-10-01","periodEnd":"2026-10-31","grossRequirement":0,"scheduledReceipt":0,"plannedOrderReceipt":0,"projectedAvailableBalance":0,"inventory":0,"amountType":"netChange"}]}'));
+        Examples.Add(ContractMgt.Example(
+            'Read one week for items 1000 and 1100 at location BLUE',
+            '{"type":"Inventory.AvailabilityByPeriod.Get","data":{"items":["1000","1100"],"location":"BLUE","periodType":"week","from":"2026-10-22","periods":1,"amountType":"balanceAtDate"}}',
+            '{"status":"Success","periodType":"week","amountType":"balanceAtDate","variant":"","location":"BLUE","items":[{"itemNo":"1000","description":"Bicycle","periods":[{"periodStart":"2026-10-19","periodEnd":"2026-10-25","grossRequirement":4,"scheduledReceipt":10,"plannedOrderReceipt":0,"projectedAvailableBalance":46,"inventory":40,"amountType":"balanceAtDate"}]},{"itemNo":"1100","description":"Front wheel","periods":[{"periodStart":"2026-10-19","periodEnd":"2026-10-25","grossRequirement":0,"scheduledReceipt":0,"plannedOrderReceipt":0,"projectedAvailableBalance":25,"inventory":25,"amountType":"balanceAtDate"}]}]}'));
         exit(true);
     end;
 
@@ -199,7 +242,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'The first period is the calendar period that contains from. With amountType netChange (the default) amounts cover that period only; with balanceAtDate they cover everything up to the period end. Projected available balance is the balance at the period end. Inventory is the on-hand quantity. A service or non-inventory item is refused. At most 53 periods and 20 items are returned.', Comment = 'is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins. Birgðir eru magn á hendi. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka.';
+        NotesLbl: Label 'The first period is the calendar period that contains from. With amountType netChange (the default) the amounts cover that period only; with balanceAtDate they cover everything up to the period end. Projected available balance is the balance at the period end in both modes. Inventory is the item ledger quantity within the same dates: the net change of the period with netChange, and the on-hand quantity at the period end with balanceAtDate. One item (itemNo) is answered at the top level; several items (items) are answered in items, each with its own periods. variant and location are exact codes, not filter expressions, and drop shipments are always left out. A service or non-inventory item is refused. At most 53 periods and 20 items are returned. The type only reads, so it can be repeated freely.', Comment = 'is-IS=Fyrsta tímabilið er dagatals tímabilið sem inniheldur from. Með amountType netChange (sjálfgefið) ná upphæðir aðeins yfir tímabilið; með balanceAtDate ná þær yfir allt fram að lokum tímabilsins. Áætlað tiltækt magn er staðan í lok tímabilsins í báðum stillingum. Birgðir (inventory) eru vörufærslumagn innan sömu dagsetninga: nettóbreyting tímabilsins með netChange og magn á hendi í lok tímabilsins með balanceAtDate. Ein vara (itemNo) er svarað á efsta stigi; fleiri vörur (items) eru svaraðar í items, hver með sín tímabil. variant og location eru nákvæmir kóðar, ekki síutjáningar, og beinar sendingar eru alltaf undanskildar. Þjónustuvöru eða vöru sem er ekki birgðavara er hafnað. Í mesta lagi 53 tímabil og 20 vörur koma til baka. Gerðin les aðeins og því má endurtaka kallið að vild.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -789,5 +832,19 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         StockNextStepLbl: Label 'Use an inventory item.', Comment = 'is-IS=Notaðu birgðavöru.';
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StockErr, ItemNoKeyTok, CopyStr(ItemNo, 1, 250), 'Inventory', StockNextStepLbl);
+    end;
+
+    local procedure PeriodChildren() Children: JsonArray
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Children.Add(ContractMgt.ResponseField('periodStart', 'string', 'The first date of the period, as YYYY-MM-DD.'));
+        Children.Add(ContractMgt.ResponseField('periodEnd', 'string', 'The last date of the period, as YYYY-MM-DD.'));
+        Children.Add(ContractMgt.ResponseField('grossRequirement', 'decimal', 'The quantity required in the period, for example on sales orders and components.'));
+        Children.Add(ContractMgt.ResponseField('scheduledReceipt', 'decimal', 'The quantity scheduled to arrive in the period, for example on purchase orders.'));
+        Children.Add(ContractMgt.ResponseField('plannedOrderReceipt', 'decimal', 'The quantity planned to arrive in the period on planned orders.'));
+        Children.Add(ContractMgt.ResponseField('projectedAvailableBalance', 'decimal', 'The projected available balance at the end of the period.'));
+        Children.Add(ContractMgt.ResponseField('inventory', 'decimal', 'The item ledger quantity within the dates of the period: the net change with netChange, the on-hand quantity at the period end with balanceAtDate.'));
+        Children.Add(ContractMgt.ResponseField('amountType', 'string', 'netChange or balanceAtDate.'));
     end;
 }

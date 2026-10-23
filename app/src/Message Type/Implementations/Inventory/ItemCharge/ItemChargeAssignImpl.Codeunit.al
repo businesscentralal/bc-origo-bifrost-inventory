@@ -82,9 +82,15 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.ItemCharge.Assign');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The charge line is named under data.documentType, data.documentNo or data.systemId, and data.lineNo; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -93,7 +99,9 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TargetLbl: Label 'The charge line, named by its document and line number.', Comment = 'is-IS=Kostnaðaraukalínan, tilgreind með skjali sínu og línunúmeri.';
     begin
-        Target.Add(ContractMgt.TargetEntry('data.documentNo + data.lineNo', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.documentNo', 'document no.', 'The No. of the open purchase or sales document that holds the charge line. data.documentType says which kind of document it is.'));
+        Target.Add(ContractMgt.TargetEntry('data.systemId', 'guid', 'The system id of that document, as an alternative to data.documentNo. Send one of them, not both.'));
+        Target.Add(ContractMgt.TargetEntry('data.lineNo', 'integer', TargetLbl));
         exit(true);
     end;
 
@@ -105,6 +113,8 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         SystemIdLbl: Label 'systemId of the document. Send this or documentNo.', Comment = 'is-IS=systemId skjalsins. Sendu þetta eða documentNo.';
         LineNoLbl: Label 'Line number of the Charge (Item) line.', Comment = 'is-IS=Línunúmer línunnar af gerðinni Kostnaðarauki (vara).';
         MethodLbl: Label 'equally, byAmount, byWeight or byVolume. Spreads the charge over the item lines of the same document, as Suggest Item Charge Assignment does. Send this or targets.', Comment = 'is-IS=equally, byAmount, byWeight eða byVolume. Dreifir kostnaðaraukanum á vörulínur sama skjals, eins og Leggja til úthlutun kostnaðarauka gerir. Sendu þetta eða targets.';
+        TargetChildren: JsonArray;
+        TargetsParameter: JsonObject;
         TargetsLbl: Label 'Explicit lines to assign to. Each entry has appliesToDocType, documentNo, lineNo and qtyToAssign. appliesToDocType is order, invoice, returnOrder or creditMemo for an open document line, or receipt, transferReceipt, returnShipment, salesShipment or returnReceipt (purchase) and shipment or returnReceipt (sales) for a posted line. Send this or method.', Comment = 'is-IS=Tilteknar línur til að úthluta á. Hver færsla hefur appliesToDocType, documentNo, lineNo og qtyToAssign. appliesToDocType er order, invoice, returnOrder eða creditMemo fyrir línu á opnu skjali, eða receipt, transferReceipt, returnShipment, salesShipment eða returnReceipt (innkaup) og shipment eða returnReceipt (sala) fyrir bókaða línu. Sendu þetta eða method.';
     begin
         Parameters.Add(ContractMgt.Parameter('documentType', 'string', true, DocumentTypeLbl));
@@ -112,31 +122,42 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, SystemIdLbl));
         Parameters.Add(ContractMgt.Parameter('lineNo', 'integer', true, LineNoLbl));
         Parameters.Add(ContractMgt.Parameter('method', 'string', false, MethodLbl));
-        Parameters.Add(ContractMgt.Parameter('targets', 'array', false, TargetsLbl));
+        TargetChildren.Add(ContractMgt.Parameter('appliesToDocType', 'string', true, 'What the target line is: order, invoice, returnOrder or creditMemo for an open document line, or a posted line type (see targets).'));
+        TargetChildren.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the document the target line belongs to.'));
+        TargetChildren.Add(ContractMgt.Parameter('lineNo', 'integer', true, 'Line number of the target line on that document.'));
+        TargetChildren.Add(ContractMgt.Parameter('qtyToAssign', 'number', true, 'Quantity of the charge to assign to that line. It must be greater than zero.'));
+        TargetsParameter := ContractMgt.Parameter('targets', 'array', false, TargetsLbl);
+        TargetsParameter.Add('children', TargetChildren);
+        Parameters.Add(TargetsParameter);
         exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
     var
-        Rows: JsonArray;
-        Row: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        RowsField: JsonObject;
+        RowChildren: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('documentType', 'purchase');
-        Response.Add('documentNo', '106001');
-        Response.Add('lineNo', 30000);
-        Response.Add('replacedCount', 0);
-        Row.Add('lineNo', 10000);
-        Row.Add('appliesToDocType', 'order');
-        Row.Add('appliesToDocNo', '106001');
-        Row.Add('appliesToDocLineNo', 10000);
-        Row.Add('itemNo', '1896-S');
-        Row.Add('description', 'ATHENS Desk');
-        Row.Add('qtyToAssign', 1);
-        Row.Add('amountToAssign', 100);
-        Row.Add('qtyAssigned', 0);
-        Rows.Add(Row);
-        Response.Add('assignments', Rows);
+        RowChildren.Add(ContractMgt.ResponseField('lineNo', 'integer', 'The line number of the assignment row.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocType', 'string', 'What the charge lands on: order, invoice, returnOrder, creditMemo, receipt, transferReceipt, returnShipment, salesShipment, shipment, returnReceipt, quote or blanketOrder.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocNo', 'string', 'The No. of the document the charge lands on.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocLineNo', 'integer', 'The line number on that document.'));
+        RowChildren.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item the charge lands on.'));
+        RowChildren.Add(ContractMgt.ResponseField('description', 'string', 'The description of the assignment row.'));
+        RowChildren.Add(ContractMgt.ResponseField('qtyToAssign', 'decimal', 'The quantity of the charge assigned to that line and not yet invoiced.'));
+        RowChildren.Add(ContractMgt.ResponseField('amountToAssign', 'decimal', 'The amount of the charge assigned to that line and not yet invoiced.'));
+        RowChildren.Add(ContractMgt.ResponseField('qtyAssigned', 'decimal', 'The quantity of the charge that is already invoiced.'));
+        RowsField := ContractMgt.ResponseField('assignments', 'array', 'The assignment rows of the charge line, in row order.');
+        RowsField.Add('children', RowChildren);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('documentType', 'string', 'purchase or sales, in lower case.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The No. of the document that holds the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'The line number of the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('replacedCount', 'integer', 'The number of assignment rows the charge line had before the call. Rows without an invoiced quantity are deleted; rows that are already partly invoiced are kept with qtyToAssign set to zero.'));
+        Fields.Add(RowsField);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -183,13 +204,23 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ValueWhenLbl, ValueFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, BusinessCentralWhenLbl, BusinessCentralFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Charge domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The document is an open order, invoice, return order or credit memo, and lineNo is a Charge (Item) line on it.');
+        Preconditions.Add('The charge line has a quantity to invoice.');
+        Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Replaces the item charge assignment of the charge line: rows without an invoiced quantity are deleted, rows that are already partly invoiced are kept with qtyToAssign set to zero, and the new rows are inserted. The document is not posted. The write is isolated: a refusal saves nothing.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
 
@@ -204,12 +235,22 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         RelatedLbl: Label 'Read the current assignment and the unassigned quantity without changing anything.', Comment = 'is-IS=Lesa núverandi úthlutun og óúthlutað magn án þess að breyta neinu.';
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.ItemCharge.Get', RelatedLbl));
+        Related.Add(ContractMgt.RelatedEntry('Purchase.Document.Post', 'Post the purchase document once the charge is assigned; this type does not post.'));
+        Related.Add(ContractMgt.RelatedEntry('Sales.Document.Post', 'Post the sales document once the charge is assigned; this type does not post.'));
         exit(true);
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemCharge.Get', 'Read the current assignment and the quantity that is still unassigned.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemCharge.Assign', 'Spread the charge over the item lines with method, or over named lines with targets.'));
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Document.Post', 'Post the purchase document so the assigned charge lands on the items.'));
+        Steps.Add(ContractMgt.WorkflowStep('Sales.Document.Post', 'Post the sales document so the assigned charge lands on the items.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
@@ -218,8 +259,8 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         MethodTitleLbl: Label 'Spread a freight charge equally over the item lines of a purchase order', Comment = 'is-IS=Dreifa flutningskostnaði jafnt á vörulínur innkaupapöntunar';
         TargetsTitleLbl: Label 'Assign a freight charge on a purchase invoice to a posted receipt line', Comment = 'is-IS=Úthluta flutningskostnaði á innkaupareikningi á bókaða móttökulínu';
     begin
-        Examples.Add(ContractMgt.Example(MethodTitleLbl, '{"documentType":"purchase","documentNo":"106001","lineNo":30000,"method":"equally"}', '{"status":"Success","documentType":"purchase","documentNo":"106001","lineNo":30000,"replacedCount":0,"assignments":[{"lineNo":10000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0},{"lineNo":20000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":20000,"itemNo":"1900-S","description":"PARIS Guest Chair, black","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0}]}'));
-        Examples.Add(ContractMgt.Example(TargetsTitleLbl, '{"documentType":"purchase","documentNo":"108001","lineNo":10000,"targets":[{"appliesToDocType":"receipt","documentNo":"107001","lineNo":10000,"qtyToAssign":1}]}', '{"status":"Success","documentType":"purchase","documentNo":"108001","lineNo":10000,"replacedCount":0,"assignments":[{"lineNo":10000,"appliesToDocType":"receipt","appliesToDocNo":"107001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":1,"amountToAssign":100,"qtyAssigned":0}]}'));
+        Examples.Add(ContractMgt.Example(MethodTitleLbl, '{"type":"Inventory.ItemCharge.Assign","data":{"documentType":"purchase","documentNo":"106001","lineNo":30000,"method":"equally"}}', '{"status":"Success","documentType":"purchase","documentNo":"106001","lineNo":30000,"replacedCount":0,"assignments":[{"lineNo":10000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0},{"lineNo":20000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":20000,"itemNo":"1900-S","description":"PARIS Guest Chair, black","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0}]}'));
+        Examples.Add(ContractMgt.Example(TargetsTitleLbl, '{"type":"Inventory.ItemCharge.Assign","data":{"documentType":"purchase","documentNo":"108001","lineNo":10000,"targets":[{"appliesToDocType":"receipt","documentNo":"107001","lineNo":10000,"qtyToAssign":1}]}}', '{"status":"Success","documentType":"purchase","documentNo":"108001","lineNo":10000,"replacedCount":0,"assignments":[{"lineNo":10000,"appliesToDocType":"receipt","appliesToDocNo":"107001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":1,"amountToAssign":100,"qtyAssigned":0}]}'));
         exit(true);
     end;
 
@@ -233,7 +274,7 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line, and replacedCount says how many rows were replaced; rows that are already partly invoiced keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them.', Comment = 'is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu, og replacedCount segir hve mörgum línum var skipt út; línur sem eru þegar reikningsfærðar að hluta halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.';
+        NotesLbl: Label 'The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them.', Comment = 'is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.';
     begin
         Notes := NotesLbl;
         exit(true);

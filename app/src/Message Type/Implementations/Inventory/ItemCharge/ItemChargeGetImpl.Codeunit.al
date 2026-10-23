@@ -69,9 +69,15 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
     begin
-        Envelope.Add('messageType', 'Inventory.ItemCharge.Get');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('description', 'The charge line is named under data.documentType, data.documentNo or data.systemId, and data.lineNo; subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -80,7 +86,9 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TargetLbl: Label 'The charge line, named by its document and line number.', Comment = 'is-IS=Kostnaðaraukalínan, tilgreind með skjali sínu og línunúmeri.';
     begin
-        Target.Add(ContractMgt.TargetEntry('data.documentNo + data.lineNo', 'text', TargetLbl));
+        Target.Add(ContractMgt.TargetEntry('data.documentNo', 'document no.', 'The No. of the open purchase or sales document that holds the charge line. data.documentType says which kind of document it is.'));
+        Target.Add(ContractMgt.TargetEntry('data.systemId', 'guid', 'The system id of that document, as an alternative to data.documentNo. Send one of them, not both.'));
+        Target.Add(ContractMgt.TargetEntry('data.lineNo', 'integer', TargetLbl));
         exit(true);
     end;
 
@@ -101,19 +109,34 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetResponse(var Response: JsonObject): Boolean
     var
-        Rows: JsonArray;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        RowsField: JsonObject;
+        RowChildren: JsonArray;
     begin
-        Response.Add('status', 'Success');
-        Response.Add('documentType', 'purchase');
-        Response.Add('documentNo', '106001');
-        Response.Add('lineNo', 30000);
-        Response.Add('itemChargeNo', 'FREIGHT');
-        Response.Add('quantity', 1);
-        Response.Add('qtyToAssign', 1);
-        Response.Add('qtyAssigned', 0);
-        Response.Add('unassignedQuantity', 0);
-        Rows.Add(SampleRow());
-        Response.Add('assignments', Rows);
+        RowChildren.Add(ContractMgt.ResponseField('lineNo', 'integer', 'The line number of the assignment row.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocType', 'string', 'What the charge lands on: order, invoice, returnOrder, creditMemo, receipt, transferReceipt, returnShipment, salesShipment, shipment, returnReceipt, quote or blanketOrder.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocNo', 'string', 'The No. of the document the charge lands on.'));
+        RowChildren.Add(ContractMgt.ResponseField('appliesToDocLineNo', 'integer', 'The line number on that document.'));
+        RowChildren.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item the charge lands on.'));
+        RowChildren.Add(ContractMgt.ResponseField('description', 'string', 'The description of the assignment row.'));
+        RowChildren.Add(ContractMgt.ResponseField('qtyToAssign', 'decimal', 'The quantity of the charge assigned to that line and not yet invoiced.'));
+        RowChildren.Add(ContractMgt.ResponseField('amountToAssign', 'decimal', 'The amount of the charge assigned to that line and not yet invoiced.'));
+        RowChildren.Add(ContractMgt.ResponseField('qtyAssigned', 'decimal', 'The quantity of the charge that is already invoiced.'));
+        RowsField := ContractMgt.ResponseField('assignments', 'array', 'The assignment rows of the charge line, in row order.');
+        RowsField.Add('children', RowChildren);
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
+        Fields.Add(ContractMgt.ResponseField('documentType', 'string', 'purchase or sales, in lower case.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The No. of the document that holds the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('lineNo', 'integer', 'The line number of the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('itemChargeNo', 'string', 'The No. of the item charge on the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', 'The quantity of the charge line.'));
+        Fields.Add(ContractMgt.ResponseField('qtyToAssign', 'decimal', 'The quantity of the charge that is assigned and not yet invoiced.'));
+        Fields.Add(ContractMgt.ResponseField('qtyAssigned', 'decimal', 'The quantity of the charge that is already invoiced.'));
+        Fields.Add(ContractMgt.ResponseField('unassignedQuantity', 'decimal', 'The quantity of the charge line minus qtyToAssign and qtyAssigned.'));
+        Fields.Add(RowsField);
+        Response.Add('contentType', 'text/json');
+        Response.Add('fields', Fields);
         exit(true);
     end;
 
@@ -148,13 +171,18 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, PreconditionWhenLbl, PreconditionFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Charge domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         exit(true);
     end;
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
+        Effect.Add('effect', 'read');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
+        Effect.Add('changes', 'Nothing. The call only reads the assignment rows of one charge line and the quantity that is still unassigned.');
+        Effect.Add('idempotent', true);
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         exit(true);
     end;
 
@@ -182,7 +210,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         TitleLbl: Label 'Read the assignment of a freight charge on a purchase order', Comment = 'is-IS=Lesa úthlutun flutningskostnaðar á innkaupapöntun';
     begin
-        Examples.Add(ContractMgt.Example(TitleLbl, '{"documentType":"purchase","documentNo":"106001","lineNo":30000}', '{"status":"Success","documentType":"purchase","documentNo":"106001","lineNo":30000,"itemChargeNo":"FREIGHT","quantity":1,"qtyToAssign":1,"qtyAssigned":0,"unassignedQuantity":0,"assignments":[{"lineNo":10000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0},{"lineNo":20000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":20000,"itemNo":"1900-S","description":"PARIS Guest Chair, black","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0}]}'));
+        Examples.Add(ContractMgt.Example(TitleLbl, '{"type":"Inventory.ItemCharge.Get","data":{"documentType":"purchase","documentNo":"106001","lineNo":30000}}', '{"status":"Success","documentType":"purchase","documentNo":"106001","lineNo":30000,"itemChargeNo":"FREIGHT","quantity":1,"qtyToAssign":1,"qtyAssigned":0,"unassignedQuantity":0,"assignments":[{"lineNo":10000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":10000,"itemNo":"1896-S","description":"ATHENS Desk","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0},{"lineNo":20000,"appliesToDocType":"order","appliesToDocNo":"106001","appliesToDocLineNo":20000,"itemNo":"1900-S","description":"PARIS Guest Chair, black","qtyToAssign":0.5,"amountToAssign":50,"qtyAssigned":0}]}'));
         exit(true);
     end;
 
@@ -890,10 +918,5 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Row.Add('qtyToAssign', QtyToAssign);
         Row.Add('amountToAssign', AmountToAssign);
         Row.Add('qtyAssigned', QtyAssigned);
-    end;
-
-    local procedure SampleRow(): JsonObject
-    begin
-        exit(RowJson(10000, 'order', '106001', 10000, '1896-S', 'ATHENS Desk', 1, 100, 0));
     end;
 }

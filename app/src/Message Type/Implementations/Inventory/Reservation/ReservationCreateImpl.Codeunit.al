@@ -62,9 +62,17 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <param name="Envelope">The envelope.</param>
     /// <returns>True.</returns>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
+    var
+        Subject: JsonObject;
+        Forms: JsonArray;
     begin
-        Envelope.Add('messageType', 'Inventory.Reservation.Create');
-        Envelope.Add('version', 1);
+        Subject.Add('use', 'notUsed');
+        Subject.Add('forms', Forms);
+        Subject.Add('description', 'The source line is named in data (sourceType, sourceNo and sourceLineNo); subject is not read.');
+        Envelope.Add('subject', Subject);
+        Envelope.Add('dataRequired', true);
+        Envelope.Add('version', '1.0');
+        Envelope.Add('contentType', 'text/json');
         exit(true);
     end;
 
@@ -73,10 +81,9 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
-        TargetJson: JsonObject;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        TargetJson.Add('codeunit', 'Reservation Management');
-        Target.Add(TargetJson);
+        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', 'The source line to reserve for: a Sales Line (sourceType 37), Purchase Line (39), Transfer Line (5741) or Assembly Line (901). sourceSubtype is the document type ordinal, or the transfer direction (0 outbound, 1 inbound), and defaults to 1 for sales, purchase and assembly lines and to 0 for a transfer line.'));
         exit(true);
     end;
 
@@ -121,8 +128,15 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Fields.Add(ContractMgt.ResponseField('status', 'string', StatusLbl));
         Fields.Add(ContractMgt.ResponseField('entryNo', 'integer', EntryNoLbl));
         Fields.Add(ContractMgt.ResponseField('entryNos', 'array', EntryNosLbl));
-        Fields.Add(ContractMgt.ResponseField('quantity', 'number', QuantityLbl));
+        Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'Item number of the source line.'));
+        Fields.Add(ContractMgt.ResponseField('locationCode', 'string', 'Location code of the source line; blank when the line has none.'));
+        Fields.Add(ContractMgt.ResponseField('quantity', 'decimal', QuantityLbl));
+        Fields.Add(ContractMgt.ResponseField('requestedQuantity', 'decimal', 'The quantity that was asked for, as sent.'));
         Fields.Add(ContractMgt.ResponseField('fullAutoReservation', 'boolean', FullLbl));
+        Fields.Add(ContractMgt.ResponseField('sourceType', 'integer', 'The source table number, as sent.'));
+        Fields.Add(ContractMgt.ResponseField('sourceSubtype', 'integer', 'The source subtype that was used, including the default.'));
+        Fields.Add(ContractMgt.ResponseField('sourceNo', 'string', 'The source document number, in upper case.'));
+        Fields.Add(ContractMgt.ResponseField('sourceLineNo', 'integer', 'The source line number, as sent.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
@@ -143,9 +157,13 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         NothingFixLbl: Label 'Check inventory or incoming supply at the source location, then retry.', Comment = 'is-IS=Athugaðu birgðir eða væntanlegt framboð á staðsetningunni og reyndu aftur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'sourceType, sourceSubtype or sourceLineNo is not a whole number of 0 or more, quantity is not a number, or sourceNo, itemNo or locationCode is not text within 20, 20 and 10 characters (sourceNo must not be blank).', 'Send the integers as JSON numbers and the codes as JSON strings within their length.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source line is not an item line, or the Reservations domain is turned off for the company.', 'Reserve for an item line, or turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NothingWhenLbl, NothingFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the source line or the supply it names.'));
         exit(true);
     end;
 
@@ -153,7 +171,16 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <param name="Effect">The effect.</param>
     /// <returns>True.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Preconditions: JsonArray;
     begin
+        Preconditions.Add('The Reservations domain is turned on in Inventory Setup.');
+        Preconditions.Add('The source line exists and is an item line that has supply to reserve from.');
+        Effect.Add('effect', 'write');
+        Effect.Add('changes', 'Creates reservation entries that tie the source line to available supply, and commits them when the call finishes. Nothing is posted; the source documents and the ledger entries stay as they are.');
+        Effect.Add('idempotent', false);
+        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         exit(true);
@@ -176,6 +203,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Get', 'Read reservations before creating one.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Cancel', 'Cancel a reservation instead of creating one.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.AutoReserve', 'Reserve the whole outstanding quantity of a sales order line without naming a quantity; it reserves all or nothing.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.OrderTracking.Get', 'Read which supply is tracked against the source line after reserving.'));
         exit(true);
     end;
 
@@ -183,16 +212,29 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <param name="Workflow">The workflow.</param>
     /// <returns>False.</returns>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.Get', 'Read the reservations that already exist before reserving.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.Create', 'Reserve supply for the source line and keep entryNo from the answer.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.OrderTracking.Get', 'Read which supply is now tracked against the line.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reservation.Cancel', 'Cancel a reservation by its entryNo when it is no longer wanted.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Returns a request example.</summary>
     /// <param name="Examples">The examples.</param>
     /// <returns>True.</returns>
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Examples.ReadFrom('[{"title":"Reserve 5 units for sales order line 10000. Replace the identifiers with your own.","request":{"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceSubtype":1,"sourceNo":"S-ORD101001","sourceLineNo":10000,"quantity":5}}}]');
+        Examples.Add(ContractMgt.Example(
+            'Reserve 5 units for sales order line 10000. Replace the identifiers with your own.',
+            '{"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceSubtype":1,"sourceNo":"S-ORD101001","sourceLineNo":10000,"quantity":5}}',
+            '{"status":"Success","entryNo":120,"entryNos":[120],"itemNo":"1000","locationCode":"BLUE","quantity":5,"requestedQuantity":5,"fullAutoReservation":true,"sourceType":37,"sourceSubtype":1,"sourceNo":"S-ORD101001","sourceLineNo":10000}'));
         exit(true);
     end;
 
@@ -201,7 +243,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetOverview(var Overview: Text): Boolean
     var
-        OverviewLbl: Label 'Reserves supply for a real source line with Reservation Management AutoReserve and returns the reservation entry numbers.', Comment = 'is-IS=Tekur frá framboð fyrir raunverulega upprunalínu með AutoReserve í Reservation Management og skilar númerum frátekningarfærslnanna.';
+        OverviewLbl: Label 'Reserves supply for one real source line with the same automatic reservation as the Auto Reserve action and returns the reservation entry numbers.', Comment = 'is-IS=Tekur frá framboð fyrir eina raunverulega upprunalínu með sömu sjálfvirku frátekningu og aðgerðin Taka sjálfvirkt frá og skilar númerum frátekningarfærslnanna.';
     begin
         Overview := OverviewLbl;
         exit(true);
@@ -212,7 +254,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'AutoReserve runs on the loaded source line and reserves at most the requested quantity from the available supply; a partial reservation returns fullAutoReservation false. Cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=AutoReserve keyrir á hlaðinni upprunalínu og tekur að hámarki frá umbeðið magn af tiltæku framboði; hlutafrátekning skilar fullAutoReservation false. Afturkallaðu færslu með Inventory.Reservation.Cancel.';
+        NotesLbl: Label 'Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
     begin
         Notes := NotesLbl;
         exit(true);
