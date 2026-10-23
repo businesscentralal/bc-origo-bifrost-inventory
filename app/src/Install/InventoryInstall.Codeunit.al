@@ -11,9 +11,12 @@ codeunit 10076835 "Inventory Install ori"
     Access = Internal;
 
     trigger OnInstallAppPerCompany()
+    var
+        InventoryUpgrade: Codeunit "Inventory Upgrade ori";
     begin
         SetUpgradeTags();
         InsertSetup();
+        InventoryUpgrade.EnableUsedDomains();
     end;
 
     local procedure InsertSetup()
