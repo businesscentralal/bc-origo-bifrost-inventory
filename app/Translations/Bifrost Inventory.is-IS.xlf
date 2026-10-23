@@ -784,9 +784,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.</source>
-          <target>Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.</note>
+          <source>Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.</source>
+          <target>Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -794,6 +794,18 @@
           <target>bóka birgðakostnað,fjárhagur,skýrsla 1002</target>
           <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðakostnað,fjárhagur,skýrsla 1002</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
+          <target>itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts selected pending inventory value entries to G/L using native per-entry posting. The response reports actual posted and remaining counts.</source>
+          <target>Bókar valdar óbókaðar virðisfærslur birgða á fjárhag með innbyggðri bókun fyrir hverja færslu. Svarið sýnir raunfjölda bókaðra og eftirstandandi færslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valdar óbókaðar virðisfærslur birgða á fjárhag með innbyggðri bókun fyrir hverja færslu. Svarið sýnir raunfjölda bókaðra og eftirstandandi færslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetOverview - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Post inventory value entries that are not yet posted to the general ledger.</source>

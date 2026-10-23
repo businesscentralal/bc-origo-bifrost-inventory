@@ -5,6 +5,8 @@ using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Microsoft.Foundation.Enums;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
@@ -32,6 +34,10 @@ codeunit 10076842 "Inventory Write Process ori"
         ReserveQuantityBase: Decimal;
         AvailabilityDate: Date;
         ReserveDescription: Text[100];
+        CostItemFilter: Text;
+        CostDocumentFilter: Text;
+        CostJournalTemplate: Code[10];
+        CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
         CancelEntryNo: Integer;
         FullAutoReservation: Boolean;
@@ -61,6 +67,8 @@ codeunit 10076842 "Inventory Write Process ori"
                 CancelReservation();
             'AssemblyUndo':
                 UndoAssembly();
+            'CostToGLPost':
+                PostCostToGL(Rec);
             else
                 Error(UnknownOperationErr);
         end;
@@ -113,6 +121,62 @@ codeunit 10076842 "Inventory Write Process ori"
     procedure GetFullAutoReservation(): Boolean
     begin
         exit(FullAutoReservation);
+    end;
+
+    /// <summary>Sets native cost posting selection and the optional mandatory G/L journal batch.</summary>
+    procedure SetCostPostingSelection(ItemFilter: Text; DocumentFilter: Text; JournalTemplate: Code[10]; JournalBatch: Code[10])
+    begin
+        CostItemFilter := ItemFilter;
+        CostDocumentFilter := DocumentFilter;
+        CostJournalTemplate := JournalTemplate;
+        CostJournalBatch := JournalBatch;
+    end;
+
+    local procedure PostCostToGL(var Argument: Record "Message Argument ori")
+    var
+        Pending: Record "Post Value Entry to G/L";
+        ValueEntry: Record "Value Entry";
+        PostInventoryCost: Report "Post Inventory Cost to G/L";
+        EntryFilter: Text;
+        Response: JsonObject;
+        BeforeCount: Integer;
+        RemainingCount: Integer;
+    begin
+        if CostItemFilter <> '' then
+            Pending.SetFilter("Item No.", CostItemFilter);
+        if CostDocumentFilter <> '' then begin
+            ValueEntry.SetFilter("Document No.", CostDocumentFilter);
+            if Pending.FindSet() then
+                repeat
+                    ValueEntry.SetRange("Entry No.", Pending."Value Entry No.");
+                    if not ValueEntry.IsEmpty() then begin
+                        if EntryFilter <> '' then
+                            EntryFilter += '|';
+                        EntryFilter += Format(Pending."Value Entry No.", 0, 9);
+                    end;
+                until Pending.Next() = 0;
+            if EntryFilter = '' then
+                Pending.SetRange("Value Entry No.", 0)
+            else
+                Pending.SetFilter("Value Entry No.", EntryFilter);
+        end;
+        BeforeCount := Pending.Count();
+        // Native per-entry posting uses each value entry's document number, not a fabricated document number.
+        PostInventoryCost.InitializeRequest(1, '', true);
+        if (CostJournalTemplate <> '') or (CostJournalBatch <> '') then
+            PostInventoryCost.SetGenJnlBatch(CostJournalTemplate, CostJournalBatch);
+        PostInventoryCost.SetTableView(Pending);
+        PostInventoryCost.UseRequestPage(false);
+        PostInventoryCost.Run();
+        RemainingCount := Pending.Count();
+        Response.Add('status', 'Success');
+        Response.Add('itemNoFilter', CostItemFilter);
+        Response.Add('documentNoFilter', CostDocumentFilter);
+        Response.Add('postedValueEntryCount', BeforeCount - RemainingCount);
+        Response.Add('remainingValueEntryCount', RemainingCount);
+        Response.Add('posted', BeforeCount > RemainingCount);
+        Argument.SetResponseJson(Response);
+        Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
     /// <summary>Selects the owned posted assembly for an atomic AssemblyUndo operation.</summary>

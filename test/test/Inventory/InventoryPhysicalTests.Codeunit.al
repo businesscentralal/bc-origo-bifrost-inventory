@@ -24,6 +24,64 @@ codeunit 96944 "Inventory Physical Tests"
         Journal: Codeunit "Inventory Native Journal ori";
 
     [Test]
+    procedure CostToGL_PostsSelectedItemOnly()
+    begin
+        VerifyCostToGLPosting(false);
+    end;
+
+    [Test]
+    procedure CostToGL_AppliesDocumentAndItemFilters()
+    begin
+        VerifyCostToGLPosting(true);
+    end;
+
+    local procedure VerifyCostToGLPosting(UseDocumentFilter: Boolean)
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        ValueEntry: Record "Value Entry";
+        OtherValueEntry: Record "Value Entry";
+        GLEntry: Record "G/L Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+        OtherEntryNo: Integer;
+        BeforeCount: Integer;
+    begin
+        CreateStock(Item);
+        CreateStock(OtherItem);
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.FindFirst();
+        EntryNo := ValueEntry."Entry No.";
+        OtherValueEntry.SetRange("Item No.", OtherItem."No.");
+        OtherValueEntry.FindFirst();
+        OtherEntryNo := OtherValueEntry."Entry No.";
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Owned selected cost is unposted.');
+        Assert.AreEqual(0, OtherValueEntry."Cost Posted to G/L", 'Owned other cost is unposted.');
+        if UseDocumentFilter then begin
+            Assert.AreNotEqual(ValueEntry."Document No.", OtherValueEntry."Document No.", 'Own fixture documents differ.');
+            Request.Add('itemNoFilter', Item."No." + '|' + OtherItem."No.");
+            Request.Add('documentNoFilter', ValueEntry."Document No.");
+        end else
+            Request.Add('itemNoFilter', Item."No.");
+        BeforeCount := GLEntry.Count();
+        Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native cost posting completes.');
+        Response.Get('posted', Token);
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'Actual selected entries posted.');
+        Response.Get('postedValueEntryCount', Token);
+        Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'Actual posted count.');
+        ValueEntry.Get(EntryNo);
+        OtherValueEntry.Get(OtherEntryNo);
+        Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'Selected value entry cost is posted.');
+        Assert.AreEqual(0, OtherValueEntry."Cost Posted to G/L", 'Unselected value entry remains unposted.');
+        Assert.IsTrue(GLEntry.Count() > BeforeCount, 'Real G/L entries were created.');
+    end;
+
+    [Test]
     procedure ReclassPost_RejectsItemTemplate_1033()
     begin
         VerifyWrongReclassTemplate("Item Journal Template Type"::Item, 1033);

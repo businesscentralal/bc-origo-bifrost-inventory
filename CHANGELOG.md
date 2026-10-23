@@ -4,6 +4,7 @@
 
 ### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
 
+- `Inventory.CostToGL.Post` initializes native per-entry posting with Post=true, applies item and document filters to pending value entries, accepts the mandatory G/L journal template/batch, and returns actual posted/remaining counts. It uses the existing isolated write process and the documented independent Post commit boundary. Native regressions verify real G/L entries and selected/unselected value-entry amounts (10076861, 10076842; test 96944).
 - `Inventory.Reclassification.Post` refuses missing templates and non-Transfer template types before any line is posted, with coded English/Icelandic recovery instructions. Help reflects the enforced template boundary (codeunit 10076888).
 - `Inventory.Assembly.UndoPost` and `Inventory.Transfer.UndoShipment` require the inventory posting token in addition to their existing document-write and company-domain gates, because undo creates reversing entries (codeunits 10076909, 10076910).
 - `Inventory.Cost.Update`, `Inventory.ItemCategory.Set` and `Inventory.ItemCharge.Assign` honor `Omit Commit`: chained calls run without a Boolean Codeunit.Run boundary so failures propagate and caller writes roll back together. Standalone calls retain their existing isolated error handling (codeunits 10076863, 10076871, 10076873).

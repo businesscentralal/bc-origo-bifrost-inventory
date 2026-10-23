@@ -26,6 +26,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
     procedure FullRole_ExecutesPreviouslyMissingImplementations()
     var
         Setup: Record "Inventory Setup ori";
+        OriginalSetup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         PostingGate: Codeunit "Inv. Posting Gate ori";
@@ -39,6 +40,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
         LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.InsertIfNotExists();
         Setup.Get();
+        OriginalSetup := Setup;
         Setup.Costing := false;
         Setup."Item Application" := false;
         Setup.Assembly := false;
@@ -67,6 +69,9 @@ codeunit 96918 "Inv. Posting Gate Tests"
             Assert.IsTrue(Response.Get('code', Token), 'Implementation must execute its company gate under the real Full role.');
             Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Company domain disabled; no native write or posting permission added.');
         end;
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        Setup := OriginalSetup;
+        Setup.Modify(true);
     end;
 
     [Test]
