@@ -23,6 +23,49 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Assert: Codeunit "Library Assert";
 
     [Test]
+    procedure FullRole_ExecutesPreviouslyMissingImplementations()
+    var
+        Setup: Record "Inventory Setup ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        Impl: Interface "Msg Interface ori";
+        MessageType: Enum "Message Type ori";
+        Types: List of [Enum "Message Type ori"];
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Costing := false;
+        Setup."Item Application" := false;
+        Setup.Assembly := false;
+        Setup."Transfer Orders" := false;
+        Setup.Modify(true);
+        Types.Add("Message Type ori"::"Inventory.AdjustCost.Run");
+        Types.Add("Message Type ori"::"Inventory.CostToGL.Post");
+        Types.Add("Message Type ori"::"Inventory.CostToGL.Test");
+        Types.Add("Message Type ori"::"Inventory.Revaluation.Calculate");
+        Types.Add("Message Type ori"::"Inventory.ItemApplication.Get");
+        Types.Add("Message Type ori"::"Inventory.ItemApplication.Reapply");
+        Types.Add("Message Type ori"::"Inventory.ItemApplication.Unapply");
+        Types.Add("Message Type ori"::"Inventory.Assembly.UndoPost");
+        Types.Add("Message Type ori"::"Inventory.Transfer.UndoReceipt");
+        Types.Add("Message Type ori"::"Inventory.Transfer.UndoShipment");
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        foreach MessageType in Types do begin
+            Clear(TempArgument);
+            TempArgument.Init();
+            TempArgument.Version := "Message Version ori"::"1.0";
+            TempArgument.Insert(true);
+            Impl := MessageType;
+            Impl.ExecuteBifrostTask(TempArgument);
+            Response := TempArgument.GetResponseJson();
+            Assert.IsTrue(Response.Get('code', Token), 'Implementation must execute its company gate under the real Full role.');
+            Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Company domain disabled; no native write or posting permission added.');
+        end;
+    end;
+
+    [Test]
     procedure AssemblyUndo_WithoutInvPost_EnforcesGate()
     var
         Header: Record "Posted Assembly Header";

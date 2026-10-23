@@ -13,6 +13,17 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
 
     Permissions =
         tabledata "Inventory Setup ori" = R,
+        codeunit "Adjust Cost Run Impl ori" = X,
+        codeunit "Adjust Cost Run Process ori" = X,
+        codeunit "Cost To GL Post Impl ori" = X,
+        codeunit "Revaluation Calc Impl ori" = X,
+        codeunit "Item Appl. Reapply Impl ori" = X,
+        codeunit "Item Appl. Unapply Impl ori" = X,
+        codeunit "Assembly Undo Post Impl ori" = X,
+        codeunit "Transf Undo Rcpt Impl ori" = X,
+        codeunit "Transfer Undo Shpt Impl ori" = X,
+        codeunit "Cost To GL Test Impl ori" = X,
+        codeunit "Item Appl. Get Impl ori" = X,
         codeunit "Item Attribute Get Impl ori" = X,
         codeunit "Item Attribute Create Impl ori" = X,
         codeunit "Item Attr. Create Process ori" = X,

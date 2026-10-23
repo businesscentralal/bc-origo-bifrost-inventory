@@ -216,7 +216,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
-        Effect.Add('changes', 'Creates the item category, or changes the description of an existing one, and stores the listed attribute defaults on it. A value equal to the one inherited from a parent category removes the own row of the category for that attribute. Categories are never deleted or moved. The write is isolated: a refusal saves nothing.');
+        Effect.Add('changes', 'Creates the item category, or changes the description of an existing one, and stores the listed attribute defaults on it. A value equal to the one inherited from a parent category removes the own row of the category for that attribute. Categories are never deleted or moved. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
@@ -285,7 +285,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'A successful call saves the category and its attribute defaults. A refusal leaves every category and attribute unchanged. The call does not delete categories, does not move an existing category to another parent and does not post. Items already in the category keep their own attribute values; the defaults apply to items assigned to the category later. Generic data writes to item categories and their attribute rows are refused, so use this call.', Comment = 'is-IS=Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall.';
+        NotesLbl: Label 'A successful call saves the category and its attribute defaults. A refusal leaves every category and attribute unchanged. The call does not delete categories, does not move an existing category to another parent and does not post. Items already in the category keep their own attribute values; the defaults apply to items assigned to the category later. Generic data writes to item categories and their attribute rows are refused, so use this call. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
     begin
         Notes := NotesLbl;
         exit(true);

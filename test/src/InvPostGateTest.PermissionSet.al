@@ -21,8 +21,6 @@ permissionset 96920 "Inv Post Gate Test"
         tabledata "Assembly Header" = RIMD,
         tabledata "Posted Assembly Header" = RIMD,
         tabledata "Transfer Shipment Header" = RIMD,
-        codeunit "Assembly Undo Post Impl ori" = X,
-        codeunit "Transfer Undo Shpt Impl ori" = X,
         tabledata "Inventory Setup ori" = R,
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Transfer Order Post Impl ori" = X,
