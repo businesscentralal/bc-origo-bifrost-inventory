@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
+
+- `Inventory.Reclassification.Post` refuses missing templates and non-Transfer template types before any line is posted, with coded English/Icelandic recovery instructions. Help reflects the enforced template boundary (codeunit 10076888).
+- `AssemblyOrder.UndoPost` and `Inventory.Transfer.UndoShipment` require the inventory posting token in addition to their existing document-write and company-domain gates, because undo creates reversing entries (codeunits 10076909, 10076910).
+- `Inventory.Cost.Update`, `Inventory.ItemCategory.Set` and `Inventory.ItemCharge.Assign` honor `Omit Commit`: chained calls run without a Boolean Codeunit.Run boundary so failures propagate and caller writes roll back together. Standalone calls retain their existing isolated error handling (codeunits 10076863, 10076871, 10076873).
+- Tests cover non-Transfer templates in both languages, actual restricted caller grants/denials, native subscriber rollback of an uncommitted caller write, and category/charge mutation suites in chained mode (96918, 96919, 96920, 96937, 96944 and existing category/charge tests). This phase does not close #159; cost-to-G/L posting, preview, reservation, undo atomicity and remaining permissions acceptance are still pending. Gunnar's AC2 decision retains existing pre-post assembly quantity persistence.
+
 ### Changed (2026-10-22) - message type contract and discovery up to Foundation parity
 
 - All 59 Inventory message types now declare the chapters Foundation's own types declare: envelope, target, parameters (with `children` on every array of objects), response (with `children` on arrays), errors with a machine code (or the error text) and a fix, effect with `effect` (read, write or irreversible), `changes`, `idempotent` and `permissionSet`, related, workflow for every type that is not a plain read, examples with a request and a response, overview and notes. Texts were rewritten from the implementation; where the help contradicted the code it was corrected (error codes, response fields, parameter types, commit behaviour of the Post types). `Inventory.Cost.Get` declared the effect `readOnly`, now `read`; `Inventory.CostToGL.Test` named an error code and chapter shapes that no caller could get, now standard.

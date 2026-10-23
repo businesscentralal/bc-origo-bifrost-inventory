@@ -299,8 +299,11 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
             exit;
         if not ValidateRequest(Argument, RequestJson) then
             exit;
-        if not Codeunit.Run(Codeunit::"Item Charge Assign Proc ori", Argument) then
-            Argument.RespondWithLastError();
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Item Charge Assign Proc ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Item Charge Assign Proc ori", Argument) then
+                Argument.RespondWithLastError();
     end;
 
     /// <summary>

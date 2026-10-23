@@ -46,8 +46,11 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         Process.SetOperation('CostUpdate');
-        if not Process.Run(Argument) then
-            Argument.RespondWithError(GetLastErrorText());
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithError(GetLastErrorText());
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>

@@ -4197,6 +4197,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName er nauðsynlegt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 was not found.</source>
+          <target>Bókarsniðmátið %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingJournalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a Transfer template.</source>
+          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 809699881" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing Transfer journal template</source>
+          <target>fyrirliggjandi bókarsniðmát af gerðinni Transfer</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 688647466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.</source>
+          <target>Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reclassification batch %1 %2 has no lines.</source>
           <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>

@@ -23,6 +23,42 @@ codeunit 96944 "Inventory Physical Tests"
         LibraryInventory: Codeunit "Library - Inventory";
         Journal: Codeunit "Inventory Native Journal ori";
 
+    [Test]
+    procedure ReclassPost_RejectsItemTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Item, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsItemTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Item, 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsPhysicalTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::"Phys. Inventory", 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsPhysicalTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::"Phys. Inventory", 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsRevaluationTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Revaluation, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsRevaluationTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Revaluation, 1039);
+    end;
+
     /// <summary>Calculate uses report 790 and its item filter, leaves ledgers untouched, and refuses duplicate proposals.</summary>
     [Test]
     procedure Scenario_AC01_Calculate_SelectedStockCreatesNativeLines()
@@ -581,6 +617,58 @@ codeunit 96944 "Inventory Physical Tests"
         JournalLine.Validate("Unit Amount", 12);
         JournalLine.Modify(true);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+    end;
+
+    local procedure VerifyWrongReclassTemplate(JournalType: Enum "Item Journal Template Type"; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Impl: Codeunit "Reclass Post Impl ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        PreviousLanguage: Integer;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        CreateBatch(Batch, JournalType);
+        Line.Init();
+        Line."Journal Template Name" := Batch."Journal Template Name";
+        Line."Journal Batch Name" := Batch.Name;
+        Line."Line No." := 10000;
+        Line.Description := 'Owned template guard fixture';
+        Line.Insert(false);
+        Request.Add('journalTemplateName', Batch."Journal Template Name");
+        Request.Add('journalBatchName', Batch.Name);
+        InitArgument(TempArgument, Batch, Request);
+        BeforeCount := Entries.Count();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Impl.ExecuteBifrostTask(TempArgument);
+        GlobalLanguage(PreviousLanguage);
+        Response := TempArgument.GetResponseJson();
+        Assert.IsTrue(Response.Get('code', Token), 'Refusal must be coded before native posting runs.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Wrong journal type.');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('journalTemplateName', Token.AsValue().AsText(), 'Template parameter.');
+        Response.Get('received', Token);
+        Assert.AreEqual(Batch."Journal Template Name", Token.AsValue().AsText(), 'Actual template name.');
+        Response.Get('error', Token);
+        if LanguageId = 1039 then
+            Assert.AreEqual('Bókarsniðmátið ' + Batch."Journal Template Name" + ' er ekki af gerðinni Transfer.', Token.AsValue().AsText(), 'Icelandic refusal.')
+        else
+            Assert.AreEqual('Journal template ' + Batch."Journal Template Name" + ' is not a Transfer template.', Token.AsValue().AsText(), 'English refusal.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Recovery instruction required.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Recovery instruction nonempty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Wrong template creates no item ledger entries.');
+        Assert.IsTrue(Line.Get(Batch."Journal Template Name", Batch.Name, 10000), 'Wrong template must not consume the line.');
+        Assert.AreEqual('Owned template guard fixture', Line.Description, 'Line unchanged.');
     end;
 
     local procedure CreateBatch(var Batch: Record "Item Journal Batch"; JournalType: Enum "Item Journal Template Type")

@@ -14,7 +14,8 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     var
         Gate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(Gate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false));
+        exit(Gate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) and
+            Gate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -91,7 +92,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write Transfer Shipment Header records.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted transfer tables.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks BIFROST InvPost ori or cannot write Transfer Shipment Header records.', 'Assign BIFROST InvPost ori, BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted transfer tables.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo was not sent.', 'Send documentNo, the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Transfer Shipment Header has that number.', 'Check the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.TextErrorEntry('Posted transfer shipment %1 has no lines to undo.', 'The posted transfer shipment has no line that is not a correction line, so there is nothing to undo. The answer carries the error text and no code.', 'Check that the shipment is the original posted shipment and not one that only holds correction lines.'));
@@ -108,7 +109,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Undoes every line of the posted transfer shipment that is not a correction line, one line after the other, with the standard Business Central undo of a transfer shipment line, which posts the corrective entries. The posted document is not deleted. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
@@ -158,7 +159,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
             'Every line that is not a correction line is undone, in line order, each as its own step. A refusal on one line stops the call and answers an error; lines that came before it may already be undone, so read the posted shipment before you send the call again. ' +
             'A posted transfer shipment whose lines are all correction lines is refused. A refusal from Business Central is answered with its error text and no error code. ' +
-            'The caller needs the Transfer Orders domain turned on in Inventory Setup and write permission on the posted transfer shipment table. Unlike Inventory.TransferOrder.Post this type does not check the BIFROST InvPost ori permission set. ' +
+            'The caller needs the Transfer Orders domain turned on in Inventory Setup and write permission on the posted transfer shipment table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
             'Receipt undo is a separate type, Inventory.Transfer.UndoReceipt, and is not available in this version. The type does not read subject.';
         exit(true);
     end;
@@ -184,6 +185,8 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.';
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
+            exit;
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

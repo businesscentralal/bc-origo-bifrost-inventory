@@ -320,8 +320,11 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
             exit;
         if not ValidateRequest(Argument, RequestJson) then
             exit;
-        if not Codeunit.Run(Codeunit::"Item Category Set Proc ori", Argument) then
-            Argument.RespondWithLastError();
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Item Category Set Proc ori", Argument)
+        else
+            if not Codeunit.Run(Codeunit::"Item Category Set Proc ori", Argument) then
+                Argument.RespondWithLastError();
     end;
 
     local procedure CanWriteTables(): Boolean

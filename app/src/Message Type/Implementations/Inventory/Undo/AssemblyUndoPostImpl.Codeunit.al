@@ -12,7 +12,8 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) and
+            DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, true));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -87,7 +88,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Assembly domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot write Posted Assembly Header records.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted assembly tables.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks BIFROST InvPost ori or cannot write Posted Assembly Header records.', 'Assign BIFROST InvPost ori, BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the posted assembly tables.'));
         Errors.Add(ContractMgt.TextErrorEntry('documentNo is required.', 'documentNo was not sent. The answer carries the error text and no code.', 'Send documentNo, the number of the posted assembly.'));
         Errors.Add(ContractMgt.TextErrorEntry('Posted assembly %1 was not found.', 'No Posted Assembly Header has that number. The answer carries the error text and no code.', 'Check the number. It is the posted assembly number, not the assembly order number.'));
         Errors.Add(ContractMgt.TextErrorEntry('The error text of Business Central', 'Business Central refuses the undo, for example when the posted assembly cannot be undone. The answer carries Business Central''s own error text and no code.', 'Read the text, correct the cause in Business Central and send the call again.'));
@@ -105,7 +106,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Effect.Add('posts', true);
         Effect.Add('changes', 'Undoes the posted assembly with the standard Business Central undo of a posted assembly, which posts the reversing entries. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
@@ -154,7 +155,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     begin
         Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
             'documentNo is the number of the posted assembly (the posted document), not the number of the assembly order; the type looks it up in the Posted Assembly Header table only. ' +
-            'The caller needs the Assembly domain turned on in Inventory Setup and write permission on the posted assembly table. Unlike Inventory.AssemblyOrder.Post this type does not check the BIFROST InvPost ori permission set. ' +
+            'The caller needs the Assembly domain turned on in Inventory Setup and write permission on the posted assembly table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
             'A refusal from Business Central is answered with its error text and no error code. The type does not read subject. ' +
             'Post the assembly again with Inventory.AssemblyOrder.Post, or create a new assembly order with Inventory.AssemblyOrder.Create, once the posted assembly is undone.';
         exit(true);
@@ -177,6 +178,8 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         NotFoundErr: Label 'Posted assembly %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
+            exit;
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
