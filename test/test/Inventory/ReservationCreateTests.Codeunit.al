@@ -14,6 +14,7 @@ codeunit 96946 "Reservation Create Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
         Helper: Codeunit "Transfer Order Test Helper";
 
@@ -29,6 +30,7 @@ codeunit 96946 "Reservation Create Tests"
         Token: JsonToken;
         EntryNo: Integer;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] A released transfer order line for 6 of an item with 10 on hand at the from location.
         CreateTransferLine(Item, TransferHeader, TransferLine, 10, 6);
 
@@ -82,6 +84,7 @@ codeunit 96946 "Reservation Create Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] A transfer line for an item with nothing on hand.
         CreateTransferLine(Item, TransferHeader, TransferLine, 0, 2);
 
@@ -109,6 +112,7 @@ codeunit 96946 "Reservation Create Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] A request without sourceType.
         RequestJson.Add('sourceNo', 'TO-NONE');
         RequestJson.Add('sourceLineNo', 10000);
@@ -130,6 +134,7 @@ codeunit 96946 "Reservation Create Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] A transfer line reference that does not exist.
         RequestJson.Add('sourceType', Database::"Transfer Line");
         RequestJson.Add('sourceNo', 'NO-SUCH-TO');
@@ -150,6 +155,7 @@ codeunit 96946 "Reservation Create Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] An unsupported source table (Item Ledger Entry, 32).
         RequestJson.Add('sourceType', 32);
         RequestJson.Add('sourceNo', 'X');
@@ -185,6 +191,7 @@ codeunit 96946 "Reservation Create Tests"
         Token: JsonToken;
         EntryNo: Integer;
     begin
+        DomainSetup.EnableReservations();
         // [GIVEN] An entry number above every existing reservation entry.
         ReservationEntry.SetLoadFields("Entry No.");
         if ReservationEntry.FindLast() then

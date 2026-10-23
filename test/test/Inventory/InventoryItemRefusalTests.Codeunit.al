@@ -16,6 +16,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
         Helper: Codeunit "Assembly Order Test Helper";
 
@@ -100,6 +101,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
+        DomainSetup.EnablePhysicalInventory();
         RequestJson.Add('journalTemplateName', 'ZZC-NONE');
         RequestJson.Add('journalBatchName', 'ZZC-NONE');
         RequestJson.Add('lineNo', 999999);

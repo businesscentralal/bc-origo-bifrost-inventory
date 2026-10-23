@@ -11,6 +11,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
     [Test]
@@ -312,6 +313,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnablePhysicalInventory();
         // [GIVEN] The help contract names PreconditionFailed for an empty batch.
         LibraryAssert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.Post", Contract), 'Inventory.PhysInventory.Post must declare a contract.');
         GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', ErrorEntry);

@@ -20,6 +20,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
     TestPermissions = Restrictive;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
 
     /// <summary>A real read-only caller reads native cost and stock without card or posting rights.</summary>
@@ -149,6 +150,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         PriceImpl: Codeunit "Price Update Impl ori";
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        DomainSetup.EnableItemPrice();
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Insert(true);
@@ -168,6 +170,7 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        DomainSetup.EnableItemPrice();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Cost Write Test');
         Assert.IsFalse(PostingGate.HasPostingPermission(), 'Price write does not require a posting token.');
