@@ -867,6 +867,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeName: Text;
         TextChapter: Text;
         ObjectChapter: JsonObject;
+        ErrorChapter: JsonObject;
         ArrayChapter: JsonArray;
         Keys: List of [Text];
         RepeatRead: Integer;
@@ -899,7 +900,16 @@ codeunit 96921 "Inventory Contract Batch Tests"
                     LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Two applied filters and optional native journal template/batch.');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
-                LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified error branches.');
+                if TypeName = 'Inventory.AdjustCost.Run' then
+                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified adjustment error branches.')
+                else begin
+                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Domain, posting permission and native posting/selection failures.');
+                    Clear(ObjectChapter);
+                    ObjectChapter.Add('errors', ArrayChapter);
+                    GetNamedMember(ObjectChapter, 'errors', 'code', 'InvalidParameter', ErrorChapter);
+                    GetNamedMember(ObjectChapter, 'errors', 'code', 'PermissionDenied', ErrorChapter);
+                    GetNamedMember(ObjectChapter, 'errors', 'code', 'BusinessCentralError', ErrorChapter);
+                end;
                 ObjectChapter.Add('stale', true);
                 LibraryAssert.IsTrue(Contract.GetResponse(ObjectChapter), 'Response is declared.');
                 LibraryAssert.IsFalse(ObjectChapter.Contains('stale'), 'Response must replace output.');
