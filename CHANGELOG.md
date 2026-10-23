@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
+
+- Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
+
 ### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
 
 - `Inventory.AdjustCost.Run` (codeunit 10076858 `Adjust Cost Run Impl ori`) now calls `AssertIsLicensed` and then `AssertVersion1` after the Costing domain gate and before report 795 runs, like the other Inventory costing types. `Inventory.CostToGL.Post` (10076861) already had both checks on main (#177); this change adds regression coverage for it. Test codeunit 96918 `Inv. Posting Gate Tests` gains an unlicensed-call refusal test for each of the two types.
