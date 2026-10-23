@@ -25,6 +25,16 @@
         "githubRunner": "windows-latest",
         "githubRunnerShell": "pwsh"
       }
+    },
+    {
+      "branches": [
+        "**"
+      ],
+      "settings": {
+        "incrementalBuilds": {
+          "onPull_Request": false
+        }
+      }
     }
   ],
   "Environments": [
