@@ -800,10 +800,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Error.Get('when', ValueToken);
         LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
-        GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', Error);
-        Error.Get('when', ValueToken);
-        LibraryAssert.AreEqual('The standard report Run returns false; response carries GetLastErrorText. This branch precedes response-echo conversion.', ValueToken.AsValue().AsText(), 'Do not describe post-report echo conversion as preflight validation.');
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
+        Error.Get('when', ValueToken);
+        LibraryAssert.AreEqual('Native posting or selection fails.', ValueToken.AsValue().AsText(), 'Native posting failures retain the BusinessCentralError code.');
     end;
 
     /// <summary>Checks that CostToGL completion does not promise G/L posting.</summary>
@@ -819,7 +818,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract.Get('effect', ChapterToken);
         Effect := ChapterToken.AsObject();
         Effect.Get('changes', ChapterToken);
-        LibraryAssert.AreEqual('Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.', ChapterToken.AsValue().AsText(), 'Report invocation does not prove posting or filtered selection.');
+        LibraryAssert.AreEqual('Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.', ChapterToken.AsValue().AsText(), 'Applied filters, posting boundary and actual queue counts are declared.');
         Effect.Get('idempotent', ChapterToken);
         LibraryAssert.IsFalse(ChapterToken.AsValue().AsBoolean(), 'No safe retry or idempotence guarantee is established.');
     end;
@@ -897,7 +896,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 if TypeName = 'Inventory.AdjustCost.Run' then
                     LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Three supported request keys.')
                 else
-                    LibraryAssert.AreEqual(2, ArrayChapter.Count(), 'Two echo keys.');
+                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Two applied filters and optional native journal template/batch.');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified error branches.');
@@ -1005,7 +1004,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             LibraryAssert.AreEqual('Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.', Selection, 'Exact AdjustCost selection.');
             LibraryAssert.AreEqual('adjust cost,item entry correction,post to g/l,report 795', Keywords, 'Exact AdjustCost keywords.');
         end else begin
-            LibraryAssert.AreEqual('Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.', Description, 'Exact CostToGL description.');
+            LibraryAssert.AreEqual('Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.', Description, 'Exact CostToGL description.');
             LibraryAssert.AreEqual('Post inventory value entries that are not yet posted to the general ledger.', Selection, 'Exact CostToGL selection.');
             LibraryAssert.AreEqual('post inventory cost,general ledger,report 1002', Keywords, 'Exact CostToGL keywords.');
         end;
@@ -1021,7 +1020,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         if TypeName = 'Inventory.AdjustCost.Run' then
             LibraryAssert.AreEqual(4, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
         else
-            LibraryAssert.AreEqual(3, Token.AsArray().Count(), 'Exact CostToGL response field count.');
+            LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Exact CostToGL response field count.');
         GetNamedMember(Response, 'fields', 'name', 'status', Field);
         AssertJsonText(Field, 'type', 'string');
         GetNamedMember(Response, 'fields', 'name', 'itemNoFilter', Field);
@@ -1034,6 +1033,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end else begin
             GetNamedMember(Response, 'fields', 'name', 'documentNoFilter', Field);
             AssertJsonText(Field, 'type', 'string');
+            GetNamedMember(Response, 'fields', 'name', 'postedValueEntryCount', Field);
+            AssertJsonText(Field, 'type', 'integer');
+            GetNamedMember(Response, 'fields', 'name', 'remainingValueEntryCount', Field);
+            AssertJsonText(Field, 'type', 'integer');
+            GetNamedMember(Response, 'fields', 'name', 'posted', Field);
+            AssertJsonText(Field, 'type', 'boolean');
         end;
     end;
 

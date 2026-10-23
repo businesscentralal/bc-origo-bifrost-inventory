@@ -70,7 +70,11 @@ codeunit 96918 "Inv. Posting Gate Tests"
             Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Company domain disabled; no native write or posting permission added.');
         end;
         LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
-        Setup := OriginalSetup;
+        Setup.Get();
+        Setup.Costing := OriginalSetup.Costing;
+        Setup."Item Application" := OriginalSetup."Item Application";
+        Setup.Assembly := OriginalSetup.Assembly;
+        Setup."Transfer Orders" := OriginalSetup."Transfer Orders";
         Setup.Modify(true);
     end;
 

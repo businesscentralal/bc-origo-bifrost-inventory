@@ -24,15 +24,23 @@ codeunit 96944 "Inventory Physical Tests"
         Journal: Codeunit "Inventory Native Journal ori";
 
     [Test]
+    [HandlerFunctions('CostPostMessageHandler')]
     procedure CostToGL_PostsSelectedItemOnly()
     begin
         VerifyCostToGLPosting(false);
     end;
 
     [Test]
+    [HandlerFunctions('CostPostMessageHandler')]
     procedure CostToGL_AppliesDocumentAndItemFilters()
     begin
         VerifyCostToGLPosting(true);
+    end;
+
+    [MessageHandler]
+    procedure CostPostMessageHandler(Message: Text[1024])
+    begin
+        // Native report statistics; posting and selection are asserted from actual ledgers below.
     end;
 
     local procedure VerifyCostToGLPosting(UseDocumentFilter: Boolean)
@@ -49,6 +57,7 @@ codeunit 96944 "Inventory Physical Tests"
         EntryNo: Integer;
         OtherEntryNo: Integer;
         BeforeCount: Integer;
+        ResponseText: Text;
     begin
         CreateStock(Item);
         CreateStock(OtherItem);
@@ -69,7 +78,8 @@ codeunit 96944 "Inventory Physical Tests"
         BeforeCount := GLEntry.Count();
         Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
         Response.Get('status', Token);
-        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Native cost posting completes.');
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
         Response.Get('posted', Token);
         Assert.IsTrue(Token.AsValue().AsBoolean(), 'Actual selected entries posted.');
         Response.Get('postedValueEntryCount', Token);

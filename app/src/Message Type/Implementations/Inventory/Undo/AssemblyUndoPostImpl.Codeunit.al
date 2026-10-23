@@ -151,12 +151,10 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Use the posted assembly number in documentNo, not the assembly order number. The Assembly domain, native document write permission and BIFROST InvPost ori are required. Native undo commits are suppressed inside one isolated transaction: a failure rolls back reversing entries and the header change. Standalone undo commits its isolated operation; chained Omit Commit calls remain in the caller transaction and propagate native failures. Subject is not used.', Comment = 'is-IS=Notaðu númer bókaðrar samsetningar í documentNo, ekki númer samsetningarpöntunar. Samsetningarsviðið, innbyggð skrifheimild á skjalið og BIFROST InvPost ori eru nauðsynleg. Innbyggðar staðfestingar afturköllunar eru bældar í einni einangraðri færslu: villa afturkallar mótfærslur og breytingu á haus. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Subject er ekki notað.';
     begin
-        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. Native commits are suppressed inside one isolated undo transaction; a failure rolls back every reversing entry and document change. Chained Omit Commit calls remain in the caller transaction and propagate native failures. ' +
-            'documentNo is the number of the posted assembly (the posted document), not the number of the assembly order; the type looks it up in the Posted Assembly Header table only. ' +
-            'The caller needs the Assembly domain turned on in Inventory Setup and write permission on the posted assembly table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
-            'A refusal from Business Central is answered with its error text and no error code. The type does not read subject. ' +
-            'Post the assembly again with Inventory.AssemblyOrder.Post, or create a new assembly order with Inventory.AssemblyOrder.Create, once the posted assembly is undone.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

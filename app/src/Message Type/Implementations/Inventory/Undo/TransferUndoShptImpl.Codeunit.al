@@ -155,12 +155,10 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Use the posted transfer shipment number in documentNo. Only non-correction lines of that document are selected and passed together to native undo. A failure rolls back all selected lines and reversing entries; other shipments are untouched. Standalone undo commits its isolated operation; chained Omit Commit calls remain in the caller transaction and propagate native failures. Transfer Orders, native shipment write permission and BIFROST InvPost ori are required. A shipment with no lines to undo is refused. Receipt undo is a separate unavailable operation. Subject is not used.', Comment = 'is-IS=Notaðu númer bókaðrar millifærsluafhendingar í documentNo. Aðeins línur þess skjals sem eru ekki leiðréttingarlínur eru valdar og sendar saman í innbyggða afturköllun. Villa afturkallar allar valdar línur og mótfærslur; öðrum afhendingum er ekki breytt. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Flutningspöntunarsviðið, innbyggð skrifheimild á afhendinguna og BIFROST InvPost ori eru nauðsynleg. Afhendingu án lína til afturköllunar er hafnað. Afturköllun móttöku er aðskilin aðgerð sem er ekki í boði. Subject er ekki notað.';
     begin
-        Notes := 'The undo commits: the message task commits when the message completes, and under Omit Commit the caller''s transaction commits instead. The type itself does not commit. ' +
-            'Only lines of the selected posted shipment are passed to the native undo, as one transaction. A failure rolls back every line and reversing entry of that undo. Other shipments are not selected. Chained Omit Commit calls remain in the caller transaction and propagate native failures. ' +
-            'A posted transfer shipment whose lines are all correction lines is refused. A refusal from Business Central is answered with its error text and no error code. ' +
-            'The caller needs the Transfer Orders domain turned on in Inventory Setup and write permission on the posted transfer shipment table. The BIFROST InvPost ori permission set is required because undo posts reversing entries. ' +
-            'Receipt undo is a separate type, Inventory.Transfer.UndoReceipt, and is not available in this version. The type does not read subject.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
