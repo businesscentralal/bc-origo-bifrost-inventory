@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added — issue #158
+
+- Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.
+
+
 ### Fixed
 
 - Cost refusal regression fixture (96937) scopes its Field Access page before editing the user control, verifies that only Last Direct Cost is restricted and restores its row before assertions. This prevents unintended wildcard restrictions and cascading failures; product permission and aggregation behavior is unchanged.
