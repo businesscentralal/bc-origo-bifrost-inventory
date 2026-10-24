@@ -233,31 +233,44 @@ class Staging(unittest.TestCase):
 
 
 class Candidate530(unittest.TestCase):
+    profile = 'candidate530'
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.config = S.PROFILES['candidate530']
-        inputs = Path(os.environ['FOUNDATION_CANDIDATE_ARTIFACTS'])
+        self.config = S.PROFILES[self.profile]
+        inputs = Path(os.environ['FOUNDATION_RELEASE617_ARTIFACTS' if self.profile == 'release617' else 'FOUNDATION_CANDIDATE_ARTIFACTS'])
         context = dict(run='1234', attempt='1', sourceCommit='3' * 40, checkoutSha='4' * 40, mode='Default')
         artifacts = {}
         for kind, (artifact, sha) in self.config['artifacts'].items():
-            archive = inputs / f'foundation530-{artifact}.zip'
+            archive = inputs / (f'{kind}.zip' if self.profile == 'release617' else f'foundation530-{artifact}.zip')
             self.assertEqual(sha, G.file_hash(archive))
             artifacts[kind] = dict(archive=str(archive), provenance=dict(repository='OrigoSoftwareSolutions/bc-origo-bifrost-core',
                 sourceSha=self.config['source'], run=self.config['run'], attempt=self.config['attempt'],
                 artifactId=artifact, archiveSha256=sha, expired=False, conclusion='success'))
-        # Default production staging profile is candidate530.523is only explicit controlled fixture.
-        self.request = dict(context=context, artifacts=artifacts)
+            if self.profile == 'release617':
+                provenance = artifacts[kind]['provenance']
+                provenance.pop('expired')
+                provenance['releaseTag'] = self.config['releaseTag']
+                provenance['releaseAssetId'] = provenance.pop('artifactId')
+        # Historical530 is an explicit fixture, never the production default.
+        self.request = dict(profile=self.profile, context=context, artifacts=artifacts)
+        if self.profile == 'release617':
+            del self.request['profile']  # Exercise the actual production default.
 
     def test_actual_candidate_staging_retains_signed_apps_and_excludes_only_exact_test_collision(self):
         arrays = S.stage(self.request, self.root / 'stage')
         self.assertEqual(1, len(arrays['installApps']))
         self.assertEqual([], arrays['installTestApps'])
         info = G.package_info(arrays['installApps'][0])
-        G.check_foundation_candidate(info)
+        if self.profile == 'release617':
+            G.check_foundation_candidate(info)
+        else:
+            with self.assertRaises(G.GateError):
+                G.check_foundation_candidate(info)
         receipt = S.validate(self.root / 'stage/selection.json', self.request['context'], arrays['installApps'], arrays['installTestApps'])
-        self.assertEqual('candidate530', receipt['profile'])
+        self.assertEqual(self.profile, receipt['profile'])
         self.assertFalse(receipt['signatureTrustVerified'])
         self.assertEqual(self.config['testPin'], receipt['selection']['excluded'][0]['sha256'])
         self.assertEqual([S.TEST_FRIEND], receipt['selection']['excluded'][0]['friends'])
@@ -274,10 +287,58 @@ class Candidate530(unittest.TestCase):
     def test_test_candidate_cannot_be_swapped_into_apps_or_mutated_after_staging(self):
         arrays = S.stage(self.request, self.root / 'stage')
         excluded = json.loads((self.root / 'stage/selection.json').read_text())['selection']['excluded'][0]['path']
-        with self.assertRaises(G.GateError): S.select([excluded], [excluded], 'candidate530')
+        with self.assertRaises(G.GateError): S.select([excluded], [excluded], self.profile)
         with open(arrays['installApps'][0], 'ab') as out: out.write(b'mutated-tail')
         with self.assertRaises(G.GateError):
             S.validate(self.root / 'stage/selection.json', self.request['context'], arrays['installApps'], arrays['installTestApps'])
 
 
-if __name__ == '__main__': unittest.main()
+class Release617(Candidate530):
+    profile = 'release617'
+
+    def test_current_release_and_manifests_agree(self):
+        root = Path(__file__).parents[2]
+        settings = json.loads((root / '.AL-Go/settings.json').read_text())
+        dependency = next(p for p in settings['appDependencyProbingPaths'] if 'bc-origo-bifrost-core' in p['repo'])
+        self.assertEqual(self.config['releaseTag'], dependency['version'])
+        self.assertEqual('release', dependency['release_status'])
+        for project in ('app', 'test'):
+            manifest = json.loads((root / project / 'app.json').read_text())
+            foundation = next(d for d in manifest['dependencies'] if d['id'] == S.FOUNDATION)
+            self.assertEqual(self.config['identity'], foundation)
+
+    def test_release_asset_provenance_cannot_be_substituted(self):
+        for key, value in [('releaseTag', '28.0.7'), ('releaseAssetId', 1), ('archiveSha256', '0' * 64)]:
+            request = copy.deepcopy(self.request)
+            request['artifacts']['Apps']['provenance'][key] = value
+            with self.subTest(key=key), self.assertRaises(G.GateError):
+                S.stage(request, self.root / key)
+            self.assertFalse((self.root / key).exists())
+
+
+
+
+class ReleaseRestore(unittest.TestCase):
+    def test_real_testapps_collision_restores_only_exact_released_apps(self):
+        inputs = Path(os.environ['FOUNDATION_RELEASE617_ARTIFACTS'])
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            dependencies = root / '.dependencies'
+            dependencies.mkdir()
+            S.extract_archive(inputs / 'TestApps.zip', dependencies)
+            target = next(dependencies.glob('*.app'))
+            self.assertEqual(S.PROFILES[S.DEFAULT_PROFILE]['testPin'], G.file_hash(target))
+            result = S.restore_overwritten_foundation(root, lambda _: inputs / 'Apps.zip')
+            self.assertEqual('restored', result['action'])
+            G.check_foundation_candidate(G.package_info(target))
+            def no_download(_):
+                self.fail('Approved dependency must not be fetched again')
+            self.assertEqual('already-approved', S.restore_overwritten_foundation(root, no_download)['action'])
+            with target.open('ab') as stream:
+                stream.write(b'changed')
+            with self.assertRaises(G.GateError):
+                S.restore_overwritten_foundation(root, no_download)
+
+
+if __name__ == "__main__":
+    unittest.main()

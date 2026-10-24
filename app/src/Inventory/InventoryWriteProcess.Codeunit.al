@@ -7,6 +7,7 @@ using Microsoft.Foundation.Enums;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
@@ -40,6 +41,8 @@ codeunit 10076842 "Inventory Write Process ori"
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
         CancelEntryNo: Integer;
+        ApplicationEntryNo: Integer;
+        ApplyToEntryNo: Integer;
         FullAutoReservation: Boolean;
         UnknownOperationErr: Label 'Unknown inventory write operation.', Comment = 'is-IS=Óþekkt birgðaskrifaðgerð.';
 
@@ -67,6 +70,10 @@ codeunit 10076842 "Inventory Write Process ori"
                 CancelReservation();
             'AssemblyUndo':
                 UndoAssembly();
+            'ItemApplicationUnapply':
+                UnapplyItemEntry();
+            'ItemApplicationReapply':
+                ReapplyItemEntry();
             'CostToGLPost':
                 PostCostToGL(Rec);
             else
@@ -74,7 +81,7 @@ codeunit 10076842 "Inventory Write Process ori"
         end;
     end;
 
-    /// <summary>Selects the write: Post (or blank), Calculate, RecordCount, RevaluationPost, CostUpdate, PriceUpdate, ReservationCreate or ReservationCancel.</summary>
+    /// <summary>Selects the write: Post (or blank), Calculate, RecordCount, RevaluationPost, CostUpdate, PriceUpdate, ReservationCreate, ReservationCancel, ItemApplicationUnapply or ItemApplicationReapply.</summary>
     /// <param name="NewOperation">The operation name.</param>
     procedure SetOperation(NewOperation: Text)
     begin
@@ -130,6 +137,33 @@ codeunit 10076842 "Inventory Write Process ori"
         CostDocumentFilter := DocumentFilter;
         CostJournalTemplate := JournalTemplate;
         CostJournalBatch := JournalBatch;
+    end;
+
+    /// <summary>Selects native application entries for the existing atomic write boundary.</summary>
+    /// <param name="EntryNo">Application entry for Unapply, or item ledger entry for Reapply.</param>
+    /// <param name="ApplyWith">Item ledger entry to apply with; zero for Unapply.</param>
+    procedure SetApplicationEntries(EntryNo: Integer; ApplyWith: Integer)
+    begin
+        ApplicationEntryNo := EntryNo;
+        ApplyToEntryNo := ApplyWith;
+    end;
+
+    local procedure UnapplyItemEntry()
+    var
+        ApplicationEntry: Record "Item Application Entry";
+        NativePost: Codeunit "Item Jnl.-Post Line";
+    begin
+        ApplicationEntry.Get(ApplicationEntryNo);
+        NativePost.UnApply(ApplicationEntry);
+    end;
+
+    local procedure ReapplyItemEntry()
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        NativePost: Codeunit "Item Jnl.-Post Line";
+    begin
+        LedgerEntry.Get(ApplicationEntryNo);
+        NativePost.ReApply(LedgerEntry, ApplyToEntryNo);
     end;
 
     local procedure PostCostToGL(var Argument: Record "Message Argument ori")

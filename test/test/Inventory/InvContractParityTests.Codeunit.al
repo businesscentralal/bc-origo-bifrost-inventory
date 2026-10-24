@@ -529,8 +529,8 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
 
     local procedure PinnedNoExamplesTypes() Names: List of [Text]
     begin
-        Names.Add('Inventory.Attribute.Create');
-        Names.Add('Inventory.Attribute.Update');
+        // #148 supplies Create and Update examples; every type now requires an example.
+        exit(Names);
     end;
 
     local procedure PinnedNoWorkflowTypes() Names: List of [Text]

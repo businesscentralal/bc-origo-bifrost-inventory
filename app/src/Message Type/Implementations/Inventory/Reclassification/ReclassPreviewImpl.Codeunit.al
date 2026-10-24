@@ -54,11 +54,11 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         JournalTemplate: Record "Item Journal Template";
         JournalBatch: Record "Item Journal Batch";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Lines: JsonArray;
         LineJson: JsonObject;
-        Token: JsonToken;
         TemplateName: Code[10];
         BatchName: Code[10];
         LineCount: Integer;
@@ -66,24 +66,20 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
         BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
         NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
-        MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er nauðsynlegt.';
-        MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er nauðsynlegt.';
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
+            Parts.CompleteOlderDomainRefusal(Argument);
             exit;
+        end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingTemplateErr, 'journalTemplateName', '', '', NextStepLbl);
+        TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
             exit;
-        end;
-        TemplateName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TemplateName));
-        if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingBatchErr, 'journalBatchName', '', '', NextStepLbl);
+        BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
             exit;
-        end;
-        BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName));
 
         if not JournalTemplate.Get(TemplateName) or not JournalBatch.Get(TemplateName, BatchName) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, BatchMissingErr, 'journalBatchName', BatchName, '', NextStepLbl);
@@ -220,14 +216,32 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ErrorHelp1Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
+        ErrorHelp2Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
+        ErrorHelp3Lbl: Label 'The caller lacks BIFROST InvPost ori. Native preview executes posting with rollback and retains the posting gate.', Comment = 'is-IS=Kallandi hefur ekki BIFROST InvPost ori. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.';
+        ErrorHelp4Lbl: Label 'Ask an administrator for the posting permission and required native permissions.', Comment = 'is-IS=Biddu stjórnanda um bókunarheimild og nauðsynlegar kerfisheimildir.';
+        ErrorHelp5Lbl: Label 'journalTemplateName or journalBatchName is absent.', Comment = 'is-IS=journalTemplateName eða journalBatchName vantar.';
+        ErrorHelp6Lbl: Label 'Supply both journal selectors.', Comment = 'is-IS=Tilgreindu bæði bókarsniðmát og keyrslu.';
+        ErrorHelp7Lbl: Label 'The journal template or batch does not exist.', Comment = 'is-IS=Bókarsniðmátið eða keyrslan er ekki til.';
+        ErrorHelp8Lbl: Label 'Choose an existing batch.', Comment = 'is-IS=Veldu fyrirliggjandi keyrslu.';
+        ErrorHelp9Lbl: Label 'The template is not Transfer or the batch has no lines.', Comment = 'is-IS=Sniðmátið er ekki af gerðinni Transfer eða keyrslan hefur engar línur.';
+        ErrorHelp10Lbl: Label 'Choose a nonempty reclassification batch.', Comment = 'is-IS=Veldu endurflokkunarkeyrslu með línum.';
+        ErrorHelp11Lbl: Label 'Native posting preview refused a journal line.', Comment = 'is-IS=Bókunarforskoðun hafnaði bókarlínu.';
+        ErrorHelp12Lbl: Label 'Correct the reported posting error and preview again.', Comment = 'is-IS=Leiðréttu tilgreinda bókunarvillu og forskoðaðu aftur.';
+        ErrorHelp13Lbl: Label 'A journal selector is not JSON text.', Comment = 'is-IS=Bókarval er ekki JSON-texti.';
+        ErrorHelp14Lbl: Label 'Send the documented selector as a JSON string.', Comment = 'is-IS=Sendu skjalfesta valbreytu sem JSON-streng.';
+        ErrorHelp15Lbl: Label 'A journal selector exceeds 10 characters.', Comment = 'is-IS=Bókarval er lengra en 10 stafir.';
+        ErrorHelp16Lbl: Label 'Use a journal template or batch name of at most 10 characters.', Comment = 'is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks BIFROST InvPost ori. Native preview executes posting with rollback and retains the posting gate.', 'Ask an administrator for the posting permission and required native permissions.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalTemplateName or journalBatchName is absent.', 'Supply both journal selectors.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The journal template or batch does not exist.', 'Choose an existing batch.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The template is not Transfer or the batch has no lines.', 'Choose a nonempty reclassification batch.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native posting preview refused a journal line.', 'Correct the reported posting error and preview again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp1Lbl, ErrorHelp2Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, ErrorHelp3Lbl, ErrorHelp4Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ErrorHelp5Lbl, ErrorHelp6Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, ErrorHelp7Lbl, ErrorHelp8Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, ErrorHelp9Lbl, ErrorHelp10Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, ErrorHelp11Lbl, ErrorHelp12Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ErrorHelp13Lbl, ErrorHelp14Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp15Lbl, ErrorHelp16Lbl));
         exit(true);
     end;
 
