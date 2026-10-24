@@ -31,6 +31,7 @@ codeunit 96972 "Reclass Check Perm Tests ori"
         LineId: Guid;
     begin
         // Story #159 AC03 | Time: none | Risk: discovery and execution require unrelated posting/write access.
+        LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Reclassification := true;

@@ -2,9 +2,11 @@
 
 ## [Unreleased]
 
-### Fixed (2026-10-24) - Native reclassification preview (#159, partial)
+### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
 
-- `Inventory.Reclassification.PreviewPost` now runs native posting preview, validates an existing nonempty Transfer batch, returns captured ledger entries and rolls back simulated posting changes. Existing `lines`, `lineCount` and `rollback` fields remain. The posting gate is intentional for native simulation. `Inventory.Reclassification.Check` now requires only journal read permission (codeunits 10076887, 10076889; tests 96971, 96972 and permission set 96971).
+- `Inventory.Reclassification.PreviewPost` now runs native posting preview, validates an existing nonempty Transfer batch, returns captured ledger entries and rolls back simulated posting changes. Existing `lines`, `lineCount` and `rollback` fields remain. The posting gate is intentional for native simulation. `Inventory.Reclassification.Check` now requires only journal read permission (codeunits 10076887, 10076889; execute grants in 10076835/10076836; tests 96971, 96972 and permission set 96971).
+
+- `Inventory.Reservation.Create` shares sales item/line eligibility with AutoReserve: Reserve Never, drop shipment, special order and missing shipment date are refused. `Reservation.Cancel` checks both sides for Reservation status, matching item/variant/location and opposite base quantities, then rechecks under lock before native cancellation (10076893, 10076896, 10076892, 10076842; test 96946). Test-only codeunit 96973 explicitly seeds owned preview/stock fixtures for MCP; it is never invoked on install.
 
 ### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
 

@@ -1425,6 +1425,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðaskrifaðgerð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - NamedType UnknownOperationErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - Method 895184314 - NamedType 3966791644" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservation %1 no longer contains a consistent reservation pair.</source>
+          <target>Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method CancelReservation - NamedType InconsistentPairErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 3571782927 - NamedType 2247369567" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemLedgerEntryNo is required.</source>
           <target>itemLedgerEntryNo er nauðsynlegt.</target>
@@ -4683,36 +4689,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Aðeins er hægt að taka sölupöntunarlínur sjálfvirkt frá.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotOrderErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line is not an item line.</source>
-          <target>Línan er ekki vörulína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki vörulína.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotItemErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2595599654" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item %1 is not an inventory item.</source>
-          <target>Vara %1 er ekki birgðavara.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Vara %1 er ekki birgðavara.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotInventoryErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1111338825" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reserve is set to Never for item %1 or for the line.</source>
-          <target>Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType ReserveNeverErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2987138680" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line is a drop shipment or special order line.</source>
-          <target>Línan er bein afhending eða sérpöntunarlína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan er bein afhending eða sérpöntunarlína.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType DropShipmentErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1109335900" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line has no shipment date.</source>
-          <target>Línan hefur engan afhendingardag.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan hefur engan afhendingardag.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NoShipmentDateErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2411655350" size-unit="char" translate="yes" xml:space="preserve">
           <source>The line has no outstanding quantity.</source>
           <target>Línan hefur ekkert útistandandi magn.</target>
@@ -4730,6 +4706,48 @@
           <target>Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType PreconditionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is not an item line.</source>
+          <target>Línan er ekki vörulína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki vörulína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NotItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 2595599654" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 is not an inventory item.</source>
+          <target>Vara %1 er ekki birgðavara.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Vara %1 er ekki birgðavara.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NotInventoryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1111338825" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserve is set to Never for item %1 or for the line.</source>
+          <target>Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType ReserveNeverErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 2987138680" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is a drop shipment or special order line.</source>
+          <target>Línan er bein afhending eða sérpöntunarlína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er bein afhending eða sérpöntunarlína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType DropShipmentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1109335900" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line has no shipment date.</source>
+          <target>Línan hefur engan afhendingardag.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan hefur engan afhendingardag.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NoShipmentDateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 267332005" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a reservable item line on a sales order</source>
+          <target>vörulína á sölupöntun sem má taka frá</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörulína á sölupöntun sem má taka frá</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType ReservableExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 291721461" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Change the item's Reserve setting or reserve manually.</source>
+          <target>Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType PreconditionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3467707986 - Method 1366471521 - NamedType 3631912442" size-unit="char" translate="yes" xml:space="preserve">
           <source>Only %1 of %2 could be reserved. Nothing is written.</source>
@@ -4790,6 +4808,18 @@
           <target>jákvæð JSON-heiltala</target>
           <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-heiltala</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType IntegerExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3966791644" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservation %1 does not contain a consistent reservation pair.</source>
+          <target>Frátekning %1 inniheldur ekki samræmt frátekningarpar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType InconsistentPairErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 2486900890" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inspect both reservation entries and correct their native reservation state before retrying.</source>
+          <target>Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType InspectPairLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cancels a reservation entry through Reservation Management.</source>
@@ -4906,9 +4936,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
-          <target>Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
+          <source>Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
+          <target>Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">

@@ -37,7 +37,7 @@ codeunit 96971 "Reclass Preview Tests ori"
     end;
 
     [Test]
-    procedure Scenario_AC03_InvalidSecondLine_RollsBackEarlierWrites()
+    procedure Scenario_AC03_InvalidSecondLine_PreservesJournalAndLedgers()
     begin
         VerifyPreview(1033, true);
     end;
@@ -81,7 +81,7 @@ codeunit 96971 "Reclass Preview Tests ori"
         // Story #159 AC03 | Time: WorkDate for native postings | Risk: preview consumes journal or commits partial posting.
         CreateStock(Item);
         CreateBatch(Batch, "Item Journal Template Type"::Transfer);
-        LibraryWarehouse.CreateLocation(Location);
+        LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
         LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 2);
         Line.Validate("New Location Code", Location.Code);
         Line.Modify(true);

@@ -41,11 +41,17 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Setup.InsertIfNotExists();
         Setup.Get();
         OriginalSetup := Setup;
+        Setup.Reclassification := false;
+        Setup.Reservations := false;
         Setup.Costing := false;
         Setup."Item Application" := false;
         Setup.Assembly := false;
         Setup."Transfer Orders" := false;
         Setup.Modify(true);
+        Types.Add("Message Type ori"::"Inventory.Reclassification.Post");
+        Types.Add("Message Type ori"::"Inventory.Reclassification.PreviewPost");
+        Types.Add("Message Type ori"::"Inventory.Reservation.Create");
+        Types.Add("Message Type ori"::"Inventory.Reservation.Cancel");
         Types.Add("Message Type ori"::"Inventory.AdjustCost.Run");
         Types.Add("Message Type ori"::"Inventory.CostToGL.Post");
         Types.Add("Message Type ori"::"Inventory.CostToGL.Test");
@@ -71,6 +77,8 @@ codeunit 96918 "Inv. Posting Gate Tests"
         end;
         LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.Get();
+        Setup.Reclassification := OriginalSetup.Reclassification;
+        Setup.Reservations := OriginalSetup.Reservations;
         Setup.Costing := OriginalSetup.Costing;
         Setup."Item Application" := OriginalSetup."Item Application";
         Setup.Assembly := OriginalSetup.Assembly;

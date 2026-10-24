@@ -67,7 +67,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'The reservation entry number, a positive whole number up to 2147483647. Both entries of the pair share it. Only an entry with status Reservation can be cancelled.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'The reservation entry number, a positive whole number up to 2147483647. Both entries of the pair share it. Both demand and supply entries must have status Reservation, matching item, variant and location, and equal opposite base quantities.'));
         exit(true);
     end;
 
@@ -95,6 +95,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The entry is item tracking or surplus, not a reservation (its status is not Reservation), or the Reservations domain is turned off for the company.', 'Send the number of an entry with status Reservation, or turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native cancellation error text.', 'Business Central refuses the cancellation while it runs; the answer carries its text.', 'Read the error text and correct the reservation it names.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The reservation pair is incomplete or has inconsistent status, identity or base quantity.', 'Inspect both entries and correct their native reservation state.'));
         exit(true);
     end;
 
@@ -162,7 +163,8 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     var
         NotesLbl: Label 'Cancels both sides of the reservation pair, the same action as Cancel Reservation on the Reservation Entries page. Only entries with status Reservation can be cancelled; item tracking and surplus entries are refused as InvalidParameter. Bifrost commits the cancellation when the call finishes; under Omit Commit the caller''s transaction commits instead. The answer gives the item and the reserved quantity of the entry as they were before the cancellation. Read the entry numbers with Inventory.Reservation.Get.', Comment = 'is-IS=Afturkallar báðar hliðar frátekningarparsins, sömu aðgerð og Afturkalla frátekningu á síðunni Frátekningarfærslur. Aðeins er hægt að afturkalla færslur með stöðuna Reservation; vörurakningar- og afgangsfærslum er hafnað sem InvalidParameter. Bifrost vistar afturköllunina þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Svarið gefur vöruna og frátekna magnið í færslunni eins og það var fyrir afturköllunina. Lestu færslunúmerin með Inventory.Reservation.Get.';
     begin
-        Notes := NotesLbl;
+        Notes := 'Cancellation requires both sides of a consistent reservation pair: Reservation status on both entries, matching item, variant and location, and equal opposite nonzero base quantities. A missing or inconsistent side is refused before any cancellation; the pair is checked again under a native write lock. ' +
+            NotesLbl;
         exit(true);
     end;
 
@@ -187,6 +189,8 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         NotFoundErr: Label 'Reservation entry %1 was not found.', Comment = '%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.';
         NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
         IntegerExpectedTok: Label 'a positive JSON integer', Comment = 'is-IS=jákvæð JSON-heiltala';
+        InconsistentPairErr: Label 'Reservation %1 does not contain a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.';
+        InspectPairLbl: Label 'Inspect both reservation entries and correct their native reservation state before retrying.', Comment = 'is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
             exit;
@@ -215,6 +219,10 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             exit;
         end;
 
+        if not Process.HasConsistentReservationPair(EntryNo, ReservationEntry) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(InconsistentPairErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', InspectPairLbl);
+            exit;
+        end;
         Process.SetOperation('ReservationCancel');
         Process.SetCancelReservation(EntryNo);
         if Argument."Omit Commit" then

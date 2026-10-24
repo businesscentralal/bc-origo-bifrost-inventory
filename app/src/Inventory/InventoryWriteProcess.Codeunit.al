@@ -229,13 +229,31 @@ codeunit 10076842 "Inventory Write Process ori"
         ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
     end;
 
+    /// <summary>Reads both sides and refuses incomplete or inconsistent native reservation pairs.</summary>
+    procedure HasConsistentReservationPair(EntryNo: Integer; var DemandEntry: Record "Reservation Entry"): Boolean
+    var
+        SupplyEntry: Record "Reservation Entry";
+    begin
+        if not DemandEntry.Get(EntryNo, false) or not SupplyEntry.Get(EntryNo, true) then
+            exit(false);
+        exit((DemandEntry."Reservation Status" = DemandEntry."Reservation Status"::Reservation) and
+            (SupplyEntry."Reservation Status" = SupplyEntry."Reservation Status"::Reservation) and
+            (DemandEntry."Item No." = SupplyEntry."Item No.") and
+            (DemandEntry."Variant Code" = SupplyEntry."Variant Code") and
+            (DemandEntry."Location Code" = SupplyEntry."Location Code") and
+            (DemandEntry."Quantity (Base)" < 0) and
+            (SupplyEntry."Quantity (Base)" = -DemandEntry."Quantity (Base)"));
+    end;
+
     local procedure CancelReservation()
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEngineMgt: Codeunit "Reservation Engine Mgt.";
+        InconsistentPairErr: Label 'Reservation %1 no longer contains a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.';
     begin
-        ReservationEntry.SetRange("Entry No.", CancelEntryNo);
-        ReservationEntry.FindFirst();
+        ReservationEntry.LockTable();
+        if not HasConsistentReservationPair(CancelEntryNo, ReservationEntry) then
+            Error(InconsistentPairErr, CancelEntryNo);
         ReservationEngineMgt.CancelReservation(ReservationEntry);
     end;
 }
