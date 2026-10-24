@@ -39,7 +39,7 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
     var
         Gate: Codeunit "Inventory Domain Gate ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
-        Journal: Codeunit "Inventory Native Journal ori";
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
             exit;
@@ -47,7 +47,12 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        Journal.Preview(Argument, "Item Journal Template Type"::"Phys. Inventory");
+        Process.SetOperation('PhysicalPreview');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithLastError();
     end;
 
 

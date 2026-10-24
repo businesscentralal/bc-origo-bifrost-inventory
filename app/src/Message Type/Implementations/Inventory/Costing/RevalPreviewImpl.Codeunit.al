@@ -39,13 +39,18 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Gate: Codeunit "Inventory Domain Gate ori";
-        NativeJournal: Codeunit "Inventory Native Journal ori";
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::"Item Journal Line", true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        NativeJournal.PreviewRevaluation(Argument);
+        Process.SetOperation('RevaluationPreview');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithLastError();
     end;
 
     /// <summary>Returns the native revaluation envelope contract.</summary>

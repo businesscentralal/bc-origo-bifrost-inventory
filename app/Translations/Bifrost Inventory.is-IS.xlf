@@ -1467,6 +1467,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3820833257 - NamedType 2230270348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown inventory read operation.</source>
+          <target>Óþekkt birgðalesaðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðalesaðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Read Process ori - NamedType UnknownOperationErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 633023824" size-unit="char" translate="yes" xml:space="preserve">
           <source>locationCode and variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.</source>
           <target>locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</target>

@@ -38,13 +38,18 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Gate: Codeunit "Inventory Domain Gate ori";
-        Journal: Codeunit "Inventory Native Journal ori";
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        Journal.Check(Argument, "Item Journal Template Type"::"Phys. Inventory");
+        Process.SetOperation('PhysicalCheck');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithLastError();
     end;
 
 

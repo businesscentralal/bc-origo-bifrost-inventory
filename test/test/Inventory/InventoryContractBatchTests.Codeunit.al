@@ -700,8 +700,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
             end;
             'Inventory.AttributeDefinition.Create': begin
-                Index := 3;
-                Expected := 'Item attribute "%1" already exists.';
+                Errors.Get(6, Token);
+                Entry := Token.AsObject();
+                AssertJsonText(Entry, 'code', 'PreconditionFailed');
+                AssertJsonText(Entry, 'when', 'The definition name is already used.');
+                AssertJsonText(Entry, 'fix', 'Use the existing definition or choose another name.');
+                exit;
             end;
         end;
         Errors.Get(Index, Token);
