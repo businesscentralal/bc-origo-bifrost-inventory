@@ -1273,7 +1273,9 @@ codeunit 96930 "Inventory Item Refusal Tests"
             Request.Add(TemplateKey, 'W8-NONE');
         if Scenario = 'WrongTemplate' then begin
             JournalTemplate.Init();
-            WrongTemplateName := CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 10);
+            repeat
+                WrongTemplateName := 'ZZTEST' + CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 4);
+            until not Template.Get(WrongTemplateName);
             JournalTemplate.Name := WrongTemplateName;
             JournalTemplate.Type := JournalTemplate.Type::Item;
             JournalTemplate.Insert(true);
@@ -1440,7 +1442,9 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Setup.Reclassification := true;
         Setup.Modify(true);
         JournalTemplate.Init();
-        JournalTemplate.Name := CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 10);
+        repeat
+            JournalTemplate.Name := 'ZZTEST' + CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 4);
+        until not JournalTemplate.Get(JournalTemplate.Name);
         JournalTemplate.Type := JournalTemplate.Type::Transfer;
         JournalTemplate.Insert(true);
         Batch.Init();
