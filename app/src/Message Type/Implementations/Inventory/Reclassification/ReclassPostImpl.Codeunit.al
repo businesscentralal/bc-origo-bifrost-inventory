@@ -198,7 +198,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Workflow);
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Confirm that the template is a reclassification template and see how many transfer lines the batch has.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'List the lines the posting would process.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'Simulate native posting and inspect the rolled-back ledger entries.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Post', 'Post the batch; the lines are written to the item ledger.'));
         Workflow.Add('steps', Steps);
         exit(true);

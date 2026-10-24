@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-24) - Native reclassification preview (#159, partial)
+
+- `Inventory.Reclassification.PreviewPost` now runs native posting preview, validates an existing nonempty Transfer batch, returns captured ledger entries and rolls back simulated posting changes. Existing `lines`, `lineCount` and `rollback` fields remain. The posting gate is intentional for native simulation. `Inventory.Reclassification.Check` now requires only journal read permission (codeunits 10076887, 10076889; tests 96971, 96972 and permission set 96971).
+
 ### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
 
 - Preserve Gunnar's AC2 decision: a failed `Inventory.AssemblyOrder.Post` keeps the requested `Quantity to Assemble` written before the isolated native post, as the existing bilingual help states. English/Icelandic dispatcher regressions fail after real native output writes and verify that the requested quantity survives while posted headers and item entries roll back (tests 96909, 96938; production codeunit 10076855 unchanged).

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="is-IS" original="Bifrost Inventory">
     <body>
@@ -4263,6 +4263,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a Transfer template.</source>
+          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification batch %1 %2 has no lines.</source>
+          <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType EmptyBatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 2807648679" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification journal template or batch was not found.</source>
+          <target>Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType BatchMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose an existing Transfer journal batch and correct its posting errors before retrying.</source>
+          <target>Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType NextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 1342401987" size-unit="char" translate="yes" xml:space="preserve">
           <source>journalTemplateName is required.</source>
           <target>journalTemplateName er nauðsynlegt.</target>
@@ -4276,9 +4300,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Lists the lines of a reclassification journal batch that Post would process, without posting. It does not simulate the ledger entries.</source>
-          <target>Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</note>
+          <source>Simulates posting a reclassification journal batch and returns the captured ledger entries. All posting changes are rolled back.</source>
+          <target>Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -4288,10 +4312,16 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Returns the reclassification journal lines that Post would process.</source>
-          <target>Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</note>
+          <source>Previews the ledger entries of one Transfer journal batch without saving posting changes.</source>
+          <target>Forskoðar færslur einnar millifærslubókarkeyrslu án þess að vista bókunarbreytingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar færslur einnar millifærslubókarkeyrslu án þess að vista bókunarbreytingar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 2319321116 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reclassification journal posting errors and run the preview again.</source>
+          <target>Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method PreviewEntries - NamedType NextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
