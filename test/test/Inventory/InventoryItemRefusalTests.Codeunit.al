@@ -1242,6 +1242,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         ErrorText: Text;
         NextStep: Text;
         Declared: Boolean;
+        WrongTemplateName: Code[10];
     begin
         if not Setup.Get() then begin
             Setup.Init();
@@ -1264,7 +1265,8 @@ codeunit 96930 "Inventory Item Refusal Tests"
             Request.Add(TemplateKey, 'W8-NONE');
         if Scenario = 'WrongTemplate' then begin
             JournalTemplate.Init();
-            JournalTemplate.Name := 'W8-WRONG';
+            WrongTemplateName := CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 10);
+            JournalTemplate.Name := WrongTemplateName;
             JournalTemplate.Type := JournalTemplate.Type::Item;
             JournalTemplate.Insert(true);
             Batch.Init();
@@ -1273,14 +1275,14 @@ codeunit 96930 "Inventory Item Refusal Tests"
             Batch.Insert(true);
             Request.Add(TemplateKey, JournalTemplate.Name);
             ErrorCode := 'PreconditionFailed';
-            ErrorText := Choose(LanguageId, 'Template W8-WRONG is not a reclassification template.', 'Sniðmát W8-WRONG er ekki endurflokkunarsniðmát.');
+            ErrorText := StrSubstNo(Choose(LanguageId, 'Template %1 is not a reclassification template.', 'Sniðmát %1 er ekki endurflokkunarsniðmát.'), WrongTemplateName);
         end;
         if MessageType = "Message Type ori"::"Inventory.Reclassification.PreviewPost" then begin
             NextStep := Choose(LanguageId, 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', 'Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.');
             if Scenario = 'MissingTemplate' then
                 ErrorText := Choose(LanguageId, 'Reclassification journal template or batch was not found.', 'Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.')
             else
-                ErrorText := Choose(LanguageId, 'Journal template W8-WRONG is not a Transfer template.', 'Bókarsniðmátið W8-WRONG er ekki af gerðinni Transfer.');
+                ErrorText := StrSubstNo(Choose(LanguageId, 'Journal template %1 is not a Transfer template.', 'Bókarsniðmátið %1 er ekki af gerðinni Transfer.'), WrongTemplateName);
         end;
         if Scenario in ['Format', 'LongName'] then begin
             if Scenario = 'Format' then begin

@@ -89,6 +89,13 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Found: Boolean;
     begin
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Reclassification := true;
+        Setup."Item Application" := true;
+        Setup.Modify(true);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         Assert.IsFalse(JournalLine.ReadPermission(), 'Caller lacks actual native journal read.');
         Assert.IsFalse(ApplicationEntry.WritePermission(), 'Caller lacks actual native application write.');
         Assert.IsTrue(Setup.IsDomainEnabled("Inventory Domain ori"::Reclassification), 'Domain is on, so this proves permission denial.');
