@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-24) - Contract guard declaration identity (#150)
+
+- Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
+
 ### Fixed — issue #150
 - Tracking.Assign/Get/Delete now round-trip native source-bound lot, serial and package tracking. A source line SystemId is required; deletion affects only the selected unreserved entry. Single-entry response fields are retained, native posting remains separate and Omit Commit retains caller transaction ownership.
 - UndoShipment explicitly refuses received transfer lines with PreconditionFailed and a return-transfer next step; the selected-shipment repair is inherited from #159.
