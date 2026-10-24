@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-11-03) - Inventory setup wizard (#158)
+
+- Five-step Assisted Setup "Set up Bifrost Inventory" (Extensions group): what the app adds, read-only HTTP status with a link to Foundation's setup wizard, access guidance, read-only company domains and explicit completion. Page 10076836, registration codeunit 10076924, management codeunit 10076927 and bilingual tests 96920. Inventory Setup (10076835) gets a Setup Wizard action. The guide never writes HTTP settings, assigns permissions or toggles domains; closing early does not mark completion. Execute permission for the new objects is added only to the existing BIFROST Read/Full extensions; no BIFROST InvPost ori grant is added pending Gunnar's product decision.
+
 ### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
 
 - Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.
