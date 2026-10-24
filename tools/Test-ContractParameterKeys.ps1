@@ -91,7 +91,11 @@ $script:ArgumentReaders = '^(evaluate|tryevaluate|apply|gettableidfromrequestjso
 $script:NeverParameters = @('data', 'subject', 'type', 'version')
 
 $procedureStart = [regex]::new('^\s*(\[[^\]]*\]\s*)*((local|internal|protected)\s+)?(procedure|trigger)\s+("[^"]+"|\w+)', 'IgnoreCase')
-$objectStart = [regex]::new('^\s*(codeunit|table|page|enum|enumextension|interface)\s+\d*\s*"([^"]+)"', 'IgnoreCase')
+# Numbered object declarations require an ID. Permission grants such as
+# codeunit "Worker" = X are references, not declarations; accepting them made
+# the first enumerated permission file replace the real object's header/state.
+# Interfaces are the only supported declarations without a numeric ID.
+$objectStart = [regex]::new('^\s*(?:(?<kind>codeunit|table|page|enum|enumextension)\s+\d+\s+|(?<kind>interface)\s+)"(?<name>[^"]+)"', 'IgnoreCase')
 $varDeclaration = [regex]::new('(?<![\w])(\w+)\s*:\s*(?:Codeunit|Record|Interface)\s+"([^"]+)"', 'IgnoreCase')
 $callQualified = [regex]::new('\b(\w+)\.(\w+)\(', 'IgnoreCase')
 $codeunitReference = [regex]::new('Codeunit::"([^"]+)"', 'IgnoreCase')
@@ -131,7 +135,7 @@ function Read-Source([string]$AppSrc) {
         $kind = $null
         for ($i = 0; $i -lt $lines.Count; $i++) {
             $m = $objectStart.Match($lines[$i])
-            if ($m.Success) { $kind = $m.Groups[1].Value.ToLowerInvariant(); $objectName = $m.Groups[2].Value; $objectLine = $i; break }
+            if ($m.Success) { $kind = $m.Groups['kind'].Value.ToLowerInvariant(); $objectName = $m.Groups['name'].Value; $objectLine = $i; break }
         }
         if (-not $objectName) { continue }
         if (-not $objects.ContainsKey($objectName)) {

@@ -228,7 +228,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
             'A batch without lines, or one that does not exist, is answered with the error text and no code. A posting error is answered with Business Central''s text and no code, and the posting is rolled back. ' +
             'The caller needs the BIFROST InvPost ori permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
-            'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost lists the lines but does not simulate the posting, so it cannot predict posting errors.';
+            'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
     end;
 }
