@@ -54,6 +54,10 @@ codeunit 96972 "Reclass Check Perm Tests ori"
         Assert.IsFalse(PostGate.HasPostingPermission(), 'Caller has no posting token.');
         Assert.IsTrue(CheckImpl.IsEnabled(), 'Check discovery permits read-only callers.');
         Assert.IsFalse(PreviewImpl.IsEnabled(), 'Real preview retains the native posting gate.');
+        // The real dispatcher persists its request envelope; API grants that transport access only.
+        LowerPermissions.AddPermissionSet('BIFROST API ori');
+        Assert.IsFalse(Line.WritePermission(), 'Transport access does not grant native journal writes.');
+        Assert.IsFalse(PostGate.HasPostingPermission(), 'Transport access does not grant posting.');
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Check", Request, Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Dispatcher authorizes the real call; no test license state is fabricated.');
