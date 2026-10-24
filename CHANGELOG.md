@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+- Align the AppSource compiler gate and Foundation collision restoration with the configured published 28.0.8.617 release, including exact production/test archive hashes and source provenance. Keep no-friend, signature-content and compatibility checks; align the test dependency floor (#148, #155, PR #168).
+
+
 - ItemApplication.Unapply/Reapply now use existing Inventory Write Process10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. No new objects or permission grants. Native error parity tests preserve actual BC text in both languages.
 
 - Issues148/155: extend coded refusals to Reclassification.Post (10076888) and ItemApplication.Get (10076867). Empty/native-failed posting returns existing PreconditionFailed with unchanged BC text, selected batch and recovery; malformed reads use InvalidParameterFormat. Translate all six older-type error chapters and add bilingual native rollback/refusal tests in96930. Minimum released Foundation28.0.8.617 supplies the public error-context API (Architect1792830947); no Foundation source change.
