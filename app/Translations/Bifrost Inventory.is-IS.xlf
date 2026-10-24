@@ -1731,17 +1731,59 @@
           <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method CancelReservation - NamedType InconsistentPairErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 886104080 - Method 3571782927 - NamedType 2247369567" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemLedgerEntryNo is required.</source>
-          <target>itemLedgerEntryNo er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemLedgerEntryNo er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method ExecuteBifrostTask - NamedType MissingEntryErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item application entries for an item ledger entry.</source>
           <target>Les vörujöfnunarfærslur fyrir vörufærslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les vörujöfnunarfærslur fyrir vörufærslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemLedgerEntryNo is not sent.</source>
+          <target>itemLedgerEntryNo vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemLedgerEntryNo vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the Entry No. of the item ledger entry in data.itemLedgerEntryNo.</source>
+          <target>Sendu færslunúmer vörufærslunnar í data.itemLedgerEntryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu færslunúmer vörufærslunnar í data.itemLedgerEntryNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Application domain is turned off in Inventory Setup.</source>
+          <target>Slökkt er á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn on the Item Application domain in Inventory Setup.</source>
+          <target>Kveiktu á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read item application entries.</source>
+          <target>Kallandi getur ekki lesið vörujöfnunarfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi getur ekki lesið vörujöfnunarfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Request read permission on item application entries from an administrator.</source>
+          <target>Biddu stjórnanda um lesheimild á vörujöfnunarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um lesheimild á vörujöfnunarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemLedgerEntryNo is not a JSON integer.</source>
+          <target>itemLedgerEntryNo er ekki JSON-heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemLedgerEntryNo er ekki JSON-heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the entry number as a JSON integer.</source>
+          <target>Sendu færslunúmerið sem JSON-heiltölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu færslunúmerið sem JSON-heiltölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>item application, applied entries</source>
@@ -1785,6 +1827,78 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Jafnar vörufærslu aftur með Item Jnl.-Post Line.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Application domain is turned off in Inventory Setup.</source>
+          <target>Slökkt er á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn on the Item Application domain in Inventory Setup.</source>
+          <target>Kveiktu á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller has no write permission on item application entries.</source>
+          <target>Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Request the permission from an administrator.</source>
+          <target>Biddu stjórnanda um heimildina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um heimildina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required entry number is absent.</source>
+          <target>Nauðsynlegt færslunúmer vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt færslunúmer vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documented entry number parameters.</source>
+          <target>Sendu skjalfestar færslunúmerabreytur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu skjalfestar færslunúmerabreytur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An entry number is not a JSON integer.</source>
+          <target>Færslunúmer er ekki JSON-heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færslunúmer er ekki JSON-heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send entry numbers as JSON integers.</source>
+          <target>Sendu færslunúmer sem JSON-heiltölur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu færslunúmer sem JSON-heiltölur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 1289171662" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected entry does not exist.</source>
+          <target>Valin færsla er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin færsla er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 3826106942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.ItemApplication.Get and select an existing entry.</source>
+          <target>Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the application change.</source>
+          <target>Business Central hafnar breytingu á jöfnun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar breytingu á jöfnun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the application according to the native refusal and retry.</source>
+          <target>Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1835291251 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reapply item application, apply item ledger entry</source>
           <target>jafna vöru aftur, jafna vörufærslu</target>
@@ -1826,6 +1940,78 @@
           <target>Afturkallar vörujöfnun með Item Jnl.-Post Line.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar vörujöfnun með Item Jnl.-Post Line.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Application domain is turned off in Inventory Setup.</source>
+          <target>Slökkt er á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn on the Item Application domain in Inventory Setup.</source>
+          <target>Kveiktu á vörujöfnun í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á vörujöfnun í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller has no write permission on item application entries.</source>
+          <target>Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Request the permission from an administrator.</source>
+          <target>Biddu stjórnanda um heimildina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um heimildina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required entry number is absent.</source>
+          <target>Nauðsynlegt færslunúmer vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt færslunúmer vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documented entry number parameters.</source>
+          <target>Sendu skjalfestar færslunúmerabreytur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu skjalfestar færslunúmerabreytur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An entry number is not a JSON integer.</source>
+          <target>Færslunúmer er ekki JSON-heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færslunúmer er ekki JSON-heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send entry numbers as JSON integers.</source>
+          <target>Sendu færslunúmer sem JSON-heiltölur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu færslunúmer sem JSON-heiltölur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 1289171662" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected entry does not exist.</source>
+          <target>Valin færsla er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin færsla er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 3826106942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.ItemApplication.Get and select an existing entry.</source>
+          <target>Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the application change.</source>
+          <target>Business Central hafnar breytingu á jöfnun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar breytingu á jöfnun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the application according to the native refusal and retry.</source>
+          <target>Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2654937359 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>unapply item application, undo application</source>
@@ -4731,6 +4917,108 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Athugar hvort bókarsniðmát sé endurflokkunarsniðmát og telur millifærslulínur keyrslunnar. Sannreynir ekki línurnar og bókar ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Reclassification domain is turned off for this company in Inventory Setup.</source>
+          <target>Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn the domain on from the Inventory Setup page.</source>
+          <target>Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller has no read permission on the Item Journal Line table.</source>
+          <target>Kallandi hefur ekki lesheimild á vörubókarlínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki lesheimild á vörubókarlínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for a permission set that grants it, for example BIFROST Read ori.</source>
+          <target>Biddu stjórnanda um heimildasafn sem veitir aðgang, til dæmis BIFROST Read ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um heimildasafn sem veitir aðgang, til dæmis BIFROST Read ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>templateName and batchName are required.</source>
+          <target>templateName og batchName eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=templateName og batchName eru nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The template or the batch name is absent or empty.</source>
+          <target>Heiti sniðmáts eða keyrslu vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti sniðmáts eða keyrslu vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send templateName and batchName, or their journal aliases.</source>
+          <target>Sendu templateName og batchName eða samheitin journalTemplateName og journalBatchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu templateName og batchName eða samheitin journalTemplateName og journalBatchName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item journal template %1 was not found.</source>
+          <target>Vörubókarsniðmát %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = journal template, is-IS=Vörubókarsniðmát %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 1289171662" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item journal template has that name.</source>
+          <target>Ekkert vörubókarsniðmát hefur þetta heiti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekkert vörubókarsniðmát hefur þetta heiti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 3826106942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check templateName.</source>
+          <target>Athugaðu templateName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu templateName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Template %1 is not a reclassification template.</source>
+          <target>Sniðmát %1 er ekki endurflokkunarsniðmát.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = journal template, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The template exists but its type is not Transfer.</source>
+          <target>Sniðmátið er til en er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmátið er til en er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 3309638683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a reclassification template.</source>
+          <target>Notaðu endurflokkunarsniðmát.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarsniðmát.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp13Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 3414267002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector is not JSON text.</source>
+          <target>Bókarval er ekki JSON-texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er ekki JSON-texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp14Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 314240025" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documented selector as a JSON string.</source>
+          <target>Sendu skjalfesta valbreytu sem JSON-streng.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu skjalfesta valbreytu sem JSON-streng.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp15Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 260543928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector exceeds 10 characters.</source>
+          <target>Bókarval er lengra en 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er lengra en 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp16Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 1158096087 - NamedType 2176641495" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a journal template or batch name of at most 10 characters.</source>
+          <target>Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp17Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reclassification journal, change item location, change lot</source>
           <target>endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu</target>
@@ -4742,18 +5030,6 @@
           <target>Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 1342401987" size-unit="char" translate="yes" xml:space="preserve">
-          <source>journalTemplateName is required.</source>
-          <target>journalTemplateName er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=journalTemplateName er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingTemplateErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3832473495" size-unit="char" translate="yes" xml:space="preserve">
-          <source>journalBatchName is required.</source>
-          <target>journalBatchName er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal template %1 was not found.</source>
@@ -4779,6 +5055,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferNextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3316243964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a nonempty Transfer journal batch that passes native posting</source>
+          <target>millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType BatchExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2840945451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the selected batch and correct the posting error before retrying.</source>
+          <target>Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType BatchNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reclassification batch %1 %2 has no lines.</source>
           <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
@@ -4790,6 +5078,114 @@
           <target>Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The journal template does not exist.</source>
+          <target>Bókarsniðmátið er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarsniðmátið er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the name of an existing Transfer journal template.</source>
+          <target>Sendu heiti fyrirliggjandi bókarsniðmáts af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu heiti fyrirliggjandi bókarsniðmáts af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The journal template is not of type Transfer.</source>
+          <target>Bókarsniðmátið er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarsniðmátið er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a reclassification template; use the dedicated posting message for other journal types.</source>
+          <target>Notaðu endurflokkunarsniðmát; notaðu viðeigandi bókunarskilaboð fyrir aðrar bókargerðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarsniðmát; notaðu viðeigandi bókunarskilaboð fyrir aðrar bókargerðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>journalTemplateName is absent.</source>
+          <target>journalTemplateName vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=journalTemplateName vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send journalTemplateName.</source>
+          <target>Sendu journalTemplateName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu journalTemplateName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>journalBatchName is absent.</source>
+          <target>journalBatchName vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send journalBatchName.</source>
+          <target>Sendu journalBatchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu journalBatchName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 1289171662" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Reclassification domain is turned off for this company in Inventory Setup.</source>
+          <target>Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 3826106942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn the domain on from the Inventory Setup page.</source>
+          <target>Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller lacks the posting permission set BIFROST InvPost ori.</source>
+          <target>Kallandi hefur ekki bókunarheimildasafnið BIFROST InvPost ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki bókunarheimildasafnið BIFROST InvPost ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for BIFROST InvPost ori.</source>
+          <target>Biddu stjórnanda um BIFROST InvPost ori.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um BIFROST InvPost ori.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 3309638683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected batch has no lines or native posting fails; native error text is preserved unchanged.</source>
+          <target>Valin keyrsla hefur engar línur eða bókun mistekst; upprunaleg villuboð kerfisins haldast óbreytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin keyrsla hefur engar línur eða bókun mistekst; upprunaleg villuboð kerfisins haldast óbreytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp13Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 3414267002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the selected batch and correct the posting error before retrying.</source>
+          <target>Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp14Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 314240025" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector is not JSON text.</source>
+          <target>Bókarval er ekki JSON-texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er ekki JSON-texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp15Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 260543928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documented selector as a JSON string.</source>
+          <target>Sendu skjalfesta valbreytu sem JSON-streng.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu skjalfesta valbreytu sem JSON-streng.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp16Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 2176641495" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector exceeds 10 characters.</source>
+          <target>Bókarval er lengra en 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er lengra en 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp17Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 486466998" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a journal template or batch name of at most 10 characters.</source>
+          <target>Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp18Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reclassification journal, post reclassification</source>
@@ -4832,6 +5228,102 @@
           <target>Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Reclassification domain is turned off for this company in Inventory Setup.</source>
+          <target>Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 4259185251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn the domain on from the Inventory Setup page.</source>
+          <target>Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller lacks BIFROST InvPost ori. Native preview executes posting with rollback and retains the posting gate.</source>
+          <target>Kallandi hefur ekki BIFROST InvPost ori. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki BIFROST InvPost ori. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for the posting permission and required native permissions.</source>
+          <target>Biddu stjórnanda um bókunarheimild og nauðsynlegar kerfisheimildir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um bókunarheimild og nauðsynlegar kerfisheimildir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 2547837378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>journalTemplateName or journalBatchName is absent.</source>
+          <target>journalTemplateName eða journalBatchName vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=journalTemplateName eða journalBatchName vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 3126188063" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Supply both journal selectors.</source>
+          <target>Tilgreindu bæði bókarsniðmát og keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu bæði bókarsniðmát og keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 136444928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The journal template or batch does not exist.</source>
+          <target>Bókarsniðmátið eða keyrslan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarsniðmátið eða keyrslan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1741781357" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose an existing batch.</source>
+          <target>Veldu fyrirliggjandi keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu fyrirliggjandi keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1289171662" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The template is not Transfer or the batch has no lines.</source>
+          <target>Sniðmátið er ekki af gerðinni Transfer eða keyrslan hefur engar línur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmátið er ekki af gerðinni Transfer eða keyrslan hefur engar línur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 3826106942" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose a nonempty reclassification batch.</source>
+          <target>Veldu endurflokkunarkeyrslu með línum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu endurflokkunarkeyrslu með línum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native posting preview refused a journal line.</source>
+          <target>Bókunarforskoðun hafnaði bókarlínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókunarforskoðun hafnaði bókarlínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported posting error and preview again.</source>
+          <target>Leiðréttu tilgreinda bókunarvillu og forskoðaðu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda bókunarvillu og forskoðaðu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 3309638683" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector is not JSON text.</source>
+          <target>Bókarval er ekki JSON-texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er ekki JSON-texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp13Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 3414267002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documented selector as a JSON string.</source>
+          <target>Sendu skjalfesta valbreytu sem JSON-streng.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu skjalfesta valbreytu sem JSON-streng.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp14Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 314240025" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A journal selector exceeds 10 characters.</source>
+          <target>Bókarval er lengra en 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókarval er lengra en 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp15Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 260543928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a journal template or batch name of at most 10 characters.</source>
+          <target>Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp16Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>preview reclassification, reclass journal preview</source>

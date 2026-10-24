@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Issues148/155: extend coded refusals to Reclassification.Post (10076888) and ItemApplication.Get (10076867). Empty/native-failed posting returns existing PreconditionFailed with unchanged BC text, selected batch and recovery; malformed reads use InvalidParameterFormat. Translate all six older-type error chapters and add bilingual native rollback/refusal tests in96930. Minimum Foundation28.0.9.618 follows Architect1792828422.
+
 - Combine #148/#155: coded, localized older item-application and reclassification refusals with help/runtime parity in existing objects 10076867–10076869,10076887–10076889,10076919 and existing test96930. Require Foundation28.0.8.617 released public error-context API and matching dependency probe to preserve native rollback and actionable failure context; no Foundation source changes. Parent#151 strict validation remains intact.
 
 ### Fixed (2026-10-23) - coded attribute and physical inventory refusals (#148)

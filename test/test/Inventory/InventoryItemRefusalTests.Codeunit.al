@@ -4,6 +4,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -979,7 +980,10 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Response.Get('code', Token);
         Assert.AreEqual(ExpectedCode, Token.AsValue().AsText(), 'Actual retained runtime refusal.');
         Contract := MessageType;
-        Assert.IsTrue(Contract.GetErrors(Errors), 'Errors chapter exists.');
+        GlobalLanguage(LanguageId);
+        Contract.GetErrors(Errors);
+        GlobalLanguage(OldLanguage);
+        Assert.IsTrue(Errors.Count() > 0, 'Errors chapter exists.');
         foreach Token in Errors do begin
             Entry := Token.AsObject();
             Assert.IsTrue(Entry.Get('code', Value), 'Each help error has a code.');
@@ -987,6 +991,8 @@ codeunit 96930 "Inventory Item Refusal Tests"
                 FoundCode := true;
             Assert.IsTrue(Entry.Get('fix', Value), 'Each help error has a fix.');
             Assert.AreNotEqual('', Value.AsValue().AsText(), 'The fix is actionable.');
+            if LanguageId = 1039 then
+                Assert.IsFalse(Value.AsValue().AsText().StartsWith('Send ') or Value.AsValue().AsText().StartsWith('Use ') or Value.AsValue().AsText().StartsWith('Ask ') or Value.AsValue().AsText().StartsWith('Turn ') or Value.AsValue().AsText().StartsWith('Choose ') or Value.AsValue().AsText().StartsWith('Correct ') or Value.AsValue().AsText().StartsWith('Request '), 'Icelandic help does not retain English recovery text.');
         end;
         Assert.IsTrue(FoundCode, 'Help declares the actual refusal code.');
         Assert.IsTrue(Contract.GetExamples(Examples), 'Examples chapter exists.');
@@ -1093,6 +1099,8 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Assert.IsFalse(ApplicationEntry.Get(2147483000), 'Missing application sentinel must not exist.');
         Assert.IsFalse(LedgerEntry.Get(2147483000), 'Missing ledger sentinel must not exist.');
         ParameterName := 'entryNo';
+        if MessageType = "Message Type ori"::"Inventory.ItemApplication.Get" then
+            ParameterName := 'itemLedgerEntryNo';
         if MessageType = "Message Type ori"::"Inventory.ItemApplication.Reapply" then begin
             ParameterName := 'itemLedgerEntryNo';
             Request.Add('applyToEntryNo', 2147483000);
@@ -1252,7 +1260,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Setup.Modify(true);
         TemplateKey := 'templateName';
         BatchKey := 'batchName';
-        if MessageType = "Message Type ori"::"Inventory.Reclassification.PreviewPost" then begin
+        if MessageType in ["Message Type ori"::"Inventory.Reclassification.PreviewPost", "Message Type ori"::"Inventory.Reclassification.Post"] then begin
             TemplateKey := 'journalTemplateName';
             BatchKey := 'journalBatchName';
         end;
@@ -1284,6 +1292,13 @@ codeunit 96930 "Inventory Item Refusal Tests"
             else
                 ErrorText := StrSubstNo(Choose(LanguageId, 'Journal template %1 is not a Transfer template.', 'Bókarsniðmátið %1 er ekki af gerðinni Transfer.'), WrongTemplateName);
         end;
+        if MessageType = "Message Type ori"::"Inventory.Reclassification.Post" then begin
+            NextStep := Choose(LanguageId, 'Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.', 'Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.');
+            if Scenario = 'MissingTemplate' then
+                ErrorText := Choose(LanguageId, 'Journal template W8-NONE was not found.', 'Bókarsniðmátið W8-NONE fannst ekki.')
+            else
+                ErrorText := StrSubstNo(Choose(LanguageId, 'Journal template %1 is not a Transfer template.', 'Bókarsniðmátið %1 er ekki af gerðinni Transfer.'), WrongTemplateName);
+        end;
         if Scenario in ['Format', 'LongName'] then begin
             if Scenario = 'Format' then begin
                 Request.Add(TemplateKey, 12);
@@ -1307,6 +1322,158 @@ codeunit 96930 "Inventory Item Refusal Tests"
             Declared := Declared or (Value.AsValue().AsText() = ErrorCode);
         end;
         Assert.IsTrue(Declared, 'Actual refusal is declared by help.');
+    end;
+
+    [Test]
+    procedure ApplicationGet_Missing_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Get", 'Missing', 1033);
+    end;
+
+    [Test]
+    procedure ApplicationGet_Missing_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Get", 'Missing', 1039);
+    end;
+
+    [Test]
+    procedure ApplicationGet_Format_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Get", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure ApplicationGet_Format_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Get", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_MissingTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'MissingTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_MissingTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'MissingTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_WrongTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'WrongTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_WrongTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'WrongTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_Format_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_Format_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_LongName_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'LongName', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_LongName_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Post", 'LongName', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_Empty_1033()
+    begin
+        VerifyPostBatchRefusal(false, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_Empty_1039()
+    begin
+        VerifyPostBatchRefusal(false, 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_NativeFailure_1033()
+    begin
+        VerifyPostBatchRefusal(true, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_NativeFailure_1039()
+    begin
+        VerifyPostBatchRefusal(true, 1039);
+    end;
+
+    local procedure VerifyPostBatchRefusal(NativeFailure: Boolean; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Ledger: Record "Item Ledger Entry";
+        NativePost: Codeunit "Item Jnl.-Post Batch";
+        Request: JsonObject;
+        Response: JsonObject;
+        ErrorText: Text;
+        NextStep: Text;
+        PreviousLanguage: Integer;
+        BeforeLedger: Integer;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        JournalTemplate.Init();
+        JournalTemplate.Name := CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 10);
+        JournalTemplate.Type := JournalTemplate.Type::Transfer;
+        JournalTemplate.Insert(true);
+        Batch.Init();
+        Batch."Journal Template Name" := JournalTemplate.Name;
+        Batch.Name := 'OWNED';
+        Batch.Insert(true);
+        Request.Add('journalTemplateName', JournalTemplate.Name);
+        Request.Add('journalBatchName', Batch.Name);
+        ErrorText := StrSubstNo(Choose(LanguageId, 'Reclassification batch %1 %2 has no lines.', 'Endurflokkunarkeyrsla %1 %2 hefur engar línur.'), JournalTemplate.Name, Batch.Name);
+        NextStep := Choose(LanguageId, 'Check the selected batch and correct the posting error before retrying.', 'Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.');
+        BeforeLedger := Ledger.Count();
+        if NativeFailure then begin
+            Line.Init();
+            Line."Journal Template Name" := JournalTemplate.Name;
+            Line."Journal Batch Name" := Batch.Name;
+            Line."Line No." := 10000;
+            Line."Entry Type" := Line."Entry Type"::Transfer;
+            Line.Quantity := 1;
+            Line.Insert(true);
+            Commit(); // Retain only this owned invalid journal across the native rollback.
+            PreviousLanguage := GlobalLanguage();
+            GlobalLanguage(LanguageId);
+            Assert.IsFalse(NativePost.Run(Line), 'Native posting must reject the incomplete owned line.');
+            ErrorText := GetLastErrorText();
+            GlobalLanguage(PreviousLanguage);
+            Assert.AreNotEqual('', ErrorText, 'Capture the real localized BC error, never invent it.');
+        end;
+        Commit(); // Boolean native posting owns its transaction boundary.
+        Dispatch("Message Type ori"::"Inventory.Reclassification.Post", Request, LanguageId, Response);
+        AssertRefusal(Response, 'PreconditionFailed', 'journalBatchName', ErrorText, NextStep);
+        Assert.AreEqual(BeforeLedger, Ledger.Count(), 'Refusal creates no item ledger entries.');
+        if NativeFailure then
+            Assert.IsTrue(Line.Get(JournalTemplate.Name, Batch.Name, 10000), 'Refused line remains for correction.');
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; LanguageId: Integer; var ResponseJson: JsonObject)

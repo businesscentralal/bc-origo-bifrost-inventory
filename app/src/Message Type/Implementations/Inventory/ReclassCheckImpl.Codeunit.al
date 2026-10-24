@@ -64,12 +64,12 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
         NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
     begin
-        Argument.AssertIsLicensed();
-        Argument.AssertVersion1();
         if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
             exit;
         end;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
 
         RequestJson := Argument.GetRequestJson();
         if RequestJson.Contains('templateName') then
@@ -160,15 +160,32 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ErrorHelp1Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
+        ErrorHelp2Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
+        ErrorHelp3Lbl: Label 'The caller has no read permission on the Item Journal Line table.', Comment = 'is-IS=Kallandi hefur ekki lesheimild á vörubókarlínum.';
+        ErrorHelp4Lbl: Label 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.', Comment = 'is-IS=Biddu stjórnanda um heimildasafn sem veitir aðgang, til dæmis BIFROST Read ori.';
+        ErrorHelp5Lbl: Label 'templateName and batchName are required.', Comment = 'is-IS=templateName og batchName eru nauðsynleg.';
+        ErrorHelp6Lbl: Label 'The template or the batch name is absent or empty.', Comment = 'is-IS=Heiti sniðmáts eða keyrslu vantar eða er tómt.';
+        ErrorHelp7Lbl: Label 'Send templateName and batchName, or their journal aliases.', Comment = 'is-IS=Sendu templateName og batchName eða samheitin journalTemplateName og journalBatchName.';
+        ErrorHelp8Lbl: Label 'Item journal template %1 was not found.', Comment = '%1 = journal template, is-IS=Vörubókarsniðmát %1 fannst ekki.';
+        ErrorHelp9Lbl: Label 'No item journal template has that name.', Comment = 'is-IS=Ekkert vörubókarsniðmát hefur þetta heiti.';
+        ErrorHelp10Lbl: Label 'Check templateName.', Comment = 'is-IS=Athugaðu templateName.';
+        ErrorHelp11Lbl: Label 'Template %1 is not a reclassification template.', Comment = '%1 = journal template, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
+        ErrorHelp12Lbl: Label 'The template exists but its type is not Transfer.', Comment = 'is-IS=Sniðmátið er til en er ekki af gerðinni Transfer.';
+        ErrorHelp13Lbl: Label 'Use a reclassification template.', Comment = 'is-IS=Notaðu endurflokkunarsniðmát.';
+        ErrorHelp14Lbl: Label 'A journal selector is not JSON text.', Comment = 'is-IS=Bókarval er ekki JSON-texti.';
+        ErrorHelp15Lbl: Label 'Send the documented selector as a JSON string.', Comment = 'is-IS=Sendu skjalfesta valbreytu sem JSON-streng.';
+        ErrorHelp16Lbl: Label 'A journal selector exceeds 10 characters.', Comment = 'is-IS=Bókarval er lengra en 10 stafir.';
+        ErrorHelp17Lbl: Label 'Use a journal template or batch name of at most 10 characters.', Comment = 'is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'templateName and batchName are required.', 'The template or the batch name is absent or empty.', 'Send templateName and batchName, or their journal aliases.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item journal template %1 was not found.', 'No item journal template has that name.', 'Check templateName.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer.', 'Use a reclassification template.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A journal selector is not JSON text.', 'Send the documented selector as a JSON string.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'A journal selector exceeds 10 characters.', 'Use a journal template or batch name of at most 10 characters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp1Lbl, ErrorHelp2Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, ErrorHelp3Lbl, ErrorHelp4Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ErrorHelp5Lbl, ErrorHelp6Lbl, ErrorHelp7Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, ErrorHelp8Lbl, ErrorHelp9Lbl, ErrorHelp10Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, ErrorHelp11Lbl, ErrorHelp12Lbl, ErrorHelp13Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ErrorHelp14Lbl, ErrorHelp15Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp16Lbl, ErrorHelp17Lbl));
         exit(true);
     end;
 

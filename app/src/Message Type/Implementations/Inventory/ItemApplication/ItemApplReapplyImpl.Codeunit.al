@@ -85,14 +85,26 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ErrorHelp1Lbl: Label 'The Item Application domain is turned off in Inventory Setup.', Comment = 'is-IS=Slökkt er á vörujöfnun í birgðauppsetningu.';
+        ErrorHelp2Lbl: Label 'Turn on the Item Application domain in Inventory Setup.', Comment = 'is-IS=Kveiktu á vörujöfnun í birgðauppsetningu.';
+        ErrorHelp3Lbl: Label 'The caller has no write permission on item application entries.', Comment = 'is-IS=Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.';
+        ErrorHelp4Lbl: Label 'Request the permission from an administrator.', Comment = 'is-IS=Biddu stjórnanda um heimildina.';
+        ErrorHelp5Lbl: Label 'A required entry number is absent.', Comment = 'is-IS=Nauðsynlegt færslunúmer vantar.';
+        ErrorHelp6Lbl: Label 'Send the documented entry number parameters.', Comment = 'is-IS=Sendu skjalfestar færslunúmerabreytur.';
+        ErrorHelp7Lbl: Label 'An entry number is not a JSON integer.', Comment = 'is-IS=Færslunúmer er ekki JSON-heiltala.';
+        ErrorHelp8Lbl: Label 'Send entry numbers as JSON integers.', Comment = 'is-IS=Sendu færslunúmer sem JSON-heiltölur.';
+        ErrorHelp9Lbl: Label 'The selected entry does not exist.', Comment = 'is-IS=Valin færsla er ekki til.';
+        ErrorHelp10Lbl: Label 'Read Inventory.ItemApplication.Get and select an existing entry.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.';
+        ErrorHelp11Lbl: Label 'Business Central refuses the application change.', Comment = 'is-IS=Business Central hafnar breytingu á jöfnun.';
+        ErrorHelp12Lbl: Label 'Correct the application according to the native refusal and retry.', Comment = 'is-IS=Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required entry number is absent.', 'Send the documented entry number parameters.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'An entry number is not a JSON integer.', 'Send entry numbers as JSON integers.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected entry does not exist.', 'Read Inventory.ItemApplication.Get and select an existing entry.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central refuses the application change.', 'Correct the application according to the native refusal and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp1Lbl, ErrorHelp2Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, ErrorHelp3Lbl, ErrorHelp4Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ErrorHelp5Lbl, ErrorHelp6Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ErrorHelp7Lbl, ErrorHelp8Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, ErrorHelp9Lbl, ErrorHelp10Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, ErrorHelp11Lbl, ErrorHelp12Lbl));
         exit(true);
     end;
 

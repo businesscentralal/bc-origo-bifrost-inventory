@@ -72,6 +72,30 @@ codeunit 96918 "Inv. Posting Gate Tests"
         VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Reapply", 1039);
     end;
 
+    [Test]
+    procedure OlderReclassificationPost_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.Post", 1033);
+    end;
+
+    [Test]
+    procedure OlderReclassificationPost_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.Post", 1039);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationGet_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Get", 1033);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationGet_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Get", 1039);
+    end;
+
     local procedure VerifyOlderDenied(MessageType: Enum "Message Type ori"; LanguageId: Integer)
     var
         TempArgument: Record "Message Argument ori" temporary;
