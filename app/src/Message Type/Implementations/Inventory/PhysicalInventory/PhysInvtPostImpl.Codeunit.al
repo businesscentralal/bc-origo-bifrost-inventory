@@ -38,6 +38,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         Gate: Codeunit "Inventory Domain Gate ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         Process: Codeunit "Inventory Write Process ori";
@@ -53,7 +54,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithLastError();
+                FailureJournal.RespondWithFailure(Argument);
     end;
 
     /// <summary>Describes native journal behavior.</summary>

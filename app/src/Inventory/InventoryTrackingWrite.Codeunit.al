@@ -25,6 +25,22 @@ codeunit 10076925 "Inventory Tracking Write ori"
         Execute(Rec);
     end;
 
+    /// <summary>Preserves native failure text with the exact source selector and actionable tracking context.</summary>
+    procedure RespondWithFailure(var Argument: Record "Message Argument ori")
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Request: JsonObject;
+        Source: JsonToken;
+        Received: Text;
+    begin
+        Request := Argument.GetRequestJson();
+        if Request.Get('source', Source) then
+            Source.WriteTo(Received)
+        else
+            Received := '<missing>';
+        Parts.RespondWithNativeContext(Argument, 'source', Received, SourceExpectedLbl, TrackingNextStepLbl);
+    end;
+
     /// <summary>Selects removal of tracking rather than assignment for this invocation.</summary>
     procedure SetDeleteMode()
     begin

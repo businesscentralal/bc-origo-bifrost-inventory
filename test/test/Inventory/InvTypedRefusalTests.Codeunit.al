@@ -3,6 +3,8 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Inventory.Setup;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
@@ -542,6 +544,51 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Response := Library.ExecuteType("Message Type ori"::"Inventory.Tracking.Assign", '', Request, false);
         AssertRefusal(Response, 'InvalidParameterFormat', 'source');
         Assert.AreEqual('true', TextValue(Response, 'received'), 'The malformed source value is preserved.');
+        GlobalLanguage(OldLanguage);
+    end;
+
+    [Test]
+    procedure NativeJournalFailure_Context_EN()
+    begin
+        CheckNativeJournalContext(1033);
+    end;
+
+    [Test]
+    procedure NativeJournalFailure_Context_IS()
+    begin
+        CheckNativeJournalContext(1039);
+    end;
+
+    local procedure CheckNativeJournalContext(LanguageId: Integer)
+    var
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Entries: Record "Item Ledger Entry";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Types: List of [Enum "Message Type ori"];
+        MessageType: Enum "Message Type ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        OldLanguage: Integer;
+        BeforeCount: Integer;
+    begin
+        EnableDomains();
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Item);
+        LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+        BeforeCount := Entries.Count();
+        Commit();
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Check");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Post");
+        Types.Add("Message Type ori"::"Inventory.Revaluation.Post");
+        Types.Add("Message Type ori"::"Inventory.Revaluation.PreviewPost");
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        foreach MessageType in Types do begin
+            Response := Library.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            AssertRefusal(Response, 'BusinessCentralError', 'journalBatch');
+            Assert.AreEqual(Batch."Journal Template Name" + '|' + Batch.Name, TextValue(Response, 'received'), 'Actual selected batch context.');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'Native refusal posts nothing.');
+        end;
         GlobalLanguage(OldLanguage);
     end;
 

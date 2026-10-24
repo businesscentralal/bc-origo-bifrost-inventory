@@ -186,6 +186,6 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
             TrackingWrite.Run(Argument)
         else
             if not TrackingWrite.Run(Argument) then
-                Argument.RespondWithLastError();
+                TrackingWrite.RespondWithFailure(Argument);
     end;
 }

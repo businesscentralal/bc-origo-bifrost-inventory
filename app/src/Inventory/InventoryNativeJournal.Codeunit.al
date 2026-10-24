@@ -40,6 +40,25 @@ codeunit 10076840 "Inventory Native Journal ori"
         RevalParameterErr: Label 'Unsupported revaluation parameter %1.', Comment = '%1 = parameter name; is-IS=Endurmatsfæribreytan %1 er ekki studd.';
         RevalNextStepLbl: Label 'Review the revaluation journal lines before posting.', Comment = 'is-IS=Farðu yfir línur endurmatsbókarinnar áður en bókað er.';
 
+    /// <summary>Answers a failed native journal invocation with its selected batch while retaining any more specific collected line context.</summary>
+    procedure RespondWithFailure(var Argument: Record "Message Argument ori")
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Request: JsonObject;
+        Received: Text;
+        Expected: Text;
+    begin
+        Received := Argument.Subject;
+        if Received = '' then begin
+            Request := Argument.GetRequestJson();
+            Request.WriteTo(Received);
+        end;
+        Expected := BatchErr;
+        if Argument.Type in ["Message Type ori"::"Inventory.Revaluation.Post", "Message Type ori"::"Inventory.Revaluation.PreviewPost"] then
+            Expected := RevalBatchErr;
+        Parts.RespondWithNativeContext(Argument, 'journalBatch', Received, Expected, RequestNextStepLbl);
+    end;
+
     /// <summary>Uses Foundation's published ItemJournal.Post interface to check its actual native table and posting permissions.</summary>
     procedure HasItemPostingPermission(): Boolean
     var

@@ -1258,4 +1258,34 @@ codeunit 10076919 "Inventory Contract Parts ori"
         exit(true);
     end;
 
+    /// <summary>Preserves a collected refusal and adds caller context only to an otherwise context-free native failure.</summary>
+    procedure RespondWithNativeContext(var Argument: Record "Message Argument ori"; Parameter: Text; Received: Text; Expected: Text; NextStep: Text)
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Argument.RespondWithLastError();
+        Response := Argument.GetResponseJson();
+        if not Response.Get('code', Token) then
+            exit;
+        if Token.AsValue().AsText() <> 'BusinessCentralError' then
+            exit;
+        AddMissingContext(Response, 'parameter', Parameter);
+        AddMissingContext(Response, 'received', Received);
+        AddMissingContext(Response, 'expected', Expected);
+        AddMissingContext(Response, 'nextStep', NextStep);
+        Argument.SetResponseJson(Response);
+    end;
+
+    local procedure AddMissingContext(var Response: JsonObject; Name: Text; Value: Text)
+    var
+        Token: JsonToken;
+    begin
+        if not Response.Get(Name, Token) then
+            Response.Add(Name, Value)
+        else
+            if Token.AsValue().AsText() = '' then
+                Response.Replace(Name, Value);
+    end;
+
 }
