@@ -1275,7 +1275,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
             JournalTemplate.Init();
             repeat
                 WrongTemplateName := 'ZZTEST' + CopyStr(DelChr(Format(CreateGuid()), '=', '{}-'), 1, 4);
-            until not Template.Get(WrongTemplateName);
+            until not JournalTemplate.Get(WrongTemplateName);
             JournalTemplate.Name := WrongTemplateName;
             JournalTemplate.Type := JournalTemplate.Type::Item;
             JournalTemplate.Insert(true);
