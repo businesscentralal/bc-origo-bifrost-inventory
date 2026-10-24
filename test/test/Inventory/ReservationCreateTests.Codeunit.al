@@ -277,6 +277,7 @@ codeunit 96946 "Reservation Create Tests"
     begin
         // Story #159 AC03 | Time: WorkDate for owned demand | Risk: Create bypasses AutoReserve eligibility.
         CreateTransferLine(Item, TransferHeader, TransferLine, 10, 1);
+        Item.Get(Item."No.");
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
         LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
@@ -287,6 +288,7 @@ codeunit 96946 "Reservation Create Tests"
         case CaseName of
             'itemNever':
                 begin
+                    Item.Get(Item."No.");
                     Item.Validate(Reserve, Item.Reserve::Never);
                     Item.Modify(true);
                 end;

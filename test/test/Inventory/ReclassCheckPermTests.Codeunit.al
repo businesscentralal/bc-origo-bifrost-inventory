@@ -18,9 +18,9 @@ codeunit 96972 "Reclass Check Perm Tests ori"
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
         Setup: Record "Inventory Setup ori";
-        TempArgument: Record "Message Argument ori" temporary;
         LibraryInventory: Codeunit "Library - Inventory";
         LowerPermissions: Codeunit "Library - Lower Permissions";
+        Helper: Codeunit "Assembly Order Test Helper";
         CheckImpl: Codeunit "Reclass Check Impl ori";
         PreviewImpl: Codeunit "Reclass Preview Impl ori";
         PostGate: Codeunit "Inv. Posting Gate ori";
@@ -47,10 +47,6 @@ codeunit 96972 "Reclass Check Perm Tests ori"
         LineId := Line.SystemId;
         Request.Add('templateName', JournalTemplate.Name);
         Request.Add('batchName', Batch.Name);
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
-        TempArgument.SetRequestJson(Request);
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         LowerPermissions.AddPermissionSet('Inv Reclass Read');
         Assert.IsTrue(Line.ReadPermission(), 'Caller has native journal read permission.');
@@ -58,10 +54,9 @@ codeunit 96972 "Reclass Check Perm Tests ori"
         Assert.IsFalse(PostGate.HasPostingPermission(), 'Caller has no posting token.');
         Assert.IsTrue(CheckImpl.IsEnabled(), 'Check discovery permits read-only callers.');
         Assert.IsFalse(PreviewImpl.IsEnabled(), 'Real preview retains the native posting gate.');
-        CheckImpl.ExecuteBifrostTask(TempArgument);
-        Response := TempArgument.GetResponseJson();
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Check", Request, Response);
         Response.Get('status', Token);
-        Assert.AreEqual('Success', Token.AsValue().AsText(), TempArgument.GetResponseText());
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Dispatcher authorizes the real call; no test license state is fabricated.');
         Response.Get('postedLineCount', Token);
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Existing compatibility field counts rather than posts.');
         Assert.IsTrue(Line.GetBySystemId(LineId), 'Read leaves the owned journal intact.');
