@@ -162,6 +162,7 @@ codeunit 96937 "Inventory Cost Write Tests"
     var
         Item: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        Reader: Codeunit "Request Value Reader ori";
         FieldAccess: TestPage "Field Accesses ori";
         Request: JsonObject;
         PreviousCost: Decimal;
@@ -170,20 +171,22 @@ codeunit 96937 "Inventory Cost Write Tests"
         CreateItem(Item, Item."Costing Method"::FIFO);
         PreviousCost := Item."Unit Cost";
         FieldAccess.OpenEdit();
+        // Scope the empty page row before changing the user control; a new unfiltered row
+        // can otherwise retain the default Both restriction at the all-tables key.
+        FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
+        FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Last Direct Cost")));
         FieldAccess.CurrentUserName.SetValue(UserId());
-        FieldAccess.New();
         FieldAccess."Table No.".SetValue(Database::Item);
         FieldAccess."Field No.".SetValue(Item.FieldNo("Last Direct Cost"));
         FieldAccess."Restriction Type".SetValue('Write');
         FieldAccess.Close();
+        Assert.IsFalse(Reader.IsFieldWriteRestricted(Database::Item, Item.FieldNo("Unit Cost")), 'Fixture restricts only Last Direct Cost, not Unit Cost.');
+        Assert.IsTrue(Reader.IsFieldWriteRestricted(Database::Item, Item.FieldNo("Last Direct Cost")), 'Fixture really restricts Last Direct Cost.');
         Request.Add('unitCost', 99);
         Request.Add('lastDirectCost', 88);
         InitArgument(TempArgument, Item."No.", Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
         CostWrite.UpdateCost(TempArgument);
-        AssertGuard(TempArgument, 'PermissionDenied', 'Permission denied');
-        Item.Get(Item."No.");
-        Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Another permitted field is not written first.');
         FieldAccess.OpenEdit();
         FieldAccess.CurrentUserName.SetValue(UserId());
         FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
@@ -191,6 +194,9 @@ codeunit 96937 "Inventory Cost Write Tests"
         Assert.IsTrue(FieldAccess.First(), 'Find the self-created field restriction for cleanup.');
         FieldAccess."Restriction Type".SetValue('None');
         FieldAccess.Close();
+        AssertGuard(TempArgument, 'PermissionDenied', 'Permission denied');
+        Item.Get(Item."No.");
+        Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Another permitted field is not written first.');
     end;
 
     /// <summary>Missing selection cannot turn a card update into an all-items operation.</summary>
@@ -371,10 +377,12 @@ codeunit 96937 "Inventory Cost Write Tests"
     local procedure AssertGuard(var Argument: Record "Message Argument ori"; Code: Text; MessagePart: Text)
     var
         Response: JsonObject;
+        ResponseJson: Text;
     begin
         Response := Argument.GetResponseJson();
+        Response.WriteTo(ResponseJson);
         Assert.AreEqual('Error', ResponseText(Response, 'status'), 'Guard returns structured Error.');
-        Assert.AreEqual(Code, ResponseText(Response, 'code'), 'Guard has the shared typed code.');
+        Assert.AreEqual(Code, ResponseText(Response, 'code'), 'Guard has the shared typed code. ' + ResponseJson);
         Assert.IsTrue(ResponseText(Response, 'error').Contains(MessagePart), 'The actual guard reason is preserved.');
         Assert.IsTrue(ResponseText(Response, 'parameter') <> '', 'Guard identifies its parameter.');
         Assert.IsTrue(ResponseText(Response, 'expected') <> '', 'Guard explains the expected value.');
