@@ -12,6 +12,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
     IncludedPermissionSets = "BIFROST InvAttrRead ori";
 
     Permissions =
+        codeunit "Inventory Read Process ori" = X,
         tabledata "Inventory Setup ori" = R,
         codeunit "Cost To GL Test Impl ori" = X,
         codeunit "Item Appl. Get Impl ori" = X,

@@ -19,6 +19,32 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
 
     [Test]
     [HandlerFunctions('MessageHandler')]
+    procedure PreviewSummary_IsIcelandic()
+    var
+        OldLanguage: Integer;
+    begin
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
+        PreviewPost_OrderWithStock_ReturnsLedgerEntries();
+        GlobalLanguage(OldLanguage);
+    end;
+
+    local procedure AssertLocalizedSummary(Response: JsonObject)
+    var
+        Token: JsonToken;
+        Summary: Text;
+    begin
+        Assert.IsTrue(Response.Get('summary', Token), 'Summary is returned.');
+        Summary := Token.AsValue().AsText();
+        if GlobalLanguage() = 1039 then begin
+            Assert.IsTrue(Summary.StartsWith('Forskoðun'), 'One translated summary label is used.');
+            Assert.IsFalse(Summary.Contains('preview produced'), 'No English summary prefix at1039.');
+        end else
+            Assert.IsTrue(Summary.Contains('preview produced'), 'English summary remains meaningful.');
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
     procedure PreviewPost_OrderWithStock_ReturnsLedgerEntries()
     var
         ParentItem, ComponentItem : Record Item;
@@ -38,6 +64,7 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
         Assert.IsTrue(ResponseJson.Contains('entryCount'), 'Preview helper must return entry counts');
         Assert.IsTrue(ResponseJson.Contains('glEntryCount'), 'Preview helper must return GL entry counts');
         Assert.IsTrue(ResponseJson.Contains('summary'), 'Preview helper must return its summary');
+        AssertLocalizedSummary(ResponseJson);
         Assert.IsFalse(ResponseJson.Contains('callstack'), 'Preview must not expose a callstack');
 
         // Source order remains Open after preview (no real posting)

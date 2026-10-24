@@ -135,6 +135,42 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Valid costing setup and one item or category filter.</source>
+          <target>Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported costing or filter problem and inspect ledger state before retrying.</source>
+          <target>Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a JSON string.</source>
+          <target>%1 verður að vera JSON-strengur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera JSON-strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string containing a Business Central filter, or an empty string.</source>
+          <target>JSON-strengur með Business Central-síu eða tómur strengur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-strengur með Business Central-síu eða tómur strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the filter as text; omit the parameter to leave the filter empty.</source>
+          <target>Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType NextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 998221038 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assembly Order %1 (Item %2) preview produced %3 entries. %4</source>
+          <target>Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4</target>
+          <note from="Developer" annotates="general" priority="2">%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence; is-IS=Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Doc Prev. Post Impl ori - Method BuildSummary - NamedType SummaryTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly order %1 has no lines to post.</source>
           <target>Samsetningarpöntun %1 hefur engar línur til að bóka.</target>
@@ -225,24 +261,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les magn, línufjölda og kostnaðarsundurgreiningu samsetningar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Statistics Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 4243124488" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNo must be specified in the request JSON.</source>
-          <target>itemNo verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingItemErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The number of the item to assemble in data.itemNo.</source>
-          <target>Númer vörunnar sem á að setja saman í data.itemNo.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer vörunnar sem á að setja saman í data.itemNo.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ItemNoExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send the parent item number in data.itemNo.</source>
-          <target>Sendu vörunúmer yfirvörunnar í data.itemNo.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmer yfirvörunnar í data.itemNo.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ItemNoNextStepTxt</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1018346614" size-unit="char" translate="yes" xml:space="preserve">
           <source>quantity must be specified and greater than 0 in the request JSON.</source>
           <target>Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.</target>
@@ -266,6 +284,30 @@
           <target>Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</target>
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value, is-IS=Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 578640536" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 %2 was not found.</source>
+          <target>%1 %2 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = requested value; is-IS=%1 %2 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingRecordErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3417866066" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing item number.</source>
+          <target>Vörunúmer sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ExistingItemTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3758865482" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing location code.</source>
+          <target>Staðsetningarkóði sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ExistingLocationTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1393164433" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an existing item and location, then correct every reported value.</source>
+          <target>Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType LookupNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.</source>
@@ -321,11 +363,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>documentNo is required.</source>
-          <target>documentNo er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=documentNo er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType MissingDocErr</note>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 2590426299" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing posted assembly document that can be undone.</source>
+          <target>Bókað samsetningarskjal sem er til og hægt er að afturkalla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3455991230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the posted assembly number in documentNo and resolve its native posting constraints.</source>
+          <target>Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted assembly %1 was not found.</source>
@@ -867,6 +915,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - Method 3571782927 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cost fields that pass native item validation.</source>
+          <target>Kostnaðarreitir sem standast innbyggða vörusannprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðarreitir sem standast innbyggða vörusannprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - Method ExecuteBifrostTask - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - Method 3571782927 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the selected item; use lastDirectCost if unitCost is refused for an item with entries, or Inventory.Revaluation.Post for Standard costing.</source>
+          <target>Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1635400680 - Method 3527532202 - NamedType 842664886" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: missing '%1' permission set.</source>
           <target>Bókun hafnað: vantar '%1' heimildasett.</target>
@@ -878,6 +938,18 @@
           <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
           <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 1728894929" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One eligible non-Standard item and permitted native cost values.</source>
+          <target>Ein gjaldgeng vara sem notar ekki staðalkostnað og leyfileg innbyggð kostnaðargildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ein gjaldgeng vara sem notar ekki staðalkostnað og leyfileg innbyggð kostnaðargildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType CostExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2920123632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the item selection and cost values; use Inventory.Revaluation.Post for Standard items and lastDirectCost when native unitCost validation refuses an item with entries.</source>
+          <target>Leiðréttu vöruval og kostnaðargildi; notaðu Inventory.Revaluation.Post fyrir staðalkostnaðarvörur og lastDirectCost þegar innbyggð unitCost-prófun hafnar vöru með færslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu vöruval og kostnaðargildi; notaðu Inventory.Revaluation.Post fyrir staðalkostnaðarvörur og lastDirectCost þegar innbyggð unitCost-prófun hafnar vöru með færslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType CostNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3975037305 - NamedType 558155080" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied to update item costs.</source>
@@ -932,12 +1004,6 @@
           <target>Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType StandardErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3975037305 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCostingMethod must be text.</source>
-          <target>expectedCostingMethod verður að vera texti.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCostingMethod verður að vera texti.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType TextErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 306285125" size-unit="char" translate="yes" xml:space="preserve">
           <source>refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.</source>
@@ -1143,6 +1209,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið sem texta í data.itemNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddItemNoSubjectErrors - NamedType ItemNoFormatNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required.</source>
+          <target>%1 er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text of at most %2 characters.</source>
+          <target>%1 verður að vera texti með að hámarki %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = maximum length; is-IS=%1 verður að vera texti með að hámarki %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string of at most %1 characters.</source>
+          <target>JSON-strengur með að hámarki %1 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length; is-IS=JSON-strengur með að hámarki %1 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text in the documented format.</source>
+          <target>Sendu %1 sem texta á skjalfestu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Sendu %1 sem texta á skjalfestu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType NextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3981430822 - NamedType 494448295" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported request values before retrying.</source>
+          <target>Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method RespondToProblems - NamedType ProblemsErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 2778129220" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemNo is required.</source>
           <target>itemNo er nauðsynlegt.</target>
@@ -1245,6 +1341,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3138712269" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A parameter listed in the message contract.</source>
+          <target>Færibreyta sem er talin upp í samningi skilaboðanna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreyta sem er talin upp í samningi skilaboðanna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType AllowedParameterLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.</source>
           <target>Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</target>
@@ -1256,6 +1358,12 @@
           <target>counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CountsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2361715141" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An empty physical inventory journal batch.</source>
+          <target>Tóm talningarbókarkeyrsla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tóm talningarbókarkeyrsla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyBatchLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
           <source>The selected journal contains no lines.</source>
@@ -1299,6 +1407,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 590620199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A native item register for the selected journal.</source>
+          <target>Innbyggð vöruskrá fyrir valda bók.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggð vöruskrá fyrir valda bók.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RegisterExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named parameter or selected journal line using the expected value, then retry.</source>
+          <target>Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 416719055" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
           <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
@@ -1335,11 +1455,29 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1879669363" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Nonempty JSON text of at most %1 characters.</source>
+          <target>JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length; is-IS=JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextExpectedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - Method 3881973616 - NamedType 286034047" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: native journal write permission and BIFROST ItemPost ori are required.</source>
           <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3820833257 - NamedType 2230270348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown inventory read operation.</source>
+          <target>Óþekkt birgðalesaðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðalesaðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Read Process ori - NamedType UnknownOperationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 633023824" size-unit="char" translate="yes" xml:space="preserve">
+          <source>locationCode and variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.</source>
+          <target>locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType FilterExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
           <source>integer in range</source>
@@ -1371,6 +1509,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir umbeðin rakningargögn.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType PermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named tracking parameter and retry with an existing permitted source.</source>
+          <target>Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 3567710146" size-unit="char" translate="yes" xml:space="preserve">
           <source>A non-empty item number in data.itemNo, an item SystemId, a tableView, or a source line.</source>
           <target>Ótómt vörunúmer í data.itemNo, SystemId vöru, tableView eða upprunalína.</target>
@@ -1382,6 +1526,24 @@
           <target>Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SelectionNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A supported existing source with the required read or write permission.</source>
+          <target>Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 700893003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing item tracking for the selected item or source line.</source>
+          <target>Vörurakning sem er til fyrir valda vöru eða upprunalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörurakning sem er til fyrir valda vöru eða upprunalínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType TrackingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 984320782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item, source and filters; assign tracking to the source line before reading it.</source>
+          <target>Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType TrackingNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - Method 11078697 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specify %1 as text.</source>
@@ -1418,6 +1580,24 @@
           <target>Heimild hafnað fyrir upprunafærsluna.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ResolveDocument - NamedType SourcePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 4262812612" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A tracking number and positive base quantity; serial tracking uses one base unit.</source>
+          <target>Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType EntryExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A SalesLine, PurchaseLine or TransferLine source.</source>
+          <target>Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 3085145172" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Tracking.Get for the source and send valid tracking entries for that source.</source>
+          <target>Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType TrackingNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2677511102" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking on the selected source.</source>
@@ -1586,6 +1766,60 @@
           <target>Hvert stak í attributes[] verður að vera hlutur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Hvert stak í attributes[] verður að vera hlutur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attr. Update Process ori - NamedType AttributeObjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 2034178160" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown attribute type %1.</source>
+          <target>Óþekkt gerð eiginleika %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = type name; is-IS=Óþekkt gerð eiginleika %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType InvalidTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 440988511" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Option, Text, Integer, Decimal or Date.</source>
+          <target>Option, Text, Integer, Decimal eða Date.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Option, Text, Integer, Decimal eða Date.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType TypesExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 1386075410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one documented attribute type name in type.</source>
+          <target>Sendu eitt skjalfest heiti gerðar eiginleika í type.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt skjalfest heiti gerðar eiginleika í type.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType TypesNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 624188174" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attribute %1 already exists.</source>
+          <target>Eiginleikinn %1 er þegar til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = attribute name; is-IS=Eiginleikinn %1 er þegar til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType DuplicateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 3333995083" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A unique attribute name.</source>
+          <target>Einkvæmt heiti eiginleika.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Einkvæmt heiti eiginleika.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType NameExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 3617422862" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read existing attributes and choose a new name or use the existing definition.</source>
+          <target>Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType NameNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 1607064031" size-unit="char" translate="yes" xml:space="preserve">
+          <source>optionValues must be an array of distinct nonempty strings for an Option attribute.</source>
+          <target>optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 4142116594" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An array of distinct text option values.</source>
+          <target>Fylki aðgreindra textagilda valkosta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylki aðgreindra textagilda valkosta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 2340148047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct every option value before creating the definition.</source>
+          <target>Leiðréttu öll valkostsgildi áður en skilgreiningin er stofnuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu öll valkostsgildi áður en skilgreiningin er stofnuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates an item attribute definition and optional option values, independent of any item.</source>
@@ -3969,11 +4203,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu direction Outbound eða Inbound, eða slepptu því fyrir Outbound.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method ValidateValues - NamedType DirectionNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
@@ -4017,11 +4257,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil. Lokun og enduropnun eru aðskildar tegundir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
@@ -4899,6 +5145,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar eina frátekningarfærslu eftir færslunúmeri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing eligible item source line and valid reservation values.</source>
+          <target>Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 4113132238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the source identifiers and quantity; read the source line before retrying.</source>
+          <target>Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType SourceNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1820331447" size-unit="char" translate="yes" xml:space="preserve">
           <source>quantity must be greater than zero.</source>
           <target>quantity verður að vera stærra en núll.</target>
@@ -5433,6 +5691,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>
+          <target>Forskoðun flutningspöntunar %1 (%2 -&gt; %3), %4, myndaði %5 færslur. %6</target>
+          <note from="Developer" annotates="general" priority="2">%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence; is-IS=Forskoðun flutningspöntunar %1 (%2 -&gt; %3), %4, myndaði %5 færslur. %6</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method BuildSummary - NamedType SummaryTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer order %1 has no lines to post.</source>
           <target>Millifærslupöntun %1 hefur engar línur til að bóka.</target>
@@ -5444,6 +5708,18 @@
           <target>Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PreviewFailedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship or Receive for a non-direct transfer order.</source>
+          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PostingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
+          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PostingNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
@@ -5547,18 +5823,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leyfir opna millifærslupöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf. Order Release Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 1233726033" size-unit="char" translate="yes" xml:space="preserve">
-          <source>transferFromCode must be specified in the request JSON.</source>
-          <target>transferFromCode verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=transferFromCode verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingFromErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 3755103750" size-unit="char" translate="yes" xml:space="preserve">
-          <source>transferToCode must be specified in the request JSON.</source>
-          <target>transferToCode verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=transferToCode verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingToErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 2845265579" size-unit="char" translate="yes" xml:space="preserve">
           <source>inTransitCode must be specified when directTransfer is false.</source>
           <target>inTransitCode verður að vera tilgreint þegar directTransfer er false.</target>
@@ -5570,6 +5834,24 @@
           <target>Ritun í reitinn %1 er takmörkuð. Ekki má nota gildið '%2'.</target>
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value, is-IS=Ritun í reitinn %1 er takmörkuð. Ekki má nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 4030903664" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 %2 was not found.</source>
+          <target>%1 %2 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = location code; is-IS=%1 %2 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingLocationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 1031872573" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing location code appropriate for this transfer.</source>
+          <target>Staðsetningarkóði sem er til og á við um þennan flutning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði sem er til og á við um þennan flutning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType LocationExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 2218698876" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the from, to and in-transit locations and every reported request value.</source>
+          <target>Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType LocationNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.</source>
@@ -5589,6 +5871,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýja millifærslupöntun og valkvæðar línur; notaðu TransferOrder.Release eða Post eftir stofnun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship or Receive for a non-direct transfer order.</source>
+          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
+          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A transfer order that passes native posting validation.</source>
+          <target>Flutningspöntun sem stenst innbyggða bókunarprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the selected document and inspect its posted state before retrying.</source>
+          <target>Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
           <target>Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</target>
@@ -5596,9 +5902,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType MissingPostingTypeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2336037040" size-unit="char" translate="yes" xml:space="preserve">
-          <source>postingType must be "Ship", "Receive", or "ShipReceive". Received: %1</source>
-          <target>postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1</target>
-          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1</note>
+          <source>postingType must be "Ship" or "Receive". Received: %1</source>
+          <target>postingType verður að vera "Ship" eða "Receive". Móttekið: %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType InvalidPostingTypeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">

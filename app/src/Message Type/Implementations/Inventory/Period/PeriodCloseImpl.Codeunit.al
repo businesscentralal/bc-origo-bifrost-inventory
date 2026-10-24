@@ -53,11 +53,12 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     var
         InventoryPeriod: Record "Inventory Period";
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Reader: Codeunit "Request Value Reader ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         EndingDate: Date;
-        MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
+        PeriodExpectedTxt: Label 'An existing inventory period ending on the ISO date YYYY-MM-DD.', Comment = 'is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.';
+        PeriodNextStepTxt: Label 'Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.', Comment = 'is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.';
         NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date, is-IS=Birgðatímabil sem endar %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::InventoryPeriod, Database::"Inventory Period", true, false) then
@@ -65,13 +66,10 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('endingDate', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDateErr, 'endingDate', '', '', '');
+        if not Reader.TryReadDate(Argument, RequestJson, 'endingDate', true, EndingDate) then
             exit;
-        end;
-        EndingDate := Token.AsValue().AsDate();
         if not InventoryPeriod.Get(EndingDate) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EndingDate), 'endingDate', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, Format(EndingDate, 0, 9)), 'endingDate', Format(EndingDate, 0, 9), PeriodExpectedTxt, PeriodNextStepTxt);
             exit;
         end;
         if not InventoryPeriod.Closed then begin
@@ -135,8 +133,9 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'endingDate is absent.', 'Send endingDate as YYYY-MM-DD.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'endingDate is not a JSON string in YYYY-MM-DD format.', 'Use the expected ISO date format; no period was changed.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No inventory period ends on endingDate.', 'Read the periods with Inventory.Period.Get and send the ending date of one of them.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central error text', 'endingDate is not a date, or Business Central refuses the change of the period.', 'Send endingDate as YYYY-MM-DD, or correct the cause in the text and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central error text', 'Business Central refuses the change of the selected period.', 'Send endingDate as YYYY-MM-DD, or correct the cause in the text and retry.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Inventory Period domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
         exit(true);

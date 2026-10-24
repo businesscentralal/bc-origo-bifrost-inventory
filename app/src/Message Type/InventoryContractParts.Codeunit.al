@@ -569,6 +569,11 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.')
             else
                 AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');
+        if MessageType in ['Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create', 'Inventory.AssemblyOrder.Create', 'Inventory.TransferOrder.Create'] then begin
+            Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors, 'Several independent request values are invalid; no header or definition is inserted.', 'Correct every errors[] entry before retrying.'));
+            Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A supplied text, number, boolean, date or array has the wrong JSON format.', 'Use the named parameter, received value, expected format and nextStep.'));
+            Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'An item or location named in a create request does not exist.', 'Choose existing records and correct all reported values.'));
+        end;
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
@@ -588,7 +593,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unknown attribute type.', 'Use Option, Text, Integer, Decimal or Date.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The definition name is already used.', 'Use the existing definition or choose another name.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin
@@ -598,7 +603,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'directTransfer is not a boolean, a date key is not YYYY-MM-DD, or lines is not an array.', 'Send true or false, dates as YYYY-MM-DD and lines as an array.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'One or more transfer lines are invalid.', 'Correct the reported line fields and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LimitExceeded, 'A request can contain at most 200 lines.', 'Send no more than 200 lines.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own validation error text.', 'Transfer Header validation rejected a location, date or other value.', 'Read the error text and correct the request.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot write Transfer Header records');
                 end;
@@ -614,8 +619,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', 'postingType is not Ship or Receive. ShipReceive is named in the text but is refused as well.', 'Send Ship or Receive in two separate calls.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is not Ship or Receive. ShipReceive is named in the text but is refused as well.', 'Send Ship or Receive in two separate calls.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the order is not ready to ship or receive.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks BIFROST InvPost ori, which posting requires in addition to BIFROST Full ori');
                 end;
@@ -623,8 +628,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview produced no entries. Nothing would be posted.', 'Add a line quantity to ship or receive and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'Transfer order %1 has no lines to post.', 'The order has no lines.', 'Create the lines first and retry.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'The transfer posting preview failed.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
                 end;
@@ -632,10 +637,11 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
             'Inventory.AssemblyOrder.Create':
                 begin
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'A supplied quantity is zero or negative.', 'Send a quantity greater than zero.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo must be specified in the request JSON.', 'Send the parent item number.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'quantity must be specified and greater than 0 in the request JSON.', 'Send a positive quantity.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'quantity or quantityToAssemble is not a number, refreshLines is not a boolean, or a date key is not YYYY-MM-DD.', 'Send numbers as JSON numbers, true or false for refreshLines and dates as YYYY-MM-DD.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own validation error text.', 'Assembly Header validation rejected the request.', 'Read the error text and correct the item, location, dates or quantity.'));
                     AddDomainErrors(Errors, 'Assembly', 'the caller cannot write Assembly Header records');
                 end;
@@ -1210,4 +1216,76 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, ItemNoRequiredErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
         exit(false);
     end;
+    /// <summary>Reads a bounded JSON string and collects every invalid value before the caller writes.</summary>
+    procedure ReadRequestText(Request: JsonObject; Name: Text; var Argument: Record "Message Argument ori"; Required: Boolean; MaximumLength: Integer): Text
+    var
+        Token: JsonToken;
+        Serialized: Text;
+        Value: Text;
+        MissingErr: Label '%1 is required.', Comment = '%1 = parameter name; is-IS=%1 er nauðsynlegt.';
+        FormatErr: Label '%1 must be text of at most %2 characters.', Comment = '%1 = parameter name, %2 = maximum length; is-IS=%1 verður að vera texti með að hámarki %2 stöfum.';
+        ExpectedTxt: Label 'A JSON string of at most %1 characters.', Comment = '%1 = maximum length; is-IS=JSON-strengur með að hámarki %1 stöfum.';
+        NextStepTxt: Label 'Send %1 as text in the documented format.', Comment = '%1 = parameter name; is-IS=Sendu %1 sem texta á skjalfestu sniði.';
+    begin
+        if not Request.Get(Name, Token) then begin
+            if Required then
+                Argument.AddError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, Name), Name, '<missing>', StrSubstNo(ExpectedTxt, MaximumLength), StrSubstNo(NextStepTxt, Name));
+            exit('');
+        end;
+        Token.WriteTo(Serialized);
+        if not Token.IsValue() or not Serialized.StartsWith('"') then begin
+            Argument.AddError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, Name, MaximumLength), Name, Serialized, StrSubstNo(ExpectedTxt, MaximumLength), StrSubstNo(NextStepTxt, Name));
+            exit('');
+        end;
+        Value := Token.AsValue().AsText();
+        if StrLen(Value) > MaximumLength then begin
+            Argument.AddError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(FormatErr, Name, MaximumLength), Name, Value, StrSubstNo(ExpectedTxt, MaximumLength), StrSubstNo(NextStepTxt, Name));
+            exit('');
+        end;
+        if Required and (Value = '') then
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, Name), Name, Serialized, StrSubstNo(ExpectedTxt, MaximumLength), StrSubstNo(NextStepTxt, Name));
+        exit(Value);
+    end;
+
+    /// <summary>Responds once with every collected request problem; single errors retain their specific code.</summary>
+    procedure RespondToProblems(var Argument: Record "Message Argument ori"): Boolean
+    var
+        ProblemsErr: Label 'Correct the reported request values before retrying.', Comment = 'is-IS=Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.';
+    begin
+        if not Argument.HasCollectedErrors() then
+            exit(false);
+        Argument.RespondWithCollectedErrors("Bifrost Error Code ori"::MultipleErrors, ProblemsErr);
+        exit(true);
+    end;
+
+    /// <summary>Preserves a collected refusal and adds caller context only to an otherwise context-free native failure.</summary>
+    procedure RespondWithNativeContext(var Argument: Record "Message Argument ori"; Parameter: Text; Received: Text; Expected: Text; NextStep: Text)
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Argument.RespondWithLastError();
+        Response := Argument.GetResponseJson();
+        if not Response.Get('code', Token) then
+            exit;
+        if Token.AsValue().AsText() <> 'BusinessCentralError' then
+            exit;
+        AddMissingContext(Response, 'parameter', Parameter);
+        AddMissingContext(Response, 'received', Received);
+        AddMissingContext(Response, 'expected', Expected);
+        AddMissingContext(Response, 'nextStep', NextStep);
+        Argument.SetResponseJson(Response);
+    end;
+
+    local procedure AddMissingContext(var Response: JsonObject; Name: Text; Value: Text)
+    var
+        Token: JsonToken;
+    begin
+        if not Response.Get(Name, Token) then
+            Response.Add(Name, Value)
+        else
+            if Token.AsValue().AsText() = '' then
+                Response.Replace(Name, Value);
+    end;
+
 }
