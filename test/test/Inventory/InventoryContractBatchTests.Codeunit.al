@@ -798,7 +798,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
+        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Request scalar conversions are validated before the report') > 0, 'Native report failures are distinguished from preflight format errors.');
+        GetNamedMember(Contract, 'errors', 'code', 'InvalidParameterFormat', Error);
+        Error.Get('when', ValueToken);
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('postToGL'), 'The Boolean format refusal is explicitly documented.');
+        GetNamedMember(Contract, 'errors', 'code', 'MultipleErrors', Error);
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
@@ -901,7 +905,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified adjustment error branches.')
+                    LibraryAssert.AreEqual(6, ArrayChapter.Count(), 'Six independently specified adjustment error branches, including typed formats and collected errors.')
                 else begin
                     LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Domain, posting permission and native posting/selection failures.');
                     Clear(ObjectChapter);

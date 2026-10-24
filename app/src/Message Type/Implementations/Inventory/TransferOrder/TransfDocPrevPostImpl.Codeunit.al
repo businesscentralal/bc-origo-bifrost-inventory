@@ -151,6 +151,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         TempDocumentEntry: Record "Document Entry" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
         ResponseJson: JsonObject;
@@ -158,9 +159,9 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         PredictedJson: JsonObject;
         PreviewArray: JsonArray;
         RequestJson: JsonObject;
-        Token: JsonToken;
         PostingType: Enum "Transfer Order Post";
         PostingTypeText: Text;
+        PostingTypeNormalized: Text;
         DocumentNo: Code[20];
         DirectTransfer: Boolean;
         PostShipment: Boolean;
@@ -175,6 +176,8 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         PreviewFieldNames: List of [Text];
         NoLinesToPostErr: Label 'Transfer order %1 has no lines to post.', Comment = '%1 = Document No., is-IS=Millifærslupöntun %1 hefur engar línur til að bóka.';
         PreviewFailedErr: Label 'Posting preview failed and no entries were captured. The transfer order cannot be posted in its current state.', Comment = 'is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.';
+        PostingExpectedTxt: Label 'Ship or Receive for a non-direct transfer order.', Comment = 'is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.';
+        PostingNextStepTxt: Label 'Send postingType="Ship" or postingType="Receive" for the selected transfer order.', Comment = 'is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.';
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
         InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1';
         NothingToPostNextStepTok: Label 'No line has a quantity to ship or receive. Review with Inventory.TransferOrder.Statistics.', Comment = 'is-IS=Engin lína hefur magn til að senda eða móttaka. Skoðið með Inventory.TransferOrder.Statistics.';
@@ -183,6 +186,10 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        PostingTypeText := Parts.ReadRequestText(Argument, RequestJson, 'postingType', false, 30);
+        if Parts.RespondToProblems(Argument) then
+            exit;
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
         TransferLine.SetRange("Document No.", TransferHeader."No.");
@@ -197,9 +204,9 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
             ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
-            if RequestJson.Get('postingType', Token) then begin
-                PostingTypeText := Token.AsValue().AsText();
-                case LowerCase(PostingTypeText) of
+            if PostingTypeText <> '' then begin
+                PostingTypeNormalized := LowerCase(PostingTypeText);
+                case PostingTypeNormalized of
                     'ship':
                         begin
                             PostShipment := true;
@@ -211,12 +218,12 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
                             PostingType := PostingType::Receive;
                         end;
                     else begin
-                        Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), 'postingType', PostingTypeText, PostingExpectedTxt, PostingNextStepTxt);
                         exit;
                     end;
                 end;
             end else begin
-                Argument.RespondWithError(MissingPostingTypeErr);
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingPostingTypeErr, 'postingType', '<missing>', PostingExpectedTxt, PostingNextStepTxt);
                 exit;
             end;
         GLSetup.Get();
@@ -299,7 +306,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     local procedure BuildSummary(DocumentNo: Code[20]; FromCode: Code[10]; ToCode: Code[10]; PostingTypeText: Text; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
-        SummaryTok: Label 'Transfer Order %1 (%2 -> %3) %4 preview produced %5 entries. %6', Comment = '%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence', Locked = true;
+        SummaryTok: Label 'Transfer Order %1 (%2 -> %3) %4 preview produced %5 entries. %6', Comment = '%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence; is-IS=Forskoðun flutningspöntunar %1 (%2 -> %3), %4, myndaði %5 færslur. %6';
     begin
         exit(StrSubstNo(SummaryTok, DocumentNo, FromCode, ToCode, PostingTypeText, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
     end;

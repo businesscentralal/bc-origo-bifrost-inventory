@@ -147,26 +147,35 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         TransferHeader: Record "Transfer Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
         TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         PostingTypeText: Text;
+        PostingTypeNormalized: Text;
         DocumentNo: Code[20];
         DirectTransfer: Boolean;
         PostShipment: Boolean;
         PostReceipt: Boolean;
         PostTransfer: Boolean;
+        PostingExpectedTxt: Label 'Ship or Receive for a non-direct transfer order.', Comment = 'is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.';
+        PostingNextStepTxt: Label 'Send postingType="Ship" or postingType="Receive" for the selected transfer order.', Comment = 'is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.';
+        NativeExpectedTxt: Label 'A transfer order that passes native posting validation.', Comment = 'is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.';
+        NativeNextStepTxt: Label 'Correct the selected document and inspect its posted state before retrying.', Comment = 'is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.';
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
-        InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1';
+        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         if not PostingGate.AssertCanPost(Argument) then
+            exit;
+        RequestJson := Argument.GetRequestJson();
+        PostingTypeText := Parts.ReadRequestText(Argument, RequestJson, 'postingType', false, 30);
+        if Parts.RespondToProblems(Argument) then
             exit;
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
             exit;
@@ -179,25 +188,25 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
             ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
-            if RequestJson.Get('postingType', Token) then begin
-                PostingTypeText := Token.AsValue().AsText();
-                case LowerCase(PostingTypeText) of
+            if PostingTypeText <> '' then begin
+                PostingTypeNormalized := LowerCase(PostingTypeText);
+                case PostingTypeNormalized of
                     'ship':
                         PostShipment := true;
                     'receive':
                         PostReceipt := true;
                     'shipreceive', 'ship+receive':
                         begin
-                            Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), 'postingType', PostingTypeText, PostingExpectedTxt, PostingNextStepTxt);
                             exit;
                         end;
                     else begin
-                        Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), 'postingType', PostingTypeText, PostingExpectedTxt, PostingNextStepTxt);
                         exit;
                     end;
                 end;
             end else begin
-                Argument.RespondWithError(MissingPostingTypeErr);
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingPostingTypeErr, 'postingType', '<missing>', PostingExpectedTxt, PostingNextStepTxt);
                 exit;
             end;
 
@@ -207,7 +216,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Commit();
         if not TransferOrderPostYesNo.Run(TransferHeader) then begin
             UnbindSubscription(TransferPostSubscriber);
-            Argument.RespondWithError(GetLastErrorText());
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'documentNo', DocumentNo, NativeExpectedTxt, NativeNextStepTxt);
             exit;
         end;
         UnbindSubscription(TransferPostSubscriber);

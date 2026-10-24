@@ -123,6 +123,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         CheckParameters(Argument.GetRequestJson(), '');
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
+        if JournalType = JournalType::"Phys. Inventory" then
+            ExcludeEmptyPhysicalLines(Line);
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
             exit;
@@ -542,6 +544,17 @@ codeunit 10076840 "Inventory Native Journal ori"
             FilterText += Format(SelectedLine."Line No.", 0, 9);
         end;
         Line.SetFilter("Line No.", FilterText);
+    end;
+
+    local procedure ExcludeEmptyPhysicalLines(var Line: Record "Item Journal Line")
+    begin
+        if Line.FindSet() then
+            repeat
+                // Only the empty row left by the native page is ignored; malformed nonempty rows still fail validation.
+                if (Line."Item No." <> '') or (Line.Quantity <> 0) or (Line."Qty. (Phys. Inventory)" <> 0) or (Line."Qty. (Calculated)" <> 0) then
+                    Line.Mark(true);
+            until Line.Next() = 0;
+        Line.MarkedOnly(true);
     end;
 
     local procedure ReadLines(var Line: Record "Item Journal Line"; JournalType: Enum "Item Journal Template Type"; var Results: JsonArray)

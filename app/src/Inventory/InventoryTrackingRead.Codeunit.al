@@ -33,6 +33,8 @@ codeunit 10076841 "Inventory Tracking Read ori"
         Skip: Integer;
         Take: Integer;
         InvalidFilterErr: Label 'The tracking filter or paging value is invalid.', Comment = 'is-IS=Rakningarsía eða síðugildi er ógilt.';
+        TrackingExpectedTxt: Label 'Existing item tracking for the selected item or source line.', Comment = 'is-IS=Vörurakning sem er til fyrir valda vöru eða upprunalínu.';
+        TrackingNextStepTxt: Label 'Check the item, source and filters; assign tracking to the source line before reading it.', Comment = 'is-IS=Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.';
         NoTrackingErr: Label 'No item tracking found matching the specified criteria.', Comment = 'is-IS=Engin vörurakning fannst sem passar við tilgreind skilyrði.';
         PermissionErr: Label 'Permission denied for the requested tracking data.', Comment = 'is-IS=Heimild hafnað fyrir umbeðin rakningargögn.';
         MissingSelectionErr: Label 'Select an item or a source line.', Comment = 'is-IS=Veldu vöru eða upprunalínu.';
@@ -136,7 +138,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
                 until Specification.Next() = 0;
         end;
         if Lines.Count() = 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoTrackingErr, '', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoTrackingErr, 'itemNo', Item."No.", TrackingExpectedTxt, TrackingNextStepTxt);
             exit;
         end;
         Response.Add('itemNo', Item."No.");

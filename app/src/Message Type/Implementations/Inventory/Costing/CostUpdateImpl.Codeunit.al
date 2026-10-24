@@ -40,6 +40,8 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     var
         Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
+        NativeExpectedTxt: Label 'Cost fields that pass native item validation.', Comment = 'is-IS=Kostnaðarreitir sem standast innbyggða vörusannprófun.';
+        NativeNextStepTxt: Label 'Review the selected item; use lastDirectCost if unitCost is refused for an item with entries, or Inventory.Revaluation.Post for Standard costing.', Comment = 'is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.';
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, false) then
             exit;
@@ -50,7 +52,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNo', Argument.Subject, NativeExpectedTxt, NativeNextStepTxt);
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
@@ -149,7 +151,11 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitCost, lastDirectCost, standardCost or allowBlocked has the wrong format, or an item selection key is invalid.', 'Use JSON numbers or invariant decimal text for the costs, JSON true or false for allowBlocked, and valid identifiers.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitCost, lastDirectCost or standardCost is present but null or empty.', 'Supply a numeric cost value or leave the key out.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, none of the three cost keys is sent, the item is Standard-costed, or blocked without allowBlocked, expectedCostingMethod is not text or does not match, a cost field is restricted, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Use Inventory.Revaluation.Post for Standard-costed items; otherwise correct the request.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors, 'Several request format or lookup values are invalid.', 'Correct every errors[] entry before retrying; no item was changed.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Item selection or all three cost keys are absent.', 'Select one item and send at least one cost value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::AmbiguousRecord, 'The selection matches several items.', 'Select exactly one item.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The item is Standard-costed, blocked without opt-in, or expectedCostingMethod differs.', 'Use Inventory.Revaluation.Post for Standard costing; otherwise correct the named guard.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native cost field validation fails.', 'Inspect the selected item; use lastDirectCost when native unitCost validation refuses an item with entries.'));
         exit(true);
     end;
 

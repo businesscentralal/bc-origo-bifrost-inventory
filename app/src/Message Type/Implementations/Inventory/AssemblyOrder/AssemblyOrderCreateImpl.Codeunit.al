@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Location;
 using Origo.Bifrost;
 
 codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
@@ -141,11 +143,13 @@ codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
+        Item: Record Item;
+        Location: Record Location;
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         ItemNo: Code[20];
         VariantCode: Code[10];
         LocationCode: Code[10];
@@ -159,47 +163,30 @@ codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori
         Quantity: Decimal;
         QuantityToAssemble: Decimal;
         RefreshLines: Boolean;
-        MissingItemErr: Label 'itemNo must be specified in the request JSON.', Comment = 'is-IS=itemNo verður að vera tilgreint í JSON-beiðninni.';
-        ItemNoExpectedTxt: Label 'The number of the item to assemble in data.itemNo.', Comment = 'is-IS=Númer vörunnar sem á að setja saman í data.itemNo.';
-        ItemNoNextStepTxt: Label 'Send the parent item number in data.itemNo.', Comment = 'is-IS=Sendu vörunúmer yfirvörunnar í data.itemNo.';
         MissingQuantityErr: Label 'quantity must be specified and greater than 0 in the request JSON.', Comment = 'is-IS=Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.';
         QuantityExpectedTxt: Label 'A quantity greater than 0 in data.quantity.', Comment = 'is-IS=Magn stærra en 0 í data.quantity.';
         QuantityNextStepTxt: Label 'Send the quantity to assemble in data.quantity.', Comment = 'is-IS=Sendu magnið sem á að setja saman í data.quantity.';
         FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value, is-IS=Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið ''%2''.';
         ReadOk: Boolean;
+        MissingRecordErr: Label '%1 %2 was not found.', Comment = '%1 = parameter name, %2 = requested value; is-IS=%1 %2 fannst ekki.';
+        ExistingItemTxt: Label 'An existing item number.', Comment = 'is-IS=Vörunúmer sem er til.';
+        ExistingLocationTxt: Label 'An existing location code.', Comment = 'is-IS=Staðsetningarkóði sem er til.';
+        LookupNextStepTxt: Label 'Select an existing item and location, then correct every reported value.', Comment = 'is-IS=Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if RequestJson.Get('itemNo', Token) then
-            ItemNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(ItemNo))
-        else begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
-            exit;
-        end;
-        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', false, Quantity) then
-            exit;
-        if Quantity <= 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTxt, QuantityNextStepTxt);
-            exit;
-        end;
-        if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo));
-            exit;
-        end;
-        if RequestJson.Get('variantCode', Token) then
-            VariantCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(VariantCode));
-        if RequestJson.Get('locationCode', Token) then
-            LocationCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(LocationCode));
-        if RequestJson.Get('binCode', Token) then
-            BinCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BinCode));
-        if RequestJson.Get('unitOfMeasureCode', Token) then
-            UnitOfMeasureCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(UnitOfMeasureCode));
-        if RequestJson.Get('description', Token) then
-            Description := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(Description));
-        ReadOk := true;
+        ItemNo := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'itemNo', true, 20), 1, 20);
+        VariantCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'variantCode', false, 10), 1, 10);
+        LocationCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'locationCode', false, 10), 1, 10);
+        BinCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'binCode', false, 20), 1, 20);
+        UnitOfMeasureCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'unitOfMeasureCode', false, 10), 1, 10);
+        Description := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'description', false, 100), 1, 100);
+        ReadOk := RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', true, Quantity);
+        if ReadOk and (Quantity <= 0) then
+            Argument.AddError("Bifrost Error Code ori"::InvalidParameter, MissingQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTxt, QuantityNextStepTxt);
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'dueDate', false, DueDate) then
@@ -210,11 +197,19 @@ codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori
             ReadOk := false;
         if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
             ReadOk := false;
-        if not ReadOk then
-            exit;
         RefreshLines := true;
         if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'refreshLines', false, RefreshLines) then
+            ReadOk := false;
+        if (ItemNo <> '') and not Item.Get(ItemNo) then
+            Argument.AddError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingRecordErr, 'itemNo', ItemNo), 'itemNo', ItemNo, ExistingItemTxt, LookupNextStepTxt);
+        if (LocationCode <> '') and not Location.Get(LocationCode) then
+            Argument.AddError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingRecordErr, 'locationCode', LocationCode), 'locationCode', LocationCode, ExistingLocationTxt, LookupNextStepTxt);
+        if Parts.RespondToProblems(Argument) or not ReadOk then
             exit;
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo), 'itemNo', ItemNo, ExistingItemTxt, LookupNextStepTxt);
+            exit;
+        end;
         if PostingDate = 0D then
             PostingDate := WorkDate();
         AssemblyHeader.Init();
