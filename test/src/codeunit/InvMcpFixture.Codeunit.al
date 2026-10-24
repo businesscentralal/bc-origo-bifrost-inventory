@@ -277,7 +277,11 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Header: Record "Sales Header";
         Item: Record Item;
         VATSetup: Record "VAT Posting Setup";
+        GenBusGroup: Record "Gen. Business Posting Group";
+        GenSetup: Record "General Posting Setup";
+        SalesLine: Record "Sales Line";
         LibraryERM: Codeunit "Library - ERM";
+        LibrarySales: Codeunit "Library - Sales";
     begin
         if CompanyName() <> 'CRONUS International Ltd.' then
             Error('Owned company required.');
@@ -286,15 +290,31 @@ codeunit 96973 "Inv. MCP Fixture ori"
         if not Header.IsEmpty() then
             Error('Sales source already exists; inspect it before changing its fixture setup.');
         LibraryERM.CreateVATPostingSetupWithAccounts(VATSetup, VATSetup."VAT Calculation Type"::"Normal VAT", 0);
-        Customer.Validate("Gen. Bus. Posting Group", '');
+        LibraryERM.CreateGenBusPostingGroup(GenBusGroup);
+        Customer.Validate("Gen. Bus. Posting Group", GenBusGroup.Code);
         Customer.Validate("VAT Bus. Posting Group", VATSetup."VAT Bus. Posting Group");
         Customer.Modify(true);
         Item.Get('W8PRV-EN');
         Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
+        Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
+        LibraryERM.CreateGeneralPostingSetup(GenSetup, GenBusGroup.Code, Item."Gen. Prod. Posting Group");
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::Order, Customer."No.");
+        LibrarySales.CreateSalesLine(SalesLine, Header, SalesLine.Type::Item, Item."No.", 3);
+        SalesLine.Validate("Shipment Date", WorkDate());
+        SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
+        SalesLine.Modify(true);
         Item.Get('W8PRV-IS');
         Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
+        Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
+        LibraryERM.CreateGeneralPostingSetup(GenSetup, GenBusGroup.Code, Item."Gen. Prod. Posting Group");
+        Clear(Header);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::Order, Customer."No.");
+        LibrarySales.CreateSalesLine(SalesLine, Header, SalesLine.Type::Item, Item."No.", 3);
+        SalesLine.Validate("Shipment Date", WorkDate());
+        SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
+        SalesLine.Modify(true);
     end;
 
 }
