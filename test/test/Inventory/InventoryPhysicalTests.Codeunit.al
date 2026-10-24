@@ -23,6 +23,110 @@ codeunit 96944 "Inventory Physical Tests"
         LibraryInventory: Codeunit "Library - Inventory";
         Journal: Codeunit "Inventory Native Journal ori";
 
+    [Test]
+    [HandlerFunctions('CostPostMessageHandler')]
+    procedure CostToGL_PostsSelectedItemOnly()
+    begin
+        VerifyCostToGLPosting(false);
+    end;
+
+    [Test]
+    [HandlerFunctions('CostPostMessageHandler')]
+    procedure CostToGL_AppliesDocumentAndItemFilters()
+    begin
+        VerifyCostToGLPosting(true);
+    end;
+
+    [MessageHandler]
+    procedure CostPostMessageHandler(Message: Text[1024])
+    begin
+        // Native report statistics; posting and selection are asserted from actual ledgers below.
+    end;
+
+    local procedure VerifyCostToGLPosting(UseDocumentFilter: Boolean)
+    var
+        Item: Record Item;
+        OtherItem: Record Item;
+        ValueEntry: Record "Value Entry";
+        OtherValueEntry: Record "Value Entry";
+        GLEntry: Record "G/L Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+        OtherEntryNo: Integer;
+        BeforeCount: Integer;
+        ResponseText: Text;
+    begin
+        CreateStock(Item);
+        CreateStock(OtherItem);
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.FindFirst();
+        EntryNo := ValueEntry."Entry No.";
+        OtherValueEntry.SetRange("Item No.", OtherItem."No.");
+        OtherValueEntry.FindFirst();
+        OtherEntryNo := OtherValueEntry."Entry No.";
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Owned selected cost is unposted.');
+        Assert.AreEqual(0, OtherValueEntry."Cost Posted to G/L", 'Owned other cost is unposted.');
+        if UseDocumentFilter then begin
+            Assert.AreNotEqual(ValueEntry."Document No.", OtherValueEntry."Document No.", 'Own fixture documents differ.');
+            Request.Add('itemNoFilter', Item."No." + '|' + OtherItem."No.");
+            Request.Add('documentNoFilter', ValueEntry."Document No.");
+        end else
+            Request.Add('itemNoFilter', Item."No.");
+        BeforeCount := GLEntry.Count();
+        Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
+        Response.Get('status', Token);
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
+        Response.Get('posted', Token);
+        Assert.IsTrue(Token.AsValue().AsBoolean(), 'Actual selected entries posted.');
+        Response.Get('postedValueEntryCount', Token);
+        Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'Actual posted count.');
+        ValueEntry.Get(EntryNo);
+        OtherValueEntry.Get(OtherEntryNo);
+        Assert.AreEqual(ValueEntry."Cost Amount (Actual)", ValueEntry."Cost Posted to G/L", 'Selected value entry cost is posted.');
+        Assert.AreEqual(0, OtherValueEntry."Cost Posted to G/L", 'Unselected value entry remains unposted.');
+        Assert.IsTrue(GLEntry.Count() > BeforeCount, 'Real G/L entries were created.');
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsItemTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Item, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsItemTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Item, 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsPhysicalTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::"Phys. Inventory", 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsPhysicalTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::"Phys. Inventory", 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsRevaluationTemplate_1033()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Revaluation, 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_RejectsRevaluationTemplate_1039()
+    begin
+        VerifyWrongReclassTemplate("Item Journal Template Type"::Revaluation, 1039);
+    end;
+
     /// <summary>Calculate uses report 790 and its item filter, leaves ledgers untouched, and refuses duplicate proposals.</summary>
     [Test]
     procedure Scenario_AC01_Calculate_SelectedStockCreatesNativeLines()
@@ -259,6 +363,78 @@ codeunit 96944 "Inventory Physical Tests"
         Entries.SetRange("Entry No.", Register."From Entry No.", Register."To Entry No.");
         Entries.FindFirst();
         Assert.AreEqual(-2, Entries.Quantity, 'Actual native shortage adjustment.');
+    end;
+
+    [Test]
+    procedure PhysicalPost_IgnoresOnlyEmptyLine_EN()
+    begin
+        VerifyEmptyPhysicalLine(1033, false);
+    end;
+
+    [Test]
+    procedure PhysicalPost_IgnoresOnlyEmptyLine_IS()
+    begin
+        VerifyEmptyPhysicalLine(1039, false);
+    end;
+
+    [Test]
+    procedure PhysicalPost_RejectsNonemptyMissingItem_EN()
+    begin
+        VerifyEmptyPhysicalLine(1033, true);
+    end;
+
+    [Test]
+    procedure PhysicalPost_RejectsNonemptyMissingItem_IS()
+    begin
+        VerifyEmptyPhysicalLine(1039, true);
+    end;
+
+    local procedure VerifyEmptyPhysicalLine(LanguageId: Integer; InvalidNonempty: Boolean)
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        BlankLine: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        OldLanguage: Integer;
+    begin
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        CreatePhysical(Item, Batch, Line);
+        AddCount(Request, Line.SystemId, 8);
+        InitArgument(TempArgument, Batch, Request);
+        Journal.RecordCount(TempArgument);
+        BlankLine.Init();
+        BlankLine."Journal Template Name" := Batch."Journal Template Name";
+        BlankLine."Journal Batch Name" := Batch.Name;
+        BlankLine."Line No." := Line."Line No." + 10000;
+        if InvalidNonempty then
+            BlankLine.Quantity := 1;
+        BlankLine.Insert(false);
+        Clear(Request);
+        InitArgument(TempArgument, Batch, Request);
+        Process.SetJournalType("Item Journal Template Type"::"Phys. Inventory");
+        BeforeCount := Entries.Count();
+        Commit();
+        if InvalidNonempty then begin
+            Assert.IsFalse(Process.Run(TempArgument), 'A malformed nonempty row must still fail native validation.');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'Failure does not leave partial posting.');
+        end else begin
+            Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
+            Response := TempArgument.GetResponseJson();
+            Response.Get('postedLineCount', Token);
+            Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Only the meaningful physical inventory row posts.');
+            Entries.SetRange("Item No.", Item."No.");
+            Entries.SetRange(Quantity, -2);
+            Assert.AreEqual(1, Entries.Count(), 'Actual shortage posted despite the empty row.');
+        end;
+        GlobalLanguage(OldLanguage);
     end;
 
     /// <summary>Every operation rejects an existing batch of another journal family.</summary>
@@ -678,6 +854,55 @@ codeunit 96944 "Inventory Physical Tests"
         JournalLine.Validate("Unit Amount", 12);
         JournalLine.Modify(true);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+    end;
+
+    local procedure VerifyWrongReclassTemplate(JournalType: Enum "Item Journal Template Type"; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        PreviousLanguage: Integer;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        CreateBatch(Batch, JournalType);
+        Line.Init();
+        Line."Journal Template Name" := Batch."Journal Template Name";
+        Line."Journal Batch Name" := Batch.Name;
+        Line."Line No." := 10000;
+        Line.Description := 'Owned template guard fixture';
+        Line.Insert(false);
+        Request.Add('journalTemplateName', Batch."Journal Template Name");
+        Request.Add('journalBatchName', Batch.Name);
+        BeforeCount := Entries.Count();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Post", Request, Response);
+        GlobalLanguage(PreviousLanguage);
+        Assert.IsTrue(Response.Get('code', Token), 'Refusal must be coded before native posting runs.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Wrong journal type.');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('journalTemplateName', Token.AsValue().AsText(), 'Template parameter.');
+        Response.Get('received', Token);
+        Assert.AreEqual(Batch."Journal Template Name", Token.AsValue().AsText(), 'Actual template name.');
+        Response.Get('error', Token);
+        if LanguageId = 1039 then
+            Assert.AreEqual('Bókarsniðmátið ' + Batch."Journal Template Name" + ' er ekki af gerðinni Transfer.', Token.AsValue().AsText(), 'Icelandic refusal.')
+        else
+            Assert.AreEqual('Journal template ' + Batch."Journal Template Name" + ' is not a Transfer template.', Token.AsValue().AsText(), 'English refusal.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Recovery instruction required.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Recovery instruction nonempty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Wrong template creates no item ledger entries.');
+        Assert.IsTrue(Line.Get(Batch."Journal Template Name", Batch.Name, 10000), 'Wrong template must not consume the line.');
+        Assert.AreEqual('Owned template guard fixture', Line.Description, 'Line unchanged.');
     end;
 
     local procedure CreateBatch(var Batch: Record "Item Journal Batch"; JournalType: Enum "Item Journal Template Type")

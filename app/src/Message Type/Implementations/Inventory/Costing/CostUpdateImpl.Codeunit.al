@@ -13,7 +13,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
         KeywordsLbl: Label 'item cost, unit cost, last direct cost, standard cost, intentional cost update', Comment = 'is-IS=vörukostnaður,kostnaðarverð,síðasta beina kostnaðarverð,staðlað kostnaðarverð,kostnaðaruppfærsla';
         OverviewLbl: Label 'Writes current Item card costs through Validate. It does not revalue inventory or post ledger entries.', Comment = 'is-IS=Skráir núverandi kostnað á vöruspjald með Validate. Endurmetur ekki birgðir og bókar engar fjárhagsfærslur.';
-        NotesLbl: Label 'Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted.', Comment = 'is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.';
+        NotesLbl: Label 'Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
 
     /// <summary>Requires native Item write permission and the company Costing flag.</summary>
     procedure IsEnabled(): Boolean
@@ -40,14 +40,26 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     var
         Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
+        Request: JsonObject;
+        Token: JsonToken;
+        ItemSelection: Text;
+        NativeExpectedTxt: Label 'Cost fields that pass native item validation.', Comment = 'is-IS=Kostnaðarreitir sem standast innbyggða vörusannprófun.';
+        NativeNextStepTxt: Label 'Review the selected item; use lastDirectCost if unitCost is refused for an item with entries, or Inventory.Revaluation.Post for Standard costing.', Comment = 'is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.';
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        ItemSelection := Argument.Subject;
+        Request := Argument.GetRequestJson();
+        if (ItemSelection = '') and Request.Get('itemNo', Token) then
+            ItemSelection := Format(Token);
         Process.SetOperation('CostUpdate');
-        if not Process.Run(Argument) then
-            Argument.RespondWithError(GetLastErrorText());
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNo', ItemSelection, NativeExpectedTxt, NativeNextStepTxt);
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
@@ -146,7 +158,11 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitCost, lastDirectCost, standardCost or allowBlocked has the wrong format, or an item selection key is invalid.', 'Use JSON numbers or invariant decimal text for the costs, JSON true or false for allowBlocked, and valid identifiers.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitCost, lastDirectCost or standardCost is present but null or empty.', 'Supply a numeric cost value or leave the key out.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, none of the three cost keys is sent, the item is Standard-costed, or blocked without allowBlocked, expectedCostingMethod is not text or does not match, a cost field is restricted, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Use Inventory.Revaluation.Post for Standard-costed items; otherwise correct the request.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors, 'Several request format or lookup values are invalid.', 'Correct every errors[] entry before retrying; no item was changed.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Item selection or all three cost keys are absent.', 'Select one item and send at least one cost value.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::AmbiguousRecord, 'The selection matches several items.', 'Select exactly one item.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The item is Standard-costed, blocked without opt-in, or expectedCostingMethod differs.', 'Use Inventory.Revaluation.Post for Standard costing; otherwise correct the named guard.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native cost field validation fails.', 'Inspect the selected item; use lastDirectCost when native unitCost validation refuses an item with entries.'));
         exit(true);
     end;
 

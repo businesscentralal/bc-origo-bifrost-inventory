@@ -37,9 +37,10 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         Gate: Codeunit "Inventory Domain Gate ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
-        Journal: Codeunit "Inventory Native Journal ori";
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
             exit;
@@ -47,7 +48,12 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        Journal.Preview(Argument, "Item Journal Template Type"::"Phys. Inventory");
+        Process.SetOperation('PhysicalPreview');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                FailureJournal.RespondWithFailure(Argument);
     end;
 
 
@@ -164,8 +170,8 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected journal contains no lines.', 'Select a batch with lines or a valid line subset.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview captured no entry, so the posting would create nothing.', 'Check that the lines have a quantity to post.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central refused the posting preview; the answer carries its own text.', 'Correct the cause in the text and retry.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (BIFROST ItemPost ori) or write permission on the item journal.', 'Ask an administrator for BIFROST ItemPost ori.'));
         exit(true);

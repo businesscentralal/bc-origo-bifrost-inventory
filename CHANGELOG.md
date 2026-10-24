@@ -2,12 +2,46 @@
 
 ## [Unreleased]
 
+- Combine #148/#155: coded, localized older item-application and reclassification refusals with help/runtime parity in existing objects 10076867–10076869,10076887–10076889,10076919 and existing test96930. Require Foundation28.0.8.617 released public error-context API and matching dependency probe to preserve native rollback and actionable failure context; no Foundation source changes. Parent#151 strict validation remains intact.
+
 ### Fixed (2026-10-23) - coded attribute and physical inventory refusals (#148)
 
 - Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
 - Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Attribute and physical-inventory help declares the actual codes, remedies and examples. The older Reclassification and ItemApplication runtime remains unchanged; their uncoded refusal/help parity is pending the explicit #148/#155 scope disposition.
 - Objects: codeunits 10076840, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076913, 10076915, 10076917 and 10076919; tests 96900, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Paired 1033/1039 regressions cover complete refusal texts and no-write behavior; empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
 
+### Fixed
+
+- Issue151 first refusal family: Period.Close/Reopen (10076877/10076879) validate ISO dates before lookup, report missing periods with invariant dates and actionable translated context; AdjustCost.Run process10076859 validates boolean/filter values before running report795 and collects independent format errors. Native bilingual regression codeunit96975. Additional issue151 repairs collect assembly/transfer/attribute-definition/reservation/cost inputs, code assembly undo/transfer posting and cost guards, translate preview summaries, return invariant Reservation.Get statuses and ignore only truly empty physical-posting rows. Journal helper10076840 now raises coded rollback-safe refusals and native line context; tracking helpers10076841/10076925 provide expected values and next actions. New read-process codeunit10076926 preserves coded synchronous Check/Preview failures through rollback isolation, with execute permission only in existing read/write permission extensions. Native journal and tracking failures retain their original BusinessCentralError text with the selected source/batch context and translated recovery fields. Metadata, isolated lookup collection and explicit test fixtures are updated; runtime/independent verification remains tracked at each candidate.
+
+### Fixed (2026-10-24) - Contract guard declaration identity (#150)
+
+- Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
+
+### Fixed — issue #150
+- Tracking.Assign/Get/Delete now round-trip native source-bound lot, serial and package tracking. A source line SystemId is required; deletion affects only the selected unreserved entry. Single-entry response fields are retained, native posting remains separate and Omit Commit retains caller transaction ownership.
+- UndoShipment explicitly refuses received transfer lines with PreconditionFailed and a return-transfer next step; the selected-shipment repair is inherited from #159.
+- Correction to the earlier shipped roster: UndoReceipt is disabled, not a working undo feature. The released enum remains for compatibility only; no native Undo Transfer Receipt codeunit exists in the configured BC symbols. Use a new transfer order for received goods. Historical changelog entries describe earlier releases, not current availability.
+- Objects: codeunits 10076897 Tracking Assign Impl ori, 10076899 Tracking Delete Impl ori, 10076900 Tracking Get Impl ori, 10076910 Transfer Undo Shpt Impl ori, 10076911 Transf Undo Rcpt Impl ori; new codeunit 10076925 Inventory Tracking Write ori; permission extension 10076836 BIFROST InvWrite ori; new test codeunit 96974 Inv. Source Tracking Tests ori; test codeunit 96914 Transfer Order Post Tests and explicit fixture codeunit/page 96973. Updated README, contracts and is-IS translations.
+
+### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
+
+- Correct the cross-reference in Reclassification.Post notes to describe PreviewPost as native posting simulation with captured entries and rollback (10076888; PR #164 F1).
+
+- `Inventory.Reclassification.PreviewPost` now runs native posting preview, validates an existing nonempty Transfer batch, returns captured ledger entries and rolls back simulated posting changes. Existing `lines`, `lineCount` and `rollback` fields remain. The posting gate is intentional for native simulation. `Inventory.Reclassification.Check` now requires only journal read permission (codeunits 10076887, 10076889; execute grants in 10076835/10076836; tests 96971, 96972 and permission set 96971).
+
+- `Inventory.Reservation.Create` shares sales item/line eligibility with AutoReserve: Reserve Never, drop shipment, special order and missing shipment date are refused. `Reservation.Cancel` checks both sides for Reservation status, matching item/variant/location and opposite base quantities, then rechecks under lock before native cancellation (10076893, 10076896, 10076892, 10076842; test 96946). Test-only codeunit 96973 explicitly seeds owned preview/stock fixtures for MCP; it is never invoked on install.
+
+### Fixed (2026-10-23) - Inventory posting guards and chained writes (#159, partial)
+
+- Preserve Gunnar's AC2 decision: a failed `Inventory.AssemblyOrder.Post` keeps the requested `Quantity to Assemble` written before the isolated native post, as the existing bilingual help states. English/Icelandic dispatcher regressions fail after real native output writes and verify that the requested quantity survives while posted headers and item entries roll back (tests 96909, 96938; production codeunit 10076855 unchanged).
+- `Inventory.CostToGL.Post` initializes native per-entry posting with Post=true, applies item and document filters to pending value entries, accepts the mandatory G/L journal template/batch, and returns actual posted/remaining counts. It uses the existing isolated write process and the documented independent Post commit boundary. Native regressions verify real G/L entries and selected/unselected value-entry amounts (10076861, 10076842; test 96944).
+- `Inventory.Reclassification.Post` refuses missing templates and non-Transfer template types before any line is posted, with coded English/Icelandic recovery instructions. Help reflects the enforced template boundary (codeunit 10076888).
+- `Inventory.Assembly.UndoPost` and `Inventory.Transfer.UndoShipment` require the inventory posting token in addition to their existing document-write and company-domain gates, because undo creates reversing entries (codeunits 10076909, 10076910).
+- `Inventory.Cost.Update`, `Inventory.ItemCategory.Set` and `Inventory.ItemCharge.Assign` honor `Omit Commit`: chained calls run without a Boolean Codeunit.Run boundary so failures propagate and caller writes roll back together. Standalone calls retain their existing isolated error handling (codeunits 10076863, 10076871, 10076873).
+- Undo now runs atomically: Assembly undo suppresses native commits inside the existing write process; transfer undo passes the complete document-filtered set once to the native undo, preserving selection and rolling back all lines on failure. Native tests inject a failure after real undo writes and prove ledger/header rollback plus another shipment remaining unchanged (10076842, 10076909, 10076910; tests 96909, 96914, 96938). This also addresses the shared wrong-shipment finding in #150; its tracking and receipt-undo acceptance remains pending.
+- Restore explicit execute grants for the costing, application and undo implementation codeunits named in #159; read operations are granted to Read and Full, writes only to Full. Native table rights and the separate posting token remain required. Restricted tests execute the domain refusals through the actual shipping Full role and the undo tests no longer supply test-only implementation grants (permission extensions 10076835, 10076836).
+- Tests cover non-Transfer templates in both languages, actual restricted caller grants/denials, native subscriber rollback of an uncommitted caller write, and category/charge mutation suites in chained mode (96918, 96919, 96920, 96937, 96944 and existing category/charge tests). This phase does not close #159; real reclassification preview/read permission, reservation consistency and remaining live verification are still pending. Gunnar's AC2 decision retains existing pre-post assembly quantity persistence.
 
 ### Changed (2026-10-22) - message type contract and discovery up to Foundation parity
 
@@ -33,7 +67,7 @@
 ### Changed (2026-10-20) - object IDs moved to 10076835–10077034
 
 - Every app object now uses the single range 10076835–10077034; `app.json` drops 10036885–10036934 and 70013400–70013499. Names, behaviour and the test range 96900–96999 are unchanged. README lists the new IDs.
-- Message type enum values follow: each value is the ID of its implementation codeunit (for example `Inventory.Cost.Get` 10076860 on `Cost Get Impl ori`). `Inventory.PhysInventory.Record` takes the ID of `Phys. Invt. Record Impl ori` (10076882); `Inventory.PhysInventory.RecordCount`, which shares that codeunit, is 10076924.
+- Message type enum values follow: each value is the ID of its implementation codeunit (for example `Inventory.Cost.Get` 10076860 on `Cost Get Impl ori`). `Inventory.PhysInventory.Record` takes the ID of `Phys. Invt. Record Impl ori` (10076882); `Inventory.PhysInventory.RecordCount`, which shares that codeunit, is 10076925.
 - Earlier entries below keep the IDs that were valid when they were written.
 - An installation from an earlier build stores the old enum values: uninstall it with its data before publishing this build.
 

@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -87,13 +89,17 @@ codeunit 96930 "Inventory Item Refusal Tests"
     [Test]
     procedure AssemblyOrderCreate_ZeroQuantity_IsIcelandicIn1039()
     var
+        Item: Record Item;
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        RequestJson.Add('itemNo', 'ZZC-ASM');
+        Item.Init();
+        Item."No." := CopyStr('W8Q' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, 20);
+        Item.Insert(true);
+        RequestJson.Add('itemNo', Item."No.");
         RequestJson.Add('quantity', 0);
         Dispatch("Message Type ori"::"Inventory.AssemblyOrder.Create", RequestJson, 1039, ResponseJson);
-        AssertRefusal(ResponseJson, 'MissingParameter', 'quantity', 'Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.', 'Sendu magnið sem á að setja saman í data.quantity.');
+        AssertRefusal(ResponseJson, 'InvalidParameter', 'quantity', 'Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.', 'Sendu magnið sem á að setja saman í data.quantity.');
     end;
 
     [Test]
@@ -761,29 +767,39 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Library.CreateOptionAttribute('DEF-W8148', Attribute, ValueA, ValueB);
         ErrorCode := 'MissingParameter';
         ParameterName := 'name';
-        ErrorText := Choose(LanguageId, 'Attribute definition requires data.name.', 'Skilgreining eigindar krefst data.name.');
-        Expected := Choose(LanguageId, 'a new non-empty attribute name', 'nýtt heiti eigindar sem er ekki tómt');
-        NextStep := Choose(LanguageId, 'Send a new name or use the existing attribute definition.', 'Sendu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu eigindar.');
-        if Scenario <> 1 then
-            Request.Add('name', Attribute.Name);
+        ErrorText := Choose(LanguageId, 'name is required.', 'name er nauðsynlegt.');
+        Expected := Choose(LanguageId, 'A JSON string of at most 250 characters.', 'JSON-strengur með að hámarki 250 stöfum.');
+        NextStep := Choose(LanguageId, 'Send name as text in the documented format.', 'Sendu name sem texta á skjalfestu sniði.');
+        case Scenario of
+            1:
+                Request.Add('type', 'Text');
+            4:
+                Request.Add('name', Attribute.Name);
+            else
+                Request.Add('name', 'NEW-W8148');
+        end;
         case Scenario of
             2, 3:
                 begin
                     ParameterName := 'type';
-                    ErrorText := Choose(LanguageId, 'Attribute definition requires data.type.', 'Skilgreining eigindar krefst data.type.');
-                    Expected := Choose(LanguageId, 'Option, Text, Integer, Decimal or Date', 'Option, Text, Integer, Decimal eða Date');
-                    NextStep := Choose(LanguageId, 'Send Option, Text, Integer, Decimal or Date in data.type.', 'Sendu Option, Text, Integer, Decimal eða Date í data.type.');
+                    ErrorText := Choose(LanguageId, 'type is required.', 'type er nauðsynlegt.');
+                    Expected := Choose(LanguageId, 'A JSON string of at most 20 characters.', 'JSON-strengur með að hámarki 20 stöfum.');
+                    NextStep := Choose(LanguageId, 'Send type as text in the documented format.', 'Sendu type sem texta á skjalfestu sniði.');
                     if Scenario = 3 then begin
                         Request.Add('type', 'Unknown');
                         ErrorCode := 'InvalidParameter';
-                        ErrorText := Choose(LanguageId, 'Unknown attribute type "Unknown". Expected Option, Text, Integer, Decimal, or Date.', 'Óþekkt gerð eigindar "Unknown". Búist var við Option, Text, Integer, Decimal eða Date.');
+                        Expected := Choose(LanguageId, 'Option, Text, Integer, Decimal or Date.', 'Option, Text, Integer, Decimal eða Date.');
+                        NextStep := Choose(LanguageId, 'Send one documented attribute type name in type.', 'Sendu eitt skjalfest heiti gerðar eiginleika í type.');
+                        ErrorText := Choose(LanguageId, 'Unknown attribute type Unknown.', 'Óþekkt gerð eiginleika Unknown.');
                     end;
                 end;
             4:
                 begin
                     Request.Add('type', 'Option');
                     ErrorCode := 'PreconditionFailed';
-                    ErrorText := StrSubstNo(Choose(LanguageId, 'Item attribute "%1" already exists.', 'Vörueigindin "%1" er þegar til.'), Attribute.Name);
+                    Expected := Choose(LanguageId, 'A unique attribute name.', 'Einkvæmt heiti eiginleika.');
+                    NextStep := Choose(LanguageId, 'Read existing attributes and choose a new name or use the existing definition.', 'Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.');
+                    ErrorText := StrSubstNo(Choose(LanguageId, 'Attribute %1 already exists.', 'Eiginleikinn %1 er þegar til.'), Attribute.Name);
                 end;
         end;
         BeforeCount := Attribute.Count();
@@ -864,13 +880,13 @@ codeunit 96930 "Inventory Item Refusal Tests"
     [Test]
     procedure HelpRuntime_ReclassificationCheck_1033()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.Check", 'BusinessCentralError', 1033);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.Check", 'MissingParameter', 1033);
     end;
 
     [Test]
     procedure HelpRuntime_ReclassificationCheck_1039()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.Check", 'BusinessCentralError', 1039);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.Check", 'MissingParameter', 1039);
     end;
 
     [Test]
@@ -888,37 +904,37 @@ codeunit 96930 "Inventory Item Refusal Tests"
     [Test]
     procedure HelpRuntime_ReclassificationPreviewPost_1033()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'BusinessCentralError', 1033);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'MissingParameter', 1033);
     end;
 
     [Test]
     procedure HelpRuntime_ReclassificationPreviewPost_1039()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'BusinessCentralError', 1039);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'MissingParameter', 1039);
     end;
 
     [Test]
     procedure HelpRuntime_ItemApplicationUnapply_1033()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Unapply", 'BusinessCentralError', 1033);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Unapply", 'MissingParameter', 1033);
     end;
 
     [Test]
     procedure HelpRuntime_ItemApplicationUnapply_1039()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Unapply", 'BusinessCentralError', 1039);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Unapply", 'MissingParameter', 1039);
     end;
 
     [Test]
     procedure HelpRuntime_ItemApplicationReapply_1033()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Reapply", 'BusinessCentralError', 1033);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Reapply", 'MissingParameter', 1033);
     end;
 
     [Test]
     procedure HelpRuntime_ItemApplicationReapply_1039()
     begin
-        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Reapply", 'BusinessCentralError', 1039);
+        AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Reapply", 'MissingParameter', 1039);
     end;
 
     [Test]
@@ -975,6 +991,320 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Assert.IsTrue(FoundCode, 'Help declares the actual refusal code.');
         Assert.IsTrue(Contract.GetExamples(Examples), 'Examples chapter exists.');
         Assert.IsTrue(Examples.Count() > 0, 'At least one example.');
+    end;
+
+    [Test]
+    procedure Unapply_Missing_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'Missing', 1033);
+    end;
+
+    [Test]
+    procedure Unapply_Missing_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'Missing', 1039);
+    end;
+
+    [Test]
+    procedure Unapply_Format_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure Unapply_Format_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure Unapply_NotFound_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'NotFound', 1033);
+    end;
+
+    [Test]
+    procedure Unapply_NotFound_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 'NotFound', 1039);
+    end;
+
+    [Test]
+    procedure Reapply_Missing_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'Missing', 1033);
+    end;
+
+    [Test]
+    procedure Reapply_Missing_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'Missing', 1039);
+    end;
+
+    [Test]
+    procedure Reapply_Format_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure Reapply_Format_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure Reapply_NotFound_1033()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'NotFound', 1033);
+    end;
+
+    [Test]
+    procedure Reapply_NotFound_1039()
+    begin
+        ApplicationRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 'NotFound', 1039);
+    end;
+
+    local procedure ApplicationRefusal(MessageType: Enum "Message Type ori"; Scenario: Text; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        ApplicationEntry: Record "Item Application Entry";
+        LedgerEntry: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Contract: Interface "Msg Contract ori";
+        Errors: JsonArray;
+        Token: JsonToken;
+        Value: JsonToken;
+        ParameterName: Text;
+        ErrorCode: Text;
+        ErrorText: Text;
+        NextStep: Text;
+        Declared: Boolean;
+        BeforeApplications: Integer;
+        BeforeLedger: Integer;
+    begin
+        if not Setup.Get() then begin
+            Setup.Init();
+            Setup.Insert(true);
+        end;
+        Setup."Item Application" := true;
+        Setup.Modify(true);
+        Assert.IsFalse(ApplicationEntry.Get(2147483000), 'Missing application sentinel must not exist.');
+        Assert.IsFalse(LedgerEntry.Get(2147483000), 'Missing ledger sentinel must not exist.');
+        ParameterName := 'entryNo';
+        if MessageType = "Message Type ori"::"Inventory.ItemApplication.Reapply" then begin
+            ParameterName := 'itemLedgerEntryNo';
+            Request.Add('applyToEntryNo', 2147483000);
+        end;
+        ErrorCode := 'MissingParameter';
+        ErrorText := StrSubstNo(Choose(LanguageId, '%1 is required.', '%1 er nauðsynlegt.'), ParameterName);
+        NextStep := StrSubstNo(Choose(LanguageId, 'Send %1 as a JSON integer from Inventory.ItemApplication.Get.', 'Sendu %1 sem JSON-heiltölu úr Inventory.ItemApplication.Get.'), ParameterName);
+        if Scenario = 'Format' then begin
+            Request.Add(ParameterName, 'not-an-integer');
+            ErrorCode := 'InvalidParameterFormat';
+            ErrorText := StrSubstNo(Choose(LanguageId, '%1 must be a JSON integer.', '%1 verður að vera JSON-heiltala.'), ParameterName);
+        end;
+        if Scenario = 'NotFound' then begin
+            Request.Add(ParameterName, 2147483000);
+            ErrorCode := 'RecordNotFound';
+            if MessageType = "Message Type ori"::"Inventory.ItemApplication.Unapply" then
+                ErrorText := Choose(LanguageId, 'Item application entry 2147483000 was not found.', 'Vörujöfnunarfærsla 2147483000 fannst ekki.')
+            else
+                ErrorText := Choose(LanguageId, 'Item ledger entry 2147483000 was not found.', 'Vörufærsla 2147483000 fannst ekki.');
+            NextStep := Choose(LanguageId, 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', 'Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.');
+        end;
+        BeforeApplications := ApplicationEntry.Count();
+        BeforeLedger := LedgerEntry.Count();
+        Dispatch(MessageType, Request, LanguageId, Response);
+        AssertRefusal(Response, ErrorCode, ParameterName, ErrorText, NextStep);
+        Assert.AreEqual(BeforeApplications, ApplicationEntry.Count(), 'No application mutation on refusal.');
+        Assert.AreEqual(BeforeLedger, LedgerEntry.Count(), 'No ledger mutation on refusal.');
+        Contract := MessageType;
+        Contract.GetErrors(Errors);
+        foreach Token in Errors do begin
+            Assert.IsTrue(Token.AsObject().Get('code', Value), 'Every declared error is coded.');
+            Declared := Declared or (Value.AsValue().AsText() = ErrorCode);
+        end;
+        Assert.IsTrue(Declared, 'Actual refusal is declared by help.');
+    end;
+
+    [Test]
+    procedure ReclassCheck_MissingTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'MissingTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassCheck_MissingTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'MissingTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassCheck_WrongTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'WrongTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassCheck_WrongTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'WrongTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassCheck_Format_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure ReclassCheck_Format_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure ReclassCheck_LongName_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'LongName', 1033);
+    end;
+
+    [Test]
+    procedure ReclassCheck_LongName_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.Check", 'LongName', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_MissingTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'MissingTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_MissingTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'MissingTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_WrongTemplate_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'WrongTemplate', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_WrongTemplate_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'WrongTemplate', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_Format_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'Format', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_Format_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'Format', 1039);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_LongName_1033()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'LongName', 1033);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_LongName_1039()
+    begin
+        ReclassRefusal("Message Type ori"::"Inventory.Reclassification.PreviewPost", 'LongName', 1039);
+    end;
+
+    local procedure ReclassRefusal(MessageType: Enum "Message Type ori"; Scenario: Text; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Request: JsonObject;
+        Response: JsonObject;
+        Contract: Interface "Msg Contract ori";
+        Errors: JsonArray;
+        Token: JsonToken;
+        Value: JsonToken;
+        TemplateKey: Text;
+        BatchKey: Text;
+        ErrorCode: Text;
+        ErrorText: Text;
+        NextStep: Text;
+        Declared: Boolean;
+    begin
+        if not Setup.Get() then begin
+            Setup.Init();
+            Setup.Insert(true);
+        end;
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        TemplateKey := 'templateName';
+        BatchKey := 'batchName';
+        if MessageType = "Message Type ori"::"Inventory.Reclassification.PreviewPost" then begin
+            TemplateKey := 'journalTemplateName';
+            BatchKey := 'journalBatchName';
+        end;
+        Assert.IsFalse(JournalTemplate.Get('W8-NONE'), 'Missing template sentinel must not exist.');
+        Request.Add(BatchKey, 'OWNED');
+        ErrorCode := 'RecordNotFound';
+        ErrorText := Choose(LanguageId, 'Item journal template W8-NONE was not found.', 'Vörubókarsniðmát W8-NONE fannst ekki.');
+        NextStep := Choose(LanguageId, 'Send templateName and batchName for an existing Transfer journal template.', 'Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.');
+        if Scenario = 'MissingTemplate' then
+            Request.Add(TemplateKey, 'W8-NONE');
+        if Scenario = 'WrongTemplate' then begin
+            JournalTemplate.Init();
+            JournalTemplate.Name := 'W8-WRONG';
+            JournalTemplate.Type := JournalTemplate.Type::Item;
+            JournalTemplate.Insert(true);
+            Batch.Init();
+            Batch."Journal Template Name" := JournalTemplate.Name;
+            Batch.Name := 'OWNED';
+            Batch.Insert(true);
+            Request.Add(TemplateKey, JournalTemplate.Name);
+            ErrorCode := 'PreconditionFailed';
+            ErrorText := Choose(LanguageId, 'Template W8-WRONG is not a reclassification template.', 'Sniðmát W8-WRONG er ekki endurflokkunarsniðmát.');
+        end;
+        if MessageType = "Message Type ori"::"Inventory.Reclassification.PreviewPost" then begin
+            NextStep := Choose(LanguageId, 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', 'Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.');
+            if Scenario = 'MissingTemplate' then
+                ErrorText := Choose(LanguageId, 'Reclassification journal template or batch was not found.', 'Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.')
+            else
+                ErrorText := Choose(LanguageId, 'Journal template W8-WRONG is not a Transfer template.', 'Bókarsniðmátið W8-WRONG er ekki af gerðinni Transfer.');
+        end;
+        if Scenario in ['Format', 'LongName'] then begin
+            if Scenario = 'Format' then begin
+                Request.Add(TemplateKey, 12);
+                ErrorCode := 'InvalidParameterFormat';
+            end else begin
+                Request.Add(TemplateKey, '12345678901');
+                ErrorCode := 'InvalidParameter';
+            end;
+            ErrorText := StrSubstNo(Choose(LanguageId, '%1 must be text of at most 10 characters.', '%1 verður að vera texti með að hámarki 10 stöfum.'), TemplateKey);
+            NextStep := StrSubstNo(Choose(LanguageId, 'Send %1 as text in the documented format.', 'Sendu %1 sem texta á skjalfestu sniði.'), TemplateKey);
+        end;
+        Dispatch(MessageType, Request, LanguageId, Response);
+        if (MessageType = "Message Type ori"::"Inventory.Reclassification.PreviewPost") and (Scenario = 'MissingTemplate') then
+            AssertRefusal(Response, ErrorCode, BatchKey, ErrorText, NextStep)
+        else
+            AssertRefusal(Response, ErrorCode, TemplateKey, ErrorText, NextStep);
+        Contract := MessageType;
+        Contract.GetErrors(Errors);
+        foreach Token in Errors do begin
+            Assert.IsTrue(Token.AsObject().Get('code', Value), 'Every declared error is coded.');
+            Declared := Declared or (Value.AsValue().AsText() = ErrorCode);
+        end;
+        Assert.IsTrue(Declared, 'Actual refusal is declared by help.');
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; LanguageId: Integer; var ResponseJson: JsonObject)

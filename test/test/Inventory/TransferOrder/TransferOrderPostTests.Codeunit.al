@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
@@ -24,6 +25,135 @@ codeunit 96914 "Transfer Order Post Tests"
     begin
         if IsInitialized then exit;
         IsInitialized := true;
+    end;
+
+    [Test]
+    procedure UndoShipment_SelectedDocumentOnly()
+    begin
+        VerifyShipmentUndo(false);
+    end;
+
+    [Test]
+    procedure UndoShipment_SecondLineFailureRollsBackAll()
+    begin
+        VerifyShipmentUndo(true);
+    end;
+
+    [Test]
+    procedure UndoShipment_ReceivedIsCodedAndPreserved_EN()
+    begin
+        VerifyReceivedRefusal(1033);
+    end;
+
+    [Test]
+    procedure UndoShipment_ReceivedIsCodedAndPreserved_IS()
+    begin
+        VerifyReceivedRefusal(1039);
+    end;
+
+    local procedure VerifyReceivedRefusal(LanguageId: Integer)
+    var
+        Shipment: Record "Transfer Shipment Header";
+        Line: Record "Transfer Shipment Line";
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ShipmentNo: Code[20];
+        BeforeCount: Integer;
+        SavedLanguage: Integer;
+    begin
+        ShipmentNo := CreateUndoShipment();
+        Shipment.Get(ShipmentNo);
+        Request.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Shipment."Transfer Order No.", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Own shipment is actually received before refusal verification.');
+        BeforeCount := Entries.Count();
+        Clear(Request);
+        Request.Add('documentNo', ShipmentNo);
+        SavedLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        GlobalLanguage(SavedLanguage);
+        Assert.IsTrue(Response.Get('code', Token), 'A received shipment has a coded refusal.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Received shipment is a precondition failure.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Refusal provides the return-transfer next step.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Next step is not empty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Refusal writes no reversing entries.');
+        Line.SetRange("Document No.", ShipmentNo);
+        Line.SetRange("Correction Line", true);
+        Assert.IsTrue(Line.IsEmpty(), 'The already-received shipment is preserved.');
+    end;
+
+    local procedure VerifyShipmentUndo(FailSecondLine: Boolean)
+    var
+        Line: Record "Transfer Shipment Line";
+        OtherLine: Record "Transfer Shipment Line";
+        Entries: Record "Item Ledger Entry";
+        Observer: Codeunit "Inventory Cost Write Observer";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ShipmentNo: Code[20];
+        OtherShipmentNo: Code[20];
+        BeforeCount: Integer;
+    begin
+        ShipmentNo := CreateUndoShipment();
+        OtherShipmentNo := CreateUndoShipment();
+        BeforeCount := Entries.Count();
+        if FailSecondLine then begin
+            Observer.SetUndoFailure(ShipmentNo, '');
+            BindSubscription(Observer);
+        end;
+        Request.Add('documentNo', ShipmentNo);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        if FailSecondLine then
+            UnbindSubscription(Observer);
+        Response.Get('status', Token);
+        Line.SetRange("Document No.", ShipmentNo);
+        Line.SetRange("Correction Line", true);
+        if FailSecondLine then begin
+            Assert.AreEqual('Error', Token.AsValue().AsText(), 'Injected native failure is returned.');
+            Response.Get('error', Token);
+            Assert.AreNotEqual(0, StrPos(Token.AsValue().AsText(), 'Owned second undo line failure'), 'The second native line was reached.');
+            Assert.AreEqual(2, Observer.UndoCallbacks(), 'Failure after native writes for two selected lines.');
+            Assert.AreEqual(0, Line.Count(), 'All selected correction flags roll back.');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'All reversing ledger entries roll back.');
+        end else begin
+            Assert.AreEqual('Success', Token.AsValue().AsText(), 'Selected shipment undone.');
+            Assert.IsTrue(Line.Count() >= 2, 'Both selected lines are reversed.');
+            Assert.IsTrue(Entries.Count() > BeforeCount, 'Native reversing entries were posted.');
+        end;
+        OtherLine.SetRange("Document No.", OtherShipmentNo);
+        OtherLine.SetRange("Correction Line", true);
+        Assert.AreEqual(0, OtherLine.Count(), 'Another owned shipment is untouched.');
+        OtherLine.SetRange("Correction Line", false);
+        Assert.AreEqual(2, OtherLine.Count(), 'Both other shipment lines remain unchanged.');
+    end;
+
+    local procedure CreateUndoShipment() ShipmentNo: Code[20]
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        Header: Record "Transfer Header";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 100);
+        Helper.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(Header, Item."No.", 10);
+        Helper.CreateTransferLine(Header, Item."No.", 5);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
+        Request.Add('postingType', 'Ship');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Header."No.", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned shipment fixture posts.');
+        Response.Get('postedShipmentNo', Token);
+        ShipmentNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ShipmentNo));
     end;
 
     [Test]

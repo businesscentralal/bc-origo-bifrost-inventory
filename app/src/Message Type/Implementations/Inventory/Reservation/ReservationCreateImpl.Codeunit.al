@@ -15,6 +15,11 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
 {
     Access = Internal;
 
+    var
+        SourceExpectedLbl: Label 'An existing eligible item source line and valid reservation values.', Comment = 'is-IS=Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.';
+        SourceNextStepLbl: Label 'Correct the source identifiers and quantity; read the source line before retrying.', Comment = 'is-IS=Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur.';
+
+
     /// <summary>Checks the Reservations domain and the native reservation permissions.</summary>
     /// <returns>True when the type can run for the current user and company.</returns>
     procedure IsEnabled(): Boolean
@@ -156,6 +161,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         NothingWhenLbl: Label 'No supply is available, so nothing was reserved.', Comment = 'is-IS=Ekkert framboð er tiltækt svo ekkert var tekið frá.';
         NothingFixLbl: Label 'Check inventory or incoming supply at the source location, then retry.', Comment = 'is-IS=Athugaðu birgðir eða væntanlegt framboð á staðsetningunni og reyndu aftur.';
     begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MultipleErrors, 'Several source identifiers or values are missing or invalid.', 'Correct every errors[] entry before retrying; nothing is reserved.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'sourceType, sourceSubtype or sourceLineNo is not a whole number of 0 or more, quantity is not a number, or sourceNo, itemNo or locationCode is not text within 20, 20 and 10 characters (sourceNo must not be blank).', 'Send the integers as JSON numbers and the codes as JSON strings within their length.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundFixLbl));
@@ -164,6 +170,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NothingWhenLbl, NothingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the source line or the supply it names.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The sales source item or line cannot be reserved: non-inventory item, Reserve Never, drop shipment, special order or missing shipment date.', 'Correct the source line reservation settings and retry.'));
         exit(true);
     end;
 
@@ -254,7 +261,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
+        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -275,6 +282,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Reader: Codeunit "Request Value Reader ori";
         Process: Codeunit "Inventory Write Process ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         EntryNos: JsonArray;
@@ -283,6 +291,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         LocationCode: Text;
         SourceNoText: Text;
         Description: Text[100];
+        ReadOk: Boolean;
         Quantity: Decimal;
         QtyPerUOM: Decimal;
         ReservedQuantity: Decimal;
@@ -302,24 +311,28 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not ReadInteger(Argument, RequestJson, 'sourceType', true, SourceType) then
-            exit;
+        ReadOk := ReadInteger(Argument, RequestJson, 'sourceType', true, SourceType);
         SourceSubtype := DefaultSourceSubtype(SourceType);
         if not ReadInteger(Argument, RequestJson, 'sourceSubtype', false, SourceSubtype) then
-            exit;
+            ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'sourceNo', true, 20, SourceNoText) then
-            exit;
+            ReadOk := false;
         if not ReadInteger(Argument, RequestJson, 'sourceLineNo', true, SourceLineNo) then
-            exit;
+            ReadOk := false;
+        if not RequestJson.Contains('quantity') then begin
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, QuantityPositiveErr, 'quantity', '<missing>', QuantityExpectedTok, SourceNextStepLbl);
+            ReadOk := false;
+        end else
         if not Reader.TryReadDecimal(Argument, RequestJson, 'quantity', true, Quantity) then
-            exit;
-        if Quantity <= 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, QuantityPositiveErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTok, '');
-            exit;
-        end;
+            ReadOk := false
+        else
+            if Quantity <= 0 then
+                Argument.AddError("Bifrost Error Code ori"::InvalidParameter, QuantityPositiveErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTok, SourceNextStepLbl);
         if not ReadCode(Argument, RequestJson, 'itemNo', false, 20, ItemNo) then
-            exit;
+            ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'locationCode', false, 10, LocationCode) then
+            ReadOk := false;
+        if Parts.RespondToProblems(Argument) or not ReadOk then
             exit;
         if not ReadSourceLine(Argument, SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, Description) then
             exit;
@@ -336,7 +349,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'sourceNo', SourceNoText, SourceExpectedLbl, SourceNextStepLbl);
                 exit;
             end;
 
@@ -389,6 +402,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
+        ReservationPolicy: Codeunit "Reserv. AutoReserve Proc ori";
         SourceItemNo: Code[20];
         SourceLocationCode: Code[10];
         Found: Boolean;
@@ -406,11 +420,13 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                 begin
                     if not Enum::"Sales Document Type".Ordinals().Contains(SourceSubtype) then
                         exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
-                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description);
+                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description, Reserve, "Drop Shipment", "Special Order");
                     Found := SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
                     if Found then begin
                         if SalesLine.Type <> SalesLine.Type::Item then
                             exit(RespondNotItem(Argument, NotItemErr, SourceType, SourceNo, SourceLineNo));
+                        if not ReservationPolicy.CheckSalesLinePolicy(Argument, SalesLine) then
+                            exit(false);
                         SourceItemNo := SalesLine."No.";
                         SourceLocationCode := SalesLine."Location Code";
                         QtyPerUOM := SalesLine."Qty. per Unit of Measure";
@@ -470,20 +486,20 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                     end;
                 end;
             else begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnsupportedSourceErr, SourceType), 'sourceType', Format(SourceType, 0, 9), UnsupportedSourceExpectedTok, '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnsupportedSourceErr, SourceType), 'sourceType', Format(SourceType, 0, 9), UnsupportedSourceExpectedTok, SourceNextStepLbl);
                 exit(false);
             end;
         end;
         if not Found then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(SourceNotFoundErr, SourceType, SourceNo, SourceLineNo), 'sourceLineNo', Format(SourceLineNo, 0, 9), '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(SourceNotFoundErr, SourceType, SourceNo, SourceLineNo), 'sourceLineNo', Format(SourceLineNo, 0, 9), SourceExpectedLbl, SourceNextStepLbl);
             exit(false);
         end;
         if (ItemNo <> '') and (ItemNo <> SourceItemNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ItemMismatchErr, ItemNo, SourceItemNo), 'itemNo', ItemNo, SourceItemNo, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ItemMismatchErr, ItemNo, SourceItemNo), 'itemNo', ItemNo, SourceItemNo, SourceNextStepLbl);
             exit(false);
         end;
         if (LocationCode <> '') and (LocationCode <> SourceLocationCode) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(LocationMismatchErr, LocationCode, SourceLocationCode), 'locationCode', LocationCode, SourceLocationCode, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(LocationMismatchErr, LocationCode, SourceLocationCode), 'locationCode', LocationCode, SourceLocationCode, SourceNextStepLbl);
             exit(false);
         end;
         ItemNo := SourceItemNo;
@@ -495,13 +511,13 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
 
     local procedure RespondSubtype(var Argument: Record "Message Argument ori"; SubtypeErr: Text; SourceSubtype: Integer; SourceType: Integer): Boolean
     begin
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(SubtypeErr, SourceSubtype, SourceType), 'sourceSubtype', Format(SourceSubtype, 0, 9), '', '');
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(SubtypeErr, SourceSubtype, SourceType), 'sourceSubtype', Format(SourceSubtype, 0, 9), SourceExpectedLbl, SourceNextStepLbl);
         exit(false);
     end;
 
     local procedure RespondNotItem(var Argument: Record "Message Argument ori"; NotItemErr: Text; SourceType: Integer; SourceNo: Code[20]; SourceLineNo: Integer): Boolean
     begin
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(NotItemErr, SourceType, SourceNo, SourceLineNo), 'sourceLineNo', Format(SourceLineNo, 0, 9), '', '');
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(NotItemErr, SourceType, SourceNo, SourceLineNo), 'sourceLineNo', Format(SourceLineNo, 0, 9), SourceExpectedLbl, SourceNextStepLbl);
         exit(false);
     end;
 
@@ -516,16 +532,16 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     begin
         if not RequestJson.Get(KeyName, Token) then begin
             if Required then
-                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, KeyName), KeyName, '', IntegerExpectedTok, '');
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, KeyName), KeyName, '<missing>', IntegerExpectedTok, SourceNextStepLbl);
             exit(not Required);
         end;
         Token.WriteTo(Serialized);
         if not Token.IsValue() or Serialized.StartsWith('"') or not Evaluate(Number, Serialized, 9) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), KeyName, Serialized, IntegerExpectedTok, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), KeyName, Serialized, IntegerExpectedTok, SourceNextStepLbl);
             exit(false);
         end;
         if (Number <> Round(Number, 1)) or (Number < 0) or (Number > 2147483647) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), KeyName, Serialized, IntegerExpectedTok, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), KeyName, Serialized, IntegerExpectedTok, SourceNextStepLbl);
             exit(false);
         end;
         Value := Number;
@@ -543,17 +559,17 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     begin
         if not RequestJson.Get(KeyName, Token) then begin
             if Required then
-                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, KeyName), KeyName, '', StringExpectedTok, '');
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, KeyName), KeyName, '<missing>', StringExpectedTok, SourceNextStepLbl);
             exit(not Required);
         end;
         Token.WriteTo(Serialized);
         if not Token.IsValue() or not Serialized.StartsWith('"') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName, MaxLength), KeyName, Serialized, StringExpectedTok, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName, MaxLength), KeyName, Serialized, StringExpectedTok, SourceNextStepLbl);
             exit(false);
         end;
         Raw := Token.AsValue().AsText();
         if (StrLen(Raw) > MaxLength) or (Required and (Raw = '')) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName, MaxLength), KeyName, Raw, StringExpectedTok, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName, MaxLength), KeyName, Raw, StringExpectedTok, SourceNextStepLbl);
             exit(false);
         end;
         Value := UpperCase(Raw);

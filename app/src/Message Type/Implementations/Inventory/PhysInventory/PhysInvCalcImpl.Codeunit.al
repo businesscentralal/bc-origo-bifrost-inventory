@@ -36,6 +36,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         Gate: Codeunit "Inventory Domain Gate ori";
         Process: Codeunit "Inventory Write Process ori";
     begin
@@ -48,7 +49,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                FailureJournal.RespondWithFailure(Argument);
     end;
 
 
@@ -146,10 +147,10 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'postingDate is not a date in YYYY-MM-DD form, or itemsNotOnInventory or includeItemsWithNoTransactions is not a JSON boolean.', 'Correct the value as the answer indicates.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Calculate requires an empty physical inventory batch.', 'The batch already has lines.', 'Use an empty batch, or work on the existing lines with Inventory.PhysInventory.RecordCount.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Parameter documentNo must be nonempty text of at most 20 characters.', 'documentNo is absent, empty, not text or longer than 20 characters.', 'Send a document number of at most 20 characters.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Calculate requires an empty physical inventory batch.', 'The batch already has lines.', 'Use an empty batch, or work on the existing lines with Inventory.PhysInventory.RecordCount.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'Parameter documentNo must be nonempty text of at most 20 characters.', 'documentNo is absent, empty, not text or longer than 20 characters.', 'Send a document number of at most 20 characters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
         exit(true);
     end;
 

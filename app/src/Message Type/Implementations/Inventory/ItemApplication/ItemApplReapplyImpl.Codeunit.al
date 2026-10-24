@@ -89,7 +89,10 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item ledger entry 99 was not found.', 'itemLedgerEntryNo or applyToEntryNo is not sent, is not an integer, or names an item ledger entry that does not exist, or the standard item application logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send both entry numbers as JSON integers of existing item ledger entries, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A required entry number is absent.', 'Send the documented entry number parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'An entry number is not a JSON integer.', 'Send entry numbers as JSON integers.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected entry does not exist.', 'Read Inventory.ItemApplication.Get and select an existing entry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central refuses the application change.', 'Correct the application according to the native refusal and retry.'));
         exit(true);
     end;
 
@@ -162,7 +165,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     begin
         Clear(Notes);
         Notes := 'Both numbers are Entry Nos of item ledger entries; read them with Inventory.ItemApplication.Get first. The standard item application logic decides what is allowed, so its rules apply: for example an entry whose posting date is in a closed inventory period is refused. The refusal text is returned as BusinessCentralError. ' +
-            'A missing key and an entry number that does not exist are answered the same way, as text with code BusinessCentralError, not as MissingParameter or RecordNotFound. ' +
+            'Missing keys return MissingParameter, non-integer values return InvalidParameterFormat and missing entries return RecordNotFound, each with nextStep. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. ' +
             'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
@@ -179,40 +182,37 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         ApplyToItemLedgerEntry: Record "Item Ledger Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         ItemLedgerEntryNo: Integer;
         ApplyToEntryNo: Integer;
-        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Comment = 'is-IS=itemLedgerEntryNo er nauðsynlegt.';
-        MissingApplyToErr: Label 'applyToEntryNo is required.', Comment = 'is-IS=applyToEntryNo er nauðsynlegt.';
         EntryNotFoundErr: Label 'Item ledger entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörufærsla %1 fannst ekki.';
+        ExpectedLbl: Label 'an existing item application or item ledger entry', Comment = 'is-IS=fyrirliggjandi vörujöfnunarfærsla eða vörufærsla';
+        NextLbl: Label 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.';
+        NativeNextLbl: Label 'Correct the item application according to the Business Central refusal and retry.', Comment = 'is-IS=Leiðréttu vörujöfnunina samkvæmt höfnun Business Central og reyndu aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
-            Argument.RespondWithError(MissingEntryErr);
+        if not Parts.TryReadEntryNo(RequestJson, 'itemLedgerEntryNo', Argument, ItemLedgerEntryNo) then
             exit;
-        end;
-        ItemLedgerEntryNo := Token.AsValue().AsInteger();
-        if not RequestJson.Get('applyToEntryNo', Token) then begin
-            Argument.RespondWithError(MissingApplyToErr);
+        if not Parts.TryReadEntryNo(RequestJson, 'applyToEntryNo', Argument, ApplyToEntryNo) then
             exit;
-        end;
-        ApplyToEntryNo := Token.AsValue().AsInteger();
         if not ItemLedgerEntry.Get(ItemLedgerEntryNo) then begin
-            Argument.RespondWithError(StrSubstNo(EntryNotFoundErr, Format(ItemLedgerEntryNo)));
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ItemLedgerEntryNo, 0, 9)), 'itemLedgerEntryNo', Format(ItemLedgerEntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
         if not ApplyToItemLedgerEntry.Get(ApplyToEntryNo) then begin
-            Argument.RespondWithError(StrSubstNo(EntryNotFoundErr, Format(ApplyToEntryNo)));
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ApplyToEntryNo, 0, 9)), 'applyToEntryNo', Format(ApplyToEntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
 
+        Argument.SetErrorContext('itemLedgerEntryNo', ExpectedLbl, NativeNextLbl);
         ItemJnlPostLine.ReApply(ItemLedgerEntry, ApplyToEntryNo);
+        Argument.ClearErrorContext();
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo);
         ResponseJson.Add('applyToEntryNo', ApplyToEntryNo);

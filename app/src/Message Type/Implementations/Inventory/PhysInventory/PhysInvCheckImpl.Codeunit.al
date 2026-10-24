@@ -37,14 +37,20 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         Gate: Codeunit "Inventory Domain Gate ori";
-        Journal: Codeunit "Inventory Native Journal ori";
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::PhysInventory, Database::"Item Journal Line", false, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        Journal.Check(Argument, "Item Journal Template Type"::"Phys. Inventory");
+        Process.SetOperation('PhysicalCheck');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then
+                FailureJournal.RespondWithFailure(Argument);
     end;
 
 
@@ -144,9 +150,9 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected journal batch does not exist.', 'Check templateName and batchName or send the SystemId of an existing physical inventory batch.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id,.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
         exit(true);

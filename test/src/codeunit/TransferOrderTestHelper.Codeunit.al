@@ -118,7 +118,7 @@ codeunit 96904 "Transfer Order Test Helper"
             '',
             RequestContent,
             EmptyTaskId,
-            0,
+            GlobalLanguage(),
             MessageId,
             ResponseContent,
             ResponseContentType,
