@@ -176,6 +176,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Setup.Assembly := false;
         Setup."Transfer Orders" := false;
         Setup.Modify(true);
+        Types.Add("Message Type ori"::"Inventory.Reclassification.Check");
         Types.Add("Message Type ori"::"Inventory.Reclassification.Post");
         Types.Add("Message Type ori"::"Inventory.Reclassification.PreviewPost");
         Types.Add("Message Type ori"::"Inventory.Reservation.Create");

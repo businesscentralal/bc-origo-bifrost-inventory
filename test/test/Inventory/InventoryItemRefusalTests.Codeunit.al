@@ -1476,6 +1476,152 @@ codeunit 96930 "Inventory Item Refusal Tests"
             Assert.IsTrue(Line.Get(JournalTemplate.Name, Batch.Name, 10000), 'Refused line remains for correction.');
     end;
 
+    [Test]
+    procedure Unapply_NativeFailure_1033()
+    begin
+        VerifyApplicationNativeRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 1033);
+    end;
+
+    [Test]
+    procedure Unapply_NativeFailure_1039()
+    begin
+        VerifyApplicationNativeRefusal("Message Type ori"::"Inventory.ItemApplication.Unapply", 1039);
+    end;
+
+    [Test]
+    procedure Reapply_NativeFailure_1033()
+    begin
+        VerifyApplicationNativeRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 1033);
+    end;
+
+    [Test]
+    procedure Reapply_NativeFailure_1039()
+    begin
+        VerifyApplicationNativeRefusal("Message Type ori"::"Inventory.ItemApplication.Reapply", 1039);
+    end;
+
+    local procedure VerifyApplicationNativeRefusal(MessageType: Enum "Message Type ori"; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        Application: Record "Item Application Entry";
+        Ledger: Record "Item Ledger Entry";
+        Item: Record Item;
+        NativePost: Codeunit "Item Jnl.-Post Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        NativeError: Text;
+        ParameterName: Text;
+        PreviousLanguage: Integer;
+        EntryNo: Integer;
+        BeforeApplications: Integer;
+        BeforeLedger: Integer;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup."Item Application" := true;
+        Setup.Modify(true);
+        Assert.IsFalse(Item.Get('ZZTEST-NATIVE-MISS'), 'Own missing-item sentinel must be absent.');
+        if MessageType = "Message Type ori"::"Inventory.ItemApplication.Unapply" then begin
+            if Application.FindLast() then
+                EntryNo := Application."Entry No.";
+            Application.Init();
+            Application."Entry No." := EntryNo + 1;
+            Application."Posting Date" := WorkDate();
+            Application.Insert(true);
+            Request.Add('entryNo', Application."Entry No.");
+            ParameterName := 'entryNo';
+        end else begin
+            if Ledger.FindLast() then
+                EntryNo := Ledger."Entry No.";
+            Ledger.Init();
+            Ledger."Entry No." := EntryNo + 1;
+            Ledger."Item No." := 'ZZTEST-NATIVE-MISS';
+            Ledger."Posting Date" := WorkDate();
+            Ledger.Insert(true);
+            Request.Add('itemLedgerEntryNo', Ledger."Entry No.");
+            Request.Add('applyToEntryNo', Ledger."Entry No.");
+            ParameterName := 'itemLedgerEntryNo';
+        end;
+        Commit(); // Keep this isolated invalid fixture across native error rollback.
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        if MessageType = "Message Type ori"::"Inventory.ItemApplication.Unapply" then begin
+            asserterror NativePost.UnApply(Application);
+            NativeError := GetLastErrorText();
+        end else begin
+            asserterror NativePost.ReApply(Ledger, Ledger."Entry No.");
+            NativeError := GetLastErrorText();
+        end;
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual('', NativeError, 'Capture the real BC refusal in the requested language.');
+        BeforeApplications := Application.Count();
+        BeforeLedger := Ledger.Count();
+        Dispatch(MessageType, Request, LanguageId, Response);
+        AssertRefusal(Response, 'BusinessCentralError', ParameterName, NativeError,
+            Choose(LanguageId, 'Correct the item application according to the Business Central refusal and retry.', 'Leiðréttu vörujöfnunina samkvæmt höfnun Business Central og reyndu aftur.'));
+        Assert.AreEqual(BeforeApplications, Application.Count(), 'Native refusal does not mutate applications.');
+        Assert.AreEqual(BeforeLedger, Ledger.Count(), 'Native refusal does not mutate ledger entries.');
+    end;
+
+    [Test]
+    procedure ReclassCheck_MissingBatch_1033()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.Check", 1033);
+    end;
+
+    [Test]
+    procedure ReclassCheck_MissingBatch_1039()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.Check", 1039);
+    end;
+
+    [Test]
+    procedure ReclassPost_MissingBatch_1033()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.Post", 1033);
+    end;
+
+    [Test]
+    procedure ReclassPost_MissingBatch_1039()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.Post", 1039);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_MissingBatch_1033()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.PreviewPost", 1033);
+    end;
+
+    [Test]
+    procedure ReclassPreviewPost_MissingBatch_1039()
+    begin
+        VerifyMissingBatch("Message Type ori"::"Inventory.Reclassification.PreviewPost", 1039);
+    end;
+
+    local procedure VerifyMissingBatch(MessageType: Enum "Message Type ori"; LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        ParameterName: Text;
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        ParameterName := 'journalBatchName';
+        if MessageType = "Message Type ori"::"Inventory.Reclassification.Check" then begin
+            Request.Add('templateName', 'ZZTEST');
+            ParameterName := 'batchName';
+        end else
+            Request.Add('journalTemplateName', 'ZZTEST');
+        Dispatch(MessageType, Request, LanguageId, Response);
+        AssertRefusal(Response, 'MissingParameter', ParameterName,
+            StrSubstNo(Choose(LanguageId, '%1 is required.', '%1 er nauðsynlegt.'), ParameterName),
+            StrSubstNo(Choose(LanguageId, 'Send %1 as text in the documented format.', 'Sendu %1 sem texta á skjalfestu sniði.'), ParameterName));
+    end;
+
     local procedure Dispatch(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; LanguageId: Integer; var ResponseJson: JsonObject)
     var
         PreviousLanguage: Integer;
