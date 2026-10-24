@@ -371,10 +371,12 @@ codeunit 96937 "Inventory Cost Write Tests"
     local procedure AssertGuard(var Argument: Record "Message Argument ori"; Code: Text; MessagePart: Text)
     var
         Response: JsonObject;
+        ResponseJson: Text;
     begin
         Response := Argument.GetResponseJson();
+        Response.WriteTo(ResponseJson);
         Assert.AreEqual('Error', ResponseText(Response, 'status'), 'Guard returns structured Error.');
-        Assert.AreEqual(Code, ResponseText(Response, 'code'), 'Guard has the shared typed code.');
+        Assert.AreEqual(Code, ResponseText(Response, 'code'), 'Guard has the shared typed code. ' + ResponseJson);
         Assert.IsTrue(ResponseText(Response, 'error').Contains(MessagePart), 'The actual guard reason is preserved.');
         Assert.IsTrue(ResponseText(Response, 'parameter') <> '', 'Guard identifies its parameter.');
         Assert.IsTrue(ResponseText(Response, 'expected') <> '', 'Guard explains the expected value.');
