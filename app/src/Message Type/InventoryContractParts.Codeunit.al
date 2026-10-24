@@ -1217,7 +1217,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         exit(false);
     end;
     /// <summary>Reads a bounded JSON string and collects every invalid value before the caller writes.</summary>
-    procedure ReadRequestText(var Argument: Record "Message Argument ori"; Request: JsonObject; Name: Text; Required: Boolean; MaximumLength: Integer): Text
+    procedure ReadRequestText(Request: JsonObject; Name: Text; var Argument: Record "Message Argument ori"; Required: Boolean; MaximumLength: Integer): Text
     var
         Token: JsonToken;
         Serialized: Text;

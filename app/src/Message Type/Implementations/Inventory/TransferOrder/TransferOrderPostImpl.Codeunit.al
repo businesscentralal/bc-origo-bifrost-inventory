@@ -174,7 +174,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         if not PostingGate.AssertCanPost(Argument) then
             exit;
         RequestJson := Argument.GetRequestJson();
-        PostingTypeText := Parts.ReadRequestText(Argument, RequestJson, 'postingType', false, 30);
+        PostingTypeText := Parts.ReadRequestText(RequestJson, 'postingType', Argument, false, 30);
         if Parts.RespondToProblems(Argument) then
             exit;
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then

@@ -174,10 +174,10 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
 
-        TransferFromCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'transferFromCode', true, 10), 1, 10);
-        TransferToCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'transferToCode', true, 10), 1, 10);
-        InTransitCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'inTransitCode', false, 10), 1, 10);
-        ExternalDocNo := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'externalDocumentNo', false, 35), 1, 35);
+        TransferFromCode := CopyStr(Parts.ReadRequestText(RequestJson, 'transferFromCode', Argument, true, 10), 1, 10);
+        TransferToCode := CopyStr(Parts.ReadRequestText(RequestJson, 'transferToCode', Argument, true, 10), 1, 10);
+        InTransitCode := CopyStr(Parts.ReadRequestText(RequestJson, 'inTransitCode', Argument, false, 10), 1, 10);
+        ExternalDocNo := CopyStr(Parts.ReadRequestText(RequestJson, 'externalDocumentNo', Argument, false, 35), 1, 35);
         ReadOk := RequestValueReader.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer);
         if ReadOk and (not DirectTransfer) and (InTransitCode = '') then
             Argument.AddError("Bifrost Error Code ori"::MissingParameter, MissingInTransitErr, 'inTransitCode', '<missing>', LocationExpectedTxt, LocationNextStepTxt);

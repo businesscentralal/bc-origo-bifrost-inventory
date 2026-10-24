@@ -185,7 +185,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
 
         RequestJson := Argument.GetRequestJson();
-        DocumentNo := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'documentNo', true, 20), 1, 20);
+        DocumentNo := CopyStr(Parts.ReadRequestText(RequestJson, 'documentNo', Argument, true, 20), 1, 20);
         if Parts.RespondToProblems(Argument) then
             exit;
         if not PostedAssemblyHeader.Get(DocumentNo) then begin

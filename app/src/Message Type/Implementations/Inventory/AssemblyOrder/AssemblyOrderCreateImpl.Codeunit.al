@@ -178,12 +178,12 @@ codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        ItemNo := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'itemNo', true, 20), 1, 20);
-        VariantCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'variantCode', false, 10), 1, 10);
-        LocationCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'locationCode', false, 10), 1, 10);
-        BinCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'binCode', false, 20), 1, 20);
-        UnitOfMeasureCode := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'unitOfMeasureCode', false, 10), 1, 10);
-        Description := CopyStr(Parts.ReadRequestText(Argument, RequestJson, 'description', false, 100), 1, 100);
+        ItemNo := CopyStr(Parts.ReadRequestText(RequestJson, 'itemNo', Argument, true, 20), 1, 20);
+        VariantCode := CopyStr(Parts.ReadRequestText(RequestJson, 'variantCode', Argument, false, 10), 1, 10);
+        LocationCode := CopyStr(Parts.ReadRequestText(RequestJson, 'locationCode', Argument, false, 10), 1, 10);
+        BinCode := CopyStr(Parts.ReadRequestText(RequestJson, 'binCode', Argument, false, 20), 1, 20);
+        UnitOfMeasureCode := CopyStr(Parts.ReadRequestText(RequestJson, 'unitOfMeasureCode', Argument, false, 10), 1, 10);
+        Description := CopyStr(Parts.ReadRequestText(RequestJson, 'description', Argument, false, 100), 1, 100);
         ReadOk := RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantity', true, Quantity);
         if ReadOk and (Quantity <= 0) then
             Argument.AddError("Bifrost Error Code ori"::InvalidParameter, MissingQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTxt, QuantityNextStepTxt);

@@ -64,7 +64,7 @@ codeunit 10076837 "Inventory Card Write ori"
         if Request.Contains('standardCost') then
             if not Reader.TryReadDecimal(Argument, Request, 'standardCost', true, StandardCost) then
                 ReadOk := false;
-        ExpectedMethod := Parts.ReadRequestText(Argument, Request, 'expectedCostingMethod', false, 30);
+        ExpectedMethod := Parts.ReadRequestText(Request, 'expectedCostingMethod', Argument, false, 30);
         if HasSelection then begin
             Found := Lookup.FindItemRange(Argument, Item);
             if Found then

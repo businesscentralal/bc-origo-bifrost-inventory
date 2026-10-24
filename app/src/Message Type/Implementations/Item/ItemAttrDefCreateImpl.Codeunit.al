@@ -164,9 +164,9 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         Request := Argument.GetRequestJson();
-        NameText := Parts.ReadRequestText(Argument, Request, 'name', true, MaxStrLen(Attribute.Name));
-        TypeText := Parts.ReadRequestText(Argument, Request, 'type', true, 20);
-        Parts.ReadRequestText(Argument, Request, 'unitOfMeasure', false, MaxStrLen(Attribute."Unit of Measure"));
+        NameText := Parts.ReadRequestText(Request, 'name', Argument, true, MaxStrLen(Attribute.Name));
+        TypeText := Parts.ReadRequestText(Request, 'type', Argument, true, 20);
+        Parts.ReadRequestText(Request, 'unitOfMeasure', Argument, false, MaxStrLen(Attribute."Unit of Measure"));
         if (TypeText <> '') and not Resolve.TryParseType(TypeText, Probe) then
             Argument.AddError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidTypeErr, TypeText), 'type', TypeText, TypesExpectedTxt, TypesNextStepTxt);
         if NameText <> '' then begin
@@ -182,7 +182,7 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
                 foreach OptionToken in Token.AsArray() do begin
                     Clear(OptionObject);
                     OptionObject.Add('optionValues', OptionToken);
-                    OptionText := Parts.ReadRequestText(Argument, OptionObject, 'optionValues', true, 250);
+                    OptionText := Parts.ReadRequestText(OptionObject, 'optionValues', Argument, true, 250);
                     if OptionNames.Contains(UpperCase(OptionText)) then
                         Argument.AddError("Bifrost Error Code ori"::InvalidParameter, OptionsErr, 'optionValues', OptionText, OptionsExpectedTxt, OptionsNextStepTxt);
                     OptionNames.Add(UpperCase(OptionText));

@@ -187,7 +187,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        PostingTypeText := Parts.ReadRequestText(Argument, RequestJson, 'postingType', false, 30);
+        PostingTypeText := Parts.ReadRequestText(RequestJson, 'postingType', Argument, false, 30);
         if Parts.RespondToProblems(Argument) then
             exit;
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
