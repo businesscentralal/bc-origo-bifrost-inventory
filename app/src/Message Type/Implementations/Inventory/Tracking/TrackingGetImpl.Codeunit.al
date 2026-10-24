@@ -212,8 +212,8 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.TrackingAvailability.Get', 'Read how much of each lot, serial or package is in stock and available after reservations, instead of tracking rows.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Create a tracking specification instead of reading tracking.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete a tracking specification by the entryNo of a TrackingSpecification row.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Assign native tracking to an existing source line instead of reading tracking.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Delete', 'Delete one unreserved ReservationEntry entryNo on the same source line.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.Reservation.Get', 'Read the reservations of an item or line instead of its tracking numbers.'));
         exit(true);
     end;

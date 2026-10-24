@@ -60,7 +60,6 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
-| `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
 | `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
@@ -358,3 +357,11 @@ and `supportedLocales` `["en-US", "is-IS"]`, so every help page must exist in bo
 ---
 
 © 2026 Origo ehf.
+
+### Source-bound item tracking
+
+`Inventory.Tracking.Assign` now requires `source: {"type":"PurchaseLine", "systemId":"<line GUID>"}` (also `SalesLine` and `TransferLine`). Send a positive base `quantity` plus `lotNo`, `serialNo` or `packageNo`; serial quantity must be one. Optional `itemNo` must match the source. For multiple allocations use `entries` with those tracking values. Read `Inventory.Tracking.Get` with the same source, then remove one unreserved `ReservationEntry` using `Inventory.Tracking.Delete` with that source and its `entryNo`. The calls use native tracking and do not insert unlinked tracking specifications.
+
+`Inventory.Transfer.UndoReceipt` is disabled and removed from the active shipped roster because the supported platform has no native transfer receipt undo. Its released enum identifier remains solely for binary compatibility; it does not undo receipts. Return received goods with a new transfer order. `Inventory.Transfer.UndoShipment` refuses already-received lines with `PreconditionFailed` and that next step.
+
+Tracking write helper: codeunit `10076925 Inventory Tracking Write ori`; native regressions: `96974 Inv. Source Tracking Tests ori`. The explicit test-only MCP fixture `96973` adds owned tracking sources.

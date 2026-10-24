@@ -25,6 +25,20 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreateTracking)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned tracking';
+                ToolTip = 'Creates four new owned lot and serial source lines for bilingual tracking verification; refuses existing fixtures.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateTrackingFixtures();
+                    SeedState := 'Create owned tracking completed.';
+                end;
+            }
             action(ConfigureReservationVAT)
             {
                 ApplicationArea = All;
