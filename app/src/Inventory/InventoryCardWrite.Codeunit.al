@@ -26,7 +26,6 @@ codeunit 10076837 "Inventory Card Write ori"
     procedure UpdateCost(var Argument: Record "Message Argument ori")
     var
         Item: Record Item;
-        Lookup: Codeunit "Document Lookup ori";
         Reader: Codeunit "Request Value Reader ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         Request: JsonObject;
@@ -66,7 +65,7 @@ codeunit 10076837 "Inventory Card Write ori"
                 ReadOk := false;
         ExpectedMethod := Parts.ReadRequestText(Request, 'expectedCostingMethod', Argument, false, 30);
         if HasSelection then begin
-            Found := Lookup.FindItemRange(Argument, Item);
+            Found := FindCostItem(Argument, Request, Item);
             if Found then
                 if Item.Count() <> 1 then
                     Argument.AddError("Bifrost Error Code ori"::AmbiguousRecord, SelectionErr, 'itemNo', Argument.Subject, CostExpectedLbl, CostNextStepLbl)
@@ -109,6 +108,44 @@ codeunit 10076837 "Inventory Card Write ori"
         Response.Add('warnings', Warnings);
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure FindCostItem(var Argument: Record "Message Argument ori"; Request: JsonObject; var Item: Record Item): Boolean
+    var
+        TempLookupArgument: Record "Message Argument ori" temporary;
+        Lookup: Codeunit "Document Lookup ori";
+        Problems: JsonArray;
+        Problem: JsonToken;
+        Code: Enum "Bifrost Error Code ori";
+        Found: Boolean;
+    begin
+        TempLookupArgument.Init();
+        TempLookupArgument.ID := CreateGuid();
+        TempLookupArgument.Version := Argument.Version;
+        TempLookupArgument.Type := Argument.Type;
+        TempLookupArgument.Subject := Argument.Subject;
+        TempLookupArgument.Insert();
+        TempLookupArgument.SetRequestJson(Request);
+        Found := Lookup.FindItemRange(TempLookupArgument, Item);
+        Problems := TempLookupArgument.GetCollectedErrorsJson();
+        foreach Problem in Problems do begin
+            if not Evaluate(Code, ProblemText(Problem.AsObject(), 'code')) then
+                Code := Code::BusinessCentralError;
+            Argument.AddError(Code, ProblemText(Problem.AsObject(), 'message'), ProblemText(Problem.AsObject(), 'parameter'),
+                ProblemText(Problem.AsObject(), 'received'), ProblemText(Problem.AsObject(), 'expected'), ProblemText(Problem.AsObject(), 'nextStep'));
+        end;
+        if not Found and (Problems.Count() = 0) then
+            Argument.SetResponseJson(TempLookupArgument.GetResponseJson());
+        exit(Found);
+    end;
+
+    local procedure ProblemText(Problem: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if Problem.Get(Name, Token) then
+            exit(Token.AsValue().AsText());
+        exit('');
     end;
 
     /// <summary>Checks parameters and permissions before Validate/Modify; caller owns the Codeunit.Run rollback boundary.</summary>

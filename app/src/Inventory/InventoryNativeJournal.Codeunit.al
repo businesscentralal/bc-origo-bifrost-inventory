@@ -18,6 +18,11 @@ codeunit 10076840 "Inventory Native Journal ori"
     Access = Internal;
 
     var
+        AllowedParameterLbl: Label 'A parameter listed in the message contract.', Comment = 'is-IS=Færibreyta sem er talin upp í samningi skilaboðanna.';
+        TextExpectedLbl: Label 'Nonempty JSON text of at most %1 characters.', Comment = '%1 = maximum length; is-IS=JSON-texti sem er ekki tómur og er að hámarki %1 stafir.';
+        EmptyBatchLbl: Label 'An empty physical inventory journal batch.', Comment = 'is-IS=Tóm talningarbókarkeyrsla.';
+        RegisterExpectedLbl: Label 'A native item register for the selected journal.', Comment = 'is-IS=Innbyggð vöruskrá fyrir valda bók.';
+        RequestNextStepLbl: Label 'Correct the named parameter or selected journal line using the expected value, then retry.', Comment = 'is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.';
         BatchErr: Label 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', Comment = 'is-IS=Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.';
         EmptyErr: Label 'The selected journal contains no lines.', Comment = 'is-IS=Valin bók inniheldur engar línur.';
         ParameterErr: Label 'Unsupported journal parameter %1.', Comment = '%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.';
@@ -70,7 +75,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         LineCount: Integer;
         Verdict: Text;
     begin
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '');
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         LineCount := Line.Count();
@@ -120,7 +125,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Results: JsonArray;
     begin
         Line.LockTable();
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '');
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if JournalType = JournalType::"Phys. Inventory" then
@@ -129,11 +134,11 @@ codeunit 10076840 "Inventory Native Journal ori"
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
             exit;
         end;
-        ReadLines(Line, JournalType, Results);
+        ReadLines(Argument, Line, JournalType, Results);
         PostBatch.SetSuppressCommit(true);
         PostBatch.Run(Line);
         if (Line."Line No." = 0) or not Register.Get(Line."Line No.") then
-            Error(NothingPostedErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, NothingPostedErr, 'batchName', Batch.Name, RegisterExpectedLbl);
         AddBatch(Response, Batch);
         Response.Add('postedLineCount', Results.Count());
         Response.Add('itemRegisterNo', Register."No.");
@@ -164,14 +169,14 @@ codeunit 10076840 "Inventory Native Journal ori"
         GLEntryCount: Integer;
         Balanced: Boolean;
     begin
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '');
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
             exit;
         end;
-        ReadLines(Line, JournalType, Results);
+        ReadLines(Argument, Line, JournalType, Results);
         BindSubscription(ItemPost);
         NativePreview.SetContext(ItemPost, Line);
         if NativePreview.Run() then;
@@ -215,25 +220,25 @@ codeunit 10076840 "Inventory Native Journal ori"
         IncludeNoTransactions: Boolean;
     begin
         Request := Argument.GetRequestJson();
-        CheckParameters(Request, 'Calculate');
+        CheckParameters(Argument, Request, 'Calculate');
         Line.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then
             exit;
         if not Line.IsEmpty() then
-            Error(NonemptyErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, NonemptyErr, 'batchName', Batch.Name, EmptyBatchLbl);
         if not Reader.TryReadDate(Argument, Request, 'postingDate', true, PostingDate) then
             exit;
-        DocumentNo := CopyStr(ReadText(Request, 'documentNo', 20), 1, 20);
+        DocumentNo := CopyStr(ReadText(Request, 'documentNo', Argument, 20), 1, 20);
         if not Reader.TryReadBoolean(Argument, Request, 'itemsNotOnInventory', Request.Contains('itemsNotOnInventory'), IncludeZero) then
             exit;
         if not Reader.TryReadBoolean(Argument, Request, 'includeItemsWithNoTransactions', Request.Contains('includeItemsWithNoTransactions'), IncludeNoTransactions) then
             exit;
         if Request.Contains('itemNo') then
-            Item.SetFilter("No.", ReadText(Request, 'itemNo', 2048));
+            Item.SetFilter("No.", ReadText(Request, 'itemNo', Argument, 2048));
         if Request.Contains('locationCode') then
-            Item.SetFilter("Location Filter", ReadText(Request, 'locationCode', 2048));
+            Item.SetFilter("Location Filter", ReadText(Request, 'locationCode', Argument, 2048));
         if Request.Contains('variantCode') then
-            Item.SetFilter("Variant Filter", ReadText(Request, 'variantCode', 2048));
+            Item.SetFilter("Variant Filter", ReadText(Request, 'variantCode', Argument, 2048));
         Line."Journal Template Name" := Batch."Journal Template Name";
         Line."Journal Batch Name" := Batch.Name;
         CalculateInventory.SetItemJnlLine(Line);
@@ -271,49 +276,50 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Request := Argument.GetRequestJson();
         NormalizeLegacyCount(Argument, Request);
-        CheckParameters(Request, 'RecordCount');
+        CheckParameters(Argument, Request, 'RecordCount');
         Lines.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Lines) then
             exit;
         if not Request.Get('counts', Token) or not Token.IsArray() then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
         Counts := Token.AsArray();
         if Counts.Count() = 0 then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
         // Validate every entry before any Modify; later native errors still roll back through the process codeunit.
         foreach Entry in Counts do begin
             if not Entry.IsObject() then
-                Error(CountsErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             Count := Entry.AsObject();
             foreach ParameterName in Count.Keys() do
                 if not (ParameterName in ['lineNo', 'systemId', 'qtyCounted']) then
-                    Error(ParameterErr, ParameterName);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
             Clear(LineId);
             if Count.Contains('systemId') then begin
-                if not Evaluate(LineId, ReadText(Count, 'systemId', 50)) or IsNullGuid(LineId) then
-                    Error(CountsErr);
+                if not Evaluate(LineId, ReadText(Count, 'systemId', Argument, 50)) or IsNullGuid(LineId) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
                 if not Line.GetBySystemId(LineId) then
-                    Error(CountsErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             end else begin
-                LineNo := ReadLineNo(Count);
-                Line.Get(Batch."Journal Template Name", Batch.Name, LineNo);
+                LineNo := ReadLineNo(Argument, Count);
+                if not Line.Get(Batch."Journal Template Name", Batch.Name, LineNo) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, CountsErr, 'lineNo', Format(LineNo, 0, 9), CountsErr);
                 LineId := Line.SystemId;
             end;
             if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then
-                Error(CountsErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             if Count.Contains('lineNo') then begin
-                LineNo := ReadLineNo(Count);
+                LineNo := ReadLineNo(Argument, Count);
                 if LineNo <> Line."Line No." then
-                    Error(CountsErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             end;
             if LineIds.Contains(LineId) then
-                Error(CountsErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             LineIds.Add(LineId);
             CheckLineType(Line, "Item Journal Template Type"::"Phys. Inventory");
             if Count.Contains('qtyCounted') then begin
-                CountedQuantity := ReadCount(Count);
+                CountedQuantity := ReadCount(Argument, Count);
                 if CountedQuantity < 0 then
-                    Error(CountsErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             end;
         end;
         LineNo := 0;
@@ -323,7 +329,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             Count := Entry.AsObject();
             BeforeQuantity := Line."Qty. (Phys. Inventory)";
             if Count.Contains('qtyCounted') then begin
-                CountedQuantity := ReadCount(Count);
+                CountedQuantity := ReadCount(Argument, Count);
                 Line.Validate("Qty. (Phys. Inventory)", CountedQuantity);
                 Line.Modify(true);
             end;
@@ -369,37 +375,37 @@ codeunit 10076840 "Inventory Native Journal ori"
         Request.Add('counts', Counts);
     end;
 
-    local procedure ReadCount(Count: JsonObject): Decimal
+    local procedure ReadCount(var Argument: Record "Message Argument ori"; Count: JsonObject): Decimal
     var
         Token: JsonToken;
         Serialized: Text;
         Number: Decimal;
     begin
         if not Count.Get('qtyCounted', Token) or not Token.IsValue() then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, 'qtyCounted', RequestValue(Count, 'qtyCounted'), CountsErr);
         Token.WriteTo(Serialized);
         if not Evaluate(Number, Serialized, 9) or (Number < 0) then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, 'qtyCounted', RequestValue(Count, 'qtyCounted'), CountsErr);
         exit(Number);
     end;
 
-    local procedure ReadLineNo(Count: JsonObject): Integer
+    local procedure ReadLineNo(var Argument: Record "Message Argument ori"; Count: JsonObject): Integer
     var
         Token: JsonToken;
         Serialized: Text;
         Number: Decimal;
     begin
         if not Count.Get('lineNo', Token) or not Token.IsValue() then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, 'lineNo', RequestValue(Count, 'lineNo'), CountsErr);
         Token.WriteTo(Serialized);
         if not Evaluate(Number, Serialized, 9) then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, 'lineNo', RequestValue(Count, 'lineNo'), CountsErr);
         if (Number <= 0) or (Number > 2147483647) or (Number <> Round(Number, 1)) then
-            Error(CountsErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, 'lineNo', RequestValue(Count, 'lineNo'), CountsErr);
         exit(Number);
     end;
 
-    local procedure CheckParameters(Request: JsonObject; Operation: Text)
+    local procedure CheckParameters(var Argument: Record "Message Argument ori"; Request: JsonObject; Operation: Text)
     var
         ParameterName: Text;
     begin
@@ -408,13 +414,13 @@ codeunit 10076840 "Inventory Native Journal ori"
                 case Operation of
                     'Calculate':
                         if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
-                            Error(ParameterErr, ParameterName);
+                            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
                     'RecordCount':
                         if ParameterName <> 'counts' then
-                            Error(ParameterErr, ParameterName);
+                            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
                     else
                         if ParameterName <> 'lineSystemIds' then
-                            Error(ParameterErr, ParameterName);
+                            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
                 end;
     end;
 
@@ -428,37 +434,38 @@ codeunit 10076840 "Inventory Native Journal ori"
         Parts: List of [Text];
     begin
         if JournalType <> JournalType::"Phys. Inventory" then
-            Error(BatchErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         Request := Argument.GetRequestJson();
-        NormalizeAlias(Request, 'journalTemplateName', 'templateName');
-        NormalizeAlias(Request, 'journalBatchName', 'batchName');
+        NormalizeAlias(Argument, Request, 'journalTemplateName', 'templateName');
+        NormalizeAlias(Argument, Request, 'journalBatchName', 'batchName');
         if Request.Contains('templateName') or Request.Contains('batchName') then begin
-            TemplateName := CopyStr(ReadText(Request, 'templateName', 10), 1, 10);
-            BatchName := CopyStr(ReadText(Request, 'batchName', 10), 1, 10);
+            TemplateName := CopyStr(ReadText(Request, 'templateName', Argument, 10), 1, 10);
+            BatchName := CopyStr(ReadText(Request, 'batchName', Argument, 10), 1, 10);
         end;
         if Argument.Subject <> '' then
             if not Evaluate(BatchId, Argument.Subject) then begin
                 Parts := Argument.Subject.Split('|');
                 if Parts.Count() <> 2 then
-                    Error(BatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
                 if (Parts.Get(1) = '') or (Parts.Get(2) = '') or (StrLen(Parts.Get(1)) > 10) or (StrLen(Parts.Get(2)) > 10) then
-                    Error(BatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
                 if (TemplateName <> '') and ((TemplateName <> UpperCase(Parts.Get(1))) or (BatchName <> UpperCase(Parts.Get(2)))) then
-                    Error(BatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
                 TemplateName := CopyStr(Parts.Get(1), 1, 10);
                 BatchName := CopyStr(Parts.Get(2), 1, 10);
             end else
                 if IsNullGuid(BatchId) then
-                    Error(BatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         if IsNullGuid(BatchId) and ((TemplateName = '') or (BatchName = '')) then
-            Error(BatchErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         if not IsNullGuid(BatchId) then begin
             if not Batch.GetBySystemId(BatchId) then
-                Error(BatchErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
             if (TemplateName <> '') and ((TemplateName <> Batch."Journal Template Name") or (BatchName <> Batch.Name)) then
-                Error(BatchErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         end else
-            Batch.Get(TemplateName, BatchName);
+            if not Batch.Get(TemplateName, BatchName) then
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'batchName', TemplateName + '|' + BatchName, BatchErr);
         JournalTemplate.Get(Batch."Journal Template Name");
         JournalTemplate.TestField(Type, JournalType);
         JournalTemplate.TestField(Recurring, false);
@@ -472,45 +479,45 @@ codeunit 10076840 "Inventory Native Journal ori"
         // Only Check, Post and Preview accept lineSystemIds; Calculate and RecordCount reject it in CheckParameters.
         if not Resolve(Argument, JournalType, Batch, Line) then
             exit(false);
-        SelectLines(Argument.GetRequestJson(), Batch, Line);
+        SelectLines(Argument, Argument.GetRequestJson(), Batch, Line);
         exit(true);
     end;
 
-    local procedure NormalizeAlias(var Request: JsonObject; AliasName: Text; Name: Text)
+    local procedure NormalizeAlias(var Argument: Record "Message Argument ori"; var Request: JsonObject; AliasName: Text; Name: Text)
     var
         Value: Text;
     begin
         if Request.Contains(AliasName) then begin
-            Value := ReadText(Request, AliasName, 10);
+            Value := ReadText(Request, AliasName, Argument, 10);
             if Request.Contains(Name) then begin
-                if UpperCase(ReadText(Request, Name, 10)) <> UpperCase(Value) then
-                    Error(BatchErr);
+                if UpperCase(ReadText(Request, Name, Argument, 10)) <> UpperCase(Value) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
             end else
                 Request.Add(Name, Value);
             Request.Remove(AliasName);
         end;
         if Request.Contains(Name) then
-            ReadText(Request, Name, 10);
+            ReadText(Request, Name, Argument, 10);
     end;
 
-    local procedure ReadText(Request: JsonObject; Name: Text; Maximum: Integer): Text
+    local procedure ReadText(Request: JsonObject; Name: Text; var Argument: Record "Message Argument ori"; Maximum: Integer): Text
     var
         Token: JsonToken;
         Serialized: Text;
         Value: Text;
     begin
         if not Request.Get(Name, Token) or not Token.IsValue() then
-            Error(TextErr, Name, Maximum);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextErr, Name, Maximum), Name, RequestValue(Request, Name), StrSubstNo(TextExpectedLbl, Maximum));
         Token.WriteTo(Serialized);
         if CopyStr(Serialized, 1, 1) <> '"' then
-            Error(TextErr, Name, Maximum);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextErr, Name, Maximum), Name, RequestValue(Request, Name), StrSubstNo(TextExpectedLbl, Maximum));
         Value := Token.AsValue().AsText();
         if (Value.Trim() = '') or (StrLen(Value) > Maximum) then
-            Error(TextErr, Name, Maximum);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextErr, Name, Maximum), Name, RequestValue(Request, Name), StrSubstNo(TextExpectedLbl, Maximum));
         exit(Value);
     end;
 
-    local procedure SelectLines(Request: JsonObject; Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")
+    local procedure SelectLines(var Argument: Record "Message Argument ori"; Request: JsonObject; Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")
     var
         SelectedLine: Record "Item Journal Line";
         Token: JsonToken;
@@ -523,22 +530,22 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not Request.Get('lineSystemIds', Token) then
             exit;
         if not Token.IsArray() then
-            Error(SelectionErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
         if Token.AsArray().Count() = 0 then
-            Error(SelectionErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
         foreach Entry in Token.AsArray() do begin
             Entry.WriteTo(Serialized);
             if not Entry.IsValue() or (CopyStr(Serialized, 1, 1) <> '"') then
-                Error(SelectionErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
             if not Evaluate(Id, Entry.AsValue().AsText()) or IsNullGuid(Id) then
-                Error(SelectionErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
             if Ids.Contains(Id) then
-                Error(SelectionErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
             Ids.Add(Id);
             if not SelectedLine.GetBySystemId(Id) then
-                Error(SelectionErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
             if (SelectedLine."Journal Template Name" <> Batch."Journal Template Name") or (SelectedLine."Journal Batch Name" <> Batch.Name) then
-                Error(SelectionErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, SelectionErr, 'lineSystemIds', RequestValue(Request, 'lineSystemIds'), SelectionErr);
             if FilterText <> '' then
                 FilterText += '|';
             FilterText += Format(SelectedLine."Line No.", 0, 9);
@@ -557,14 +564,15 @@ codeunit 10076840 "Inventory Native Journal ori"
         Line.MarkedOnly(true);
     end;
 
-    local procedure ReadLines(var Line: Record "Item Journal Line"; JournalType: Enum "Item Journal Template Type"; var Results: JsonArray)
+    local procedure ReadLines(var Argument: Record "Message Argument ori"; var Line: Record "Item Journal Line"; JournalType: Enum "Item Journal Template Type"; var Results: JsonArray)
     var
         Result: JsonObject;
     begin
         if not Line.FindSet() then
-            Error(EmptyErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            CheckLineType(Line, JournalType);
+            if not TryCheckLine(Line, JournalType) then
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             Clear(Result);
             Result.Add('systemId', Line.SystemId);
             Result.Add('lineNo', Line."Line No.");
@@ -690,15 +698,15 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalQuantity: Decimal;
         TotalAmount: Decimal;
     begin
-        CheckPostParameters(Argument.GetRequestJson());
+        CheckPostParameters(Argument, Argument.GetRequestJson());
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
         Line.LockTable();
-        ReadTotals(Line, LinesToPost, TotalQuantity, TotalAmount);
+        ReadTotals(Argument, Line, LinesToPost, TotalQuantity, TotalAmount);
         PostBatch.SetSuppressCommit(true);
         PostBatch.Run(Line);
         if (Line."Line No." = 0) or not Register.Get(Line."Line No.") then
-            Error(NothingPostedErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, NothingPostedErr, 'batchName', Batch.Name, RegisterExpectedLbl);
         Response.Add('status', 'Success');
         Response.Add('templateName', Batch."Journal Template Name");
         Response.Add('batchName', Batch.Name);
@@ -734,10 +742,10 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalAmount: Decimal;
         Balanced: Boolean;
     begin
-        CheckPostParameters(Argument.GetRequestJson());
+        CheckPostParameters(Argument, Argument.GetRequestJson());
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
-        ReadTotals(Line, LinesToPost, TotalQuantity, TotalAmount);
+        ReadTotals(Argument, Line, LinesToPost, TotalQuantity, TotalAmount);
         BindSubscription(ItemPost);
         NativePreview.SetContext(ItemPost, Line);
         if NativePreview.Run() then;
@@ -781,9 +789,9 @@ codeunit 10076840 "Inventory Native Journal ori"
             if not Evaluate(BatchId, Argument.Subject) then begin
                 Parts := Argument.Subject.Split('|');
                 if Parts.Count() <> 2 then
-                    Error(RevalBatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, RevalBatchErr, 'batchName', Argument.Subject, RevalBatchErr);
                 if (StrLen(Parts.Get(1)) > 10) or (StrLen(Parts.Get(2)) > 10) or (Parts.Get(1) = '') or (Parts.Get(2) = '') then
-                    Error(RevalBatchErr);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, RevalBatchErr, 'batchName', Argument.Subject, RevalBatchErr);
                 TemplateName := CopyStr(Parts.Get(1), 1, 10);
                 BatchName := CopyStr(Parts.Get(2), 1, 10);
             end;
@@ -791,20 +799,21 @@ codeunit 10076840 "Inventory Native Journal ori"
             foreach Identifier in Request.Keys() do
                 if Identifier in ['batchId', 'id', 'systemId', 'recordSystemId'] then begin
                     if not IsNullGuid(BatchId) then
-                        Error(RevalBatchErr);
-                    if not Evaluate(BatchId, ReadText(Request, Identifier, 50)) or IsNullGuid(BatchId) then
-                        Error(RevalBatchErr);
+                        RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, RevalBatchErr, 'batchName', Argument.Subject, RevalBatchErr);
+                    if not Evaluate(BatchId, ReadText(Request, Identifier, Argument, 50)) or IsNullGuid(BatchId) then
+                        RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, RevalBatchErr, 'batchName', Argument.Subject, RevalBatchErr);
                 end;
             if IsNullGuid(BatchId) then begin
-                TemplateName := CopyStr(ReadText(Request, 'templateName', 10), 1, 10);
-                BatchName := CopyStr(ReadText(Request, 'batchName', 10), 1, 10);
+                TemplateName := CopyStr(ReadText(Request, 'templateName', Argument, 10), 1, 10);
+                BatchName := CopyStr(ReadText(Request, 'batchName', Argument, 10), 1, 10);
             end;
         end;
         if not IsNullGuid(BatchId) then begin
             if not Batch.GetBySystemId(BatchId) then
-                Error(RevalBatchErr);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, RevalBatchErr, 'batchName', Argument.Subject, RevalBatchErr);
         end else
-            Batch.Get(TemplateName, BatchName);
+            if not Batch.Get(TemplateName, BatchName) then
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, RevalBatchErr, 'batchName', TemplateName + '|' + BatchName, RevalBatchErr);
         JournalTemplate.Get(Batch."Journal Template Name");
         JournalTemplate.TestField(Type, JournalTemplate.Type::Revaluation);
         JournalTemplate.TestField(Recurring, false);
@@ -819,13 +828,13 @@ codeunit 10076840 "Inventory Native Journal ori"
         Line.SetRange("Journal Batch Name", Batch.Name);
     end;
 
-    local procedure ReadTotals(var Line: Record "Item Journal Line"; var LinesToPost: Integer; var TotalQuantity: Decimal; var TotalAmount: Decimal)
+    local procedure ReadTotals(var Argument: Record "Message Argument ori"; var Line: Record "Item Journal Line"; var LinesToPost: Integer; var TotalQuantity: Decimal; var TotalAmount: Decimal)
     begin
         if not Line.FindSet() then
-            Error(RevalEmptyErr);
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, RevalEmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            Line.TestField("Item No.");
-            Line.TestField("Value Entry Type", Line."Value Entry Type"::Revaluation);
+            if not TryCheckRevaluationLine(Line) then
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             LinesToPost += 1;
             TotalQuantity += Line.Quantity;
             TotalAmount += Line.Amount;
@@ -833,12 +842,36 @@ codeunit 10076840 "Inventory Native Journal ori"
         Line.FindFirst();
     end;
 
-    local procedure CheckPostParameters(Request: JsonObject)
+    [TryFunction]
+    local procedure TryCheckRevaluationLine(Line: Record "Item Journal Line")
+    begin
+        Line.TestField("Item No.");
+        Line.TestField("Value Entry Type", Line."Value Entry Type"::Revaluation);
+    end;
+
+    local procedure RaiseRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; Parameter: Text; Received: Text; Expected: Text)
+    begin
+        Argument.AddError(Code, MessageText, Parameter, Received, Expected, RequestNextStepLbl);
+        Argument.RaiseCollectedErrors(Code, MessageText);
+    end;
+
+    local procedure RequestValue(Request: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+        Serialized: Text;
+    begin
+        if not Request.Get(Name, Token) then
+            exit('<missing>');
+        Token.WriteTo(Serialized);
+        exit(Serialized);
+    end;
+
+    local procedure CheckPostParameters(var Argument: Record "Message Argument ori"; Request: JsonObject)
     var
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
             if not (ParameterName in ['templateName', 'batchName', 'batchId', 'id', 'systemId', 'recordSystemId']) then
-                Error(RevalParameterErr, ParameterName);
+                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(RevalParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
     end;
 }

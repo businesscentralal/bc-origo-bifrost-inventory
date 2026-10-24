@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -85,13 +86,17 @@ codeunit 96930 "Inventory Item Refusal Tests"
     [Test]
     procedure AssemblyOrderCreate_ZeroQuantity_IsIcelandicIn1039()
     var
+        Item: Record Item;
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
-        RequestJson.Add('itemNo', 'ZZC-ASM');
+        Item.Init();
+        Item."No." := CopyStr('W8Q' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, 20);
+        Item.Insert(true);
+        RequestJson.Add('itemNo', Item."No.");
         RequestJson.Add('quantity', 0);
         Dispatch("Message Type ori"::"Inventory.AssemblyOrder.Create", RequestJson, 1039, ResponseJson);
-        AssertRefusal(ResponseJson, 'MissingParameter', 'quantity', 'Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.', 'Sendu magnið sem á að setja saman í data.quantity.');
+        AssertRefusal(ResponseJson, 'InvalidParameter', 'quantity', 'Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.', 'Sendu magnið sem á að setja saman í data.quantity.');
     end;
 
     [Test]

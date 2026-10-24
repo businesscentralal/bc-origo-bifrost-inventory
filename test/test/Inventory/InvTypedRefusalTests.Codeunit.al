@@ -428,6 +428,123 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         GlobalLanguage(OldLanguage);
     end;
 
+    [Test]
+    procedure Calculate_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Calculate");
+    end;
+
+    [Test]
+    procedure RecordCount_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.RecordCount");
+    end;
+
+    [Test]
+    procedure Check_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Check");
+    end;
+
+    [Test]
+    procedure PhysicalPost_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Post");
+    end;
+
+    [Test]
+    procedure RevaluationPost_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.Post");
+    end;
+
+    [Test]
+    procedure RevaluationPreview_UnknownParameterCoded_EN()
+    begin
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.PreviewPost");
+    end;
+
+    [Test]
+    procedure TrackingMalformedSource_Coded_EN()
+    begin
+        CheckTrackingSource(1033);
+    end;
+
+    [Test]
+    procedure Calculate_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Calculate");
+    end;
+
+    [Test]
+    procedure RecordCount_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.RecordCount");
+    end;
+
+    [Test]
+    procedure Check_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Check");
+    end;
+
+    [Test]
+    procedure PhysicalPost_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Post");
+    end;
+
+    [Test]
+    procedure RevaluationPost_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.Post");
+    end;
+
+    [Test]
+    procedure RevaluationPreview_UnknownParameterCoded_IS()
+    begin
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.PreviewPost");
+    end;
+
+    [Test]
+    procedure TrackingMalformedSource_Coded_IS()
+    begin
+        CheckTrackingSource(1039);
+    end;
+
+    local procedure CheckJournalUnknown(LanguageId: Integer; MessageType: Enum "Message Type ori")
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        OldLanguage: Integer;
+    begin
+        EnableDomains();
+        Request.Add('unknownJournalKey', true);
+        Commit();
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Response := Library.ExecuteType(MessageType, '', Request, false);
+        AssertRefusal(Response, 'InvalidParameter', 'unknownJournalKey');
+        GlobalLanguage(OldLanguage);
+    end;
+
+    local procedure CheckTrackingSource(LanguageId: Integer)
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        OldLanguage: Integer;
+    begin
+        EnableDomains();
+        Request.Add('source', true);
+        Commit();
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.Tracking.Assign", '', Request, false);
+        AssertRefusal(Response, 'InvalidParameterFormat', 'source');
+        Assert.AreEqual('true', TextValue(Response, 'received'), 'The malformed source value is preserved.');
+        GlobalLanguage(OldLanguage);
+    end;
+
     local procedure EnableDomains()
     var
         Setup: Record "Inventory Setup ori";
@@ -438,6 +555,8 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Setup.Costing := true;
         Setup.Assembly := true;
         Setup.Attributes := true;
+        Setup."Phys. Inventory" := true;
+        Setup."Item Tracking" := true;
         Setup.Reservations := true;
         Setup."Transfer Orders" := true;
         Setup.Modify();

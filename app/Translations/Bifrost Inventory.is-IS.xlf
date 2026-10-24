@@ -1341,6 +1341,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3138712269" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A parameter listed in the message contract.</source>
+          <target>Færibreyta sem er talin upp í samningi skilaboðanna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreyta sem er talin upp í samningi skilaboðanna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType AllowedParameterLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.</source>
           <target>Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</target>
@@ -1352,6 +1358,12 @@
           <target>counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CountsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2361715141" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An empty physical inventory journal batch.</source>
+          <target>Tóm talningarbókarkeyrsla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tóm talningarbókarkeyrsla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyBatchLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
           <source>The selected journal contains no lines.</source>
@@ -1395,6 +1407,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 590620199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A native item register for the selected journal.</source>
+          <target>Innbyggð vöruskrá fyrir valda bók.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggð vöruskrá fyrir valda bók.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RegisterExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named parameter or selected journal line using the expected value, then retry.</source>
+          <target>Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 416719055" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
           <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
@@ -1431,11 +1455,23 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1879669363" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Nonempty JSON text of at most %1 characters.</source>
+          <target>JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length; is-IS=JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextExpectedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - Method 3881973616 - NamedType 286034047" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: native journal write permission and BIFROST ItemPost ori are required.</source>
           <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 633023824" size-unit="char" translate="yes" xml:space="preserve">
+          <source>locationCode and variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.</source>
+          <target>locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType FilterExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
           <source>integer in range</source>
@@ -1467,6 +1503,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir umbeðin rakningargögn.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType PermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named tracking parameter and retry with an existing permitted source.</source>
+          <target>Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 3567710146" size-unit="char" translate="yes" xml:space="preserve">
           <source>A non-empty item number in data.itemNo, an item SystemId, a tableView, or a source line.</source>
           <target>Ótómt vörunúmer í data.itemNo, SystemId vöru, tableView eða upprunalína.</target>
@@ -1478,6 +1520,12 @@
           <target>Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SelectionNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A supported existing source with the required read or write permission.</source>
+          <target>Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SourceExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 700893003" size-unit="char" translate="yes" xml:space="preserve">
           <source>Existing item tracking for the selected item or source line.</source>
@@ -1526,6 +1574,24 @@
           <target>Heimild hafnað fyrir upprunafærsluna.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ResolveDocument - NamedType SourcePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 4262812612" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A tracking number and positive base quantity; serial tracking uses one base unit.</source>
+          <target>Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType EntryExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A SalesLine, PurchaseLine or TransferLine source.</source>
+          <target>Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 3085145172" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Tracking.Get for the source and send valid tracking entries for that source.</source>
+          <target>Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType TrackingNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2677511102" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking on the selected source.</source>

@@ -121,7 +121,11 @@ codeunit 10076864 "Reval Preview Impl ori" implements "Msg Interface ori", "Msg 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Ask an administrator to assign BIFROST InvPost ori.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview would create no entries, so nothing would be posted.', 'Check the lines of the Revaluation batch.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The batch is not identified, is not a non-recurring batch of a Revaluation journal template, has no lines, has a line without an item or that is not a Revaluation line, a key other than the batch keys is sent, or Business Central refuses the posting in the preview. The text of Business Central is returned as it is, and nothing is kept.', 'Correct the batch or its journal lines and preview again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'A batch selector is malformed or an unsupported parameter is supplied.', 'Use the named parameter and expected value to select one revaluation batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A batch name or identifier is not nonempty text in the required format.', 'Correct the named parameter.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No revaluation batch matches templateName and batchName.', 'Select an existing owned batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The revaluation batch is empty.', 'Calculate the revaluation lines before posting or previewing.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native validation or posting fails; known validation failures name lineNo and its document.', 'Correct the selected journal line; no failed posting is committed.'));
         exit(true);
     end;
 

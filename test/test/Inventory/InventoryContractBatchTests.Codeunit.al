@@ -530,7 +530,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertAttributeContract('Inventory.AttributeDefinition.Create', Enum::"Message Type ori"::"Inventory.AttributeDefinition.Create".AsInteger(),
             'name:string:true,type:string:true,unitOfMeasure:string:false,optionValues:array:false',
             'status:string,attributeId:integer,attributeName:string,type:string,createdValues:array',
-            'write', false, 4, 2, 1,
+            'write', false, 7, 2, 1,
             'Creates an Item Attribute definition and optional Option values independently of an Item.', '');
     end;
 

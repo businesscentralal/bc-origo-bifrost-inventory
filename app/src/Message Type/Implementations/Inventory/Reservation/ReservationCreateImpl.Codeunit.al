@@ -319,6 +319,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             ReadOk := false;
         if not ReadInteger(Argument, RequestJson, 'sourceLineNo', true, SourceLineNo) then
             ReadOk := false;
+        if not RequestJson.Contains('quantity') then begin
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, QuantityPositiveErr, 'quantity', '<missing>', QuantityExpectedTok, SourceNextStepLbl);
+            ReadOk := false;
+        end else
         if not Reader.TryReadDecimal(Argument, RequestJson, 'quantity', true, Quantity) then
             ReadOk := false
         else

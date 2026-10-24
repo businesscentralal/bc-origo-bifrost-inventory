@@ -5,6 +5,8 @@ using Microsoft.Finance.VAT.Setup;
 using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
+using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
@@ -65,6 +67,70 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateScenario('W8PRV-FAIL', 'FAIL', StockBatch, Location.Code);
         CreateScenario('W8PRV-OTHER', 'OTHER', StockBatch, Location.Code);
         CreateEmptyBatch();
+    end;
+
+    /// <summary>Explicitly seeds independent physical-count batches and periods for issue151 in the owned evaluation company.</summary>
+    procedure CreateRefusalFixtures()
+    var
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Item: Record Item;
+        Period: Record "Inventory Period";
+        Setup: Record "Inventory Setup ori";
+        CalculateInventory: Report "Calculate Inventory";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Suffix: Code[2];
+        Index: Integer;
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Only the owned CRONUS verification company is supported.');
+        if JournalTemplate.Get('W8COUNT') or Period.Get(20991231D) or Period.Get(20991130D) then
+            Error('Owned151 fixtures exist; inspect actual state and do not replay.');
+        Item.Get('W8PRV-EN');
+        Item.Get('W8PRV-IS');
+        Setup.Get();
+        Setup."Phys. Inventory" := true;
+        Setup."Inventory Period" := true;
+        Setup.Modify();
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::"Phys. Inventory");
+        JournalTemplate.Rename('W8COUNT');
+        for Index := 1 to 2 do begin
+            if Index = 1 then
+                Suffix := 'EN'
+            else
+                Suffix := 'IS';
+            LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+            Batch.Rename(JournalTemplate.Name, Suffix);
+            Clear(Line);
+            Line."Journal Template Name" := Batch."Journal Template Name";
+            Line."Journal Batch Name" := Batch.Name;
+            Item.Reset();
+            Item.SetRange("No.", 'W8PRV-' + Suffix);
+            Clear(CalculateInventory);
+            CalculateInventory.SetItemJnlLine(Line);
+            CalculateInventory.InitializeRequest(WorkDate(), 'W8COUNT-' + Suffix, false, false);
+            CalculateInventory.SetTableView(Item);
+            CalculateInventory.UseRequestPage(false);
+            CalculateInventory.RunModal();
+            Line.Reset();
+            Line.SetRange("Journal Template Name", Batch."Journal Template Name");
+            Line.SetRange("Journal Batch Name", Batch.Name);
+            Line.FindLast();
+            Line."Line No." += 10000;
+            Line.Init();
+            Line.Insert(false);
+            LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
+            Batch.Rename(JournalTemplate.Name, Suffix + 'CALC');
+        end;
+        Period.Init();
+        Period."Ending Date" := 20991231D;
+        Period.Name := 'W8I151 EN';
+        Period.Insert(true);
+        Period.Init();
+        Period."Ending Date" := 20991130D;
+        Period.Name := 'W8I151 IS';
+        Period.Insert(true);
     end;
 
     /// <summary>Creates independent source lines for issue 150 in the owned evaluation company, only on explicit UI invocation.</summary>

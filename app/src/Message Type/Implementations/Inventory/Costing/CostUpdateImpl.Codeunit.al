@@ -40,6 +40,9 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
     var
         Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
+        Request: JsonObject;
+        Token: JsonToken;
+        ItemSelection: Text;
         NativeExpectedTxt: Label 'Cost fields that pass native item validation.', Comment = 'is-IS=Kostnaðarreitir sem standast innbyggða vörusannprófun.';
         NativeNextStepTxt: Label 'Review the selected item; use lastDirectCost if unitCost is refused for an item with entries, or Inventory.Revaluation.Post for Standard costing.', Comment = 'is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.';
     begin
@@ -47,12 +50,16 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        ItemSelection := Argument.Subject;
+        Request := Argument.GetRequestJson();
+        if (ItemSelection = '') and Request.Get('itemNo', Token) then
+            ItemSelection := Format(Token);
         Process.SetOperation('CostUpdate');
         if Argument."Omit Commit" then
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNo', Argument.Subject, NativeExpectedTxt, NativeNextStepTxt);
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNo', ItemSelection, NativeExpectedTxt, NativeNextStepTxt);
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
