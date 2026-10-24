@@ -67,8 +67,10 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
         NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
+            Parts.CompleteOlderDomainRefusal(Argument);
             exit;
+        end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();

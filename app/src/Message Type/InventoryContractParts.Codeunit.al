@@ -1247,6 +1247,32 @@ codeunit 10076919 "Inventory Contract Parts ori"
         exit(Value);
     end;
 
+    /// <summary>Adds actionable field context to the four scoped older-type domain refusals.</summary>
+    procedure CompleteOlderDomainRefusal(var Argument: Record "Message Argument ori")
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+        ParameterName: Text;
+        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including BIFROST InvPost ori for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal BIFROST InvPost ori fyrir bókunarforskoðun.';
+    begin
+        Response := Argument.GetResponseJson();
+        if not Response.Get('code', Token) then
+            exit;
+        ParameterName := 'domain';
+        if Token.AsValue().AsText() = 'PermissionDenied' then begin
+            ParameterName := 'permissionSet';
+            if Response.Contains('nextStep') then
+                Response.Replace('nextStep', PermissionNextLbl)
+            else
+                Response.Add('nextStep', PermissionNextLbl);
+        end;
+        if Response.Contains('parameter') then
+            Response.Replace('parameter', ParameterName)
+        else
+            Response.Add('parameter', ParameterName);
+        Argument.SetResponseJson(Response);
+    end;
+
     /// <summary>Reads a required item-application entry number without a platform conversion error.</summary>
     procedure TryReadEntryNo(Request: JsonObject; Name: Text; var Argument: Record "Message Argument ori"; var EntryNo: Integer): Boolean
     var

@@ -1209,6 +1209,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið sem texta í data.itemNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddItemNoSubjectErrors - NamedType ItemNoFormatNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3880825549 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for the documented Inventory role and native table permissions, including BIFROST InvPost ori for posting preview.</source>
+          <target>Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal BIFROST InvPost ori fyrir bókunarforskoðun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal BIFROST InvPost ori fyrir bókunarforskoðun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CompleteOlderDomainRefusal - NamedType PermissionNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
           <target>%1 er nauðsynlegt.</target>

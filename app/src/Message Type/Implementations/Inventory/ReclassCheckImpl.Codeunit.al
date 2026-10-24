@@ -66,8 +66,10 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then
+        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
+            Parts.CompleteOlderDomainRefusal(Argument);
             exit;
+        end;
 
         RequestJson := Argument.GetRequestJson();
         if RequestJson.Contains('templateName') then

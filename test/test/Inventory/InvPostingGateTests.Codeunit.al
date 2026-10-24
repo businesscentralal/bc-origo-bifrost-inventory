@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Assembly.History;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Inventory.Item.Attribute;
@@ -21,6 +23,101 @@ codeunit 96918 "Inv. Posting Gate Tests"
 
     var
         Assert: Codeunit "Library Assert";
+
+    [Test]
+    procedure OlderReclassificationCheck_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.Check", 1033);
+    end;
+
+    [Test]
+    procedure OlderReclassificationCheck_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.Check", 1039);
+    end;
+
+    [Test]
+    procedure OlderReclassificationPreviewPost_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.PreviewPost", 1033);
+    end;
+
+    [Test]
+    procedure OlderReclassificationPreviewPost_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.Reclassification.PreviewPost", 1039);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationUnapply_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Unapply", 1033);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationUnapply_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Unapply", 1039);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationReapply_Denied1033()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Reapply", 1033);
+    end;
+
+    [Test]
+    procedure OlderItemApplicationReapply_Denied1039()
+    begin
+        VerifyOlderDenied("Message Type ori"::"Inventory.ItemApplication.Reapply", 1039);
+    end;
+
+    local procedure VerifyOlderDenied(MessageType: Enum "Message Type ori"; LanguageId: Integer)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        JournalLine: Record "Item Journal Line";
+        ApplicationEntry: Record "Item Application Entry";
+        Setup: Record "Inventory Setup ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Impl: Interface "Msg Interface ori";
+        Contract: Interface "Msg Contract ori";
+        Response: JsonObject;
+        Token: JsonToken;
+        Code: JsonToken;
+        Errors: JsonArray;
+        PreviousLanguage: Integer;
+        Found: Boolean;
+    begin
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        Assert.IsFalse(JournalLine.ReadPermission(), 'Caller lacks actual native journal read.');
+        Assert.IsFalse(ApplicationEntry.WritePermission(), 'Caller lacks actual native application write.');
+        Assert.IsTrue(Setup.IsDomainEnabled("Inventory Domain ori"::Reclassification), 'Domain is on, so this proves permission denial.');
+        Assert.IsTrue(Setup.IsDomainEnabled("Inventory Domain ori"::ItemApplication), 'Application domain is on.');
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        Impl := MessageType;
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Impl.ExecuteBifrostTask(TempArgument);
+        GlobalLanguage(PreviousLanguage);
+        Response := TempArgument.GetResponseJson();
+        Assert.IsTrue(Response.Get('code', Token), 'Stable code.');
+        Assert.AreEqual('PermissionDenied', Token.AsValue().AsText(), 'Actual denial.');
+        Assert.IsTrue(Response.Get('parameter', Token), 'Parameter present.');
+        Assert.AreEqual('permissionSet', Token.AsValue().AsText(), 'Actionable permission parameter.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Actionable remedy.');
+        if LanguageId = 1039 then
+            Assert.AreEqual('Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal BIFROST InvPost ori fyrir bókunarforskoðun.', Token.AsValue().AsText(), 'Full Icelandic remedy.')
+        else
+            Assert.AreEqual('Ask an administrator for the documented Inventory role and native table permissions, including BIFROST InvPost ori for posting preview.', Token.AsValue().AsText(), 'Full English remedy.');
+        Contract := MessageType;
+        Contract.GetErrors(Errors);
+        foreach Token in Errors do
+            if Token.AsObject().Get('code', Code) then
+                Found := Found or (Code.AsValue().AsText() = 'PermissionDenied');
+        Assert.IsTrue(Found, 'Help declares actual permission code.');
+    end;
 
     [Test]
     procedure FullRole_ExecutesPreviouslyMissingImplementations()
