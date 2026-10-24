@@ -25,6 +25,20 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(ConfigureReservationVAT)
+            {
+                ApplicationArea = All;
+                Caption = 'Complete owned reservation setup';
+                ToolTip = 'Creates native owned VAT setup for the isolated reservation fixtures without changing any write guard.';
+                Image = Setup;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.ConfigureReservationVAT();
+                    SeedState := 'Complete owned reservation setup completed.';
+                end;
+            }
             action(CompletePreview)
             {
                 ApplicationArea = All;

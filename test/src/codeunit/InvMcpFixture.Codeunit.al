@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.VAT.Setup;
+using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Ledger;
@@ -172,6 +174,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 Error('Owned customer already exists.');
             LibrarySales.CreateCustomer(Customer);
             Customer.Rename('W8PRV-CUST');
+            ConfigureReservationVAT();
         end;
         CreateAssemblyFixture(Suffix);
         CreateTransferFixture(Suffix);
@@ -265,6 +268,33 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Line.Validate("Direct Unit Cost", 20);
         Line.Modify(true);
         LibraryPurchase.CreateItemChargePurchaseLine(Line, Charge, Header, 4, 5);
+    end;
+
+    /// <summary>Builds an owned VAT combination through native validation without changing Bifrost write guards.</summary>
+    procedure ConfigureReservationVAT()
+    var
+        Customer: Record Customer;
+        Header: Record "Sales Header";
+        Item: Record Item;
+        VATSetup: Record "VAT Posting Setup";
+        LibraryERM: Codeunit "Library - ERM";
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned company required.');
+        Customer.Get('W8PRV-CUST');
+        Header.SetRange("Sell-to Customer No.", Customer."No.");
+        if not Header.IsEmpty() then
+            Error('Sales source already exists; inspect it before changing its fixture setup.');
+        LibraryERM.CreateVATPostingSetupWithAccounts(VATSetup, VATSetup."VAT Calculation Type"::"Normal VAT", 0);
+        Customer.Validate("Gen. Bus. Posting Group", '');
+        Customer.Validate("VAT Bus. Posting Group", VATSetup."VAT Bus. Posting Group");
+        Customer.Modify(true);
+        Item.Get('W8PRV-EN');
+        Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
+        Item.Modify(true);
+        Item.Get('W8PRV-IS');
+        Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
+        Item.Modify(true);
     end;
 
 }
