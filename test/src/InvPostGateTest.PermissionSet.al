@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -18,6 +19,8 @@ permissionset 96920 "Inv Post Gate Test"
         tabledata "Message Argument ori" = RIMD,
         tabledata "Transfer Header" = RIMD,
         tabledata "Assembly Header" = RIMD,
+        tabledata "Posted Assembly Header" = RIMD,
+        tabledata "Transfer Shipment Header" = RIMD,
         tabledata "Inventory Setup ori" = R,
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Transfer Order Post Impl ori" = X,

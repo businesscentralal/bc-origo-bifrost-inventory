@@ -52,6 +52,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemJournalLine: Record "Item Journal Line";
+        JournalTemplate: Record "Item Journal Template";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         ItemJnlPostBatch: Codeunit "Item Jnl.-Post Batch";
         RequestJson: JsonObject;
@@ -61,6 +62,10 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         BatchName: Code[10];
         MissingTemplateErr: Label 'journalTemplateName is required.', Comment = 'is-IS=journalTemplateName er nauðsynlegt.';
         MissingBatchErr: Label 'journalBatchName is required.', Comment = 'is-IS=journalBatchName er nauðsynlegt.';
+        MissingJournalErr: Label 'Journal template %1 was not found.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.';
+        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
+        TransferExpectedLbl: Label 'an existing Transfer journal template', Comment = 'is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer';
+        TransferNextLbl: Label 'Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.', Comment = 'is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.';
         EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then
@@ -78,6 +83,14 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             exit;
         end;
         BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName));
+        if not JournalTemplate.Get(TemplateName) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingJournalErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
+            exit;
+        end;
+        if JournalTemplate.Type <> JournalTemplate.Type::Transfer then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(WrongTypeErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
+            exit;
+        end;
         ItemJournalLine.SetRange("Journal Template Name", TemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", BatchName);
         if not ItemJournalLine.FindFirst() then begin
@@ -116,7 +129,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters; read as an upper-case code. Use a reclassification template (type Transfer): the call does not check the template type.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters; read as an upper-case code. Use a reclassification template (type Transfer); other template types are refused before posting.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', true, 'Name of the journal batch to post, at most 10 characters; read as an upper-case code. Every line of the batch is posted.'));
         exit(true);
     end;
@@ -140,6 +153,8 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The journal template does not exist.', 'Send the name of an existing Transfer journal template.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The journal template is not of type Transfer.', 'Use a reclassification template; use the dedicated posting message for other journal types.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalTemplateName is absent.', 'Send journalTemplateName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalBatchName is absent.', 'Send journalBatchName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
@@ -183,7 +198,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Workflow);
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Confirm that the template is a reclassification template and see how many transfer lines the batch has.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'List the lines the posting would process.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'Simulate native posting and inspect the rolled-back ledger entries.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Post', 'Post the batch; the lines are written to the item ledger.'));
         Workflow.Add('steps', Steps);
         exit(true);
@@ -210,10 +225,10 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := 'Posting is permanent and commits. All lines of the batch are posted; the call has no line selection. It does not create or post a transfer order. ' +
-            'The call does not check that journalTemplateName is a reclassification (Transfer) template: it posts the lines of whatever item journal batch is named, so use it only with a reclassification batch. Inventory.Reclassification.Check refuses other templates, but it is not a gate for this call. ' +
+            'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
             'A batch without lines, or one that does not exist, is answered with the error text and no code. A posting error is answered with Business Central''s text and no code, and the posting is rolled back. ' +
             'The caller needs the BIFROST InvPost ori permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
-            'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost lists the lines but does not simulate the posting, so it cannot predict posting errors.';
+            'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
     end;
 }
