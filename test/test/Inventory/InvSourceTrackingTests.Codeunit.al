@@ -290,6 +290,8 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Assert.IsTrue(EntryNo > 0, 'Native entry allocation never returns zero.');
         ReadRequest.Add('source', SourceObject(Line));
         TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         TempArgument.SetRequestJson(ReadRequest);
         TrackingRead.ReadTracking(TempArgument);
         Response := TempArgument.GetResponseJson();

@@ -24,7 +24,7 @@ and `Data.Records.Set`.
 
 ### Message types
 
-The list is the `Message Type ori` enum extensions under `app/src/Message Type/`. `Help.Bifrost.Get`
+The active roster is implemented by the `Message Type ori` enum extensions under `app/src/Message Type/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
 and `Help.Implementation.Get` return the same list and each type's contract at runtime.
 
 | Type | Direction | Purpose |
@@ -55,8 +55,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
-| `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
-| `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.Tracking.Assign` | Inbound | Assign lot, serial or package tracking to an explicit document line through native Item Tracking Lines |
+| `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |

@@ -66,6 +66,8 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        EntryParameter: JsonObject;
+        Children: JsonArray;
     begin
         Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
@@ -74,7 +76,14 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Parameters.Add(ContractMgt.Parameter('serialNo', 'string', false, 'Serial number, at most 50 characters.'));
         Parameters.Add(ContractMgt.Parameter('packageNo', 'string', false, 'Package number, at most 50 characters.'));
         Parameters.Add(ContractMgt.Parameter('expirationDate', 'string', false, 'Optional ISO date YYYY-MM-DD, subject to native item tracking rules.'));
-        Parameters.Add(ContractMgt.Parameter('entries', 'array', false, 'Optional 1..200 tracking objects, each with required positive quantity and lotNo, serialNo or packageNo; optional expirationDate. All request values are validated before writes. Use this instead of the top-level tracking values.'));
+        Children.Add(ContractMgt.Parameter('quantity', 'number', true, 'Positive base quantity. A serial number requires exactly one base unit.'));
+        Children.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Lot number, at most 50 characters. At least one tracking number is required.'));
+        Children.Add(ContractMgt.Parameter('serialNo', 'string', false, 'Serial number, at most 50 characters.'));
+        Children.Add(ContractMgt.Parameter('packageNo', 'string', false, 'Package number, at most 50 characters.'));
+        Children.Add(ContractMgt.Parameter('expirationDate', 'string', false, 'Optional ISO date YYYY-MM-DD, subject to native item tracking rules.'));
+        EntryParameter := ContractMgt.Parameter('entries', 'array', false, 'Optional 1..200 tracking objects instead of the top-level tracking values. All values are checked before writes.');
+        EntryParameter.Add('children', Children);
+        Parameters.Add(EntryParameter);
         exit(true);
     end;
 
