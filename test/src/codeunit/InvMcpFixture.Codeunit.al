@@ -1,6 +1,13 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Assembly.Document;
+using Microsoft.Inventory.BOM;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Vendor;
+using Microsoft.Sales.Customer;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Location;
@@ -100,7 +107,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Line.Validate("New Location Code", NewLocation);
         if BatchName = 'FAIL' then
             Line."Item No." := 'W8PRV-NOT-FOUND';
-        Line.Modify(true);
+        Line.Modify(false);
     end;
 
     local procedure CreateEmptyBatch()
@@ -111,4 +118,153 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRV');
         Batch.Rename('W8PRV', 'EMPTY');
     end;
+    /// <summary>Completes only the inspected partial seed; it never repeats an existing stock posting.</summary>
+    procedure CompletePreviewFixture()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        StockBatch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Entry: Record "Item Ledger Entry";
+        LibraryInventory: Codeunit "Library - Inventory";
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned company required.');
+        Item.Get('W8PRV-FAIL');
+        Entry.SetRange("Item No.", Item."No.");
+        if Entry.Count() <> 1 then
+            Error('Inspect owned stock before recovery.');
+        Entry.FindFirst();
+        Entry.TestField(Quantity, 10);
+        if Batch.Get('W8PRV', 'FAIL') or Item.Get('W8PRV-OTHER') or Batch.Get('W8PRV', 'EMPTY') then
+            Error('Recovery target already exists; inspect before another action.');
+        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRV');
+        Batch.Rename('W8PRV', 'FAIL');
+        LibraryInventory.CreateItemJournalLine(Line, 'W8PRV', 'FAIL', Line."Entry Type"::Transfer, 'W8PRV-FAIL', 2);
+        Line.Validate("New Location Code", 'W8PRV');
+        // Explicit corrupt test fixture: native preview must reject it without changing journal or ledger records.
+        Line."Item No." := 'W8PRV-NOT-FOUND';
+        Line.Modify(false);
+        StockBatch.Get('W8PRVSTK', 'OWNED');
+        CreateScenario('W8PRV-OTHER', 'OTHER', StockBatch, 'W8PRV');
+        CreateEmptyBatch();
+    end;
+
+    /// <summary>Creates separate owned source documents for live posting, undo and item-charge MCP acceptance.</summary>
+    procedure CreatePostingFixtures(Suffix: Code[2])
+    var
+        Item: Record Item;
+        FeatureSetup: Record "Inventory Setup ori";
+        Customer: Record Customer;
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        if (CompanyName() <> 'CRONUS International Ltd.') or not (Suffix in ['EN', 'IS']) then
+            Error('Owned company and scenario required.');
+        if Item.Get('W8ASM-' + Suffix) or Item.Get('W8TRF-' + Suffix) or Item.Get('W8CHI1-' + Suffix) then
+            Error('Posting fixture exists; inspect state, do not replay.');
+        FeatureSetup.Get();
+        FeatureSetup.Assembly := true;
+        FeatureSetup."Transfer Orders" := true;
+        FeatureSetup."Item Charge" := true;
+        FeatureSetup.Modify(true);
+        if Suffix = 'EN' then begin
+            if Customer.Get('W8PRV-CUST') then
+                Error('Owned customer already exists.');
+            LibrarySales.CreateCustomer(Customer);
+            Customer.Rename('W8PRV-CUST');
+        end;
+        CreateAssemblyFixture(Suffix);
+        CreateTransferFixture(Suffix);
+        CreateChargeFixture(Suffix);
+    end;
+
+    local procedure CreateAssemblyFixture(Suffix: Code[2])
+    var
+        ParentItem: Record Item;
+        Component: Record Item;
+        BOM: Record "BOM Component";
+        Header: Record "Assembly Header";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        LibraryInventory.CreateItem(Component);
+        Component.Rename('W8CMP-' + Suffix);
+        LibraryInventory.CreateItem(ParentItem);
+        ParentItem.Rename('W8ASM-' + Suffix);
+        ParentItem.Validate("Replenishment System", ParentItem."Replenishment System"::Assembly);
+        ParentItem.Validate("Assembly Policy", ParentItem."Assembly Policy"::"Assemble-to-Stock");
+        ParentItem.Modify(true);
+        LibraryAssembly.CreateAssemblyListComponent(BOM.Type::Item, Component."No.", ParentItem."No.", '', BOM."Resource Usage Type", 1, true);
+        PostOwnedStock(Component."No.", '', 'ASM' + Suffix, 10);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), ParentItem."No.", '', 2, '');
+    end;
+
+    local procedure CreateTransferFixture(Suffix: Code[2])
+    var
+        Item: Record Item;
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransit: Record Location;
+        Header: Record "Transfer Header";
+        Line: Record "Transfer Line";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+    begin
+        LibraryWarehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
+        LibraryWarehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
+        LibraryWarehouse.CreateInTransitLocation(InTransit);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('W8TRF-' + Suffix);
+        PostOwnedStock(Item."No.", FromLocation.Code, 'TRF' + Suffix, 30);
+        LibraryWarehouse.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransit.Code);
+        LibraryWarehouse.CreateTransferLine(Header, Line, Item."No.", 4);
+        LibraryWarehouse.CreateTransferLine(Header, Line, Item."No.", 2);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
+    end;
+
+    local procedure PostOwnedStock(ItemNo: Code[20]; LocationCode: Code[10]; BatchName: Code[10]; Quantity: Decimal)
+    var
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        LibraryInventory: Codeunit "Library - Inventory";
+    begin
+        if Batch.Get('W8PRVSTK', BatchName) then
+            Error('Owned stock batch exists.');
+        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRVSTK');
+        Batch.Rename('W8PRVSTK', BatchName);
+        LibraryInventory.CreateItemJournalLine(Line, 'W8PRVSTK', BatchName, Line."Entry Type"::"Positive Adjmt.", ItemNo, Quantity);
+        Line.Validate("Location Code", LocationCode);
+        Line.Validate("Unit Amount", 12);
+        Line.Modify(true);
+        LibraryInventory.PostItemJournalLine('W8PRVSTK', BatchName);
+    end;
+
+    local procedure CreateChargeFixture(Suffix: Code[2])
+    var
+        Vendor: Record Vendor;
+        Item: Record Item;
+        Charge: Record "Item Charge";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryPurchase: Codeunit "Library - Purchase";
+    begin
+        LibraryPurchase.CreateVendor(Vendor);
+        Vendor.Rename('W8CHGV-' + Suffix);
+        LibraryInventory.CreateItemCharge(Charge);
+        Charge.Rename('W8CHG-' + Suffix);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::Order, Vendor."No.");
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('W8CHI1-' + Suffix);
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, Item."No.", 2);
+        Line.Validate("Direct Unit Cost", 10);
+        Line.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('W8CHI2-' + Suffix);
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, Item."No.", 2);
+        Line.Validate("Direct Unit Cost", 20);
+        Line.Modify(true);
+        LibraryPurchase.CreateItemChargePurchaseLine(Line, Charge, Header, 4, 5);
+    end;
+
 }

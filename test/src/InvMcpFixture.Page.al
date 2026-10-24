@@ -25,6 +25,48 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CompletePreview)
+            {
+                ApplicationArea = All;
+                Caption = 'Complete inspected preview fixture';
+                ToolTip = 'Runs the explicit guarded test fixture action once; inspect existing records before recovery.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CompletePreviewFixture();
+                    SeedState := 'Complete inspected preview fixture completed.';
+                end;
+            }
+            action(CreatePostingEN)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned posting EN';
+                ToolTip = 'Runs the explicit guarded test fixture action once; inspect existing records before recovery.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreatePostingFixtures('EN');
+                    SeedState := 'Create owned posting EN completed.';
+                end;
+            }
+            action(CreatePostingIS)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned posting IS';
+                ToolTip = 'Runs the explicit guarded test fixture action once; inspect existing records before recovery.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreatePostingFixtures('IS');
+                    SeedState := 'Create owned posting IS completed.';
+                end;
+            }
             action(CreateOwnedFixture)
             {
                 ApplicationArea = All;
