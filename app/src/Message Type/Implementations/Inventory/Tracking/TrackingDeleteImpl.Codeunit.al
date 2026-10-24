@@ -11,17 +11,17 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false));
+        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false));
     end;
 
     procedure GetFilterTableNo(): Integer
     begin
-        exit(Database::"Tracking Specification");
+        exit(Database::"Reservation Entry");
     end;
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Deletes a tracking specification record by its entry number.', Comment = 'is-IS=Eyðir rakningarforskrift eftir færslunúmeri hennar.';
+        DescriptionLbl: Label 'Removes selected unposted item tracking from its document line through native reservation handling.', Comment = 'is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.';
     begin
         exit(DescriptionLbl);
     end;
@@ -35,7 +35,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Deletes one tracking specification by entry number.', Comment = 'is-IS=Eyðir einni rekjanleikaforskrift eftir færslunúmeri.';
+        SelectionDescriptionLbl: Label 'Removes selected unposted item tracking from its document line through native reservation handling.', Comment = 'is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -47,7 +47,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     begin
         Subject.Add('use', 'notUsed');
         Subject.Add('forms', Forms);
-        Subject.Add('description', 'The tracking specification is named in data (entryNo); subject is not read.');
+        Subject.Add('description', 'Select the document line with data.source.type and data.source.systemId.');
         Envelope.Add('subject', Subject);
         Envelope.Add('dataRequired', true);
         Envelope.Add('version', '1.0');
@@ -59,7 +59,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Target.Add(ContractMgt.TargetEntry('data.entryNo', 'tracking specification entry no.', 'The Entry No. of the Tracking Specification record to delete, as returned by Inventory.Tracking.Assign or shown as entryNo on a TrackingSpecification row of Inventory.Tracking.Get.'));
+        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine or TransferLine by its SystemId. The source line determines the item and native tracking pointer.'));
         exit(true);
     end;
 
@@ -67,7 +67,9 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'The Entry No. of the Tracking Specification record to delete, a whole number.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'Positive entryNo of an unreserved ReservationEntry tracking row returned by Inventory.Tracking.Get for this exact source. A missing, foreign or reserved entry is refused; no bulk delete.'));
         exit(true);
     end;
 
@@ -77,12 +79,13 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Fields: JsonArray;
     begin
         Response.Add('contentType', 'text/json');
-        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the tracking specification record was deleted.'));
+        Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when the source tracking entry was deleted.'));
         Fields.Add(ContractMgt.ResponseField('entryNo', 'integer', 'The entry number of the deleted record, as sent.'));
         Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'The item number the record held before it was deleted.'));
         Fields.Add(ContractMgt.ResponseField('lotNo', 'string', 'The lot number the record held; blank when it had none.'));
         Fields.Add(ContractMgt.ResponseField('serialNo', 'string', 'The serial number the record held; blank when it had none.'));
         Fields.Add(ContractMgt.ResponseField('packageNo', 'string', 'The package number the record held; blank when it had none.'));
+        Fields.Add(ContractMgt.ResponseField('entriesDeleted', 'integer', 'Number of selected tracking entries processed. Single-entry responses also retain entryNo, itemNo and tracking fields.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
@@ -91,11 +94,13 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'entryNo is required.', 'entryNo was not sent.', 'Send entryNo as a whole number. This is a plain error text, not MissingParameter.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Tracking specification %1 was not found.', 'No tracking specification record has that entry number (also when it was already deleted). This is a plain error text, not RecordNotFound.', 'Use the entryNo that Inventory.Tracking.Assign returned, or read it from a TrackingSpecification row of Inventory.Tracking.Get.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native JSON or delete error text.', 'entryNo has a JSON type the call cannot read as a whole number, or the delete fails; Business Central raises its own text.', 'Send entryNo as a JSON number.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Tracking domain is turned off for the company.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the Tracking Specification table.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A source selector, quantity or entryNo is absent.', 'Send the required source and tracking parameters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A selector or tracking value has the wrong JSON type.', 'Use the declared JSON types, positive integer entry numbers and ISO dates.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid, or the domain is disabled.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected line or tracking entry does not exist on that source.', 'Read Inventory.Tracking.Get for the selected source and use its entryNo.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected tracking is reserved or cannot be removed.', 'Cancel the reservation using Inventory.Reservation.Cancel before removing its tracking.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native source or tracking permissions are missing.', 'Assign BIFROST Full ori and the required Business Central document and reservation permissions.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native item tracking validation refuses the operation.', 'Correct the source or tracking values in Business Central. A standalone failure rolls back; Omit Commit propagates the failure to the caller transaction.'));
         exit(true);
     end;
 
@@ -103,14 +108,13 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         Preconditions: JsonArray;
     begin
-        Preconditions.Add('The Item Tracking domain is turned on in Inventory Setup.');
-        Preconditions.Add('A Tracking Specification record with that entry number exists.');
+        Preconditions.Add('Item Tracking is enabled and the caller can write the selected source and reservation entries.');
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Deletes the Tracking Specification record with that entry number, and commits the deletion when the call finishes. Nothing is posted and no ledger entry changes.');
+        Effect.Add('changes', 'Changes only unposted tracking on the selected source using native item tracking and reservation handling. No direct persistent Tracking Specification inserts and no ledger postings. Standalone calls commit on success; Omit Commit stays in the caller transaction.');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
-        Effect.Add('writes', 'Tracking Specification');
+        Effect.Add('writes', 'Reservation Entry');
         Effect.Add('posts', false);
         exit(true);
     end;
@@ -126,7 +130,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     begin
         Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Assign', 'Assign item tracking instead of deleting it.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.TrackingAvailability.Get', 'Read tracking availability before deleting a specification.'));
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Get', 'Read the tracking rows of an item or document line; a TrackingSpecification row carries the entryNo to delete.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Tracking.Get', 'Read the tracking rows of an item or document line; a ReservationEntry row carries the entryNo to delete.'));
         exit(true);
     end;
 
@@ -135,9 +139,9 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Steps: JsonArray;
     begin
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Get', 'Read the tracking rows of the document line and find the entryNo of a TrackingSpecification row.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Delete the specification by its entryNo.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Assign', 'Create a specification with other numbers when that is wanted.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Assign', 'Assign tracking to your own selected document line.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Get', 'Read the same source and keep its ReservationEntry entryNo.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove one unreserved entryNo from the same source when no longer needed.'));
         Workflow.Add('steps', Steps);
         exit(true);
     end;
@@ -146,25 +150,20 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Examples.Add(ContractMgt.Example(
-            'Delete the tracking specification with entry number 1',
-            '{"type":"Inventory.Tracking.Delete","data":{"entryNo":1}}',
-            '{"status":"Success","entryNo":1,"itemNo":"1000","lotNo":"LOT0001","serialNo":"","packageNo":""}'));
+        Examples.Add(ContractMgt.Example('Use your own purchase line SystemId and tracking entry', '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNo":210}}', '{"status":"Success","entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
         exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Deletes one tracking specification record by its entry number and returns what the record held.';
+        Overview := 'Removes selected unposted item tracking from its document line through native reservation handling.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Deletes the Tracking Specification record with that entry number, whatever item or source it belongs to; the call does not check what the record is tied to. The answer gives the item, lot, serial and package numbers the record held before the deletion. ' +
-            'An unknown entryNo, also one that was already deleted, is answered as BusinessCentralError with the text shown in errors, not as RecordNotFound. ' +
-            'Bifrost commits the deletion when the call finishes; under Omit Commit the caller''s transaction commits instead. ' +
-            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs BIFROST Full ori and write permission on the Tracking Specification table.';
+        Notes := 'Select an existing SalesLine, PurchaseLine or TransferLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete requires the source and one unreserved entryNo, so another document cannot be affected. ' +
+            'No ledger entries are posted. No unlinked persistent Tracking Specification is inserted. Native failures roll back standalone calls; Omit Commit leaves transaction ownership with the caller and propagates native failures. Repeating an assignment may add quantity; read the source before retrying.';
         exit(true);
     end;
 
@@ -175,40 +174,18 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        TrackingSpecification: Record "Tracking Specification";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemTrackingManagement: Codeunit "Item Tracking Management";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Token: JsonToken;
-        EntryNo: Integer;
-        MissingEntryErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
-        NotFoundErr: Label 'Tracking specification %1 was not found.', Comment = '%1 = entry no., is-IS=Rakningarforskrift %1 fannst ekki.';
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Tracking Specification", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError(MissingEntryErr);
-            exit;
-        end;
-        EntryNo := Token.AsValue().AsInteger();
-        if not TrackingSpecification.Get(EntryNo) then begin
-            Argument.RespondWithError(StrSubstNo(NotFoundErr, Format(EntryNo)));
-            exit;
-        end;
-
-        ItemTrackingManagement.SetPointerFilter(TrackingSpecification);
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemNo', TrackingSpecification."Item No.");
-        ResponseJson.Add('lotNo', TrackingSpecification."Lot No.");
-        ResponseJson.Add('serialNo', TrackingSpecification."Serial No.");
-        ResponseJson.Add('packageNo', TrackingSpecification."Package No.");
-        TrackingSpecification.Delete(true);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        TrackingWrite.SetDeleteMode();
+        if Argument."Omit Commit" then
+            TrackingWrite.Run(Argument)
+        else
+            if not TrackingWrite.Run(Argument) then
+                Argument.RespondWithLastError();
     end;
 }

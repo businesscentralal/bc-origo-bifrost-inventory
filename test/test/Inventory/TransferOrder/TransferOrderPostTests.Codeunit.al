@@ -39,6 +39,53 @@ codeunit 96914 "Transfer Order Post Tests"
         VerifyShipmentUndo(true);
     end;
 
+    [Test]
+    procedure UndoShipment_ReceivedIsCodedAndPreserved_EN()
+    begin
+        VerifyReceivedRefusal(1033);
+    end;
+
+    [Test]
+    procedure UndoShipment_ReceivedIsCodedAndPreserved_IS()
+    begin
+        VerifyReceivedRefusal(1039);
+    end;
+
+    local procedure VerifyReceivedRefusal(LanguageId: Integer)
+    var
+        Shipment: Record "Transfer Shipment Header";
+        Line: Record "Transfer Shipment Line";
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ShipmentNo: Code[20];
+        BeforeCount: Integer;
+        SavedLanguage: Integer;
+    begin
+        ShipmentNo := CreateUndoShipment();
+        Shipment.Get(ShipmentNo);
+        Request.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Shipment."Transfer Order No.", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Own shipment is actually received before refusal verification.');
+        BeforeCount := Entries.Count();
+        Clear(Request);
+        Request.Add('documentNo', ShipmentNo);
+        SavedLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        GlobalLanguage(SavedLanguage);
+        Assert.IsTrue(Response.Get('code', Token), 'A received shipment has a coded refusal.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Received shipment is a precondition failure.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Refusal provides the return-transfer next step.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Next step is not empty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Refusal writes no reversing entries.');
+        Line.SetRange("Document No.", ShipmentNo);
+        Line.SetRange("Correction Line", true);
+        Assert.IsTrue(Line.IsEmpty(), 'The already-received shipment is preserved.');
+    end;
+
     local procedure VerifyShipmentUndo(FailSecondLine: Boolean)
     var
         Line: Record "Transfer Shipment Line";
