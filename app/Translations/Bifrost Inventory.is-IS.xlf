@@ -135,6 +135,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Valid costing setup and one item or category filter.</source>
+          <target>Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported costing or filter problem and inspect ledger state before retrying.</source>
+          <target>Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a JSON string.</source>
+          <target>%1 verður að vera JSON-strengur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera JSON-strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string containing a Business Central filter, or an empty string.</source>
+          <target>JSON-strengur með Business Central-síu eða tómur strengur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-strengur með Business Central-síu eða tómur strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the filter as text; omit the parameter to leave the filter empty.</source>
+          <target>Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType NextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly order %1 has no lines to post.</source>
           <target>Samsetningarpöntun %1 hefur engar línur til að bóka.</target>
@@ -3969,11 +3999,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu direction Outbound eða Inbound, eða slepptu því fyrir Outbound.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method ValidateValues - NamedType DirectionNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
@@ -4017,11 +4053,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil. Lokun og enduropnun eru aðskildar tegundir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
