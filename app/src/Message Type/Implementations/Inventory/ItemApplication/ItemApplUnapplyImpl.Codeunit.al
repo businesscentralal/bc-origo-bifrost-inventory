@@ -191,7 +191,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     var
         ItemApplicationEntry: Record "Item Application Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
+        Process: Codeunit "Inventory Write Process ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -216,7 +216,15 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         end;
 
         Argument.SetErrorContext('entryNo', ExpectedLbl, NativeNextLbl);
-        ItemJnlPostLine.UnApply(ItemApplicationEntry);
+        Process.SetOperation('ItemApplicationUnapply');
+        Process.SetApplicationEntries(EntryNo, 0);
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                Argument.RespondWithLastError();
+                exit;
+            end;
         Argument.ClearErrorContext();
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
