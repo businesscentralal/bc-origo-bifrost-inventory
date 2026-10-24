@@ -219,12 +219,12 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             exit;
         end;
 
+        Process.SetOperation('ReservationCancel');
+        Process.SetCancelReservation(EntryNo);
         if not Process.HasConsistentReservationPair(EntryNo, ReservationEntry) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(InconsistentPairErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', InspectPairLbl);
             exit;
         end;
-        Process.SetOperation('ReservationCancel');
-        Process.SetCancelReservation(EntryNo);
         if Argument."Omit Commit" then
             Process.Run(Argument)
         else
