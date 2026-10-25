@@ -950,11 +950,50 @@ codeunit 96930 "Inventory Item Refusal Tests"
         AssertOlderHelpRuntime("Message Type ori"::"Inventory.ItemApplication.Get", 'MissingParameter', 1039);
     end;
 
+    [Test]
+    procedure PhysCheck_PublicHelpDeclaresForeignLineSelection()
+    begin
+        AssertPhysicalSelectionHelp("Message Type ori"::"Inventory.PhysInventory.Check");
+    end;
+
+    [Test]
+    procedure PhysPost_PublicHelpDeclaresForeignLineSelection()
+    begin
+        AssertPhysicalSelectionHelp("Message Type ori"::"Inventory.PhysInventory.Post");
+    end;
+
+    local procedure AssertPhysicalSelectionHelp(MessageType: Enum "Message Type ori")
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Entry: JsonObject;
+        Errors: JsonArray;
+        Token: JsonToken;
+        Value: JsonToken;
+        Found: Boolean;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Public physical inventory help exists.');
+        Contract.Get('errors', Token);
+        Errors := Token.AsArray();
+        foreach Token in Errors do begin
+            Entry := Token.AsObject();
+            if Entry.Get('when', Value) then
+                if Value.AsValue().AsText() = 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the selected batch.' then begin
+                    Entry.Get('code', Value);
+                    Assert.AreEqual('InvalidParameter', Value.AsValue().AsText(), 'Foreign selection uses the runtime refusal code.');
+                    Found := true;
+                end;
+        end;
+        Assert.IsTrue(Found, 'Selection help must explain missing and foreign-batch SystemIds.');
+    end;
+
     local procedure AssertOlderHelpRuntime(MessageType: Enum "Message Type ori"; ExpectedCode: Text; LanguageId: Integer)
     var
         Setup: Record "Inventory Setup ori";
         Library: Codeunit "Inventory Test Library ori";
-        Contract: Interface "Msg Contract ori";
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        EnglishContract: JsonObject;
         Request: JsonObject;
         Response: JsonObject;
         Entry: JsonObject;
@@ -964,6 +1003,8 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Value: JsonToken;
         FoundCode: Boolean;
         OldLanguage: Integer;
+        EnglishErrors: Text;
+        ActualErrors: Text;
     begin
         if not Setup.Get() then begin
             Setup.Init();
@@ -979,10 +1020,19 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Library.AssertStatus(Response, 'Error');
         Response.Get('code', Token);
         Assert.AreEqual(ExpectedCode, Token.AsValue().AsText(), 'Actual retained runtime refusal.');
-        Contract := MessageType;
+        // Public help is English at every LCID (Architect 1792832435); runtime refusals stay localized.
+        GlobalLanguage(1033);
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, EnglishContract), 'English public help exists.');
         GlobalLanguage(LanguageId);
-        Contract.GetErrors(Errors);
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Public help exists at the requested LCID.');
+        Assert.AreEqual(LanguageId, GlobalLanguage(), 'Public help restores the caller language.');
         GlobalLanguage(OldLanguage);
+        EnglishContract.Get('errors', Token);
+        Token.WriteTo(EnglishErrors);
+        Contract.Get('errors', Token);
+        Token.WriteTo(ActualErrors);
+        Assert.AreEqual(EnglishErrors, ActualErrors, 'Public error chapters remain English at both LCIDs.');
+        Errors := Token.AsArray();
         Assert.IsTrue(Errors.Count() > 0, 'Errors chapter exists.');
         foreach Token in Errors do begin
             Entry := Token.AsObject();
@@ -991,11 +1041,10 @@ codeunit 96930 "Inventory Item Refusal Tests"
                 FoundCode := true;
             Assert.IsTrue(Entry.Get('fix', Value), 'Each help error has a fix.');
             Assert.AreNotEqual('', Value.AsValue().AsText(), 'The fix is actionable.');
-            if LanguageId = 1039 then
-                Assert.IsFalse(Value.AsValue().AsText().StartsWith('Send ') or Value.AsValue().AsText().StartsWith('Use ') or Value.AsValue().AsText().StartsWith('Ask ') or Value.AsValue().AsText().StartsWith('Turn ') or Value.AsValue().AsText().StartsWith('Choose ') or Value.AsValue().AsText().StartsWith('Correct ') or Value.AsValue().AsText().StartsWith('Request '), 'Icelandic help does not retain English recovery text.');
         end;
         Assert.IsTrue(FoundCode, 'Help declares the actual refusal code.');
-        Assert.IsTrue(Contract.GetExamples(Examples), 'Examples chapter exists.');
+        Assert.IsTrue(Contract.Get('examples', Token), 'Public examples chapter exists.');
+        Examples := Token.AsArray();
         Assert.IsTrue(Examples.Count() > 0, 'At least one example.');
     end;
 

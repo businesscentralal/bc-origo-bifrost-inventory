@@ -2,21 +2,14 @@
 
 ## [Unreleased]
 
-### Fixed
-- Align the AppSource compiler gate and Foundation collision restoration with the configured published 28.0.8.617 release, including exact production/test archive hashes and source provenance. Keep no-friend, signature-content and compatibility checks; align the test dependency floor (#148, #155, PR #168).
-
-
-- ItemApplication.Unapply/Reapply now use existing Inventory Write Process10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. No new objects or permission grants. Native error parity tests preserve actual BC text in both languages.
-
-- Issues148/155: extend coded refusals to Reclassification.Post (10076888) and ItemApplication.Get (10076867). Empty/native-failed posting returns existing PreconditionFailed with unchanged BC text, selected batch and recovery; malformed reads use InvalidParameterFormat. Translate all six older-type error chapters and add bilingual native rollback/refusal tests in96930. Minimum released Foundation28.0.8.617 supplies the public error-context API (Architect1792830947); no Foundation source change.
-
-- Combine #148/#155: coded, localized older item-application and reclassification refusals with help/runtime parity in existing objects 10076867–10076869,10076887–10076889,10076919 and existing test96930. Require Foundation28.0.8.617 released public error-context API and matching dependency probe to preserve native rollback and actionable failure context; no Foundation source changes. Parent#151 strict validation remains intact.
-
-### Fixed (2026-10-23) - coded attribute and physical inventory refusals (#148)
+### Fixed (2026-10-25) - coded Inventory refusals and public help (#148, #155)
 
 - Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
-- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Attribute and physical-inventory help declares the actual codes, remedies and examples. The older Reclassification and ItemApplication runtime remains unchanged; their uncoded refusal/help parity is pending the explicit #148/#155 scope disposition.
-- Objects: codeunits 10076840, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076913, 10076915, 10076917 and 10076919; tests 96900, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Paired 1033/1039 regressions cover complete refusal texts and no-write behavior; empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
+- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Check/Post help includes missing or foreign-batch lineSystemIds, matching the InvalidParameter selection refusal.
+- Reclassification and ItemApplication now return coded, localized refusals. ItemApplication.Unapply/Reapply use existing Inventory Write Process 10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. Reclassification.Post preserves native BC text and adds selected-batch recovery context. Malformed reads use InvalidParameterFormat. Parent #151 strict validation remains intact.
+- Attribute, physical inventory and older-type help declares actual codes, remedies and examples. Public help remains English at both LCIDs under Architect disposition 1792832435; tests use the public contract path and separately verify translated runtime refusals and native error parity in 1033/1039. No new objects or permission grants.
+- Use the released Foundation 28.0.8.617 public error-context API (Architect 1792830947). Align app/test dependency floors, the dependency probe, AppSource gate and collision restoration with that published release, including exact production/test archive hashes and source provenance. Preserve no-friend, signature-content and compatibility checks; no Foundation source changes.
+- Objects: codeunits 10076840, 10076842, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076915, 10076917 and 10076919; tests 96900, 96918, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
 
 ### Fixed
 
