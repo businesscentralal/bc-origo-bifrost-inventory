@@ -648,6 +648,115 @@ codeunit 96963 "Inventory Domain Usage Tests"
         Assert.IsTrue(InventorySetup.Assembly, 'Production BOM is an accepted usage signal.');
     end;
 
+    [Test]
+    procedure Scenario_AC03_NewCompanyTags_PreserveLaterOptOut()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        Location: Record Location;
+        InventoryUpgrade: Codeunit "Inventory Upgrade ori";
+        UpgradeTag: Codeunit "Upgrade Tag";
+        UpgradeTagLibrary: Codeunit "Upgrade Tag Library";
+        PerCompanyUpgradeTags: List of [Code[250]];
+    begin
+        // [SCENARIO] Issue147 AC03 / review F2 | Time: none | Risk: a later upgrade must preserve a new company's opt-out.
+        // [GIVEN] The same tag-registration path used by company initialization.
+        ClearUsage();
+        UpgradeTagLibrary.DeleteUpgradeTag(InventoryUpgrade.GetDomainUsageTag(), CopyStr(CompanyName(), 1, 30));
+        UpgradeTag.GetPerCompanyUpgradeTags(PerCompanyUpgradeTags);
+        Assert.IsTrue(PerCompanyUpgradeTags.Contains(InventoryUpgrade.GetDomainUsageTag()), 'New companies must register the domain migration tag.');
+        UpgradeTag.SetAllUpgradeTags();
+        Assert.IsTrue(UpgradeTag.HasUpgradeTag(InventoryUpgrade.GetDomainUsageTag()), 'Company initialization must persist the tag.');
+        Location.Code := 'XDOMAIN';
+        Location.Insert(false);
+        InventorySetup.InsertIfNotExists();
+        Assert.IsTrue(InventorySetup.Reclassification, 'New rows still derive defaults from usage.');
+        InventorySetup.Reclassification := false;
+        InventorySetup.Modify(true);
+        // [WHEN] The next app upgrade calls the tagged migration.
+        InventoryUpgrade.EnableUsedDomains();
+        // [THEN] A deliberate opt-out made after company initialization survives.
+        InventorySetup.Get();
+        Assert.IsFalse(InventorySetup.Reclassification, 'The next upgrade must not repeat the migration for a new company.');
+    end;
+
+    [Test]
+    procedure Scenario_AC05_LocationUsage_AvoidsLedgerScan()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        Location: Record Location;
+        SetupRecord: RecordRef;
+        DomainField: FieldRef;
+        EntryNo: Integer;
+        FieldNo: Integer;
+        BeforeRowsRead: BigInteger;
+        RowsRead: BigInteger;
+        ExcessiveReadsErr: Label 'Expected bounded existence reads, but read %1 SQL rows.', Comment = '%1 = number of SQL rows read', Locked = true;
+    begin
+        // [SCENARIO] Issue147 AC05 / review F1 | Time: no timing threshold | Risk: eager OR scans a large ledger during upgrade.
+        // [GIVEN] A Location already proves usage and 1000 ledger entries provide no additional location.
+        ClearUsage();
+        Location.Code := 'XDOMAIN';
+        Location.Insert(false);
+        for EntryNo := 1 to 1000 do
+            InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
+        SetupRecord.GetTable(InventorySetup);
+        for FieldNo := 10 to 24 do begin
+            DomainField := SetupRecord.Field(FieldNo);
+            DomainField.Value := true;
+        end;
+        SetupRecord.SetTable(InventorySetup);
+        InventorySetup.Reclassification := false;
+        // [WHEN] Only Reclassification needs evaluation, as on an existing mostly enabled setup.
+        BeforeRowsRead := SessionInformation.SqlRowsRead();
+        Assert.IsTrue(InventorySetup.EnableDomainsInUse(), 'Location usage must enable the remaining domain.');
+        RowsRead := SessionInformation.SqlRowsRead() - BeforeRowsRead;
+        // [THEN] The result is correct without reading the 1000 ledger rows.
+        Assert.IsTrue(InventorySetup.Reclassification, 'An existing Location enables reclassification.');
+        Assert.IsTrue(RowsRead < 100, StrSubstNo(ExcessiveReadsErr, RowsRead));
+    end;
+
+    [Test]
+    procedure Scenario_AC05_LedgerLocationsForSameItem_EnableReclass()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue147 AC05 | Time: none | Risk: the last-resort ledger signal must remain supported.
+        // [GIVEN] No Location, Bin Content or Warehouse Entry; one item has ledger entries at two locations.
+        ClearUsage();
+        InsertLedgerLocation(1, 'XITEM', 'XLOC1');
+        InsertLedgerLocation(2, 'XITEM', 'XLOC2');
+        // [WHEN] A setup row is created.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] The fallback enables Reclassification.
+        Assert.IsTrue(InventorySetup.Reclassification, 'Multiple ledger locations for the same item enable reclassification.');
+    end;
+
+    [Test]
+    procedure Scenario_AC05_LedgerLocationsForDifferentItems_StayOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue147 AC05 | Time: none | Risk: do not combine locations from unrelated items.
+        // [GIVEN] Two items each use only one location, with no other reclassification signal.
+        ClearUsage();
+        InsertLedgerLocation(1, 'XITEM1', 'XLOC1');
+        InsertLedgerLocation(2, 'XITEM2', 'XLOC2');
+        // [WHEN] A setup row is created.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Distinct locations across items do not enable Reclassification.
+        Assert.IsFalse(InventorySetup.Reclassification, 'Multiple locations must belong to the same item.');
+    end;
+
+    local procedure InsertLedgerLocation(EntryNo: Integer; ItemNo: Code[20]; LocationCode: Code[10])
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+    begin
+        ItemLedgerEntry."Entry No." := EntryNo;
+        ItemLedgerEntry."Item No." := ItemNo;
+        ItemLedgerEntry."Location Code" := LocationCode;
+        ItemLedgerEntry.Insert(false);
+    end;
+
     local procedure AssertDomain(InventorySetup: Record "Inventory Setup ori"; FieldNo: Integer; Expected: Boolean)
     var
         SetupRecord: RecordRef;

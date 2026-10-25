@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-25) - domain usage review corrections (#147)
+
+- `Inventory Setup ori` (table 10076836) stops at the first matching usage signal. Reclassification reads the item ledger only when Location, Bin Content and Warehouse Entry supply no signal; the other multi-signal checks also return early. The domain mapping is unchanged.
+- `Inventory Install ori` (codeunit 10076835) registers the domain-usage upgrade tag for newly created companies, preserving later administrator opt-outs on the next upgrade. `Inventory Domain Usage Tests` (96963) covers new-company tag registration, preserved opt-outs, bounded reads with an existing Location and the per-item ledger-location fallback.
+
 ### Fixed (2026-10-23) - company domain defaults from usage (#147)
 
 - `Inventory Setup ori` table 10076836 derives new-row defaults from native company data. `Inventory Upgrade ori` (10076836) runs the same off-to-on evaluation once per company under its own upgrade tag; `Inventory Install ori` (10076835) applies it on fresh installs. Enabled domains and absent rows are preserved, and unchanged rows are not modified. No licence, consent or HTTP setting is written.

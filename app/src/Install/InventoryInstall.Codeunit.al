@@ -41,7 +41,10 @@ codeunit 10076835 "Inventory Install ori"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Upgrade Tag", OnGetPerCompanyUpgradeTags, '', false, false)]
     local procedure RegisterPerCompanyTags(var PerCompanyUpgradeTags: List of [Code[250]])
+    var
+        InventoryUpgrade: Codeunit "Inventory Upgrade ori";
     begin
         PerCompanyUpgradeTags.Add(GetInitialReleaseTag());
+        PerCompanyUpgradeTags.Add(InventoryUpgrade.GetDomainUsageTag());
     end;
 }

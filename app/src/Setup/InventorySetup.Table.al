@@ -177,7 +177,7 @@ table 10076836 "Inventory Setup ori"
                 Changed := true;
             end;
         if not Assembly then
-            if HasRecords(Database::"BOM Component") or HasRecords(Database::"Assembly Header") or HasRecords(Database::"Production BOM Header") then begin
+            if HasAssemblyUsage() then begin
                 Assembly := true;
                 Changed := true;
             end;
@@ -197,12 +197,12 @@ table 10076836 "Inventory Setup ori"
                 Changed := true;
             end;
         if not Costing then
-            if HasRecords(Database::"Value Entry") or HasRecords(Database::"Inventory Adjmt. Entry (Order)") then begin
+            if HasCostingUsage() then begin
                 Costing := true;
                 Changed := true;
             end;
         if not Reclassification then
-            if HasRecords(Database::Location) or HasRecords(Database::"Bin Content") or HasRecords(Database::"Warehouse Entry") or HasMultipleLedgerLocations() then begin
+            if HasReclassificationUsage() then begin
                 Reclassification := true;
                 Changed := true;
             end;
@@ -227,7 +227,7 @@ table 10076836 "Inventory Setup ori"
                 Changed := true;
             end;
         if not Availability then
-            if HasRecords(Database::Item) or HasRecords(Database::"Item Ledger Entry") then begin
+            if HasAvailabilityUsage() then begin
                 Availability := true;
                 Changed := true;
             end;
@@ -263,7 +263,44 @@ table 10076836 "Inventory Setup ori"
         if Location.ReadPermission() then
             if not Location.IsEmpty() then
                 exit(true);
-        exit(HasRecords(Database::"Transfer Header") or HasRecords(Database::"Transfer Route"));
+        if HasRecords(Database::"Transfer Header") then
+            exit(true);
+        exit(HasRecords(Database::"Transfer Route"));
+    end;
+
+    local procedure HasAssemblyUsage(): Boolean
+    begin
+        if HasRecords(Database::"BOM Component") then
+            exit(true);
+        if HasRecords(Database::"Assembly Header") then
+            exit(true);
+        exit(HasRecords(Database::"Production BOM Header"));
+    end;
+
+    local procedure HasCostingUsage(): Boolean
+    begin
+        if HasRecords(Database::"Value Entry") then
+            exit(true);
+        exit(HasRecords(Database::"Inventory Adjmt. Entry (Order)"));
+    end;
+
+    local procedure HasReclassificationUsage(): Boolean
+    begin
+        // AL evaluates both operands of OR. Keep the ledger scan behind the cheaper signals.
+        if HasRecords(Database::Location) then
+            exit(true);
+        if HasRecords(Database::"Bin Content") then
+            exit(true);
+        if HasRecords(Database::"Warehouse Entry") then
+            exit(true);
+        exit(HasMultipleLedgerLocations());
+    end;
+
+    local procedure HasAvailabilityUsage(): Boolean
+    begin
+        if HasRecords(Database::Item) then
+            exit(true);
+        exit(HasRecords(Database::"Item Ledger Entry"));
     end;
 
     local procedure HasReservationUsage(): Boolean
@@ -316,7 +353,9 @@ table 10076836 "Inventory Setup ori"
     var
         Item: Record Item;
     begin
-        if HasRecords(Database::"Phys. Invt. Record Header") or HasRecords(Database::"Phys. Inventory Ledger Entry") then
+        if HasRecords(Database::"Phys. Invt. Record Header") then
+            exit(true);
+        if HasRecords(Database::"Phys. Inventory Ledger Entry") then
             exit(true);
         Item.SetFilter("Phys Invt Counting Period Code", '<>%1', '');
         if not Item.ReadPermission() then
