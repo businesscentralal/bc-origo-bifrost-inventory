@@ -39,6 +39,7 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
     local procedure CheckCancelNotFound(LanguageId: Integer)
     var
         ReservationEntry: Record "Reservation Entry";
+        Helper: Codeunit "Transfer Order Test Helper";
         Request: JsonObject;
         Response: JsonObject;
         EntryNo: Integer;
@@ -56,7 +57,7 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Request.Add('entryNo', EntryNo);
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.Reservation.Cancel", '', Request, true);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
         GlobalLanguage(OldLanguage);
 
         AssertRefusal(Response, 'RecordNotFound', 'entryNo');

@@ -149,7 +149,7 @@ page 96973 "Inv. MCP Fixture ori"
     local procedure ShowMissingReservation()
     var
         ReservationEntry: Record "Reservation Entry";
-        Library: Codeunit "Inventory Test Library ori";
+        Helper: Codeunit "Transfer Order Test Helper";
         Request: JsonObject;
         Response: JsonObject;
     begin
@@ -159,7 +159,7 @@ page 96973 "Inv. MCP Fixture ori"
         if not ReservationEntry.IsEmpty() then
             Error('The test selector exists; no cancellation was attempted.');
         Request.Add('entryNo', 2147483000);
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.Reservation.Cancel", '', Request, true);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
         Response.WriteTo(SeedState);
     end;
 
