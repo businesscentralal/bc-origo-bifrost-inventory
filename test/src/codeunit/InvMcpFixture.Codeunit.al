@@ -11,6 +11,7 @@ using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Customer;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
@@ -64,6 +65,47 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateScenario('W8PRV-FAIL', 'FAIL', StockBatch, Location.Code);
         CreateScenario('W8PRV-OTHER', 'OTHER', StockBatch, Location.Code);
         CreateEmptyBatch();
+    end;
+
+    /// <summary>Creates independent source lines for issue 150 in the owned evaluation company, only on explicit UI invocation.</summary>
+    procedure CreateTrackingFixtures()
+    var
+        Item: Record Item;
+        FeatureSetup: Record "Inventory Setup ori";
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned evaluation company required.');
+        if Item.Get('W8I150-L-EN') or Item.Get('W8I150-S-EN') or Item.Get('W8I150-L-IS') or Item.Get('W8I150-S-IS') then
+            Error('Owned tracking fixtures already exist. Inspect actual state before recovery.');
+        FeatureSetup.InsertIfNotExists();
+        FeatureSetup.Get();
+        FeatureSetup."Item Tracking" := true;
+        FeatureSetup.Modify();
+        CreateTrackingLine('W8I150-L-EN', false);
+        CreateTrackingLine('W8I150-S-EN', true);
+        CreateTrackingLine('W8I150-L-IS', false);
+        CreateTrackingLine('W8I150-S-IS', true);
+    end;
+
+    local procedure CreateTrackingLine(ItemNo: Code[20]; Serial: Boolean)
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryPurchase: Codeunit "Library - Purchase";
+    begin
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode."SN Specific Tracking" := Serial;
+        TrackingCode."Lot Specific Tracking" := not Serial;
+        TrackingCode.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename(ItemNo);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Modify(true);
+        LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, Item."No.", 10);
     end;
 
     local procedure CreateScenario(ItemNo: Code[20]; BatchName: Code[10]; StockBatch: Record "Item Journal Batch"; NewLocation: Code[10])
