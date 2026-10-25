@@ -2,13 +2,15 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Origo.Bifrost;
 
+using System.TestLibraries.Utilities;
+
 /// <summary>
 /// Catalogue quality guard (inventory#152): every Inventory message type must describe itself in translatable text.
 /// The description, selection description and keywords are read through the catalogue interfaces in 1033 and 1039:
 /// they must be non-empty, must differ between the languages (Icelandic is present), and a text that the compiler
 /// marks as Locked cannot be translated, so a Locked catalogue label fails here.
 /// </summary>
-codeunit 96971 "Inv. Catalogue Quality Tests ori"
+codeunit 96971 "Inv. Catalogue Quality Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;
