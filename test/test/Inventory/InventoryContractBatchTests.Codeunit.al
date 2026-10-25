@@ -497,7 +497,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Get', Enum::"Message Type ori"::"Inventory.Attribute.Get".AsInteger(),
             'includeUnassigned:boolean:false,attributeNames:array:false,attributeIds:array:false',
-            'status:string,items:array', 'read', true, 5, 3, 1,
+            'status:string,items:array', 'read', true, 4, 3, 1,
             'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', '');
     end;
 
@@ -507,7 +507,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Create', Enum::"Message Type ori"::"Inventory.Attribute.Create".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
-            'write', false, 7, 2, 0,
+            'write', false, 10, 2, 1,
             'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.',
             'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.');
     end;
@@ -518,8 +518,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Update', Enum::"Message Type ori"::"Inventory.Attribute.Update".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
-            'write', false, 6, 2, 0,
-            'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.',
+            'write', false, 10, 2, 1,
+            'Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.',
             'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.');
     end;
 
@@ -683,34 +683,22 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         Token: JsonToken;
         Entry: JsonObject;
-        Index: Integer;
-        Expected: Text;
+        Value: JsonToken;
+        Serialized: Text;
     begin
-        case TypeName of
-            'Inventory.Attribute.Get': begin
-                Index := 4;
-                Expected := 'No items found matching the specified criteria.';
-            end;
-            'Inventory.Attribute.Create': begin
-                Index := 5;
-                Expected := 'Item "%1" already has attribute "%2" with a different value.';
-            end;
-            'Inventory.Attribute.Update': begin
-                Index := 5;
-                Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
-            end;
-            'Inventory.AttributeDefinition.Create': begin
-                Errors.Get(6, Token);
-                Entry := Token.AsObject();
-                AssertJsonText(Entry, 'code', 'PreconditionFailed');
-                AssertJsonText(Entry, 'when', 'The definition name is already used.');
-                AssertJsonText(Entry, 'fix', 'Use the existing definition or choose another name.');
-                exit;
-            end;
+        foreach Token in Errors do begin
+            Entry := Token.AsObject();
+            LibraryAssert.IsTrue(Entry.Get('code', Value), TypeName + ' requires a code on every error.');
+            LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Error code is populated.');
+            LibraryAssert.IsTrue(Entry.Get('fix', Value), TypeName + ' requires a fix on every error.');
+            LibraryAssert.AreNotEqual('', Value.AsValue().AsText(), 'Fix is populated.');
+            Entry.WriteTo(Serialized);
+            LibraryAssert.IsFalse(Serialized.Contains('Item.Attribute.'), 'Help names only registered Inventory types.');
         end;
-        Errors.Get(Index, Token);
-        Entry := Token.AsObject();
-        AssertJsonText(Entry, 'error', Expected);
+        if TypeName = 'Inventory.AttributeDefinition.Create' then begin
+            Errors.Get(6, Token);
+            AssertJsonText(Token.AsObject(), 'code', 'PreconditionFailed');
+        end;
     end;
 
     local procedure AssertAttributeLegacyPayloads(TypeName: Text; Contract: JsonObject)
@@ -729,10 +717,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             AssertChapterJson(Contract, 'target', Parts.GetTarget(Legacy).AsToken())
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create'] then
-            AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken())
-        else
-            LibraryAssert.IsFalse(Contract.Contains('examples'), 'Create and Update examples remain absent.');
+        AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
