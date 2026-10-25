@@ -373,6 +373,10 @@ table 10076836 "Inventory Setup ori"
             exit(false);
         ItemLedgerEntry.ReadIsolation := IsolationLevel::ReadCommitted;
         ItemLedgerEntry.SetLoadFields("Item No.", "Location Code");
+        ItemLedgerEntry.SetFilter("Location Code", '<>%1', '');
+        if ItemLedgerEntry.IsEmpty() then
+            exit(false);
+        ItemLedgerEntry.SetRange("Location Code");
         if ItemLedgerEntry.FindSet() then
             repeat
                 if FirstLocations.Get(ItemLedgerEntry."Item No.", FirstLocation) then begin

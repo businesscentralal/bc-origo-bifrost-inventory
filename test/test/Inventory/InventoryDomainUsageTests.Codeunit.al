@@ -747,6 +747,59 @@ codeunit 96963 "Inventory Domain Usage Tests"
         Assert.IsFalse(InventorySetup.Reclassification, 'Multiple locations must belong to the same item.');
     end;
 
+    [Test]
+    procedure Scenario_AC05_BlankLedgerLocations_AvoidsLedgerScan()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        SetupRecord: RecordRef;
+        DomainField: FieldRef;
+        EntryNo: Integer;
+        FieldNo: Integer;
+        BeforeRowsRead: BigInteger;
+        RowsRead: BigInteger;
+        ExcessiveReadsErr: Label 'Expected bounded existence reads, but read %1 SQL rows.', Comment = '%1 = number of SQL rows read', Locked = true;
+    begin
+        // [SCENARIO] Issue147 AC05 | Time: no timing threshold | Risk: blank-location ledgers must not be materialized in AL.
+        // [GIVEN] No location signal and 1000 ledger entries at the blank location.
+        ClearUsage();
+        for EntryNo := 1 to 1000 do
+            InsertLedgerLocation(EntryNo, 'XITEM', '');
+        SetupRecord.GetTable(InventorySetup);
+        for FieldNo := 10 to 24 do begin
+            DomainField := SetupRecord.Field(FieldNo);
+            DomainField.Value := true;
+        end;
+        SetupRecord.SetTable(InventorySetup);
+        InventorySetup.Reclassification := false;
+        // [WHEN] Evaluate the remaining domain directly; setup-page trigger wiring is covered separately.
+        BeforeRowsRead := SessionInformation.SqlRowsRead();
+        Assert.IsFalse(InventorySetup.EnableDomainsInUse(), 'A blank-only ledger must not change any domain.');
+        RowsRead := SessionInformation.SqlRowsRead() - BeforeRowsRead;
+        // [THEN] Reclassification stays off without fetching all ledger rows into AL.
+        Assert.IsFalse(InventorySetup.Reclassification, 'One blank location is not multiple locations.');
+        Assert.IsTrue(RowsRead < 100, StrSubstNo(ExcessiveReadsErr, RowsRead));
+    end;
+
+    [Test]
+    procedure Scenario_AC05_BlankAndNamedLedgerLocations_EnableReclass()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        SetupPage: TestPage "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue147 AC05 | Time: none | Risk: the existence filter must not remove blank locations from comparison.
+        // [GIVEN] One item uses a blank and a named location, with no Location/Bin/Warehouse rows.
+        ClearUsage();
+        InsertLedgerLocation(1, 'XITEM', '');
+        InsertLedgerLocation(2, 'XITEM', 'XLOC');
+        // [WHEN] Opening setup creates the row through the real page trigger.
+        SetupPage.OpenEdit();
+        SetupPage.Reclassification.AssertEquals(true);
+        SetupPage.Close();
+        // [THEN] Blank and named locations still count as two locations for the same item.
+        InventorySetup.Get();
+        Assert.IsTrue(InventorySetup.Reclassification, 'The blank location must participate in the comparison.');
+    end;
+
     local procedure InsertLedgerLocation(EntryNo: Integer; ItemNo: Code[20]; LocationCode: Code[10])
     var
         ItemLedgerEntry: Record "Item Ledger Entry";

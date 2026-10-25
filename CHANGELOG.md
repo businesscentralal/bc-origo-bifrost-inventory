@@ -4,6 +4,7 @@
 
 ### Fixed (2026-10-25) - domain usage review corrections (#147)
 
+- `Inventory Setup ori` (table 10076836) checks for a nonblank ledger location before loading the per-item location comparison. A blank-only ledger leaves Reclassification off without fetching every row into AL; mixed blank/nonblank locations still participate in the unchanged mapping. `Inventory Domain Usage Tests` (96963) covers both cases, including a 1000-entry bounded-read regression and actual setup-page creation.
 - `Inventory Setup ori` (table 10076836) stops at the first matching usage signal. Reclassification reads the item ledger only when Location, Bin Content and Warehouse Entry supply no signal; the other multi-signal checks also return early. The domain mapping is unchanged.
 - `Inventory Install ori` (codeunit 10076835) registers the domain-usage upgrade tag for newly created companies, preserving later administrator opt-outs on the next upgrade. `Inventory Domain Usage Tests` (96963) covers new-company tag registration, preserved opt-outs, bounded reads with an existing Location and the per-item ledger-location fallback.
 
