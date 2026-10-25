@@ -2,7 +2,7 @@
   "id": "02701c94-c962-4825-92c7-ef9f70311a2b",
   "name": "Bifrost Inventory",
   "publisher": "Origo",
-  "version": "28.3.1.0",
+  "version": "28.3.2.0",
   "brief": "Bifrost Inventory - message types for inventory operations",
   "description": "Adds Bifrost message types for Microsoft Dynamics 365 Business Central inventory operations that Bifrost Foundation does not cover. Covers item attributes, transfer orders, assembly orders, item tracking, reservations, physical inventory, reclassification journals, item application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and unit price updates - so an agent or integration can run inventory work through one governed API. Each domain can be switched on or off per company, and transfer and assembly posting needs its own permission set.",
   "url": "https://www.origo.is/",
