@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-25) - transfer posting help (#151)
+
+- Correct the TransferOrder.Post invalid postingType condition in contract help (10076919). ShipReceive remains refused; the description no longer claims it appears in the runtime error text. No posting behavior or accepted values change.
+
 ### Fixed
 
 - Cost refusal regression fixture (96937) scopes its Field Access page before editing the user control, verifies that only Last Direct Cost is restricted and restores its row before assertions. This prevents unintended wildcard restrictions and cascading failures; product permission and aggregation behavior is unchanged.
