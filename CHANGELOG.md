@@ -6,6 +6,9 @@
 
 - Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.
 
+### Fixed (2026-10-25) - transfer posting help (#151)
+
+- Correct the TransferOrder.Post invalid postingType condition in contract help (10076919). ShipReceive remains refused; the description no longer claims it appears in the runtime error text. No posting behavior or accepted values change.
 
 ### Fixed
 
