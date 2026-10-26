@@ -4,10 +4,12 @@
 
 ### Fixed (2026-10-25) - catalogue quality guard compiles (inventory#152, PR 163)
 
-- Test codeunit 96971 now imports `System.TestLibraries.Utilities` (its `GlobalLanguage` calls resolved from that library) and is renamed from the 31-character `Inv. Catalogue Quality Tests ori` to the 30-character `Inv. Catalogue Quality Tests` (AL0185/AL0305 object-name length). No behaviour, test, object ID or catalogue text changed; the guard still reads description, selection description and keywords of every Inventory message type in LCID 1033 and 1039.
+- Test codeunit 96971 now imports `System.TestLibraries.Utilities` (which resolves `Codeunit "Library Assert"`; `GlobalLanguage` is an AL built-in) and is renamed from the 32-character `Inv. Catalogue Quality Tests ori` to the 28-character `Inv. Catalogue Quality Tests` (AL0305 object-name length limit 30). No behaviour, test, object ID or catalogue text changed; the guard still reads description, selection description and keywords of every Inventory message type in LCID 1033 and 1039.
+
 ### Added (2026-10-23) - catalogue quality guard (inventory#152, AC1)
 
-- New test codeunit 96971 `Inv. Catalogue Quality Tests ori` (test range 96900-96999): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
+- New test codeunit 96971 `Inv. Catalogue Quality Tests` (test range 96900-96999): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
+
 ### Fixed (2026-10-25) - domain usage review corrections (#147)
 
 - `Inventory Setup ori` (table 10076836) checks for a nonblank ledger location before loading the per-item location comparison. A blank-only ledger leaves Reclassification off without fetching every row into AL; mixed blank/nonblank locations still participate in the unchanged mapping. `Inventory Domain Usage Tests` (96963) covers both cases, including a 1000-entry bounded-read regression and actual setup-page creation.
