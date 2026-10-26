@@ -16,6 +16,8 @@
 
 ### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
 
+- Test-only fixture codeunit/page 96973 supports the isolated owned `CRONUS W8 Inv164` company with a separate `R8` record prefix, preserving existing `W8` fixtures during exact-tip re-verification after the main merge. Existing fixture and company guards remain.
+
 - Correct the cross-reference in Reclassification.Post notes to describe PreviewPost as native posting simulation with captured entries and rollback (10076888; PR #164 F1).
 
 - `Inventory.Reclassification.PreviewPost` now runs native posting preview, validates an existing nonempty Transfer batch, returns captured ledger entries and rolls back simulated posting changes. Existing `lines`, `lineCount` and `rollback` fields remain. The posting gate is intentional for native simulation. `Inventory.Reclassification.Check` now requires only journal read permission (codeunits 10076887, 10076889; execute grants in 10076835/10076836; tests 96971, 96972 and permission set 96971).

@@ -1,7 +1,5 @@
 namespace Origo.Bifrost.Inventory.Test;
 
-using Microsoft.Inventory.Item;
-
 /// <summary>Explicit Web Client entry point for creating the test app's owned MCP fixtures; never included in the product app.</summary>
 page 96973 "Inv. MCP Fixture ori"
 {
@@ -107,9 +105,9 @@ page 96973 "Inv. MCP Fixture ori"
 
     local procedure ReadState()
     var
-        Item: Record Item;
+        Seed: Codeunit "Inv. MCP Fixture ori";
     begin
-        if Item.Get('W8PRV-EN') then
+        if Seed.FixtureExists() then
             SeedState := 'Fixture exists; inspect records, do not replay.'
         else
             SeedState := 'Fixture absent.';
