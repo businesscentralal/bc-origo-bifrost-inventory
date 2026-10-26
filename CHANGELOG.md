@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-25) - domain usage review corrections (#147)
+
+- `Inventory Setup ori` (table 10076836) checks for a nonblank ledger location before loading the per-item location comparison. A blank-only ledger leaves Reclassification off without fetching every row into AL; mixed blank/nonblank locations still participate in the unchanged mapping. `Inventory Domain Usage Tests` (96963) covers both cases, including a 1000-entry bounded-read regression and actual setup-page creation.
+- `Inventory Setup ori` (table 10076836) stops at the first matching usage signal. Reclassification reads the item ledger only when Location, Bin Content and Warehouse Entry supply no signal; the other multi-signal checks also return early. The domain mapping is unchanged.
+- `Inventory Install ori` (codeunit 10076835) registers the domain-usage upgrade tag for newly created companies, preserving later administrator opt-outs on the next upgrade. `Inventory Domain Usage Tests` (96963) covers new-company tag registration, preserved opt-outs, bounded reads with an existing Location and the per-item ledger-location fallback.
+
+### Fixed (2026-10-23) - company domain defaults from usage (#147)
+
+- `Inventory Setup ori` table 10076836 derives new-row defaults from native company data. `Inventory Upgrade ori` (10076836) runs the same off-to-on evaluation once per company under its own upgrade tag; `Inventory Install ori` (10076835) applies it on fresh installs. Enabled domains and absent rows are preserved, and unchanged rows are not modified. No licence, consent or HTTP setting is written.
+- Usage mapping: attributes → Item Attribute; transfer → in-transit Location/Transfer Header/Transfer Route; assembly → BOM Component/Assembly Header/Production BOM Header; reservations → Reservation-status entries; tracking → tracking codes, tracked Items or lot/serial/package entries; physical inventory → recording headers, physical ledger or counting-period Items; costing → Value Entry/order adjustment; reclassification → locations, bins, warehouse entries or multiple ledger locations per Item; application → Item Application Entry; periods → Inventory Period; prices → Item Price List Lines; references → Item Reference; availability → Items/ledger entries (valid demand/supply refers to Items); charges → Item Charge; categories → Item Category/categorized Items. README documents the mapping and the existing Foundation discovery boundary for disabled types.
+- Native regressions in `Inventory Domain Usage Tests` (96963) cover all fifteen domains with and without data, the actual setup page/insert trigger, upgrade tagging, existing enabled switches, missing setup, idempotence and distinguishing transfer/reservation signals. The test app adds Microsoft's System Application Test Library for supported upgrade-tag fixture cleanup. `.claude/CLAUDE.md` no longer describes the superseded opt-in default.
+
 ### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
 
 - Correct the cross-reference in Reclassification.Post notes to describe PreviewPost as native posting simulation with captured entries and rollback (10076888; PR #164 F1).
