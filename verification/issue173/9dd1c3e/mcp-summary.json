@@ -1,0 +1,10 @@
+{
+  "sha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "touchedMessageTypes": [],
+  "notApplicableReason": "Only registration subscriber inherent Execute properties and own-suite permission fixture change; no message implementation, handler, contract, enum or dispatcher change.",
+  "executed": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "fixturesCreated": 0
+}
