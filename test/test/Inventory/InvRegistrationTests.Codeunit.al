@@ -21,6 +21,7 @@ codeunit 96972 "Inv. Registration Tests ori"
         // Story #173 AC02 | Time: independent | Risk: an event subscriber requires extra Execute grants.
         BifrostSetup.InsertIfNotExists();
 
+        LowerPermissions.StartLoggingNAVPermissions();
         LowerPermissions.SetExactPermissionSet('BIFROST LicAdm ori');
         LowerPermissions.AddPermissionSet('Inv Setup Test');
         Assert.IsFalse(BifrostSetup.WritePermission(), 'Licence administration must not grant direct Setup writes.');
@@ -29,5 +30,6 @@ codeunit 96972 "Inv. Registration Tests ori"
         Assert.IsFalse(SetupPage.Editable(), 'A licence administrator must not become a Bifrost administrator.');
         Assert.IsTrue(SetupPage.RefreshLicense.Visible(), 'The licence-administrator action remains available.');
         SetupPage.Close();
+        LowerPermissions.StopLoggingNAVPermissions();
     end;
 }
