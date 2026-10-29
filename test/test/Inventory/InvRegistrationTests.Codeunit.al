@@ -26,6 +26,7 @@ codeunit 96972 "Inv. Registration Tests ori"
 
         LowerPermissions.StartLoggingNAVPermissions();
         LowerPermissions.SetExactPermissionSet('BIFROST LicAdm ori');
+        // Test-only page/platform access also supports Foundation 28.0.3.530.
         LowerPermissions.AddPermissionSet('Inv Setup Test');
         HasDirectSetupWrite := BifrostSetup.WritePermission();
 

@@ -5,7 +5,7 @@
 ### Fixed (2026-10-29) - registration under restricted licence administration (#173)
 
 - `Inventory Registration ori` (codeunit 10076845) declares `InherentPermissions = X` and `InherentEntitlements = X`, so its `OnRegisterApps` subscriber can run when a restricted licence administrator opens Bifröst Setup. No permission set is widened.
-- `Inv. Registration Tests ori` (codeunit 96972) opens Foundation's actual Setup page under the exact `BIFROST LicAdm ori` permission set plus a test-only Microsoft platform baseline with Inventory installed, and checks that the page remains non-editable while the licence-administrator action is visible. The test does not invoke Sync or write licence, EULA or trial state.
+- `Inv. Registration Tests ori` (codeunit 96972) opens Foundation's actual Setup page under the exact `BIFROST LicAdm ori` permission set plus test-only Setup-page Execute (needed by the supported Foundation 28.0.3.530 floor) and a Microsoft platform baseline with Inventory installed, and checks that the page remains non-editable while the licence-administrator action is visible. The test does not invoke Sync or write licence, EULA or trial state.
 
 ### Fixed (2026-10-25) - domain usage review corrections (#147)
 
