@@ -1,0 +1,22 @@
+{
+  "sha": "14d645b6deabc685048977f87977db1defd009e0",
+  "containerId": "f0a32cf1f8d6",
+  "FoundationVersion": "28.0.3.530",
+  "testAppVersion": "28.3.2.179",
+  "companyName": "My Company",
+  "fullSuite": false,
+  "codeunit": 96972,
+  "finishedAt": "2026-10-29T09:41:00.502Z",
+  "durationMs": 125285,
+  "ok": false,
+  "passed": 0,
+  "failed": 1,
+  "skipped": 0,
+  "failures": [
+    {
+      "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "message": "Unexpected CLR exception thrown.: Microsoft.Dynamics.Framework.UI.FormAbortException: Page Bifrost Setup has to close.\\ ---&gt; Microsoft.Dynamics.Nav.Types.NavPermissionException: Sorry, the current permissions prevented the action. (CodeUnit 10077958 Eula Consent ori Execute: Bifrost Foundation)\\   at Microsoft.Dynamics.Nav.Client.DataBinder.NstDataAccess.OpenForm(LogicalForm mainForm, ICollection`1 subForms)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.TryOpenForm(Logic",
+      "classname": "96972 Inv. Registration Tests ori"
+    }
+  ]
+}
