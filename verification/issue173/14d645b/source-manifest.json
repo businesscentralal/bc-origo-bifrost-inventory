@@ -1,0 +1,10 @@
+{
+  "sha": "14d645b6deabc685048977f87977db1defd009e0",
+  "files": {
+    "CHANGELOG.md": "c211f1a1b0b64badf4a0c8bf763bc851ae563d77621d8b3e427a896118d611f6",
+    "app/src/Lifecycle/InventoryRegistration.Codeunit.al": "73bdddc08cb5e4a184a55ed42f94deba63d36e047e0bfe30742c4dfa83ab451e",
+    "test/src/InvSetupTest.PermissionSet.al": "9e7b99a55646ab0eb487c35df4743856d098ee2c01b7d791e08fd7523716f00a",
+    "test/src/InvRegExclTest.PermissionSet.al": "21f6229c746489dafc3472726a69a3354e8995ca8e031155f1c6e3ae97c9b0d9",
+    "test/test/Inventory/InvRegistrationTests.Codeunit.al": "f2182224889f60e4087f8546aef6be9db24de0f5787f4ed70935c0495d1cacbd"
+  }
+}

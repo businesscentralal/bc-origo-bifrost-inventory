@@ -1,0 +1,13 @@
+Microsoft (R) AL Compiler version 18.0.41.62505
+Copyright (C) Microsoft Corporation. All rights reserved
+
+Compilation started for project 'Bifrost Inventory - Tests' containing '59' files at '09:29:52.309'.
+
+evidence/inventory173-worker4/compile-source/test/src/InvCostReadTest.PermissionSet.al(4,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory173-worker4/compile-source/test/test/Inventory/InventoryTrackingReadTests.Codeunit.al(7,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory173-worker4/compile-source/test/test/Inventory/InvPostingGateTests.Codeunit.al(5,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory173-worker4/compile-source/test/test/Inventory/InventoryDomainUsageTests.Codeunit.al(10,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory173-worker4/compile-source/test/test/Inventory/InventoryPhysicalTests.Codeunit.al(8,1): info AA0477: The using statements are not in a sorted order.
+
+Compilation ended at '09:30:01.526'.
+
