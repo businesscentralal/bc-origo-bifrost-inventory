@@ -1,0 +1,21 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "FoundationVersion": "28.0.10.632",
+  "inventoryVersion": "28.3.2.183",
+  "tool": "list_message_types",
+  "namespace": "Inventory",
+  "executed": 2,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "lcids": [
+    1033,
+    1039
+  ],
+  "rowsPerLanguage": 49,
+  "sameDescriptionTypes": [],
+  "coverageLimitation": "Namespace Inventory only,49 visible rows; not all59 types across namespaces. These optional reads do not replace guard96971 full enum coverage or independent Claude acceptance.",
+  "dataSetup": "Read-only catalogue: no business fixtures needed, created0/remaining0",
+  "verified": true
+}

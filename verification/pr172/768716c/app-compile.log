@@ -1,0 +1,9 @@
+Microsoft (R) AL Compiler version 18.0.41.62505
+Copyright (C) Microsoft Corporation. All rights reserved
+
+Compilation started for project 'Bifrost Inventory' containing '110' files at '11:10:30.166'.
+
+evidence/inventory172-worker4-20261029/compile-source/app/src/Setup/InventorySetup.Table.al(10,1): info AA0477: The using statements are not in a sorted order.
+
+Compilation ended at '11:10:45.989'.
+

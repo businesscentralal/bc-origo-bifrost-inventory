@@ -1,0 +1,762 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "testAppId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+  "version": "28.3.2.183",
+  "artifactSha256": "1ac18083bbec16f5a5fd8449b4c820bfa45e4d41c43750f9e0a5dd7115e0fb34",
+  "expectedMethods": 422,
+  "codeunitCount": 47,
+  "sourceMatchesCompiled": true,
+  "codeunits": [
+    {
+      "id": 96901,
+      "name": "Item AttrDef Tests ori",
+      "methods": [
+        "DefinitionCreate_Option_CreatesValues",
+        "DefinitionCreate_DuplicateName_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96900,
+      "name": "Item Attribute Tests ori",
+      "methods": [
+        "Get_ByItemNo_ReturnsAttributes",
+        "Get_MissingItem_ReturnsError",
+        "Create_Idempotent_SameValue_ChangedFalse",
+        "Create_ConflictWithoutOverwrite_ReturnsError",
+        "Create_ConflictWithOverwrite_Succeeds",
+        "Update_Existing_ReturnsBeforeAfter",
+        "Update_MissingMapping_ReturnsError",
+        "Create_ServiceItem_Accepted",
+        "Enum_ValuesResolveToImpl",
+        "DataRecords_WriteRestricted_AttributeTables"
+      ],
+      "count": 10
+    },
+    {
+      "id": 96953,
+      "name": "Avail. By Period Perm",
+      "methods": [
+        "WithoutInvRead_ReturnsPermissionDenied"
+      ],
+      "count": 1
+    },
+    {
+      "id": 96952,
+      "name": "Avail. By Period Tests",
+      "methods": [
+        "PostedItem_ReturnsPeriodRows",
+        "TwoItems_ReturnOneResultEach",
+        "MissingItemNo_ReturnsMissingParameter",
+        "UnknownKey_ReturnsUnknownParameter",
+        "NumberItemNo_ReturnsInvalidParameterFormat",
+        "BothForms_ReturnConflictingIdentifiers",
+        "UnknownPeriodType_ReturnsInvalidParameter",
+        "MissingItem_ReturnsRecordNotFound",
+        "TooManyPeriods_ReturnsLimitExceeded",
+        "TooManyItems_ReturnsLimitExceeded",
+        "ServiceAndNonInventory_ReturnPreconditionFailed",
+        "BalanceAtDate_ReturnsCumulativeBalance",
+        "UnknownAmountType_ReturnsInvalidParameter"
+      ],
+      "count": 13
+    },
+    {
+      "id": 96971,
+      "name": "Inv. Catalogue Quality Tests",
+      "methods": [
+        "EveryType_CatalogueTextsTranslatableAt1039",
+        "EveryType_CatalogueTextsAreNotCopyPasted"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96970,
+      "name": "Inv. Contract Parity Tests ori",
+      "methods": [
+        "EveryType_DeclaresEveryRequiredChapter",
+        "EveryEnvelope_StatesSubjectVersionAndContentType",
+        "EveryChangingType_DeclaresAWorkflow",
+        "EveryErrorEntry_CarriesCodeConditionAndFix",
+        "EveryType_DirectionMatchesEffect",
+        "EveryParameter_IsDescribed",
+        "ResponseAndExamples_AreComplete",
+        "RelatedAndWorkflow_NameExistingTypes",
+        "EveryType_DiscoveryTextsExistInBothLanguages",
+        "NotesAndOverview_NameNoAlObjects"
+      ],
+      "count": 10
+    },
+    {
+      "id": 96921,
+      "name": "Inventory Contract Batch Tests",
+      "methods": [
+        "CurrentNotes_ReplacePreviousOutput",
+        "ScopedCatalogue_UsesIcelandicAt1039",
+        "RemainingCatalogue_UsesIcelandicAt1039",
+        "PublicHelp_ClearsDeveloperNotes",
+        "AllInventoryTypes_HaveRequiredContractChapters",
+        "AllInventoryTypes_HaveBilingualDiscovery",
+        "AllInventoryTypes_RelatedNamesExist",
+        "PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed",
+        "InventoryEffects_MatchOperation",
+        "AttributeGet_RegisteredContract_DeclaresReadChapters",
+        "AttributeCreate_RegisteredContract_DeclaresWriteChapters",
+        "AttributeUpdate_RegisteredContract_DeclaresWriteChapters",
+        "AttributeDefinition_RegisteredContract_HasNoTarget",
+        "CostingContracts_DeclareTypedDefaults",
+        "CostingContracts_DeclareFilterPrecondition",
+        "CostingContracts_DeclareDispatcherFailure",
+        "CostingContracts_DiscloseReportOptions",
+        "CostingContracts_ClearReusedChapters",
+        "CostingInterfaces_AllChapters_ReplaceReusedOutputs"
+      ],
+      "count": 19
+    },
+    {
+      "id": 96933,
+      "name": "Inventory Cost Perm. Tests",
+      "methods": [
+        "CostGet_ReadOnlyCaller_ReturnsSnapshotWithoutWriteRights",
+        "CostGet_NoItemRead_RefusesBeforeLicense",
+        "CostUpdate_ReadOnlyCaller_RefusesBeforeLicense",
+        "CostUpdate_NativeWriteWithoutPostToken_Enabled",
+        "PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense",
+        "PriceUpdate_NativeWriteWithoutPostToken_Enabled",
+        "CostFieldHints_ReadCaller_KeepWritePermissionsAbsent"
+      ],
+      "count": 7
+    },
+    {
+      "id": 96936,
+      "name": "Inventory Cost Read Tests",
+      "methods": [
+        "Scenario_AC01_ItemNo_ReturnsCurrentSnapshot",
+        "Scenario_AC01_SystemIdAliases_ReturnSameItem",
+        "Scenario_AC01_SubjectPrecedesData_SelectsSubject",
+        "Scenario_AC01_TableView_ReturnsSelectedItems",
+        "Scenario_AC02_MissingItem_ReturnsStructuredError",
+        "ReadCosts_MalformedLocation_ReturnsStructuredError",
+        "ReadCosts_DatedStock_CalculatesQuantityWithoutWrites",
+        "ReadCosts_VariantStock_SelectsOnlyRequestedVariant",
+        "Scenario_AC01_FIFO_NativeSnapshotIsReadOnlyInBothLanguages",
+        "Scenario_AC01_LIFO_NativeSnapshotIsReadOnlyInBothLanguages",
+        "Scenario_AC01_Average_NativeSnapshotIsReadOnlyInBothLanguages",
+        "Scenario_AC01_Standard_NativeSnapshotIsReadOnlyInBothLanguages",
+        "Scenario_AC01_Specific_NativeSnapshotIsReadOnlyInBothLanguages"
+      ],
+      "count": 13
+    },
+    {
+      "id": 96937,
+      "name": "Inventory Cost Write Tests",
+      "methods": [
+        "Scenario_AC07_FIFO_ValidatesCosts",
+        "Scenario_AC07_LIFO_ValidatesCosts",
+        "Scenario_AC07_Average_ValidatesCosts",
+        "Scenario_AC07_Specific_ValidatesCosts",
+        "Scenario_AC08_Standard_RefusesWithoutChangingItem",
+        "Scenario_AC09_Blocked_RequiresExplicitOptIn",
+        "UpdateCost_MethodMismatch_PreservesItem",
+        "UpdateCost_RestrictedField_PreservesAllFields",
+        "UpdateCost_NoSelection_Refuses",
+        "UpdateCost_NullCost_ReturnsErrorWithoutWrite",
+        "Scenario_AC10_FieldHints_LeaveUnrelatedTablesAvailable",
+        "UpdateCost_NativeSubscriberFailure_RollsBackProcess",
+        "UpdateCost_BlockedIcelandic_PreservesValue"
+      ],
+      "count": 13
+    },
+    {
+      "id": 96963,
+      "name": "Inventory Domain Usage Tests",
+      "methods": [
+        "Scenario_AC05_AttributesUsage_EnablesDomain",
+        "Scenario_AC05_AttributesNoUsage_PreservesOff",
+        "Scenario_AC05_TransferUsage_EnablesDomain",
+        "Scenario_AC05_TransferNoUsage_PreservesOff",
+        "Scenario_AC05_AssemblyUsage_EnablesDomain",
+        "Scenario_AC05_AssemblyNoUsage_PreservesOff",
+        "Scenario_AC05_ReservationsUsage_EnablesDomain",
+        "Scenario_AC05_ReservationsNoUsage_PreservesOff",
+        "Scenario_AC05_TrackingUsage_EnablesDomain",
+        "Scenario_AC05_TrackingNoUsage_PreservesOff",
+        "Scenario_AC05_PhysicalUsage_EnablesDomain",
+        "Scenario_AC05_PhysicalNoUsage_PreservesOff",
+        "Scenario_AC05_CostingUsage_EnablesDomain",
+        "Scenario_AC05_CostingNoUsage_PreservesOff",
+        "Scenario_AC05_ReclassUsage_EnablesDomain",
+        "Scenario_AC05_ReclassNoUsage_PreservesOff",
+        "Scenario_AC05_ApplicationUsage_EnablesDomain",
+        "Scenario_AC05_ApplicationNoUsage_PreservesOff",
+        "Scenario_AC05_PeriodUsage_EnablesDomain",
+        "Scenario_AC05_PeriodNoUsage_PreservesOff",
+        "Scenario_AC05_PriceUsage_EnablesDomain",
+        "Scenario_AC05_PriceNoUsage_PreservesOff",
+        "Scenario_AC05_ReferenceUsage_EnablesDomain",
+        "Scenario_AC05_ReferenceNoUsage_PreservesOff",
+        "Scenario_AC05_AvailabilityUsage_EnablesDomain",
+        "Scenario_AC05_AvailabilityNoUsage_PreservesOff",
+        "Scenario_AC05_ChargeUsage_EnablesDomain",
+        "Scenario_AC05_ChargeNoUsage_PreservesOff",
+        "Scenario_AC05_CategoryUsage_EnablesDomain",
+        "Scenario_AC05_CategoryNoUsage_PreservesOff",
+        "Scenario_AC03_AlreadyOnWithoutUsage_StaysOn",
+        "Scenario_AC04_SecondEvaluation_DoesNotModifyRow",
+        "Scenario_AC01_UpgradeExistingOffRow_EnablesUsageOnce",
+        "Scenario_AC02_MissingSetup_StaysAbsentAndEnabled",
+        "Scenario_AC02_SetupPage_CreatesUsageDefaults",
+        "Scenario_AC05_NonTransitLocation_DoesNotEnableTransfer",
+        "Scenario_AC05_SurplusTracking_DoesNotEnableReservation",
+        "Scenario_AC05_ProductionBOM_EnablesAssembly",
+        "Scenario_AC03_NewCompanyTags_PreserveLaterOptOut",
+        "Scenario_AC05_LocationUsage_AvoidsLedgerScan",
+        "Scenario_AC05_LedgerLocationsForSameItem_EnableReclass",
+        "Scenario_AC05_LedgerLocationsForDifferentItems_StayOff",
+        "Scenario_AC05_BlankLedgerLocations_AvoidsLedgerScan",
+        "Scenario_AC05_BlankAndNamedLedgerLocations_EnableReclass"
+      ],
+      "count": 44
+    },
+    {
+      "id": 96932,
+      "name": "Inventory Item Quantity Tests",
+      "methods": [
+        "CostGet_ItemNo_ReturnsCalculatedInventory",
+        "RevaluationCalculate_UsesLedgerCost"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96930,
+      "name": "Inventory Item Refusal Tests",
+      "methods": [
+        "CostGet_MissingItemNo_IsMissingParameterIn1033",
+        "CostGet_MissingItemNo_IsMissingParameterIn1039",
+        "TrackingGet_MissingItemNo_IsMissingParameterIn1033",
+        "TrackingGet_MissingItemNo_IsMissingParameterIn1039",
+        "TrackingGet_BlankItemNo_IsMissingParameter",
+        "RevaluationCalculate_MissingItemNo_IsMissingParameterIn1039",
+        "RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1033",
+        "RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1039",
+        "AssemblyOrderCreate_ZeroQuantity_IsIcelandicIn1039",
+        "PhysInventoryRecord_UnknownLine_IsIcelandicIn1039",
+        "ReclassificationDomainOff_NextStepIsIcelandicIn1039"
+      ],
+      "count": 11
+    },
+    {
+      "id": 96931,
+      "name": "Inventory Item Subject Tests",
+      "methods": [
+        "CostGet_SubjectAndDifferentItemNo_ReturnsConflict",
+        "CostGet_Subject_ReturnsThatItem",
+        "CostGet_MissingItemNoAndSubject_ReturnsMissingParameter",
+        "ReservationGet_Subject_ExcludesOtherItems"
+      ],
+      "count": 4
+    },
+    {
+      "id": 96945,
+      "name": "Inventory Physical Perm Tests",
+      "methods": [
+        "Scenario_AC07_JournalWriterWithoutItemPost_IsDenied",
+        "Scenario_AC07_JournalWriterWithItemPost_IsEnabled",
+        "Scenario_AC07_PreviewMirrorsFoundationItemPostGate"
+      ],
+      "count": 3
+    },
+    {
+      "id": 96944,
+      "name": "Inventory Physical Tests",
+      "methods": [
+        "Scenario_AC01_Calculate_SelectedStockCreatesNativeLines",
+        "Scenario_AC01_Calculate_MissingPostingDate_Refuses",
+        "Scenario_AC02_RecordCount_OmittedAndZeroDiffer",
+        "Scenario_AC04_EqualCount_IsReady",
+        "Scenario_AC05_Preview_RollsBackPhysicalEntries",
+        "Scenario_AC06_Post_ReturnsBothNativeLedgerRanges",
+        "Scenario_AC03_WrongTemplate_AllFiveRefuse",
+        "RecordCount_LaterInvalidCount_PreservesFirstLine",
+        "LegacyRecord_Quantity_UsesNativeCountValidation",
+        "RecordCount_MalformedQuantity_Refuses",
+        "RecordCount_AfterModifyError_RollsBackNativeWrite",
+        "Scenario_AC01_HelpCalculateExample_CreatesOnlyOwnedLines",
+        "Scenario_AC02_HelpRecordCountExample_WritesZeroWithoutPosting",
+        "Scenario_AC02_HelpLegacyRecordExample_RefusesCanonicalType"
+      ],
+      "count": 14
+    },
+    {
+      "id": 96939,
+      "name": "Inventory Price Write Tests",
+      "methods": [
+        "UpdatePrice_Subject_ValidatesAndReturnsStoredPrice",
+        "UpdatePrice_SystemId_SupportsZeroPrice",
+        "UpdatePrice_TableView_ResolvesOneItem",
+        "UpdatePrice_MultipleItems_RefusesWithoutWrites",
+        "UpdatePrice_NativeFailure_RollsBackSubscriberWrite",
+        "UpdatePrice_RestrictedField_PreservesPrice",
+        "UpdatePrice_Blocked_RequiresExplicitOptIn",
+        "UpdatePrice_MissingPrice_ReturnsError",
+        "UpdatePrice_NullPrice_ReturnsError",
+        "UpdatePrice_BooleanPrice_ReturnsError",
+        "UpdatePrice_ObjectPrice_ReturnsError",
+        "UpdatePrice_ArrayPrice_ReturnsError",
+        "UpdatePrice_MalformedPrice_ReturnsError",
+        "UpdatePrice_NullOptIn_ReturnsError",
+        "UpdatePrice_StringOptIn_ReturnsError",
+        "UpdatePrice_NoSelection_Refuses",
+        "UpdatePrice_BlankIdentifier_Refuses",
+        "UpdatePrice_UnknownField_Refuses",
+        "UpdatePrice_PriceList_Refuses",
+        "UpdatePrice_BlockedIcelandic_PreservesValue"
+      ],
+      "count": 20
+    },
+    {
+      "id": 96941,
+      "name": "Inventory Revaluation Tests",
+      "methods": [
+        "Scenario_AC05_Preview_RollsBackNativeLedgerChanges",
+        "Scenario_AC06_Post_ReturnsActualRegisterAndValue",
+        "Scenario_AC06_PostFailure_PreservesJournalAndLedgers",
+        "Post_WrongTemplate_Refuses",
+        "Preview_WrongTemplate_Refuses",
+        "Post_AfterNativeInsertFailure_RollsBackActualWrite",
+        "Revaluation_LIFO_NativePreviewAndPost",
+        "Revaluation_Average_NativePreviewAndPost",
+        "Revaluation_Standard_NativePreviewAndPost",
+        "Revaluation_Specific_NativeSerialPreviewAndPost"
+      ],
+      "count": 10
+    },
+    {
+      "id": 96927,
+      "name": "Inventory Tracking Read Tests",
+      "methods": [
+        "Scenario_AC1_DocumentKeysReadOnlyOwnTracking",
+        "Scenario_AC1_SystemIdMatchesDocumentKeys",
+        "Scenario_AC1_SubjectLineGuidReadsTracking",
+        "Scenario_AC2_PackageAndSerialAreNotLost",
+        "Scenario_AC2_ItemSystemIdReadsPendingTracking",
+        "Scenario_AC2_TrackingTableViewReadsOnlySelectedItem",
+        "Scenario_AC4_AvailabilityTableViewReadsOnlySelectedItem",
+        "Scenario_AC3_TrackingTableViewWrongTypeIsRefused",
+        "Scenario_AC4_AvailabilityTableViewWrongTypeIsRefused",
+        "Scenario_AC3_UnknownDocumentReturnsError",
+        "Scenario_AC3_NoItemSelectionIsRefused",
+        "Scenario_AC3_BlankItemNoIsRefused",
+        "Scenario_AC3_UntrackedItemReturnsNotFoundWithoutWrites",
+        "Scenario_AC3_UntrackedDocumentReturnsNotFoundWithoutWrites",
+        "Scenario_AC3_InvalidFilterAndPagingReturnError",
+        "Scenario_AC8_PagingPreservesTotalAndOrder",
+        "Scenario_AC2_LocationCodeDoesNotOverrideFilter",
+        "Scenario_AC4_AvailabilityGroupsPostedReceipts",
+        "Scenario_AC4_AvailabilitySubtractsNativeReservation",
+        "Scenario_AC5_TrackingEntryExpirationIsPreserved",
+        "Scenario_AC2_PackageOnlyTrackingIsVisible",
+        "Scenario_AC5_DisabledPolicyReturnsBlank",
+        "Scenario_AC5_GroupedDateDisagreementReturnsBlank",
+        "Scenario_AC5_GroupedEntryDateAndUndatedFallback",
+        "Scenario_AC5_LotDatedThenUndatedReturnsBlank",
+        "Scenario_AC5_LotUndatedThenDatedReturnsBlank",
+        "Scenario_AC5_PackageDatedThenUndatedReturnsBlank",
+        "Scenario_AC5_PackageUndatedThenDatedReturnsBlank",
+        "Scenario_AC4_ReservationCarriesSerialAndPackage",
+        "Scenario_AC5_PackageDisagreementAndDisabledPolicy",
+        "Scenario_AC5_EnabledUndatedEntryReturnsBlank",
+        "Scenario_AC4_PublicAvailabilityExample_ReadsOwnedStock",
+        "Scenario_AC7_ReadTypes_DoNotAddTableWriteRestrictions",
+        "Scenario_AC1_PurchaseAdapter_MatchesFullNativeRecord",
+        "Scenario_AC1_SalesAdapter_MatchesFullNativeRecord",
+        "Scenario_AC1_TransferOutbound_MatchesFullNativeRecord",
+        "Scenario_AC1_TransferInbound_MatchesFullNativeRecord",
+        "Scenario_AC1_TransferOutbound_ReadsNativeTracking",
+        "Scenario_AC1_TransferInbound_ReadsShippedTracking"
+      ],
+      "count": 39
+    },
+    {
+      "id": 96922,
+      "name": "Inv. Lookup Contract Tests",
+      "methods": [
+        "AllLookupTypes_ErrorsChapter_ListsDataAndKeys",
+        "AllLookupTypes_ErrorsChapter_ExactlyOneMultipleErrors",
+        "NonLookupTypes_ErrorsChapter_NoMultipleErrors",
+        "AttributeBlocked_BothLanguages_PlaceholderAndKeyPreserved",
+        "AllLookupTypes_BothLanguages_KeepEnglishContract"
+      ],
+      "count": 5
+    },
+    {
+      "id": 96923,
+      "name": "Inv. Lookup Format Tests",
+      "methods": [
+        "TransferStatistics_ArrayData_TypedError",
+        "TransferStatistics_InvalidJson_TypedError",
+        "TransferStatistics_ObjectIdentifier_TypedError",
+        "TransferStatistics_NullIdentifier_TypedError",
+        "TransferStatistics_NumericIdentifier_TypedError",
+        "TransferStatistics_ArrayIdentifier_TypedError",
+        "TransferStatistics_BooleanIdentifier_TypedError",
+        "TransferStatistics_NullSystemId_TypedError",
+        "TransferStatistics_TwoWrongKeys_OrderedErrors",
+        "TransferStatistics_EmptyIdentifier_MissingParameter",
+        "AssemblyStatistics_ArrayData_TypedError",
+        "AssemblyStatistics_InvalidJson_TypedError",
+        "AssemblyStatistics_ObjectIdentifier_TypedError",
+        "AssemblyStatistics_NullIdentifier_TypedError",
+        "AssemblyStatistics_NumericIdentifier_TypedError",
+        "AssemblyStatistics_ArrayIdentifier_TypedError",
+        "AssemblyStatistics_BooleanIdentifier_TypedError",
+        "AssemblyStatistics_NullSystemId_TypedError",
+        "AssemblyStatistics_TwoWrongKeys_OrderedErrors",
+        "AssemblyStatistics_EmptyIdentifier_MissingParameter",
+        "TransferStatistics_ExistingSubjectWrongKey_NoTotals",
+        "AssemblyStatistics_ExistingSubjectWrongKey_NoTotals"
+      ],
+      "count": 22
+    },
+    {
+      "id": 96919,
+      "name": "Inv. Posting Gate Grant Tests",
+      "methods": [
+        "TransferPost_WithInvPost_IsEnabled",
+        "AssemblyPost_WithInvPost_IsEnabled",
+        "HasPostingPermission_WithInvPost_IsTrue",
+        "AssertCanPost_WithInvPost_WritesNoError"
+      ],
+      "count": 4
+    },
+    {
+      "id": 96918,
+      "name": "Inv. Posting Gate Tests",
+      "methods": [
+        "InventoryRead_PreservesAttributeReadOnlyPermissions",
+        "InventoryFull_PreservesAttributeWritePermissions",
+        "TransferPost_WithoutInvPost_IsDisabled",
+        "AssemblyPost_WithoutInvPost_IsDisabled",
+        "AssertCanPost_WithoutInvPost_NamesInvPostSet",
+        "TransferPreview_WithoutInvPost_StaysEnabled",
+        "AssemblyPreview_WithoutInvPost_StaysEnabled"
+      ],
+      "count": 7
+    },
+    {
+      "id": 96972,
+      "name": "Inv. Registration Tests ori",
+      "methods": [
+        "AC02_LicAdm_OpensSetupWithInventoryInstalled"
+      ],
+      "count": 1
+    },
+    {
+      "id": 96957,
+      "name": "Item Category Perm",
+      "methods": [
+        "WithoutInvRead_GetReturnsPermissionDenied",
+        "WithoutInvWrite_SetReturnsPermissionDenied"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96956,
+      "name": "Item Category Tests",
+      "methods": [
+        "Get_ByCode_ReturnsCategoryAndInheritedAttribute",
+        "Get_WithoutAttributes_OmitsAttributeArray",
+        "Get_NoIdentifier_ReturnsEveryCategory",
+        "Get_BySystemId_ReturnsCategory",
+        "Get_MissingCategory_ReturnsRecordNotFound",
+        "Get_IncludeAttributesAsText_ReturnsInvalidParameterFormat",
+        "Get_EmptyCode_ReturnsMissingParameter",
+        "Get_UnknownKey_ReturnsUnknownParameter",
+        "Get_CodeAndSystemId_ReturnsConflict",
+        "Set_CreatesCategoryAndLocalAttribute",
+        "Set_ExistingCategory_UpdatesDescriptionAndValue",
+        "Set_ValueEqualToParent_AnswersInherited",
+        "Set_ParentLoop_ReturnsInvalidParameter",
+        "Set_NewCategoryOwnParent_ReturnsInvalidParameter",
+        "Set_Reparent_ReturnsPreconditionFailed",
+        "Set_Delete_ReturnsPreconditionFailed",
+        "Set_MissingAttribute_ReturnsRecordNotFound",
+        "Set_MissingValue_ReturnsRecordNotFound",
+        "Set_MissingCode_ReturnsMissingParameter",
+        "Set_CodeAsNumber_ReturnsInvalidParameterFormat",
+        "Set_AttributesNotArray_ReturnsInvalidParameterFormat",
+        "Set_UnknownKey_ReturnsUnknownParameter",
+        "Set_CodeAndSystemId_ReturnsConflict",
+        "Set_AttributeNameAndId_ReturnsConflict",
+        "DataRecords_WriteRestricted_ItemCategory"
+      ],
+      "count": 25
+    },
+    {
+      "id": 96955,
+      "name": "Item Charge Perm",
+      "methods": [
+        "WithoutInvWrite_AssignReturnsPermissionDenied",
+        "WithoutInvRead_GetReturnsPermissionDenied"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96954,
+      "name": "Item Charge Tests",
+      "methods": [
+        "AssignEqually_SplitsAcrossItemLines",
+        "AssignByAmount_FollowsLineAmounts",
+        "AssignTargets_WritesOnlyNamedLines",
+        "AssignAgain_ReportsReplacedRows",
+        "SalesAssignEqually_SplitsAcrossItemLines",
+        "Get_ReturnsRowsAndUnassignedQuantity",
+        "Get_BeforeAssign_ReturnsWholeQuantityUnassigned",
+        "Get_NonChargeLine_ReturnsPreconditionFailed",
+        "Get_UnknownDocument_ReturnsRecordNotFound",
+        "NonChargeLine_ReturnsPreconditionFailed",
+        "OtherVendorTarget_ReturnsInvalidLine",
+        "ChargeLineAsTarget_ReturnsInvalidLine",
+        "ByWeightWithoutWeight_ReturnsInvalidParameter",
+        "MissingDocumentType_ReturnsMissingParameter",
+        "LineNoAsText_ReturnsInvalidParameterFormat",
+        "UnknownKey_ReturnsUnknownParameter",
+        "UnknownDocument_ReturnsRecordNotFound",
+        "MethodAndTargets_ReturnConflict",
+        "DocumentNoAndSystemId_ReturnConflict",
+        "DataRecords_WriteRestricted_AssignmentTables"
+      ],
+      "count": 20
+    },
+    {
+      "id": 96951,
+      "name": "Item Ref. Resolve Perm",
+      "methods": [
+        "WithoutInvRead_ReturnsPermissionDenied"
+      ],
+      "count": 1
+    },
+    {
+      "id": 96950,
+      "name": "Item Ref. Resolve Tests",
+      "methods": [
+        "Barcode_ReturnsItemVariantAndUnit",
+        "CustomerReference_UsesTypeNo",
+        "ItemNo_IsUsedWhenNoReferenceExists",
+        "Gtin_IsUsedWhenNoReferenceExists",
+        "ReferencesArray_ReturnsOneResultEach",
+        "MissingReferenceNo_ReturnsMissingParameter",
+        "UnknownKey_ReturnsUnknownParameter",
+        "NumberReferenceNo_ReturnsInvalidParameterFormat",
+        "BothForms_ReturnConflictingIdentifiers",
+        "UnknownType_ReturnsInvalidParameter",
+        "NothingMatches_ReturnsRecordNotFound",
+        "TwoItems_ReturnAmbiguousRecord",
+        "BarcodeWithTypeNo_ReturnsInvalidParameter",
+        "EndedReference_IsIgnored",
+        "BlockedItem_ReturnsBlockedTrue"
+      ],
+      "count": 15
+    },
+    {
+      "id": 96962,
+      "name": "Order Tracking Get Tests",
+      "methods": [
+        "OrderTracking_ReservedSalesLine_ReturnsChainAndWritesNothing",
+        "OrderTracking_PurchaseLineSupplyingSalesLine_ReturnsChain",
+        "OrderTracking_ItemLedgerEntry_ReturnsChain",
+        "OrderTracking_ReservedTransferLine_ReturnsOutboundChain",
+        "OrderTracking_ReservedAssemblyLine_ReturnsChain",
+        "OrderTracking_UnreservedLine_ReturnsEmptyChain",
+        "OrderTracking_MissingLine_ReturnsRecordNotFound",
+        "OrderTracking_MissingSourceKind_ReturnsMissingParameter",
+        "OrderTracking_MissingLineNo_ReturnsMissingParameter",
+        "OrderTracking_UnsupportedSourceKind_ReturnsInvalidParameter",
+        "OrderTracking_EntryNoForSales_ReturnsInvalidParameter",
+        "OrderTracking_BadEntryNo_ReturnsInvalidParameterFormat",
+        "OrderTracking_SystemIdAndDocument_ReturnsConflictingIdentifiers",
+        "OrderTracking_UnknownKey_ReturnsUnknownParameter",
+        "OrderTracking_Help_CoversRefusalsInBothLanguages"
+      ],
+      "count": 15
+    },
+    {
+      "id": 96946,
+      "name": "Reservation Create Tests",
+      "methods": [
+        "Create_TransferLine_ReservesAndCancelRemovesPair",
+        "Create_NoSupply_ReturnsPreconditionFailed",
+        "Create_MissingSourceType_ReturnsMissingParameter",
+        "Create_UnknownSourceLine_ReturnsRecordNotFound",
+        "Create_UnsupportedSourceTypeOrZeroQuantity_ReturnsInvalidParameter",
+        "Cancel_UnknownEntry_ReturnsRecordNotFound"
+      ],
+      "count": 6
+    },
+    {
+      "id": 96959,
+      "name": "Reserv. AutoReserve Perm",
+      "methods": [
+        "WithoutInvWrite_AutoReserveReturnsPermissionDenied",
+        "WithoutInvRead_OrderTrackingReturnsPermissionDenied"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96958,
+      "name": "Reserv. AutoReserve Tests",
+      "methods": [
+        "AutoReserve_SalesLineWithStock_ReservesFully",
+        "AutoReserve_BySystemIdWithQuantity_ReservesPart",
+        "AutoReserve_AlreadyFullyReserved_ReturnsZero",
+        "AutoReserve_ReserveNever_ReturnsPreconditionFailed",
+        "AutoReserve_SalesQuoteLine_ReturnsPreconditionFailed",
+        "AutoReserve_PartialSupply_ReturnsLinesSkippedAndRollsBack",
+        "AutoReserve_MissingLine_ReturnsRecordNotFound",
+        "AutoReserve_UnknownSystemId_ReturnsRecordNotFound",
+        "AutoReserve_UnknownKey_ReturnsUnknownParameter",
+        "AutoReserve_MissingKeys_ReturnsMissingParameter",
+        "AutoReserve_MissingLineNo_ReturnsMissingParameter",
+        "AutoReserve_BadLineNo_ReturnsInvalidParameterFormat",
+        "AutoReserve_ZeroQuantity_ReturnsInvalidParameter",
+        "AutoReserve_QuoteDocumentType_ReturnsInvalidParameter",
+        "AutoReserve_SystemIdAndDocument_ReturnsConflictingIdentifiers",
+        "AutoReserve_Help_CoversRefusalsInBothLanguages",
+        "ReservationEntry_RemainsWriteRestricted"
+      ],
+      "count": 17
+    },
+    {
+      "id": 96905,
+      "name": "Asm. Doc Prev. Post Tests",
+      "methods": [
+        "PreviewPost_OrderWithStock_ReturnsLedgerEntries",
+        "PreviewPost_NothingToAssemble_ReturnsNothingToPreview",
+        "PreviewPost_MissingIdentifier_ReturnsError",
+        "PreviewPost_NoLines_ReturnsErrorAndPreservesOrder",
+        "PreviewPost_NoComponentStock_ReturnsPostingError"
+      ],
+      "count": 5
+    },
+    {
+      "id": 96906,
+      "name": "Asm. Order RefreshLines Tests",
+      "methods": [
+        "RefreshLines_ExistingOrder_ReturnsSuccess",
+        "RefreshLines_MissingIdentifier_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96907,
+      "name": "Asm. Order Statistics Tests",
+      "methods": [
+        "Statistics_OpenOrder_ReturnsCosts",
+        "Statistics_MissingIdentifier_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96908,
+      "name": "Assembly Order Create Tests",
+      "methods": [
+        "Create_AllRequiredFields_ReturnsSuccess",
+        "Create_MissingItemNo_ReturnsError",
+        "AssemblyCreate_BadPostingDate_IsAnError"
+      ],
+      "count": 3
+    },
+    {
+      "id": 96909,
+      "name": "Assembly Order Post Tests",
+      "methods": [
+        "Post_OrderWithStock_ReturnsSuccess",
+        "Post_MissingIdentifier_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96910,
+      "name": "Assembly Order Release Tests",
+      "methods": [
+        "Release_OpenOrder_StatusReleased",
+        "Release_MissingIdentifier_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96911,
+      "name": "Assembly Order Reopen Tests",
+      "methods": [
+        "Reopen_ReleasedOrder_StatusOpen",
+        "Reopen_MissingIdentifier_ReturnsError"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96912,
+      "name": "Transfer Doc Prev. Post Tests",
+      "methods": [
+        "PreviewPost_ShipReleased_ReturnsPreviewAndRollsBack",
+        "PreviewPost_NothingToShip_ReturnsNothingToPreview",
+        "PreviewPost_DirectTransfer_ReceiptAndShipment_PredictsShipment",
+        "PreviewPost_DirectTransfer_DirectTransferPosting_PredictsDirectTransfer"
+      ],
+      "count": 4
+    },
+    {
+      "id": 96913,
+      "name": "Transfer Order Create Tests",
+      "methods": [
+        "Create_AllRequiredFields_ReturnsSuccess",
+        "Create_MissingFromCode_ReturnsError",
+        "Create_WithItemLine_ReturnsLineAndQuantityTotal",
+        "Create_BadLines_ReturnsEveryProblemAndNoHeader",
+        "Create_WithoutLines_OmitsLinesFromResponse",
+        "TransferOrderCreateHelp_DocumentsLinesContract",
+        "Create_InvalidBoolean_ReturnsErrorWithoutHeader"
+      ],
+      "count": 7
+    },
+    {
+      "id": 96914,
+      "name": "Transfer Order Post Tests",
+      "methods": [
+        "Post_Ship_ReturnsPostedShipmentNo",
+        "Post_InvalidPostingType_ReturnsError",
+        "Post_DirectTransfer_ReceiptAndShipment_ReturnsBothDocuments",
+        "Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted",
+        "Post_Receive_Partial_KeepsOrderAndReturnsPostedReceiptNo"
+      ],
+      "count": 5
+    },
+    {
+      "id": 96915,
+      "name": "Transfer Order Release Tests",
+      "methods": [
+        "Release_OpenOrder_StatusChangesToReleased",
+        "Release_AlreadyReleased_NoOp"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96916,
+      "name": "Transfer Order Reopen Tests",
+      "methods": [
+        "Reopen_ReleasedOrder_StatusChangesToOpen",
+        "Reopen_AlreadyOpen_NoOp"
+      ],
+      "count": 2
+    },
+    {
+      "id": 96917,
+      "name": "Transfer Order Stats. Tests",
+      "methods": [
+        "Statistics_OrderWithTwoLines_ReturnsTotals",
+        "Statistics_NumericDocumentNo_ReturnsTypedError",
+        "Statistics_UnknownDocument_ReturnsNotFound"
+      ],
+      "count": 3
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Inv. Catalogue Quality Tests",
+  "codeUnit": 96971,
+  "codeunitName": "Inv. Catalogue Quality Tests",
+  "applicationID": "{A886B2CB-7DA0-4784-8163-42956DBDD5EC}",
+  "applicationName": "Bifrost Inventory - Tests",
+  "startTime": "2026-10-29T11:28:57.2770000Z",
+  "finishTime": "2026-10-29T11:28:57.3330000Z",
+  "result": 2,
+  "testResults": [
+    {
+      "method": "EveryType_CatalogueTextsTranslatableAt1039",
+      "startTime": "2026-10-29T11:28:57.2870000Z",
+      "finishTime": "2026-10-29T11:28:57.3070000Z",
+      "result": 2
+    },
+    {
+      "method": "EveryType_CatalogueTextsAreNotCopyPasted",
+      "startTime": "2026-10-29T11:28:57.3200000Z",
+      "finishTime": "2026-10-29T11:28:57.3330000Z",
+      "result": 2
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "harnessFailure": "Language lookup search toolbar title included a shortcut suffix; exact-title selector missed it before1039 execution.",
+  "testCaseFailures": 0,
+  "initial1033": "2/2passed retained; not rerun",
+  "repair": "Use prefix title match and validate retained JSON/applicationID/LCID before resume",
+  "sourceChange": false,
+  "originalAttemptEvidence": "Private ui-attempt1 retained",
+  "currentScenarioEvidence": "ui-summary.json"
+}

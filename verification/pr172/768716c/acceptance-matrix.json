@@ -1,0 +1,34 @@
+{
+  "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/152",
+  "prUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/172",
+  "scope": "Retained guard96971 AC1 only; main merge#174; no broader product reimplementation",
+  "criteria": {
+    "AC1": {
+      "implemented": true,
+      "guard": "96971,2tests,59types \u00d7 description/selection/keywords \u00d71033/1039",
+      "runtimeVerified": false,
+      "limitation": "Keywords compared as whole text; partial-list observation remains disclosed"
+    },
+    "AC2": {
+      "state": "Already on main via#160, outside this guard repair; not independently declared complete here"
+    },
+    "AC3": {
+      "state": "Separate dependency#147; current source merged, no independent acceptance asserted"
+    },
+    "AC4": {
+      "xlf": "Exact compiled generated-source sync guard passes",
+      "changelog": "Guard IDs96971 and imported#174 entries preserved",
+      "claudeCurrentTip": "Pending, requires published fullSHA and live1033/1039 evidence"
+    }
+  },
+  "expectedSuite": {
+    "methods": 422,
+    "codeunits": 47
+  },
+  "mcpApplicability": {
+    "touchedMessageTypes": [],
+    "reason": "Only catalogue test guard added versus main; no implementation, type definition or catalogue text changed. Main merge registration X is not a message-type change. Static describe checks optional and recorded separately; no mutation passes claimed."
+  },
+  "sourceCustody": "worker-4 retained CI/sourcerepair; original local-4 private checkpoints preserved"
+}

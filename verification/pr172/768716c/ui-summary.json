@@ -1,0 +1,50 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "appVersion": "28.3.2.183",
+  "startedAt": "2026-10-29T11:30:05.693Z",
+  "scenarios": [
+    {
+      "lcid": 1033,
+      "suite": "I172UIEN",
+      "codeunit": 96971,
+      "executed": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs catalogue quality guard reads all Inventory descriptions, selection descriptions and keywords in English and Icelandic",
+      "evidence": "ui-release-1033-results.json"
+    },
+    {
+      "lcid": 1039,
+      "suite": "I172UIIS",
+      "codeunit": 96971,
+      "executed": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs catalogue quality guard reads all Inventory descriptions, selection descriptions and keywords in English and Icelandic",
+      "evidence": "ui-release-1039-results.json"
+    }
+  ],
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "cleanup": {
+    "businessFixtureRecordsCreatedByBrowserHarness": 0,
+    "nativeFixtures": "Self-seeded by isolated AL tests; rollback readback recorded separately",
+    "languageRestored": true
+  },
+  "attemptHistory": [
+    {
+      "evidence": "ui-attempt1/ui-summary.json",
+      "harnessFailure": "Language search must be visible",
+      "testCaseFailures": 0,
+      "retainedScenarios": [
+        1033
+      ],
+      "repair": "Language lookup search selector accepts the platform keyboard shortcut suffix in its title; no product/source change."
+    }
+  ],
+  "finishedAt": "2026-10-29T11:31:05.154Z"
+}

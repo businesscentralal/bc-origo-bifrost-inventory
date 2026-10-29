@@ -1,0 +1,32 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "executed": 422,
+  "passed": 422,
+  "failed": 0,
+  "skipped": 0,
+  "codeunits": 47,
+  "sourceAndCompiledMethods": 422,
+  "compiledArtifactSha256": "1ac18083bbec16f5a5fd8449b4c820bfa45e4d41c43750f9e0a5dd7115e0fb34",
+  "missing": [],
+  "unexpected": [],
+  "catalogueGuard96971": [
+    {
+      "classname": "96971 Inv. Catalogue Quality Tests",
+      "name": "EveryType_CatalogueTextsTranslatableAt1039",
+      "time": "0.027"
+    },
+    {
+      "classname": "96971 Inv. Catalogue Quality Tests",
+      "name": "EveryType_CatalogueTextsAreNotCopyPasted",
+      "time": "0.02"
+    }
+  ],
+  "registrationRegression96972": [
+    {
+      "classname": "96972 Inv. Registration Tests ori",
+      "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "time": "2.76"
+    }
+  ],
+  "verified": true
+}

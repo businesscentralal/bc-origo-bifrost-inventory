@@ -1,0 +1,15 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "touchedMessageTypes": [],
+  "notApplicableReason": "Relative to current main only read-only catalogue guard96971 and CHANGELOG change; merge imports registration Execute fix, not a message implementation or catalogue change. No mutation MCP types/scenarios applicable. Native and real browser guards exercise catalogue interfaces; optional MCP catalogue reads are separate evidence.",
+  "executed": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "dataSetup": "No MCP business data required or created for this test-only guard scope",
+  "cleanup": {
+    "created": 0,
+    "remaining": 0
+  }
+}

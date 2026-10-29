@@ -1,0 +1,70 @@
+{
+  "sourceHead": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "workingTree": false,
+  "compilerPath": "/workspace/tools/warehouse-23-worker4/al18/extension/bin/alc.dll",
+  "compilerSha256": "4e93f534721663ab1b30b73bce5cb75812ce26478a8f09f83fbeb0869a133985",
+  "analyzers": [
+    "CodeCop",
+    "UICop",
+    "AppSourceCop"
+  ],
+  "sourceAppVersion": "28.3.2.0",
+  "artifactAppVersion": "28.3.2.183",
+  "stamp": "Private verification build .183, no repository manifest mutation",
+  "dependency": {
+    "release": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/releases/tag/28.0.10",
+    "sourceSha": "130955cdc524cf7da3f162d1aeb10777fde55ab1",
+    "assetId": 684711931,
+    "assetName": "bc-origo-bifrost-core-main-TestApps-1.0.10.632.zip",
+    "version": "28.0.10.632",
+    "sha256": "67e70551b8384829adf96ed9af67dd4d1e8e772ef040ceeae8177ba0b3e2eb98",
+    "digestVerified": true
+  },
+  "baseline": {
+    "release": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/releases/tag/28.3.1",
+    "sourceSha": "33eb788439d9d1df3772fd8bb3e203383896e628",
+    "assetId": 674886734,
+    "assetName": "bc-origo-bifrost-inventory-main-Apps-1.0.1.81.zip",
+    "version": "28.3.1.81",
+    "sha256": "35e647ca0aaa395231f19f71ff06d93511905282879f7e253a09864300d45cf5",
+    "digestVerified": true
+  },
+  "app": {
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "diagnosticErrors": 0,
+    "diagnosticWarnings": 0,
+    "invocation": [
+      "/workspace/tools/dotnet/dotnet",
+      "/workspace/tools/warehouse-23-worker4/al18/extension/bin/alc.dll",
+      "/project:/workspace/evidence/inventory172-worker4-20261029/compile-source/app",
+      "/packagecachepath:/workspace/evidence/inventory172-worker4-20261029/symbols",
+      "/out:/workspace/evidence/inventory172-worker4-20261029/build/Inventory.app",
+      "/errorlog:/workspace/evidence/inventory172-worker4-20261029/build/app-diagnostics.json",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.CodeCop.dll",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.UICop.dll",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+    ],
+    "sha256": "00856d90609c7c6c5e51752c2edf9ad42f43a92b207bfd373f9f1964039e3361"
+  },
+  "test": {
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "diagnosticErrors": 0,
+    "diagnosticWarnings": 0,
+    "invocation": [
+      "/workspace/tools/dotnet/dotnet",
+      "/workspace/tools/warehouse-23-worker4/al18/extension/bin/alc.dll",
+      "/project:/workspace/evidence/inventory172-worker4-20261029/compile-source/test",
+      "/packagecachepath:/workspace/evidence/inventory172-worker4-20261029/symbols",
+      "/out:/workspace/evidence/inventory172-worker4-20261029/build/InventoryTests.app",
+      "/errorlog:/workspace/evidence/inventory172-worker4-20261029/build/test-diagnostics.json",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.CodeCop.dll",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.UICop.dll",
+      "/analyzer:/workspace/tools/warehouse-23-worker4/al18/extension/bin/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+    ],
+    "sha256": "1ac18083bbec16f5a5fd8449b4c820bfa45e4d41c43750f9e0a5dd7115e0fb34"
+  }
+}

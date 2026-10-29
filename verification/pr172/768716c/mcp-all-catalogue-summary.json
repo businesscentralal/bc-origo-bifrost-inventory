@@ -1,0 +1,2879 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "appVersion": "28.3.2.183",
+  "tool": "get_message_type_help",
+  "detail": "summary",
+  "startedAt": "2026-10-29T11:23:04.152Z",
+  "lcids": [
+    1033,
+    1039
+  ],
+  "types": [
+    "Inventory.AdjustCost.Run",
+    "Inventory.Assembly.UndoPost",
+    "Inventory.AssemblyOrder.Create",
+    "Inventory.AssemblyOrder.Post",
+    "Inventory.AssemblyOrder.PreviewPost",
+    "Inventory.AssemblyOrder.RefreshLines",
+    "Inventory.AssemblyOrder.Release",
+    "Inventory.AssemblyOrder.Reopen",
+    "Inventory.AssemblyOrder.Statistics",
+    "Inventory.Attribute.Create",
+    "Inventory.Attribute.Get",
+    "Inventory.Attribute.Update",
+    "Inventory.AttributeDefinition.Create",
+    "Inventory.AvailabilityByPeriod.Get",
+    "Inventory.Cost.Get",
+    "Inventory.Cost.Update",
+    "Inventory.CostToGL.Post",
+    "Inventory.CostToGL.Test",
+    "Inventory.ItemApplication.Get",
+    "Inventory.ItemApplication.Reapply",
+    "Inventory.ItemApplication.Unapply",
+    "Inventory.ItemCategory.Get",
+    "Inventory.ItemCategory.Set",
+    "Inventory.ItemCharge.Assign",
+    "Inventory.ItemCharge.Get",
+    "Inventory.ItemReference.Resolve",
+    "Inventory.OrderTracking.Get",
+    "Inventory.Period.Close",
+    "Inventory.Period.Get",
+    "Inventory.Period.Reopen",
+    "Inventory.PhysInventory.Calculate",
+    "Inventory.PhysInventory.Check",
+    "Inventory.PhysInventory.Post",
+    "Inventory.PhysInventory.PreviewPost",
+    "Inventory.PhysInventory.Record",
+    "Inventory.PhysInventory.RecordCount",
+    "Inventory.Price.Update",
+    "Inventory.Reclassification.Check",
+    "Inventory.Reclassification.Post",
+    "Inventory.Reclassification.PreviewPost",
+    "Inventory.Reservation.AutoReserve",
+    "Inventory.Reservation.Cancel",
+    "Inventory.Reservation.Create",
+    "Inventory.Reservation.Get",
+    "Inventory.Revaluation.Calculate",
+    "Inventory.Revaluation.Post",
+    "Inventory.Revaluation.PreviewPost",
+    "Inventory.Tracking.Assign",
+    "Inventory.Tracking.Delete",
+    "Inventory.Tracking.Get",
+    "Inventory.TrackingAvailability.Get",
+    "Inventory.Transfer.UndoReceipt",
+    "Inventory.Transfer.UndoShipment",
+    "Inventory.TransferOrder.Create",
+    "Inventory.TransferOrder.Post",
+    "Inventory.TransferOrder.PreviewPost",
+    "Inventory.TransferOrder.Release",
+    "Inventory.TransferOrder.Reopen",
+    "Inventory.TransferOrder.Statistics"
+  ],
+  "requests": [
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AdjustCost.Run",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Runs report 795 with optional item or category filter and explicit postToGL option.",
+        "selectionDescription": "Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "adjust cost",
+          "item entry correction",
+          "post to g/l",
+          "report 795"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AdjustCost.Run",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Keyrir skýrslu 795 með valkvæmri vöru- eða flokkssíu og skýru postToGL-vali.",
+        "selectionDescription": "Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "leiðrétta kostnað",
+          "leiðrétting vörufærslu",
+          "bóka á fjárhag",
+          "skýrsla 795"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Assembly.UndoPost",
+        "isEnabled": true,
+        "filterTableNo": 910,
+        "description": "Undoes a posted assembly document through the standard posted assembly undo.",
+        "selectionDescription": "Undoes a posted assembly by document number.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "undo assembly",
+          "reverse posted assembly"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Assembly.UndoPost",
+        "isEnabled": true,
+        "filterTableNo": 910,
+        "description": "Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar.",
+        "selectionDescription": "Afturkallar bókaða samsetningu eftir skjalnúmeri.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "afturkalla samsetningu",
+          "bakfæra bókaða samsetningu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Create",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.",
+        "selectionDescription": "Creates a new assembly order for a parent item; use RefreshLines, Release or Post after creation.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "assembly order",
+          "assemble",
+          "kit",
+          "build a product",
+          "bill of materials",
+          "bom",
+          "make to order",
+          "bundle"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Create",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Býr til nýjan haus samsetningarpöntunar fyrir móðurvöru og getur endurnýjað íhlutalínur úr uppskrift.",
+        "selectionDescription": "Býr til nýja samsetningarpöntun fyrir móðurvöru; notaðu RefreshLines, Release eða Post eftir stofnun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "samsetningarpöntun",
+          "setja saman",
+          "vörusett",
+          "smíða vöru",
+          "uppskrift",
+          "íhlutalisti",
+          "framleiða eftir pöntun",
+          "vöruknippi"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Post",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.",
+        "selectionDescription": "Posts an assembly order and consumes components; use PreviewPost to inspect predicted entries first.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "post assembly",
+          "finish assembly",
+          "assembled",
+          "output the kit",
+          "consume components"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Post",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.",
+        "selectionDescription": "Bókar samsetningarpöntun og notar íhluti; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "bóka samsetningu",
+          "ljúka samsetningu",
+          "samsett",
+          "skila vörusetti",
+          "nota íhluti"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Simulates posting an assembly order and returns predicted ledger entries (Item, Value, G/L, Resource) without committing changes.",
+        "selectionDescription": "Previews assembly posting without committing; use Post to perform the irreversible component consumption and output.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "preview assembly posting",
+          "simulate assembly",
+          "what would the assembly post"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Hermir bókun samsetningarpöntunar og skilar væntanlegum vöru-, virðis-, fjárhags- og forðafærslum án þess að vista breytingar.",
+        "selectionDescription": "Forskoðar bókun samsetningar án frágangs; notaðu Post til að framkvæma óafturkræfa notkun íhluta og framleiðslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "forskoða bókun samsetningar",
+          "herma samsetningu",
+          "hvað myndi samsetningin bóka"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.RefreshLines",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Refreshes assembly order component lines from the parent item's BOM (RefreshBOM).",
+        "selectionDescription": "Refreshes assembly components from the parent item BOM; use Create to create a new assembly order.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "refresh assembly lines",
+          "update components from bom",
+          "reload bill of materials",
+          "recalculate components"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.RefreshLines",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift móðurvörunnar (RefreshBOM).",
+        "selectionDescription": "Uppfærir samsetningarhluti úr uppskrift móðurvöru; notaðu Create til að búa til nýja samsetningarpöntun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "uppfæra samsetningarlínur",
+          "uppfæra íhluti úr uppskrift",
+          "endurhlaða íhlutalista",
+          "endurreikna íhluti"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Release",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Releases an open assembly order so it can be posted (status Open -> Released).",
+        "selectionDescription": "Releases an open assembly order so it can be posted; use Reopen to edit a released order.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "release assembly order",
+          "assembly ready",
+          "lock the assembly order"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Release",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Staðfestir opna samsetningarpöntun svo hægt sé að bóka hana (staða Opin -> Staðfest).",
+        "selectionDescription": "Leyfir opna samsetningarpöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "losa samsetningarpöntun",
+          "staðfesta samsetningarpöntun",
+          "samsetning tilbúin"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Reopen",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Reopens a released assembly order so it can be edited again (status Released -> Open).",
+        "selectionDescription": "Reopens a released assembly order for editing; use Release to prepare it for posting again.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reopen assembly order",
+          "change released assembly",
+          "unlock assembly order"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Reopen",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Opnar staðfesta samsetningarpöntun aftur svo hægt sé að breyta henni (staða Staðfest -> Opin).",
+        "selectionDescription": "Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "opna samsetningarpöntun aftur",
+          "breyta staðfestri samsetningu",
+          "aflæsa samsetningarpöntun"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Statistics",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Returns assembly order statistics: header info, line counts, quantities and cost breakdown.",
+        "selectionDescription": "Reads assembly quantities, line counts and cost breakdown without changing the order; use PreviewPost for posting prediction.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "assembly statistics",
+          "assembly cost",
+          "cost of components",
+          "kit cost breakdown"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AssemblyOrder.Statistics",
+        "isEnabled": true,
+        "filterTableNo": 900,
+        "description": "Skilar tölfræði samsetningarpöntunar: upplýsingum úr haus, fjölda lína, magni og sundurliðun kostnaðar.",
+        "selectionDescription": "Les magn, línufjölda og kostnaðarsundurgreiningu samsetningar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "tölfræði samsetningar",
+          "kostnaður samsetningar",
+          "kostnaður íhluta",
+          "sundurliðun kostnaðar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Create",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Assigns attribute values to an item. Idempotent when the same value already exists.",
+        "selectionDescription": "Assigns attribute values to an item and may create missing option values; use Inventory.Attribute.Update for an existing mapping.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "assign item attribute",
+          "create item attribute value",
+          "set item characteristic",
+          "tag item",
+          "add item metadata"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Create",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til.",
+        "selectionDescription": "Úthlutar eiginleikagildum á vöru og getur búið til valkosti sem vantar; notaðu Inventory.Attribute.Update fyrir núverandi vörutengingu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "úthluta eiginleika vöru",
+          "búa til eiginleikagildi vöru",
+          "stilla eiginleika vöru",
+          "merkja vöru",
+          "bæta við lýsigögnum vöru"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Returns item attribute definitions and assigned values for one or more items.",
+        "selectionDescription": "Reads item attributes and assigned values without changing the item; use Inventory.Attribute.Create to assign a value.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "read item attributes",
+          "get item attribute values",
+          "inspect item characteristics",
+          "list assigned attributes",
+          "item metadata"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.",
+        "selectionDescription": "Les eiginleika vöru og úthlutuð gildi án þess að breyta vörunni; notaðu Inventory.Attribute.Create til að úthluta gildi.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "lesa eiginleika vöru",
+          "sækja eiginleikagildi vöru",
+          "skoða eiginleika vöru",
+          "telja úthlutaða eiginleika",
+          "lýsigögn vöru"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Update",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Updates an existing item attribute mapping and returns before/after values.",
+        "selectionDescription": "Updates an existing item attribute mapping and returns before and after values; use Inventory.Attribute.Create when no mapping exists.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "update item attribute",
+          "change item attribute value",
+          "replace item characteristic",
+          "edit item metadata",
+          "overwrite item attribute"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Attribute.Update",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Uppfærir fyrirliggjandi eiginleikatengingu vöru og skilar fyrra og nýju gildi.",
+        "selectionDescription": "Uppfærir núverandi eiginleikatengingu vöru og skilar fyrra og nýju gildi; notaðu Inventory.Attribute.Create þegar tenging er ekki til.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "uppfæra eiginleika vöru",
+          "breyta eiginleikagildi vöru",
+          "skipta um eiginleika vöru",
+          "breyta lýsigögnum vöru",
+          "skrifa yfir eiginleika vöru"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AttributeDefinition.Create",
+        "isEnabled": true,
+        "filterTableNo": 7500,
+        "description": "Creates an item attribute definition and optional option values, independent of any item.",
+        "selectionDescription": "Creates a reusable item attribute definition and optional option values; use Inventory.Attribute.Create to assign it to an item.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "create item attribute definition",
+          "define item characteristic",
+          "add attribute type",
+          "create option list",
+          "item metadata definition"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AttributeDefinition.Create",
+        "isEnabled": true,
+        "filterTableNo": 7500,
+        "description": "Býr til skilgreiningu vörueiginleika og valkvæða valkosti, óháð einstökum vörum.",
+        "selectionDescription": "Býr til endurnýtanlega eiginleikaskilgreiningu vöru og valkvæða valkosti; notaðu Inventory.Attribute.Create til að úthluta henni á vöru.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "búa til eiginleikaskilgreiningu vöru",
+          "skilgreina eiginleika vöru",
+          "bæta við eiginleikategund",
+          "búa til valkostalista",
+          "skilgreining á lýsigögnum vöru"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AvailabilityByPeriod.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Reads projected item availability by day, week, month, quarter, or year.",
+        "selectionDescription": "Reads projected availability for one or more items across calendar periods.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "availability",
+          "period",
+          "gross requirement",
+          "projected available balance",
+          "inventory"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.AvailabilityByPeriod.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Les áætlað framboð vöru eftir degi, viku, mánuði, ársfjórðungi eða ári.",
+        "selectionDescription": "Les áætlað framboð fyrir eina eða fleiri vörur yfir dagatals tímabil.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "framboð",
+          "tímabil",
+          "heildarþörf",
+          "áætlað tiltækt magn",
+          "birgðir"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Cost.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Reads item cost fields that are not exposed by the foundation app.",
+        "selectionDescription": "Returns current costing fields and native filtered inventory for one or more items.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "read item cost",
+          "unit cost",
+          "inventory value"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Cost.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Les kostnaðarreiti vöru sem grunnforritið birtir ekki.",
+        "selectionDescription": "Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "lesa vörukostnað",
+          "kostnaðarverð",
+          "birgðavirði"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Cost.Update",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Updates current Item costs through native validation; refuses Standard-costed items.",
+        "selectionDescription": "Selects exactly one item using the Foundation subject, identifier or tableView rules.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "item cost",
+          "unit cost",
+          "last direct cost",
+          "standard cost",
+          "intentional cost update"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Cost.Update",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Uppfærir núverandi vörukostnað með innbyggðri sannprófun; hafnar vörum með staðlað kostnaðarverð.",
+        "selectionDescription": "Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "vörukostnaður",
+          "kostnaðarverð",
+          "síðasta beina kostnaðarverð",
+          "staðlað kostnaðarverð",
+          "kostnaðaruppfærsla"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.CostToGL.Post",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.",
+        "selectionDescription": "Post inventory value entries that are not yet posted to the general ledger.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "post inventory cost",
+          "general ledger",
+          "report 1002"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.CostToGL.Post",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.",
+        "selectionDescription": "Bókar virðisfærslur birgða sem ekki hafa verið bókaðar á fjárhag.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "bóka birgðakostnað",
+          "fjárhagur",
+          "skýrsla 1002"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.CostToGL.Test",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Counts the items that match an item filter before inventory cost is posted to G/L; nothing is posted.",
+        "selectionDescription": "Returns the item filter and the number of items it matches. Nothing is posted and no value entries are read.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "test post inventory cost to gl",
+          "cost to gl test"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.CostToGL.Test",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Telur vörurnar sem passa við vörusíu áður en birgðakostnaður er bókaður á fjárhag; ekkert er bókað.",
+        "selectionDescription": "Skilar vörusíunni og fjölda vara sem hún passar við. Ekkert er bókað og engar virðisfærslur eru lesnar.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "prófa bókun birgðakostnaðar í fjárhag",
+          "prófun kostnaðarbókunar í fjárhag"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Get",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Reads item application entries for an item ledger entry.",
+        "selectionDescription": "Reads application entries. Unapply and reapply are separate types.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "item application",
+          "applied entries"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Get",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Les vörujöfnunarfærslur fyrir vörufærslu.",
+        "selectionDescription": "Les jöfnunarfærslur. Afturköllun og endurjöfnun eru aðskildar tegundir.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "vörujöfnun",
+          "jafnaðar færslur"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Reapply",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Reapplies an item ledger entry through Item Jnl.-Post Line.",
+        "selectionDescription": "Reapplies an outbound item ledger entry to an inbound entry.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reapply item application",
+          "apply item ledger entry"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Reapply",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Jafnar vörufærslu aftur með Item Jnl.-Post Line.",
+        "selectionDescription": "Jafnar útleiðandi vörufærslu aftur við innleiðandi færslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "jafna vöru aftur",
+          "jafna vörufærslu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Unapply",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Unapplies an item application entry through Item Jnl.-Post Line.",
+        "selectionDescription": "Unapplies one item application entry by entry number.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "unapply item application",
+          "undo application"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemApplication.Unapply",
+        "isEnabled": true,
+        "filterTableNo": 339,
+        "description": "Afturkallar vörujöfnun með Item Jnl.-Post Line.",
+        "selectionDescription": "Afturkallar eina vörujöfnunarfærslu eftir færslunúmeri.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "afturkalla vörujöfnun",
+          "afturkalla jöfnun"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCategory.Get",
+        "isEnabled": true,
+        "filterTableNo": 5722,
+        "description": "Reads item categories and their default attributes.",
+        "selectionDescription": "Show the item category tree and the default attributes on each category.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "item category",
+          "parent",
+          "attribute",
+          "inherited"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCategory.Get",
+        "isEnabled": true,
+        "filterTableNo": 5722,
+        "description": "Les vöruflokka og sjálfgefna eiginleika þeirra.",
+        "selectionDescription": "Sýndu vöruflokkatréð og sjálfgefna eiginleika hvers flokks.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "vöruflokkur",
+          "yfirflokkur",
+          "eiginleiki",
+          "erft"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCategory.Set",
+        "isEnabled": true,
+        "filterTableNo": 5722,
+        "description": "Creates or updates an item category and its default attributes.",
+        "selectionDescription": "Create or change an item category and the default attributes stored on it.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "item category",
+          "parent",
+          "attribute",
+          "default value"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCategory.Set",
+        "isEnabled": true,
+        "filterTableNo": 5722,
+        "description": "Stofnar eða uppfærir vöruflokk og sjálfgefna eiginleika hans.",
+        "selectionDescription": "Stofnaðu eða breyttu vöruflokki og sjálfgefnum eiginleikum sem eru vistaðir á honum.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "vöruflokkur",
+          "yfirflokkur",
+          "eiginleiki",
+          "sjálfgefið gildi"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCharge.Assign",
+        "isEnabled": true,
+        "filterTableNo": 5805,
+        "description": "Assigns a purchase or sales item charge to item lines, receipts or shipments.",
+        "selectionDescription": "Spreads freight, customs or another item charge over item lines equally, by amount, by weight or by volume, so the cost lands on the items.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "item charge",
+          "assign",
+          "freight",
+          "customs",
+          "landed cost"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCharge.Assign",
+        "isEnabled": true,
+        "filterTableNo": 5805,
+        "description": "Úthlutar kostnaðarauka í innkaupum eða sölu á vörulínur, móttökur eða afhendingar.",
+        "selectionDescription": "Dreifir flutningskostnaði, tolli eða öðrum kostnaðarauka á vörulínur jafnt, eftir upphæð, þyngd eða rúmmáli, svo kostnaðurinn leggist á vörurnar.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "kostnaðarauki",
+          "úthluta",
+          "flutningskostnaður",
+          "tollur",
+          "kostnaðarverð"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCharge.Get",
+        "isEnabled": true,
+        "filterTableNo": 5805,
+        "description": "Reads the item charge assignment of one purchase or sales charge line.",
+        "selectionDescription": "Shows how a freight, customs or other item charge is spread over item lines and how much is still unassigned.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "item charge",
+          "assignment",
+          "unassigned",
+          "freight",
+          "customs"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemCharge.Get",
+        "isEnabled": true,
+        "filterTableNo": 5805,
+        "description": "Les úthlutun kostnaðarauka á einni kostnaðaraukalínu í innkaupum eða sölu.",
+        "selectionDescription": "Sýnir hvernig flutningskostnaði, tolli eða öðrum kostnaðarauka er dreift á vörulínur og hve mikið er enn óúthlutað.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "kostnaðarauki",
+          "úthlutun",
+          "óúthlutað",
+          "flutningskostnaður",
+          "tollur"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemReference.Resolve",
+        "isEnabled": true,
+        "filterTableNo": 5777,
+        "description": "Resolves a barcode, customer reference, or vendor reference to an item.",
+        "selectionDescription": "Resolves a scanned barcode or a customer or vendor item number to the item, variant, and unit of measure.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "barcode",
+          "item reference",
+          "customer item number",
+          "vendor item number",
+          "gtin"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.ItemReference.Resolve",
+        "isEnabled": true,
+        "filterTableNo": 5777,
+        "description": "Leysir strikamerki, viðskiptavinatilvísun eða birgjatilvísun upp í vöru.",
+        "selectionDescription": "Leysir skannað strikamerki eða vörunúmer viðskiptavinar eða birgja upp í vöru, afbrigði og mælieiningu.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "strikamerki",
+          "vörutilvísun",
+          "vörunúmer viðskiptavinar",
+          "vörunúmer birgja",
+          "gtin"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.OrderTracking.Get",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Reads the order tracking chain for a line or an item ledger entry.",
+        "selectionDescription": "Reads which supply is tracked against a demand line, or which demand a supply line or item ledger entry covers.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "order tracking",
+          "supply",
+          "demand",
+          "reservation chain"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.OrderTracking.Get",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Les pöntunarrakningarkeðju fyrir línu eða birgðafærslu.",
+        "selectionDescription": "Les hvaða framboð er rakið á móti eftirspurnarlínu, eða hvaða eftirspurn framboðslína eða birgðafærsla dekkar.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "pöntunarrakning",
+          "framboð",
+          "eftirspurn",
+          "frátekningarkeðja"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Close",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Closes the inventory period that ends on the given ending date.",
+        "selectionDescription": "Closes an inventory period. An already closed period returns success.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "close inventory period",
+          "lock inventory period"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Close",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu.",
+        "selectionDescription": "Lokar birgðatímabili. Tímabil sem er þegar lokað skilar árangri.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "loka birgðatímabili",
+          "læsa birgðatímabili"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Get",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Reads inventory periods.",
+        "selectionDescription": "Reads inventory periods. Close and reopen are separate types.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "inventory period",
+          "closed period"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Get",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Les birgðatímabil.",
+        "selectionDescription": "Les birgðatímabil. Lokun og enduropnun eru aðskildar tegundir.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "birgðatímabil",
+          "lokað tímabil"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Reopen",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Reopens a closed inventory period.",
+        "selectionDescription": "Reopens a closed inventory period.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reopen inventory period"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Period.Reopen",
+        "isEnabled": false,
+        "filterTableNo": 5814,
+        "description": "Enduropnar lokað birgðatímabil.",
+        "selectionDescription": "Opnar lokað birgðatímabil aftur.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "enduropna birgðatímabil"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Calculate",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "calculate inventory",
+          "physical count",
+          "stock take",
+          "count journal",
+          "fill count journal"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Calculate",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reikna birgðir",
+          "birgðatalning",
+          "vörutalning",
+          "talningarbók",
+          "fylla talningarbók"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Check",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Checks the lines of a physical inventory journal with the standard item journal line checks, without writing or posting.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "check physical count",
+          "validate count journal",
+          "count journal errors",
+          "ready to post count"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Check",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Athugar línur talningarbókar með stöðluðum athugunum á vörubókarlínum án þess að skrifa eða bóka.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "athuga birgðatalningu",
+          "sannprófa talningarbók",
+          "villur í talningarbók",
+          "talning tilbúin til bókunar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Post",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Posts the lines of a physical inventory journal and returns the item register and the entry number ranges.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "post physical count",
+          "post count journal",
+          "book stock take",
+          "post inventory count"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Post",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Bókar línur talningarbókar og skilar vörubókarskrá og númeraröðum færslna.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "bóka birgðatalningu",
+          "bóka talningarbók",
+          "færa vörutalningu",
+          "bóka talin birgðamagn"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.PreviewPost",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Previews posting a physical inventory journal: returns the ledger entries it would create, then rolls everything back.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "preview physical count posting",
+          "preview count journal",
+          "count journal ledger entries",
+          "simulate stock take posting"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.PreviewPost",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Forskoðar bókun talningarbókar: skilar þeim færslum sem hún myndi stofna og bakfærir síðan allt.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "forskoða bókun birgðatalningar",
+          "forskoða talningarbók",
+          "færslur talningarbókar",
+          "líkja eftir bókun vörutalningar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Record",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "enter counted quantity",
+          "record count",
+          "record physical count",
+          "set counted quantity",
+          "count lines"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.Record",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "skrá talið magn",
+          "skrá talningu",
+          "skrá birgðatalningu",
+          "setja talið magn",
+          "talningarlínur"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.RecordCount",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.",
+        "selectionDescription": "Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "enter counted quantity",
+          "record count",
+          "record physical count",
+          "set counted quantity",
+          "count lines"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.PhysInventory.RecordCount",
+        "isEnabled": false,
+        "filterTableNo": 233,
+        "description": "Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.",
+        "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "skrá talið magn",
+          "skrá talningu",
+          "skrá birgðatalningu",
+          "setja talið magn",
+          "talningarlínur"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Price.Update",
+        "isEnabled": false,
+        "filterTableNo": 27,
+        "description": "Updates an item unit price.",
+        "selectionDescription": "Selects exactly one item using the Foundation subject, identifier or tableView rules.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "update item price",
+          "unit price"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Price.Update",
+        "isEnabled": false,
+        "filterTableNo": 27,
+        "description": "Uppfærir einingarverð vöru.",
+        "selectionDescription": "Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "uppfæra vöruverð",
+          "einingarverð"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.Check",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Checks that a journal template is a reclassification template and counts the transfer lines of the batch. It does not validate the lines or post.",
+        "selectionDescription": "Confirms the template type and counts transfer lines. Posting is a separate type.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reclassification journal",
+          "change item location",
+          "change lot"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.Check",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Athugar hvort bókarsniðmát sé endurflokkunarsniðmát og telur millifærslulínur keyrslunnar. Sannreynir ekki línurnar og bókar ekki.",
+        "selectionDescription": "Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "endurflokkunarfærsla",
+          "breyta staðsetningu vöru",
+          "breyta lotu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.Post",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Posts an item reclassification journal. This is not a transfer order.",
+        "selectionDescription": "Posts a reclassification journal. Does not create a transfer order.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reclassification journal",
+          "post reclassification"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.Post",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.",
+        "selectionDescription": "Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "endurflokkunarbók",
+          "bóka endurflokkun"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Lists the lines of a reclassification journal batch that Post would process, without posting. It does not simulate the ledger entries.",
+        "selectionDescription": "Returns the reclassification journal lines that Post would process.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "preview reclassification",
+          "reclass journal preview"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reclassification.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 83,
+        "description": "Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.",
+        "selectionDescription": "Skilar línum endurflokkunarbókar sem Post myndi vinna úr.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "forskoða endurflokkun",
+          "forskoðun endurflokkunarbókar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.AutoReserve",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Reserves a sales order line from available supply.",
+        "selectionDescription": "Reserves the outstanding quantity of one sales order line. Business Central chooses the supply.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "auto reserve",
+          "sales line",
+          "reservation",
+          "reserve"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.AutoReserve",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Tekur sölupöntunarlínu frá úr tiltæku framboði.",
+        "selectionDescription": "Tekur frá útistandandi magn einnar sölupöntunarlínu. Business Central velur framboðið.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "sjálfvirk frátekning",
+          "sölulína",
+          "frátekning",
+          "taka frá"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Cancel",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Cancels a reservation entry through Reservation Management.",
+        "selectionDescription": "Cancels one reservation entry by entry number.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "cancel reservation",
+          "delete reservation"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Cancel",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Afturkallar frátekningarfærslu með Reservation Management.",
+        "selectionDescription": "Afturkallar eina frátekningarfærslu eftir færslunúmeri.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "afturkalla frátekningu",
+          "eyða frátekningu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Create",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Reserves supply for a source document line through Reservation Management.",
+        "selectionDescription": "Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer or assembly line).",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "create reservation",
+          "auto reserve",
+          "reserve item",
+          "source line"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Create",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Tekur frá framboð fyrir línu upprunaskjals með Reservation Management.",
+        "selectionDescription": "Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "búa til frátekningu",
+          "taka sjálfvirkt frá",
+          "taka vöru frá",
+          "upprunalína"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Get",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Reads reservation entries for an item.",
+        "selectionDescription": "Reads reservation entries. Cancel is a separate type.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "reservation",
+          "reserved quantity"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Reservation.Get",
+        "isEnabled": false,
+        "filterTableNo": 337,
+        "description": "Les frátekningarfærslur fyrir vöru.",
+        "selectionDescription": "Les frátekningarfærslur. Afturköllun er aðskilin tegund.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "frátekning",
+          "frátekið magn"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.Calculate",
+        "isEnabled": true,
+        "filterTableNo": 32,
+        "description": "Calculates remaining inventory quantity and value for an item.",
+        "selectionDescription": "Calculates remaining quantity and inventory value. Does not post a revaluation journal.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "revaluation",
+          "calculate inventory value"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.Calculate",
+        "isEnabled": true,
+        "filterTableNo": 32,
+        "description": "Reiknar eftirstandandi birgðamagn og birgðavirði vöru.",
+        "selectionDescription": "Reiknar eftirstandandi magn og birgðavirði. Bókar ekki endurmatsbók.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "endurmat",
+          "reikna birgðavirði"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.Post",
+        "isEnabled": true,
+        "filterTableNo": 233,
+        "description": "Posts all lines of a Revaluation item journal batch.",
+        "selectionDescription": "Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "inventory",
+          "revaluation",
+          "inventory value",
+          "calculate",
+          "preview",
+          "post"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.Post",
+        "isEnabled": true,
+        "filterTableNo": 233,
+        "description": "Bókar allar línur í endurmatsbókarkeyrslu vöru.",
+        "selectionDescription": "Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "birgðir",
+          "endurmat",
+          "birgðavirði",
+          "reikna",
+          "forskoða",
+          "bóka"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 233,
+        "description": "Runs native revaluation posting preview and returns captured entries without committing.",
+        "selectionDescription": "Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "inventory",
+          "revaluation",
+          "inventory value",
+          "calculate",
+          "preview",
+          "post"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Revaluation.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 233,
+        "description": "Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær.",
+        "selectionDescription": "Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "birgðir",
+          "endurmat",
+          "birgðavirði",
+          "reikna",
+          "forskoða",
+          "bóka"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Assign",
+        "isEnabled": true,
+        "filterTableNo": 336,
+        "description": "Creates a tracking specification record with a lot, serial or package number and a quantity for an item.",
+        "selectionDescription": "Creates one tracking specification from itemNo, quantity and a lot, serial or package number; it is not tied to a document line.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "assign lot",
+          "assign serial",
+          "assign package",
+          "item tracking"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Assign",
+        "isEnabled": true,
+        "filterTableNo": 336,
+        "description": "Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru.",
+        "selectionDescription": "Stofnar eina rakningarforskrift út frá itemNo, quantity og lotu-, rað- eða pakkanúmeri; hún er ekki tengd skjalalínu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "úthluta lotu",
+          "úthluta raðnúmeri",
+          "úthluta pakka",
+          "vörurekjanleiki"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Delete",
+        "isEnabled": true,
+        "filterTableNo": 336,
+        "description": "Deletes a tracking specification record by its entry number.",
+        "selectionDescription": "Deletes one tracking specification by entry number.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "delete tracking",
+          "delete lot",
+          "delete serial",
+          "delete package"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Delete",
+        "isEnabled": true,
+        "filterTableNo": 336,
+        "description": "Eyðir rakningarforskrift eftir færslunúmeri hennar.",
+        "selectionDescription": "Eyðir einni rekjanleikaforskrift eftir færslunúmeri.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "eyða rekjanleika",
+          "eyða lotu",
+          "eyða raðnúmeri",
+          "eyða pakka"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Reads lot, serial and package tracking for an item or document line.",
+        "selectionDescription": "Select a source or legacy document line; otherwise select an item. A sales, purchase or transfer line SystemId in subject selects that source.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "read tracking",
+          "lot tracking",
+          "serial tracking",
+          "package tracking"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Tracking.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.",
+        "selectionDescription": "Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "lesa rakningu",
+          "loturakning",
+          "raðnúmerarakning",
+          "pakkarakning"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TrackingAvailability.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Reads tracked inventory, reserved quantities and availability by location and variant.",
+        "selectionDescription": "Select an item using subject or item identifiers; intersect location, variant and exact tracking filters.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "tracking availability",
+          "lot availability",
+          "serial availability",
+          "package availability"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TrackingAvailability.Get",
+        "isEnabled": true,
+        "filterTableNo": 27,
+        "description": "Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.",
+        "selectionDescription": "Veldu vöru með subject eða vöruauðkennum; sameinaðu síur fyrir birgðageymslu, afbrigði og nákvæma rakningu.",
+        "messageDirection": "Outbound",
+        "keywords": [
+          "tiltæk rakning",
+          "tiltækar lotur",
+          "tiltæk raðnúmer",
+          "tiltækir pakkar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Transfer.UndoReceipt",
+        "isEnabled": true,
+        "filterTableNo": 5746,
+        "description": "Undoes a posted transfer receipt by writing corrective item ledger entries.",
+        "selectionDescription": "Undoes a posted transfer receipt. Does not delete the posted document.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "undo transfer receipt"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Transfer.UndoReceipt",
+        "isEnabled": true,
+        "filterTableNo": 5746,
+        "description": "Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum.",
+        "selectionDescription": "Afturkallar bókaða millifærslumóttöku. Eyðir ekki bókaða skjalinu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "afturkalla millifærslumóttöku"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Transfer.UndoShipment",
+        "isEnabled": true,
+        "filterTableNo": 5744,
+        "description": "Undoes a posted transfer shipment with corrective entries.",
+        "selectionDescription": "Same action as Undo Shipment on a posted transfer shipment.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "undo transfer shipment"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.Transfer.UndoShipment",
+        "isEnabled": true,
+        "filterTableNo": 5744,
+        "description": "Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.",
+        "selectionDescription": "Sama aðgerð og Afturkalla afhendingu á bókaðri millifærsluafhendingu.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "afturkalla millifærsluafhendingu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Create",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.",
+        "selectionDescription": "Creates a new transfer order header and optional lines; use TransferOrder.Release or Post after creation.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "transfer order",
+          "move stock",
+          "transfer between locations",
+          "move goods to another warehouse",
+          "stock transfer",
+          "relocate inventory"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Create",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum.",
+        "selectionDescription": "Býr til nýja millifærslupöntun og valkvæðar línur; notaðu TransferOrder.Release eða Post eftir stofnun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "millifærslupöntun",
+          "flytja birgðir",
+          "flutningur milli birgðageymslna",
+          "flytja vörur í aðra birgðageymslu",
+          "birgðaflutningur",
+          "færa birgðir til"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Post",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Posts a transfer order (ship/receive, or ship+receive for direct transfers).",
+        "selectionDescription": "Posts a transfer order by shipping or receiving it; use PreviewPost to inspect predicted entries first.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "post transfer",
+          "ship transfer order",
+          "receive transfer order",
+          "goods arrived at the other warehouse",
+          "direct transfer"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Post",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu).",
+        "selectionDescription": "Bókar millifærslupöntun með afhendingu eða móttöku; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "bóka millifærslu",
+          "afhenda millifærslupöntun",
+          "taka á móti millifærslupöntun",
+          "móttekið í hinni birgðageymslunni",
+          "bein millifærsla"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.",
+        "selectionDescription": "Previews transfer posting without committing; use Post to perform the irreversible shipment or receipt.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "preview transfer posting",
+          "simulate stock transfer",
+          "what would the transfer post"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.PreviewPost",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.",
+        "selectionDescription": "Forskoðar bókun millifærslu án frágangs; notaðu Post til að framkvæma óafturkræfa afhendingu eða móttöku.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "forskoða bókun millifærslu",
+          "herma birgðaflutning",
+          "hvað myndi millifærslan bóka"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Release",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Releases a transfer order, changing its status from Open to Released.",
+        "selectionDescription": "Releases an open transfer order so it can be posted; use Reopen to edit a released order.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "release transfer order",
+          "transfer ready to ship",
+          "lock the transfer"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Release",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest.",
+        "selectionDescription": "Leyfir opna millifærslupöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "losa millifærslupöntun",
+          "staðfesta millifærslupöntun",
+          "millifærsla tilbúin til afhendingar"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Reopen",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Reopens a transfer order, changing its status from Released to Open.",
+        "selectionDescription": "Reopens a released transfer order for editing; use Release to prepare it for posting again.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "reopen transfer order",
+          "change released transfer",
+          "unlock transfer"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Reopen",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin.",
+        "selectionDescription": "Opnar leyfða millifærslupöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "opna millifærslupöntun aftur",
+          "breyta staðfestri millifærslu",
+          "aflæsa millifærslu"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "lcid": 1033,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Statistics",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Returns transfer order statistics: line quantity, parcels, net/gross weight, volume and reservation state.",
+        "selectionDescription": "Reads transfer order quantities, parcels, weights and volume without changing the order; use PreviewPost for posting prediction.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "transfer statistics",
+          "transfer weight",
+          "parcels",
+          "transfer volume",
+          "transfer quantities"
+        ],
+        "chargeable": true
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "lcid": 1039,
+      "ok": true,
+      "status": "Success",
+      "catalogue": {
+        "name": "Inventory.TransferOrder.Statistics",
+        "isEnabled": true,
+        "filterTableNo": 5740,
+        "description": "Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar.",
+        "selectionDescription": "Les magn, pakka, þyngdir og rúmmál millifærslupöntunar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.",
+        "messageDirection": "Inbound",
+        "keywords": [
+          "tölfræði millifærslu",
+          "þyngd millifærslu",
+          "pakkar",
+          "rúmmál millifærslu",
+          "magn millifærslu"
+        ],
+        "chargeable": true
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "descriptionDiffers": true,
+      "selectionDiffers": true,
+      "keywordsDiffer": true
+    }
+  ],
+  "dataSetup": "Catalogue metadata reads need no business fixtures. Created0/remaining0. No message mutation, licence, EULA, trial or backend write.",
+  "touchedMessageTypes": [],
+  "executed": 118,
+  "passed": 118,
+  "failed": 0,
+  "skipped": 0,
+  "finishedAt": "2026-10-29T11:23:39.744Z",
+  "verified": true
+}
