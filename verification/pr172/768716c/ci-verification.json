@@ -1,0 +1,89 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "run": 40863486675,
+  "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/40863486675",
+  "status": "completed",
+  "conclusion": "success",
+  "fullSuite": true,
+  "total": 422,
+  "passed": 422,
+  "failed": 0,
+  "skipped": 0,
+  "codeunits": 47,
+  "sourceAndCompiledMethodInventoryMatch": true,
+  "testResultProvenance": {
+    "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+    "run": 40863486675,
+    "artifact": 12893876402,
+    "name": "bc-origo-bifrost-inventory-codex_inventory-152-catalogue-guard-20261027-arch-TestTestResults-PR172-20261029",
+    "sha256": "8a1d9a867b7d289337e725f367203378a440e03fb678ac343fe608ebc22fac26",
+    "digestVerified": true
+  },
+  "compile": {
+    "default": {
+      "loggedAlErrors": 0,
+      "loggedAlWarnings": 0,
+      "analyzersMentioned": {
+        "CodeCop": true,
+        "UICop": true,
+        "AppSourceCop": true
+      },
+      "containerSeen": true
+    },
+    "test": {
+      "loggedAlErrors": 0,
+      "loggedAlWarnings": 0,
+      "analyzersMentioned": {
+        "CodeCop": true,
+        "UICop": true,
+        "AppSourceCop": true
+      },
+      "containerSeen": true
+    }
+  },
+  "samePhysicalContainer": "f078cae366a7",
+  "cleanup": {
+    "containerId": "f078cae366a7",
+    "deleted": 1,
+    "expected": 1,
+    "verified": true,
+    "job": 123421322782
+  },
+  "testProductRepublish": {
+    "actual": true,
+    "version": "28.3.2147483647.202",
+    "containerId": "f078cae366a7",
+    "skipUpgradeTrueLogged": true,
+    "sha256": "4ed9cf0b26bf50c3ea2bb14aec636a6e6c03894eafe92da02bee7ef466e62082"
+  },
+  "workflowSkippedJobsAreNotTestSkips": [
+    "PregateCheck same-repository bypass",
+    "per-mode cleanup deferred to final cleanup",
+    "Code Analysis Processing disabled by existing config"
+  ],
+  "pipelineSettingsChanged": false,
+  "incrementalDiagnosis": "Prior9e12 skipped product and failed strict receipt. Current768716 merge includes product change from main#174, selected fresh product compilation and strict finalization passed. No settings bypass/weakening or general incremental-mode repair claimed.",
+  "defaultNoIVT": true,
+  "defaultPackage": {
+    "file": "Origo_Bifrost Inventory_28.3.2147483647.202.app",
+    "version": "28.3.2147483647.202",
+    "sha256": "70e3c6f17acb7a380f5a9e7781ab24327e29d24fb6bb2a7ea4e274c52d6847a4",
+    "internalsVisibleToModules": [],
+    "verifiedFromActualDefaultArtifact": true,
+    "artifactProvenance": {
+      "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+      "run": 40863486675,
+      "id": 12892249604,
+      "name": "bc-origo-bifrost-inventory-codex_inventory-152-catalogue-guard-20261027-arch-Apps-PR172-20261029",
+      "sha256": "3a26f5895975913c96764452a0efaec51a4168c7ff394030c6ad094ccc457df4",
+      "digestVerified": true
+    }
+  },
+  "sourceCheckout": {
+    "ciCommit": "9951d2805bc3e51fd91e6346fb74d3136448b0b6",
+    "candidateCommit": "768716cbd94d377e69e1324951863a56dab1cfa2",
+    "identicalTree": "1c9a591254d942dfde1ec40d3934a469d60c3f3d",
+    "verified": true
+  },
+  "foundationVersion": "28.0.3.530"
+}

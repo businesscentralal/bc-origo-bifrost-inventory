@@ -1,0 +1,22 @@
+default: 2026-10-29T11:13:04.4601909Z HEAD is now at 9951d28 Merge 768716cbd94d377e69e1324951863a56dab1cfa2 into 63f9312eea552639a464086e72221bc697532fd3
+default: 2026-10-29T11:13:05.5399460Z Bifrost: Test MainApp republish completed; the test app may now be deployed.
+default: 2026-10-29T11:14:03.6293071Z Bifrost: build mode 'Default' - removed internalsVisibleTo and the AS0081 suppression from app/app.json.
+default: 2026-10-29T11:16:13.6433221Z AppSource gate: before passed
+default: 2026-10-29T11:16:49.9240574Z Compilation started for project 'Bifrost Inventory' containing '110' files at '11:16:15.104'.
+default: 2026-10-29T11:17:11.0609959Z AppSource gate: post passed
+default: 2026-10-29T11:19:44.2829708Z AppSource gate: finalize passed
+default: 2026-10-29T11:19:52.7408851Z AppSource gate: pipeline passed
+test: 2026-10-29T11:20:50.3630875Z HEAD is now at 9951d28 Merge 768716cbd94d377e69e1324951863a56dab1cfa2 into 63f9312eea552639a464086e72221bc697532fd3
+test: 2026-10-29T11:20:51.7879062Z Bifrost: Test MainApp republish completed; the test app may now be deployed.
+test: 2026-10-29T11:24:08.9185407Z AppSource gate: before passed
+test: 2026-10-29T11:24:22.4350351Z Compilation started for project 'Bifrost Inventory' containing '110' files at '11:24:09.935'.
+test: 2026-10-29T11:24:50.3188029Z AppSource gate: post passed
+test: 2026-10-29T11:26:00.8862516Z AppSource gate: before passed
+test: 2026-10-29T11:26:12.6905065Z Compilation started for project 'Bifrost Inventory - Tests' containing '60' files at '11:26:01.632'.
+test: 2026-10-29T11:26:34.7180578Z AppSource gate: post passed
+test: 2026-10-29T11:27:08.9293739Z Bifrost: republishing Test MainApp 28.3.2147483647.202 on shared container f078cae366a7, SHA256=4ED9CF0B26BF50C3EA2BB14AEC636A6E6C03894EAFE92DA02BEE7EF466E62082.
+test: 2026-10-29T11:27:20.4999820Z Bifrost: Test MainApp republish completed; the test app may now be deployed.
+test: 2026-10-29T11:31:44.0650468Z AppSource gate: finalize passed
+test: 2026-10-29T11:31:48.7048692Z AppSource gate: pipeline passed
+cleanup: 2026-10-29T11:32:33.9272138Z     Container 'f078cae366a7' deleted
+cleanup: 2026-10-29T11:32:33.9281293Z   Deleted 1 of 1 containers

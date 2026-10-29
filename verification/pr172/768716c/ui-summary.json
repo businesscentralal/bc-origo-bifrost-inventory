@@ -43,7 +43,7 @@
       "retainedScenarios": [
         1033
       ],
-      "repair": "Language lookup search selector accepts the platform keyboard shortcut suffix in its title; no product/source change."
+      "repair": "Use title prefix match for the visible lookup search control; validate retained applicationID/LCID/result JSON before resume, no source change."
     }
   ],
   "finishedAt": "2026-10-29T11:31:05.154Z"

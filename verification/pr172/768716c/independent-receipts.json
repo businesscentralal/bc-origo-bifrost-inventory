@@ -1,0 +1,22 @@
+{
+  "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "claude": {
+    "commentId": 6495216582,
+    "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/172#issuecomment-6495216582",
+    "identity": "gunnargestsson",
+    "createdAt": "2026-10-29T11:18:24Z",
+    "environment": "bc28-w1 f089d7daffb9",
+    "method": "Explicit current-head main-only carry-forward; no fresh independent422/UI execution claimed",
+    "body": "\u2705 Verified by Claude Code at 768716cbd94d377e69e1324951863a56dab1cfa2 (bc28-w1 f089d7daffb9) (carried forward automatically: update from `main` only)\n\n**Exact head:** `768716cbd94d377e69e1324951863a56dab1cfa2`. This head merges `main` into the branch I verified at **9e12d89** (receipt earlier on this PR). Every commit in 9e12d89...768716c is either already on `main` or a merge commit. The PR's own diff against `main` is the same as at 9e12d89, file for file and line count for line count for every non-Markdown file (1 files), so the update added no code, test or XLF changes of its own. The 9e12d89 receipt carries forward. What `main` brought in is covered by its own merges' receipts.\nCI pending/red is not a verification blocker (Gunnar 16.10). Merging needs green CI and an approval."
+  },
+  "grok": {
+    "reviewId": 5696934801,
+    "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/172#pullrequestreview-5696934801",
+    "identity": "gunnargestsson",
+    "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+    "state": "APPROVED",
+    "body": "**CLEARED at 768716cbd94d377e69e1324951863a56dab1cfa2**: re-gate after a main merge. This replaces the dismissed APPROVE 5666620980 at 9e12d896.\n\n**Delta 9e12d896..768716cb:** a single merge of main `63f9312e` (PR #174). The only resolved conflict is in CHANGELOG.\n- The PR's own non-Markdown diff against main is **byte-identical** to 9e12d896 (interdiff empty). It's still only `test/test/Inventory/InvCatalogueQualityTests.Codeunit.al` (96971, +126).\n- No conflict markers anywhere in the tree.\n- **#174 is intact:** `app/src/Lifecycle/InventoryRegistration.Codeunit.al`, `test/src/InvSetupTest.PermissionSet.al`, `test/src/InvRegExclTest.PermissionSet.al` and `InvRegistrationTests.Codeunit.al` are identical to main.\n- The product floor stays Foundation 28.0.3.530.\n\n- **Receipt:** Claude carry-forward [6495216582](https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/172#issuecomment-6495216582) names this exact SHA (bc28-w1 `f089d7daffb9`, main-only update). It's valid.\n- **Decision:** Gunnar Decision 6443359924 (`d-20261027-inv172-owner-signoff`) approves the PR regardless of tip.\n- **COSMO:** `alviss-worker4-inventory172-20261029` / `f001f45a265c` (PR body), confirmed.\n- **CI (not gated):** the Default build passed. The Test job was still in progress when this was posted.\n\nSoft nit (Keep a Changelog, newest first): in `CHANGELOG.md` under Unreleased, the #152 entries (2026-10-25, 2026-10-23) now sit **above** the 2026-10-29 #173 entry, and there's a double blank line before it. Consider moving #173 to the top in a later docs touch. Not blocking.\n\nTest-only change. No permission, message-type or Inventory/Warehouse crossover. Labels left as set by Architect. Not merging from Apps."
+  },
+  "eligibleNonAuthorApproval": true,
+  "softNit": "Keep a Changelog order/newest-first is nonblocking; no additional candidate was introduced for it."
+}

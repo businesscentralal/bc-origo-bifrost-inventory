@@ -1,0 +1,14 @@
+{
+  "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "name": "alviss-worker4-inventory172-20261029",
+  "startedAt": "2026-10-29T11:34:50.519Z",
+  "stateBefore": "Running",
+  "deleted": false,
+  "retainedUntil": "Same-SHA deployment plus Tester UAT pass and issue closure",
+  "fixtureCleanupVerified": true,
+  "stopRequested": true,
+  "actualState": "Stopped",
+  "verified": true,
+  "checkedAt": "2026-10-29T11:35:11.563Z"
+}
