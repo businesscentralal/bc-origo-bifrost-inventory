@@ -1,0 +1,15 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "containerId": "f0a32cf1f8d6",
+  "FoundationVersion": "28.0.3.530",
+  "testAppVersion": "28.3.2.182",
+  "companyName": "My Company",
+  "fullSuite": false,
+  "codeunit": 96972,
+  "finishedAt": "2026-10-29T09:54:25.952Z",
+  "durationMs": 16165,
+  "ok": true,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0
+}
