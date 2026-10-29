@@ -10,14 +10,23 @@
     "full-suite-inventory.json": "6cc5bcd490bacb0f806e7a73fc26686d0c16dcda4a3d2fc2ecc4ddd36d1db58e",
     "full-suite.junit.xml": "ebb7c0946498c48916abdccd58af8c0f5833e7f0d213d18ce19c991de9a539f5",
     "github-candidate.json": "49c86d69b4bf729d348a8daa4684848e2835274016ebda51e0fa05cf67ee911b",
+    "grok-current-tip.json": "7942cdd99e443a894b6e66bc91a0a410c85876849452119acf2f8350deb6a162",
     "inventory-baseline-provenance.json": "9b5d92113a02d4fd2786a0e6e56e64748f9e8876b5b04f87cb8a4f3b6e9da844",
     "inventory-verified.json": "f9923b288755c32f9d8f54cef82c54d7659b8fb83f1a850e5a55e7984c0e4e74",
+    "language-restoration.json": "9e52fd5ca250231d26e134e503d3cca5b773b8017ccd08df105dd8077e388cbb",
     "mcp-summary.json": "2e9f870a06671f1ad1a5fe29c917863a9ddb61d1633e4677a785f5dc7d45f7f3",
     "minimum530-compile-summary.json": "acb77893cf20763e70429bff559a7f4dd49fc3c59d309a3a6b6c61d24727caa9",
+    "object-ids.log": "1ed3f7b14e4a6e8c790d329d4e06c564e6dacef6e5b41b81cb06b0aabaa75d59",
     "owned-cleanup.json": "aa951860d2d748244b17194bfec81fdd2c8e1ccb0d1feb2382bb99ef78d953e7",
-    "owned-resource-policy.json": "01b605b4dc2441b8d70f3c5e6c7de1ad44b6dcb88b46ea50b1bfaf124d4539d3",
+    "owned-resource-policy.json": "25f974e1eb1be394194829657c01d92d8398ce1861390927243c7ac31525804f",
+    "permissions.log": "eb62e5f4e0d617534642d0d26d570d03d1dd1ad8ff7489d61303cc26cc691adc",
+    "pr-gateway-layer1.json": "48840c386441d325fe43ade9b85d2403668629ca48700370a5cebb6a4e867c79",
+    "pr-gateway-triage.json": "e37789d359e37c47fa2ec0c52bc9c5e0748a8ac9a871892643a920aaee994f52",
     "source-manifest.json": "fbb02bc4f66f9b979425d402cd5a32a49f8f80e41fe6edc98441a02160dd74ea",
     "test-compile.log": "6bbda21cb48826007bf8e349e50a49a985b71ea6c00aad21c80fa26f313783d1",
+    "test-gateway-layer1.json": "ae127bf4cdcd7758658c3287d44f727ccb08c1e88f3d69a9f03e38907fc4e11a",
+    "ui-language-recovery-initial-attempt.json": "fc28b7e615e3271fd2cafad0f305db1e33dbb5de237887acf5163f8205a608f4",
+    "ui-language-restored.png": "6b1fc8a3d93d4d88fec924d4da8692d5c7b11b5b0626632dc841af662f2402c1",
     "ui-release-1033-results.json": "6ce5b193a1a03fd926be564b6200b63ba83faeac65c4d16080ac701643ece158",
     "ui-release-1033.png": "27fcbc8c2060bfe6b42522017b313e05ce4721119dd628e162660932de2bb1a7",
     "ui-release-1039-results.json": "c22b74edd46a2f06bbf0c2908a94a7c140ed3f8601d5aa4d14df45d10e56c44f",
@@ -26,6 +35,7 @@
     "ui-setup-1039.png": "a9c3da1048a46592780217993791c249bbfaf7d95b7ea78da91e9fd4af3a537a",
     "ui-suite-cleanup.json": "4eb19781242013a42db784e61ef5312e74af3e8eb87c88891b7315a021559bfc",
     "ui-summary.json": "c2dc5aefdf32c91d89c4c65937b1188888ae82227a906cfd2fd6597cc4a898cd",
-    "versions-deployed.json": "3df37330a7df9242ddc98c2fecf48927b9ea26274aed40d24e8905c1d41f1fd6"
+    "versions-deployed.json": "3df37330a7df9242ddc98c2fecf48927b9ea26274aed40d24e8905c1d41f1fd6",
+    "xlf-test.log": "e313183a073e395b647a1b77d1f8e3bc29dfb995c1a50153e3fbab741ab9b5b0"
   }
 }
