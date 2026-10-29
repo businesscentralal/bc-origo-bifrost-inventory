@@ -1,0 +1,58 @@
+{
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/173",
+  "sourceSha": "1102f8a9d7ab559df9202ddb9ab4f7522e2ede58",
+  "criteria": {
+    "AC01": {
+      "implemented": true,
+      "verified": "Both approved inherent Execute properties unchanged; both apps compile0errors0warnings530/632",
+      "objects": [
+        10076845
+      ]
+    },
+    "AC02": {
+      "implemented": true,
+      "verified": false,
+      "regression": 96972,
+      "pending": "Fresh current-head native/UI and minimum530 CI; isolated one-object notification permission role fixture added, no Inventory grant",
+      "assertions": [
+        "actual Setup opens",
+        "no direct Setup write",
+        "Setup non-editable",
+        "RefreshLicense visible"
+      ]
+    },
+    "AC03": {
+      "verified": false,
+      "owner": "Claude Code",
+      "pending": "Independent current-head clean receipt and resolution after greenCI; bc28-w1 Inventory full suite/96972 and Foundation98677 in applicable1033/1039"
+    },
+    "AC04": {
+      "implemented": true,
+      "verified": true,
+      "summary": "CHANGELOG records objects and isolated fixture lifecycle"
+    }
+  },
+  "developerGates": {
+    "compile": "Current exact-tip0e0w on530/632 with3analyzers",
+    "publication": {
+      "repo": "businesscentralal/bc-origo-bifrost-inventory",
+      "branch": "fix/worker4-inventory173-registration-execute",
+      "sha": "1102f8a9d7ab559df9202ddb9ab4f7522e2ede58",
+      "branchUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/tree/fix/worker4-inventory173-registration-execute",
+      "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/1102f8a9d7ab559df9202ddb9ab4f7522e2ede58",
+      "remoteVerifiedAt": "2026-10-29T09:19:43.456Z"
+    },
+    "native": "PENDING",
+    "ui": "PENDING1033/1039",
+    "mcp": "Not applicable, registration/fixture only;0types/0executed/0passed",
+    "cleanup": "PENDING current-head owned fixture checks; retain container through postdeployUAT/closure",
+    "ci": "Fresh normal paired run pending publication event"
+  },
+  "deliveryPending": [
+    "Current-tip fullsuite/UI/cleanup and normalCI",
+    "Claude clean current-head receipt",
+    "Grok current-head clearance and eligible non-author approval",
+    "Architect merge/RC and same-SHA green-main deployment",
+    "Tester UAT, issue closure, owned-container deletion verification and genuine SecretaryACK"
+  ]
+}

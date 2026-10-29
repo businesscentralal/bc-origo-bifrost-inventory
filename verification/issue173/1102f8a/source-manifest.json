@@ -1,0 +1,9 @@
+{
+  "sha": "1102f8a9d7ab559df9202ddb9ab4f7522e2ede58",
+  "files": {
+    "app/src/Lifecycle/InventoryRegistration.Codeunit.al": "73bdddc08cb5e4a184a55ed42f94deba63d36e047e0bfe30742c4dfa83ab451e",
+    "test/src/InvSetupTest.PermissionSet.al": "14a898a7d6ee13cf988df72fe420315d4c274c700b5afc008d4d67a6f1587b8a",
+    "test/test/Inventory/InvRegistrationTests.Codeunit.al": "ce53bb2d70296e771c906c1ae03c417394256155c8486d1a01d85fc68a499840",
+    "CHANGELOG.md": "9729fc2b1269155c98fcacfd38d4643fac7075f9bb5703e898818ef6a226836e"
+  }
+}
