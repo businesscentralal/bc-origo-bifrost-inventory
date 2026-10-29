@@ -21,7 +21,7 @@
 
 ### Fixed (2026-10-29) - Reclassification test allocation after main integration (#159, PR #164)
 
-- Move `Reclass Check Perm Tests ori` from codeunit 96972 to unused test codeunit 96974, avoiding the registration test codeunit 96972 introduced by #174. Test assertions and production behavior are unchanged; both suites remain included.
+- Move `Reclass Check Perm Tests ori` from codeunit 96972 to 96976 and `Reclass Preview Tests ori` from 96971 to 96977. This avoids registration test 96972 introduced by #174 and preserves the allocations already used by open PRs #165 (96974), #166 (96975) and #172 (96971). Test assertions and production behavior are unchanged; all suites remain included.
 
 ### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
 
