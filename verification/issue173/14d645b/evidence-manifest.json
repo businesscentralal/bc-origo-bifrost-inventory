@@ -1,18 +1,35 @@
 {
   "sourceSha": "14d645b6deabc685048977f87977db1defd009e0",
-  "currentNativeUIPending": true,
   "files": {
-    "acceptance-matrix.json": "fe1ca9c08f274bf5f23f26818fb48a54c1e8e608d242d077c6e0dbc9df8cdf7d",
+    "acceptance-matrix.json": "71c7ba14269f4d7aae54c7ed75a5fc1e5cd447ac7e71fba366e64abff4ae12c2",
+    "amendment.json": "ffbcec8f95a4d85f85ba3350b25e61c47e4ffaee91cb2cc30a484e9ba6d7681d",
     "app-compile.log": "832354d7e42b64c2babb42aaa3d87993da8117684f07dd9c1eb6d368990eaf5e",
+    "artifact-provenance.json": "f37daee290a06e3ec00f462e0d774a383ff6d8d1648aff1889729dc80d257a5b",
     "compile-summary.json": "5fd6cc482538c6e2f61172a28c19eab43dbe1f6639692996c2fcb00614bb9af0",
+    "evidence-manifest.json": "251f65a083c6c2feccc493a85986419bda551d49fffae028bca97fd3a4284eae",
     "foundation-provenance.json": "5e24b728b5be2b9e1e702095221bf0fc08b8028bae45f44d4a3b25f172f4dd43",
+    "full-suite-inventory.json": "e48d1f0862a089fb52868ae851caa854968dc1d4ac203a2de1dac1a7847963fa",
+    "full-suite.junit.xml": "6430d733f49413d8ee3780c52675dd95c04673bb4758af522828c3582b029831",
     "github-candidate.json": "fdf84c80f1c3bba8c0ba36bb99f398dcd2109fe20e91d5f122bfcc30dc313a8d",
     "inventory-baseline-provenance.json": "9b5d92113a02d4fd2786a0e6e56e64748f9e8876b5b04f87cb8a4f3b6e9da844",
+    "inventory-verified.json": "fee39f6dd7093b81791a23fb43e8a6e6a3ba6e659c7bee4d09386693126a4774",
+    "language-restoration.json": "c0c02499cf67b7995bd59f128b8fb3b1db0acf6a1579939cbfea35dc278e787b",
     "mcp-summary.json": "a67c4d9a0e9a02428271b9d3807a602e2cb413f1b9bc10038a7ed1e566b592db",
     "minimum530-compile-summary.json": "7ffc9964f134c7de93452757c0ec88970ae99220f2715a6bdc43d2165d3d138b",
+    "owned-cleanup.json": "70ce24a42fe41f598df7c68d147afeb4ad185105134a6a21eec5659c76b90be4",
+    "owned-resource-policy.json": "25f974e1eb1be394194829657c01d92d8398ce1861390927243c7ac31525804f",
     "previous9dd-ci-attempt2-diagnosis.json": "bd265375cf8e3913985d3e87c4acfbe3c8bb76f5e7204597b24424369e42ee37",
     "previous9dd-ci-attempt2-TestResults.xml": "6e1fb69f4f4a8f6827c3bdb4f06c82b8f5eba84932fc64c879aa495161798979",
     "source-manifest.json": "5fa5f6cbf11eff5a3d32d3ff8b1c499ba86415db8ae317021feb611c6511886a",
-    "test-compile.log": "1ceab4c7bf86a46c440f200f070f1a24273dd66f2dc9d05e11a9076b7481aae8"
+    "test-compile.log": "1ceab4c7bf86a46c440f200f070f1a24273dd66f2dc9d05e11a9076b7481aae8",
+    "ui-release-1033-results.json": "0a3d46f2948edfc96b731218a0359c7d446f9ffb0fb6432adb8b97b442bd6d83",
+    "ui-release-1033.png": "27fcbc8c2060bfe6b42522017b313e05ce4721119dd628e162660932de2bb1a7",
+    "ui-release-1039-results.json": "c93148569899cd82561f75ce25fa3f255cdbb57cb07cdcbc30bb98890763a217",
+    "ui-release-1039.png": "e4185c62851580ec9b1d4469ae708f85033c3853b841048350b1ddb98db5caed",
+    "ui-setup-1033.png": "7de89b3d58b55fe97db84d3af21b0ae7d1debc4f919fed4799a1889792abe1be",
+    "ui-setup-1039.png": "125f6133e1e56c42dc188d4283eebb7f797000c269943b95558250069f8b3c9c",
+    "ui-suite-cleanup.json": "50e9f3ba43d480830aea5470aa08f6676661bab296f92ff7a4f340939ce95bab",
+    "ui-summary.json": "bfa6d03b13ad8617933ae9b700a1668f704ba0c609cfce4028806ccf487854d9",
+    "versions-deployed.json": "a6b1ba394cbce403aff50a0570c8faea7322df7a410e35490ced5d3b78f6dad4"
   }
 }

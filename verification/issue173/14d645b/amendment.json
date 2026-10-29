@@ -1,0 +1,10 @@
+{
+  "sourceSha": "14d645b6deabc685048977f87977db1defd009e0",
+  "previousSha": "1102f8a9d7ab559df9202ddb9ab4f7522e2ede58",
+  "cause": "Foundation530 internal Setup Notifications cannot be named cross-app; runtime tenant role cannot be consumed by Microsoft Permissions Mock, which reads platform Permission Set.",
+  "repair": "Native AL FoundationRead inclusion minus explicit InventoryRegistration Execute exclusion via96973. No runtime role/user changes and no general administration.",
+  "currentDeveloperSuite": "420/420/0/0 on632; UI1/1each1033/1039; language restoration harness failure recovered and fixtures deleted.",
+  "negativeControlPending": true,
+  "claudeReceiptPending": true,
+  "minimumRuntimeAndCIStillPending": true
+}

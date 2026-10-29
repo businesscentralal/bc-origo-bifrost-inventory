@@ -1,0 +1,18 @@
+{
+  "name": "Inv. Registration Tests ori",
+  "codeUnit": 96972,
+  "codeunitName": "Inv. Registration Tests ori",
+  "applicationID": "{A886B2CB-7DA0-4784-8163-42956DBDD5EC}",
+  "applicationName": "Bifrost Inventory - Tests",
+  "startTime": "2026-10-29T09:34:59.4630000Z",
+  "finishTime": "2026-10-29T09:34:59.7130000Z",
+  "result": 2,
+  "testResults": [
+    {
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "startTime": "2026-10-29T09:34:59.4770000Z",
+      "finishTime": "2026-10-29T09:34:59.7030000Z",
+      "result": 2
+    }
+  ]
+}

@@ -19,7 +19,8 @@
         "no direct Setup write",
         "Setup non-editable",
         "RefreshLicense visible"
-      ]
+      ],
+      "native": "Own632420/420/0/0 source/JUnit inventory verified;96972included"
     },
     "AC03": {
       "verified": false,
@@ -42,11 +43,33 @@
       "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/14d645b6deabc685048977f87977db1defd009e0",
       "remoteVerifiedAt": "2026-10-29T09:31:11.248Z"
     },
-    "native": "PENDING179",
+    "native": {
+      "sha": "14d645b6deabc685048977f87977db1defd009e0",
+      "executed": 420,
+      "passed": 420,
+      "failed": 0,
+      "skipped": 0,
+      "codeunits": 46,
+      "sourceMethods": 420,
+      "missing": [],
+      "unexpected": [],
+      "regression96972": {
+        "classname": "96972 Inv. Registration Tests ori",
+        "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+        "time": "3.717"
+      },
+      "verified": true
+    },
     "ui": "PENDING179",
     "mcp": "Not applicable, registration/fixture only;0types/0executed/0passed",
     "cleanup": "PENDING current-head owned fixture checks; retain container through postdeployUAT/closure",
-    "ci": "Fresh normal paired run pending publication event"
+    "ci": {
+      "run": 40850301286,
+      "sha": "14d645b6deabc685048977f87977db1defd009e0",
+      "status": "in_progress",
+      "observedAt": "2026-10-29T09:32:14.965Z",
+      "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/40850301286"
+    }
   },
   "deliveryPending": [
     "Current-tip fullsuite/UI/cleanup and normalCI",
