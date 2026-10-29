@@ -1,0 +1,648 @@
+
+Dynamics 365 Business Central
+
+
+
+
+G
+
+Command Line Test Tool
+Saved
+
+
+
+Suite Name
+Test Codeunit Range
+Test Procedure Range
+Test Runner Codeunit ID
+Extension ID
+Required Test Isolation
+Test Type
+DisableTestMethod
+Test Result JSON
+Code Coverage Tracking Type
+Code Coverage Map
+Code Coverage Track All Sessions
+Code Coverage Exporter ID
+Code Coverage Results CSV
+Data Output
+Data Input
+Code Coverage Map CSV Text
+Code Coverage Information
+Stability run
+Company Name
+CRONUS International Ltd.
+Tenant ID
+default
+Language ID
+1033
+Manage
+Run Selected Tests
+Run Next Test
+Clear Test Results
+GetCodeCoverage
+
+
+
+		
+Line Type
+	
+	
+Codeunit ID
+	
+Name
+	
+Run
+	
+Result
+	
+Error Message
+	
+Stack Trace
+	
+Finish Time
+	
+Start Time
+	
+			
+									
+		
+0
+	
+	
+96900
+	
+Item Attribute Tests ori
+	
+	
+2
+	
+		
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Get_ByItemNo_ReturnsAttributes
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Get_MissingItem_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Create_Idempotent_SameValue_ChangedFalse
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Create_ConflictWithoutOverwrite_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Create_ConflictWithOverwrite_Succeeds
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Update_Existing_ReturnsBeforeAfter
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Update_MissingMapping_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Create_ServiceItem_Accepted
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+Enum_ValuesResolveToImpl
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96900
+	
+DataRecords_WriteRestricted_AttributeTables
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96901
+	
+Item AttrDef Tests ori
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96901
+	
+DefinitionCreate_Option_CreatesValues
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96901
+	
+DefinitionCreate_DuplicateName_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96905
+	
+Asm. Doc Prev. Post Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96905
+	
+PreviewPost_OrderWithStock_ReturnsLedgerEntries
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96905
+	
+PreviewPost_NothingToAssemble_ReturnsNothingToPreview
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96905
+	
+PreviewPost_MissingIdentifier_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96905
+	
+PreviewPost_NoLines_ReturnsErrorAndPreservesOrder
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96905
+	
+PreviewPost_NoComponentStock_ReturnsPostingError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96906
+	
+Asm. Order RefreshLines Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96906
+	
+RefreshLines_ExistingOrder_ReturnsSuccess
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96906
+	
+RefreshLines_MissingIdentifier_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96907
+	
+Asm. Order Statistics Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96907
+	
+Statistics_OpenOrder_ReturnsCosts
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96907
+	
+Statistics_MissingIdentifier_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96908
+	
+Assembly Order Create Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96908
+	
+Create_AllRequiredFields_ReturnsSuccess
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96908
+	
+Create_MissingItemNo_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96908
+	
+AssemblyCreate_BadPostingDate_IsAnError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96909
+	
+Assembly Order Post Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96909
+	
+Post_OrderWithStock_ReturnsSuccess
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96909
+	
+Post_MissingIdentifier_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+0
+		
+96910
+	
+Assembly Order Release Tests
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96910
+	
+Release_OpenOrder_StatusReleased
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+		
+1
+		
+96910
+	
+Release_MissingIdentifier_ReturnsError
+	
+	
+2
+	
+	
+	
+10/29/2026 9:56 AM
+	
+10/29/2026 9:56 AM
+	
+
+Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.
+
+List with title "Command Line Test Tool" now has 147 items
