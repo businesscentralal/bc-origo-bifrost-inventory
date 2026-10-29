@@ -1,0 +1,28 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "startedAt": "2026-10-29T11:32:40.289Z",
+  "ownedSuites": [
+    "I172UIEN",
+    "I172UIIS"
+  ],
+  "deleted": [
+    "I172UIEN",
+    "I172UIIS"
+  ],
+  "verification": [
+    {
+      "suite": "I172UIEN",
+      "remaining": 0
+    },
+    {
+      "suite": "I172UIIS",
+      "remaining": 0
+    }
+  ],
+  "defaultSuite": "Retained native full-suite evidence in owned container; not deleted",
+  "priorAttempt": "ui-suite-cleanup-attempt1.json",
+  "recovery": "Read fresh suite list first; delete only present exact own rows; wait for server readback. No already-absent deletion replay.",
+  "verified": true,
+  "finishedAt": "2026-10-29T11:32:47.182Z"
+}

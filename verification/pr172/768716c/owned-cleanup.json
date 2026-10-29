@@ -1,0 +1,31 @@
+{
+  "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+  "containerId": "f001f45a265c",
+  "checkedAt": "2026-10-29T11:32:47.360Z",
+  "nativeIsolation": "Test Runner - Isol. codeunit130450, TestIsolation=Codeunit; full422test result exported with source-to-method inventory",
+  "mcpFixturesCreated": 0,
+  "mcpFixturesRemaining": 0,
+  "uiSuitesDeleted": [
+    "I172UIEN",
+    "I172UIIS"
+  ],
+  "uiSuiteCleanupVerified": true,
+  "languageRestored1033": true,
+  "representativeNativeRollbackChecks": [
+    {
+      "entity": "items",
+      "filter": "number eq 'ZZTEST' or number eq 'XITEM'",
+      "remaining": 0,
+      "httpStatus": 200
+    },
+    {
+      "entity": "locations",
+      "filter": "code eq 'ZZTEST' or code eq 'XLOC'",
+      "remaining": 0,
+      "httpStatus": 200
+    }
+  ],
+  "newRegressionFixtures": "Catalogue guard is read-only and creates no business data; full suite native fixtures are codeunit-isolated",
+  "containerDisposition": "Retain same task-owned container for amendments and postdeploy Tester UAT. Delete only after UAT passes and issue closes; container deletion not claimed.",
+  "verified": true
+}

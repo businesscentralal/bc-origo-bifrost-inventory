@@ -7,8 +7,31 @@
     "AC1": {
       "implemented": true,
       "guard": "96971,2tests,59types \u00d7 description/selection/keywords \u00d71033/1039",
-      "runtimeVerified": false,
-      "limitation": "Keywords compared as whole text; partial-list observation remains disclosed"
+      "runtimeVerified": true,
+      "limitation": "Keywords compared as whole text; partial-list observation remains disclosed",
+      "nativeGuard": {
+        "executed": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "webClient": {
+        "lcids": [
+          1033,
+          1039
+        ],
+        "executed": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "optionalMcpCatalogue": {
+        "types": 59,
+        "executed": 118,
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0
+      }
     },
     "AC2": {
       "state": "Already on main via#160, outside this guard repair; not independently declared complete here"
@@ -30,5 +53,86 @@
     "touchedMessageTypes": [],
     "reason": "Only catalogue test guard added versus main; no implementation, type definition or catalogue text changed. Main merge registration X is not a message-type change. Static describe checks optional and recorded separately; no mutation passes claimed."
   },
-  "sourceCustody": "worker-4 retained CI/sourcerepair; original local-4 private checkpoints preserved"
+  "sourceCustody": "worker-4 retained CI/sourcerepair; original local-4 private checkpoints preserved",
+  "developerGates": {
+    "compile": "App/test0errors0warnings on530/632; exact source SHA; artifact183",
+    "fullSuite": {
+      "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+      "executed": 422,
+      "passed": 422,
+      "failed": 0,
+      "skipped": 0,
+      "codeunits": 47,
+      "sourceAndCompiledMethods": 422,
+      "compiledArtifactSha256": "1ac18083bbec16f5a5fd8449b4c820bfa45e4d41c43750f9e0a5dd7115e0fb34",
+      "missing": [],
+      "unexpected": [],
+      "catalogueGuard96971": [
+        {
+          "classname": "96971 Inv. Catalogue Quality Tests",
+          "name": "EveryType_CatalogueTextsTranslatableAt1039",
+          "time": "0.027"
+        },
+        {
+          "classname": "96971 Inv. Catalogue Quality Tests",
+          "name": "EveryType_CatalogueTextsAreNotCopyPasted",
+          "time": "0.02"
+        }
+      ],
+      "registrationRegression96972": [
+        {
+          "classname": "96972 Inv. Registration Tests ori",
+          "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+          "time": "2.76"
+        }
+      ],
+      "verified": true
+    },
+    "ui": {
+      "executed": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "lcids": [
+        1033,
+        1039
+      ],
+      "languageRestored": true,
+      "harnessRetry": "First language picker title matcher corrected, retained EN2pass without replay. Cleanup waited for server readback; final0own suites verified."
+    },
+    "ownedCleanup": {
+      "sha": "768716cbd94d377e69e1324951863a56dab1cfa2",
+      "containerId": "f001f45a265c",
+      "checkedAt": "2026-10-29T11:32:47.360Z",
+      "nativeIsolation": "Test Runner - Isol. codeunit130450, TestIsolation=Codeunit; full422test result exported with source-to-method inventory",
+      "mcpFixturesCreated": 0,
+      "mcpFixturesRemaining": 0,
+      "uiSuitesDeleted": [
+        "I172UIEN",
+        "I172UIIS"
+      ],
+      "uiSuiteCleanupVerified": true,
+      "languageRestored1033": true,
+      "representativeNativeRollbackChecks": [
+        {
+          "entity": "items",
+          "filter": "number eq 'ZZTEST' or number eq 'XITEM'",
+          "remaining": 0,
+          "httpStatus": 200
+        },
+        {
+          "entity": "locations",
+          "filter": "code eq 'ZZTEST' or code eq 'XLOC'",
+          "remaining": 0,
+          "httpStatus": 200
+        }
+      ],
+      "newRegressionFixtures": "Catalogue guard is read-only and creates no business data; full suite native fixtures are codeunit-isolated",
+      "containerDisposition": "Retain same task-owned container for amendments and postdeploy Tester UAT. Delete only after UAT passes and issue closes; container deletion not claimed.",
+      "verified": true
+    },
+    "ci": "Current Default passed; Test/full run pending",
+    "independentClaude": "Pending changed-head receipt",
+    "grokClearanceApproval": "Pending changed-head receipt; old9e12 approval stale"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "sourceSha": "768716cbd94d377e69e1324951863a56dab1cfa2",
   "files": {
-    "acceptance-matrix.json": "85c4f49a1f641d18b7bcf1644c64afbff80489c93d6edc4642541e6a4a23f26e",
+    "acceptance-matrix.json": "fd2fa7ed22bd967673dad6b290431673dfc648320fa9b459c09bf904c9846a44",
     "app-compile.log": "07a76788392f44e27fedccf64767a8817f8122ed0b3032c8773b7c948499a142",
     "artifact-provenance.json": "e1011b24ce3159c23987a7bdce04139304637e567a02a9e8a4db566984afc697",
     "catalogue-types.json": "9ba5ddf4f164def146a285cc845228a25885c1aac8998bb324524d06bd1e4d73",
@@ -20,6 +20,7 @@
     "minimum530-compile-summary.json": "86fed86d46aaadc9bb5b7b98c6ac6365c06f3dd01d11cd9ec117f6fa2e4eda7b",
     "native-summary.json": "60a014dcef3f366390a673fcf60de6292df07275a855f56874107889191dca08",
     "object-ids.log": "1ed3f7b14e4a6e8c790d329d4e06c564e6dacef6e5b41b81cb06b0aabaa75d59",
+    "owned-cleanup.json": "b7173b8138d478f36196480c9f9b700606208be49fbd50f3e14cbf175e713592",
     "owned-resource-policy.json": "784e3443339d3768f55df2758da9447fa7c7b5ed87be19050edf0fbfae6ead4e",
     "permissions.log": "eb62e5f4e0d617534642d0d26d570d03d1dd1ad8ff7489d61303cc26cc691adc",
     "pipeline-guards.log": "1ba5e41e97893be2422bc27ff398afc389055400986f4a773c94064eb6900255",
@@ -32,6 +33,7 @@
     "ui-release-1039.png": "90c5cda0b326fe0f564a89ecf4868c316052b12776203c1840ec8a01fba4b89e",
     "ui-setup-1033.png": "308272978be6ead6be4bcbd23322b26e79d654b75ceae8f472974130143f2e26",
     "ui-setup-1039.png": "b36c93b004d23573bb209915f4cbc43cd37a83ae53de7843f36b9362da1fe900",
+    "ui-suite-cleanup.json": "aaf310fe844af385fc4c404e2cbc0143d6bda6831fc866a455ea5cc030374521",
     "ui-summary.json": "dc00081ad229595434bd5aca30625e5fe4d778582b59a157c21b330440bb371d",
     "versions-deployed.json": "0f0296f7c0f248e78d6a7066ec5906812fe0a5bc97a018171ef8ca9fe1af9afb",
     "xlf-test.log": "e313183a073e395b647a1b77d1f8e3bc29dfb995c1a50153e3fbab741ab9b5b0"
