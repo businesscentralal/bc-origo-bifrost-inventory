@@ -1,0 +1,17 @@
+{
+  "sourceSha": "bf3df7d241a8aac0b42794ee0c38dfb56f1bca2c",
+  "previousSha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "previousCI": {
+    "run": 40833572875,
+    "executed": 420,
+    "passed": 419,
+    "failed": 1,
+    "skipped": 0,
+    "cleanupJob": 123321144369,
+    "cleanupResult": "success"
+  },
+  "cause": "Declared Foundation floor530 LicAdm lacks page Setup ori Execute, unlike632 used in owned developer run",
+  "repair": "Test-only Setup page Execute; no Inventory subscriber grant, no direct Setup writes, assertions unchanged",
+  "claudeReceiptPending": true,
+  "priorEvidence": "../compile-summary.json"
+}

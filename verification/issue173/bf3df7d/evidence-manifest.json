@@ -1,0 +1,31 @@
+{
+  "sourceSha": "bf3df7d241a8aac0b42794ee0c38dfb56f1bca2c",
+  "files": {
+    "acceptance-matrix.json": "9de424ebd41c9bdfd8fc0df756735c4a228783266f5abf49459700e263447b68",
+    "amendment.json": "e7a7cf6fb68bd482ced57c3c54033b308032587265756c521f5c12c4cbdec008",
+    "app-compile.log": "eeda12ca17690a72660397b2948b6ff297eefbe0954cbbb59618381a9d98fa06",
+    "artifact-provenance.json": "f81d8643cce056d3057708183a450ed2febe6cf98327350bfdeeb01bf45a5993",
+    "compile-summary.json": "68dfea265d3cf967b329e03014fec7eb13c08249e05c590fa1e230af7efb4f39",
+    "foundation-provenance.json": "5e24b728b5be2b9e1e702095221bf0fc08b8028bae45f44d4a3b25f172f4dd43",
+    "full-suite-inventory.json": "d39bdf150aca7611454d4360fa012132354f3eff2ea333bbd4cbfb101c22d9a4",
+    "full-suite.junit.xml": "ff261826b857fe4bebb4454eae757701e22c3f01fe0357981d546b960ba7ce8f",
+    "github-candidate.json": "7ddec29f7aa6cbd55f06d8ceb2585a610d8fc2e80023281e22e2bc4d87d32333",
+    "inventory-baseline-provenance.json": "9b5d92113a02d4fd2786a0e6e56e64748f9e8876b5b04f87cb8a4f3b6e9da844",
+    "inventory-verified.json": "2f3be8f60b1d37f4e17288c89f72f790d04b1ea3fad34e8e1d781d44aaeafc19",
+    "mcp-summary.json": "7e43eb24118de65b7881516be4b03b21a39c604c4fcc8fc660546381d3a6be65",
+    "minimum530-compile-summary.json": "514f378995a8f0808482b659463da921b9bd2ee09414fb49985192fbea259a12",
+    "owned-cleanup.json": "0a0929464f28c74580620f0a82768c0187ffa92165a59521dc21ced2b744ad2d",
+    "owned-resource-policy.json": "01b605b4dc2441b8d70f3c5e6c7de1ad44b6dcb88b46ea50b1bfaf124d4539d3",
+    "source-manifest.json": "1cad32cd5571c5bd58ddd2b49346dde54ba0e859dc7ceb4287e85a494cb3c969",
+    "test-compile.log": "398410ac92626aed9caab0ee5349b66ff64d66c22fb76a7bdffca7a9706cccc7",
+    "ui-release-1033-results.json": "7e4fd3866c1baa866a488546e8422b1f19d3987bc6bcf0e5af07f13612e2317e",
+    "ui-release-1033.png": "27fcbc8c2060bfe6b42522017b313e05ce4721119dd628e162660932de2bb1a7",
+    "ui-release-1039-results.json": "2563588b790563ef7b1f2ff0d36c15ccee54e6e09fd21cb1582115906c06c373",
+    "ui-release-1039.png": "e4185c62851580ec9b1d4469ae708f85033c3853b841048350b1ddb98db5caed",
+    "ui-setup-1033.png": "308272978be6ead6be4bcbd23322b26e79d654b75ceae8f472974130143f2e26",
+    "ui-setup-1039.png": "0a4db85db4b3e6c772d402097d7e33ece8b1897fa268f17a85c3d5e1df581f1f",
+    "ui-suite-cleanup.json": "8168cbb6a96ebe0e5f33fa674a78bc0c3ca2f7a07fb2bc30d858c4d151e02187",
+    "ui-summary.json": "339de5031ea3bd230ca83fa9cff1a91c7bde8133783d00c105d374bb215f0bff",
+    "versions-deployed.json": "0227bc05a78ee9d0411397999fe403d931f49a5dbc16a0e97be7f0e4303045e6"
+  }
+}

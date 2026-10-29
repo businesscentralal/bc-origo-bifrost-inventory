@@ -1,0 +1,31 @@
+{
+  "sha": "bf3df7d241a8aac0b42794ee0c38dfb56f1bca2c",
+  "containerId": "f018323b75c9",
+  "checkedAt": "2026-10-29T07:53:14.416Z",
+  "nativeIsolation": "Test Runner - Isol. codeunit130450, TestIsolation=Codeunit; full420test result exported with source-to-method inventory",
+  "mcpFixturesCreated": 0,
+  "mcpFixturesRemaining": 0,
+  "uiSuitesDeleted": [
+    "I173UIEN",
+    "I173UIIS"
+  ],
+  "uiSuiteCleanupVerified": true,
+  "languageRestored1033": true,
+  "representativeNativeRollbackChecks": [
+    {
+      "entity": "items",
+      "filter": "number eq 'ZZTEST' or number eq 'XITEM'",
+      "remaining": 0,
+      "httpStatus": 200
+    },
+    {
+      "entity": "locations",
+      "filter": "code eq 'ZZTEST' or code eq 'XLOC'",
+      "remaining": 0,
+      "httpStatus": 200
+    }
+  ],
+  "newRegressionFixtures": "Setup singleton is installed/prepared through existing public InsertIfNotExists; no licence, EULA, trial, quota or backend mutation in new regression",
+  "containerDisposition": "Retain same task-owned container for amendments and postdeploy Tester UAT. Delete only after UAT passes and issue closes; container deletion not claimed.",
+  "verified": true
+}
