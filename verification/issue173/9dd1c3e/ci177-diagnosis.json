@@ -1,0 +1,36 @@
+{
+  "sha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "runId": 40840686498,
+  "attempt": 1,
+  "testJob": 123340281868,
+  "testConclusion": "failure",
+  "classification": "Transport/session abort during full suite, not an observed AL assertion failure",
+  "observedLoggedMethodPasses": 110,
+  "observedLoggedMethodFailures": 0,
+  "completedCodeunits": 20,
+  "fullSuiteCountsAvailable": false,
+  "fullSuitePass": false,
+  "unreportedRemainingMethods": 310,
+  "remainingMethodExecutionUnknown": true,
+  "finalTestArtifactAvailable": false,
+  "error": "CommunicationError: An error occurred while sending the request; ClientSession State is InError",
+  "firstCommunicationErrorAt": "2026-10-29T08:36:50.3025633Z",
+  "cleanup": {
+    "job": 123345309150,
+    "conclusion": "success",
+    "deleted": 1,
+    "expected": 1,
+    "containerId": "f068f43de664",
+    "evidence": "ci177-cleanup-extract.log"
+  },
+  "retry": {
+    "requested": true,
+    "launched": false,
+    "nextOwner": "Architect",
+    "reason": "Codex GitHub App Actions permission is read; helper Actions access read-only. Use authorized pipeline identity for fresh full paired retry, not failed-Test-only against deleted container.",
+    "freshPairRequired": true,
+    "sameSha": true,
+    "noNewSourceChangeJustified": true
+  },
+  "recordedAt": "2026-10-29T08:42:48.911632+00:00"
+}

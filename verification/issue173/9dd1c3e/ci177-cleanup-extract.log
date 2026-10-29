@@ -1,0 +1,4 @@
+2026-10-29T08:37:49.9418459Z     Returning 1 container(s): f068f43de664
+2026-10-29T08:37:49.9594218Z   > Deleting Container 'f068f43de664' (Project: '.', BuildMode: 'Default')
+2026-10-29T08:37:50.3560650Z     Container 'f068f43de664' deleted
+2026-10-29T08:37:50.3583521Z   Deleted 1 of 1 containers

@@ -1,0 +1,7 @@
+{
+  "app": "gunnars-codex-developer",
+  "owner": "gunnargestsson",
+  "actions": "read",
+  "contents": "write",
+  "pullRequests": "write"
+}
