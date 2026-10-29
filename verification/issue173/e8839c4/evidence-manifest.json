@@ -1,0 +1,18 @@
+{
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "currentNativeUIPending": true,
+  "files": {
+    "acceptance-matrix.json": "824ea40be8d0eb78a66e83c9a5dabeb548cf7bd7ec013d52606987dfe2dc413c",
+    "app-compile.log": "b8e37de5cba8f0fe02811f1ba7ce18a2bf58583157ae07911e1822e8a52e41ce",
+    "compile-summary.json": "cd9d4c1291514180f1fef02ba8f92959ff63fd032544e86fb01bbe22a1e89b82",
+    "foundation-provenance.json": "5e24b728b5be2b9e1e702095221bf0fc08b8028bae45f44d4a3b25f172f4dd43",
+    "github-candidate.json": "9c723ed6ca155a69b9f622b61138009e7dbe59902eb37b588f259f3713f42306",
+    "inventory-baseline-provenance.json": "9b5d92113a02d4fd2786a0e6e56e64748f9e8876b5b04f87cb8a4f3b6e9da844",
+    "mcp-summary.json": "2046ce77bacefc706a27e3f53c63bc3013c6bd8a1aef84802d6d6d91393d7537",
+    "minimum530-compile-summary.json": "01fc2c9a2c346c6f562f2765fd7c3d6d4bd0e93f0bc49f1c61216c3f2d135a68",
+    "previous9dd-ci-attempt2-diagnosis.json": "bd265375cf8e3913985d3e87c4acfbe3c8bb76f5e7204597b24424369e42ee37",
+    "previous9dd-ci-attempt2-TestResults.xml": "6e1fb69f4f4a8f6827c3bdb4f06c82b8f5eba84932fc64c879aa495161798979",
+    "source-manifest.json": "6e9568d0accac121f3b3a54bc9f7105201ac3320950461ce245ea5ba35e62a44",
+    "test-compile.log": "da3cc1502e9ef6b46eebccb4e2423eb789e044abc6723e778bf65677adc4c3b5"
+  }
+}

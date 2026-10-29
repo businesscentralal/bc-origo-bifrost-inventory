@@ -1,0 +1,60 @@
+{
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/173",
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "criteria": {
+    "AC01": {
+      "implemented": true,
+      "verified": "Both approved inherent Execute properties unchanged; both apps compile0errors0warnings530/632",
+      "objects": [
+        10076845
+      ]
+    },
+    "AC02": {
+      "implemented": true,
+      "verified": false,
+      "regression": 96972,
+      "pending": "NEW182 fullnative/UI/positive530 andnormalCI plusindependentClaude",
+      "assertions": [
+        "actual Setup opens",
+        "no direct Setup write",
+        "Setup non-editable",
+        "RefreshLicense visible"
+      ],
+      "native": "PENDING at newSHA",
+      "negativeControl": "66f6da6: missing inherentX deniedInventoryRegistration even under AllObjects-minus-subscriber baseline; proves no masking"
+    },
+    "AC03": {
+      "verified": false,
+      "owner": "Claude Code",
+      "pending": "Independent current-head clean receipt and resolution after greenCI; bc28-w1 Inventory full suite/96972 and Foundation98677 in applicable1033/1039"
+    },
+    "AC04": {
+      "implemented": true,
+      "verified": true,
+      "summary": "CHANGELOG documents native Include/Exclude fixture and96973"
+    }
+  },
+  "developerGates": {
+    "compile": "Both530/6320errors0warnings current182",
+    "publication": {
+      "repo": "businesscentralal/bc-origo-bifrost-inventory",
+      "branch": "fix/worker4-inventory173-registration-execute",
+      "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+      "branchUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/tree/fix/worker4-inventory173-registration-execute",
+      "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/e8839c4ae673c8b65e2e2b002df362904d06234d",
+      "remoteVerifiedAt": "2026-10-29T09:53:35.258Z"
+    },
+    "native": "PENDING182",
+    "ui": "PENDING182",
+    "mcp": "Not applicable, registration/fixture only;0types/0executed/0passed",
+    "cleanup": "PENDING182",
+    "ci": "FreshnormalCI triggered byverificationpublication"
+  },
+  "deliveryPending": [
+    "Current-tip fullsuite/UI/cleanup and normalCI",
+    "Claude clean current-head receipt",
+    "Grok current-head clearance and eligible non-author approval",
+    "Architect merge/RC and same-SHA green-main deployment",
+    "Tester UAT, issue closure, owned-container deletion verification and genuine SecretaryACK"
+  ]
+}

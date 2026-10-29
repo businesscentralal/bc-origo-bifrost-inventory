@@ -1,0 +1,134 @@
+{
+  "version": "28.0.3.530",
+  "artifactSha256": "b95e0eccf7a4038531cea08f0441e757ac176c7c4ff06b1b8eb9d25ac0dd3a88",
+  "basePermissionRole": "BIFROST Read ori plus LicAdm; explicit exclusion only Inventory Registration Execute",
+  "pageOpenDirectReferences": [
+    "Setup ori source table (exact IDs in sourceObjectIds)",
+    "Registered App ori temporary table",
+    "App Registry ori10078317",
+    "Setup Notifications ori10078318",
+    "Env Facade ori10078350",
+    "License ori10077908",
+    "Role Registration Cache ori10078347",
+    "Customer Registration ori10078344",
+    "Eula Consent ori10077958, conditional on vendor eligibility"
+  ],
+  "runtimeProbePending": false,
+  "sourceDeclarations": {
+    "Setup.Page.al": {
+      "declaredReferences": [
+        "App Registry ori",
+        "Cancel Reason Dialog ori",
+        "Customer Registration ori",
+        "Docs Links ori",
+        "Env Facade ori",
+        "Eula Consent ori",
+        "License Refresh ori",
+        "License ori",
+        "Partner Registration ori",
+        "Rate Limit Config Dialog ori",
+        "Rate Limit Mgt ori",
+        "Registered App ori",
+        "Retention Cleanup ori",
+        "Role Registration Cache ori",
+        "Secret Sync ori",
+        "Setup Notifications ori",
+        "Setup ori",
+        "Vendor Onboarding Wizard ori",
+        "Vendor Registration ori",
+        "Wizard Links ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "AppRegistry.Codeunit.al": {
+      "declaredReferences": [
+        "App Secret ori",
+        "Registered App ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "SetupNotifications.Codeunit.al": {
+      "declaredReferences": [
+        "App Registry ori",
+        "Customer Registration ori",
+        "Eula Consent ori",
+        "Partner Registration ori",
+        "Registered App ori",
+        "Role Registration Cache ori",
+        "Telemetry ori",
+        "Vendor Allowlist ori",
+        "Vendor Registration ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "License.Codeunit.al": {
+      "declaredReferences": [
+        "Cosmos Database ori",
+        "Env Facade ori",
+        "License Hash ori",
+        "Message ori",
+        "Rate Limit Mgt ori",
+        "Setup ori",
+        "Telemetry ori",
+        "User Setup ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "RoleRegistrationCache.Codeunit.al": {
+      "declaredReferences": [
+        "Cosmos Database ori",
+        "License Hash ori",
+        "Message Argument ori",
+        "Vendor Allowlist ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "CustomerRegistration.Codeunit.al": {
+      "declaredReferences": [
+        "Cancel Proof ori",
+        "Cosmos Container Map ori",
+        "Cosmos Database ori",
+        "Customer Config Lookup ori",
+        "Eula Consent ori",
+        "License Hash ori",
+        "License Usage Mgt ori",
+        "License ori",
+        "Pend. Cust. Invites Picker ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "EnvFacade.Codeunit.al": {
+      "declaredReferences": [],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    },
+    "EulaConsent.Codeunit.al": {
+      "declaredReferences": [
+        "Cosmos Database ori",
+        "Customer Config Lookup ori",
+        "Env Facade ori",
+        "License Hash ori",
+        "License ori",
+        "Setup ori",
+        "Telemetry ori"
+      ],
+      "sourceScope": "All declared references, including actions not executed by Setup.OpenView; not a minimal executed-object trace."
+    }
+  },
+  "sourceObjectIds": {
+    "Tables:Setup ori": 10077901,
+    "Tables:Registered App ori": 10078316,
+    "Pages:Setup ori": 10077914,
+    "Codeunits:Env Facade ori": 10078350,
+    "Codeunits:Eula Consent ori": 10077958,
+    "Codeunits:Customer Registration ori": 10078344,
+    "Codeunits:License ori": 10077908,
+    "Codeunits:Role Registration Cache ori": 10078347,
+    "Codeunits:App Registry ori": 10078317,
+    "Codeunits:Setup Notifications ori": 10078318
+  },
+  "runtimeFindings": [
+    "14d positive baseline withoutAllObjects failedEulaConsentExecute",
+    "66f no-inherentX withAllObjects-minus-subscriber deniedInventoryRegistration Execute",
+    "66f bareLicAdm deniedFoundationSetupPageExecute"
+  ]
+}

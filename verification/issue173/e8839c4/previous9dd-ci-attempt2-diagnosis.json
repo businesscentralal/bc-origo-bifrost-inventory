@@ -1,0 +1,25 @@
+{
+  "sha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "run": 40840686498,
+  "attempt": 2,
+  "codeunits": 46,
+  "total": 420,
+  "failed": 1,
+  "skipped": 0,
+  "fullSuite": true,
+  "artifactId": 12885675798,
+  "cleanup": {
+    "containerId": "f055b4bac6a5",
+    "deleted": 1,
+    "expected": 1,
+    "evidence": "cleanup-attempt2.log"
+  },
+  "passed": 419,
+  "failure": [
+    {
+      "codeunit": "96972 Inv. Registration Tests ori",
+      "test": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "message": "Unexpected CLR exception thrown.: Microsoft.Dynamics.Framework.UI.FormAbortException: Page Bifrost Setup has to close.\\ ---> Microsoft.Dynamics.Nav.Types.NavPermissionException: Sorry, the current permissions prevented the action. (CodeUnit 10078318 Setup Notifications ori Execute: Bifrost Foundation)\\   at Microsoft.Dynamics.Nav.Client.DataBinder.NstDataAccess.OpenForm(LogicalForm mainForm, ICollection`1 subForms)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.TryOpenForm(LogicalForm form, Boolean retry)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.OpenForm(LogicalForm form, Boolean retry)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.OnFormOpened(Object sender, EventArgs e)\\   at Microsoft.Dynamics.Framework.UI.LogicalForm.OnFormOpened(EventArgs e)\\   at Microsoft.Dynamics.Framework.UI.LogicalForm.OpenForm()\\   at Microsoft.Dynamics.Framework.UI.LogicalForm.BuildForm(Action customBuild)\\   at Microsoft.Dynamics.Nav.Client.Builder.NavSessionHelper.BuildForm(LogicalForm form, Action customBuild)\\   --- End of inner exception stack trace ---\\   at Microsoft.Dynamics.Nav.Client.Builder.NavSessionHelper.BuildForm(LogicalForm form, Action customBuild)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.PageBuilder.CompleteBuildDependingOnPageDefinition(MasterPage definition, LogicalForm form, UIBuilderContext context)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.PageBuilder.Build(MasterPage definition, BindingManager bindingManager, UIBuilderContext context)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.PageBuilder.Build(MasterPage definition, UIBuilderContext context)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.UIBuildManager.BuildPage(MasterPage pageDef, UIBuilderContext context)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.BuilderSession.CreateLogicalForm(MasterPage metadata, FormState formState)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.BuilderSession.<>c__DisplayClass39_0.<CreateLogicalForm>b__0(Boolean isRetry)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.BuilderSession.CreateLogicalFormWithErrorHandling(Int32 formId, Int32 retryCounter, Func`2 action)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.BuilderSession.CreateLogicalForm(Int32 formId, FormState formState, String viewName)\\   at Microsoft.Dynamics.Nav.Client.FormBuilder.BuilderSession.CreateLogicalForm(Int32 formId, FormState formState)\\   at Microsoft.Dynamics.Nav.Client.TestPageClient.TestPageClientSession.CreateLogicalForm(Int32 formId, FormState formState)\\   at Microsoft.Dynamics.Nav.Client.TestPageClient.TestPageClientSession.CreatePage(Int32 id, ViewMode mode)\\   at InvokeStub_ITestClientSession.CreatePage(Object, Span`1)\\   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\\--- End of stack trace from previous location ---\\   at Microsoft.Dynamics.Nav.Types.TestClientProxy`1.Invoke(MethodInfo targetMethod, Object[] args)\\   at generatedProxy_2.CreatePage(Int32, ViewMode)\\   at Microsoft.Dynamics.Nav.Runtime.NavTestPage.Open(ViewMode mode)\\   at Microsoft.Dynamics.Nav.Runtime.NavTestPage.ALOpenView()\\   at Microsoft.Dynamics.Nav.BusinessApplication.Codeunit96972.AC02_LicAdm_OpensSetupWithInventoryInstalled()\\   at Microsoft.Dynamics.Nav.Runtime.NavTestCodeunit.ExecuteTestMethodAsync(MethodInfo method, TestTransactionModel transactionModel, Boolean isAsync)"
+    }
+  ]
+}

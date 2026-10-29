@@ -1,0 +1,10 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "touchedMessageTypes": [],
+  "notApplicableReason": "Product diff only registration inherent Execute; test fixture only. No message implementation, handler, contract, enum or dispatcher change.",
+  "executed": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "fixturesCreated": 0
+}

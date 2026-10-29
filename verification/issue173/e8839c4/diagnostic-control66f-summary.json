@@ -1,0 +1,45 @@
+{
+  "sha": "66f6da68daab36e35338b8f1343def0dd51cee9f",
+  "containerId": "f0a32cf1f8d6",
+  "FoundationVersion": "28.0.3.530",
+  "testAppVersion": "28.3.2.180",
+  "companyName": "My Company",
+  "notDeliveryCandidate": true,
+  "productPassesClaimed": 0,
+  "finishedAt": "2026-10-29T09:45:15.190Z",
+  "verified": true,
+  "scenarios": [
+    {
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "expectedFailure": "10076845|Inventory Registration ori",
+      "finishedAt": "2026-10-29T09:44:57.245Z",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "expectedDenialObserved": true,
+      "failures": [
+        {
+          "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+          "message": "Unexpected CLR exception thrown.: Microsoft.Dynamics.Framework.UI.FormAbortException: Page Bifrost Setup has to close.\\ ---&gt; Microsoft.Dynamics.Nav.Types.NavPermissionException: Sorry, the current permissions prevented the action. (CodeUnit 10076845 Inventory Registration ori Execute: Bifrost Foundation)\\   at Microsoft.Dynamics.Nav.Client.DataBinder.NstDataAccess.OpenForm(LogicalForm mainForm, ICollection`1 subForms)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.TryOpen",
+          "classname": "96972 Inv. Registration Tests ori"
+        }
+      ]
+    },
+    {
+      "method": "Probe_BareLicAdm_SetupOpen",
+      "expectedFailure": "10077914|Setup ori",
+      "finishedAt": "2026-10-29T09:45:15.182Z",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "expectedDenialObserved": true,
+      "failures": [
+        {
+          "name": "Probe_BareLicAdm_SetupOpen",
+          "message": "Unexpected CLR exception thrown.: Microsoft.Dynamics.Framework.UI.FormAbortException: Page Bifrost Setup has to close.\\ ---&gt; Microsoft.Dynamics.Nav.Types.NavPermissionException: Sorry, the current permissions prevented the action. (Page 10077914 Setup ori Bifrost Setup Execute: Bifrost Foundation)\\   at Microsoft.Dynamics.Nav.Client.DataBinder.NstDataAccess.OpenForm(LogicalForm mainForm, ICollection`1 subForms)\\   at Microsoft.Dynamics.Nav.Client.UIPatterns.OnFormOpeningPattern.TryOpenForm(Lo",
+          "classname": "96972 Inv. Registration Tests ori"
+        }
+      ]
+    }
+  ]
+}
