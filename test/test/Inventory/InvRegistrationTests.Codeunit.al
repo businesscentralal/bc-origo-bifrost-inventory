@@ -41,4 +41,20 @@ codeunit 96972 "Inv. Registration Tests ori"
         Assert.IsFalse(IsSetupEditable, 'A licence administrator must not become a Bifrost administrator.');
         Assert.IsTrue(IsRefreshLicenseVisible, 'The licence-administrator action remains available.');
     end;
+
+    // Diagnostic control only; this branch is never a delivery candidate.
+    [Test]
+    procedure Probe_BareLicAdm_SetupOpen()
+    var
+        BifrostSetup: Record "Setup ori";
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        SetupPage: TestPage "Setup ori";
+    begin
+        BifrostSetup.InsertIfNotExists();
+        LowerPermissions.StartLoggingNAVPermissions();
+        LowerPermissions.SetExactPermissionSet('BIFROST LicAdm ori');
+        SetupPage.OpenView();
+        SetupPage.Close();
+        LowerPermissions.StopLoggingNAVPermissions();
+    end;
 }

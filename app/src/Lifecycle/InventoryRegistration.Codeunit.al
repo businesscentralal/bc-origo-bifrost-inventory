@@ -9,8 +9,6 @@ using Origo.Bifrost;
 codeunit 10076845 "Inventory Registration ori"
 {
     Access = Internal;
-    InherentPermissions = X;
-    InherentEntitlements = X;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"App Registry ori", OnRegisterApps, '', false, false)]
     local procedure RegisterApp(var Apps: Record "Registered App ori" temporary)
