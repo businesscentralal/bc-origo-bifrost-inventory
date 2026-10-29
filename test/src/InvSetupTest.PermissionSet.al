@@ -3,7 +3,7 @@ namespace Origo.Bifrost.Inventory.Test;
 using Origo.Bifrost;
 using System.Environment.Configuration;
 
-/// <summary>Supplies the Setup-open page and registry dependencies at the supported Foundation floor and the platform baseline; grants no Inventory subscriber Execute or administration.</summary>
+/// <summary>Supplies the Setup-open page, registry and notification dependencies at the supported Foundation floor and the platform baseline; grants no Inventory subscriber Execute or administration.</summary>
 permissionset 96972 "Inv Setup Test"
 {
     Assignable = true;
