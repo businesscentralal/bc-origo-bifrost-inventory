@@ -1,7 +1,7 @@
 {
   "version": "28.0.3.530",
   "artifactSha256": "b95e0eccf7a4038531cea08f0441e757ac176c7c4ff06b1b8eb9d25ac0dd3a88",
-  "basePermissionRole": "BIFROST Read ori plus LicAdm; explicit exclusion only Inventory Registration Execute",
+  "basePermissionRole": "BIFROST LicAdm ori plus test-only composition D365 Basic - Read, Guided Experience - View, BIFROST Read ori and Microsoft All Objects, excluding Inventory Registration Execute via96973",
   "pageOpenDirectReferences": [
     "Setup ori source table (exact IDs in sourceObjectIds)",
     "Registered App ori temporary table",
@@ -11,7 +11,7 @@
     "License ori10077908",
     "Role Registration Cache ori10078347",
     "Customer Registration ori10078344",
-    "Eula Consent ori10077958, conditional on vendor eligibility"
+    "Eula Consent ori10077958, through unconditional Setup Notifications.ShowEulaMissingNotification (also conditional vendor checks)"
   ],
   "runtimeProbePending": false,
   "sourceDeclarations": {
@@ -130,5 +130,16 @@
     "14d positive baseline withoutAllObjects failedEulaConsentExecute",
     "66f no-inherentX withAllObjects-minus-subscriber deniedInventoryRegistration Execute",
     "66f bareLicAdm deniedFoundationSetupPageExecute"
-  ]
+  ],
+  "currentPositiveProbe": {
+    "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+    "version": "28.3.2.182",
+    "executed": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "company": "My Company, real non-evaluation",
+    "notFullSuite": true
+  },
+  "legacyRoleFinding": "Bare LicAdm on530 fails Setup page Execute before the Inventory subscriber. This is a supported-floor role-composition gap, not evidence of a new current632 defect or a real customer with additional roles. Claude/Architect own intended role contract/followup."
 }

@@ -1,0 +1,21 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "containerId": "f0a32cf1f8d6",
+  "companyName": "My Company",
+  "companyEvaluationFlag": false,
+  "FoundationVersion": "28.0.3.530",
+  "version": "28.3.2.182",
+  "previousControlSha": "66f6da68daab36e35338b8f1343def0dd51cee9f",
+  "artifacts": [
+    {
+      "name": "Inventory",
+      "sha256": "e44d0eb1b41aab45e2f265e6ee4091f27704cb3a16c8831580175f76e4cce91b",
+      "publishedAt": "2026-10-29T09:54:00.952Z"
+    },
+    {
+      "name": "InventoryTests",
+      "sha256": "3488ff6585082f41be4ffd3ed6a871590c4f218e0c66a18175a9f762bd5c1777",
+      "publishedAt": "2026-10-29T09:54:02.285Z"
+    }
+  ]
+}

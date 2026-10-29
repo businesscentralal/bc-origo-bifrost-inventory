@@ -1,0 +1,52 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "containerId": "f018323b75c9",
+  "appVersion": "28.3.2.182",
+  "startedAt": "2026-10-29T09:58:06.466Z",
+  "scenarios": [
+    {
+      "lcid": 1033,
+      "suite": "I173UIEN",
+      "codeunit": 96972,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs restricted LicAdm Setup-open regression with Inventory installed; page remains non-editable and RefreshLicense visible; no Sync or licence state writes",
+      "evidence": "ui-release-1033-results.json"
+    },
+    {
+      "lcid": 1039,
+      "suite": "I173UIIS",
+      "codeunit": 96972,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs restricted LicAdm Setup-open regression with Inventory installed; page remains non-editable and RefreshLicense visible; no Sync or licence state writes",
+      "evidence": "ui-release-1039-results.json"
+    }
+  ],
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "cleanup": {
+    "businessFixtureRecordsCreatedByBrowserHarness": 0,
+    "nativeFixtures": "Self-seeded by isolated AL tests; rollback readback recorded separately",
+    "languageRestored": true
+  },
+  "finishedAt": "2026-10-29T09:59:24.409Z",
+  "scenarioCounts": {
+    "executed": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "rawHarnessAttemptFailures": 0,
+  "cleanupRecovery": {
+    "verified": true,
+    "required": false,
+    "summary": "Current-tip UI completed language restoration without failure; earlier14d failure remains historical."
+  },
+  "errorResolved": true
+}

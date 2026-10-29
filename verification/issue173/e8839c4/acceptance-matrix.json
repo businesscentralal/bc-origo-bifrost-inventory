@@ -11,17 +11,33 @@
     },
     "AC02": {
       "implemented": true,
-      "verified": false,
+      "verified": true,
       "regression": 96972,
-      "pending": "NEW182 fullnative/UI/positive530 andnormalCI plusindependentClaude",
+      "pending": "Normal pairedCI,current-headindependentClaude/Grok anddelivery",
       "assertions": [
         "actual Setup opens",
         "no direct Setup write",
         "Setup non-editable",
         "RefreshLicense visible"
       ],
-      "native": "PENDING at newSHA",
-      "negativeControl": "66f6da6: missing inherentX deniedInventoryRegistration even under AllObjects-minus-subscriber baseline; proves no masking"
+      "native": "Current-tip full632420executed/420passed/0failed/0skipped; minimum530 focused96972 1/1passed; existingcontrol66f deniesregistrationwithoutfix.",
+      "negativeControl": "66f6da6: missing inherentX deniedInventoryRegistration even under AllObjects-minus-subscriber baseline; proves no masking",
+      "minimum530Runtime": {
+        "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+        "containerId": "f0a32cf1f8d6",
+        "FoundationVersion": "28.0.3.530",
+        "testAppVersion": "28.3.2.182",
+        "companyName": "My Company",
+        "fullSuite": false,
+        "codeunit": 96972,
+        "finishedAt": "2026-10-29T09:54:25.952Z",
+        "durationMs": 16165,
+        "ok": true,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "ui": "Fresh1033/1039 each1executed/1passed/0failed/0skipped; no current harness failure; language1033/own suites absent verified."
     },
     "AC03": {
       "verified": false,
@@ -44,11 +60,32 @@
       "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/e8839c4ae673c8b65e2e2b002df362904d06234d",
       "remoteVerifiedAt": "2026-10-29T09:53:35.258Z"
     },
-    "native": "PENDING182",
-    "ui": "PENDING182",
+    "native": {
+      "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+      "executed": 420,
+      "passed": 420,
+      "failed": 0,
+      "skipped": 0,
+      "codeunits": 46,
+      "sourceMethods": 420,
+      "missing": [],
+      "unexpected": [],
+      "regression96972": {
+        "classname": "96972 Inv. Registration Tests ori",
+        "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+        "time": "0.173"
+      },
+      "verified": true
+    },
+    "ui": {
+      "executed": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
     "mcp": "Not applicable, registration/fixture only;0types/0executed/0passed",
-    "cleanup": "PENDING182",
-    "ci": "FreshnormalCI triggered byverificationpublication"
+    "cleanup": "Verified0ownUIsuites; language1033; representative native rollback checks0records",
+    "ci": "Normalpaired40853213852 active; no CI pass/counts claimed"
   },
   "deliveryPending": [
     "Current-tip fullsuite/UI/cleanup and normalCI",

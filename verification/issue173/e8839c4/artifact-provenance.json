@@ -1,0 +1,33 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "appVersion": "28.3.2.182",
+  "containerId": "f018323b75c9",
+  "dependency": {
+    "release": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/releases/tag/28.0.10",
+    "sourceSha": "130955cdc524cf7da3f162d1aeb10777fde55ab1",
+    "assetId": 684711931,
+    "assetName": "bc-origo-bifrost-core-main-TestApps-1.0.10.632.zip",
+    "version": "28.0.10.632",
+    "sha256": "67e70551b8384829adf96ed9af67dd4d1e8e772ef040ceeae8177ba0b3e2eb98",
+    "digestVerified": true
+  },
+  "baseline": {
+    "release": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/releases/tag/28.3.1",
+    "sourceSha": "33eb788439d9d1df3772fd8bb3e203383896e628",
+    "assetId": 674886734,
+    "assetName": "bc-origo-bifrost-inventory-main-Apps-1.0.1.81.zip",
+    "version": "28.3.1.81",
+    "sha256": "35e647ca0aaa395231f19f71ff06d93511905282879f7e253a09864300d45cf5",
+    "digestVerified": true
+  },
+  "artifacts": [
+    {
+      "name": "Inventory",
+      "sha256": "ae72fc3137b6c9b676b454429ff0c477f27bb3b35c9d8d413020ded014782fa0"
+    },
+    {
+      "name": "InventoryTests",
+      "sha256": "84e8ed5ce598c33aa10bb4938f1292eafd82705a5a5e9c97c61c6f66094245bf"
+    }
+  ]
+}

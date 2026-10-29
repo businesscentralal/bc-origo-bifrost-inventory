@@ -1,0 +1,31 @@
+{
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "repair": "Complete standard platform read plus execute-only test baseline, excluding InventoryRegistration Execute via96973. No production permission-set widening or assertion removal; both approved subscriber inherentX properties unchanged.",
+  "diagnosticControlSha": "66f6da68daab36e35338b8f1343def0dd51cee9f",
+  "controlOutcome": "No-inherentX control deniedInventoryRegistration underAllObjects-minus-subscriber; bareLicAdm deniedFoundationSetup530page.0productpassesclaimedfromdiagnosticexpectedfailures.",
+  "own632FullSuite": {
+    "executed": 420,
+    "passed": 420,
+    "failed": 0,
+    "skipped": 0
+  },
+  "own530Scoped": {
+    "executed": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "fullSuite": false
+  },
+  "ui": {
+    "executed": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "languages": [
+      1033,
+      1039
+    ],
+    "rawHarnessFailures": 0
+  },
+  "normalCIAndIndependentClaudeGrokPending": true
+}
