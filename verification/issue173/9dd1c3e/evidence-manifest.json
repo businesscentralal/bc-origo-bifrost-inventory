@@ -6,6 +6,8 @@
     "app-compile.log": "17261f4133bc8c55aa210adec7d0a44ffaf95c0d4147068b18c8dc466878e6bb",
     "artifact-provenance.json": "4471fa2f865c2603659b6b8911b95ea8f37392b5ef819aa87b04522602616591",
     "bot-capabilities.json": "3a4711ec5b62fd819bbeaa81ea5175e4789ca703e422a2819e1a1f49a2771fd0",
+    "ci177-attempt2-create-extract.log": "616dded63632ab93076d961fca2e75104f936606098583bf0b43470880a489ce",
+    "ci177-attempt2.json": "03c04ae48f69f871eff42e58e7514b9c2fee5bdafb9b847fa86439064f744b23",
     "ci177-cleanup-extract.log": "b2f8dc1df629a4936c5373907cdffea4dc256b719494458da9f8c9f31c810ee5",
     "ci177-diagnosis.json": "e63221d22c91b1c6e838f78f908b08768c938cdf6ae30807c75fe4fafcfdf2d4",
     "ci177-transient-failure-extract.log": "0aa23d7613833d34215f99115753f88e9c2ade31f10efad0e70227b48c803413",
