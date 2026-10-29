@@ -1,0 +1,108 @@
+{
+  "publisher": "Origo",
+  "mode": "full",
+  "total_al_files": 2,
+  "checks": {
+    "format_evaluate_enum": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "format_guid": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "today_vs_workdate": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "namespace": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "one_statement_per_line": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "modernization": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "set_load_fields": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "commit_in_loop": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "read_isolation": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "event_subscriber_placement": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "changelog": {
+      "findings_count": 1,
+      "pass": false
+    },
+    "data_classification": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "app_json": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "page_code_minimal": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "reserved_var_names": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "xml_doc_comments": {
+      "findings_count": 1,
+      "pass": false
+    },
+    "caption_translation": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "try_prefix_convention": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "confirm_in_page": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "hardcoded_values": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "object_naming": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "with_statements": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "global_variables": {
+      "findings_count": 0,
+      "pass": true
+    }
+  },
+  "project": "Bifrost Inventory - Tests",
+  "files_scanned": 2,
+  "version": "28.3.2.0",
+  "summary": {
+    "ready": false,
+    "failed": 2,
+    "total": 23,
+    "passed": 21
+  }
+}

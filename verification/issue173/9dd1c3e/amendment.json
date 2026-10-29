@@ -1,0 +1,17 @@
+{
+  "sourceSha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "previousSha": "bf3df7d241a8aac0b42794ee0c38dfb56f1bca2c",
+  "previousCI": {
+    "run": 40837097585,
+    "executed": 420,
+    "passed": 419,
+    "failed": 1,
+    "skipped": 0,
+    "cleanupJob": 123331702672,
+    "cleanupResult": "success"
+  },
+  "cause": "Declared Foundation floor530 lacks inherent Execute on public App Registry; page-only prior fixture repair did not cover this registration dependency.632 runtime has inherent Registry Execute.",
+  "repair": "Test-only Foundation App Registry and temporary RegisteredApp object Execute, alongside existing Setup-page baseline; no Inventory subscriber grant, no direct Setup writes, assertions unchanged",
+  "claudeReceiptPending": true,
+  "priorEvidence": "../compile-summary.json"
+}

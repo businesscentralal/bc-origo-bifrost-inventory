@@ -1,0 +1,75 @@
+{
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/173",
+  "sourceSha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "criteria": {
+    "AC01": {
+      "implemented": true,
+      "verified": "App/test0errors0warnings, both530/632; approved product properties unchanged",
+      "objects": [
+        10076845
+      ],
+      "properties": [
+        "InherentPermissions = X",
+        "InherentEntitlements = X"
+      ]
+    },
+    "AC02": {
+      "implemented": true,
+      "regression": 96972,
+      "verified": true,
+      "pending": "Minimum530 CI plus independent Claude",
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "permissions": [
+        "BIFROST LicAdm ori",
+        "Inv Setup Test: Foundation Setup page/AppRegistry and temporary RegisteredApp Execute plus Microsoft GuidedExperience and NAVAppSetting indirect read"
+      ],
+      "assertions": [
+        "Setup table no direct write",
+        "actual Setup.OpenView succeeds",
+        "Setup non-editable",
+        "RefreshLicense action visible"
+      ],
+      "licenceWrites": 0,
+      "native": "1/1 in full420/420/0/0",
+      "ui": "Fresh1/1 in1033 and1/1 in1039; initial language-restore automation failed, recovered via actual visible lookup and reload; both owned suites deleted/readback absent"
+    },
+    "AC03": {
+      "implemented": "Inventory candidate supplies repair",
+      "verified": false,
+      "owner": "Claude Code",
+      "environment": "bc28-w1",
+      "scenario": "Foundation98677 LicAdm_Sync_PassesGateAndKeepsQuota with Inventory installed",
+      "pending": "New exact-head Claude receipt",
+      "historicalEvidence": "bf3df7d Foundation98677 16/16 passed on bc28-w1; no new-head independent pass"
+    },
+    "AC04": {
+      "implemented": "CHANGELOG29Oct entry includes both codeunitIDs",
+      "verified": true,
+      "pending": "Paired CI and delivery"
+    }
+  },
+  "developerGates": {
+    "compile": "9dd1c3e both product/test0e0w on530/632",
+    "publication": {
+      "repo": "businesscentralal/bc-origo-bifrost-inventory",
+      "branch": "fix/worker4-inventory173-registration-execute",
+      "sha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+      "branchUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/tree/fix/worker4-inventory173-registration-execute",
+      "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+      "remoteVerifiedAt": "2026-10-29T08:13:55.119Z"
+    },
+    "suite": "420executed/420passed/0failed/0skipped, all46codeunits/current177; JUnit/source exact match",
+    "ui": "2/2scenarios passed1033/1039;1harness cleanup attempt failed/resolved;language1033 and own suites absent verified",
+    "mcp": "N/A registration-only;0message types touched/0executed/0passed",
+    "cleanup": "/workspace/evidence/inventory173-worker4/owned-cleanup.json"
+  },
+  "deliveryPending": [
+    "PR CI",
+    "Claude AC03/current-head receipt",
+    "Grok exact-head clearance",
+    "eligible non-author approval",
+    "Architect merge plus RC re-verification before10:00 Reykjavik",
+    "same-SHA deployment and Tester UAT",
+    "owned-container closure and Secretary ACK"
+  ]
+}

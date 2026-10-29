@@ -1,0 +1,33 @@
+{
+  "sha": "9dd1c3e3bb05ab08760cf276a69cafec9917388f",
+  "toolProvenance": "Exact copied Invoke-PrepareForPR.ps1 from pinned standards snapshot; colocated original modernization config to resolve Linux USERPROFILE/path fallback, no script edits",
+  "productScan": {
+    "files": 1,
+    "passed": 22,
+    "checks": 23,
+    "rawSummaryCounter": "Script reports failed2 but only1 pass=false category; raw retained",
+    "findings": {
+      "changelog": "False positive for repository Unreleased format: added29Oct173 entry with codeunit IDs, not a release-version heading"
+    }
+  },
+  "testScan": {
+    "files": 2,
+    "passed": 21,
+    "checks": 23,
+    "findings": {
+      "xml_doc_comments": "False positive: procedure XML summary directly precedes [Test] attribute; source shows summary line12 and procedure line14",
+      "changelog": "Staged test-only scan omits root CHANGELOG; actual root updated and checked"
+    }
+  },
+  "sourceReview": {
+    "publicCompatibility": "Only adds inherent Execute flags to internal existing subscriber; no public procedure/field/enum/ID changes; released28.3.1.81 AppSourceCop baseline clean",
+    "security": "No product permission changes. Test baseline has Foundation Setup-page and public App Registry Execute plus temporary RegisteredApp object Execute, Microsoft GuidedExperience view and indirect NAV App Setting read. No Inventory codeunit Execute grant and no Setup tabledata writes; exact-role negative-write and page-state assertions retained.",
+    "tests": "Actual Setup.OpenView under SetExactPermissionSet LicAdm with write denial/noneditable/RefreshLicense-visible assertions; TestPermissions Disabled allows setup preparation, actual restricted role replaces effective permissions",
+    "translations": "No production user-facing text changes; existing XLF parity passes; test caption Locked",
+    "docs": "CHANGELOG scoped entry added; no new page/help contract requiring docs site changes",
+    "pending": "Current177 full native/UI/pairedCI and independent Claude receipt",
+    "permissionMock": "Explicit StartLoggingNAVPermissions precedes SetExactPermissionSet; Stop after page close. Actual Microsoft source precondition inspected; prior run420/420 does not prove current amendment.",
+    "browserHelperRepair": "Captures write/edit/action booleans while exact restricted permissions apply, closes page and stops mock, then invokes assertion helper. No helper/product Execute permission granted.",
+    "runtime177": "Fresh own full native420/420/0/0 with exact JUnit/source inventory46codeunits; UI/CI/independent Claude pending"
+  }
+}
