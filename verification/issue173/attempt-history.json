@@ -1,0 +1,23 @@
+{
+  "earlierSource": "8628881961089760fa779c3310e07df425211152",
+  "earlierSuite": "420/420/0/0",
+  "sourceAmendment": "Explicit permission mock Start/Stop removes runner lifecycle dependence; no earlier runtime failure claimed",
+  "intermediateSource": "7a11733cb110967555f340a286a30d4e6b132285",
+  "intermediateNative": "420/420/0/0",
+  "intermediateBrowser": "0passed/1failed in1033: Library Assert Execute before Setup open",
+  "browserFix": "Capture measured role/page state before restoring mock, then assert outside restricted role; no grants widened",
+  "browserFailureEvidence": "prior-7a11733-ui-failure.json",
+  "currentSource": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "currentSuite": "420/420/0/0",
+  "currentUI": "1033/1039 each1/1",
+  "languageCleanup": "Initial browser picker restoration failed; actual scoped recovery verified1033; raw failure retained",
+  "fixtureReviewLessons": [
+    "inventory173-worker4-permission-mock-start-20261029",
+    "inventory173-worker4-browser-assert-execute-20261029"
+  ],
+  "developmentCompilerRetries": [
+    "AA0215file naming corrected",
+    "AL0305test permission-set20character name corrected"
+  ],
+  "noNewSuppressions": true
+}

@@ -1,0 +1,40 @@
+{
+  "sha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "containerId": "f018323b75c9",
+  "appVersion": "28.3.2.175",
+  "startedAt": "2026-10-29T07:04:25.215Z",
+  "scenarios": [
+    {
+      "lcid": 1033,
+      "suite": "I173UIEN",
+      "codeunit": 96972,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs restricted LicAdm Setup-open regression with Inventory installed; page remains non-editable and RefreshLicense visible; no Sync or licence state writes",
+      "evidence": "ui-release-1033-results.json"
+    },
+    {
+      "lcid": 1039,
+      "suite": "I173UIIS",
+      "codeunit": 96972,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "scenario": "Real Web Client runs restricted LicAdm Setup-open regression with Inventory installed; page remains non-editable and RefreshLicense visible; no Sync or licence state writes",
+      "evidence": "ui-release-1039-results.json"
+    }
+  ],
+  "passed": 2,
+  "failed": 1,
+  "skipped": 0,
+  "cleanup": {
+    "businessFixtureRecordsCreatedByBrowserHarness": 0,
+    "nativeFixtures": "Self-seeded by isolated AL tests; rollback readback recorded separately",
+    "languageRestored": false
+  },
+  "error": "locator.dblclick: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('English (United States)', { exact: true }).first()\u001b[22m\n\u001b[2m    - locator resolved to <span id=\"b37ee\" tabindex=\"0\" role=\"textbox\" aria-readonly=\"true\" aria-labelledby=\"b37lbl b37ee\" title=\"English (United States)\" class=\"stringcontrol-read value thm-font-size-small thm-segoeNormal thm-color--style-standard_medmaxflat_45--not_FCM thm-bgcolor--medmaxflat thm-bdrcolor--brand-primary_minflat_45--focus--not_FCM thm-outlinecolor--brand-primary_minflat_45--focus--not_FCM\">English (United States)</span>\u001b[22m\n\u001b[2m  - attempting dblclick action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div class=\"ms-nav-scrollable scroll-source thm-bgcolor--medflat\">…</div> from <div class=\"spa-view spa-task-dialog appear-fadeout animate no-animations shown\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying dblclick action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <div class=\"ms-nav-scrollable scroll-source thm-bgcolor--medflat\">…</div> from <div class=\"spa-view spa-task-dialog appear-fadeout animate no-animations shown\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying dblclick action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    57 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <div class=\"ms-nav-scrollable scroll-source thm-bgcolor--medflat\">…</div> from <div class=\"spa-view spa-task-dialog appear-fadeout animate no-animations shown\">…</div> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying dblclick action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+  "finishedAt": "2026-10-29T07:06:04.534Z"
+}

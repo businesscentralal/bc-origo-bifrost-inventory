@@ -1,0 +1,26 @@
+{
+  "sha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "containerId": "f018323b75c9",
+  "startedAt": "2026-10-29T07:07:15.323Z",
+  "ownedSuites": [
+    "I173UIEN",
+    "I173UIIS"
+  ],
+  "deleted": [
+    "I173UIEN",
+    "I173UIIS"
+  ],
+  "verification": [
+    {
+      "suite": "I173UIEN",
+      "remaining": 0
+    },
+    {
+      "suite": "I173UIIS",
+      "remaining": 0
+    }
+  ],
+  "defaultSuite": "Retained native full-suite evidence in owned container; not deleted",
+  "verified": true,
+  "finishedAt": "2026-10-29T07:07:26.258Z"
+}

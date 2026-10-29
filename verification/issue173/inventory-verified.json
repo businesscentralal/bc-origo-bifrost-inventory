@@ -1,0 +1,17 @@
+{
+  "sha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "executed": 420,
+  "passed": 420,
+  "failed": 0,
+  "skipped": 0,
+  "codeunits": 46,
+  "sourceMethods": 420,
+  "missing": [],
+  "unexpected": [],
+  "regression96972": {
+    "classname": "96972 Inv. Registration Tests ori",
+    "name": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+    "time": "0.123"
+  },
+  "verified": true
+}

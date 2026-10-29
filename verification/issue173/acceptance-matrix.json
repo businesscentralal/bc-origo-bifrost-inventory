@@ -1,0 +1,73 @@
+{
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/173",
+  "sourceSha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "criteria": {
+    "AC01": {
+      "implemented": true,
+      "verified": "Exact source diff and app/test0errors0warnings",
+      "objects": [
+        10076845
+      ],
+      "properties": [
+        "InherentPermissions = X",
+        "InherentEntitlements = X"
+      ]
+    },
+    "AC02": {
+      "implemented": true,
+      "regression": 96972,
+      "verified": true,
+      "pending": "Independent Claude verification",
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "permissions": [
+        "BIFROST LicAdm ori",
+        "Inv Setup Test (test-only Microsoft platform baseline)"
+      ],
+      "assertions": [
+        "Setup table no direct write",
+        "actual Setup.OpenView succeeds",
+        "Setup non-editable",
+        "RefreshLicense action visible"
+      ],
+      "licenceWrites": 0,
+      "native": "1/1 in420/420full suite",
+      "ui": "Real browser Setup plus restricted regression1/1 in1033 and1039"
+    },
+    "AC03": {
+      "implemented": "Inventory candidate supplies repair",
+      "verified": false,
+      "owner": "Claude Code",
+      "environment": "bc28-w1",
+      "scenario": "Foundation98677 LicAdm_Sync_PassesGateAndKeepsQuota with Inventory installed",
+      "pending": "Independent exact-head receipt; developer does not execute licensing/quota fixture mutation"
+    },
+    "AC04": {
+      "implemented": "CHANGELOG29Oct entry includes both codeunitIDs",
+      "verified": true,
+      "pending": "PR CI and delivery"
+    }
+  },
+  "developerGates": {
+    "compile": "0errors0warnings app/test on Foundation530 and632; exact-head summaries",
+    "publication": {
+      "repo": "businesscentralal/bc-origo-bifrost-inventory",
+      "branch": "fix/worker4-inventory173-registration-execute",
+      "sha": "8628881961089760fa779c3310e07df425211152",
+      "branchUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/tree/fix/worker4-inventory173-registration-execute",
+      "commitUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/8628881961089760fa779c3310e07df425211152",
+      "remoteVerifiedAt": "2026-10-29T06:48:20.682Z"
+    },
+    "suite": "420executed/420passed/0failed/0skipped; all46codeunits, exact deployed174artifact",
+    "ui": "passed1033/1039, own suites cleanup verified and language restored",
+    "mcp": "N/A no touched message types; registration-only change"
+  },
+  "deliveryPending": [
+    "PR CI",
+    "Claude AC03/current-head receipt",
+    "Grok exact-head clearance",
+    "eligible non-author approval",
+    "Architect merge plus RC re-verification before10:00 Reykjavik",
+    "same-SHA deployment and Tester UAT",
+    "owned-container closure and Secretary ACK"
+  ]
+}

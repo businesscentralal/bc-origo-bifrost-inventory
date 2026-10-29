@@ -1,0 +1,118 @@
+{
+  "files_scanned": 2,
+  "version": "28.3.2.0",
+  "checks": {
+    "object_naming": {
+      "pass": true,
+      "findings": []
+    },
+    "try_prefix_convention": {
+      "pass": true,
+      "findings": []
+    },
+    "commit_in_loop": {
+      "pass": true,
+      "findings": []
+    },
+    "app_json": {
+      "pass": true,
+      "findings": []
+    },
+    "changelog": {
+      "pass": false,
+      "findings": [
+        "CHANGELOG.md not found"
+      ]
+    },
+    "event_subscriber_placement": {
+      "pass": true,
+      "findings": []
+    },
+    "hardcoded_values": {
+      "pass": true,
+      "findings": []
+    },
+    "format_guid": {
+      "pass": true,
+      "findings": []
+    },
+    "namespace": {
+      "pass": true,
+      "findings": []
+    },
+    "global_variables": {
+      "pass": true,
+      "findings": []
+    },
+    "with_statements": {
+      "pass": true,
+      "findings": []
+    },
+    "page_code_minimal": {
+      "pass": true,
+      "findings": []
+    },
+    "xml_doc_comments": {
+      "pass": false,
+      "findings": [
+        {
+          "line": 14,
+          "procedure": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+          "file": "InvRegistrationTests.Codeunit.al"
+        }
+      ]
+    },
+    "data_classification": {
+      "pass": true,
+      "findings": []
+    },
+    "set_load_fields": {
+      "pass": true,
+      "advisory": "Loops without SetLoadFields - consider it only for wide tables; not a gate failure",
+      "findings": []
+    },
+    "today_vs_workdate": {
+      "pass": true,
+      "findings": []
+    },
+    "reserved_var_names": {
+      "pass": true,
+      "findings": []
+    },
+    "confirm_in_page": {
+      "pass": true,
+      "findings": []
+    },
+    "caption_translation": {
+      "skipped": "single-locale project",
+      "pass": true,
+      "findings": []
+    },
+    "format_evaluate_enum": {
+      "pass": true,
+      "findings": []
+    },
+    "one_statement_per_line": {
+      "pass": true,
+      "findings": []
+    },
+    "read_isolation": {
+      "pass": true,
+      "findings": []
+    },
+    "modernization": {
+      "pass": true,
+      "findings": []
+    }
+  },
+  "mode": "full",
+  "project": "Bifrost Inventory - Tests",
+  "publisher": "Origo",
+  "summary": {
+    "failed": 2,
+    "passed": 21,
+    "ready": false,
+    "total": 23
+  },
+  "total_al_files": 2
+}

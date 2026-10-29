@@ -1,0 +1,16 @@
+{
+  "containerId": "f018323b75c9",
+  "displayName": "alviss-worker4-inventory173-20261029",
+  "owner": "worker-4",
+  "taskId": "1793237566.947609-target-businesscentralal_bc-origo-bifrost-inventory-issues-173",
+  "developmentCandidate": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "policySource": "https://bifrst-group.slack.com/archives/C0C0XM70YF8/p1792155806391819",
+  "retainSameContainerForAmendments": true,
+  "deleteOnlyAfter": [
+    "Successful same-SHA deployment",
+    "Tester postdeploy UAT pass",
+    "Issue closure"
+  ],
+  "currentPlan": "Stop owned container after developer verification and fixture cleanup; retain for amendments/UAT; no replacement or deletion",
+  "noSharedResourcesTouched": true
+}

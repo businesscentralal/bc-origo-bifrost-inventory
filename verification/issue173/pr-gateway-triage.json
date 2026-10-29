@@ -1,0 +1,32 @@
+{
+  "sha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "toolProvenance": "Exact copied Invoke-PrepareForPR.ps1 from pinned standards snapshot; colocated original modernization config to resolve Linux USERPROFILE/path fallback, no script edits",
+  "productScan": {
+    "files": 1,
+    "passed": 22,
+    "checks": 23,
+    "rawSummaryCounter": "Script reports failed2 but only1 pass=false category; raw retained",
+    "findings": {
+      "changelog": "False positive for repository Unreleased format: added29Oct173 entry with codeunit IDs, not a release-version heading"
+    }
+  },
+  "testScan": {
+    "files": 2,
+    "passed": 21,
+    "checks": 23,
+    "findings": {
+      "xml_doc_comments": "False positive: procedure XML summary directly precedes [Test] attribute; source shows summary line12 and procedure line14",
+      "changelog": "Staged test-only scan omits root CHANGELOG; actual root updated and checked"
+    }
+  },
+  "sourceReview": {
+    "publicCompatibility": "Only adds inherent Execute flags to internal existing subscriber; no public procedure/field/enum/ID changes; released28.3.1.81 AppSourceCop baseline clean",
+    "security": "No product permission-set changes; test-only baseline grants Microsoft Guided Experience view and indirect NAV App Setting read; no Inventory registration Execute in test permset",
+    "tests": "Actual Setup.OpenView under SetExactPermissionSet LicAdm with write denial/noneditable/RefreshLicense-visible assertions; TestPermissions Disabled allows setup preparation, actual restricted role replaces effective permissions",
+    "translations": "No production user-facing text changes; existing XLF parity passes; test caption Locked",
+    "docs": "CHANGELOG scoped entry added; no new page/help contract requiring docs site changes",
+    "pending": "Full-suite/UI runtime, independent Claude98677 and review/CI remain",
+    "permissionMock": "Explicit StartLoggingNAVPermissions precedes SetExactPermissionSet; Stop after page close. Actual Microsoft source precondition inspected; prior run420/420 does not prove current amendment.",
+    "browserHelperRepair": "Captures write/edit/action booleans while exact restricted permissions apply, closes page and stops mock, then invokes assertion helper. No helper/product Execute permission granted."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Inv. Registration Tests ori",
+  "codeUnit": 96972,
+  "codeunitName": "Inv. Registration Tests ori",
+  "applicationID": "{A886B2CB-7DA0-4784-8163-42956DBDD5EC}",
+  "applicationName": "Bifrost Inventory - Tests",
+  "startTime": "2026-10-29T06:59:00.3900000Z",
+  "finishTime": "2026-10-29T06:59:00.4330000Z",
+  "result": 1,
+  "testResults": [
+    {
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled",
+      "startTime": "2026-10-29T06:59:00.4000000Z",
+      "finishTime": "2026-10-29T06:59:00.4270000Z",
+      "result": 1,
+      "message": "Sorry, the current permissions prevented the action. (CodeUnit 130002 Library Assert Execute: Bifrost Inventory - Tests)",
+      "stackTrace": "Inv. Registration Tests ori(CodeUnit 96972).AC02_LicAdm_OpensSetupWithInventoryInstalled line 13 - Bifrost Inventory - Tests by Origo version 28.3.2.174;Test Runner - Mgt(CodeUnit 130454).RunTests line 26 - Test Runner by Microsoft version 28.5.54151.56992;Test Runner - Isol. Codeunit(CodeUnit 130450).OnRun(Trigger) line 4 - Test Runner by Microsoft version 28.5.54151.56992;Test Suite Mgt.(CodeUnit 130456).RunTests line 2 - Test Runner by Microsoft version 28.5.54151.56992;Test Suite Mgt.(CodeUnit 130456).RunSelectedTests line 35 - Test Runner by Microsoft version 28.5.54151.56992;Test Suite Mgt.(CodeUnit 130456).RunNextTest line 20 - Test Runner by Microsoft version 28.5.54151.56992;Command Line Test Tool(Page 130455).RunNextTest - OnAction(Trigger) line 7 - Test Runner by Microsoft version 28.5.54151.56992;"
+    }
+  ]
+}

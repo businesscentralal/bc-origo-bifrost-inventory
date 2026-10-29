@@ -1,0 +1,11 @@
+{
+  "sha": "5f655f76d7e205a48939aeaa4f45544ae545107a",
+  "touchedMessageTypes": [],
+  "notApplicableReason": "Only Inventory Registration ori Execute permission/entitlement properties change; no message type implementation, handler, contract, enum or dispatcher changes. Restricted Setup UI is covered by own-suite regression96972.",
+  "executed": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "fixturesCreated": 0
+}
