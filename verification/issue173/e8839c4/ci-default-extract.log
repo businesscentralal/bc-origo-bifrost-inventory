@@ -1,0 +1,58 @@
+2026-10-29T09:56:24.3670093Z Bifrost shared container: phase=Test, id=shared-123, container mode=Default.
+2026-10-29T09:56:24.4775049Z Bifrost: republishing Test MainApp 28.0.2.0 on shared container shared-123, SHA256=BA7A1BEE4EA9581F9A3A4858EE095DC7809A220428C5CEE5D29307B6CB952DC7.
+2026-10-29T09:56:24.4926345Z Bifrost: Test MainApp republish completed; the test app may now be deployed.
+2026-10-29T09:56:24.5007945Z Shared Alpaca pipeline checks passed: plan validation, mode preservation, physical identity, compatibility guard, republish ordering, missing grant, and Default passthrough.
+2026-10-29T09:56:24.6049060Z   get: useCompilerFolder,workspaceCompilation,keyVaultCodesignCertificateName,doNotSignApps,doNotRunTests,doNotRunBcptTests,doNotRunpageScriptingTests,artifact,generateDependencyArtifact,trustedSigning,useGitSubmodules,trackALAlertsInGitHub,skipUpgrade
+2026-10-29T09:56:24.6369881Z   _get: useCompilerFolder,workspaceCompilation,keyVaultCodesignCertificateName,doNotSignApps,doNotRunTests,doNotRunBcptTests,doNotRunpageScriptingTests,artifact,generateDependencyArtifact,trustedSigning,useGitSubmodules,trackALAlertsInGitHub,skipUpgrade
+2026-10-29T09:56:26.2332108Z         "skipUpgrade": true
+2026-10-29T09:56:26.2345413Z   "skipUpgrade": false,
+2026-10-29T09:56:27.6234246Z   skipUpgrade: False
+2026-10-29T09:56:27.6506916Z   skipUpgrade: False
+2026-10-29T09:56:29.2686005Z   skipUpgrade: False
+2026-10-29T09:56:29.2964243Z   skipUpgrade: False
+2026-10-29T09:56:41.3124358Z   skipUpgrade: False
+2026-10-29T09:56:41.3395963Z   skipUpgrade: False
+2026-10-29T09:56:54.0776681Z   skipUpgrade: False
+2026-10-29T09:57:03.5884265Z   skipUpgrade: False
+2026-10-29T09:57:03.6177024Z   skipUpgrade: False
+2026-10-29T09:57:05.3147866Z   skipUpgrade: False
+2026-10-29T09:57:09.6927029Z   skipUpgrade: False
+2026-10-29T09:57:09.7195780Z   skipUpgrade: False
+2026-10-29T09:57:10.3252254Z Getting the latest release from https://api.github.com/repos/businesscentralal/bc-origo-bifrost-inventory/releases/latest - branch main
+2026-10-29T09:57:12.1296818Z   skipUpgrade: False
+2026-10-29T09:57:12.5672249Z   skipUpgrade: False
+2026-10-29T09:57:12.5953456Z   skipUpgrade: False
+2026-10-29T09:57:22.8629610Z Bifrost: build mode 'Default' - removed internalsVisibleTo and the AS0081 suppression from app/app.json.
+2026-10-29T09:57:56.9844430Z Bifrost shared container: phase=Default, id=f03c4b4fcb03, container mode=Default.
+2026-10-29T09:57:57.3246732Z   Container with ID 'f03c4b4fcb03' exists for project '.' and build mode 'Default'.
+2026-10-29T09:57:59.5740645Z TestResultsFile                 D:\a\bc-origo-bifrost-inventory\bc-origo-bifrost-inventory\TestResults.xml
+2026-10-29T09:57:59.5755073Z BcptTestResultsFile             D:\a\bc-origo-bifrost-inventory\bc-origo-bifrost-inventory\bcptTestResults.json
+2026-10-29T09:57:59.6156971Z - D:\a\bc-origo-bifrost-inventory\bc-origo-bifrost-inventory\test
+2026-10-29T09:57:59.6290643Z # Bifrost: never ship the test app's internalsVisibleTo grant.
+2026-10-29T09:57:59.6298933Z         if ($appJson.PSObject.Properties.Name -contains 'internalsVisibleTo') {
+2026-10-29T09:57:59.6299838Z             $appJson.PSObject.Properties.Remove('internalsVisibleTo')
+2026-10-29T09:57:59.6305893Z         Write-Host "Bifrost: build mode '$($env:BuildMode)' - removed internalsVisibleTo and the AS0081 suppression from app/app.json."
+2026-10-29T09:57:59.6408812Z         Invoke-BifrostSharedPublish -Parameters $Parameters -Publisher $BifrostAlpacaPublish
+2026-10-29T09:57:59.6777615Z         Invoke-BifrostSharedPublish -Parameters $Parameters -Publisher $BifrostAlpacaPublish
+2026-10-29T10:00:45.0831622Z   Get status of container 'f03c4b4fcb03' from https://cosmo-alpaca-enterprise.westeurope.cloudapp.azure.com/api/alpaca/release/Container/Container/f03c4b4fcb03
+2026-10-29T10:01:01.2699766Z   Container Hostname  : f03c4b4fcb03-business-central-b2zmf
+2026-10-29T10:01:08.3327268Z   Publishing Origo_Bifrost Foundation_28.0.3.530.app to https://cosmo-alpaca-enterprise.westeurope.cloudapp.azure.com/f03c4b4fcb03dev/dev/apps?SchemaUpdateMode=synchronize&tenant=default
+2026-10-29T10:02:47.0381510Z   Publishing Origo_Bifrost Inventory_28.3.2147483647.199.app to https://cosmo-alpaca-enterprise.westeurope.cloudapp.azure.com/f03c4b4fcb03dev/dev/apps?SchemaUpdateMode=synchronize&tenant=default
+2026-10-29T10:03:08.8004524Z   skipUpgrade: False
+2026-10-29T10:03:11.9866766Z   skipUpgrade: False
+2026-10-29T10:03:13.0905538Z   skipUpgrade: False
+2026-10-29T10:03:13.1310940Z   skipUpgrade: False
+2026-10-29T10:03:13.8720921Z Assigning bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-TestApps-PR174-20261029 to TestAppsArtifactsName
+2026-10-29T10:03:13.8738904Z Assigning bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-TestResults-PR174-20261029 to TestResultsArtifactsName
+2026-10-29T10:03:13.8757171Z Assigning bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-BcptTestResults-PR174-20261029 to BcptTestResultsArtifactsName
+2026-10-29T10:03:13.8775254Z Assigning bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-PageScriptingTestResults-PR174-20261029 to PageScriptingTestResultsArtifactsName
+2026-10-29T10:03:13.8792346Z Assigning bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-PageScriptingTestResultDetails-PR174-20261029 to PageScriptingTestResultDetailsArtifactsName
+2026-10-29T10:03:18.0281039Z   skipUpgrade: False
+2026-10-29T10:03:20.6823402Z   skipUpgrade: False
+2026-10-29T10:03:22.0449786Z   skipUpgrade: False
+2026-10-29T10:03:24.9535069Z   skipUpgrade: False
+2026-10-29T10:03:24.9978280Z   skipUpgrade: False
+2026-10-29T10:03:29.6782508Z   skipUpgrade: False
+2026-10-29T10:03:29.7124290Z   skipUpgrade: False
+2026-10-29T10:03:32.0176686Z   skipUpgrade: False
+2026-10-29T10:03:32.0528435Z   skipUpgrade: False

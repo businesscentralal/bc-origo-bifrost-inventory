@@ -1,0 +1,20 @@
+{
+  "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "containerId": "f0a32cf1f8d6",
+  "FoundationVersion": "28.0.3.530",
+  "testAppVersion": "28.3.2147483647.199",
+  "productVersion": "28.3.2147483647.199",
+  "productPackageSha256": "50835f756bf1f319776a9d58e0a27ca6884d3fe94ab772188d7513c8dbd53961",
+  "actualCiProduct": true,
+  "actualCiTestApp": true,
+  "testArtifactKind": "Unmodified actual currentCI TestTestApps artifact",
+  "companyName": "My Company",
+  "fullSuite": false,
+  "codeunit": 96972,
+  "finishedAt": "2026-10-29T10:18:44.304Z",
+  "durationMs": 26300,
+  "ok": true,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0
+}

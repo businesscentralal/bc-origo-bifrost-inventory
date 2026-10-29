@@ -1,0 +1,699 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="96900 Item Attribute Tests ori" timestamp="2026-10-29T10:13:05" hostname="runnervmdaln5" time="3.095" tests="10" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96900 Item Attribute Tests ori" name="Get_ByItemNo_ReturnsAttributes" time="2.627" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Get_MissingItem_ReturnsError" time="0.074" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Create_Idempotent_SameValue_ChangedFalse" time="0.1" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Create_ConflictWithoutOverwrite_ReturnsError" time="0.054" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Create_ConflictWithOverwrite_Succeeds" time="0.04" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Update_Existing_ReturnsBeforeAfter" time="0.077" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Update_MissingMapping_ReturnsError" time="0.037" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Create_ServiceItem_Accepted" time="0.04" />
+    <testcase classname="96900 Item Attribute Tests ori" name="Enum_ValuesResolveToImpl" time="0.016" />
+    <testcase classname="96900 Item Attribute Tests ori" name="DataRecords_WriteRestricted_AttributeTables" time="0.03" />
+  </testsuite>
+  <testsuite name="96901 Item AttrDef Tests ori" timestamp="2026-10-29T10:13:22" hostname="runnervmdaln5" time="0.08" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96901 Item AttrDef Tests ori" name="DefinitionCreate_Option_CreatesValues" time="0.057" />
+    <testcase classname="96901 Item AttrDef Tests ori" name="DefinitionCreate_DuplicateName_ReturnsError" time="0.023" />
+  </testsuite>
+  <testsuite name="96905 Asm. Doc Prev. Post Tests" timestamp="2026-10-29T10:13:47" hostname="runnervmdaln5" time="23.906" tests="5" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96905 Asm. Doc Prev. Post Tests" name="PreviewPost_OrderWithStock_ReturnsLedgerEntries" time="22.86" />
+    <testcase classname="96905 Asm. Doc Prev. Post Tests" name="PreviewPost_NothingToAssemble_ReturnsNothingToPreview" time="0.46" />
+    <testcase classname="96905 Asm. Doc Prev. Post Tests" name="PreviewPost_MissingIdentifier_ReturnsError" time="0.03" />
+    <testcase classname="96905 Asm. Doc Prev. Post Tests" name="PreviewPost_NoLines_ReturnsErrorAndPreservesOrder" time="0.26" />
+    <testcase classname="96905 Asm. Doc Prev. Post Tests" name="PreviewPost_NoComponentStock_ReturnsPostingError" time="0.296" />
+  </testsuite>
+  <testsuite name="96906 Asm. Order RefreshLines Tests" timestamp="2026-10-29T10:13:48" hostname="runnervmdaln5" time="0.341" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96906 Asm. Order RefreshLines Tests" name="RefreshLines_ExistingOrder_ReturnsSuccess" time="0.324" />
+    <testcase classname="96906 Asm. Order RefreshLines Tests" name="RefreshLines_MissingIdentifier_ReturnsError" time="0.017" />
+  </testsuite>
+  <testsuite name="96907 Asm. Order Statistics Tests" timestamp="2026-10-29T10:13:49" hostname="runnervmdaln5" time="0.38" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96907 Asm. Order Statistics Tests" name="Statistics_OpenOrder_ReturnsCosts" time="0.367" />
+    <testcase classname="96907 Asm. Order Statistics Tests" name="Statistics_MissingIdentifier_ReturnsError" time="0.013" />
+  </testsuite>
+  <testsuite name="96908 Assembly Order Create Tests" timestamp="2026-10-29T10:13:49" hostname="runnervmdaln5" time="0.276" tests="3" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96908 Assembly Order Create Tests" name="Create_AllRequiredFields_ReturnsSuccess" time="0.236" />
+    <testcase classname="96908 Assembly Order Create Tests" name="Create_MissingItemNo_ReturnsError" time="0.013" />
+    <testcase classname="96908 Assembly Order Create Tests" name="AssemblyCreate_BadPostingDate_IsAnError" time="0.027" />
+  </testsuite>
+  <testsuite name="96909 Assembly Order Post Tests" timestamp="2026-10-29T10:13:50" hostname="runnervmdaln5" time="0.647" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96909 Assembly Order Post Tests" name="Post_OrderWithStock_ReturnsSuccess" time="0.63" />
+    <testcase classname="96909 Assembly Order Post Tests" name="Post_MissingIdentifier_ReturnsError" time="0.017" />
+  </testsuite>
+  <testsuite name="96910 Assembly Order Release Tests" timestamp="2026-10-29T10:13:51" hostname="runnervmdaln5" time="0.214" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96910 Assembly Order Release Tests" name="Release_OpenOrder_StatusReleased" time="0.197" />
+    <testcase classname="96910 Assembly Order Release Tests" name="Release_MissingIdentifier_ReturnsError" time="0.017" />
+  </testsuite>
+  <testsuite name="96911 Assembly Order Reopen Tests" timestamp="2026-10-29T10:13:52" hostname="runnervmdaln5" time="0.287" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96911 Assembly Order Reopen Tests" name="Reopen_ReleasedOrder_StatusOpen" time="0.27" />
+    <testcase classname="96911 Assembly Order Reopen Tests" name="Reopen_MissingIdentifier_ReturnsError" time="0.017" />
+  </testsuite>
+  <testsuite name="96912 Transfer Doc Prev. Post Tests" timestamp="2026-10-29T10:14:01" hostname="runnervmdaln5" time="8.251" tests="4" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96912 Transfer Doc Prev. Post Tests" name="PreviewPost_ShipReleased_ReturnsPreviewAndRollsBack" time="4.39" />
+    <testcase classname="96912 Transfer Doc Prev. Post Tests" name="PreviewPost_NothingToShip_ReturnsNothingToPreview" time="0.75" />
+    <testcase classname="96912 Transfer Doc Prev. Post Tests" name="PreviewPost_DirectTransfer_ReceiptAndShipment_PredictsShipment" time="1.794" />
+    <testcase classname="96912 Transfer Doc Prev. Post Tests" name="PreviewPost_DirectTransfer_DirectTransferPosting_PredictsDirectTransfer" time="1.317" />
+  </testsuite>
+  <testsuite name="96913 Transfer Order Create Tests" timestamp="2026-10-29T10:14:03" hostname="runnervmdaln5" time="2.128" tests="7" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_AllRequiredFields_ReturnsSuccess" time="0.416" />
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_MissingFromCode_ReturnsError" time="0.343" />
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_WithItemLine_ReturnsLineAndQuantityTotal" time="0.41" />
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_BadLines_ReturnsEveryProblemAndNoHeader" time="0.026" />
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_WithoutLines_OmitsLinesFromResponse" time="0.493" />
+    <testcase classname="96913 Transfer Order Create Tests" name="TransferOrderCreateHelp_DocumentsLinesContract" time="0.11" />
+    <testcase classname="96913 Transfer Order Create Tests" name="Create_InvalidBoolean_ReturnsErrorWithoutHeader" time="0.33" />
+  </testsuite>
+  <testsuite name="96914 Transfer Order Post Tests" timestamp="2026-10-29T10:14:08" hostname="runnervmdaln5" time="3.942" tests="5" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96914 Transfer Order Post Tests" name="Post_Ship_ReturnsPostedShipmentNo" time="0.79" />
+    <testcase classname="96914 Transfer Order Post Tests" name="Post_InvalidPostingType_ReturnsError" time="0.464" />
+    <testcase classname="96914 Transfer Order Post Tests" name="Post_DirectTransfer_ReceiptAndShipment_ReturnsBothDocuments" time="0.847" />
+    <testcase classname="96914 Transfer Order Post Tests" name="Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted" time="1.007" />
+    <testcase classname="96914 Transfer Order Post Tests" name="Post_Receive_Partial_KeepsOrderAndReturnsPostedReceiptNo" time="0.834" />
+  </testsuite>
+  <testsuite name="96915 Transfer Order Release Tests" timestamp="2026-10-29T10:14:10" hostname="runnervmdaln5" time="1.488" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96915 Transfer Order Release Tests" name="Release_OpenOrder_StatusChangesToReleased" time="0.894" />
+    <testcase classname="96915 Transfer Order Release Tests" name="Release_AlreadyReleased_NoOp" time="0.594" />
+  </testsuite>
+  <testsuite name="96916 Transfer Order Reopen Tests" timestamp="2026-10-29T10:14:11" hostname="runnervmdaln5" time="0.822" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96916 Transfer Order Reopen Tests" name="Reopen_ReleasedOrder_StatusChangesToOpen" time="0.456" />
+    <testcase classname="96916 Transfer Order Reopen Tests" name="Reopen_AlreadyOpen_NoOp" time="0.366" />
+  </testsuite>
+  <testsuite name="96917 Transfer Order Stats. Tests" timestamp="2026-10-29T10:14:12" hostname="runnervmdaln5" time="0.502" tests="3" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96917 Transfer Order Stats. Tests" name="Statistics_OrderWithTwoLines_ReturnsTotals" time="0.466" />
+    <testcase classname="96917 Transfer Order Stats. Tests" name="Statistics_NumericDocumentNo_ReturnsTypedError" time="0.016" />
+    <testcase classname="96917 Transfer Order Stats. Tests" name="Statistics_UnknownDocument_ReturnsNotFound" time="0.02" />
+  </testsuite>
+  <testsuite name="96918 Inv. Posting Gate Tests" timestamp="2026-10-29T10:14:12" hostname="runnervmdaln5" time="0.263" tests="7" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96918 Inv. Posting Gate Tests" name="InventoryRead_PreservesAttributeReadOnlyPermissions" time="0.17" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="InventoryFull_PreservesAttributeWritePermissions" time="0.02" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="TransferPost_WithoutInvPost_IsDisabled" time="0.03" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="AssemblyPost_WithoutInvPost_IsDisabled" time="0.01" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="AssertCanPost_WithoutInvPost_NamesInvPostSet" time="0.01" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="TransferPreview_WithoutInvPost_StaysEnabled" time="0.017" />
+    <testcase classname="96918 Inv. Posting Gate Tests" name="AssemblyPreview_WithoutInvPost_StaysEnabled" time="0.006" />
+  </testsuite>
+  <testsuite name="96919 Inv. Posting Gate Grant Tests" timestamp="2026-10-29T10:14:13" hostname="runnervmdaln5" time="0.032" tests="4" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96919 Inv. Posting Gate Grant Tests" name="TransferPost_WithInvPost_IsEnabled" time="0.02" />
+    <testcase classname="96919 Inv. Posting Gate Grant Tests" name="AssemblyPost_WithInvPost_IsEnabled" time="0.003" />
+    <testcase classname="96919 Inv. Posting Gate Grant Tests" name="HasPostingPermission_WithInvPost_IsTrue" time="0.003" />
+    <testcase classname="96919 Inv. Posting Gate Grant Tests" name="AssertCanPost_WithInvPost_WritesNoError" time="0.006" />
+  </testsuite>
+  <testsuite name="96921 Inventory Contract Batch Tests" timestamp="2026-10-29T10:14:15" hostname="runnervmdaln5" time="1.141" tests="19" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CurrentNotes_ReplacePreviousOutput" time="0.017" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="ScopedCatalogue_UsesIcelandicAt1039" time="0.136" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="RemainingCatalogue_UsesIcelandicAt1039" time="0.04" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="PublicHelp_ClearsDeveloperNotes" time="0.007" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AllInventoryTypes_HaveRequiredContractChapters" time="0.113" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AllInventoryTypes_HaveBilingualDiscovery" time="0.003" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AllInventoryTypes_RelatedNamesExist" time="0.6" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed" time="0.097" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="InventoryEffects_MatchOperation" time="0.014" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AttributeGet_RegisteredContract_DeclaresReadChapters" time="0.027" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AttributeCreate_RegisteredContract_DeclaresWriteChapters" time="0.007" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AttributeUpdate_RegisteredContract_DeclaresWriteChapters" time="0.004" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="AttributeDefinition_RegisteredContract_HasNoTarget" time="0.007" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingContracts_DeclareTypedDefaults" time="0.01" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingContracts_DeclareFilterPrecondition" time="0.006" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingContracts_DeclareDispatcherFailure" time="0.006" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingContracts_DiscloseReportOptions" time="0.01" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingContracts_ClearReusedChapters" time="0.007" />
+    <testcase classname="96921 Inventory Contract Batch Tests" name="CostingInterfaces_AllChapters_ReplaceReusedOutputs" time="0.03" />
+  </testsuite>
+  <testsuite name="96922 Inv. Lookup Contract Tests" timestamp="2026-10-29T10:14:15" hostname="runnervmdaln5" time="0.095" tests="5" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96922 Inv. Lookup Contract Tests" name="AllLookupTypes_ErrorsChapter_ListsDataAndKeys" time="0.033" />
+    <testcase classname="96922 Inv. Lookup Contract Tests" name="AllLookupTypes_ErrorsChapter_ExactlyOneMultipleErrors" time="0.014" />
+    <testcase classname="96922 Inv. Lookup Contract Tests" name="NonLookupTypes_ErrorsChapter_NoMultipleErrors" time="0.014" />
+    <testcase classname="96922 Inv. Lookup Contract Tests" name="AttributeBlocked_BothLanguages_PlaceholderAndKeyPreserved" time="0.01" />
+    <testcase classname="96922 Inv. Lookup Contract Tests" name="AllLookupTypes_BothLanguages_KeepEnglishContract" time="0.024" />
+  </testsuite>
+  <testsuite name="96923 Inv. Lookup Format Tests" timestamp="2026-10-29T10:14:16" hostname="runnervmdaln5" time="0.839" tests="22" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_ArrayData_TypedError" time="0.057" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_InvalidJson_TypedError" time="0.044" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_ObjectIdentifier_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_NullIdentifier_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_NumericIdentifier_TypedError" time="0.016" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_ArrayIdentifier_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_BooleanIdentifier_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_NullSystemId_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_TwoWrongKeys_OrderedErrors" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_EmptyIdentifier_MissingParameter" time="0.013" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_ArrayData_TypedError" time="0.024" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_InvalidJson_TypedError" time="0.024" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_ObjectIdentifier_TypedError" time="0.014" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_NullIdentifier_TypedError" time="0.014" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_NumericIdentifier_TypedError" time="0.014" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_ArrayIdentifier_TypedError" time="0.014" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_BooleanIdentifier_TypedError" time="0.017" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_NullSystemId_TypedError" time="0.03" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_TwoWrongKeys_OrderedErrors" time="0.02" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_EmptyIdentifier_MissingParameter" time="0.016" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="TransferStatistics_ExistingSubjectWrongKey_NoTotals" time="0.3" />
+    <testcase classname="96923 Inv. Lookup Format Tests" name="AssemblyStatistics_ExistingSubjectWrongKey_NoTotals" time="0.12" />
+  </testsuite>
+  <testsuite name="96927 Inventory Tracking Read Tests" timestamp="2026-10-29T10:14:46" hostname="runnervmdaln5" time="28.674" tests="39" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_DocumentKeysReadOnlyOwnTracking" time="6.81" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_SystemIdMatchesDocumentKeys" time="0.11" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_SubjectLineGuidReadsTracking" time="0.137" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC2_PackageAndSerialAreNotLost" time="0.124" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC2_ItemSystemIdReadsPendingTracking" time="0.117" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC2_TrackingTableViewReadsOnlySelectedItem" time="0.23" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_AvailabilityTableViewReadsOnlySelectedItem" time="10.42" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_TrackingTableViewWrongTypeIsRefused" time="0.01" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_AvailabilityTableViewWrongTypeIsRefused" time="0.01" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_UnknownDocumentReturnsError" time="0.016" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_NoItemSelectionIsRefused" time="0.013" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_BlankItemNoIsRefused" time="0.007" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_UntrackedItemReturnsNotFoundWithoutWrites" time="0.1" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_UntrackedDocumentReturnsNotFoundWithoutWrites" time="0.114" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC3_InvalidFilterAndPagingReturnError" time="0.1" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC8_PagingPreservesTotalAndOrder" time="0.18" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC2_LocationCodeDoesNotOverrideFilter" time="0.134" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_AvailabilityGroupsPostedReceipts" time="0.397" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_AvailabilitySubtractsNativeReservation" time="5.093" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_TrackingEntryExpirationIsPreserved" time="0.146" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC2_PackageOnlyTrackingIsVisible" time="0.086" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_DisabledPolicyReturnsBlank" time="0.177" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_GroupedDateDisagreementReturnsBlank" time="0.023" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_GroupedEntryDateAndUndatedFallback" time="0.02" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_LotDatedThenUndatedReturnsBlank" time="0.024" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_LotUndatedThenDatedReturnsBlank" time="0.02" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_PackageDatedThenUndatedReturnsBlank" time="0.016" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_PackageUndatedThenDatedReturnsBlank" time="0.017" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_ReservationCarriesSerialAndPackage" time="0.41" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_PackageDisagreementAndDisabledPolicy" time="0.03" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC5_EnabledUndatedEntryReturnsBlank" time="0.09" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC4_PublicAvailabilityExample_ReadsOwnedStock" time="0.197" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC7_ReadTypes_DoNotAddTableWriteRestrictions" time="0.094" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_PurchaseAdapter_MatchesFullNativeRecord" time="0.263" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_SalesAdapter_MatchesFullNativeRecord" time="0.153" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_TransferOutbound_MatchesFullNativeRecord" time="0.267" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_TransferInbound_MatchesFullNativeRecord" time="0.253" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_TransferOutbound_ReadsNativeTracking" time="0.63" />
+    <testcase classname="96927 Inventory Tracking Read Tests" name="Scenario_AC1_TransferInbound_ReadsShippedTracking" time="1.636" />
+  </testsuite>
+  <testsuite name="96930 Inventory Item Refusal Tests" timestamp="2026-10-29T10:14:47" hostname="runnervmdaln5" time="0.234" tests="11" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96930 Inventory Item Refusal Tests" name="CostGet_MissingItemNo_IsMissingParameterIn1033" time="0.047" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="CostGet_MissingItemNo_IsMissingParameterIn1039" time="0.01" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="TrackingGet_MissingItemNo_IsMissingParameterIn1033" time="0.013" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="TrackingGet_MissingItemNo_IsMissingParameterIn1039" time="0.013" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="TrackingGet_BlankItemNo_IsMissingParameter" time="0.014" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="RevaluationCalculate_MissingItemNo_IsMissingParameterIn1039" time="0.017" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1033" time="0.013" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1039" time="0.013" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="AssemblyOrderCreate_ZeroQuantity_IsIcelandicIn1039" time="0.01" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="PhysInventoryRecord_UnknownLine_IsIcelandicIn1039" time="0.04" />
+    <testcase classname="96930 Inventory Item Refusal Tests" name="ReclassificationDomainOff_NextStepIsIcelandicIn1039" time="0.044" />
+  </testsuite>
+  <testsuite name="96931 Inventory Item Subject Tests" timestamp="2026-10-29T10:14:47" hostname="runnervmdaln5" time="0.193" tests="4" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96931 Inventory Item Subject Tests" name="CostGet_SubjectAndDifferentItemNo_ReturnsConflict" time="0.08" />
+    <testcase classname="96931 Inventory Item Subject Tests" name="CostGet_Subject_ReturnsThatItem" time="0.036" />
+    <testcase classname="96931 Inventory Item Subject Tests" name="CostGet_MissingItemNoAndSubject_ReturnsMissingParameter" time="0.02" />
+    <testcase classname="96931 Inventory Item Subject Tests" name="ReservationGet_Subject_ExcludesOtherItems" time="0.057" />
+  </testsuite>
+  <testsuite name="96932 Inventory Item Quantity Tests" timestamp="2026-10-29T10:14:49" hostname="runnervmdaln5" time="1.007" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96932 Inventory Item Quantity Tests" name="CostGet_ItemNo_ReturnsCalculatedInventory" time="0.877" />
+    <testcase classname="96932 Inventory Item Quantity Tests" name="RevaluationCalculate_UsesLedgerCost" time="0.13" />
+  </testsuite>
+  <testsuite name="96933 Inventory Cost Perm. Tests" timestamp="2026-10-29T10:14:53" hostname="runnervmdaln5" time="3.742" tests="7" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="CostGet_ReadOnlyCaller_ReturnsSnapshotWithoutWriteRights" time="3.654" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="CostGet_NoItemRead_RefusesBeforeLicense" time="0.01" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="CostUpdate_ReadOnlyCaller_RefusesBeforeLicense" time="0.01" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="CostUpdate_NativeWriteWithoutPostToken_Enabled" time="0.02" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense" time="0.024" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="PriceUpdate_NativeWriteWithoutPostToken_Enabled" time="0.014" />
+    <testcase classname="96933 Inventory Cost Perm. Tests" name="CostFieldHints_ReadCaller_KeepWritePermissionsAbsent" time="0.01" />
+  </testsuite>
+  <testsuite name="96936 Inventory Cost Read Tests" timestamp="2026-10-29T10:14:55" hostname="runnervmdaln5" time="1.504" tests="13" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_ItemNo_ReturnsCurrentSnapshot" time="0.12" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_SystemIdAliases_ReturnSameItem" time="0.037" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_SubjectPrecedesData_SelectsSubject" time="0.037" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_TableView_ReturnsSelectedItems" time="0.043" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC02_MissingItem_ReturnsStructuredError" time="0.01" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="ReadCosts_MalformedLocation_ReturnsStructuredError" time="0.007" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="ReadCosts_DatedStock_CalculatesQuantityWithoutWrites" time="0.24" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="ReadCosts_VariantStock_SelectsOnlyRequestedVariant" time="0.28" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_FIFO_NativeSnapshotIsReadOnlyInBothLanguages" time="0.106" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_LIFO_NativeSnapshotIsReadOnlyInBothLanguages" time="0.1" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_Average_NativeSnapshotIsReadOnlyInBothLanguages" time="0.114" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_Standard_NativeSnapshotIsReadOnlyInBothLanguages" time="0.16" />
+    <testcase classname="96936 Inventory Cost Read Tests" name="Scenario_AC01_Specific_NativeSnapshotIsReadOnlyInBothLanguages" time="0.25" />
+  </testsuite>
+  <testsuite name="96937 Inventory Cost Write Tests" timestamp="2026-10-29T10:14:57" hostname="runnervmdaln5" time="1.948" tests="13" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC07_FIFO_ValidatesCosts" time="0.143" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC07_LIFO_ValidatesCosts" time="0.023" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC07_Average_ValidatesCosts" time="0.03" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC07_Specific_ValidatesCosts" time="0.047" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC08_Standard_RefusesWithoutChangingItem" time="0.037" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC09_Blocked_RequiresExplicitOptIn" time="0.036" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_MethodMismatch_PreservesItem" time="0.026" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_RestrictedField_PreservesAllFields" time="1.493" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_NoSelection_Refuses" time="0.007" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_NullCost_ReturnsErrorWithoutWrite" time="0.023" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="Scenario_AC10_FieldHints_LeaveUnrelatedTablesAvailable" time="0.01" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_NativeSubscriberFailure_RollsBackProcess" time="0.047" />
+    <testcase classname="96937 Inventory Cost Write Tests" name="UpdateCost_BlockedIcelandic_PreservesValue" time="0.026" />
+  </testsuite>
+  <testsuite name="96939 Inventory Price Write Tests" timestamp="2026-10-29T10:14:59" hostname="runnervmdaln5" time="0.646" tests="20" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_Subject_ValidatesAndReturnsStoredPrice" time="0.097" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_SystemId_SupportsZeroPrice" time="0.03" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_TableView_ResolvesOneItem" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_MultipleItems_RefusesWithoutWrites" time="0.04" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_NativeFailure_RollsBackSubscriberWrite" time="0.037" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_RestrictedField_PreservesPrice" time="0.106" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_Blocked_RequiresExplicitOptIn" time="0.027" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_MissingPrice_ReturnsError" time="0.024" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_NullPrice_ReturnsError" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_BooleanPrice_ReturnsError" time="0.016" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_ObjectPrice_ReturnsError" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_ArrayPrice_ReturnsError" time="0.016" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_MalformedPrice_ReturnsError" time="0.04" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_NullOptIn_ReturnsError" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_StringOptIn_ReturnsError" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_NoSelection_Refuses" time="0.017" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_BlankIdentifier_Refuses" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_UnknownField_Refuses" time="0.026" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_PriceList_Refuses" time="0.02" />
+    <testcase classname="96939 Inventory Price Write Tests" name="UpdatePrice_BlockedIcelandic_PreservesValue" time="0.03" />
+  </testsuite>
+  <testsuite name="96941 Inventory Revaluation Tests" timestamp="2026-10-29T10:15:03" hostname="runnervmdaln5" time="3.755" tests="10" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96941 Inventory Revaluation Tests" name="Scenario_AC05_Preview_RollsBackNativeLedgerChanges" time="1.313" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Scenario_AC06_Post_ReturnsActualRegisterAndValue" time="0.34" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Scenario_AC06_PostFailure_PreservesJournalAndLedgers" time="0.187" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Post_WrongTemplate_Refuses" time="0.077" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Preview_WrongTemplate_Refuses" time="0.017" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Post_AfterNativeInsertFailure_RollsBackActualWrite" time="0.204" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Revaluation_LIFO_NativePreviewAndPost" time="0.22" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Revaluation_Average_NativePreviewAndPost" time="0.88" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Revaluation_Standard_NativePreviewAndPost" time="0.19" />
+    <testcase classname="96941 Inventory Revaluation Tests" name="Revaluation_Specific_NativeSerialPreviewAndPost" time="0.327" />
+  </testsuite>
+  <testsuite name="96944 Inventory Physical Tests" timestamp="2026-10-29T10:15:07" hostname="runnervmdaln5" time="3.294" tests="14" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC01_Calculate_SelectedStockCreatesNativeLines" time="1.163" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC01_Calculate_MissingPostingDate_Refuses" time="0.116" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC02_RecordCount_OmittedAndZeroDiffer" time="0.147" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC04_EqualCount_IsReady" time="0.134" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC05_Preview_RollsBackPhysicalEntries" time="0.434" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC06_Post_ReturnsBothNativeLedgerRanges" time="0.247" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC03_WrongTemplate_AllFiveRefuse" time="0.023" />
+    <testcase classname="96944 Inventory Physical Tests" name="RecordCount_LaterInvalidCount_PreservesFirstLine" time="0.156" />
+    <testcase classname="96944 Inventory Physical Tests" name="LegacyRecord_Quantity_UsesNativeCountValidation" time="0.173" />
+    <testcase classname="96944 Inventory Physical Tests" name="RecordCount_MalformedQuantity_Refuses" time="0.15" />
+    <testcase classname="96944 Inventory Physical Tests" name="RecordCount_AfterModifyError_RollsBackNativeWrite" time="0.154" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC01_HelpCalculateExample_CreatesOnlyOwnedLines" time="0.147" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC02_HelpRecordCountExample_WritesZeroWithoutPosting" time="0.127" />
+    <testcase classname="96944 Inventory Physical Tests" name="Scenario_AC02_HelpLegacyRecordExample_RefusesCanonicalType" time="0.123" />
+  </testsuite>
+  <testsuite name="96945 Inventory Physical Perm Tests" timestamp="2026-10-29T10:15:07" hostname="runnervmdaln5" time="0.059" tests="3" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96945 Inventory Physical Perm Tests" name="Scenario_AC07_JournalWriterWithoutItemPost_IsDenied" time="0.033" />
+    <testcase classname="96945 Inventory Physical Perm Tests" name="Scenario_AC07_JournalWriterWithItemPost_IsEnabled" time="0.016" />
+    <testcase classname="96945 Inventory Physical Perm Tests" name="Scenario_AC07_PreviewMirrorsFoundationItemPostGate" time="0.01" />
+  </testsuite>
+  <testsuite name="96946 Reservation Create Tests" timestamp="2026-10-29T10:15:10" hostname="runnervmdaln5" time="1.822" tests="6" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96946 Reservation Create Tests" name="Create_TransferLine_ReservesAndCancelRemovesPair" time="0.903" />
+    <testcase classname="96946 Reservation Create Tests" name="Create_NoSupply_ReturnsPreconditionFailed" time="0.823" />
+    <testcase classname="96946 Reservation Create Tests" name="Create_MissingSourceType_ReturnsMissingParameter" time="0.013" />
+    <testcase classname="96946 Reservation Create Tests" name="Create_UnknownSourceLine_ReturnsRecordNotFound" time="0.014" />
+    <testcase classname="96946 Reservation Create Tests" name="Create_UnsupportedSourceTypeOrZeroQuantity_ReturnsInvalidParameter" time="0.046" />
+    <testcase classname="96946 Reservation Create Tests" name="Cancel_UnknownEntry_ReturnsRecordNotFound" time="0.023" />
+  </testsuite>
+  <testsuite name="96950 Item Ref. Resolve Tests" timestamp="2026-10-29T10:15:11" hostname="runnervmdaln5" time="0.376" tests="15" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96950 Item Ref. Resolve Tests" name="Barcode_ReturnsItemVariantAndUnit" time="0.093" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="CustomerReference_UsesTypeNo" time="0.02" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="ItemNo_IsUsedWhenNoReferenceExists" time="0.023" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="Gtin_IsUsedWhenNoReferenceExists" time="0.037" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="ReferencesArray_ReturnsOneResultEach" time="0.057" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="MissingReferenceNo_ReturnsMissingParameter" time="0.013" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="UnknownKey_ReturnsUnknownParameter" time="0.016" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="NumberReferenceNo_ReturnsInvalidParameterFormat" time="0.01" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="BothForms_ReturnConflictingIdentifiers" time="0.01" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="UnknownType_ReturnsInvalidParameter" time="0.013" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="NothingMatches_ReturnsRecordNotFound" time="0.01" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="TwoItems_ReturnAmbiguousRecord" time="0.02" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="BarcodeWithTypeNo_ReturnsInvalidParameter" time="0.01" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="EndedReference_IsIgnored" time="0.024" />
+    <testcase classname="96950 Item Ref. Resolve Tests" name="BlockedItem_ReturnsBlockedTrue" time="0.02" />
+  </testsuite>
+  <testsuite name="96951 Item Ref. Resolve Perm" timestamp="2026-10-29T10:15:11" hostname="runnervmdaln5" time="0.03" tests="1" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96951 Item Ref. Resolve Perm" name="WithoutInvRead_ReturnsPermissionDenied" time="0.03" />
+  </testsuite>
+  <testsuite name="96952 Avail. By Period Tests" timestamp="2026-10-29T10:15:13" hostname="runnervmdaln5" time="1.048" tests="13" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96952 Avail. By Period Tests" name="PostedItem_ReturnsPeriodRows" time="0.36" />
+    <testcase classname="96952 Avail. By Period Tests" name="TwoItems_ReturnOneResultEach" time="0.167" />
+    <testcase classname="96952 Avail. By Period Tests" name="MissingItemNo_ReturnsMissingParameter" time="0.016" />
+    <testcase classname="96952 Avail. By Period Tests" name="UnknownKey_ReturnsUnknownParameter" time="0.013" />
+    <testcase classname="96952 Avail. By Period Tests" name="NumberItemNo_ReturnsInvalidParameterFormat" time="0.013" />
+    <testcase classname="96952 Avail. By Period Tests" name="BothForms_ReturnConflictingIdentifiers" time="0.014" />
+    <testcase classname="96952 Avail. By Period Tests" name="UnknownPeriodType_ReturnsInvalidParameter" time="0.02" />
+    <testcase classname="96952 Avail. By Period Tests" name="MissingItem_ReturnsRecordNotFound" time="0.02" />
+    <testcase classname="96952 Avail. By Period Tests" name="TooManyPeriods_ReturnsLimitExceeded" time="0.024" />
+    <testcase classname="96952 Avail. By Period Tests" name="TooManyItems_ReturnsLimitExceeded" time="0.014" />
+    <testcase classname="96952 Avail. By Period Tests" name="ServiceAndNonInventory_ReturnPreconditionFailed" time="0.217" />
+    <testcase classname="96952 Avail. By Period Tests" name="BalanceAtDate_ReturnsCumulativeBalance" time="0.14" />
+    <testcase classname="96952 Avail. By Period Tests" name="UnknownAmountType_ReturnsInvalidParameter" time="0.03" />
+  </testsuite>
+  <testsuite name="96953 Avail. By Period Perm" timestamp="2026-10-29T10:15:13" hostname="runnervmdaln5" time="0.034" tests="1" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96953 Avail. By Period Perm" name="WithoutInvRead_ReturnsPermissionDenied" time="0.034" />
+  </testsuite>
+  <testsuite name="96954 Item Charge Tests" timestamp="2026-10-29T10:15:17" hostname="runnervmdaln5" time="3.632" tests="20" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96954 Item Charge Tests" name="AssignEqually_SplitsAcrossItemLines" time="0.707" />
+    <testcase classname="96954 Item Charge Tests" name="AssignByAmount_FollowsLineAmounts" time="0.193" />
+    <testcase classname="96954 Item Charge Tests" name="AssignTargets_WritesOnlyNamedLines" time="0.226" />
+    <testcase classname="96954 Item Charge Tests" name="AssignAgain_ReportsReplacedRows" time="0.256" />
+    <testcase classname="96954 Item Charge Tests" name="SalesAssignEqually_SplitsAcrossItemLines" time="0.737" />
+    <testcase classname="96954 Item Charge Tests" name="Get_ReturnsRowsAndUnassignedQuantity" time="0.22" />
+    <testcase classname="96954 Item Charge Tests" name="Get_BeforeAssign_ReturnsWholeQuantityUnassigned" time="0.24" />
+    <testcase classname="96954 Item Charge Tests" name="Get_NonChargeLine_ReturnsPreconditionFailed" time="0.184" />
+    <testcase classname="96954 Item Charge Tests" name="Get_UnknownDocument_ReturnsRecordNotFound" time="0.013" />
+    <testcase classname="96954 Item Charge Tests" name="NonChargeLine_ReturnsPreconditionFailed" time="0.15" />
+    <testcase classname="96954 Item Charge Tests" name="OtherVendorTarget_ReturnsInvalidLine" time="0.277" />
+    <testcase classname="96954 Item Charge Tests" name="ChargeLineAsTarget_ReturnsInvalidLine" time="0.143" />
+    <testcase classname="96954 Item Charge Tests" name="ByWeightWithoutWeight_ReturnsInvalidParameter" time="0.15" />
+    <testcase classname="96954 Item Charge Tests" name="MissingDocumentType_ReturnsMissingParameter" time="0.047" />
+    <testcase classname="96954 Item Charge Tests" name="LineNoAsText_ReturnsInvalidParameterFormat" time="0.013" />
+    <testcase classname="96954 Item Charge Tests" name="UnknownKey_ReturnsUnknownParameter" time="0.017" />
+    <testcase classname="96954 Item Charge Tests" name="UnknownDocument_ReturnsRecordNotFound" time="0.014" />
+    <testcase classname="96954 Item Charge Tests" name="MethodAndTargets_ReturnConflict" time="0.017" />
+    <testcase classname="96954 Item Charge Tests" name="DocumentNoAndSystemId_ReturnConflict" time="0.014" />
+    <testcase classname="96954 Item Charge Tests" name="DataRecords_WriteRestricted_AssignmentTables" time="0.014" />
+  </testsuite>
+  <testsuite name="96955 Item Charge Perm" timestamp="2026-10-29T10:15:18" hostname="runnervmdaln5" time="0.093" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96955 Item Charge Perm" name="WithoutInvWrite_AssignReturnsPermissionDenied" time="0.03" />
+    <testcase classname="96955 Item Charge Perm" name="WithoutInvRead_GetReturnsPermissionDenied" time="0.063" />
+  </testsuite>
+  <testsuite name="96956 Item Category Tests" timestamp="2026-10-29T10:15:19" hostname="runnervmdaln5" time="1.075" tests="25" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96956 Item Category Tests" name="Get_ByCode_ReturnsCategoryAndInheritedAttribute" time="0.4" />
+    <testcase classname="96956 Item Category Tests" name="Get_WithoutAttributes_OmitsAttributeArray" time="0.03" />
+    <testcase classname="96956 Item Category Tests" name="Get_NoIdentifier_ReturnsEveryCategory" time="0.03" />
+    <testcase classname="96956 Item Category Tests" name="Get_BySystemId_ReturnsCategory" time="0.027" />
+    <testcase classname="96956 Item Category Tests" name="Get_MissingCategory_ReturnsRecordNotFound" time="0.014" />
+    <testcase classname="96956 Item Category Tests" name="Get_IncludeAttributesAsText_ReturnsInvalidParameterFormat" time="0.03" />
+    <testcase classname="96956 Item Category Tests" name="Get_EmptyCode_ReturnsMissingParameter" time="0.017" />
+    <testcase classname="96956 Item Category Tests" name="Get_UnknownKey_ReturnsUnknownParameter" time="0.014" />
+    <testcase classname="96956 Item Category Tests" name="Get_CodeAndSystemId_ReturnsConflict" time="0.013" />
+    <testcase classname="96956 Item Category Tests" name="Set_CreatesCategoryAndLocalAttribute" time="0.037" />
+    <testcase classname="96956 Item Category Tests" name="Set_ExistingCategory_UpdatesDescriptionAndValue" time="0.063" />
+    <testcase classname="96956 Item Category Tests" name="Set_ValueEqualToParent_AnswersInherited" time="0.066" />
+    <testcase classname="96956 Item Category Tests" name="Set_ParentLoop_ReturnsInvalidParameter" time="0.057" />
+    <testcase classname="96956 Item Category Tests" name="Set_NewCategoryOwnParent_ReturnsInvalidParameter" time="0.017" />
+    <testcase classname="96956 Item Category Tests" name="Set_Reparent_ReturnsPreconditionFailed" time="0.067" />
+    <testcase classname="96956 Item Category Tests" name="Set_Delete_ReturnsPreconditionFailed" time="0.034" />
+    <testcase classname="96956 Item Category Tests" name="Set_MissingAttribute_ReturnsRecordNotFound" time="0.02" />
+    <testcase classname="96956 Item Category Tests" name="Set_MissingValue_ReturnsRecordNotFound" time="0.03" />
+    <testcase classname="96956 Item Category Tests" name="Set_MissingCode_ReturnsMissingParameter" time="0.02" />
+    <testcase classname="96956 Item Category Tests" name="Set_CodeAsNumber_ReturnsInvalidParameterFormat" time="0.014" />
+    <testcase classname="96956 Item Category Tests" name="Set_AttributesNotArray_ReturnsInvalidParameterFormat" time="0.01" />
+    <testcase classname="96956 Item Category Tests" name="Set_UnknownKey_ReturnsUnknownParameter" time="0.017" />
+    <testcase classname="96956 Item Category Tests" name="Set_CodeAndSystemId_ReturnsConflict" time="0.02" />
+    <testcase classname="96956 Item Category Tests" name="Set_AttributeNameAndId_ReturnsConflict" time="0.014" />
+    <testcase classname="96956 Item Category Tests" name="DataRecords_WriteRestricted_ItemCategory" time="0.014" />
+  </testsuite>
+  <testsuite name="96957 Item Category Perm" timestamp="2026-10-29T10:15:20" hostname="runnervmdaln5" time="0.059" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96957 Item Category Perm" name="WithoutInvRead_GetReturnsPermissionDenied" time="0.046" />
+    <testcase classname="96957 Item Category Perm" name="WithoutInvWrite_SetReturnsPermissionDenied" time="0.013" />
+  </testsuite>
+  <testsuite name="96958 Reserv. AutoReserve Tests" timestamp="2026-10-29T10:15:24" hostname="runnervmdaln5" time="3.773" tests="17" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_SalesLineWithStock_ReservesFully" time="2.134" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_BySystemIdWithQuantity_ReservesPart" time="0.25" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_AlreadyFullyReserved_ReturnsZero" time="0.247" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_ReserveNever_ReturnsPreconditionFailed" time="0.33" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_SalesQuoteLine_ReturnsPreconditionFailed" time="0.257" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_PartialSupply_ReturnsLinesSkippedAndRollsBack" time="0.414" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_MissingLine_ReturnsRecordNotFound" time="0.017" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_UnknownSystemId_ReturnsRecordNotFound" time="0.013" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_UnknownKey_ReturnsUnknownParameter" time="0.013" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_MissingKeys_ReturnsMissingParameter" time="0.014" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_MissingLineNo_ReturnsMissingParameter" time="0.014" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_BadLineNo_ReturnsInvalidParameterFormat" time="0.02" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_ZeroQuantity_ReturnsInvalidParameter" time="0.014" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_QuoteDocumentType_ReturnsInvalidParameter" time="0.013" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_SystemIdAndDocument_ReturnsConflictingIdentifiers" time="0.01" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="AutoReserve_Help_CoversRefusalsInBothLanguages" time="0.01" />
+    <testcase classname="96958 Reserv. AutoReserve Tests" name="ReservationEntry_RemainsWriteRestricted" time="0.003" />
+  </testsuite>
+  <testsuite name="96959 Reserv. AutoReserve Perm" timestamp="2026-10-29T10:15:25" hostname="runnervmdaln5" time="0.056" tests="2" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96959 Reserv. AutoReserve Perm" name="WithoutInvWrite_AutoReserveReturnsPermissionDenied" time="0.04" />
+    <testcase classname="96959 Reserv. AutoReserve Perm" name="WithoutInvRead_OrderTrackingReturnsPermissionDenied" time="0.016" />
+  </testsuite>
+  <testsuite name="96962 Order Tracking Get Tests" timestamp="2026-10-29T10:15:28" hostname="runnervmdaln5" time="2.795" tests="15" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_ReservedSalesLine_ReturnsChainAndWritesNothing" time="0.6" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_PurchaseLineSupplyingSalesLine_ReturnsChain" time="0.783" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_ItemLedgerEntry_ReturnsChain" time="0.237" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_ReservedTransferLine_ReturnsOutboundChain" time="0.426" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_ReservedAssemblyLine_ReturnsChain" time="0.303" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_UnreservedLine_ReturnsEmptyChain" time="0.29" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_MissingLine_ReturnsRecordNotFound" time="0.034" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_MissingSourceKind_ReturnsMissingParameter" time="0.014" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_MissingLineNo_ReturnsMissingParameter" time="0.014" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_UnsupportedSourceKind_ReturnsInvalidParameter" time="0.014" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_EntryNoForSales_ReturnsInvalidParameter" time="0.017" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_BadEntryNo_ReturnsInvalidParameterFormat" time="0.016" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_SystemIdAndDocument_ReturnsConflictingIdentifiers" time="0.017" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_UnknownKey_ReturnsUnknownParameter" time="0.02" />
+    <testcase classname="96962 Order Tracking Get Tests" name="OrderTracking_Help_CoversRefusalsInBothLanguages" time="0.01" />
+  </testsuite>
+  <testsuite name="96963 Inventory Domain Usage Tests" timestamp="2026-10-29T10:15:42" hostname="runnervmdaln5" time="11.917" tests="44" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AttributesUsage_EnablesDomain" time="3.217" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AttributesNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_TransferUsage_EnablesDomain" time="0.033" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_TransferNoUsage_PreservesOff" time="0.086" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AssemblyUsage_EnablesDomain" time="0.08" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AssemblyNoUsage_PreservesOff" time="0.044" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReservationsUsage_EnablesDomain" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReservationsNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_TrackingUsage_EnablesDomain" time="0.044" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_TrackingNoUsage_PreservesOff" time="0.037" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PhysicalUsage_EnablesDomain" time="0.033" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PhysicalNoUsage_PreservesOff" time="0.047" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_CostingUsage_EnablesDomain" time="0.037" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_CostingNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReclassUsage_EnablesDomain" time="0.033" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReclassNoUsage_PreservesOff" time="0.043" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ApplicationUsage_EnablesDomain" time="0.033" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ApplicationNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PeriodUsage_EnablesDomain" time="0.036" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PeriodNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PriceUsage_EnablesDomain" time="0.074" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_PriceNoUsage_PreservesOff" time="0.047" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReferenceUsage_EnablesDomain" time="0.03" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ReferenceNoUsage_PreservesOff" time="0.044" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AvailabilityUsage_EnablesDomain" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_AvailabilityNoUsage_PreservesOff" time="0.043" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ChargeUsage_EnablesDomain" time="0.026" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ChargeNoUsage_PreservesOff" time="0.036" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_CategoryUsage_EnablesDomain" time="0.03" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_CategoryNoUsage_PreservesOff" time="0.04" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC03_AlreadyOnWithoutUsage_StaysOn" time="0.033" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC04_SecondEvaluation_DoesNotModifyRow" time="0.05" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC01_UpgradeExistingOffRow_EnablesUsageOnce" time="0.074" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC02_MissingSetup_StaysAbsentAndEnabled" time="0.03" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC02_SetupPage_CreatesUsageDefaults" time="0.16" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_NonTransitLocation_DoesNotEnableTransfer" time="0.037" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_SurplusTracking_DoesNotEnableReservation" time="0.037" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_ProductionBOM_EnablesAssembly" time="0.044" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC03_NewCompanyTags_PreserveLaterOptOut" time="0.564" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_LocationUsage_AvoidsLedgerScan" time="1.266" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_LedgerLocationsForSameItem_EnableReclass" time="1.213" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_LedgerLocationsForDifferentItems_StayOff" time="0.053" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_BlankLedgerLocations_AvoidsLedgerScan" time="1.813" />
+    <testcase classname="96963 Inventory Domain Usage Tests" name="Scenario_AC05_BlankAndNamedLedgerLocations_EnableReclass" time="2.09" />
+  </testsuite>
+  <testsuite name="96970 Inv. Contract Parity Tests ori" timestamp="2026-10-29T10:15:43" hostname="runnervmdaln5" time="0.494" tests="10" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryType_DeclaresEveryRequiredChapter" time="0.046" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryEnvelope_StatesSubjectVersionAndContentType" time="0.044" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryChangingType_DeclaresAWorkflow" time="0.06" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryErrorEntry_CarriesCodeConditionAndFix" time="0.05" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryType_DirectionMatchesEffect" time="0.074" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryParameter_IsDescribed" time="0.05" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="ResponseAndExamples_AreComplete" time="0.043" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="RelatedAndWorkflow_NameExistingTypes" time="0.047" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="EveryType_DiscoveryTextsExistInBothLanguages" time="0.03" />
+    <testcase classname="96970 Inv. Contract Parity Tests ori" name="NotesAndOverview_NameNoAlObjects" time="0.05" />
+  </testsuite>
+  <testsuite name="96972 Inv. Registration Tests ori" timestamp="2026-10-29T10:15:47" hostname="runnervmdaln5" time="2.83" tests="1" errors="0" failures="0" skipped="0">
+    <properties>
+      <property name="extensionid" value="a886b2cb-7da0-4784-8163-42956dbdd5ec" />
+      <property name="appName" value="Bifrost Inventory - Tests" />
+    </properties>
+    <testcase classname="96972 Inv. Registration Tests ori" name="AC02_LicAdm_OpensSetupWithInventoryInstalled" time="2.83" />
+  </testsuite>
+</testsuites>

@@ -13,7 +13,7 @@
       "implemented": true,
       "verified": true,
       "regression": 96972,
-      "pending": "Normal pairedCI,current-headindependentClaude/Grok anddelivery",
+      "pending": "Independent current-head Claude and Grok/eligibleapproval; postmerge delivery",
       "assertions": [
         "actual Setup opens",
         "no direct Setup write",
@@ -37,12 +37,32 @@
         "failed": 0,
         "skipped": 0
       },
-      "ui": "Fresh1033/1039 each1executed/1passed/0failed/0skipped; no current harness failure; language1033/own suites absent verified."
+      "ui": "Fresh1033/1039 each1executed/1passed/0failed/0skipped; no current harness failure; language1033/own suites absent verified.",
+      "actualCiPair530": {
+        "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+        "containerId": "f0a32cf1f8d6",
+        "FoundationVersion": "28.0.3.530",
+        "testAppVersion": "28.3.2147483647.199",
+        "productVersion": "28.3.2147483647.199",
+        "productPackageSha256": "50835f756bf1f319776a9d58e0a27ca6884d3fe94ab772188d7513c8dbd53961",
+        "actualCiProduct": true,
+        "actualCiTestApp": true,
+        "testArtifactKind": "Unmodified actual currentCI TestTestApps artifact",
+        "companyName": "My Company",
+        "fullSuite": false,
+        "codeunit": 96972,
+        "finishedAt": "2026-10-29T10:18:44.304Z",
+        "durationMs": 26300,
+        "ok": true,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
     },
     "AC03": {
       "verified": false,
       "owner": "Claude Code",
-      "pending": "Independent current-head clean receipt and resolution after greenCI; bc28-w1 Inventory full suite/96972 and Foundation98677 in applicable1033/1039"
+      "pending": "Clean exact-e8839c4 Claude receipt plus author resolution of prior findings"
     },
     "AC04": {
       "implemented": true,
@@ -85,7 +105,71 @@
     },
     "mcp": "Not applicable, registration/fixture only;0types/0executed/0passed",
     "cleanup": "Verified0ownUIsuites; language1033; representative native rollback checks0records",
-    "ci": "Normalpaired40853213852 active; no CI pass/counts claimed"
+    "ci": {
+      "sha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+      "run": 40853213852,
+      "status": "completed",
+      "conclusion": "success",
+      "fullSuite": true,
+      "total": 420,
+      "passed": 420,
+      "failed": 0,
+      "skipped": 0,
+      "codeunits": 46,
+      "sourceMethodInventoryMatch": true,
+      "compile": {
+        "default": {
+          "loggedAlErrors": 0,
+          "loggedAlWarnings": 0,
+          "analyzersMentioned": {
+            "CodeCop": true,
+            "UICop": true,
+            "AppSourceCop": true
+          }
+        },
+        "test": {
+          "loggedAlErrors": 0,
+          "loggedAlWarnings": 0,
+          "analyzersMentioned": {
+            "CodeCop": true,
+            "UICop": true,
+            "AppSourceCop": true
+          }
+        }
+      },
+      "samePhysicalContainer": "f03c4b4fcb03",
+      "defaultContainerSeen": true,
+      "testContainerSeen": true,
+      "cleanup": {
+        "deleted": 1,
+        "expected": 1,
+        "containerId": "f03c4b4fcb03",
+        "verified": true,
+        "job": 123387824434
+      },
+      "testResultProvenance": {
+        "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+        "run": 40853213852,
+        "artifact": 12889800527,
+        "name": "bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-TestTestResults-PR174-20261029",
+        "sha256": "0ca576674eb108796f5d8b38199f6a24b79ec863f5b020b54565360de41cf02e",
+        "digestVerified": true
+      },
+      "testProductRepublish": {
+        "actual": true,
+        "version": "28.3.2147483647.199",
+        "containerId": "f03c4b4fcb03",
+        "sha256": "50835f756bf1f319776a9d58e0a27ca6884d3fe94ab772188d7513c8dbd53961",
+        "completed": true,
+        "skipUpgradeTrueLogged": true
+      },
+      "defaultNoIVT": true,
+      "workflowSkippedJobsAreNotTestSkips": [
+        "PregateCheck",
+        "per-mode cleanup deferred to final cleanup",
+        "Code Analysis Processing"
+      ]
+    }
   },
   "deliveryPending": [
     "Current-tip fullsuite/UI/cleanup and normalCI",

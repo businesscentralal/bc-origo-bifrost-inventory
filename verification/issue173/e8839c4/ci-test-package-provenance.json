@@ -1,0 +1,46 @@
+{
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "run": 40853213852,
+  "artifacts": [
+    {
+      "id": 12888733508,
+      "name": "bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-TestApps-PR174-20261029",
+      "file": "/workspace/evidence/inventory173-worker4/ci182-test/artifact-12888733508.zip",
+      "sha256": "a5e92ef2b5993e966929988e680a58e68ed527382fb2f2ccb4006a4092df0ae8",
+      "digestVerified": true
+    },
+    {
+      "id": 12888409278,
+      "name": "bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-TestTestApps-PR174-20261029",
+      "file": "/workspace/evidence/inventory173-worker4/ci182-test/artifact-12888409278.zip",
+      "sha256": "e3b67a0031246f07f01b73b1e02b2891051b62060855a2747c2d8f7ce635abf3",
+      "digestVerified": true
+    }
+  ],
+  "packages": [
+    {
+      "kind": "productTestMode",
+      "name": "Bifrost Inventory",
+      "id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+      "version": "28.3.2147483647.199",
+      "file": "/workspace/evidence/inventory173-worker4/ci182-test/Inventory-TestMode.app",
+      "sha256": "50835f756bf1f319776a9d58e0a27ca6884d3fe94ab772188d7513c8dbd53961",
+      "friendRestored": true,
+      "criticalSourceMatchesTip": true,
+      "unmodified": true,
+      "artifactId": 12888733508
+    },
+    {
+      "kind": "testApp",
+      "name": "Bifrost Inventory - Tests",
+      "id": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "version": "28.3.2147483647.199",
+      "file": "/workspace/evidence/inventory173-worker4/ci182-test/InventoryTests-CI.app",
+      "sha256": "4f3f845debb80737f7792e6327503398c0523977bb5c1612649eb40d9b789a9b",
+      "friendRestored": false,
+      "criticalSourceMatchesTip": true,
+      "unmodified": true,
+      "artifactId": 12888409278
+    }
+  ]
+}

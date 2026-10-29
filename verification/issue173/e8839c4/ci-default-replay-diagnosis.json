@@ -1,0 +1,22 @@
+{
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "at": "2026-10-29T10:11:13.248085+00:00",
+  "attempt": "Unmodified CI Default199 with already-installed own test182",
+  "httpStatus": 422,
+  "classification": "Expected paired-mode constraint: Default has no InternalsVisibleTo, and server recompile of dependent test app raises AL0161 on internal Inventory objects. Do not weaken Default or repack artifact.",
+  "actualReadback": "/workspace/evidence/inventory173-worker4/floor530-runtime/versions-after-default422.json",
+  "stateAfterFailedDeveloperEndpointPublish": {
+    "Foundation": "28.0.3.530 installed",
+    "Inventory182": "uninstalled",
+    "InventoryTests182": "absent"
+  },
+  "ciProductReplayPassed": false,
+  "executed": 0,
+  "passed": 0,
+  "failedPublishAttempts": 1,
+  "nextAction": "Use actual currentCI Test-mode product and test artifacts together when published, or restore existing own test-mode182 product/tests from retained hashed artifacts. No further Default retry with test app installed.",
+  "defaultProvenance": "/workspace/evidence/inventory173-worker4/ci182-default/package-provenance.json",
+  "rawErrorEvidence": "/workspace/evidence/inventory173-worker4/floor530-runtime/ci-default-error-readback2.json",
+  "resolution": "Owned dependent test was absent after failed Dev publish. Actual unchanged Default199 published200, then actual Test product199 and Test app199 published200, scoped96972 passed1/1. No-IVTDefault preserved; no repacking or assertion changes.",
+  "resolved": true
+}

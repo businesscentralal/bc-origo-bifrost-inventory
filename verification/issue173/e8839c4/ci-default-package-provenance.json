@@ -1,0 +1,28 @@
+{
+  "sourceSha": "e8839c4ae673c8b65e2e2b002df362904d06234d",
+  "runId": 40853213852,
+  "runUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/40853213852",
+  "artifactId": 12888337427,
+  "artifactName": "bc-origo-bifrost-inventory-fix_worker4-inventory173-registration-execute-Apps-PR174-20261029",
+  "artifactSha256": "482a64fc02e07c745d84428e16048e8bd23f7eb10db2fdfff6d16384e428e064",
+  "digestVerified": true,
+  "downloadedAt": "2026-10-29T10:04:48.185Z",
+  "runConclusionAtDownload": null,
+  "notFullCiPass": true,
+  "app": {
+    "Id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+    "Name": "Bifrost Inventory",
+    "Publisher": "Origo",
+    "Version": "28.3.2147483647.199",
+    "Platform": "28.0.0.0",
+    "Application": "28.3.0.0",
+    "Runtime": "17.0",
+    "Target": "Cloud"
+  },
+  "packageSha256": "b48ede8f7b9fb5b49503025b9ccbbe3eabe9ac9d145761a69a832163f73cb946",
+  "noInternalsVisibleTo": true,
+  "registrationSourceIncluded": true,
+  "registrationSourceMatchesCurrentTip": true,
+  "artifactUnmodified": true,
+  "prUnsignedByDesign": "CI signs main only; no signing assertion made for PR package"
+}
