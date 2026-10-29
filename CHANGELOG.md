@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-29) - registration under restricted licence administration (#173)
+
+- `Inventory Registration ori` (codeunit 10076845) declares `InherentPermissions = X` and `InherentEntitlements = X`, so its `OnRegisterApps` subscriber can run when a restricted licence administrator opens Bifröst Setup. No permission set is widened.
+- `Inv. Registration Tests ori` (codeunit 96972) opens Foundation's actual Setup page under `BIFROST LicAdm ori` plus the test-only `Inv Setup Test` baseline (96972). The baseline includes Microsoft's `D365 Basic - Read` platform baseline, Foundation Read and the execute-only `All Objects` test role for the complete internal Setup dependencies at the supported 28.0.3.530 floor, then excludes the Execute grant on `Inventory Registration ori` through `Inv Reg Excl Test` (96973). This preserves the inherent-Execute regression without granting general administration: direct Setup writes are denied, the page remains non-editable and the licence-administrator action is visible. No tenant permission role or user assignment is created. The test does not invoke Sync or write licence, EULA or trial state.
+
 ### Fixed (2026-10-25) - domain usage review corrections (#147)
 
 - `Inventory Setup ori` (table 10076836) checks for a nonblank ledger location before loading the per-item location comparison. A blank-only ledger leaves Reclassification off without fetching every row into AL; mixed blank/nonblank locations still participate in the unchanged mapping. `Inventory Domain Usage Tests` (96963) covers both cases, including a 1000-entry bounded-read regression and actual setup-page creation.
