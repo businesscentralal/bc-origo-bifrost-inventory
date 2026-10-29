@@ -19,6 +19,10 @@
 - Usage mapping: attributes → Item Attribute; transfer → in-transit Location/Transfer Header/Transfer Route; assembly → BOM Component/Assembly Header/Production BOM Header; reservations → Reservation-status entries; tracking → tracking codes, tracked Items or lot/serial/package entries; physical inventory → recording headers, physical ledger or counting-period Items; costing → Value Entry/order adjustment; reclassification → locations, bins, warehouse entries or multiple ledger locations per Item; application → Item Application Entry; periods → Inventory Period; prices → Item Price List Lines; references → Item Reference; availability → Items/ledger entries (valid demand/supply refers to Items); charges → Item Charge; categories → Item Category/categorized Items. README documents the mapping and the existing Foundation discovery boundary for disabled types.
 - Native regressions in `Inventory Domain Usage Tests` (96963) cover all fifteen domains with and without data, the actual setup page/insert trigger, upgrade tagging, existing enabled switches, missing setup, idempotence and distinguishing transfer/reservation signals. The test app adds Microsoft's System Application Test Library for supported upgrade-tag fixture cleanup. `.claude/CLAUDE.md` no longer describes the superseded opt-in default.
 
+### Fixed (2026-10-29) - Reclassification test allocation after main integration (#159, PR #164)
+
+- Move `Reclass Check Perm Tests ori` from codeunit 96972 to unused test codeunit 96974, avoiding the registration test codeunit 96972 introduced by #174. Test assertions and production behavior are unchanged; both suites remain included.
+
 ### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
 
 - Test-only fixture codeunit/page 96973 supports the isolated owned `CRONUS W8 Inv164` company with a separate `R8` record prefix, preserving existing `W8` fixtures during exact-tip re-verification after the main merge. Existing fixture and company guards remain.
