@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-31) — transfer posting test confirmation (#150)
+
+- Transfer posting and undo fixtures in codeunit 96914 explicitly confirm their single owned transfer document with `expectedCount: 1`. This keeps the posting, receipt and rollback assertions reachable when Foundation confirmation is enabled; the gate and all existing assertions remain in place.
+
 ### Fixed (2026-10-24) - Contract guard declaration identity (#150)
 
 - Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
