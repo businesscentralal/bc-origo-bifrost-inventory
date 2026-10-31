@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="is-IS" original="Bifrost Inventory">
     <body>
@@ -344,6 +344,12 @@
           <target>afturkalla samsetningu, bakfæra bókaða samsetningu</target>
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla samsetningu, bakfæra bókaða samsetningu</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the posted assembly number in documentNo, not the assembly order number. The Assembly domain, native document write permission and BIFROST InvPost ori are required. Native undo commits are suppressed inside one isolated transaction: a failure rolls back reversing entries and the header change. Standalone undo commits its isolated operation; chained Omit Commit calls remain in the caller transaction and propagate native failures. Subject is not used.</source>
+          <target>Notaðu númer bókaðrar samsetningar í documentNo, ekki númer samsetningarpöntunar. Samsetningarsviðið, innbyggð skrifheimild á skjalið og BIFROST InvPost ori eru nauðsynleg. Innbyggðar staðfestingar afturköllunar eru bældar í einni einangraðri færslu: villa afturkallar mótfærslur og breytingu á haus. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Subject er ekki notað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu númer bókaðrar samsetningar í documentNo, ekki númer samsetningarpöntunar. Samsetningarsviðið, innbyggð skrifheimild á skjalið og BIFROST InvPost ori eru nauðsynleg. Innbyggðar staðfestingar afturköllunar eru bældar í einni einangraðri færslu: villa afturkallar mótfærslur og breytingu á haus. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Subject er ekki notað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Undoes a posted assembly by document number.</source>
@@ -784,9 +790,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.</source>
-          <target>Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.</note>
+          <source>Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.</source>
+          <target>Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -794,6 +800,18 @@
           <target>bóka birgðakostnað,fjárhagur,skýrsla 1002</target>
           <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðakostnað,fjárhagur,skýrsla 1002</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
+          <target>itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts selected pending inventory value entries to G/L using native per-entry posting. The response reports actual posted and remaining counts.</source>
+          <target>Bókar valdar óbókaðar virðisfærslur birgða á fjárhag með innbyggðri bókun fyrir hverja færslu. Svarið sýnir raunfjölda bókaðra og eftirstandandi færslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar valdar óbókaðar virðisfærslur birgða á fjárhag með innbyggðri bókun fyrir hverja færslu. Svarið sýnir raunfjölda bókaðra og eftirstandandi færslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetOverview - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Post inventory value entries that are not yet posted to the general ledger.</source>
@@ -832,9 +850,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1053516618 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted.</source>
-          <target>Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað.</note>
+          <source>Select exactly one item with the message subject, data.itemNo, an item SystemId key or data.tableView; several matches are refused. Send at least one of unitCost, lastDirectCost and standardCost. Standard-costed items are always refused; use Inventory.Revaluation.Post for them. A blocked item is refused unless allowBlocked is true, and expectedCostingMethod must match the costing method of the item when it is sent. All checks run before the first field is changed, so a refusal changes nothing; the fields are then validated and the item is saved in one step. before and after show the three cost fields around the change. Nothing is revalued or posted. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu nákvæmlega eina vöru með subject, data.itemNo, SystemId-lykli vöru eða data.tableView; ef fleiri vörur passa er kallinu hafnað. Sendu að minnsta kosti eitt af unitCost, lastDirectCost og standardCost. Vörum með staðlað kostnaðarverð er alltaf hafnað; notaðu Inventory.Revaluation.Post fyrir þær. Lokaðri vöru er hafnað nema allowBlocked sé true, og expectedCostingMethod verður að passa við kostnaðaraðferð vörunnar ef það er sent. Allar athuganir eru gerðar áður en fyrsti reiturinn er breyttur, svo höfnun breytir engu; reitirnir eru síðan sannprófaðir og varan vistuð í einu skrefi. before og after sýna kostnaðarreitina þrjá fyrir og eftir breytingu. Engu er endurmetið eða bókað. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1053516618 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -1406,6 +1424,12 @@
           <target>Óþekkt birgðaskrifaðgerð.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðaskrifaðgerð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - NamedType UnknownOperationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - Method 895184314 - NamedType 3966791644" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservation %1 no longer contains a consistent reservation pair.</source>
+          <target>Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method CancelReservation - NamedType InconsistentPairErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 3571782927 - NamedType 2247369567" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemLedgerEntryNo is required.</source>
@@ -2110,9 +2134,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A successful call saves the category and its attribute defaults. A refusal leaves every category and attribute unchanged. The call does not delete categories, does not move an existing category to another parent and does not post. Items already in the category keep their own attribute values; the defaults apply to items assigned to the category later. Generic data writes to item categories and their attribute rows are refused, so use this call.</source>
-          <target>Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall.</note>
+          <source>A successful call saves the category and its attribute defaults. A refusal leaves every category and attribute unchanged. The call does not delete categories, does not move an existing category to another parent and does not post. Items already in the category keep their own attribute values; the defaults apply to items assigned to the category later. Generic data writes to item categories and their attribute rows are refused, so use this call. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar flokkinn og sjálfgefna eiginleika hans. Höfnun skilur alla flokka og eiginleika eftir óbreytta. Kallið eyðir ekki flokkum, færir ekki flokk sem er til undir annan yfirflokk og bókar ekki. Vörur sem eru þegar í flokknum halda sínum eigin eiginleikagildum; sjálfgefnu gildin gilda fyrir vörur sem eru settar í flokkinn síðar. Almennum gagnaskrifum í vöruflokka og eiginleikalínur þeirra er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -2632,9 +2656,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them.</source>
-          <target>Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim.</note>
+          <source>The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -4197,6 +4221,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=journalBatchName er nauðsynlegt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 was not found.</source>
+          <target>Bókarsniðmátið %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingJournalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a Transfer template.</source>
+          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 809699881" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing Transfer journal template</source>
+          <target>fyrirliggjandi bókarsniðmát af gerðinni Transfer</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 688647466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.</source>
+          <target>Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reclassification batch %1 %2 has no lines.</source>
           <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
@@ -4221,6 +4269,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a Transfer template.</source>
+          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification batch %1 %2 has no lines.</source>
+          <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType EmptyBatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 2807648679" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification journal template or batch was not found.</source>
+          <target>Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType BatchMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose an existing Transfer journal batch and correct its posting errors before retrying.</source>
+          <target>Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType NextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 1342401987" size-unit="char" translate="yes" xml:space="preserve">
           <source>journalTemplateName is required.</source>
           <target>journalTemplateName er nauðsynlegt.</target>
@@ -4234,9 +4306,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method ExecuteBifrostTask - NamedType MissingBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Lists the lines of a reclassification journal batch that Post would process, without posting. It does not simulate the ledger entries.</source>
-          <target>Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Listar línur endurflokkunarbókarkeyrslu sem Post myndi vinna úr, án þess að bóka. Líkir ekki eftir færslum.</note>
+          <source>Simulates posting a reclassification journal batch and returns the captured ledger entries. All posting changes are rolled back.</source>
+          <target>Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -4246,10 +4318,16 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Returns the reclassification journal lines that Post would process.</source>
-          <target>Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skilar línum endurflokkunarbókar sem Post myndi vinna úr.</note>
+          <source>Previews the ledger entries of one Transfer journal batch without saving posting changes.</source>
+          <target>Forskoðar færslur einnar millifærslubókarkeyrslu án þess að vista bókunarbreytingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar færslur einnar millifærslubókarkeyrslu án þess að vista bókunarbreytingar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 2319321116 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reclassification journal posting errors and run the preview again.</source>
+          <target>Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method PreviewEntries - NamedType NextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
@@ -4611,36 +4689,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Aðeins er hægt að taka sölupöntunarlínur sjálfvirkt frá.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotOrderErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line is not an item line.</source>
-          <target>Línan er ekki vörulína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki vörulína.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotItemErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2595599654" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Item %1 is not an inventory item.</source>
-          <target>Vara %1 er ekki birgðavara.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Vara %1 er ekki birgðavara.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NotInventoryErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1111338825" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reserve is set to Never for item %1 or for the line.</source>
-          <target>Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType ReserveNeverErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2987138680" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line is a drop shipment or special order line.</source>
-          <target>Línan er bein afhending eða sérpöntunarlína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan er bein afhending eða sérpöntunarlína.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType DropShipmentErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 1109335900" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The line has no shipment date.</source>
-          <target>Línan hefur engan afhendingardag.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línan hefur engan afhendingardag.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType NoShipmentDateErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3467707986 - Method 3715050579 - NamedType 2411655350" size-unit="char" translate="yes" xml:space="preserve">
           <source>The line has no outstanding quantity.</source>
           <target>Línan hefur ekkert útistandandi magn.</target>
@@ -4658,6 +4706,48 @@
           <target>Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckReservable - NamedType PreconditionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is not an item line.</source>
+          <target>Línan er ekki vörulína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki vörulína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NotItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 2595599654" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 is not an inventory item.</source>
+          <target>Vara %1 er ekki birgðavara.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Vara %1 er ekki birgðavara.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NotInventoryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1111338825" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserve is set to Never for item %1 or for the line.</source>
+          <target>Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType ReserveNeverErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 2987138680" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is a drop shipment or special order line.</source>
+          <target>Línan er bein afhending eða sérpöntunarlína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er bein afhending eða sérpöntunarlína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType DropShipmentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 1109335900" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line has no shipment date.</source>
+          <target>Línan hefur engan afhendingardag.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan hefur engan afhendingardag.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType NoShipmentDateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 267332005" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a reservable item line on a sales order</source>
+          <target>vörulína á sölupöntun sem má taka frá</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörulína á sölupöntun sem má taka frá</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType ReservableExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 2360090388 - NamedType 291721461" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Change the item's Reserve setting or reserve manually.</source>
+          <target>Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method CheckSalesLinePolicy - NamedType PreconditionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3467707986 - Method 1366471521 - NamedType 3631912442" size-unit="char" translate="yes" xml:space="preserve">
           <source>Only %1 of %2 could be reserved. Nothing is written.</source>
@@ -4718,6 +4808,18 @@
           <target>jákvæð JSON-heiltala</target>
           <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-heiltala</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType IntegerExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3966791644" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservation %1 does not contain a consistent reservation pair.</source>
+          <target>Frátekning %1 inniheldur ekki samræmt frátekningarpar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType InconsistentPairErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 2486900890" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inspect both reservation entries and correct their native reservation state before retrying.</source>
+          <target>Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType InspectPairLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cancels a reservation entry through Reservation Management.</source>
@@ -4834,9 +4936,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
-          <target>Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
+          <source>Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
+          <target>Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -5546,6 +5648,12 @@
           <target>afturkalla millifærsluafhendingu</target>
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla millifærsluafhendingu</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the posted transfer shipment number in documentNo. Only non-correction lines of that document are selected and passed together to native undo. A failure rolls back all selected lines and reversing entries; other shipments are untouched. Standalone undo commits its isolated operation; chained Omit Commit calls remain in the caller transaction and propagate native failures. Transfer Orders, native shipment write permission and BIFROST InvPost ori are required. A shipment with no lines to undo is refused. Receipt undo is a separate unavailable operation. Subject is not used.</source>
+          <target>Notaðu númer bókaðrar millifærsluafhendingar í documentNo. Aðeins línur þess skjals sem eru ekki leiðréttingarlínur eru valdar og sendar saman í innbyggða afturköllun. Villa afturkallar allar valdar línur og mótfærslur; öðrum afhendingum er ekki breytt. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Flutningspöntunarsviðið, innbyggð skrifheimild á afhendinguna og BIFROST InvPost ori eru nauðsynleg. Afhendingu án lína til afturköllunar er hafnað. Afturköllun móttöku er aðskilin aðgerð sem er ekki í boði. Subject er ekki notað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu númer bókaðrar millifærsluafhendingar í documentNo. Aðeins línur þess skjals sem eru ekki leiðréttingarlínur eru valdar og sendar saman í innbyggða afturköllun. Villa afturkallar allar valdar línur og mótfærslur; öðrum afhendingum er ekki breytt. Sjálfstætt kall staðfestir einangruðu aðgerðina; keðjuð Omit Commit köll haldast í færslu kallandans og láta innbyggðar villur berast áfram. Flutningspöntunarsviðið, innbyggð skrifheimild á afhendinguna og BIFROST InvPost ori eru nauðsynleg. Afhendingu án lína til afturköllunar er hafnað. Afturköllun móttöku er aðskilin aðgerð sem er ekki í boði. Subject er ekki notað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Same action as Undo Shipment on a posted transfer shipment.</source>

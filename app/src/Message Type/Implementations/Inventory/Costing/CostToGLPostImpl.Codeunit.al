@@ -1,6 +1,5 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
@@ -24,30 +23,21 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not TryRunPostInventoryCost() then begin
-            Argument.RespondWithError(GetLastErrorText());
-            exit;
-        end;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('itemNoFilter', ReadText(RequestJson, 'itemNoFilter'));
-        ResponseJson.Add('documentNoFilter', ReadText(RequestJson, 'documentNoFilter'));
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
-    end;
-
-    [TryFunction]
-    local procedure TryRunPostInventoryCost()
-    var
-        PostInventoryCost: Report "Post Inventory Cost to G/L";
-    begin
-        PostInventoryCost.UseRequestPage(false);
-        PostInventoryCost.Run();
+        Process.SetOperation('CostToGLPost');
+        Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'documentNoFilter'),
+            CopyStr(ReadText(RequestJson, 'journalTemplateName'), 1, 10), CopyStr(ReadText(RequestJson, 'journalBatchName'), 1, 10));
+        // Posting is an independent transaction, including when the caller requests Omit Commit.
+        Commit();
+        if not Process.Run(Argument) then
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 
     /// <summary>Returns the Item table used by the existing selection contract.</summary>
@@ -86,7 +76,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Runs report 1002 without request selection or explicit Post initialization; success means report completion, not proof of G/L posting.', Comment = 'is-IS=Keyrir skýrslu 1002 án valglugga eða skýrrar Post-frumstillingar. Árangur þýðir að skýrslan kláraðist, ekki að fjárhagsbókun hafi tekist.';
+        DescriptionLbl: Label 'Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.';
     begin
         exit(DescriptionLbl);
     end;
@@ -126,13 +116,15 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Parameter: JsonObject;
     begin
         Clear(Parameters);
-        Parameter := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Echoed in the success response only; it does not filter what the posting batch job handles.');
+        Parameter := ContractMgt.Parameter('itemNoFilter', 'string', false, 'Item number filter in Business Central filter syntax; only matching pending value entries are selected.');
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
         Clear(Parameter);
-        Parameter := ContractMgt.Parameter('documentNoFilter', 'string', false, 'Echoed in the success response only; it does not filter what the posting batch job handles.');
+        Parameter := ContractMgt.Parameter('documentNoFilter', 'string', false, 'Document number filter in Business Central filter syntax; combined with itemNoFilter before posting.');
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'G/L journal template name required when General Ledger Setup requires a journal template.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'G/L journal batch with a number series, required with journalTemplateName.'));
         exit(true);
     end;
 
@@ -142,7 +134,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after the standard report returns successfully and response construction completes; not proof of G/L posting."},{"name":"itemNoFilter","type":"string","description":"Original request value echoed by the current implementation."},{"name":"documentNoFilter","type":"string","description":"Original request value echoed by the current implementation."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after native posting completes; inspect the counts for entries not posted."},{"name":"itemNoFilter","type":"string","description":"Applied item filter."},{"name":"documentNoFilter","type":"string","description":"Applied document filter."},{"name":"postedValueEntryCount","type":"integer","description":"Selected pending value entries removed by successful native posting."},{"name":"remainingValueEntryCount","type":"integer","description":"Selected pending value entries still not posted; review the native posting setup and entries."},{"name":"posted","type":"boolean","description":"True only when at least one selected pending value entry was posted."}]}');
         exit(true);
     end;
 
@@ -152,7 +144,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The company Costing domain is disabled.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The existing inventory posting gate denies the caller.","fix":"Have the administrator review the existing inventory posting permission policy."},{"code":"PreconditionFailed","when":"The standard report Run returns false; response carries GetLastErrorText. This branch precedes response-echo conversion.","fix":"Review the standard report error and current ledger state before deciding whether retry is safe."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion failure is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Direct invocation may raise instead; exact scalar/null conversions still require supported-platform runtime verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign BIFROST InvPost ori in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
         exit(true);
     end;
 
@@ -162,7 +154,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Report 1002 may write or post under its standard/runtime options. The caller neither initializes Post nor applies request filter fields. Report completion does not prove G/L posting.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
         exit(true);
     end;
 
@@ -205,9 +197,9 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
-            'Start the inventory cost posting; the filters are only echoed',
+            'Post pending inventory cost for one item',
             '{"type":"Inventory.CostToGL.Post","data":{"itemNoFilter":"1000","documentNoFilter":""}}',
-            '{"status":"Success","itemNoFilter":"1000","documentNoFilter":""}'));
+            '{"status":"Success","itemNoFilter":"1000","documentNoFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
         exit(true);
     end;
 
@@ -215,23 +207,19 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Overview">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetOverview(var Overview: Text): Boolean
+    var
+        OverviewLbl: Label 'Posts selected pending inventory value entries to G/L using native per-entry posting. The response reports actual posted and remaining counts.', Comment = 'is-IS=Bókar valdar óbókaðar virðisfærslur birgða á fjárhag með innbyggðri bókun fyrir hverja færslu. Svarið sýnir raunfjölda bókaðra og eftirstandandi færslna.';
     begin
-        Clear(Overview);
-        Overview := 'Starts the Post Inventory Cost to G/L batch job without passing any option, so it does not post on its own. Success only means that the batch job finished.';
+        Overview := OverviewLbl;
         exit(true);
     end;
 
-    /// <summary>Returns the notes chapter for the existing costing operation.</summary>
-    /// <param name="Notes">Receives this contract chapter.</param>
-    /// <returns>True when this chapter is supplied.</returns>
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
     begin
-        Clear(Notes);
-        Notes := 'The call starts the Post Inventory Cost to G/L batch job without passing any option: no posting method, no document number, and the Post switch stays off. itemNoFilter and documentNoFilter are only echoed in the answer; they do not select entries. ' +
-            'Because the Post switch is off the batch job does not post to the general ledger, and in standard Business Central it stops with its own error that asks for a document number, which is answered as BusinessCentralError. Success therefore proves only that the batch job finished. ' +
-            'To post cost adjustments to the general ledger use Inventory.AdjustCost.Run with postToGL true. ' +
-            'Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. No preview, idempotence or safe retry is promised. ' +
-            'The caller needs the BIFROST InvPost ori permission set, and the Costing domain must be on in Inventory Setup. Use Inventory.Cost.Get to read costIsPostedToGL.';
+        Notes := NotesLbl;
         exit(true);
     end;
+
 }

@@ -4,6 +4,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
@@ -205,6 +206,195 @@ codeunit 96946 "Reservation Create Tests"
         Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
         Assert.AreEqual('entryNo', Token.AsValue().AsText(), 'parameter');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_ItemReserveNever_RefusesWithoutWrites()
+    begin
+        VerifySalesEligibility('itemNever');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_LineReserveNever_RefusesWithoutWrites()
+    begin
+        VerifySalesEligibility('lineNever');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_DropShipment_RefusesWithoutWrites()
+    begin
+        VerifySalesEligibility('drop');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_SpecialOrder_RefusesWithoutWrites()
+    begin
+        VerifySalesEligibility('special');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_NoShipmentDate_RefusesWithoutWrites()
+    begin
+        VerifySalesEligibility('date');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_CreateSales_Eligible_ReservesAndCancelsPair()
+    begin
+        VerifySalesEligibility('valid');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_Cancel_MixedStatus_PreservesPair()
+    begin
+        VerifyCancelConsistency('status');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_Cancel_MissingSupply_PreservesPair()
+    begin
+        VerifyCancelConsistency('missing');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_Cancel_UnequalBaseQuantity_PreservesPair()
+    begin
+        VerifyCancelConsistency('quantity');
+    end;
+
+    [Test]
+    procedure Scenario_AC03_Cancel_DifferentItem_PreservesPair()
+    begin
+        VerifyCancelConsistency('item');
+    end;
+
+    local procedure VerifySalesEligibility(CaseName: Text)
+    var
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        LibrarySales: Codeunit "Library - Sales";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+    begin
+        // Story #159 AC03 | Time: WorkDate for owned demand | Risk: Create bypasses AutoReserve eligibility.
+        CreateTransferLine(Item, TransferHeader, TransferLine, 10, 1);
+        Item.Get(Item."No.");
+        Item.Validate(Reserve, Item.Reserve::Optional);
+        Item.Modify(true);
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 3);
+        SalesLine.Validate("Location Code", TransferLine."Transfer-from Code");
+        SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
+        SalesLine.Validate("Shipment Date", WorkDate());
+        case CaseName of
+            'itemNever':
+                begin
+                    Item.Get(Item."No.");
+                    Item.Validate(Reserve, Item.Reserve::Never);
+                    Item.Modify(true);
+                end;
+            'lineNever':
+                SalesLine.Validate(Reserve, SalesLine.Reserve::Never);
+            'drop':
+                SalesLine."Drop Shipment" := true;
+            'special':
+                SalesLine."Special Order" := true;
+            'date':
+                SalesLine."Shipment Date" := 0D;
+        end;
+        SalesLine.Modify(true);
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Request.Add('quantity', 2);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        ReservationEntry.SetRange("Item No.", Item."No.");
+        ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
+        if CaseName = 'valid' then begin
+            AssertStatus(Response, 'Success');
+            Assert.AreEqual(2, ReservationEntry.Count(), 'Eligible sales source produces a real pair.');
+            Response.Get('entryNo', Token);
+            EntryNo := Token.AsValue().AsInteger();
+            Clear(Request);
+            Clear(Response);
+            Request.Add('entryNo', EntryNo);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+            AssertStatus(Response, 'Success');
+            Assert.IsTrue(ReservationEntry.IsEmpty(), 'Valid sales pair is cancelled normally.');
+        end else begin
+            AssertStatus(Response, 'Error');
+            Assert.IsTrue(Response.Get('code', Token), 'Eligibility refusal is coded.');
+            Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Shared eligibility policy.');
+            Assert.IsTrue(ReservationEntry.IsEmpty(), 'Refusal writes no reservation pair.');
+        end;
+    end;
+
+    local procedure VerifyCancelConsistency(CaseName: Text)
+    var
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        Demand: Record "Reservation Entry";
+        Supply: Record "Reservation Entry";
+        Pair: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+        BeforeCount: Integer;
+        DemandModifiedAt: DateTime;
+        SupplyModifiedAt: DateTime;
+    begin
+        // Story #159 AC03 | Time: WorkDate | Risk: cancelling one side destroys an inconsistent reservation pair.
+        CreateTransferLine(Item, TransferHeader, TransferLine, 10, 6);
+        Request.Add('sourceType', Database::"Transfer Line");
+        Request.Add('sourceNo', TransferHeader."No.");
+        Request.Add('sourceLineNo', TransferLine."Line No.");
+        Request.Add('quantity', 3);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        EntryNo := Token.AsValue().AsInteger();
+        Demand.Get(EntryNo, false);
+        Supply.Get(EntryNo, true);
+        case CaseName of
+            'status':
+                Supply."Reservation Status" := Supply."Reservation Status"::Tracking;
+            'quantity':
+                Supply."Quantity (Base)" += 1;
+            'item':
+                Supply."Item No." := 'W8-MISMATCH';
+        end;
+        // Deliberately corrupt only this test's own native pair to exercise defensive cancellation.
+        if CaseName = 'missing' then
+            Supply.Delete(false)
+        else begin
+            Supply.Modify(false);
+            SupplyModifiedAt := Supply.SystemModifiedAt;
+        end;
+        DemandModifiedAt := Demand.SystemModifiedAt;
+        Pair.SetRange("Entry No.", EntryNo);
+        BeforeCount := Pair.Count();
+        Clear(Request);
+        Clear(Response);
+        Request.Add('entryNo', EntryNo);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        AssertStatus(Response, 'Error');
+        Assert.IsTrue(Response.Get('code', Token), 'Inconsistent pair refusal is coded.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Pair consistency is checked.');
+        Assert.AreEqual(BeforeCount, Pair.Count(), 'No side was removed.');
+        Demand.Get(EntryNo, false);
+        Assert.AreEqual(DemandModifiedAt, Demand.SystemModifiedAt, 'Demand side unchanged.');
+        if CaseName <> 'missing' then begin
+            Supply.Get(EntryNo, true);
+            Assert.AreEqual(SupplyModifiedAt, Supply.SystemModifiedAt, 'Supply side unchanged.');
+        end;
     end;
 
     local procedure CreateTransferLine(var Item: Record Item; var TransferHeader: Record "Transfer Header"; var TransferLine: Record "Transfer Line"; OnHand: Decimal; LineQuantity: Decimal)

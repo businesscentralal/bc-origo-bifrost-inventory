@@ -18,6 +18,33 @@ codeunit 96937 "Inventory Cost Write Tests"
         LibraryInventory: Codeunit "Library - Inventory";
         CostWrite: Codeunit "Inventory Card Write ori";
 
+    [Test]
+    procedure UpdateCost_OmitCommit_PropagatesAndRollsBack()
+    var
+        Item: Record Item;
+        Library: Codeunit "Inventory Test Library ori";
+        Observer: Codeunit "Inventory Cost Write Observer";
+        Request: JsonObject;
+        PreviousDescription: Text;
+        PreviousCost: Decimal;
+    begin
+        CreateItem(Item, Item."Costing Method"::FIFO);
+        PreviousDescription := Item.Description;
+        PreviousCost := Item."Last Direct Cost";
+        Request.Add('lastDirectCost', 99);
+        Observer.SetItem(Item."No.", true);
+        BindSubscription(Observer);
+        Commit();
+        Item.Description := 'Uncommitted caller change';
+        Item.Modify(false);
+        asserterror Library.ExecuteType("Message Type ori"::"Inventory.Cost.Update", Item."No.", Request, true);
+        Assert.ExpectedError('Owned native cost validation failure');
+        UnbindSubscription(Observer);
+        Item.Get(Item."No.");
+        Assert.AreEqual(PreviousDescription, Item.Description, 'Caller and subscriber writes roll back together.');
+        Assert.AreEqual(PreviousCost, Item."Last Direct Cost", 'Cost write rolls back.');
+    end;
+
     /// <summary>FIFO supports native card changes and truthful before/after.</summary>
     [Test]
     procedure Scenario_AC07_FIFO_ValidatesCosts()

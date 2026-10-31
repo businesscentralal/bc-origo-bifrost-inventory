@@ -76,13 +76,7 @@ codeunit 10076896 "Reserv. AutoReserve Proc ori"
 
     local procedure CheckReservable(var Argument: Record "Message Argument ori"; SalesLine: Record "Sales Line"): Boolean
     var
-        Item: Record Item;
         NotOrderErr: Label 'Only sales order lines can be auto-reserved.', Comment = 'is-IS=Aðeins er hægt að taka sölupöntunarlínur sjálfvirkt frá.';
-        NotItemErr: Label 'The line is not an item line.', Comment = 'is-IS=Línan er ekki vörulína.';
-        NotInventoryErr: Label 'Item %1 is not an inventory item.', Comment = '%1 = item no., is-IS=Vara %1 er ekki birgðavara.';
-        ReserveNeverErr: Label 'Reserve is set to Never for item %1 or for the line.', Comment = '%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.';
-        DropShipmentErr: Label 'The line is a drop shipment or special order line.', Comment = 'is-IS=Línan er bein afhending eða sérpöntunarlína.';
-        NoShipmentDateErr: Label 'The line has no shipment date.', Comment = 'is-IS=Línan hefur engan afhendingardag.';
         NothingOutstandingErr: Label 'The line has no outstanding quantity.', Comment = 'is-IS=Línan hefur ekkert útistandandi magn.';
         ReservableExpectedLbl: Label 'a reservable item line on a sales order', Comment = 'is-IS=vörulína á sölupöntun sem má taka frá';
         PreconditionNextStepLbl: Label 'Change the item''s Reserve setting or reserve manually.', Comment = 'is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.';
@@ -91,6 +85,27 @@ codeunit 10076896 "Reserv. AutoReserve Proc ori"
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NotOrderErr, 'documentType', '', OrderTok, PreconditionNextStepLbl);
             exit(false);
         end;
+        if not CheckSalesLinePolicy(Argument, SalesLine) then
+            exit(false);
+        if SalesLine."Outstanding Qty. (Base)" <= 0 then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NothingOutstandingErr, 'lineNo', Format(SalesLine."Line No.", 0, 9), ReservableExpectedLbl, PreconditionNextStepLbl);
+            exit(false);
+        end;
+        exit(true);
+    end;
+
+    /// <summary>Checks item and sales-line reservation eligibility shared by Create and AutoReserve.</summary>
+    procedure CheckSalesLinePolicy(var Argument: Record "Message Argument ori"; SalesLine: Record "Sales Line"): Boolean
+    var
+        Item: Record Item;
+        NotItemErr: Label 'The line is not an item line.', Comment = 'is-IS=Línan er ekki vörulína.';
+        NotInventoryErr: Label 'Item %1 is not an inventory item.', Comment = '%1 = item no., is-IS=Vara %1 er ekki birgðavara.';
+        ReserveNeverErr: Label 'Reserve is set to Never for item %1 or for the line.', Comment = '%1 = item no., is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða línuna.';
+        DropShipmentErr: Label 'The line is a drop shipment or special order line.', Comment = 'is-IS=Línan er bein afhending eða sérpöntunarlína.';
+        NoShipmentDateErr: Label 'The line has no shipment date.', Comment = 'is-IS=Línan hefur engan afhendingardag.';
+        ReservableExpectedLbl: Label 'a reservable item line on a sales order', Comment = 'is-IS=vörulína á sölupöntun sem má taka frá';
+        PreconditionNextStepLbl: Label 'Change the item''s Reserve setting or reserve manually.', Comment = 'is-IS=Breyttu stillingunni Frátekning á vörunni eða taktu frá handvirkt.';
+    begin
         if (SalesLine.Type <> SalesLine.Type::Item) or (SalesLine."No." = '') then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NotItemErr, 'lineNo', Format(SalesLine."Line No.", 0, 9), ReservableExpectedLbl, PreconditionNextStepLbl);
             exit(false);
@@ -110,10 +125,6 @@ codeunit 10076896 "Reserv. AutoReserve Proc ori"
         end;
         if SalesLine."Drop Shipment" or SalesLine."Special Order" then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, DropShipmentErr, 'lineNo', Format(SalesLine."Line No.", 0, 9), ReservableExpectedLbl, PreconditionNextStepLbl);
-            exit(false);
-        end;
-        if SalesLine."Outstanding Qty. (Base)" <= 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NothingOutstandingErr, 'lineNo', Format(SalesLine."Line No.", 0, 9), ReservableExpectedLbl, PreconditionNextStepLbl);
             exit(false);
         end;
         if SalesLine."Shipment Date" = 0D then begin

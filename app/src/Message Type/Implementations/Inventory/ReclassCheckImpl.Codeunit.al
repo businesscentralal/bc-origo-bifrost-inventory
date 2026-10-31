@@ -14,7 +14,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled(Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", true, false));
+        exit(DomainGate.IsEnabled(Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false));
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -65,7 +65,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", true, false) then
+        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then
             exit;
 
         RequestJson := Argument.GetRequestJson();
@@ -155,7 +155,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table, which this type requires although it only reads.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
         Errors.Add(ContractMgt.TextErrorEntry('templateName and batchName are required.', 'The template or the batch name is absent or empty. The answer carries the error text and no code.', 'Send templateName and batchName, or their journal aliases.'));
         Errors.Add(ContractMgt.TextErrorEntry('Item journal template %1 was not found.', 'No item journal template has that name. The answer carries the error text and no code.', 'Check templateName.'));
         Errors.Add(ContractMgt.TextErrorEntry('Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer. The answer carries the error text and no code.', 'Use a reclassification template.'));
@@ -168,7 +168,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is written or posted. The template is looked up and the lines of the batch whose entry type is Transfer are counted.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -196,7 +196,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Workflow);
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Confirm that the template is a reclassification template and see how many transfer lines the batch has.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'List the lines the posting would process.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'Simulate native posting and inspect the rolled-back ledger entries.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Post', 'Post the batch; the lines are written to the item ledger.'));
         Workflow.Add('steps', Steps);
         exit(true);
@@ -225,8 +225,8 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Notes := 'Read only: nothing is written or posted. The answer confirms that the template exists and is of type Transfer, and returns the number of lines of the batch with entry type Transfer as postedLineCount; the name is misleading, nothing is posted. ' +
             'The check does not look up the batch, validate the lines or predict posting errors, so an unknown batch is answered Success with postedLineCount 0. templateName and batchName win over the aliases journalTemplateName and journalBatchName when both are sent. ' +
             'A missing name, an unknown template and a template of another type are answered with the error text and no code. ' +
-            'The type requires write permission on the Item Journal Line table although it only reads, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
-            'Use Inventory.Reclassification.PreviewPost to list the lines and Inventory.Reclassification.Post to post.';
+            'The type requires read permission on the Item Journal Line table, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'Use Inventory.Reclassification.PreviewPost to simulate posting and inspect captured ledger entries and Inventory.Reclassification.Post to post.';
         exit(true);
     end;
 }
