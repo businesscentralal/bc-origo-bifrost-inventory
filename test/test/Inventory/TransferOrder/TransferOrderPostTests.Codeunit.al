@@ -181,7 +181,7 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('postedShipmentNo', ShipmentToken), 'postedShipmentNo missing');
         Assert.AreNotEqual('', ShipmentToken.AsValue().AsText(), 'postedShipmentNo should be populated');
     end;
@@ -241,7 +241,7 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.RestoreDirectTransferPosting(OriginalSetup);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success. ' + JsonText(ResponseJson));
         Assert.IsTrue(ResponseJson.Get('postedShipmentNo', ShipmentToken), 'postedShipmentNo missing');
         Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
         ShipmentNo := CopyStr(ShipmentToken.AsValue().AsText(), 1, MaxStrLen(ShipmentNo));
