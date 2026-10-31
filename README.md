@@ -159,10 +159,35 @@ Types that need the posting permission: `Inventory.TransferOrder.Post`, `Invento
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
    Item Reference, Availability, Item Charge and Item Category.
-   All domains start on except **Reclassification**, which starts off once the setup record exists.
-   Item Reference, Availability, Item Charge and Item Category start on in a new company; a company
-   that already had an Inventory Setup record before they were added gets them off after the
-   upgrade, so turn them on here.
+   Domain defaults now follow the company's inventory usage. New rows start off and enable the
+   domains for which usage exists. A one-time, per-company upgrade raises the same flags on
+   existing rows, including Reclassification. It never turns an enabled domain off and makes no
+   write when nothing changes. Later manual choices remain in place; the upgrade does not run
+   again. If no setup row exists, the existing all-domains-enabled rule still applies.
+   Calls that reach a disabled domain's implementation return a coded refusal with a next step
+   pointing to Inventory Setup. Foundation can omit disabled types from discovery and reject a
+   call before it reaches the implementation; this app cannot change that Foundation behavior.
+
+   | Domain | Usage that enables it (any listed signal is sufficient) |
+   | --- | --- |
+   | Attributes | Item Attribute records |
+   | Transfer Orders | An in-transit Location, Transfer Header or Transfer Route |
+   | Assembly | BOM Component, Assembly Header or Production BOM Header |
+   | Reservations | Reservation Entry with status Reservation |
+   | Item Tracking | Item Tracking Code, an Item with a tracking code, or lot/serial/package tracking on Reservation Entry, Tracking Specification or Item Ledger Entry |
+   | Physical Inventory | Phys. Invt. Record Header, Phys. Inventory Ledger Entry, or an Item with a counting period |
+   | Costing | Value Entry or Inventory Adjmt. Entry (Order) |
+   | Reclassification | Location, Bin Content, Warehouse Entry, or one Item with ledger entries in more than one location |
+   | Item Application | Item Application Entry |
+   | Inventory Period | Inventory Period |
+   | Item Price | Price List Line with Asset Type Item |
+   | Item Reference | Item Reference |
+   | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
+   | Item Charge | Item Charge |
+   | Item Category | Item Category or an Item with a category code |
+
+   Usage checks only read company data. A source the caller cannot read supplies no signal; no
+   extra business-data permission is granted. Administrators can still enable any domain manually.
 4. Grant permissions:
    - Foundation's `BIFROST Read ori` and `BIFROST Full ori` roles are extended by
      `BIFROST InvRead ori` and `BIFROST InvWrite ori`; no separate assignment is needed for reads
