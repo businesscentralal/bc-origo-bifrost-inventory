@@ -38,6 +38,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Preserves native permissions, company and license checks.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         Process: Codeunit "Inventory Write Process ori";
         Gate: Codeunit "Inventory Domain Gate ori";
     begin
@@ -50,7 +51,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                FailureJournal.RespondWithFailure(Argument);
     end;
 
     /// <summary>Returns the native revaluation envelope contract.</summary>
@@ -120,7 +121,11 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Ask an administrator to assign BIFROST InvPost ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal or posting text of Business Central.', 'The batch is not identified, is not a non-recurring batch of a Revaluation journal template, has no lines, has a line without an item or that is not a Revaluation line, a key other than the batch keys is sent, or Business Central refuses the posting. The text is returned as it is, with code BusinessCentralError, and nothing is posted.', 'Correct the batch or its journal lines and send the call again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'A batch selector is malformed or an unsupported parameter is supplied.', 'Use the named parameter and expected value to select one revaluation batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A batch name or identifier is not nonempty text in the required format.', 'Correct the named parameter.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No revaluation batch matches templateName and batchName.', 'Select an existing owned batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The revaluation batch is empty.', 'Calculate the revaluation lines before posting or previewing.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native validation or posting fails; known validation failures name lineNo and its document.', 'Correct the selected journal line; no failed posting is committed.'));
         exit(true);
     end;
 

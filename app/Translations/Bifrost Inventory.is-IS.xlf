@@ -135,6 +135,42 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Valid costing setup and one item or category filter.</source>
+          <target>Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported costing or filter problem and inspect ledger state before retrying.</source>
+          <target>Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RunAdjustCost - NamedType NativeNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a JSON string.</source>
+          <target>%1 verður að vera JSON-strengur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera JSON-strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string containing a Business Central filter, or an empty string.</source>
+          <target>JSON-strengur með Business Central-síu eða tómur strengur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-strengur með Business Central-síu eða tómur strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2406953796 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the filter as text; omit the parameter to leave the filter empty.</source>
+          <target>Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType NextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 998221038 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assembly Order %1 (Item %2) preview produced %3 entries. %4</source>
+          <target>Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4</target>
+          <note from="Developer" annotates="general" priority="2">%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence; is-IS=Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Doc Prev. Post Impl ori - Method BuildSummary - NamedType SummaryTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly order %1 has no lines to post.</source>
           <target>Samsetningarpöntun %1 hefur engar línur til að bóka.</target>
@@ -225,24 +261,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les magn, línufjölda og kostnaðarsundurgreiningu samsetningar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Statistics Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 4243124488" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNo must be specified in the request JSON.</source>
-          <target>itemNo verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingItemErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The number of the item to assemble in data.itemNo.</source>
-          <target>Númer vörunnar sem á að setja saman í data.itemNo.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer vörunnar sem á að setja saman í data.itemNo.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ItemNoExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send the parent item number in data.itemNo.</source>
-          <target>Sendu vörunúmer yfirvörunnar í data.itemNo.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmer yfirvörunnar í data.itemNo.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ItemNoNextStepTxt</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1018346614" size-unit="char" translate="yes" xml:space="preserve">
           <source>quantity must be specified and greater than 0 in the request JSON.</source>
           <target>Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.</target>
@@ -266,6 +284,30 @@
           <target>Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</target>
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value, is-IS=Skrif í reitinn %1 eru takmörkuð. Ekki er hægt að nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 578640536" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 %2 was not found.</source>
+          <target>%1 %2 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = requested value; is-IS=%1 %2 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingRecordErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3417866066" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing item number.</source>
+          <target>Vörunúmer sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ExistingItemTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 3758865482" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing location code.</source>
+          <target>Staðsetningarkóði sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType ExistingLocationTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1393164433" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an existing item and location, then correct every reported value.</source>
+          <target>Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Create Impl ori - Method ExecuteBifrostTask - NamedType LookupNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates a new assembly order header for a parent item, optionally refreshing component lines from the BOM.</source>
@@ -321,11 +363,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar leyfða samsetningarpöntun aftur til breytinga; notaðu Release til að undirbúa hana fyrir bókun á ný.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>documentNo is required.</source>
-          <target>documentNo er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=documentNo er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType MissingDocErr</note>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 2590426299" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing posted assembly document that can be undone.</source>
+          <target>Bókað samsetningarskjal sem er til og hægt er að afturkalla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3455991230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the posted assembly number in documentNo and resolve its native posting constraints.</source>
+          <target>Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted assembly %1 was not found.</source>
@@ -867,6 +915,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - Method 3571782927 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cost fields that pass native item validation.</source>
+          <target>Kostnaðarreitir sem standast innbyggða vörusannprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðarreitir sem standast innbyggða vörusannprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - Method ExecuteBifrostTask - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1053516618 - Method 3571782927 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the selected item; use lastDirectCost if unitCost is refused for an item with entries, or Inventory.Revaluation.Post for Standard costing.</source>
+          <target>Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1635400680 - Method 3527532202 - NamedType 842664886" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: missing '%1' permission set.</source>
           <target>Bókun hafnað: vantar '%1' heimildasett.</target>
@@ -878,6 +938,18 @@
           <target>Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</target>
           <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType BlockedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 1728894929" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One eligible non-Standard item and permitted native cost values.</source>
+          <target>Ein gjaldgeng vara sem notar ekki staðalkostnað og leyfileg innbyggð kostnaðargildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ein gjaldgeng vara sem notar ekki staðalkostnað og leyfileg innbyggð kostnaðargildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType CostExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3975037305 - NamedType 2920123632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the item selection and cost values; use Inventory.Revaluation.Post for Standard items and lastDirectCost when native unitCost validation refuses an item with entries.</source>
+          <target>Leiðréttu vöruval og kostnaðargildi; notaðu Inventory.Revaluation.Post fyrir staðalkostnaðarvörur og lastDirectCost þegar innbyggð unitCost-prófun hafnar vöru með færslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu vöruval og kostnaðargildi; notaðu Inventory.Revaluation.Post fyrir staðalkostnaðarvörur og lastDirectCost þegar innbyggð unitCost-prófun hafnar vöru með færslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType CostNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3975037305 - NamedType 558155080" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied to update item costs.</source>
@@ -932,12 +1004,6 @@
           <target>Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörur með staðalkostnað krefjast Inventory.Revaluation.Post. Kostnaði á vöruspjaldi var ekki breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType StandardErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3975037305 - NamedType 1280085756" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCostingMethod must be text.</source>
-          <target>expectedCostingMethod verður að vera texti.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCostingMethod verður að vera texti.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Card Write ori - NamedType TextErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 306285125" size-unit="char" translate="yes" xml:space="preserve">
           <source>refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.</source>
@@ -1143,6 +1209,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið sem texta í data.itemNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method AddItemNoSubjectErrors - NamedType ItemNoFormatNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required.</source>
+          <target>%1 er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text of at most %2 characters.</source>
+          <target>%1 verður að vera texti með að hámarki %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = maximum length; is-IS=%1 verður að vera texti með að hámarki %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A JSON string of at most %1 characters.</source>
+          <target>JSON-strengur með að hámarki %1 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length; is-IS=JSON-strengur með að hámarki %1 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text in the documented format.</source>
+          <target>Sendu %1 sem texta á skjalfestu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Sendu %1 sem texta á skjalfestu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method ReadRequestText - NamedType NextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3981430822 - NamedType 494448295" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported request values before retrying.</source>
+          <target>Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method RespondToProblems - NamedType ProblemsErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 2778129220" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemNo is required.</source>
           <target>itemNo er nauðsynlegt.</target>
@@ -1245,6 +1341,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3138712269" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A parameter listed in the message contract.</source>
+          <target>Færibreyta sem er talin upp í samningi skilaboðanna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreyta sem er talin upp í samningi skilaboðanna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType AllowedParameterLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 1698601683" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.</source>
           <target>Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.</target>
@@ -1256,6 +1358,12 @@
           <target>counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CountsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2361715141" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An empty physical inventory journal batch.</source>
+          <target>Tóm talningarbókarkeyrsla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tóm talningarbókarkeyrsla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType EmptyBatchLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
           <source>The selected journal contains no lines.</source>
@@ -1299,6 +1407,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 590620199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A native item register for the selected journal.</source>
+          <target>Innbyggð vöruskrá fyrir valda bók.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggð vöruskrá fyrir valda bók.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RegisterExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named parameter or selected journal line using the expected value, then retry.</source>
+          <target>Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 416719055" size-unit="char" translate="yes" xml:space="preserve">
           <source>Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.</source>
           <target>Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.</target>
@@ -1335,11 +1455,29 @@
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; %2 = maximum length; is-IS=Færibreytan %1 verður að vera texti sem er ekki tómur og er að hámarki %2 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1879669363" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Nonempty JSON text of at most %1 characters.</source>
+          <target>JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length; is-IS=JSON-texti sem er ekki tómur og er að hámarki %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextExpectedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - Method 3881973616 - NamedType 286034047" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: native journal write permission and BIFROST ItemPost ori are required.</source>
           <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3820833257 - NamedType 2230270348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown inventory read operation.</source>
+          <target>Óþekkt birgðalesaðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óþekkt birgðalesaðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Read Process ori - NamedType UnknownOperationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 633023824" size-unit="char" translate="yes" xml:space="preserve">
+          <source>locationCode and variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.</source>
+          <target>locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType FilterExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
           <source>integer in range</source>
@@ -1371,6 +1509,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir umbeðin rakningargögn.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType PermissionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 1173602266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named tracking parameter and retry with an existing permitted source.</source>
+          <target>Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType RequestNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 3567710146" size-unit="char" translate="yes" xml:space="preserve">
           <source>A non-empty item number in data.itemNo, an item SystemId, a tableView, or a source line.</source>
           <target>Ótómt vörunúmer í data.itemNo, SystemId vöru, tableView eða upprunalína.</target>
@@ -1382,6 +1526,24 @@
           <target>Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu data.itemNo eða veldu sölu-, innkaupa- eða flutningslínu í data.source.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SelectionNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A supported existing source with the required read or write permission.</source>
+          <target>Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 700893003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing item tracking for the selected item or source line.</source>
+          <target>Vörurakning sem er til fyrir valda vöru eða upprunalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörurakning sem er til fyrir valda vöru eða upprunalínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType TrackingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2759492653 - NamedType 984320782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item, source and filters; assign tracking to the source line before reading it.</source>
+          <target>Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - NamedType TrackingNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - Method 11078697 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specify %1 as text.</source>
@@ -1418,6 +1580,24 @@
           <target>Heimild hafnað fyrir upprunafærsluna.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir upprunafærsluna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Read ori - Method ResolveDocument - NamedType SourcePermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 4262812612" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A tracking number and positive base quantity; serial tracking uses one base unit.</source>
+          <target>Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType EntryExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A SalesLine, PurchaseLine or TransferLine source.</source>
+          <target>Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - NamedType 3085145172" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Tracking.Get for the source and send valid tracking entries for that source.</source>
+          <target>Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType TrackingNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2677511102" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking on the selected source.</source>
@@ -1472,6 +1652,36 @@
           <target>Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method ReadTrackingEntry - NamedType InvalidTrackingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436860357 - Method 2667510389 - NamedType 2088238337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Complete the five setup steps before finishing. Return to the guide and choose Next.</source>
+          <target>Farðu í gegnum öll fimm uppsetningarskrefin áður en þú lýkur. Farðu aftur í leiðarvísinn og veldu Áfram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu í gegnum öll fimm uppsetningarskrefin áður en þú lýkur. Farðu aftur í leiðarvísinn og veldu Áfram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Wizard Mgt ori - Method Finish - NamedType StepErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436860357 - Method 2365623617 - NamedType 3477622163" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The page could not be opened: %1. Ask an administrator to check your page permissions, then try again.</source>
+          <target>Ekki tókst að opna síðuna: %1. Biddu kerfisstjóra að athuga síðuheimildir þínar og reyndu svo aftur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = original error, is-IS=Ekki tókst að opna síðuna: %1. Biddu kerfisstjóra að athuga síðuheimildir þínar og reyndu svo aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Wizard Mgt ori - Method OpenPage - NamedType OpenErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2622992133 - Method 4149417275 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set up Bifrost Inventory</source>
+          <target>Setja upp Bifröst birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja upp Bifröst birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Wizard Reg. ori - Method Register - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2622992133 - Method 4149417275 - NamedType 3800423060" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bifrost Inventory</source>
+          <target>Bifröst birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bifröst birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Wizard Reg. ori - Method Register - NamedType ShortTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2622992133 - Method 4149417275 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review Inventory operations, outbound HTTP, user access and company domains.</source>
+          <target>Farðu yfir birgðaaðgerðir, útleið HTTP, aðgang notenda og svið fyrirtækisins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir birgðaaðgerðir, útleið HTTP, aðgang notenda og svið fyrirtækisins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Wizard Reg. ori - Method Register - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1466067084 - NamedType 2230270348" size-unit="char" translate="yes" xml:space="preserve">
           <source>Unknown inventory write operation.</source>
@@ -1586,6 +1796,60 @@
           <target>Hvert stak í attributes[] verður að vera hlutur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Hvert stak í attributes[] verður að vera hlutur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attr. Update Process ori - NamedType AttributeObjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 2034178160" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unknown attribute type %1.</source>
+          <target>Óþekkt gerð eiginleika %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = type name; is-IS=Óþekkt gerð eiginleika %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType InvalidTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 440988511" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Option, Text, Integer, Decimal or Date.</source>
+          <target>Option, Text, Integer, Decimal eða Date.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Option, Text, Integer, Decimal eða Date.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType TypesExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 1386075410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one documented attribute type name in type.</source>
+          <target>Sendu eitt skjalfest heiti gerðar eiginleika í type.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eitt skjalfest heiti gerðar eiginleika í type.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType TypesNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 624188174" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attribute %1 already exists.</source>
+          <target>Eiginleikinn %1 er þegar til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = attribute name; is-IS=Eiginleikinn %1 er þegar til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType DuplicateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 3333995083" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A unique attribute name.</source>
+          <target>Einkvæmt heiti eiginleika.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Einkvæmt heiti eiginleika.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType NameExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 3617422862" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read existing attributes and choose a new name or use the existing definition.</source>
+          <target>Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType NameNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 1607064031" size-unit="char" translate="yes" xml:space="preserve">
+          <source>optionValues must be an array of distinct nonempty strings for an Option attribute.</source>
+          <target>optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 4142116594" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An array of distinct text option values.</source>
+          <target>Fylki aðgreindra textagilda valkosta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylki aðgreindra textagilda valkosta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 2340148047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct every option value before creating the definition.</source>
+          <target>Leiðréttu öll valkostsgildi áður en skilgreiningin er stofnuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu öll valkostsgildi áður en skilgreiningin er stofnuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates an item attribute definition and optional option values, independent of any item.</source>
@@ -3969,11 +4233,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu direction Outbound eða Inbound, eða slepptu því fyrir Outbound.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method ValidateValues - NamedType DirectionNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
@@ -4017,11 +4287,17 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðatímabil. Lokun og enduropnun eru aðskildar tegundir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1789506343" size-unit="char" translate="yes" xml:space="preserve">
-          <source>endingDate is required.</source>
-          <target>endingDate er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType MissingDateErr</note>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 176250045" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing inventory period ending on the ISO date YYYY-MM-DD.</source>
+          <target>Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil sem er til og endar á ISO-dagsetningunni YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 1363076348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Period.Get and send an existing endingDate as YYYY-MM-DD.</source>
+          <target>Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Period.Get og sendu endingDate tímabils sem er til á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method ExecuteBifrostTask - NamedType PeriodNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3655186646 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory period ending %1 was not found.</source>
@@ -4899,6 +5175,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar eina frátekningarfærslu eftir færslunúmeri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing eligible item source line and valid reservation values.</source>
+          <target>Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType SourceExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - NamedType 4113132238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the source identifiers and quantity; read the source line before retrying.</source>
+          <target>Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - NamedType SourceNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1820331447" size-unit="char" translate="yes" xml:space="preserve">
           <source>quantity must be greater than zero.</source>
           <target>quantity verður að vera stærra en núll.</target>
@@ -5433,6 +5721,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>
+          <target>Forskoðun flutningspöntunar %1 (%2 -&gt; %3), %4, myndaði %5 færslur. %6</target>
+          <note from="Developer" annotates="general" priority="2">%1=Document No., %2=From Code, %3=To Code, %4=Posting Type, %5=entry count, %6=G/L status sentence; is-IS=Forskoðun flutningspöntunar %1 (%2 -&gt; %3), %4, myndaði %5 færslur. %6</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method BuildSummary - NamedType SummaryTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 2960829030" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer order %1 has no lines to post.</source>
           <target>Millifærslupöntun %1 hefur engar línur til að bóka.</target>
@@ -5444,6 +5738,18 @@
           <target>Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókunarforsýning mistókst og engar færslur voru teknar. Millifærslupöntunin getur ekki verið bókuð í núverandi stöðu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PreviewFailedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship or Receive for a non-direct transfer order.</source>
+          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PostingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
+          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf Doc Prev. Post Impl ori - Method ExecuteBifrostTask - NamedType PostingNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 3571782927 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
@@ -5547,18 +5853,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leyfir opna millifærslupöntun svo hægt sé að bóka hana; notaðu Reopen til að breyta leyfðri pöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transf. Order Release Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 1233726033" size-unit="char" translate="yes" xml:space="preserve">
-          <source>transferFromCode must be specified in the request JSON.</source>
-          <target>transferFromCode verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=transferFromCode verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingFromErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 3755103750" size-unit="char" translate="yes" xml:space="preserve">
-          <source>transferToCode must be specified in the request JSON.</source>
-          <target>transferToCode verður að vera tilgreint í JSON-beiðninni.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=transferToCode verður að vera tilgreint í JSON-beiðninni.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingToErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 2845265579" size-unit="char" translate="yes" xml:space="preserve">
           <source>inTransitCode must be specified when directTransfer is false.</source>
           <target>inTransitCode verður að vera tilgreint þegar directTransfer er false.</target>
@@ -5570,6 +5864,24 @@
           <target>Ritun í reitinn %1 er takmörkuð. Ekki má nota gildið '%2'.</target>
           <note from="Developer" annotates="general" priority="2">%1 = field caption, %2 = field value, is-IS=Ritun í reitinn %1 er takmörkuð. Ekki má nota gildið '%2'.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType FieldWriteRestrictedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 4030903664" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 %2 was not found.</source>
+          <target>%1 %2 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = location code; is-IS=%1 %2 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType MissingLocationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 1031872573" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing location code appropriate for this transfer.</source>
+          <target>Staðsetningarkóði sem er til og á við um þennan flutning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði sem er til og á við um þennan flutning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType LocationExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3571782927 - NamedType 2218698876" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the from, to and in-transit locations and every reported request value.</source>
+          <target>Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method ExecuteBifrostTask - NamedType LocationNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.</source>
@@ -5589,6 +5901,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýja millifærslupöntun og valkvæðar línur; notaðu TransferOrder.Release eða Post eftir stofnun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship or Receive for a non-direct transfer order.</source>
+          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
+          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A transfer order that passes native posting validation.</source>
+          <target>Flutningspöntun sem stenst innbyggða bókunarprófun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType NativeExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the selected document and inspect its posted state before retrying.</source>
+          <target>Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
           <target>Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</target>
@@ -5596,9 +5932,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType MissingPostingTypeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2336037040" size-unit="char" translate="yes" xml:space="preserve">
-          <source>postingType must be "Ship", "Receive", or "ShipReceive". Received: %1</source>
-          <target>postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1</target>
-          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1</note>
+          <source>postingType must be "Ship" or "Receive". Received: %1</source>
+          <target>postingType verður að vera "Ship" eða "Receive". Móttekið: %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType InvalidPostingTypeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -5816,6 +6152,492 @@
           <target>Tilgreinir hvort flutningspantanaskilaboð séu virk fyrir þetta fyrirtæki.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort flutningspantanaskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control TransferOrders - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 88444387 - Action 672734192 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the guided setup for Bifrost Inventory.</source>
+          <target>Opnar leiðsagða uppsetningu Bifröst birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar leiðsagða uppsetningu Bifröst birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Action SetupWizard - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 88444387 - Action 672734192 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Setup Wizard</source>
+          <target>Uppsetningarhjálp</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppsetningarhjálp</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Action SetupWizard - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set up Bifrost Inventory</source>
+          <target>Setja upp Bifröst birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Setja upp Bifröst birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - NamedType 880711966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Disabled — needs an administrator</source>
+          <target>Óvirkt — þarf kerfisstjóra</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óvirkt — þarf kerfisstjóra</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - NamedType DisabledLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - NamedType 1248124158" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Done</source>
+          <target>Lokið</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lokið</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - NamedType DoneLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - NamedType 2632500025" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enabled</source>
+          <target>Virkt</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkt</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - NamedType EnabledLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - NamedType 3886646144" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Needs an administrator</source>
+          <target>Þarf kerfisstjóra</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þarf kerfisstjóra</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - NamedType NeedsAdminLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cannot read the setting. Ask an administrator to verify it.</source>
+          <target>Ekki er hægt að lesa stillinguna. Biddu kerfisstjóra að staðfesta hana.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að lesa stillinguna. Biddu kerfisstjóra að staðfesta hana.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 533750042 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign BIFROST InvPost ori to users who post inventory documents. Users also need Foundation Bifrost permission sets. Assign sets to users or through a Microsoft Entra security group.</source>
+          <target>Úthlutaðu BIFROST InvPost ori til notenda sem bóka birgðaskjöl. Notendur þurfa einnig heimildasamstæður Bifröst Foundation. Úthlutaðu þeim til notenda eða með Microsoft Entra öryggishópi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST InvPost ori til notenda sem bóka birgðaskjöl. Notendur þurfa einnig heimildasamstæður Bifröst Foundation. Úthlutaðu þeim til notenda eða með Microsoft Entra öryggishópi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AccessStep - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 533750042 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Access</source>
+          <target>Aðgangur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðgangur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AccessStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 869104556 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>BIFROST InvAttrRead ori permits reading item attributes and is included through BIFROST Read ori. BIFROST InvAttrWrite ori permits changing item attributes and is included through BIFROST Full ori. These two Inventory sets cannot be assigned separately.</source>
+          <target>BIFROST InvAttrRead ori heimilar lestur vörueiginleika og fylgir BIFROST Read ori. BIFROST InvAttrWrite ori heimilar breytingar á vörueiginleikum og fylgir BIFROST Full ori. Ekki er hægt að úthluta þessum tveimur birgðaheimildasamstæðum sérstaklega.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=BIFROST InvAttrRead ori heimilar lestur vörueiginleika og fylgir BIFROST Read ori. BIFROST InvAttrWrite ori heimilar breytingar á vörueiginleikum og fylgir BIFROST Full ori. Ekki er hægt að úthluta þessum tveimur birgðaheimildasamstæðum sérstaklega.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AttributeAccess - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 410500053 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the enabled Inventory domains for this company. Open Inventory Setup to change them; this guide only reads their status.</source>
+          <target>Farðu yfir virk birgðasvið þessa fyrirtækis. Opnaðu Uppsetningu birgða til að breyta þeim; leiðarvísirinn les aðeins stöðuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir virk birgðasvið þessa fyrirtækis. Opnaðu Uppsetningu birgða til að breyta þeim; leiðarvísirinn les aðeins stöðuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Domains - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 410500053 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Domains</source>
+          <target>Svið</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svið</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Domains - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2573847538 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Assembly - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2573847538 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assembly</source>
+          <target>Samsetning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Samsetning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Assembly - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2033009233 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Attributes - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2033009233 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Attributes</source>
+          <target>Eiginleikar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Attributes - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2336152139 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Availability - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2336152139 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Availability</source>
+          <target>Framboð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Availability - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 415390853 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Costing - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 415390853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Costing</source>
+          <target>Kostnaður</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaður</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Costing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3311710601 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control InventoryPeriod - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3311710601 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory periods</source>
+          <target>Birgðatímabil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatímabil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control InventoryPeriod - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2361106801 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemApplication - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2361106801 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item application</source>
+          <target>Vörujöfnun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörujöfnun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemApplication - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2140734087 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemCategory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2140734087 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item categories</source>
+          <target>Vöruflokkar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemCategory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1000821545 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemCharge - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1000821545 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item charges</source>
+          <target>Kostnaðaraukar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemCharge - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2406459892 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemPrice - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2406459892 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item prices</source>
+          <target>Vöruverð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruverð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemPrice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1855876506 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemReference - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1855876506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item references</source>
+          <target>Vörutilvísanir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísanir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemReference - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2981724990 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemTracking - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2981724990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item tracking</source>
+          <target>Vörurakning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörurakning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemTracking - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2787767124 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PhysInventory - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2787767124 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Physical inventory</source>
+          <target>Birgðatalning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PhysInventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2190767219 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Reclassification - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2190767219 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification</source>
+          <target>Endurflokkun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurflokkun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Reclassification - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2278434717 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Reservations - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2278434717 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reservations</source>
+          <target>Frátektir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Frátektir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Reservations - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2709291762 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control TransferOrders - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2709291762 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer orders</source>
+          <target>Flutningspantanir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Flutningspantanir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control TransferOrders - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1471121939 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finish records that you reviewed the guide. It does not enable HTTP, assign access or change domains.</source>
+          <target>Ljúka skráir að þú hafir farið yfir leiðarvísinn. Það virkjar ekki HTTP, úthlutar ekki aðgangi og breytir ekki sviðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ljúka skráir að þú hafir farið yfir leiðarvísinn. Það virkjar ekki HTTP, úthlutar ekki aðgangi og breytir ekki sviðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control FinishStep - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1471121939 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finish</source>
+          <target>Ljúka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ljúka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control FinishStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3712887036 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reminds an administrator to assign the required permission sets.</source>
+          <target>Minnir kerfisstjóra á að úthluta nauðsynlegum heimildasamstæðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Minnir kerfisstjóra á að úthluta nauðsynlegum heimildasamstæðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AccessSummary - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3712887036 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Access</source>
+          <target>Aðgangur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðgangur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AccessSummary - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 4144552448 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows that the company domain states were reviewed.</source>
+          <target>Sýnir að staða sviða fyrirtækisins hafi verið yfirfarin.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir að staða sviða fyrirtækisins hafi verið yfirfarin.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control DomainSummary - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 4144552448 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Domains</source>
+          <target>Svið</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svið</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control DomainSummary - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3679675544 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows whether HTTP is enabled or needs an administrator.</source>
+          <target>Sýnir hvort HTTP sé virkt eða þurfi kerfisstjóra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir hvort HTTP sé virkt eða þurfi kerfisstjóra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control HttpSummary - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3679675544 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>HTTP</source>
+          <target>HTTP</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=HTTP</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control HttpSummary - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3186466314 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows that the operations overview was reviewed.</source>
+          <target>Sýnir að yfirlit aðgerða hafi verið lesið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir að yfirlit aðgerða hafi verið lesið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control WelcomeSummary - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3186466314 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Welcome</source>
+          <target>Velkomin</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velkomin</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control WelcomeSummary - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1627599036 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bifrost needs outbound HTTP for licensing. Enable it through Bifrost Setup.</source>
+          <target>Bifröst þarf útleið HTTP fyrir leyfisveitingar. Virkjaðu hana í uppsetningu Bifröst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bifröst þarf útleið HTTP fyrir leyfisveitingar. Virkjaðu hana í uppsetningu Bifröst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Http - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1627599036 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>HTTP</source>
+          <target>HTTP</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=HTTP</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Http - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1077820653 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>You do not have permission to change extension settings. Ask an administrator with the SUPER permission set (or write permission on table NAV App Setting) to enable Allow HttpClient Requests for the applications listed above.</source>
+          <target>Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir forritin hér að ofan.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir forritin hér að ofan.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Administrator - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2079942224 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows whether this Inventory extension may make outbound HTTP requests.</source>
+          <target>Sýnir hvort þessi birgðaviðbót megi senda HTTP-beiðnir út.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir hvort þessi birgðaviðbót megi senda HTTP-beiðnir út.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control HttpStatus - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 2079942224 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Allow HttpClient Requests</source>
+          <target>Leyfa HttpClient-beiðnir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leyfa HttpClient-beiðnir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control HttpStatus - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3800514526 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bifrost Inventory adds transfer and assembly orders from creation to posting and undoing posted assemblies; item tracking, reservations and order tracking; availability by period, item references, charges, categories and attributes; physical inventory, reclassification and item application; unit costs and prices, cost adjustment and posting to the general ledger, revaluation and inventory periods. These operations belong to the Inventory domain.</source>
+          <target>Bifröst birgðir bæta við flutnings- og samsetningarpöntunum frá stofnun til bókunar og afturköllun bókaðra samsetninga; vörurakningu, frátektum og pöntunarrakningu; framboði eftir tímabilum, vörutilvísunum, kostnaðaraukum, flokkum og eiginleikum; birgðatalningu, endurflokkun og vörujöfnun; einingarkostnaði og verði, kostnaðarleiðréttingu og bókun í fjárhag, endurmati og birgðatímabilum. Þessar aðgerðir tilheyra birgðasviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bifröst birgðir bæta við flutnings- og samsetningarpöntunum frá stofnun til bókunar og afturköllun bókaðra samsetninga; vörurakningu, frátektum og pöntunarrakningu; framboði eftir tímabilum, vörutilvísunum, kostnaðaraukum, flokkum og eiginleikum; birgðatalningu, endurflokkun og vörujöfnun; einingarkostnaði og verði, kostnaðarleiðréttingu og bókun í fjárhag, endurmati og birgðatímabilum. Þessar aðgerðir tilheyra birgðasviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Welcome - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3800514526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Welcome</source>
+          <target>Velkomin</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velkomin</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Welcome - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1549620225 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>AI assistants and other systems use these operations through Bifrost as the signed-in user and within that user’s permissions. The installed operations are listed on Bifrost Message Types. Read more in the Inventory documentation.</source>
+          <target>Gervigreindaraðstoðarmenn og önnur kerfi nota þessar aðgerðir í gegnum Bifröst sem innskráður notandi og innan heimilda hans. Uppsettar aðgerðir eru á síðunni Skilaboðategundir Bifröst. Lestu meira í hjálp fyrir birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gervigreindaraðstoðarmenn og önnur kerfi nota þessar aðgerðir í gegnum Bifröst sem innskráður notandi og innan heimilda hans. Uppsettar aðgerðir eru á síðunni Skilaboðategundir Bifröst. Lestu meira í hjálp fyrir birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control AccessExplanation - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2556186315 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns to the previous step.</source>
+          <target>Fer í fyrra skref.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fer í fyrra skref.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action BackStep - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2556186315 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Back</source>
+          <target>Til baka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Til baka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action BackStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 632153598 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the Inventory documentation.</source>
+          <target>Opnar hjálparskjöl fyrir birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar hjálparskjöl fyrir birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Documentation - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 632153598 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Documentation</source>
+          <target>Hjálparskjöl</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hjálparskjöl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Documentation - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 3275419427 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens Foundation setup; this guide does not change HTTP settings.</source>
+          <target>Opnar uppsetningu Foundation; þessi leiðarvísir breytir ekki HTTP-stillingum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar uppsetningu Foundation; þessi leiðarvísir breytir ekki HTTP-stillingum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action EnableHttp - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 3275419427 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable HTTP in Bifrost Setup</source>
+          <target>Virkja HTTP í uppsetningu Bifröst</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkja HTTP í uppsetningu Bifröst</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action EnableHttp - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2667510389 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Marks this assisted setup complete.</source>
+          <target>Merkir þessa leiðsögðu uppsetningu sem lokið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Merkir þessa leiðsögðu uppsetningu sem lokið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Finish - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2667510389 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finish</source>
+          <target>Ljúka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ljúka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Finish - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2805992183 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Continues to the next step.</source>
+          <target>Fer í næsta skref.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fer í næsta skref.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action NextStep - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2805992183 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Next</source>
+          <target>Áfram</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áfram</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action NextStep - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 69374619 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens Inventory Setup to change domain settings.</source>
+          <target>Opnar Uppsetningu birgða til að breyta sviðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar Uppsetningu birgða til að breyta sviðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenInventorySetup - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 69374619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Inventory Setup</source>
+          <target>Opna uppsetningu birgða</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opna uppsetningu birgða</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenInventorySetup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 3933687258 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens the standard Permission Sets page.</source>
+          <target>Opnar staðlaða síðu heimildasamstæðna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar staðlaða síðu heimildasamstæðna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenPermissionSets - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 3933687258 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Permission Sets</source>
+          <target>Opna heimildasamstæður</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opna heimildasamstæður</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenPermissionSets - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2793276546 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens Users for an administrator to manage access.</source>
+          <target>Opnar Notendur svo kerfisstjóri geti stjórnað aðgangi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar Notendur svo kerfisstjóri geti stjórnað aðgangi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenUsers - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2793276546 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open Users</source>
+          <target>Opna notendur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opna notendur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action OpenUsers - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 719030663 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Opens Bifrost Message Types.</source>
+          <target>Opnar Skilaboðategundir Bifröst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnar Skilaboðategundir Bifröst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action ShowOperations - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 719030663 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show operations</source>
+          <target>Sýna aðgerðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýna aðgerðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action ShowOperations - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2156087049 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads this app’s current HTTP status.</source>
+          <target>Les núverandi HTTP-stöðu þessa forrits.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les núverandi HTTP-stöðu þessa forrits.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Verify - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Action 2156087049 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Verify</source>
+          <target>Staðfesta</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðfesta</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Action Verify - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2573847538 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly</source>
