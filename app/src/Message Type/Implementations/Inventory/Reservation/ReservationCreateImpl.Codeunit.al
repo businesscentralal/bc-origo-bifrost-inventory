@@ -164,6 +164,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NothingWhenLbl, NothingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the source line or the supply it names.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The sales source item or line cannot be reserved: non-inventory item, Reserve Never, drop shipment, special order or missing shipment date.', 'Correct the source line reservation settings and retry.'));
         exit(true);
     end;
 
@@ -254,7 +255,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
+        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -389,6 +390,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
+        ReservationPolicy: Codeunit "Reserv. AutoReserve Proc ori";
         SourceItemNo: Code[20];
         SourceLocationCode: Code[10];
         Found: Boolean;
@@ -406,11 +408,13 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                 begin
                     if not Enum::"Sales Document Type".Ordinals().Contains(SourceSubtype) then
                         exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
-                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description);
+                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description, Reserve, "Drop Shipment", "Special Order");
                     Found := SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
                     if Found then begin
                         if SalesLine.Type <> SalesLine.Type::Item then
                             exit(RespondNotItem(Argument, NotItemErr, SourceType, SourceNo, SourceLineNo));
+                        if not ReservationPolicy.CheckSalesLinePolicy(Argument, SalesLine) then
+                            exit(false);
                         SourceItemNo := SalesLine."No.";
                         SourceLocationCode := SalesLine."Location Code";
                         QtyPerUOM := SalesLine."Qty. per Unit of Measure";

@@ -541,7 +541,7 @@ codeunit 96956 "Item Category Tests"
     var
         Library: Codeunit "Inventory Test Library ori";
     begin
-        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCategory.Set", '', RequestJson, false);
+        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCategory.Set", '', RequestJson, true);
     end;
 
     local procedure CategoryRequest(CategoryCode: Code[20]; Description: Text; ParentCode: Code[20]; Attributes: JsonArray) RequestJson: JsonObject

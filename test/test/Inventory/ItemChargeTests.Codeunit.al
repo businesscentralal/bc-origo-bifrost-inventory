@@ -542,8 +542,8 @@ codeunit 96954 "Item Charge Tests"
     var
         Library: Codeunit "Inventory Test Library ori";
     begin
-        // The write runs in an isolated Codeunit.Run, which needs a committed transaction, so the dispatcher commits.
-        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCharge.Assign", '', RequestJson, false);
+        // Exercise the write within the caller transaction; the process must honor Omit Commit.
+        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemCharge.Assign", '', RequestJson, true);
     end;
 
     local procedure EnableItemCharge()

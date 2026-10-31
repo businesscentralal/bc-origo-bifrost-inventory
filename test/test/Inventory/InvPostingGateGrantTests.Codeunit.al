@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -18,6 +19,30 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
 
     var
         Assert: Codeunit "Library Assert";
+
+    [Test]
+    procedure AssemblyUndo_WithInvPost_EnforcesGate()
+    var
+        Header: Record "Posted Assembly Header";
+        Impl: Codeunit "Assembly Undo Post Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LowerToInvPost(LibraryLowerPermissions);
+        Assert.IsTrue(Header.WritePermission(), 'Document access must be present before checking the posting token.');
+        Assert.IsTrue(Impl.IsEnabled(), 'Undo posts reversing entries and requires the posting token.');
+    end;
+
+    [Test]
+    procedure TransferUndoShipment_WithInvPost_EnforcesGate()
+    var
+        Header: Record "Transfer Shipment Header";
+        Impl: Codeunit "Transfer Undo Shpt Impl ori";
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        LowerToInvPost(LibraryLowerPermissions);
+        Assert.IsTrue(Header.WritePermission(), 'Document access must be present before checking the posting token.');
+        Assert.IsTrue(Impl.IsEnabled(), 'Undo posts reversing entries and requires the posting token.');
+    end;
 
     [Test]
     procedure TransferPost_WithInvPost_IsEnabled()
