@@ -6,6 +6,15 @@
 
 - Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.
 
+### Fixed (2026-10-25) - coded Inventory refusals and public help (#148, #155)
+
+- Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
+- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Check/Post help includes missing or foreign-batch lineSystemIds, matching the InvalidParameter selection refusal.
+- Reclassification and ItemApplication now return coded, localized refusals. ItemApplication.Unapply/Reapply use existing Inventory Write Process 10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. Reclassification.Post preserves native BC text and adds selected-batch recovery context. Malformed reads use InvalidParameterFormat. Parent #151 strict validation remains intact.
+- Attribute, physical inventory and older-type help declares actual codes, remedies and examples. Public help remains English at both LCIDs under Architect disposition 1792832435; tests use the public contract path and separately verify translated runtime refusals and native error parity in 1033/1039. No new objects or permission grants.
+- Use the released Foundation 28.0.8.617 public error-context API (Architect 1792830947). Align app/test dependency floors, the dependency probe, AppSource gate and collision restoration with that published release, including exact production/test archive hashes and source provenance. Preserve no-friend, signature-content and compatibility checks; no Foundation source changes.
+- Objects: codeunits 10076840, 10076842, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076915, 10076917 and 10076919; tests 96900, 96918, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
+
 ### Fixed (2026-10-25) - transfer posting help (#151)
 
 - Correct the TransferOrder.Post invalid postingType condition in contract help (10076919). ShipReceive remains refused; the description no longer claims it appears in the runtime error text. No posting behavior or accepted values change.

@@ -142,6 +142,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected journal batch does not exist.', 'Check templateName and batchName or send the SystemId of an existing physical inventory batch.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'postingDate is absent, null or empty.', 'Send postingDate as YYYY-MM-DD.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'postingDate is not a date in YYYY-MM-DD form, or itemsNotOnInventory or includeItemsWithNoTransactions is not a JSON boolean.', 'Correct the value as the answer indicates.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
@@ -149,7 +150,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Calculate requires an empty physical inventory batch.', 'The batch already has lines.', 'Use an empty batch, or work on the existing lines with Inventory.PhysInventory.RecordCount.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'Parameter documentNo must be nonempty text of at most 20 characters.', 'documentNo is absent, empty, not text or longer than 20 characters.', 'Send a document number of at most 20 characters.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
         exit(true);
     end;
 

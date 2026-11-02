@@ -84,11 +84,26 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ErrorHelp1Lbl: Label 'The Item Application domain is turned off in Inventory Setup.', Comment = 'is-IS=Slökkt er á vörujöfnun í birgðauppsetningu.';
+        ErrorHelp2Lbl: Label 'Turn on the Item Application domain in Inventory Setup.', Comment = 'is-IS=Kveiktu á vörujöfnun í birgðauppsetningu.';
+        ErrorHelp3Lbl: Label 'The caller has no write permission on item application entries.', Comment = 'is-IS=Kallandi hefur ekki skrifheimild á vörujöfnunarfærslum.';
+        ErrorHelp4Lbl: Label 'Request the permission from an administrator.', Comment = 'is-IS=Biddu stjórnanda um heimildina.';
+        ErrorHelp5Lbl: Label 'A required entry number is absent.', Comment = 'is-IS=Nauðsynlegt færslunúmer vantar.';
+        ErrorHelp6Lbl: Label 'Send the documented entry number parameters.', Comment = 'is-IS=Sendu skjalfestar færslunúmerabreytur.';
+        ErrorHelp7Lbl: Label 'An entry number is not a JSON integer.', Comment = 'is-IS=Færslunúmer er ekki JSON-heiltala.';
+        ErrorHelp8Lbl: Label 'Send entry numbers as JSON integers.', Comment = 'is-IS=Sendu færslunúmer sem JSON-heiltölur.';
+        ErrorHelp9Lbl: Label 'The selected entry does not exist.', Comment = 'is-IS=Valin færsla er ekki til.';
+        ErrorHelp10Lbl: Label 'Read Inventory.ItemApplication.Get and select an existing entry.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og veldu fyrirliggjandi færslu.';
+        ErrorHelp11Lbl: Label 'Business Central refuses the application change.', Comment = 'is-IS=Business Central hafnar breytingu á jöfnun.';
+        ErrorHelp12Lbl: Label 'Correct the application according to the native refusal and retry.', Comment = 'is-IS=Leiðréttu jöfnunina samkvæmt villuboðum kerfisins og reyndu aftur.';
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item application entry 99 was not found.', 'entryNo is not sent, is not an integer, or names an item application entry that does not exist, or the standard unapply logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send entryNo as a JSON integer taken from Inventory.ItemApplication.Get, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp1Lbl, ErrorHelp2Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, ErrorHelp3Lbl, ErrorHelp4Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ErrorHelp5Lbl, ErrorHelp6Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ErrorHelp7Lbl, ErrorHelp8Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, ErrorHelp9Lbl, ErrorHelp10Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, ErrorHelp11Lbl, ErrorHelp12Lbl));
         exit(true);
     end;
 
@@ -161,7 +176,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     begin
         Clear(Notes);
         Notes := 'entryNo is the Entry No. of an item application entry, as listed by Inventory.ItemApplication.Get. The standard unapply logic decides what can be unapplied: it refuses, for example, an application to an outbound transfer, drop shipments, and entries whose posting date is in a closed inventory period. The refusal text is returned as BusinessCentralError. ' +
-            'A missing key and an entry number that does not exist are answered the same way, as text with code BusinessCentralError, not as MissingParameter or RecordNotFound. ' +
+            'Missing keys return MissingParameter, non-integer values return InvalidParameterFormat and missing entries return RecordNotFound, each with nextStep. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. Use Inventory.ItemApplication.Reapply afterwards to apply the item ledger entry to another entry. ' +
             'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
@@ -176,30 +191,41 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     var
         ItemApplicationEntry: Record "Item Application Entry";
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        ItemJnlPostLine: Codeunit "Item Jnl.-Post Line";
+        Process: Codeunit "Inventory Write Process ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         EntryNo: Integer;
-        MissingEntryErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
         NotFoundErr: Label 'Item application entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörujöfnunarfærsla %1 fannst ekki.';
+        ExpectedLbl: Label 'an existing item application or item ledger entry', Comment = 'is-IS=fyrirliggjandi vörujöfnunarfærsla eða vörufærsla';
+        NextLbl: Label 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.';
+        NativeNextLbl: Label 'Correct the item application according to the Business Central refusal and retry.', Comment = 'is-IS=Leiðréttu vörujöfnunina samkvæmt höfnun Business Central og reyndu aftur.';
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then begin
+            Parts.CompleteOlderDomainRefusal(Argument);
             exit;
+        end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('entryNo', Token) then begin
-            Argument.RespondWithError(MissingEntryErr);
+        if not Parts.TryReadEntryNo(RequestJson, 'entryNo', Argument, EntryNo) then
             exit;
-        end;
-        EntryNo := Token.AsValue().AsInteger();
         if not ItemApplicationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError(StrSubstNo(NotFoundErr, Format(EntryNo)));
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, Format(EntryNo, 0, 9)), 'entryNo', Format(EntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
 
-        ItemJnlPostLine.UnApply(ItemApplicationEntry);
+        Argument.SetErrorContext('entryNo', ExpectedLbl, NativeNextLbl);
+        Process.SetOperation('ItemApplicationUnapply');
+        Process.SetApplicationEntries(EntryNo, 0);
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                Argument.RespondWithLastError();
+                exit;
+            end;
+        Argument.ClearErrorContext();
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
         ResponseJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
