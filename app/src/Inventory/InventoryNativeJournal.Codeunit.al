@@ -70,7 +70,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         LineCount: Integer;
         Verdict: Text;
     begin
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         LineCount := Line.Count();
@@ -120,7 +120,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Results: JsonArray;
     begin
         Line.LockTable();
-        CheckParameters(Argument.GetRequestJson(), 'Post');
+        CheckParameters(Argument.GetRequestJson(), '', true);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
@@ -162,7 +162,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         GLEntryCount: Integer;
         Balanced: Boolean;
     begin
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
@@ -213,7 +213,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         IncludeNoTransactions: Boolean;
     begin
         Request := Argument.GetRequestJson();
-        CheckParameters(Request, 'Calculate');
+        CheckParameters(Request, 'Calculate', false);
         Line.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then
             exit;
@@ -269,7 +269,7 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Request := Argument.GetRequestJson();
         NormalizeLegacyCount(Argument, Request);
-        CheckParameters(Request, 'RecordCount');
+        CheckParameters(Request, 'RecordCount', false);
         Lines.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Lines) then
             exit;
@@ -397,13 +397,13 @@ codeunit 10076840 "Inventory Native Journal ori"
         exit(Number);
     end;
 
-    local procedure CheckParameters(Request: JsonObject; Operation: Text)
+    local procedure CheckParameters(Request: JsonObject; Operation: Text; AllowConfirmation: Boolean)
     var
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
             if not ((ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) or
-                    ((Operation = 'Post') and (ParameterName = 'expectedCount'))) then
+                    (AllowConfirmation and (ParameterName = 'expectedCount'))) then
                 case Operation of
                     'Calculate':
                         if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
