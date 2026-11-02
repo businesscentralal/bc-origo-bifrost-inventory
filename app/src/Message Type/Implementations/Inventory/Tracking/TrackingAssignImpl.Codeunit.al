@@ -101,7 +101,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'lotNo, serialNo, or packageNo is required.', 'None of lotNo, serialNo and packageNo was sent, or all that were sent are blank.', 'Send at least one of lotNo, serialNo and packageNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native JSON or insert error text.', 'A key has a JSON type the call cannot read (for example an object where text or a number is expected), or the insert fails; Business Central raises its own text.', 'Send itemNo, lotNo, serialNo and packageNo as JSON strings and quantity as a JSON number.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Tracking domain is turned off for the company.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the Tracking Specification table.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change the Tracking Specification table.'));
         exit(true);
     end;
 
@@ -113,7 +113,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Inserts one Tracking Specification record with the item, quantity and lot, serial or package number sent, and commits it when the call finishes. The record is not linked to a document line or an entry, and nothing is posted.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', 'Tracking Specification');
         Effect.Add('posts', false);
@@ -169,7 +169,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Notes := 'Creates one Tracking Specification record from itemNo, quantity and at least one of lotNo, serialNo and packageNo. The call checks only that these keys are present: the item is not looked up, the quantity is not checked against stock or the item tracking code, and over-long codes are cut off. ' +
             'The record has no source document line or ledger entry, so Inventory.Tracking.Get, which reads by item or by document line, does not show it; use the entryNo of the answer with Inventory.Tracking.Delete to remove it. ' +
             'Every call inserts a new record, so repeating a call creates a duplicate. Bifrost commits the record when the call finishes; under Omit Commit the caller''s transaction commits instead. ' +
-            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs BIFROST Full ori and write permission on the Tracking Specification table. A missing key is answered as BusinessCentralError with the text shown in errors.';
+            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs Bifrost Full Access and write permission on the Tracking Specification table. A missing key is answered as BusinessCentralError with the text shown in errors.';
         exit(true);
     end;
 

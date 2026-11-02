@@ -158,9 +158,9 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalTemplateName is absent.', 'Send journalTemplateName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalBatchName is absent.', 'Send journalBatchName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the posting permission set BIFROST InvPost ori.', 'Ask an administrator for BIFROST InvPost ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Reclassification batch %1 %2 has no lines.', 'The batch has no lines or does not exist. The answer carries the error text and no code.', 'Check journalTemplateName and journalBatchName, or create the lines first.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Business Central posting error text', 'The batch posting fails, for example because a line fails the item journal checks. The posting is rolled back and the answer carries the error text and no code.', 'Correct the line named in the text and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the posting permission set Inv. Posting Gate.', 'Ask an administrator for Inv. Posting Gate.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Reclassification batch %1 %2 has no lines.', 'The batch has no lines or does not exist. The answer carries the error text and no code.', 'Check journalTemplateName and journalBatchName, or create the lines first.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central posting error text', 'The batch posting fails, for example because a line fails the item journal checks. The posting is rolled back and the answer carries the error text and no code.', 'Correct the line named in the text and retry.'));
         exit(true);
     end;
 
@@ -170,7 +170,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts every line of the item journal batch through the standard item journal batch posting: item ledger and value entries are created, an item register is written and the posted lines leave the journal. The posting commits. It does not create or post a transfer order.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access and Inv. Posting Gate');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         exit(true);
@@ -218,7 +218,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Posts every line of a reclassification journal batch through the standard item journal batch posting. Posting is permanent and needs the BIFROST InvPost ori permission set.';
+        Overview := 'Posts every line of a reclassification journal batch through the standard item journal batch posting. Posting is permanent and needs the Inv. Posting Gate permission set.';
         exit(true);
     end;
 
@@ -227,7 +227,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Notes := 'Posting is permanent and commits. All lines of the batch are posted; the call has no line selection. It does not create or post a transfer order. ' +
             'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
             'A batch without lines, or one that does not exist, is answered with the error text and no code. A posting error is answered with Business Central''s text and no code, and the posting is rolled back. ' +
-            'The caller needs the BIFROST InvPost ori permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'The caller needs the Inv. Posting Gate permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
             'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
     end;

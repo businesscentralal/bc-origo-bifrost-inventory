@@ -22,7 +22,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Unapplies an item application entry through Item Jnl.-Post Line.', Comment = 'is-IS=Afturkallar vörujöfnun með Item Jnl.-Post Line.';
+        DescriptionLbl: Label 'Unapplies an item application entry through standard item application posting.', Comment = 'is-IS=Afturkallar vörujöfnun með hefðbundinni vörujöfnun.';
     begin
         exit(DescriptionLbl);
     end;
@@ -88,7 +88,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item application entry 99 was not found.', 'entryNo is not sent, is not an integer, or names an item application entry that does not exist, or the standard unapply logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send entryNo as a JSON integer taken from Inventory.ItemApplication.Get, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal text of Business Central, for example Item application entry 99 was not found.', 'entryNo is not sent, is not an integer, or names an item application entry that does not exist, or the standard unapply logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send entryNo as a JSON integer taken from Inventory.ItemApplication.Get, and read the refusal text for anything else.'));
         exit(true);
     end;
 
@@ -102,7 +102,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Effect.Add('posts', false);
         Effect.Add('changes', 'Removes one item application entry with the standard unapply logic: the application row is deleted and kept in the application history, and the remaining quantities of the two item ledger entries are corrected. Item costs can need a new adjustment run. No document is posted. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Preconditions.Add('The Item Application domain is turned on in Inventory Setup.');
         Preconditions.Add('The item application entry exists and its posting date is in an open inventory period.');
         Preconditions.Add('The application is not to an outbound transfer and not a drop shipment.');
@@ -163,7 +163,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Notes := 'entryNo is the Entry No. of an item application entry, as listed by Inventory.ItemApplication.Get. The standard unapply logic decides what can be unapplied: it refuses, for example, an application to an outbound transfer, drop shipments, and entries whose posting date is in a closed inventory period. The refusal text is returned as BusinessCentralError. ' +
             'A missing key and an entry number that does not exist are answered the same way, as text with code BusinessCentralError, not as MissingParameter or RecordNotFound. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. Use Inventory.ItemApplication.Reapply afterwards to apply the item ledger entry to another entry. ' +
-            'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+            'The caller needs Bifrost Full Access and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
     end;
 

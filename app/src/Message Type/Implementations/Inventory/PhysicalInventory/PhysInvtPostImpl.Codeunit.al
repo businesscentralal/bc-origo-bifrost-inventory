@@ -157,12 +157,12 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected journal contains no lines.', 'Select a batch with lines or a valid line subset.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (BIFROST ItemPost ori) or write permission on the item journal.', 'Ask an administrator for BIFROST ItemPost ori.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (Item Posting Gate) or write permission on the item journal.', 'Ask an administrator for Item Posting Gate.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Business Central posting error text', 'The posting fails, for example because a line fails the item journal checks, or a selected line is not a valid physical inventory line. Nothing is posted.', 'Run Inventory.PhysInventory.Check, correct the lines named in its answer and retry.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
-        Errors.Add(ContractMgt.TextErrorEntry('lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central posting error text', 'The posting fails, for example because a line fails the item journal checks, or a selected line is not a valid physical inventory line. Nothing is posted.', 'Run Inventory.PhysInventory.Check, correct the lines named in its answer and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
         exit(true);
     end;
 
@@ -173,7 +173,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts the selected lines of the Phys. Inventory journal batch through the standard item journal batch posting: item ledger entries, physical inventory ledger entries, value entries and an item register are created and the posted lines leave the journal. The posting commits with the answer; under Omit Commit the caller''s transaction commits instead. It cannot be undone by a message type of this app.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST ItemPost ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access and Item Posting Gate');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         Effect.Add('rollback', false);
@@ -239,7 +239,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Notes := 'Posting is permanent and commits: the posting commits with the answer, and under Omit Commit the caller''s transaction commits instead. The commits inside Business Central''s batch posting are held back, so a failure rolls back the whole posting. Under Omit Commit an error is raised to the caller instead of being answered with the error text. ' +
             'Without lineSystemIds every line of the batch is posted; with lineSystemIds only those lines (distinct SystemIds of lines in the batch). A batch without lines is refused with PreconditionFailed. ' +
             'Every selected line must have an item that is not blocked, be a physical inventory line, have the entry type Positive Adjmt. or Negative Adjmt., the value entry type Direct Cost and no item charge, and must pass the item journal checks; otherwise nothing is posted and the error text is answered without a code. ' +
-            'The caller needs the item posting permission (BIFROST ItemPost ori) as well as write access to the journal; without it the call is refused with PermissionDenied. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'The caller needs the item posting permission (Item Posting Gate) as well as write access to the journal; without it the call is refused with PermissionDenied. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
             'fromPhysInventoryEntryNo and toPhysInventoryEntryNo are 0 when the posting created no physical inventory ledger entry. ' +
             'Use Inventory.PhysInventory.Check and Inventory.PhysInventory.PreviewPost first.';
         exit(true);

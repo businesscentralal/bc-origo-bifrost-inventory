@@ -117,7 +117,7 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The subject, itemNo, SystemId key or tableView matches no item.', 'Select an existing item.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on items.', 'Request the required permission from an administrator.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitPrice is not a number or allowBlocked is not a Boolean.', 'Use a JSON number or invariant decimal text for unitPrice, and JSON true or false for allowBlocked.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, a selection key is not non-empty text, a key other than the selection keys, unitPrice and allowBlocked is sent, the item is blocked without allowBlocked, Unit Price is restricted for the caller, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Correct the selection or the request and send it again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal or validation text of Business Central.', 'No item is selected or several items match, a selection key is not non-empty text, a key other than the selection keys, unitPrice and allowBlocked is sent, the item is blocked without allowBlocked, Unit Price is restricted for the caller, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Correct the selection or the request and send it again.'));
         exit(true);
     end;
 
@@ -132,7 +132,7 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('posts', false);
         Effect.Add('changes', 'Sets the Unit Price on one Item card. No price list, no cost and no ledger entries are changed. All checks run before the change, and a failure changes nothing. Business Central commits the change when the call finishes; under Omit Commit the commit is left to the caller.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Preconditions.Add('The Item Price domain is turned on in Inventory Setup.');
         Preconditions.Add('Exactly one item is selected, and it is not blocked unless allowBlocked is true.');
         Preconditions.Add('The caller can write items and the Unit Price field.');

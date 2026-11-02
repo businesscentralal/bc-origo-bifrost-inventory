@@ -42,14 +42,14 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
 | `Inventory.TransferOrder.Post` | Inbound | Post a transfer order (Ship or Receive). A Receive that completes the order returns Success with `postedReceiptNo` and `orderDeleted: true` |
 | `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
-| `Inventory.TransferOrder.Statistics` | Outbound | Read transfer order statistics |
+| `Inventory.TransferOrder.Statistics` | Inbound | Read transfer order statistics |
 | `Inventory.AssemblyOrder.Create` | Inbound | Create an assembly order |
 | `Inventory.AssemblyOrder.RefreshLines` | Inbound | Refresh assembly order lines |
 | `Inventory.AssemblyOrder.Release` | Inbound | Release an assembly order |
 | `Inventory.AssemblyOrder.Reopen` | Inbound | Reopen an assembly order |
 | `Inventory.AssemblyOrder.Post` | Inbound | Post an assembly order |
 | `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
-| `Inventory.AssemblyOrder.Statistics` | Outbound | Read assembly order statistics |
+| `Inventory.AssemblyOrder.Statistics` | Inbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |

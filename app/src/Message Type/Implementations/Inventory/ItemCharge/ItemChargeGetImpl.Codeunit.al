@@ -160,7 +160,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         PreconditionWhenLbl: Label 'The line is not an item charge line.', Comment = 'is-IS=Línan er ekki kostnaðaraukalína.';
         PreconditionFixLbl: Label 'Pass the line no. of a Charge (Item) line.', Comment = 'is-IS=Sendu línunúmer línu af gerðinni Kostnaðarauki (vara).';
         PermissionWhenLbl: Label 'The caller cannot read item charge assignments or the document.', Comment = 'is-IS=Kallandinn getur ekki lesið úthlutanir kostnaðarauka eða skjalið.';
-        PermissionFixLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -182,7 +182,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only reads the assignment rows of one charge line and the quantity that is still unassigned.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'Bifrost Read-Only');
         exit(true);
     end;
 
@@ -354,7 +354,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     procedure RespondDomainDisabled(var Argument: Record "Message Argument ori")
     var
         DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
     end;

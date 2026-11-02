@@ -84,8 +84,8 @@ codeunit 10076862 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Ask an administrator to assign BIFROST InvPost ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The Business Central filter error text.', 'itemNoFilter is not a valid Business Central filter, or it is not a text value. The error text is returned as it is, with code BusinessCentralError.', 'Send a valid item number filter as JSON text, or leave itemNoFilter out.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the Inv. Posting Gate permission set.', 'Ask an administrator to assign Inv. Posting Gate.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The Business Central filter error text.', 'itemNoFilter is not a valid Business Central filter, or it is not a text value. The error text is returned as it is, with code BusinessCentralError.', 'Send a valid item number filter as JSON text, or leave itemNoFilter out.'));
         exit(true);
     end;
 
@@ -99,9 +99,9 @@ codeunit 10076862 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Counts the items that match the filter and reports that nothing is posted. No value entries and no ledger entries are read.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'Bifrost Read-Only and Inv. Posting Gate');
         Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
-        Preconditions.Add('The caller holds the BIFROST InvPost ori permission set and can read items.');
+        Preconditions.Add('The caller holds the Inv. Posting Gate permission set and can read items.');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;

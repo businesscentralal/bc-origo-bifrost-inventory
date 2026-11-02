@@ -22,7 +22,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reapplies an item ledger entry through Item Jnl.-Post Line.', Comment = 'is-IS=Jafnar vörufærslu aftur með Item Jnl.-Post Line.';
+        DescriptionLbl: Label 'Reapplies an item ledger entry through standard item application posting.', Comment = 'is-IS=Jafnar vörufærslu aftur með hefðbundinni vörujöfnun.';
     begin
         exit(DescriptionLbl);
     end;
@@ -89,7 +89,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Application domain is turned off in Inventory Setup.', 'Turn on the Item Application domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on item application entries.', 'Request the permission from an administrator.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal text of Business Central, for example Item ledger entry 99 was not found.', 'itemLedgerEntryNo or applyToEntryNo is not sent, is not an integer, or names an item ledger entry that does not exist, or the standard item application logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send both entry numbers as JSON integers of existing item ledger entries, and read the refusal text for anything else.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal text of Business Central, for example Item ledger entry 99 was not found.', 'itemLedgerEntryNo or applyToEntryNo is not sent, is not an integer, or names an item ledger entry that does not exist, or the standard item application logic refuses the change. The text is returned as it is, with code BusinessCentralError.', 'Send both entry numbers as JSON integers of existing item ledger entries, and read the refusal text for anything else.'));
         exit(true);
     end;
 
@@ -103,7 +103,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Effect.Add('posts', false);
         Effect.Add('changes', 'Applies one item ledger entry to another with the standard item application logic: item application entries and the remaining quantities of the two entries change, and item costs can need a new adjustment run. No document is posted. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Preconditions.Add('The Item Application domain is turned on in Inventory Setup.');
         Preconditions.Add('Both item ledger entries exist.');
         Preconditions.Add('The posting date of the entry is in an open inventory period.');
@@ -164,7 +164,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Notes := 'Both numbers are Entry Nos of item ledger entries; read them with Inventory.ItemApplication.Get first. The standard item application logic decides what is allowed, so its rules apply: for example an entry whose posting date is in a closed inventory period is refused. The refusal text is returned as BusinessCentralError. ' +
             'A missing key and an entry number that does not exist are answered the same way, as text with code BusinessCentralError, not as MissingParameter or RecordNotFound. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. ' +
-            'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+            'The caller needs Bifrost Full Access and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
     end;
 

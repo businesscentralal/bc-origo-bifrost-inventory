@@ -149,7 +149,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Costing domain is turned off in Inventory Setup.', 'Turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'unitCost, lastDirectCost, standardCost or allowBlocked has the wrong format, or an item selection key is invalid.', 'Use JSON numbers or invariant decimal text for the costs, JSON true or false for allowBlocked, and valid identifiers.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'unitCost, lastDirectCost or standardCost is present but null or empty.', 'Supply a numeric cost value or leave the key out.'));
-        Errors.Add(ContractMgt.TextErrorEntry('The refusal or validation text of Business Central.', 'No item is selected or several items match, none of the three cost keys is sent, the item is Standard-costed, or blocked without allowBlocked, expectedCostingMethod is not text or does not match, a cost field is restricted, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Use Inventory.Revaluation.Post for Standard-costed items; otherwise correct the request.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The refusal or validation text of Business Central.', 'No item is selected or several items match, none of the three cost keys is sent, the item is Standard-costed, or blocked without allowBlocked, expectedCostingMethod is not text or does not match, a cost field is restricted, or Business Central validation fails. The text is returned as it is, with code BusinessCentralError, and nothing is changed.', 'Use Inventory.Revaluation.Post for Standard-costed items; otherwise correct the request.'));
         exit(true);
     end;
 
@@ -164,7 +164,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Effect.Add('posts', false);
         Effect.Add('changes', 'Changes the unit cost, last direct cost and standard cost you send on one Item card. No revaluation, no value entries and no ledger entries are created. All checks run before the first field is changed, and a failure changes nothing. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Preconditions.Add('Exactly one Item selected.');
         Preconditions.Add('Non-Standard costing method.');
         Preconditions.Add('Native Item write access and each supplied field permission.');

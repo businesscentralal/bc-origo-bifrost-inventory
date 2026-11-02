@@ -95,7 +95,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Tracking specification %1 was not found.', 'No tracking specification record has that entry number (also when it was already deleted). This is a plain error text, not RecordNotFound.', 'Use the entryNo that Inventory.Tracking.Assign returned, or read it from a TrackingSpecification row of Inventory.Tracking.Get.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native JSON or delete error text.', 'entryNo has a JSON type the call cannot read as a whole number, or the delete fails; Business Central raises its own text.', 'Send entryNo as a JSON number.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Tracking domain is turned off for the company.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the Tracking Specification table.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change the Tracking Specification table.'));
         exit(true);
     end;
 
@@ -108,7 +108,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Deletes the Tracking Specification record with that entry number, and commits the deletion when the call finishes. Nothing is posted and no ledger entry changes.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', 'Tracking Specification');
         Effect.Add('posts', false);
@@ -164,7 +164,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Notes := 'Deletes the Tracking Specification record with that entry number, whatever item or source it belongs to; the call does not check what the record is tied to. The answer gives the item, lot, serial and package numbers the record held before the deletion. ' +
             'An unknown entryNo, also one that was already deleted, is answered as BusinessCentralError with the text shown in errors, not as RecordNotFound. ' +
             'Bifrost commits the deletion when the call finishes; under Omit Commit the caller''s transaction commits instead. ' +
-            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs BIFROST Full ori and write permission on the Tracking Specification table.';
+            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs Bifrost Full Access and write permission on the Tracking Specification table.';
         exit(true);
     end;
 

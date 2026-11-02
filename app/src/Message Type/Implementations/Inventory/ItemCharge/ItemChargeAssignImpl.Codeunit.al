@@ -187,7 +187,7 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         ValueWhenLbl: Label 'documentType, method or appliesToDocType has a value this type does not know, or qtyToAssign is not greater than zero.', Comment = 'is-IS=documentType, method eða appliesToDocType hefur gildi sem þessi tegund þekkir ekki, eða qtyToAssign er ekki stærra en núll.';
         ValueFixLbl: Label 'Send purchase or sales, one of the listed methods and target types, and a positive qtyToAssign.', Comment = 'is-IS=Sendu purchase eða sales, eina af aðferðunum og gerðum marka sem eru taldar upp, og jákvætt qtyToAssign.';
         PermissionWhenLbl: Label 'The caller cannot change item charge assignments or read the document.', Comment = 'is-IS=Kallandinn getur ekki breytt úthlutunum kostnaðarauka eða lesið skjalið.';
-        PermissionFixLbl: Label 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionFixLbl: Label 'Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.';
         BusinessCentralWhenLbl: Label 'Business Central refused the assignment, for example because the charge line is already fully invoiced.', Comment = 'is-IS=Business Central hafnaði úthlutuninni, til dæmis af því að kostnaðaraukalínan er þegar fullreikningsfærð.';
         BusinessCentralFixLbl: Label 'Read the error text, correct the document in Business Central, and send the request again.', Comment = 'is-IS=Lestu villutextann, lagaðu skjalið í Business Central og sendu beiðnina aftur.';
     begin
@@ -219,7 +219,7 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         Effect.Add('posts', false);
         Effect.Add('changes', 'Replaces the item charge assignment of the charge line: rows without an invoiced quantity are deleted, rows that are already partly invoiced are kept with qtyToAssign set to zero, and the new rows are inserted. The document is not posted. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'Bifrost Full Access');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
