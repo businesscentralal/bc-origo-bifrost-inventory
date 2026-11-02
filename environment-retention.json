@@ -1,0 +1,10 @@
+{
+  "containerId": "f0133160e482",
+  "displayName": "worker9-inventory152-20261102-w1",
+  "owner": "worker-9",
+  "candidateSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "state": "Stopped",
+  "recordedAt": "2026-11-02T00:43:50.992750+00:00",
+  "retained": true,
+  "reason": "Owned fixture cleanup verified; retain stopped environment for current PR175 amendments and final delivery/UAT closure. No foreign resource changes."
+}
