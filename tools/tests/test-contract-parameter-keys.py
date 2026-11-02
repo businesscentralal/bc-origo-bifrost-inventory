@@ -199,6 +199,10 @@ context_cases = {
  'context-dynamic-bool-setter': (runtime_source.replace('SetOtherMode()', 'SetOtherMode(Value: Boolean)').replace('OtherMode := true;', 'OtherMode := Value;'), '        Worker.SetOtherMode(DynamicMode); Worker.Run(Argument);', ['read-not-declared|otherKey'], 'selectedKey'),
  'context-label-before-shadow': (runtime_source.replace('RequestJson: JsonObject;', "BeforeLbl: Label 'begin'; OtherMode: Boolean; RequestJson: JsonObject;"), '        Worker.SetOtherMode(); Worker.Run(Argument);', ['read-not-declared|otherKey'], 'selectedKey'),
  'context-default-local': (runtime_source, '        Worker.Run(Argument);', [], 'selectedKey'),
+ 'context-permission-first-default': (runtime_source, '        Worker.Run(Argument);', [], 'selectedKey'),
+ 'context-permission-first-setter': (runtime_source, '        Worker.SetOtherMode(); Worker.Run(Argument);', [], 'otherKey'),
+ 'context-permission-last-default': (runtime_source, '        Worker.Run(Argument);', [], 'selectedKey'),
+ 'context-permission-first-real-mismatch': (runtime_source, '        Worker.Run(Argument);', ['read-not-declared|selectedKey','declared-not-read|otherKey'], 'otherKey'),
  'context-setter-local': (runtime_source, '        Worker.SetOtherMode(); Worker.Run(Argument);', [], 'otherKey'),
  'context-conditional-setter': (runtime_source, '        if UnknownFlag then Worker.SetOtherMode(); Worker.Run(Argument);', ['read-not-declared|otherKey'], 'selectedKey'),
  'context-setter-after-run': (runtime_source, '        Worker.Run(Argument); Worker.SetOtherMode(); Worker.Run(Argument);', ['read-not-declared|otherKey'], 'selectedKey'),
@@ -349,6 +353,11 @@ for name,contract,execute,expected,part in cases:
  if name in context_cases:
   runtime, _, _, _ = context_cases[name]
   (root/'src'/'Runtime.al').write_text(runtime)
+  if name.startswith('context-permission-'):
+   # Force both provider enumeration orders with file names; the permission
+   # entry must not supply Runtime's object header or hide a real mismatch.
+   prefix = '000-' if 'permission-first' in name else 'zzz-'
+   (root/'src'/(prefix+'Permissions.al')).write_text('permissionsetextension 6 "Fixture Grants" extends "Fixture Base"\n{\n    Permissions =\n        codeunit "Fixture Runtime" = X;\n}\n')
   impl = root/'src'/'Impl.al'
   text = impl.read_text()
   declarations = '        Worker: Codeunit "Fixture Runtime"; OtherWorker: Codeunit "Fixture Runtime";\n'

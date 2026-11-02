@@ -8,10 +8,9 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     procedure IsEnabled(): Boolean
-    var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::TransferOrders, Database::"Transfer Receipt Header", false, true));
+        // Preserve the released enum and interface ABI, but do not advertise an operation the platform cannot execute.
+        exit(false);
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -21,7 +20,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Undoes a posted transfer receipt by writing corrective item ledger entries.', Comment = 'is-IS=Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum.';
+        DescriptionLbl: Label 'Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Comment = 'is-IS=Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd.';
     begin
         exit(DescriptionLbl);
     end;
@@ -35,7 +34,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Undoes a posted transfer receipt. Does not delete the posted document.', Comment = 'is-IS=Afturkallar bókaða millifærslumóttöku. Eyðir ekki bókaða skjalinu.';
+        SelectionDescriptionLbl: Label 'Unavailable operation. Use a new transfer order to return received goods.', Comment = 'is-IS=Aðgerð ekki í boði. Notaðu nýja flutningspöntun til að skila mótteknum vörum.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -88,7 +87,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Assign BIFROST InvPost ori. Note that the type refuses every receipt anyway.'));
         Errors.Add(ContractMgt.TextErrorEntry('documentNo must be specified.', 'documentNo was not sent. The answer carries the error text and no code.', 'Send documentNo, the number of the posted transfer receipt.'));
         Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipt %1 was not found.', 'No Transfer Receipt Header has that number. The answer carries the error text and no code.', 'Check the number of the posted transfer receipt.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipts cannot be undone in this Business Central version.', 'The posted transfer receipt exists. Every such call is refused. The answer carries the error text and no code.', 'Do not call this type for a correction. Undo the shipment with Inventory.Transfer.UndoShipment, or correct the stock with a new posting.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Posted transfer receipts cannot be undone in this Business Central version.', 'The posted transfer receipt exists. Every such call is refused with PreconditionFailed.', 'Do not call this type for a correction. Undo the shipment with Inventory.Transfer.UndoShipment, or correct the stock with a new posting.'));
         exit(true);
     end;
 
@@ -123,7 +122,6 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Steps: JsonArray;
     begin
         Clear(Workflow);
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Transfer.UndoReceipt', 'Ask to undo the posted receipt; the answer is always an error because this version cannot undo a transfer receipt.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Create', 'Move the goods back with a new transfer order from the receiving location to the sending one.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.TransferOrder.Post', 'Ship and receive the new transfer order.'));
         Workflow.Add('steps', Steps);
@@ -134,7 +132,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Examples.Add(ContractMgt.Example('Ask to undo posted transfer receipt 109001 (always refused)', '{"type":"Inventory.Transfer.UndoReceipt","data":{"documentNo":"109001"}}', '{"status":"Error","error":"Posted transfer receipts cannot be undone in this Business Central version."}'));
+        Examples.Add(ContractMgt.Example('Ask to undo posted transfer receipt 109001 (always refused)', '{"type":"Inventory.Transfer.UndoReceipt","data":{"documentNo":"109001"}}', '{"status":"Error","code":"PreconditionFailed","error":"Posted transfer receipts cannot be undone in this Business Central version."}'));
         exit(true);
     end;
 
@@ -146,7 +144,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Success is never returned: a posted transfer receipt that exists is answered with an error, and one that does not exist is answered with a not found error. Neither answer carries an error code. ' +
+        Notes := 'Disabled in the active message roster; the released identifier is retained for compatibility only. Success is never returned: a posted transfer receipt that exists is answered with an error, and one that does not exist is answered with a not found error. Existing receipts return PreconditionFailed. ' +
             'Nothing is changed, so nothing is committed and the call can be repeated. ' +
             'The caller needs the Transfer Orders domain turned on in Inventory Setup and the BIFROST InvPost ori permission set, although nothing is posted. ' +
             'Use Inventory.Transfer.UndoShipment to undo a posted transfer shipment. The type does not read subject.';
@@ -167,6 +165,8 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         DocumentNo: Code[20];
         MissingDocErr: Label 'documentNo must be specified.', Comment = 'is-IS=documentNo verður að vera tilgreint.';
         NotFoundErr: Label 'Posted transfer receipt %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærslumóttaka %1 fannst ekki.';
+        UnsupportedTxt: Label 'Transfer receipt undo is unavailable.', Comment = 'is-IS=Afturköllun flutningsmóttöku er ekki í boði.';
+        ReturnGoodsTxt: Label 'Create a new transfer order to return the received goods.', Comment = 'is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum.';
         NotSupportedErr: Label 'Posted transfer receipts cannot be undone in this Business Central version.', Comment = 'is-IS=Ekki er hægt að afturkalla bókaðar millifærslumóttökur í þessari útgáfu Business Central.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Receipt Header", false, true) then
@@ -183,6 +183,6 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
             Argument.RespondWithError(StrSubstNo(NotFoundErr, DocumentNo));
             exit;
         end;
-        Argument.RespondWithError(NotSupportedErr);
+        Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NotSupportedErr, 'documentNo', DocumentNo, UnsupportedTxt, ReturnGoodsTxt);
     end;
 }
