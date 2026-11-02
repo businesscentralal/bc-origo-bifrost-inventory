@@ -350,9 +350,10 @@ codeunit 96923 "Inv. Lookup Format Tests"
     begin
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1033);
-        Request.ReadFrom(Payload);
-        InventoryLibrary.ConfirmRequest(MessageType, Request);
-        Request.WriteTo(Payload);
+        if Request.ReadFrom(Payload) then begin
+            InventoryLibrary.ConfirmRequest(MessageType, Request);
+            Request.WriteTo(Payload);
+        end;
         RequestContent.AddText(Payload);
         Dispatcher.EnqueueAndProcess(MessageType, "Message Version ori"::"1.0", Subject, '', '', RequestContent,
             EmptyTaskId, 0, MessageId, ResponseContent, ResponseContentType, ResponseTime);

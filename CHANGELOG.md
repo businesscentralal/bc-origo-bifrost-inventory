@@ -4,7 +4,7 @@
 
 ### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
 
-- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types; README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
+- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
 - Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
 - Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
 

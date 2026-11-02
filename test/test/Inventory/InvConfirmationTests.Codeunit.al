@@ -106,7 +106,12 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             end;
         GlobalLanguage(PreviousLanguage);
         if HadSetup then begin
-            Setup := PreviousSetup;
+            Setup.Get();
+            Setup."Transfer Orders" := PreviousSetup."Transfer Orders";
+            Setup.Assembly := PreviousSetup.Assembly;
+            Setup.Costing := PreviousSetup.Costing;
+            Setup."Phys. Inventory" := PreviousSetup."Phys. Inventory";
+            Setup.Reclassification := PreviousSetup.Reclassification;
             Setup.Modify();
         end else
             Setup.Delete();
@@ -120,11 +125,15 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         ResponseContent: BigText;
         ContentType: Text[100];
         Payload: Text;
+        MessageId: Guid;
+        EmptyTaskId: Guid;
+        ResponseTime: Duration;
     begin
         // Deliberately bypass ConfirmRequest: missing and incorrect counts must reach the real dispatcher unchanged.
         Request.WriteTo(Payload);
         RequestContent.AddText(Payload);
-        Dispatcher.Execute(MessageType, "Message Version ori"::"1.0", '', '', 'application/json', RequestContent, ResponseContent, ContentType, true);
+        Dispatcher.EnqueueAndProcess(MessageType, "Message Version ori"::"1.0", '', '', 'application/json', RequestContent,
+            EmptyTaskId, GlobalLanguage(), MessageId, ResponseContent, ContentType, ResponseTime);
         ResponseContent.GetSubText(Payload, 1);
         Assert.IsTrue(Response.ReadFrom(Payload), 'Dispatcher returns a JSON response.');
         AssertText(Response, 'status', 'Error');

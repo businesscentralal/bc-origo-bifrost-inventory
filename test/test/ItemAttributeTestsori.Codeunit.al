@@ -322,6 +322,7 @@ codeunit 96900 "Item Attribute Tests ori"
     var
         Item: Record Item;
         InventorySetup: Record "Inventory Setup ori";
+        Helper: Codeunit "Assembly Order Test Helper";
         Contract: Interface "Msg Contract ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -366,7 +367,7 @@ codeunit 96900 "Item Attribute Tests ori"
                         3:
                             RequestJson.Add('attributes', 'not an array');
                     end;
-                    ResponseJson := Library.ExecuteType(MessageType, Item."No.", RequestJson, false);
+                    Helper.ProcessMessage(MessageType, Item."No.", RequestJson, ResponseJson);
                     Library.AssertStatus(ResponseJson, 'Error');
                     Assert.IsTrue(ResponseJson.Get('code', Token), 'Runtime error needs a code.');
                     Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Invalid array runtime code matches help.');
