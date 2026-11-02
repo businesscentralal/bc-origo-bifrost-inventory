@@ -1,0 +1,5 @@
+{
+  "messageType": "Inventory.Period.Close",
+  "detail": "full",
+  "lcid": 1033
+}

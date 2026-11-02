@@ -1,3 +1,5 @@
+Latest amendment evidence: [ba52cd12aaf18b3f5c78268846ddc09cf3bec927](amend-ba52cd1/README.md). Earlier root evidence below remains historical and does not verify the new candidate.
+
 # Inventory issue152 developer evidence
 
 Source candidate: `a2f970df9cd3c805e75ec9b3a37b36152b72b883` on `fix/litr-inventory152-help-quality`. These are verification records, not application source.

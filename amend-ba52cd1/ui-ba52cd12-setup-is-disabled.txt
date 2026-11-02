@@ -1,0 +1,49 @@
+- form "Uppsetning birgða":
+  - main:
+    - button "Fara á fyrra skjal sömu gerðar"
+    - button "Bakka"
+    - button "Opna síðuna skrifvarða" [pressed]
+    - button "Deila þessari síðu með öðrum notendum eða forritum"
+    - button "Stofna nýja færslu."
+    - button "Eyða upplýsingunum"
+    - text: Vista...
+    - button "Ekki bókamerkt": 
+    - button "Þessari síðu verður lokað í þessum glugga og hún opnast í sprettiglugga.": 
+    - button "Sýna/fela glugga með breiðu útliti": 
+    - text: Uppsetning birgða
+    - menubar
+    - button "Svið" [expanded]:
+      - heading "Svið" [level=2]
+    - button "Eiginleikar"
+    - checkbox "Eiginleikar"
+    - button "Flutningspantanir"
+    - checkbox "Flutningspantanir"
+    - button "Samsetning"
+    - checkbox "Samsetning"
+    - button "Frátektir"
+    - checkbox "Frátektir"
+    - button "Vörurakning"
+    - checkbox "Vörurakning"
+    - button "Birgðatalning"
+    - checkbox "Birgðatalning"
+    - button "Kostnaður"
+    - checkbox "Kostnaður"
+    - button "Endurflokkun"
+    - checkbox "Endurflokkun"
+    - button "Vörujöfnun"
+    - checkbox "Vörujöfnun"
+    - button "Birgðatímabil"
+    - checkbox "Birgðatímabil"
+    - button "Vöruverð"
+    - checkbox "Vöruverð"
+    - button "Vörutilvísun"
+    - checkbox "Vörutilvísun"
+    - button "Framboð"
+    - checkbox "Framboð"
+    - button "Kostnaðarauki"
+    - checkbox "Kostnaðarauki"
+    - button "Vöruflokkur"
+    - checkbox "Vöruflokkur"
+    - button "Fara á næsta skjal sömu gerðar"
+- text: Notaðu hægri og vinstri örvalyklana til að stilla stærðina. Notaðu Escape-lykilinn til að afturkalla eða Enter-lykilinn til að staðfesta.
+- paragraph: Vista...

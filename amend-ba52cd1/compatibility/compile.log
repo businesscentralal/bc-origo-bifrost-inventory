@@ -1,0 +1,11 @@
+Microsoft (R) AL Compiler version 17.0.44.19451
+Copyright (C) Microsoft Corporation. All rights reserved
+
+Compilation started for project 'Bifrost Inventory' containing '110' files at '02:03:57.183'.
+
+/workspace/evidence/inventory175-review-followup-20261102/compatibility/app/src/Inventory/InventoryWriteProcess.Codeunit.al(8,1): info AA0477: The using statements are not in a sorted order.
+/workspace/evidence/inventory175-review-followup-20261102/compatibility/app/src/Message Type/Implementations/Inventory/Reclassification/ReclassPreviewImpl.Codeunit.al(6,1): info AA0477: The using statements are not in a sorted order.
+/workspace/evidence/inventory175-review-followup-20261102/compatibility/app/src/Setup/InventorySetup.Table.al(10,1): info AA0477: The using statements are not in a sorted order.
+
+Compilation ended at '02:04:09.875'.
+

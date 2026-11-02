@@ -1,0 +1,8 @@
+{
+  "type": "Inventory.Tracking.Assign",
+  "data": {
+    "itemNo": "LI152-AM1102",
+    "quantity": 1
+  },
+  "lcid": 1039
+}

@@ -1,0 +1,30 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "containerId": "f0133160e482",
+  "containerName": "worker9-inventory152-20261102-w1",
+  "verified": true,
+  "languages": [
+    1033,
+    1039
+  ],
+  "scenarios": [
+    "Message Type catalogue descriptions and directions in English and Icelandic",
+    "Inventory Setup captions and15flags in both languages",
+    "All15domains disabled through supported administrator page;118actual MCP refusals; original15flags restored and reloaded",
+    "Own Option attribute Matte/Gloss visible; selected exact own row deleted and exact-name search empty"
+  ],
+  "screenshots": [
+    "ui-ba52cd12-attribute-cleaned.png",
+    "ui-ba52cd12-attribute-owned-before-cleanup.png",
+    "ui-ba52cd12-catalogue-en.png",
+    "ui-ba52cd12-catalogue-is.png",
+    "ui-ba52cd12-language-restored.png",
+    "ui-ba52cd12-setup-en-before.png",
+    "ui-ba52cd12-setup-en-enabled.png",
+    "ui-ba52cd12-setup-en-restored.png",
+    "ui-ba52cd12-setup-is-disabled-saved.png",
+    "ui-ba52cd12-setup-is-disabled.png",
+    "ui-ba52cd12-setup-is-enabled.png",
+    "ui-ba52cd12-setup-is-restored.png"
+  ]
+}

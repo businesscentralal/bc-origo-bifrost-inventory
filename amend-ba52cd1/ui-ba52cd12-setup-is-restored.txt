@@ -1,0 +1,49 @@
+- form "Uppsetning birgða":
+  - main:
+    - button "Fara á fyrra skjal sömu gerðar"
+    - button "Bakka"
+    - button "Opna síðuna skrifvarða" [pressed]
+    - button "Deila þessari síðu með öðrum notendum eða forritum"
+    - button "Stofna nýja færslu."
+    - button "Eyða upplýsingunum"
+    - text: Vistað
+    - button "Ekki bókamerkt": 
+    - button "Þessari síðu verður lokað í þessum glugga og hún opnast í sprettiglugga.": 
+    - button "Sýna/fela glugga með breiðu útliti": 
+    - text: Uppsetning birgða
+    - menubar
+    - button "Svið" [expanded]:
+      - heading "Svið" [level=2]
+    - button "Eiginleikar"
+    - checkbox "Eiginleikar" [checked]
+    - button "Flutningspantanir"
+    - checkbox "Flutningspantanir" [checked]
+    - button "Samsetning"
+    - checkbox "Samsetning" [checked]
+    - button "Frátektir"
+    - checkbox "Frátektir"
+    - button "Vörurakning"
+    - checkbox "Vörurakning" [checked]
+    - button "Birgðatalning"
+    - checkbox "Birgðatalning"
+    - button "Kostnaður"
+    - checkbox "Kostnaður" [checked]
+    - button "Endurflokkun"
+    - checkbox "Endurflokkun" [checked]
+    - button "Vörujöfnun"
+    - checkbox "Vörujöfnun" [checked]
+    - button "Birgðatímabil"
+    - checkbox "Birgðatímabil"
+    - button "Vöruverð"
+    - checkbox "Vöruverð"
+    - button "Vörutilvísun"
+    - checkbox "Vörutilvísun" [checked]
+    - button "Framboð"
+    - checkbox "Framboð" [checked]
+    - button "Kostnaðarauki"
+    - checkbox "Kostnaðarauki" [checked]
+    - button "Vöruflokkur"
+    - checkbox "Vöruflokkur" [checked]
+    - button "Fara á næsta skjal sömu gerðar"
+- text: Notaðu hægri og vinstri örvalyklana til að stilla stærðina. Notaðu Escape-lykilinn til að afturkalla eða Enter-lykilinn til að staðfesta.
+- paragraph: Vistað

@@ -1,0 +1,503 @@
+- form "Skilaboðategundir Bifröst - Inventory.Tracking.Get":
+  - main:
+    - button "Bakka"
+    - heading "Inventory.Tracking.Get" [level=1]
+    - button "Sýna/fela glugga með breiðu útliti": 
+    - heading "Skilaboðategundir Bifröst" [level=2]
+    - grid "Message Type List ori":
+      - rowgroup:
+        - row "Villa Heiti, raðað í pöntunina Hækkandi Hækkandi Opna valmynd fyrir Heiti Fleiri valkostir Lýsing Opna valmynd fyrir Lýsing Afmarkanir töflunúmer Opna valmynd fyrir Afmarkanir töflunúmer Stefna Opna valmynd fyrir Stefna":
+          - columnheader "Villa"
+          - columnheader "Heiti, raðað í pöntunina Hækkandi Hækkandi Opna valmynd fyrir Heiti":
+            - button "Heiti, raðað í pöntunina Hækkandi": Heiti
+            - img "Hækkandi"
+            - button "Opna valmynd fyrir Heiti"
+          - columnheader "Fleiri valkostir"
+          - columnheader "Lýsing Opna valmynd fyrir Lýsing":
+            - button "Lýsing"
+            - button "Opna valmynd fyrir Lýsing"
+          - columnheader "Afmarkanir töflunúmer Opna valmynd fyrir Afmarkanir töflunúmer":
+            - button "Afmarkanir töflunúmer"
+            - button "Opna valmynd fyrir Afmarkanir töflunúmer"
+          - columnheader "Stefna Opna valmynd fyrir Stefna":
+            - button "Stefna"
+            - button "Opna valmynd fyrir Stefna"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Calculate Sýna fleiri valkosti Lýsing Reiknar eftirstandandi birgðamagn og birgðavirði vöru. Afmarkanir töflunúmer 32 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Calculate":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Calculate"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Reiknar eftirstandandi birgðamagn og birgðavirði vöru.":
+          - textbox "Lýsing Reiknar eftirstandandi birgðamagn og birgðavirði vöru."
+        - gridcell "Afmarkanir töflunúmer 32":
+          - textbox "Afmarkanir töflunúmer 32"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Post Sýna fleiri valkosti Lýsing Bókar allar línur í endurmatsbókarkeyrslu vöru. Afmarkanir töflunúmer 233 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Post":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.Post"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Bókar allar línur í endurmatsbókarkeyrslu vöru.":
+          - textbox "Lýsing Bókar allar línur í endurmatsbókarkeyrslu vöru."
+        - gridcell "Afmarkanir töflunúmer 233":
+          - textbox "Afmarkanir töflunúmer 233"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.PreviewPost Sýna fleiri valkosti Lýsing Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær. Afmarkanir töflunúmer 233 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.PreviewPost":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Revaluation.PreviewPost"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær.":
+          - textbox "Lýsing Forskoðar innbyggða endurmatsbókun og skilar færslum án þess að varðveita þær."
+        - gridcell "Afmarkanir töflunúmer 233":
+          - textbox "Afmarkanir töflunúmer 233"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Assign Sýna fleiri valkosti Lýsing Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru. Afmarkanir töflunúmer 336 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Assign":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Assign"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru.":
+          - textbox "Lýsing Stofnar rakningarforskrift með lotu-, rað- eða pakkanúmeri og magni fyrir vöru."
+        - gridcell "Afmarkanir töflunúmer 336":
+          - textbox "Afmarkanir töflunúmer 336"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Delete Sýna fleiri valkosti Lýsing Eyðir rakningarforskrift eftir færslunúmeri hennar. Afmarkanir töflunúmer 336 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Delete":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Tracking.Delete"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Eyðir rakningarforskrift eftir færslunúmeri hennar.":
+          - textbox "Lýsing Eyðir rakningarforskrift eftir færslunúmeri hennar."
+        - gridcell "Afmarkanir töflunúmer 336":
+          - textbox "Afmarkanir töflunúmer 336"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Lýsing Afmarkanir töflunúmer Stefna" [selected]:
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi":
+          - textbox "Heiti, raðað í pöntunina Hækkandi"
+        - gridcell:
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing":
+          - textbox "Lýsing"
+        - gridcell "Afmarkanir töflunúmer":
+          - textbox "Afmarkanir töflunúmer"
+        - gridcell "Stefna":
+          - textbox "Stefna"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TrackingAvailability.Get Sýna fleiri valkosti Lýsing Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði. Afmarkanir töflunúmer 27 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TrackingAvailability.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TrackingAvailability.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.":
+          - textbox "Lýsing Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði."
+        - gridcell "Afmarkanir töflunúmer 27":
+          - textbox "Afmarkanir töflunúmer 27"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoReceipt Sýna fleiri valkosti Lýsing Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum. Afmarkanir töflunúmer 5746 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoReceipt":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoReceipt"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum.":
+          - textbox "Lýsing Afturkallar bókaða millifærslumóttöku með leiðréttingarfærslum í vörufærslum."
+        - gridcell "Afmarkanir töflunúmer 5746":
+          - textbox "Afmarkanir töflunúmer 5746"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoShipment Sýna fleiri valkosti Lýsing Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum. Afmarkanir töflunúmer 5744 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoShipment":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.Transfer.UndoShipment"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.":
+          - textbox "Lýsing Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum."
+        - gridcell "Afmarkanir töflunúmer 5744":
+          - textbox "Afmarkanir töflunúmer 5744"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Create Sýna fleiri valkosti Lýsing Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum. Afmarkanir töflunúmer 5740 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Create":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Create"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum.":
+          - textbox "Lýsing Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum."
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Post Sýna fleiri valkosti Lýsing Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu). Afmarkanir töflunúmer 5740 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Post":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Post"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu).":
+          - textbox "Lýsing Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu)."
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.PreviewPost Sýna fleiri valkosti Lýsing Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar. Afmarkanir töflunúmer 5740 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.PreviewPost":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.PreviewPost"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.":
+          - textbox "Lýsing Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar."
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Release Sýna fleiri valkosti Lýsing Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest. Afmarkanir töflunúmer 5740 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Release":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Release"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest.":
+          - textbox "Lýsing Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest."
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Reopen Sýna fleiri valkosti Lýsing Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin. Afmarkanir töflunúmer 5740 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Reopen":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Reopen"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin.":
+          - textbox "Lýsing Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin."
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - 'row "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Statistics Sýna fleiri valkosti Lýsing Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar. Afmarkanir töflunúmer 5740 Stefna Innsent"':
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Statistics":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Inventory.TransferOrder.Statistics"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - 'gridcell "Lýsing Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar."':
+          - 'textbox "Lýsing Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar."'
+        - gridcell "Afmarkanir töflunúmer 5740":
+          - textbox "Afmarkanir töflunúmer 5740"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Item.Availability.Get Sýna fleiri valkosti Lýsing Sækir reiknað tiltæki vöru eftir staðsetningu, þar á meðal birgðir, frátektir, þarfir og móttökur. Afmarkanir töflunúmer 27 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Item.Availability.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Item.Availability.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sækir reiknað tiltæki vöru eftir staðsetningu, þar á meðal birgðir, frátektir, þarfir og móttökur.":
+          - textbox "Lýsing Sækir reiknað tiltæki vöru eftir staðsetningu, þar á meðal birgðir, frátektir, þarfir og móttökur."
+        - gridcell "Afmarkanir töflunúmer 27":
+          - textbox "Afmarkanir töflunúmer 27"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Item.Inventory.Get Sýna fleiri valkosti Lýsing Sækir raunbirgðir á hendi eftir staðsetningu fyrir eina eða fleiri vörur. Afmarkanir töflunúmer 27 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Item.Inventory.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Item.Inventory.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sækir raunbirgðir á hendi eftir staðsetningu fyrir eina eða fleiri vörur.":
+          - textbox "Lýsing Sækir raunbirgðir á hendi eftir staðsetningu fyrir eina eða fleiri vörur."
+        - gridcell "Afmarkanir töflunúmer 27":
+          - textbox "Afmarkanir töflunúmer 27"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Item.Price.Get Sýna fleiri valkosti Lýsing Sækir verðupplýsingar vöru samkvæmt stilltum reglum um verðútreikning. Afmarkanir töflunúmer 27 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Item.Price.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Item.Price.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sækir verðupplýsingar vöru samkvæmt stilltum reglum um verðútreikning.":
+          - textbox "Lýsing Sækir verðupplýsingar vöru samkvæmt stilltum reglum um verðútreikning."
+        - gridcell "Afmarkanir töflunúmer 27":
+          - textbox "Afmarkanir töflunúmer 27"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.Company.Get Sýna fleiri valkosti Lýsing Sækir minnisfærslur sem gilda fyrir fyrirtækið. Afmarkanir töflunúmer 10077893 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.Company.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.Company.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sækir minnisfærslur sem gilda fyrir fyrirtækið.":
+          - textbox "Lýsing Sækir minnisfærslur sem gilda fyrir fyrirtækið."
+        - gridcell "Afmarkanir töflunúmer 10077893":
+          - textbox "Afmarkanir töflunúmer 10077893"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.Company.List Sýna fleiri valkosti Lýsing Skráir minnisfærslur fyrirtækis, aðeins auðkenni og lýsingu. Afmarkanir töflunúmer 10077893 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.Company.List":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.Company.List"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Skráir minnisfærslur fyrirtækis, aðeins auðkenni og lýsingu.":
+          - textbox "Lýsing Skráir minnisfærslur fyrirtækis, aðeins auðkenni og lýsingu."
+        - gridcell "Afmarkanir töflunúmer 10077893":
+          - textbox "Afmarkanir töflunúmer 10077893"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.Company.Set Sýna fleiri valkosti Lýsing Setur inn eða uppfærir minnisfærslur fyrirtækis. Afmarkanir töflunúmer 10077893 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.Company.Set":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.Company.Set"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Setur inn eða uppfærir minnisfærslur fyrirtækis.":
+          - textbox "Lýsing Setur inn eða uppfærir minnisfærslur fyrirtækis."
+        - gridcell "Afmarkanir töflunúmer 10077893":
+          - textbox "Afmarkanir töflunúmer 10077893"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.User.Get Sýna fleiri valkosti Lýsing Sækir minnisfærslur sem gilda fyrir notandann. Afmarkanir töflunúmer 10077894 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.User.Get":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.User.Get"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sækir minnisfærslur sem gilda fyrir notandann.":
+          - textbox "Lýsing Sækir minnisfærslur sem gilda fyrir notandann."
+        - gridcell "Afmarkanir töflunúmer 10077894":
+          - textbox "Afmarkanir töflunúmer 10077894"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.User.List Sýna fleiri valkosti Lýsing Skráir minnisfærslur notanda, aðeins auðkenni og lýsingu. Afmarkanir töflunúmer 10077894 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.User.List":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.User.List"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Skráir minnisfærslur notanda, aðeins auðkenni og lýsingu.":
+          - textbox "Lýsing Skráir minnisfærslur notanda, aðeins auðkenni og lýsingu."
+        - gridcell "Afmarkanir töflunúmer 10077894":
+          - textbox "Afmarkanir töflunúmer 10077894"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Memory.User.Set Sýna fleiri valkosti Lýsing Setur inn eða uppfærir minnisfærslur notanda. Afmarkanir töflunúmer 10077894 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Memory.User.Set":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Memory.User.Set"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Setur inn eða uppfærir minnisfærslur notanda.":
+          - textbox "Lýsing Setur inn eða uppfærir minnisfærslur notanda."
+        - gridcell "Afmarkanir töflunúmer 10077894":
+          - textbox "Afmarkanir töflunúmer 10077894"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesCreditMemo Sýna fleiri valkosti Lýsing Stofnar sölukreditreikninga út frá áætlunarlínum verkefnis. Afmarkanir töflunúmer 1003 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesCreditMemo":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesCreditMemo"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Stofnar sölukreditreikninga út frá áætlunarlínum verkefnis.":
+          - textbox "Lýsing Stofnar sölukreditreikninga út frá áætlunarlínum verkefnis."
+        - gridcell "Afmarkanir töflunúmer 1003":
+          - textbox "Afmarkanir töflunúmer 1003"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesInvoice Sýna fleiri valkosti Lýsing Stofnar sölureikninga út frá reikningshæfum áætlunarlínum verkefnis. Afmarkanir töflunúmer 1003 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesInvoice":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Project.Ledger.CreateSalesInvoice"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Stofnar sölureikninga út frá reikningshæfum áætlunarlínum verkefnis.":
+          - textbox "Lýsing Stofnar sölureikninga út frá reikningshæfum áætlunarlínum verkefnis."
+        - gridcell "Afmarkanir töflunúmer 1003":
+          - textbox "Afmarkanir töflunúmer 1003"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Check Sýna fleiri valkosti Lýsing Sannreynir keyrslu verkefnafærslubókar og skilar stöðu um hvort hún sé tilbúin. Afmarkanir töflunúmer 237 Stefna Útsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Check":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Check"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Sannreynir keyrslu verkefnafærslubókar og skilar stöðu um hvort hún sé tilbúin.":
+          - textbox "Lýsing Sannreynir keyrslu verkefnafærslubókar og skilar stöðu um hvort hún sé tilbúin."
+        - gridcell "Afmarkanir töflunúmer 237":
+          - textbox "Afmarkanir töflunúmer 237"
+        - gridcell "Stefna Útsent":
+          - textbox "Stefna Útsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Create Sýna fleiri valkosti Lýsing Bætir línum verkefnafærslubókar við fyrirliggjandi keyrslu. Án lína eru tómar línur settar inn með sjálfgildum Business Central. Afmarkanir töflunúmer 237 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Create":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Create"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Bætir línum verkefnafærslubókar við fyrirliggjandi keyrslu. Án lína eru tómar línur settar inn með sjálfgildum Business Central.":
+          - textbox "Lýsing Bætir línum verkefnafærslubókar við fyrirliggjandi keyrslu. Án lína eru tómar línur settar inn með sjálfgildum Business Central."
+        - gridcell "Afmarkanir töflunúmer 237":
+          - textbox "Afmarkanir töflunúmer 237"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Post Sýna fleiri valkosti Lýsing Bókar keyrslu verkefnafærslubókar og skilar tölum um bókunina. Afmarkanir töflunúmer 237 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Post":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Post"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Bókar keyrslu verkefnafærslubókar og skilar tölum um bókunina.":
+          - textbox "Lýsing Bókar keyrslu verkefnafærslubókar og skilar tölum um bókunina."
+        - gridcell "Afmarkanir töflunúmer 237":
+          - textbox "Afmarkanir töflunúmer 237"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.PreviewPost Sýna fleiri valkosti Lýsing Hermir bókun keyrslu verkefnafærslubókar og skilar færslum sem mynduðust (Job Ledger Entry, Item Ledger Entry og G/L Entry þar sem við á) án þess að vista breytingar. Afmarkanir töflunúmer 237 Stefna Báðar leiðir":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.PreviewPost":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.PreviewPost"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Hermir bókun keyrslu verkefnafærslubókar og skilar færslum sem mynduðust (Job Ledger Entry, Item Ledger Entry og G/L Entry þar sem við á) án þess að vista breytingar.":
+          - textbox "Lýsing Hermir bókun keyrslu verkefnafærslubókar og skilar færslum sem mynduðust (Job Ledger Entry, Item Ledger Entry og G/L Entry þar sem við á) án þess að vista breytingar."
+        - gridcell "Afmarkanir töflunúmer 237":
+          - textbox "Afmarkanir töflunúmer 237"
+        - gridcell "Stefna Báðar leiðir":
+          - textbox "Stefna Báðar leiðir"
+      - row "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Update Sýna fleiri valkosti Lýsing Eyðir völdum línum verkefnafærslubókar úr einni fyrirliggjandi keyrslu og endurnúmerar skjöl hennar ef óskað er. Afmarkanir töflunúmer 237 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Update":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Projects.ProjectJournal.Update"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Eyðir völdum línum verkefnafærslubókar úr einni fyrirliggjandi keyrslu og endurnúmerar skjöl hennar ef óskað er.":
+          - textbox "Lýsing Eyðir völdum línum verkefnafærslubókar úr einni fyrirliggjandi keyrslu og endurnúmerar skjöl hennar ef óskað er."
+        - gridcell "Afmarkanir töflunúmer 237":
+          - textbox "Afmarkanir töflunúmer 237"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Purchase.BlanketOrder.MakeOrder Sýna fleiri valkosti Lýsing Breytir standandi innkaupapöntun í innkaupapöntun, eins og aðgerðin Make Order á standandi pöntuninni. Afmarkanir töflunúmer 38 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Purchase.BlanketOrder.MakeOrder":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Purchase.BlanketOrder.MakeOrder"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Breytir standandi innkaupapöntun í innkaupapöntun, eins og aðgerðin Make Order á standandi pöntuninni.":
+          - textbox "Lýsing Breytir standandi innkaupapöntun í innkaupapöntun, eins og aðgerðin Make Order á standandi pöntuninni."
+        - gridcell "Afmarkanir töflunúmer 38":
+          - textbox "Afmarkanir töflunúmer 38"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Create Sýna fleiri valkosti Lýsing Stofnar nýtt innkaupaskjal fyrir tilgreindan lánardrottin og skjalategund, með valfrjálsum línum. Afmarkanir töflunúmer 38 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Create":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Create"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Stofnar nýtt innkaupaskjal fyrir tilgreindan lánardrottin og skjalategund, með valfrjálsum línum.":
+          - textbox "Lýsing Stofnar nýtt innkaupaskjal fyrir tilgreindan lánardrottin og skjalategund, með valfrjálsum línum."
+        - gridcell "Afmarkanir töflunúmer 38":
+          - textbox "Afmarkanir töflunúmer 38"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Post Sýna fleiri valkosti Lýsing Bókar innkaupaskjal og skilar upplýsingum um öll bókuð skjöl sem urðu til. Afmarkanir töflunúmer 38 Stefna Innsent":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Post":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Purchase.Document.Post"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Bókar innkaupaskjal og skilar upplýsingum um öll bókuð skjöl sem urðu til.":
+          - textbox "Lýsing Bókar innkaupaskjal og skilar upplýsingum um öll bókuð skjöl sem urðu til."
+        - gridcell "Afmarkanir töflunúmer 38":
+          - textbox "Afmarkanir töflunúmer 38"
+        - gridcell "Stefna Innsent":
+          - textbox "Stefna Innsent"
+      - row "Heiti, raðað í pöntunina Hækkandi Purchase.Document.PreviewPost Sýna fleiri valkosti Lýsing Hermir bókun innkaupaskjals og skilar færslum sem mynduðust í fjárhag, VSK, vöru, verðmæti og lánardrottnabók án þess að vista breytingar. Afmarkanir töflunúmer 38 Stefna Báðar leiðir":
+        - rowheader
+        - gridcell "Heiti, raðað í pöntunina Hækkandi Purchase.Document.PreviewPost":
+          - textbox "Heiti, raðað í pöntunina Hækkandi Purchase.Document.PreviewPost"
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell "Lýsing Hermir bókun innkaupaskjals og skilar færslum sem mynduðust í fjárhag, VSK, vöru, verðmæti og lánardrottnabók án þess að vista breytingar.":
+          - textbox "Lýsing Hermir bókun innkaupaskjals og skilar færslum sem mynduðust í fjárhag, VSK, vöru, verðmæti og lánardrottnabók án þess að vista breytingar."
+        - gridcell "Afmarkanir töflunúmer 38":
+          - textbox "Afmarkanir töflunúmer 38"
+        - gridcell "Stefna Báðar leiðir":
+          - textbox "Stefna Báðar leiðir"
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+      - row "Sýna fleiri valkosti":
+        - rowheader
+        - gridcell
+        - gridcell "Sýna fleiri valkosti":
+          - button "Sýna fleiri valkosti"
+        - gridcell
+        - gridcell
+        - gridcell
+- paragraph: Heiti, raðað í pöntunina Hækkandi
+- text: Notaðu hægri og vinstri örvalyklana til að stilla stærðina. Notaðu Escape-lykilinn til að afturkalla eða Enter-lykilinn til að staðfesta.
+- paragraph: Listi með titilinn „Skilaboðategundir Bifröst - Inventory.Tracking.Get“ hefur nú 105 atriði

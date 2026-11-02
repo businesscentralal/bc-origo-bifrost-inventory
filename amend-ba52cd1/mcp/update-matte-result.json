@@ -1,0 +1,10 @@
+{
+  "startedAt": "2026-11-02T02:09:34.093Z",
+  "finishedAt": "2026-11-02T02:09:34.309Z",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"company\": \"CRONUS International Ltd.\",\n  \"messageType\": \"Inventory.Attribute.Update\",\n  \"status\": \"Success\",\n  \"itemNo\": \"LI152-AM1102\",\n  \"results\": [\n    {\n      \"attributeName\": \"LI152 Amend Verification\",\n      \"before\": \"Gloss\",\n      \"after\": \"Matte\",\n      \"attributeId\": 98,\n      \"valueId\": 232\n    }\n  ]\n}"
+    }
+  ]
+}

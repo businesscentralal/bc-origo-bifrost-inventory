@@ -1,0 +1,719 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "containerId": "f0133160e482",
+  "executed": 118,
+  "passed": 118,
+  "failed": 0,
+  "skipped": 0,
+  "fixture": "Owned Inventory Setup row switched off through supported Web Client; no customer/shared fixture; restore verified separately",
+  "rows": [
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    }
+  ]
+}

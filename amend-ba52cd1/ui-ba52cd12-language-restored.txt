@@ -1,0 +1,80 @@
+- form "Inventory Setup":
+  - main:
+    - button "Go to the previous document of the same type"
+    - button "Back"
+    - button "Make changes on the page"
+    - button "Share this page with other users or apps"
+    - button "Create a new entry."
+    - button "Delete the information"
+    - button "Not bookmarked": 
+    - button "This page will close in this window and it will open in a pop-up window.": 
+    - button "Toggle wide layout": 
+    - text: Inventory Setup
+    - menubar
+    - button "Domains" [expanded]:
+      - heading "Domains" [level=2]
+    - button "Attributes"
+    - checkbox "Attributes" [checked] [disabled]
+    - button "Transfer Orders"
+    - checkbox "Transfer Orders" [checked] [disabled]
+    - button "Assembly"
+    - checkbox "Assembly" [checked] [disabled]
+    - button "Reservations"
+    - checkbox "Reservations" [disabled]
+    - button "Item Tracking"
+    - checkbox "Item Tracking" [checked] [disabled]
+    - button "Physical Inventory"
+    - checkbox "Physical Inventory" [disabled]
+    - button "Costing"
+    - checkbox "Costing" [checked] [disabled]
+    - button "Reclassification"
+    - checkbox "Reclassification" [checked] [disabled]
+    - button "Item Application"
+    - checkbox "Item Application" [checked] [disabled]
+    - button "Inventory Period"
+    - checkbox "Inventory Period" [disabled]
+    - button "Item Price"
+    - checkbox "Item Price" [disabled]
+    - button "Item Reference"
+    - checkbox "Item Reference" [checked] [disabled]
+    - button "Availability"
+    - checkbox "Availability" [checked] [disabled]
+    - button "Item Charge"
+    - checkbox "Item Charge" [checked] [disabled]
+    - button "Item Category"
+    - checkbox "Item Category" [checked] [disabled]
+    - button "Go to the next document of the same type"
+- dialog "My Settings - GUNNAR":
+  - main:
+    - heading "My Settings - GUNNAR" [level=1]
+    - button ""
+    - button ""
+    - button "Role"
+    - button "Review or update the value for Role"
+    - textbox "Role Business Manager"
+    - button "Company"
+    - button "Review or update the value for Company"
+    - textbox "Company CRONUS International Ltd."
+    - button "Work Date"
+    - button "Open the date picker for Work Date"
+    - combobox "Work Date": 10/1/2026
+    - button "Region"
+    - button "Review or update the value for Region"
+    - textbox "Region English (United States)"
+    - button "Language"
+    - button "Review or update the value for Language"
+    - textbox "Language English (United States)"
+    - button "Time Zone"
+    - button "Review or update the value for Time Zone"
+    - textbox "Time Zone (UTC) Coordinated Universal Time"
+    - button "Notifications"
+    - button "Notifications Change when I receive notifications.": Change when I receive notifications.
+    - button "Teaching Tips"
+    - checkbox "Teaching Tips" [checked]
+    - button "Legacy Action Bar"
+    - checkbox "Legacy Action Bar"
+    - heading "Security" [level=2]
+    - textbox "Security Your last sign in was on 11/02/26 02:14 AM."
+    - button "OK"
+    - button "Cancel"
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.

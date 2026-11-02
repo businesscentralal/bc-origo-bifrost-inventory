@@ -1,0 +1,894 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "types": 59,
+  "comparisons": 177,
+  "passed": 177,
+  "failed": 0,
+  "rows": [
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AdjustCost.Run",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Assembly.UndoPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Create",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.RefreshLines",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Reopen",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Create",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Attribute.Update",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AttributeDefinition.Create",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.AvailabilityByPeriod.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Cost.Update",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.CostToGL.Test",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Reapply",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Unapply",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCategory.Set",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.ItemReference.Resolve",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.OrderTracking.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Calculate",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.PreviewPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Record",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.PhysInventory.RecordCount",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Price.Update",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Check",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reclassification.PreviewPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.AutoReserve",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Cancel",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Create",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Reservation.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Calculate",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Revaluation.PreviewPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Assign",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Delete",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Tracking.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TrackingAvailability.Get",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoReceipt",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.Transfer.UndoShipment",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Create",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.PreviewPost",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Release",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Reopen",
+      "field": "keywords",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "field": "description",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "field": "selectionDescription",
+      "translated": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Statistics",
+      "field": "keywords",
+      "translated": true
+    }
+  ]
+}

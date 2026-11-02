@@ -1,0 +1,301 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "codeunits": 49,
+  "expectedMethods": 465,
+  "rows": [
+    {
+      "codeunit": 96901,
+      "name": "Item AttrDef Tests ori",
+      "tests": 2,
+      "source": "test/test/ItemAttrDefTestsori.Codeunit.al"
+    },
+    {
+      "codeunit": 96900,
+      "name": "Item Attribute Tests ori",
+      "tests": 10,
+      "source": "test/test/ItemAttributeTestsori.Codeunit.al"
+    },
+    {
+      "codeunit": 96953,
+      "name": "Avail. By Period Perm",
+      "tests": 1,
+      "source": "test/test/Inventory/AvailByPeriodPerm.Codeunit.al"
+    },
+    {
+      "codeunit": 96952,
+      "name": "Avail. By Period Tests",
+      "tests": 13,
+      "source": "test/test/Inventory/AvailByPeriodTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96971,
+      "name": "Inv. Catalogue Quality Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/InvCatalogueQualityTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96970,
+      "name": "Inv. Contract Parity Tests ori",
+      "tests": 17,
+      "source": "test/test/Inventory/InvContractParityTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96921,
+      "name": "Inventory Contract Batch Tests",
+      "tests": 19,
+      "source": "test/test/Inventory/InventoryContractBatchTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96933,
+      "name": "Inventory Cost Perm. Tests",
+      "tests": 7,
+      "source": "test/test/Inventory/InventoryCostPermTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96936,
+      "name": "Inventory Cost Read Tests",
+      "tests": 13,
+      "source": "test/test/Inventory/InventoryCostReadTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96937,
+      "name": "Inventory Cost Write Tests",
+      "tests": 14,
+      "source": "test/test/Inventory/InventoryCostWriteTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96963,
+      "name": "Inventory Domain Usage Tests",
+      "tests": 44,
+      "source": "test/test/Inventory/InventoryDomainUsageTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96932,
+      "name": "Inventory Item Quantity Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/InventoryItemQuantityTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96930,
+      "name": "Inventory Item Refusal Tests",
+      "tests": 11,
+      "source": "test/test/Inventory/InventoryItemRefusalTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96931,
+      "name": "Inventory Item Subject Tests",
+      "tests": 4,
+      "source": "test/test/Inventory/InventoryItemSubjectTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96945,
+      "name": "Inventory Physical Perm Tests",
+      "tests": 3,
+      "source": "test/test/Inventory/InventoryPhysicalPermTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96944,
+      "name": "Inventory Physical Tests",
+      "tests": 22,
+      "source": "test/test/Inventory/InventoryPhysicalTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96939,
+      "name": "Inventory Price Write Tests",
+      "tests": 20,
+      "source": "test/test/Inventory/InventoryPriceWriteTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96941,
+      "name": "Inventory Revaluation Tests",
+      "tests": 10,
+      "source": "test/test/Inventory/InventoryRevaluationTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96927,
+      "name": "Inventory Tracking Read Tests",
+      "tests": 39,
+      "source": "test/test/Inventory/InventoryTrackingReadTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96922,
+      "name": "Inv. Lookup Contract Tests",
+      "tests": 5,
+      "source": "test/test/Inventory/InvLookupContractTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96923,
+      "name": "Inv. Lookup Format Tests",
+      "tests": 22,
+      "source": "test/test/Inventory/InvLookupFormatTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96919,
+      "name": "Inv. Posting Gate Grant Tests",
+      "tests": 6,
+      "source": "test/test/Inventory/InvPostingGateGrantTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96918,
+      "name": "Inv. Posting Gate Tests",
+      "tests": 10,
+      "source": "test/test/Inventory/InvPostingGateTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96972,
+      "name": "Inv. Registration Tests ori",
+      "tests": 1,
+      "source": "test/test/Inventory/InvRegistrationTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96957,
+      "name": "Item Category Perm",
+      "tests": 2,
+      "source": "test/test/Inventory/ItemCategoryPerm.Codeunit.al"
+    },
+    {
+      "codeunit": 96956,
+      "name": "Item Category Tests",
+      "tests": 25,
+      "source": "test/test/Inventory/ItemCategoryTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96955,
+      "name": "Item Charge Perm",
+      "tests": 2,
+      "source": "test/test/Inventory/ItemChargePerm.Codeunit.al"
+    },
+    {
+      "codeunit": 96954,
+      "name": "Item Charge Tests",
+      "tests": 20,
+      "source": "test/test/Inventory/ItemChargeTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96951,
+      "name": "Item Ref. Resolve Perm",
+      "tests": 1,
+      "source": "test/test/Inventory/ItemRefResolvePerm.Codeunit.al"
+    },
+    {
+      "codeunit": 96950,
+      "name": "Item Ref. Resolve Tests",
+      "tests": 15,
+      "source": "test/test/Inventory/ItemRefResolveTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96962,
+      "name": "Order Tracking Get Tests",
+      "tests": 15,
+      "source": "test/test/Inventory/OrderTrackingGetTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96976,
+      "name": "Reclass Check Perm Tests ori",
+      "tests": 1,
+      "source": "test/test/Inventory/ReclassCheckPermTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96977,
+      "name": "Reclass Preview Tests ori",
+      "tests": 5,
+      "source": "test/test/Inventory/ReclassPreviewTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96946,
+      "name": "Reservation Create Tests",
+      "tests": 16,
+      "source": "test/test/Inventory/ReservationCreateTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96959,
+      "name": "Reserv. AutoReserve Perm",
+      "tests": 2,
+      "source": "test/test/Inventory/ReservAutoReservePerm.Codeunit.al"
+    },
+    {
+      "codeunit": 96958,
+      "name": "Reserv. AutoReserve Tests",
+      "tests": 17,
+      "source": "test/test/Inventory/ReservAutoReserveTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96905,
+      "name": "Asm. Doc Prev. Post Tests",
+      "tests": 5,
+      "source": "test/test/Inventory/AssemblyOrder/AsmDocPrevPostTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96906,
+      "name": "Asm. Order RefreshLines Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/AssemblyOrder/AsmOrderRefreshLinesTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96907,
+      "name": "Asm. Order Statistics Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/AssemblyOrder/AsmOrderStatisticsTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96908,
+      "name": "Assembly Order Create Tests",
+      "tests": 3,
+      "source": "test/test/Inventory/AssemblyOrder/AssemblyOrderCreateTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96909,
+      "name": "Assembly Order Post Tests",
+      "tests": 6,
+      "source": "test/test/Inventory/AssemblyOrder/AssemblyOrderPostTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96910,
+      "name": "Assembly Order Release Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/AssemblyOrder/AssemblyOrderReleaseTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96911,
+      "name": "Assembly Order Reopen Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/AssemblyOrder/AssemblyOrderReopenTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96912,
+      "name": "Transfer Doc Prev. Post Tests",
+      "tests": 4,
+      "source": "test/test/Inventory/TransferOrder/TransferDocPrevPostTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96913,
+      "name": "Transfer Order Create Tests",
+      "tests": 7,
+      "source": "test/test/Inventory/TransferOrder/TransferOrderCreateTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96914,
+      "name": "Transfer Order Post Tests",
+      "tests": 7,
+      "source": "test/test/Inventory/TransferOrder/TransferOrderPostTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96915,
+      "name": "Transfer Order Release Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/TransferOrder/TransferOrderReleaseTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96916,
+      "name": "Transfer Order Reopen Tests",
+      "tests": 2,
+      "source": "test/test/Inventory/TransferOrder/TransferOrderReopenTests.Codeunit.al"
+    },
+    {
+      "codeunit": 96917,
+      "name": "Transfer Order Stats. Tests",
+      "tests": 3,
+      "source": "test/test/Inventory/TransferOrder/TransferOrderStatsTests.Codeunit.al"
+    }
+  ]
+}

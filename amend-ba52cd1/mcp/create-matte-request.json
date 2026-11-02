@@ -1,0 +1,13 @@
+{
+  "type": "Inventory.Attribute.Create",
+  "data": {
+    "itemNo": "LI152-AM1102",
+    "attributes": [
+      {
+        "name": "LI152 Amend Verification",
+        "value": "Matte"
+      }
+    ]
+  },
+  "lcid": 1033
+}

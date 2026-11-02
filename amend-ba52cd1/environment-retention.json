@@ -1,0 +1,16 @@
+{
+  "containerId": "f0133160e482",
+  "containerName": "worker9-inventory152-20261102-w1",
+  "owner": "worker-9",
+  "state": "Stopped",
+  "candidateSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "recordedAt": "2026-11-02T02:21:50.647048+00:00",
+  "fixturesCleaned": true,
+  "retainedFor": "Existing issue152 amendment and final UAT/closure; stop verified, deletion pending final acceptance",
+  "cleanupEvidence": [
+    "fixture-cleanup-counts.json",
+    "setup-cleanup.json",
+    "language-cleanup.json",
+    "coded-tracking-fixtures.json"
+  ]
+}

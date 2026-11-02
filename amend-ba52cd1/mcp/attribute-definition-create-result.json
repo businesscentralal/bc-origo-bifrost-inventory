@@ -1,0 +1,10 @@
+{
+  "startedAt": "2026-11-02T02:09:30.565Z",
+  "finishedAt": "2026-11-02T02:09:31.068Z",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"company\": \"CRONUS International Ltd.\",\n  \"messageType\": \"Inventory.AttributeDefinition.Create\",\n  \"status\": \"Success\",\n  \"attributeId\": 98,\n  \"attributeName\": \"LI152 Amend Verification\",\n  \"type\": \"Option\",\n  \"createdValues\": [\n    {\n      \"valueId\": 232,\n      \"value\": \"Matte\"\n    },\n    {\n      \"valueId\": 233,\n      \"value\": \"Gloss\"\n    }\n  ]\n}"
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "containerId": "f0133160e482",
+  "executed": 36,
+  "passed": 36,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "setup": "Fresh own Service item and two owned tracking specifications created by shipping MCP. Missing-parameter/native-selection cases use deliberately incomplete requests and never select existing customer records. All domains enabled through supported Web Client.",
+  "cleanup": "Both own tracking specifications deleted through MCP; repeated delete returned RecordNotFound. Item/attribute and setup restoration recorded separately.",
+  "rows": [
+    {
+      "scenario": "reclass-missing",
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-item-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-quantity-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-lot-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-entry-missing",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "apply-entry-missing",
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "apply-target-missing",
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "unapply-entry-missing",
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "assembly-undo-doc-missing",
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "receipt-undo-doc-missing",
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "shipment-undo-doc-missing",
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1033,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "price-native-selection",
+      "type": "Inventory.Price.Update",
+      "lcid": 1033,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "cost-native-selection",
+      "type": "Inventory.Cost.Update",
+      "lcid": 1033,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "revaluation-native-selection",
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1033,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "physical-native-selection",
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1033,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "reclass-missing",
+      "type": "Inventory.Reclassification.Check",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-item-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-quantity-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-lot-missing",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "tracking-entry-missing",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "apply-entry-missing",
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "apply-target-missing",
+      "type": "Inventory.ItemApplication.Reapply",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "unapply-entry-missing",
+      "type": "Inventory.ItemApplication.Unapply",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "assembly-undo-doc-missing",
+      "type": "Inventory.Assembly.UndoPost",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "receipt-undo-doc-missing",
+      "type": "Inventory.Transfer.UndoReceipt",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "shipment-undo-doc-missing",
+      "type": "Inventory.Transfer.UndoShipment",
+      "lcid": 1039,
+      "expected": "MissingParameter",
+      "actual": "MissingParameter",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "price-native-selection",
+      "type": "Inventory.Price.Update",
+      "lcid": 1039,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "cost-native-selection",
+      "type": "Inventory.Cost.Update",
+      "lcid": 1039,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "revaluation-native-selection",
+      "type": "Inventory.Revaluation.Post",
+      "lcid": 1039,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "physical-native-selection",
+      "type": "Inventory.PhysInventory.Post",
+      "lcid": 1039,
+      "expected": "BusinessCentralError",
+      "actual": "BusinessCentralError",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "owned-tracking-created",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1033,
+      "passed": true
+    },
+    {
+      "scenario": "owned-tracking-deleted",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1033,
+      "passed": true
+    },
+    {
+      "scenario": "deleted-tracking-notfound",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1033,
+      "expected": "RecordNotFound",
+      "actual": "RecordNotFound",
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "owned-tracking-created",
+      "type": "Inventory.Tracking.Assign",
+      "lcid": 1039,
+      "passed": true
+    },
+    {
+      "scenario": "owned-tracking-deleted",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1039,
+      "passed": true
+    },
+    {
+      "scenario": "deleted-tracking-notfound",
+      "type": "Inventory.Tracking.Delete",
+      "lcid": 1039,
+      "expected": "RecordNotFound",
+      "actual": "RecordNotFound",
+      "passed": true,
+      "problems": []
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "containerId": "f0133160e482",
+  "touchedMessageTypes": [
+    "Inventory.AdjustCost.Run",
+    "Inventory.Assembly.UndoPost",
+    "Inventory.AssemblyOrder.Create",
+    "Inventory.AssemblyOrder.Post",
+    "Inventory.AssemblyOrder.PreviewPost",
+    "Inventory.AssemblyOrder.RefreshLines",
+    "Inventory.AssemblyOrder.Release",
+    "Inventory.AssemblyOrder.Reopen",
+    "Inventory.AssemblyOrder.Statistics",
+    "Inventory.Attribute.Create",
+    "Inventory.Attribute.Get",
+    "Inventory.Attribute.Update",
+    "Inventory.AttributeDefinition.Create",
+    "Inventory.AvailabilityByPeriod.Get",
+    "Inventory.Cost.Get",
+    "Inventory.Cost.Update",
+    "Inventory.CostToGL.Post",
+    "Inventory.CostToGL.Test",
+    "Inventory.ItemApplication.Get",
+    "Inventory.ItemApplication.Reapply",
+    "Inventory.ItemApplication.Unapply",
+    "Inventory.ItemCategory.Get",
+    "Inventory.ItemCategory.Set",
+    "Inventory.ItemCharge.Assign",
+    "Inventory.ItemCharge.Get",
+    "Inventory.ItemReference.Resolve",
+    "Inventory.OrderTracking.Get",
+    "Inventory.Period.Close",
+    "Inventory.Period.Get",
+    "Inventory.Period.Reopen",
+    "Inventory.PhysInventory.Calculate",
+    "Inventory.PhysInventory.Check",
+    "Inventory.PhysInventory.Post",
+    "Inventory.PhysInventory.PreviewPost",
+    "Inventory.PhysInventory.Record",
+    "Inventory.PhysInventory.RecordCount",
+    "Inventory.Price.Update",
+    "Inventory.Reclassification.Check",
+    "Inventory.Reclassification.Post",
+    "Inventory.Reclassification.PreviewPost",
+    "Inventory.Reservation.AutoReserve",
+    "Inventory.Reservation.Cancel",
+    "Inventory.Reservation.Create",
+    "Inventory.Reservation.Get",
+    "Inventory.Revaluation.Calculate",
+    "Inventory.Revaluation.Post",
+    "Inventory.Revaluation.PreviewPost",
+    "Inventory.Tracking.Assign",
+    "Inventory.Tracking.Delete",
+    "Inventory.Tracking.Get",
+    "Inventory.TrackingAvailability.Get",
+    "Inventory.Transfer.UndoReceipt",
+    "Inventory.Transfer.UndoShipment",
+    "Inventory.TransferOrder.Create",
+    "Inventory.TransferOrder.Post",
+    "Inventory.TransferOrder.PreviewPost",
+    "Inventory.TransferOrder.Release",
+    "Inventory.TransferOrder.Reopen",
+    "Inventory.TransferOrder.Statistics"
+  ],
+  "executed": 283,
+  "passed": 283,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "scenarios": {
+    "fullHelp1033And1039": 118,
+    "disabledDomains1033And1039": 118,
+    "protectedSetupForceFalseTrue": 2,
+    "selfSeededAttributeExamplesAndRefusals": 9,
+    "codedRuntimeErrorsAndOwnedTracking1033And1039": 36
+  },
+  "setup": "Own container with UI-controlled Inventory setup; newly created Service item LI152-AM1102, Option attribute98 and values232/233. Two sequential tracking specifications created and deleted through shipping MCP. No customer/shared business fixtures.",
+  "cleanup": {
+    "item": "API DELETE204, GET404",
+    "attribute": "Selected own name deleted through UI; exact-name search empty",
+    "readOnlyRowCounts": [
+      {
+        "table": "Item",
+        "rows": 0
+      },
+      {
+        "table": "Attribute",
+        "rows": 0
+      },
+      {
+        "table": "Attribute Values",
+        "rows": 0
+      },
+      {
+        "table": "Attribute Mapping",
+        "rows": 0
+      }
+    ],
+    "tracking": "Both sequential task-created specifications deleted through MCP; repeat delete returned RecordNotFound",
+    "setup": "All15baseline flags restored and reloaded via supported UI",
+    "language": "UI language restored to1033"
+  }
+}

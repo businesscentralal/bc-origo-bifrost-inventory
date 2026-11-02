@@ -1,0 +1,37 @@
+[
+  {
+    "ac": "AC1",
+    "currentSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+    "status": "Developer verified; independent verification and postmerge UAT pending",
+    "native": "Full465/465 includes catalogue label/runtime guards",
+    "mcp": "118fullhelp calls,177separate bilingual catalogue-field comparisons",
+    "ui": "Catalogue description/direction English and Icelandic"
+  },
+  {
+    "ac": "AC2",
+    "currentSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+    "status": "Implemented and developer verified; Grok amendment reassessment pending",
+    "details": [
+      "50explicit runtime refusals use typed codes aligned with help;4new runtime regression tests",
+      "Canonical attribute names/nested overwrite/option values and typed subjects",
+      "Published Statistics Inbound/status_ compatibility and physical aliases preserved",
+      "Actual Read-Only/Full Access permission captions and Item Posting Gate caption; no internal implementation tokens in help"
+    ],
+    "native": "465/465; four new runtime regression tests passed",
+    "mcp": "118fullhelp,9self-created attribute scenarios,36runtime-code/tracking scenarios"
+  },
+  {
+    "ac": "AC3",
+    "currentSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+    "status": "Developer verified; independent verification and postmerge UAT pending",
+    "details": "Usage-based defaults retained; refusals direct administrators to supported Inventory Setup and Inv. Posting Gate; no generic data bypass",
+    "mcp": "118disabled-domain scenarios plus2protected-setup refusals",
+    "cleanup": "15baseline flags restored and reloaded; own fixtures absent"
+  },
+  {
+    "ac": "AC4",
+    "currentSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+    "status": "XLF/CHANGELOG and developer bilingual checks passed; Claude exact-head verification and eventual UAT pending",
+    "details": "976is-IS targets synchronized, UTF8BOM preserved, imperative/caption grammar corrected, house changelog heading; CodeCop/UICop/AppSourceCop and released28.3.1.81 compatibility0errors0warnings"
+  }
+]

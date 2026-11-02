@@ -1,0 +1,53 @@
+- form "Item Attributes":
+  - button "Skip to main content"
+  - navigation "Main navigation":
+    - menubar:
+      - menuitem "CRONUS International Ltd.":
+        - heading "CRONUS International Ltd." [level=1]
+      - menuitem "Finance"
+      - menuitem "Cash Management"
+      - menuitem "Sales"
+      - menuitem "Purchasing"
+      - menuitem "Shopify"
+      - menuitem "All Reports"
+      - menuitem "Explore all business features for my role in Business Central"
+  - menubar:
+    - heading "Item Attributes:" [level=2]
+    - 'button "Item Attributes: All"': All
+    - menuitem "LI152 Amend Verification Clear search":
+      - searchbox "Search Item Attributes": LI152 Amend Verification
+      - button "Clear search"
+    - menuitem "Enter analysis mode"
+    - menuitem "New"
+    - menuitem "Delete" [disabled]
+    - menuitem "Edit List"
+    - menuitem "Item Attribute Values" [disabled]
+    - menuitem "Translations" [disabled]
+    - menuitem "Share": 
+    - menuitemcheckbox "Toggle filter": 
+    - menuitem "List layout selected"
+    - menuitemcheckbox "Toggle wide layout": 
+    - menuitemcheckbox "Not bookmarked": 
+  - main:
+    - grid "Item Attributes":
+      - rowgroup:
+        - row "Searched Name Open menu for Name More Options Searched Type Open menu for Type Values Open menu for Values Blocked Open menu for Blocked":
+          - columnheader "Searched Name Open menu for Name":
+            - img "Searched"
+            - button "Name"
+            - button "Open menu for Name"
+          - columnheader "More Options"
+          - columnheader "Searched Type Open menu for Type":
+            - img "Searched"
+            - button "Type"
+            - button "Open menu for Type"
+          - columnheader "Values Open menu for Values":
+            - text: Values
+            - button "Open menu for Values"
+          - columnheader "Blocked Open menu for Blocked":
+            - button "Blocked"
+            - button "Open menu for Blocked"
+      - text: (There is nothing to show in this view)
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.
+- paragraph: List with title "Item Attributes" now has 0 items
+- paragraph: No suggestions available for LI152 Amend Verification.

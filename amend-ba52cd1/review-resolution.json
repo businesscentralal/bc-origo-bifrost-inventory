@@ -1,0 +1,37 @@
+{
+  "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "review": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/175#pullrequestreview-5731279910",
+  "implementationCommits": [
+    "283ea53e2f45ba143ba53890d298605b3765fc5e",
+    "ba52cd12aaf18b3f5c78268846ddc09cf3bec927"
+  ],
+  "status": "Developer repairs and checks complete; Reviewer controls amendment clearance",
+  "firstAmendedCandidate": {
+    "sha": "283ea53e2f45ba143ba53890d298605b3765fc5e",
+    "executed": 465,
+    "passed": 463,
+    "failed": 2,
+    "skipped": 0,
+    "diagnosis": "Duplicate MissingParameter help entry violated existing uniqueness assertion; Icelandic assertion expected prior plural spelling. Consolidated help entry and updated exact spelling assertion without weakening guards."
+  },
+  "currentCandidate": {
+    "sha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+    "containerId": "f0133160e482",
+    "foundationVersion": "28.0.10.632",
+    "fullSuite": true,
+    "executed": 465,
+    "passed": 465,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "findings": {
+    "runtimeCodes": "Typed explicit error responses plus native/MCP regression proof",
+    "Icelandic": "Biddu and correct quoted caption grammar",
+    "permissionCaptions": "Read-Only/Full Access runtime captions",
+    "nativePostingCaption": "Item Posting Gate / Bókunarhlið vara",
+    "xlfBom": true,
+    "changelog": "House heading restored",
+    "container": "worker9-inventory152-20261102-w1 (f0133160e482)"
+  }
+}

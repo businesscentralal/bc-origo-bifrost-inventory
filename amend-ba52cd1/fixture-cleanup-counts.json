@@ -1,0 +1,24 @@
+{
+  "candidateSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "containerId": "f0133160e482",
+  "recordedAt": "2026-11-02T02:19:33.456Z",
+  "counts": [
+    {
+      "table": "Item",
+      "rows": 0
+    },
+    {
+      "table": "Attribute",
+      "rows": 0
+    },
+    {
+      "table": "Attribute Values",
+      "rows": 0
+    },
+    {
+      "table": "Attribute Mapping",
+      "rows": 0
+    }
+  ],
+  "query": "Read-only SELECT COUNT_BIG for exact owned item LI152-AM1102, attribute98, values232/233 and mappings; no SQL writes."
+}

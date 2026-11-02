@@ -1,0 +1,7 @@
+{
+  "type": "Inventory.Tracking.Delete",
+  "data": {
+    "entryNo": 0
+  },
+  "lcid": 1033
+}

@@ -1,0 +1,11 @@
+- row "Name LI152 Amend Verification Type Values Matte,Gloss Blocked" [selected]:
+  - gridcell "Name LI152 Amend Verification":
+    - button "Name LI152 Amend Verification": LI152 Amend Verification
+  - gridcell:
+    - button "Show more options"
+  - gridcell "Type":
+    - textbox "Type"
+  - gridcell "Values Matte,Gloss":
+    - button "Values Matte,Gloss": Matte,Gloss
+  - gridcell "Blocked":
+    - checkbox "Blocked" [disabled]

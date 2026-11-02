@@ -1,0 +1,53 @@
+- form "Inventory Setup":
+  - main:
+    - button "Go to the previous document of the same type"
+    - button "Back"
+    - button "Open the page in read-only mode" [pressed]
+    - button "Share this page with other users or apps"
+    - button "Create a new entry."
+    - button "Delete the information"
+    - text: Saved
+    - button "Not bookmarked": 
+    - button "This page will close in this window and it will open in a pop-up window.": 
+    - button "Toggle wide layout": 
+    - text: Inventory Setup
+    - menubar
+    - button "Domains" [expanded]:
+      - heading "Domains" [level=2]
+    - button "Attributes"
+    - checkbox "Attributes" [checked]
+    - button "Transfer Orders"
+    - checkbox "Transfer Orders" [checked]
+    - button "Assembly"
+    - checkbox "Assembly" [checked]
+    - button "Reservations"
+    - checkbox "Reservations" [checked]
+    - button "Item Tracking"
+    - checkbox "Item Tracking" [checked]
+    - button "Physical Inventory"
+    - checkbox "Physical Inventory" [checked]
+    - button "Costing"
+    - checkbox "Costing" [checked]
+    - button "Reclassification"
+    - checkbox "Reclassification" [checked]
+    - button "Item Application"
+    - checkbox "Item Application" [checked]
+    - button "Inventory Period"
+    - checkbox "Inventory Period" [checked]
+    - button "Item Price"
+    - checkbox "Item Price" [checked]
+    - button "Item Reference"
+    - checkbox "Item Reference" [checked]
+    - button "Availability"
+    - checkbox "Availability" [checked]
+    - button "Item Charge"
+    - checkbox "Item Charge" [checked]
+    - button "Item Category"
+    - checkbox "Item Category" [checked]
+    - button "Go to the next document of the same type"
+- paragraph: Attributes
+- paragraph: Specifies whether attribute message types are enabled for this company.
+- button "Show Help"
+- button "Hide tooltip"
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.
+- paragraph: Saved
