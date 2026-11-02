@@ -218,7 +218,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         Effect.Add('posts', false);
         Effect.Add('changes', 'Creates the item category, or changes the description of an existing one, and stores the listed attribute defaults on it. A value equal to the one inherited from a parent category removes the own row of the category for that attribute. Categories are never deleted or moved. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Full Access');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
@@ -342,7 +342,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         InventorySetup: Record "Inventory Setup ori";
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
         DomainDisabledErr: Label 'The Item Category domain is turned off for this company.', Comment = 'is-IS=Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if (not InventorySetup.ReadPermission()) or (not CanWriteTables()) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStep());
@@ -848,7 +848,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         exit(PermissionNextStepLbl);
     end;

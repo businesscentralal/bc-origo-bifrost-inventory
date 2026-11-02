@@ -154,7 +154,7 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         PartialWhenLbl: Label 'Only part of the quantity could be reserved. The partial reservation is rolled back. Nothing is written.', Comment = 'is-IS=Aðeins var hægt að taka hluta magnsins frá. Hlutafrátekningin er afturkölluð. Ekkert er skrifað.';
         PartialFixLbl: Label 'Read Inventory.Reservation.Get for what was reserved.', Comment = 'is-IS=Lestu Inventory.Reservation.Get til að sjá hvað er tekið frá.';
         PermissionWhenLbl: Label 'The caller cannot change reservation entries or read sales lines and items.', Comment = 'is-IS=Kallandinn getur ekki breytt frátekningarfærslum eða lesið sölulínur og vörur.';
-        PermissionFixLbl: Label 'Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -178,7 +178,7 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Creates reservation entries that tie the sales order line to supply that Business Central picks. The reservation is all or nothing: when only part of the requested quantity can be reserved, nothing is kept. Nothing is posted.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'Bifrost Full Access permission set');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', true);
         Effect.Add('posts', false);
@@ -283,9 +283,9 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
     var
         InventorySetup: Record "Inventory Setup ori";
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        PermissionNextStepLbl: Label 'Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
         DomainDisabledErr: Label 'The Reservations domain is turned off for this company.', Comment = 'is-IS=Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if not InventorySetup.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);

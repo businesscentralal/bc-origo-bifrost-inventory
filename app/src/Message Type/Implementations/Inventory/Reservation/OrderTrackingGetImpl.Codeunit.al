@@ -165,7 +165,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         NotFoundWhenLbl: Label 'No line or item ledger entry matches the identifiers.', Comment = 'is-IS=Engin lína eða birgðafærsla passar við auðkennin.';
         NotFoundFixLbl: Label 'Check the document and line no.', Comment = 'is-IS=Athugaðu fylgiskjalið og línunúmerið.';
         PermissionWhenLbl: Label 'The caller cannot read reservation entries or the source table.', Comment = 'is-IS=Kallandinn getur ekki lesið frátekningarfærslur eða upprunatöfluna.';
-        PermissionFixLbl: Label 'Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
@@ -186,7 +186,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is changed. The order tracking chain is worked out for the call and returned; no reservation is created or changed.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', false);
         Effect.Add('posts', false);
@@ -282,7 +282,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         InventorySetup: Record "Inventory Setup ori";
         ReservationEntry: Record "Reservation Entry";
         DomainDisabledErr: Label 'The Reservations domain is turned off for this company.', Comment = 'is-IS=Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if not InventorySetup.ReadPermission() then begin
             RespondPermissionDenied(Argument);
@@ -301,7 +301,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     local procedure RespondPermissionDenied(var Argument: Record "Message Argument ori")
     var
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        PermissionNextStepLbl: Label 'Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);
     end;

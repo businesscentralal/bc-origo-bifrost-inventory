@@ -47,11 +47,11 @@ codeunit 10076840 "Inventory Native Journal ori"
     /// <summary>Preserves Foundation's item-posting gate without accessing its internal gate objects or granting permissions.</summary>
     procedure AssertItemPostingPermission(var Argument: Record "Message Argument ori"): Boolean
     var
-        DeniedLbl: Label 'Posting denied: native journal write permission and BIFROST ItemPost ori are required.', Comment = 'is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.';
+        DeniedLbl: Label 'Posting denied: native journal write permission and Item Posting Gate are required.', Comment = 'is-IS=Bókun hafnað: innbyggð ritheimild í bók og heimildasafnið „Bókunarhlið vara“ eru nauðsynleg.';
     begin
         if HasItemPostingPermission() then
             exit(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, DeniedLbl, '', '', 'BIFROST ItemPost ori', '');
+        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, DeniedLbl, '', '', 'Item Posting Gate', '');
         exit(false);
     end;
 

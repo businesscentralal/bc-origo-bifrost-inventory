@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
   <file datatype="xml" source-language="en-US" target-language="is-IS" original="Bifrost Inventory">
     <body>
@@ -365,8 +365,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
@@ -376,9 +376,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -490,9 +490,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -952,9 +952,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AssemblyCreateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 1153550289" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Requires Inv. Posting Gate in addition to Bifrost Full Access. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.</source>
-          <target>Krefst Bókunarhlið birgða auk Bifröst Aðgangur að öllum hlutum. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Krefst Bókunarhlið birgða auk Bifröst Aðgangur að öllum hlutum. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</note>
+          <source>Requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.</source>
+          <target>Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AssemblyPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 3670094209" size-unit="char" translate="yes" xml:space="preserve">
@@ -1048,9 +1048,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferCreateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 2000881134" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central's own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to Bifrost Full Access. Use Inventory.TransferOrder.PreviewPost first to see the entries.</source>
-          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst Bókunarhlið birgða auk Bifröst Aðgangur að öllum hlutum. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst Bókunarhlið birgða auk Bifröst Aðgangur að öllum hlutum. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</note>
+          <source>Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central's own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.</source>
+          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 457938070" size-unit="char" translate="yes" xml:space="preserve">
@@ -1235,8 +1235,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 1761568649" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType DomainDisabledNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
@@ -1336,9 +1336,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType TextErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - Method 3881973616 - NamedType 286034047" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posting denied: native journal write permission and BIFROST ItemPost ori are required.</source>
-          <target>Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og BIFROST ItemPost ori eru nauðsynleg.</note>
+          <source>Posting denied: native journal write permission and Item Posting Gate are required.</source>
+          <target>Bókun hafnað: innbyggð ritheimild í bók og heimildasafnið „Bókunarhlið vara“ eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókun hafnað: innbyggð ritheimild í bók og heimildasafnið „Bókunarhlið vara“ eru nauðsynleg.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - Method AssertItemPostingPermission - NamedType DeniedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2759492653 - NamedType 473915023" size-unit="char" translate="yes" xml:space="preserve">
@@ -1697,8 +1697,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 2979007805 - NamedType 1132247979" size-unit="char" translate="yes" xml:space="preserve">
@@ -1846,9 +1846,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method NotFoundNextStep - NamedType NotFoundNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
@@ -1967,8 +1967,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 3552834713 - NamedType 715105691" size-unit="char" translate="yes" xml:space="preserve">
@@ -2212,7 +2212,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method LoopNextStep - NamedType LoopNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.</source>
           <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
@@ -2620,9 +2620,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change these tables.</source>
-          <target>Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
+          <source>Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Assign Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1188006982 - Method 1158096087 - NamedType 48211173" size-unit="char" translate="yes" xml:space="preserve">
@@ -3034,9 +3034,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -3185,8 +3185,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2961471195 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondDomainDisabled - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2152073072 - NamedType 3085223924" size-unit="char" translate="yes" xml:space="preserve">
@@ -3232,13 +3232,13 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2237090239 - NamedType 225315183" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType ReadNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2237090239 - NamedType 3562499966" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.</source>
           <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType WriteNextStepLbl</note>
@@ -3299,8 +3299,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
@@ -3310,9 +3310,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -3412,9 +3412,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -3569,8 +3569,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -3658,9 +3658,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Lesaðgangur (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -3826,9 +3826,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method RespondPermissionDenied - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 2237090239 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method RespondPermissionDenied - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 1814212218 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
@@ -4336,7 +4336,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.</source>
           <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType PermissionNextStepLbl</note>
@@ -4349,8 +4349,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -4462,9 +4462,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign Bifrost Full Access (extended by Inventory write permissions) and a Business Central permission set that can change these tables.</source>
-          <target>Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifröst Aðgangur að öllum hlutum (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
+          <source>Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst (með viðbótinni skrifheimildir birgða) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -5146,9 +5146,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The batch is posted and rolled back, so nothing is committed and the journal lines stay unchanged; the answer carries rollback true, the entries grouped by table in preview, totals and the entry counts. The batch is identified as in Inventory.Revaluation.Post and must have Revaluation lines that have an item number. A preview that would create no entries is answered with NothingToPreview, and a refusal from Business Central is returned as BusinessCentralError with its own text. The call can be repeated freely. The caller needs Bifrost Full Access and Inv. Posting Gate, as for posting, and the Costing domain must be on in Inventory Setup.</source>
-          <target>Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf Bifröst Aðgangur að öllum hlutum og Bókunarhlið birgða, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf Bifröst Aðgangur að öllum hlutum og Bókunarhlið birgða, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</note>
+          <source>The batch is posted and rolled back, so nothing is committed and the journal lines stay unchanged; the answer carries rollback true, the entries grouped by table in preview, totals and the entry counts. The batch is identified as in Inventory.Revaluation.Post and must have Revaluation lines that have an item number. A preview that would create no entries is answered with NothingToPreview, and a refusal from Business Central is returned as BusinessCentralError with its own text. The call can be repeated freely. The caller needs the Bifrost "Full Access" permission set and Inv. Posting Gate, as for posting, and the Costing domain must be on in Inventory Setup.</source>
+          <target>Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf heimildasafnið „Aðgangur að öllum hlutum“ í Bifröst og Bókunarhlið birgða, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrslan er bókuð og bakfærð, svo ekkert er staðfest og bókarlínur haldast óbreyttar; svarið inniheldur rollback true, færslurnar flokkaðar eftir töflu í preview, heildartölur og fjölda færslna. Keyrslan er auðkennd eins og í Inventory.Revaluation.Post og verður að hafa endurmatslínur sem hafa vörunúmer. Forskoðun sem myndi ekki búa til neinar færslur fær svarið NothingToPreview, og höfnun frá Business Central er skilað sem BusinessCentralError með eigin texta. Hægt er að endurtaka kallið að vild. Kallandinn þarf heimildasafnið „Aðgangur að öllum hlutum“ í Bifröst og Bókunarhlið birgða, eins og fyrir bókun, og Costing-svið verður að vera virkt í uppsetningu birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reval Preview Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -5230,9 +5230,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The whole batch is posted in one run; no subset of lines can be chosen, and a refusal posts nothing. The batch must be an existing non-recurring batch of a Revaluation journal template with Revaluation lines that have an item number. Name it with the subject (TEMPLATE|BATCH or the SystemId of the batch), one SystemId key, or templateName and batchName; with a subject the data keys are not used, and any other data key is refused. Posting commits: Business Central commits the posting when the call finishes, or the caller does under Omit Commit. It is irreversible and not idempotent: posted lines leave the batch, so a second call is refused. The caller needs Bifrost Full Access and Inv. Posting Gate, and the Costing domain must be on in Inventory Setup. Use Inventory.Revaluation.PreviewPost first to see the entries.</source>
-          <target>Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf Bifröst Aðgangur að öllum hlutum og Bókunarhlið birgða og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf Bifröst Aðgangur að öllum hlutum og Bókunarhlið birgða og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</note>
+          <source>The whole batch is posted in one run; no subset of lines can be chosen, and a refusal posts nothing. The batch must be an existing non-recurring batch of a Revaluation journal template with Revaluation lines that have an item number. Name it with the subject (TEMPLATE|BATCH or the SystemId of the batch), one SystemId key, or templateName and batchName; with a subject the data keys are not used, and any other data key is refused. Posting commits: Business Central commits the posting when the call finishes, or the caller does under Omit Commit. It is irreversible and not idempotent: posted lines leave the batch, so a second call is refused. The caller needs the Bifrost "Full Access" permission set and Inv. Posting Gate, and the Costing domain must be on in Inventory Setup. Use Inventory.Revaluation.PreviewPost first to see the entries.</source>
+          <target>Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf heimildasafnið „Aðgangur að öllum hlutum“ í Bifröst og Bókunarhlið birgða og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Öll keyrslan er bókuð í einu lagi; ekki er hægt að velja hluta línanna og höfnun bókar ekkert. Keyrslan verður að vera til, ekki ítrekunarbók og af endurmatsbókarsniði, með endurmatslínum sem hafa vörunúmer. Auðkenndu hana með subject (TEMPLATE|BATCH eða SystemId keyrslunnar), einum SystemId-lykli, eða templateName og batchName; með subject eru data-lyklar ekki notaðir og öðrum data-lyklum er hafnað. Bókun er staðfest: Business Central staðfestir bókunina þegar kallinu lýkur, eða kallandinn gerir það með Omit Commit. Bókunin er óafturkræf og ekki endurtakanleg: bókaðar línur fara úr keyrslunni og því er öðru kalli hafnað. Kallandinn þarf heimildasafnið „Aðgangur að öllum hlutum“ í Bifröst og Bókunarhlið birgða og Costing-svið verður að vera virkt í uppsetningu birgða. Notaðu Inventory.Revaluation.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2505414460 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">

@@ -1,8 +1,9 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
-using Microsoft.Inventory.Item;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -414,6 +415,97 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.IsTrue(NextStep.Contains('Bókunarhlið birgða'), 'The Icelandic permission caption is named.');
         Assert.IsTrue(NextStep.Contains('Uppsetning birgða'), 'The Icelandic page is named.');
         GlobalLanguage(OriginalLanguage);
+    end;
+
+    /// <summary>Issue152 AC2: former text-only missing-parameter responses match their help code.</summary>
+    [Test]
+    procedure Scenario_AC02_ExplicitMissingParameters_AreCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: metadata alone previously advertised codes absent from runtime.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup."Item Tracking" := true;
+        Setup."Item Application" := true;
+        Setup.Modify(true);
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.Tracking.Assign", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.Tracking.Delete", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.ItemApplication.Reapply", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.ItemApplication.Unapply", Request, 'MissingParameter');
+    end;
+
+    /// <summary>Issue152 AC2: an owned non-transfer template returns the documented precondition code.</summary>
+    [Test]
+    procedure Scenario_AC02_ReclassWrongTemplate_IsCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: runtime and help disagree; owned template rolls back with the test.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Item);
+        Request.Add('templateName', JournalTemplate.Name);
+        Request.Add('batchName', 'OWNED');
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'PreconditionFailed');
+    end;
+
+    /// <summary>Issue152 AC2: a deleted owned template returns the documented not-found code.</summary>
+    [Test]
+    procedure Scenario_AC02_ReclassMissingTemplate_IsCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: no customer fixture; create/delete our own unique template.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Transfer);
+        Request.Add('templateName', JournalTemplate.Name);
+        Request.Add('batchName', 'OWNED');
+        JournalTemplate.Delete(true);
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'RecordNotFound');
+    end;
+
+    /// <summary>Issue152 AC2: a caught native validation error carries BusinessCentralError, matching help.</summary>
+    [Test]
+    procedure Scenario_AC02_NativeValidation_IsCoded()
+    var
+        DomainSetup: Codeunit "Inventory Test Library ori";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: malformed selection fails before business writes; no fixture is reused.
+        DomainSetup.EnableItemPrice();
+        Request.Add('unitPrice', 1);
+        AssertRuntimeError("Message Type ori"::"Inventory.Price.Update", Request, 'BusinessCentralError');
+    end;
+
+    local procedure AssertRuntimeError(MessageType: Enum "Message Type ori"; Request: JsonObject; ExpectedCode: Text)
+    var
+        Helper: Codeunit "Assembly Order Test Helper";
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Response: JsonObject;
+        Contract: JsonObject;
+        Entry: JsonToken;
+        Documented: Boolean;
+    begin
+        Helper.ProcessMessage(MessageType, Request, Response);
+        Assert.AreEqual('Error', TextOf(Response, 'status'), 'The runtime returns an error before changing business data.');
+        Assert.AreEqual(ExpectedCode, TextOf(Response, 'code'), TypeNameOf(MessageType) + ' runtime carries the expected machine code.');
+        Assert.AreNotEqual('', TextOf(Response, 'error'), 'The existing human-readable error is retained.');
+        ContractMgt.GetContract(MessageType, Contract);
+        foreach Entry in ArrayOf(Contract, 'errors') do
+            Documented := Documented or (TextOf(Entry.AsObject(), 'code') = ExpectedCode);
+        Assert.IsTrue(Documented, TypeNameOf(MessageType) + ' help documents the actual runtime code.');
     end;
 
     local procedure AssertParameterDescribed(Parameter: JsonObject; TypeName: Text; ParameterName: Text)

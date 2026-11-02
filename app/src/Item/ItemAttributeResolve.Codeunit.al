@@ -193,7 +193,7 @@ codeunit 10076844 "Item Attribute Resolve ori"
         if not DocumentLookup.FindItemRange(Argument, Item) then
             exit(false);
         if not Item.FindFirst() then begin
-            Argument.RespondWithError(NoItemsErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoItemsErr, '', '', '', '');
             exit(false);
         end;
         exit(true);

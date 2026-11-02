@@ -177,7 +177,7 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is kept. The posting is run as a preview and every entry it creates is rolled back; the journal lines stay as they are.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only and Item Posting Gate');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set and Item Posting Gate');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         Effect.Add('rollback', true);

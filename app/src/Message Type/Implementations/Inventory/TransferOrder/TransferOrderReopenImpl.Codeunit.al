@@ -164,7 +164,7 @@ codeunit 10076904 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
             Codeunit.Run(Codeunit::"Transf. Order Reopen Proc. ori", TransferHeader)
         else
             if not Codeunit.Run(Codeunit::"Transf. Order Reopen Proc. ori", TransferHeader) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
                 exit;
             end;
 

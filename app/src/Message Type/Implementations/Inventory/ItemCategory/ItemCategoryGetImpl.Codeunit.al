@@ -182,7 +182,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only reads item categories and, when includeAttributes is true, their attribute values.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         exit(true);
     end;
 
@@ -315,7 +315,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
         InventorySetup: Record "Inventory Setup ori";
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
         DomainDisabledErr: Label 'The Item Category domain is turned off for this company.', Comment = 'is-IS=Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if (not InventorySetup.ReadPermission()) or (not CanReadTables()) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStep());
@@ -574,7 +574,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         exit(PermissionNextStepLbl);
     end;

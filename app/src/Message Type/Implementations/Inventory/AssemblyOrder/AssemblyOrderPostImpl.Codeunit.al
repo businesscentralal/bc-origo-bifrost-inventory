@@ -188,7 +188,7 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
             AssemblyPost.SetPostingDate(true, PostingDate);
         Commit();
         if not AssemblyPost.Run(AssemblyHeader) then begin
-            Argument.RespondWithError(GetLastErrorText());
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
             exit;
         end;
         PostedDocNo := PostingNoBefore;

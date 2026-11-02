@@ -114,7 +114,7 @@ codeunit 10076860 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Reads the current Item cost fields and the filtered inventory quantity.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller can read items.');
         Effect.Add('preconditions', Preconditions);

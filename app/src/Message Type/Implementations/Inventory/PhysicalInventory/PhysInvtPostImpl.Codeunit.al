@@ -53,7 +53,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 
     /// <summary>Describes native journal behavior.</summary>
@@ -173,7 +173,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts the selected lines of the Phys. Inventory journal batch through the standard item journal batch posting: item ledger entries, physical inventory ledger entries, value entries and an item register are created and the posted lines leave the journal. The posting commits with the answer; under Omit Commit the caller''s transaction commits instead. It cannot be undone by a message type of this app.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'Bifrost Full Access and Item Posting Gate');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Item Posting Gate');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         Effect.Add('rollback', false);
@@ -238,7 +238,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     begin
         Notes := 'Posting is permanent and commits: the posting commits with the answer, and under Omit Commit the caller''s transaction commits instead. The commits inside Business Central''s batch posting are held back, so a failure rolls back the whole posting. Under Omit Commit an error is raised to the caller instead of being answered with the error text. ' +
             'Without lineSystemIds every line of the batch is posted; with lineSystemIds only those lines (distinct SystemIds of lines in the batch). A batch without lines is refused with PreconditionFailed. ' +
-            'Every selected line must have an item that is not blocked, be a physical inventory line, have the entry type Positive Adjmt. or Negative Adjmt., the value entry type Direct Cost and no item charge, and must pass the item journal checks; otherwise nothing is posted and the error text is answered without a code. ' +
+            'Every selected line must have an item that is not blocked, be a physical inventory line, have the entry type Positive Adjmt. or Negative Adjmt., the value entry type Direct Cost and no item charge, and must pass the item journal checks; otherwise nothing is posted and the error text is answered with BusinessCentralError. ' +
             'The caller needs the item posting permission (Item Posting Gate) as well as write access to the journal; without it the call is refused with PermissionDenied. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
             'fromPhysInventoryEntryNo and toPhysInventoryEntryNo are 0 when the posting created no physical inventory ledger entry. ' +
             'Use Inventory.PhysInventory.Check and Inventory.PhysInventory.PreviewPost first.';

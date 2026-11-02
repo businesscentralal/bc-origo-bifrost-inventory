@@ -123,7 +123,7 @@ codeunit 10076878 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Inventory Period domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example Bifrost Read-Only.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Read-Only" permission set.'));
         exit(true);
     end;
 
@@ -133,7 +133,7 @@ codeunit 10076878 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing. The inventory periods are only read.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);

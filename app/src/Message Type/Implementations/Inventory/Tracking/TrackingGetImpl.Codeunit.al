@@ -195,7 +195,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is changed. Reads lot, serial and package tracking from item ledger entries, reservation entries and tracking specifications.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('writes', false);
         exit(true);
     end;

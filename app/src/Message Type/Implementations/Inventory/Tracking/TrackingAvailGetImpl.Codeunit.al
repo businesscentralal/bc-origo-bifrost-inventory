@@ -158,7 +158,7 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is changed. Reads the open tracked item ledger entries of the item and the quantity reserved against them.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('writes', false);
         exit(true);
     end;

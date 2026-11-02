@@ -113,7 +113,7 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Lists the item application entries recorded under one item ledger entry number.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Preconditions.Add('The Item Application domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller can read item application entries.');
         Effect.Add('preconditions', Preconditions);
@@ -164,7 +164,7 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         Clear(Notes);
         Notes := 'The list holds the application entries recorded under the given item ledger entry number, that is the rows created when that entry was posted or applied. For an outbound entry they show the inbound entries it was applied to. For an inbound entry they show the rows recorded for that entry itself; outbound entries that were applied to it later are recorded under their own numbers, so read those entries to see them. ' +
             'An entry number that does not exist returns an empty list, not RecordNotFound. Use entryNo from the list with Inventory.ItemApplication.Unapply. ' +
-            'The caller needs Bifrost Read-Only and read permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+            'The caller needs the Bifrost "Read-Only" permission set and read permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
     end;
 

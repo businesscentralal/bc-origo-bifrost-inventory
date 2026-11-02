@@ -237,7 +237,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Native posting is simulated and its ledger entries are captured. All simulated writes are rolled back; the journal and persisted ledger remain unchanged.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only and Inv. Posting Gate');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set and Inv. Posting Gate');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);

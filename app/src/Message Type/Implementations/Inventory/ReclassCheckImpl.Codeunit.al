@@ -80,15 +80,15 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
             if RequestJson.Get('journalBatchName', Token) and Token.IsValue() then
                 BatchName := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(BatchName));
         if (TemplateName = '') or (BatchName = '') then begin
-            Argument.RespondWithError(MissingBatchErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingBatchErr, '', '', '', '');
             exit;
         end;
         if not ItemJournalTemplate.Get(TemplateName) then begin
-            Argument.RespondWithError(StrSubstNo(TemplateNotFoundErr, TemplateName));
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(TemplateNotFoundErr, TemplateName), '', '', '', '');
             exit;
         end;
         if ItemJournalTemplate.Type <> ItemJournalTemplate.Type::Transfer then begin
-            Argument.RespondWithError(StrSubstNo(NotTransferErr, TemplateName));
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferErr, TemplateName), '', '', '', '');
             exit;
         end;
 
@@ -155,10 +155,10 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example Bifrost Read-Only.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'templateName and batchName are required.', 'The template or the batch name is absent or empty. The answer carries the error text and no code.', 'Send templateName and batchName, or their journal aliases.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item journal template %1 was not found.', 'No item journal template has that name. The answer carries the error text and no code.', 'Check templateName.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer. The answer carries the error text and no code.', 'Use a reclassification template.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Read-Only" permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'templateName and batchName are required.', 'The template or the batch name is absent or empty.', 'Send templateName and batchName, or their journal aliases.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item journal template %1 was not found.', 'No item journal template has that name.', 'Check templateName.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer.', 'Use a reclassification template.'));
         exit(true);
     end;
 
@@ -168,7 +168,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is written or posted. The template is looked up and the lines of the batch whose entry type is Transfer are counted.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -224,7 +224,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Notes := 'Read only: nothing is written or posted. The answer confirms that the template exists and is of type Transfer, and returns the number of lines of the batch with entry type Transfer as postedLineCount; the name is misleading, nothing is posted. ' +
             'The check does not look up the batch, validate the lines or predict posting errors, so an unknown batch is answered Success with postedLineCount 0. templateName and batchName win over the aliases journalTemplateName and journalBatchName when both are sent. ' +
-            'A missing name, an unknown template and a template of another type are answered with the error text and no code. ' +
+            'A missing name is answered with MissingParameter, an unknown template with RecordNotFound and a template of another type with PreconditionFailed. ' +
             'The type requires read permission on the Item Journal Line table, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
             'Use Inventory.Reclassification.PreviewPost to simulate posting and inspect captured ledger entries and Inventory.Reclassification.Post to post.';
         exit(true);

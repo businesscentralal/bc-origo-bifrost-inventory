@@ -50,7 +50,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 
     /// <summary>Describes guarded card-cost changes.</summary>
@@ -164,7 +164,7 @@ codeunit 10076863 "Cost Update Impl ori" implements "Msg Interface ori", "Msg Di
         Effect.Add('posts', false);
         Effect.Add('changes', 'Changes the unit cost, last direct cost and standard cost you send on one Item card. No revaluation, no value entries and no ledger entries are created. All checks run before the first field is changed, and a failure changes nothing. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Full Access');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Preconditions.Add('Exactly one Item selected.');
         Preconditions.Add('Non-Standard costing method.');
         Preconditions.Add('Native Item write access and each supplied field permission.');

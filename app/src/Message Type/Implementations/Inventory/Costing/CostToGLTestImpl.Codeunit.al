@@ -99,7 +99,7 @@ codeunit 10076862 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Counts the items that match the filter and reports that nothing is posted. No value entries and no ledger entries are read.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'Bifrost Read-Only and Inv. Posting Gate');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set and Inv. Posting Gate');
         Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller holds the Inv. Posting Gate permission set and can read items.');
         Effect.Add('preconditions', Preconditions);

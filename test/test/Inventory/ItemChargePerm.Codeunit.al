@@ -40,7 +40,7 @@ codeunit 96955 "Item Charge Perm"
         Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
         Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', NextStepToken), 'nextStep missing');
-        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'Bifrost Full Access with Inventory write permissions'), NextStepToken.AsValue().AsText());
+        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'the Bifrost "Full Access" permission set with Inventory write permissions'), NextStepToken.AsValue().AsText());
     end;
 
     [Test]
@@ -66,6 +66,6 @@ codeunit 96955 "Item Charge Perm"
         Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
         Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', NextStepToken), 'nextStep missing');
-        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'Bifrost Read-Only with Inventory read permissions'), NextStepToken.AsValue().AsText());
+        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'the Bifrost "Read-Only" permission set with Inventory read permissions'), NextStepToken.AsValue().AsText());
     end;
 }
