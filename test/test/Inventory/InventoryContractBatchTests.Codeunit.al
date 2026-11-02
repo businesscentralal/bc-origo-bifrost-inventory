@@ -765,10 +765,21 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
         ActualContract.Add('errors', Filtered);
         AssertChapterJson(ActualContract, 'errors', Expected.AsToken());
-        if (TypeName <> 'Inventory.Attribute.Get') and Enum::"Bifrost Error Code ori".Names().Contains('Retryable') then
-            LibraryAssert.AreEqual(1, RetryableCount, 'New Foundation appends exactly one shared Retryable entry.')
+        if (TypeName <> 'Inventory.Attribute.Get') and FoundationAppendsSharedRetryable() then
+            LibraryAssert.AreEqual(1, RetryableCount, 'Foundation 28.0.11 appends exactly one shared Retryable entry.')
         else
-            LibraryAssert.AreEqual(0, RetryableCount, 'Legacy Foundation and reads have no shared Retryable entry.');
+            LibraryAssert.AreEqual(0, RetryableCount, 'This Foundation does not append a shared Retryable entry.');
+    end;
+
+    local procedure FoundationAppendsSharedRetryable(): Boolean
+    var
+        Info: ModuleInfo;
+    begin
+        // GetContract appends Retryable for a write effect from Foundation 28.0.11.
+        // Release 28.0.10 has the enum and copies GetErrors unchanged. Release 28.0.3 has neither.
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            Error('Bifrost Foundation is not installed.');
+        exit(Info.AppVersion >= Version.Create(28, 0, 11, 0));
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
