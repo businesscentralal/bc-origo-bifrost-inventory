@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-25) - missing reservation recovery (#169)
+
+- `Inventory.Reservation.Cancel` now includes localized `expected` and `nextStep` context when `entryNo` does not exist, directing callers to `Inventory.Reservation.Get`. The `RecordNotFound` code, selector context and cancellation behavior are preserved (codeunit 10076892). English and Icelandic regressions verify the response and unchanged reservation data (test codeunit 96975). The test-only fixture page 96973 can display the real refusal for an absent selector during bilingual Web Client verification.
+
 ### Added — issue #158
 
 - Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.

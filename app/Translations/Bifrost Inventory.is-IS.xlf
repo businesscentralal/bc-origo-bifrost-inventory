@@ -5127,6 +5127,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 2629873655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing reservation entry number</source>
+          <target>númer frátekningarfærslu sem er til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=númer frátekningarfærslu sem er til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType ExistingEntryLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 1490923157" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read current reservations with Inventory.Reservation.Get and retry with an existing entryNo.</source>
+          <target>Lestu núverandi frátekningar með Inventory.Reservation.Get og reyndu aftur með entryNo færslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu núverandi frátekningar með Inventory.Reservation.Get og reyndu aftur með entryNo færslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType ReadReservationsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 3816499092" size-unit="char" translate="yes" xml:space="preserve">
           <source>Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.</source>
           <target>Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.</target>

@@ -187,6 +187,8 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         EntryNoRequiredErr: Label 'entryNo is required.', Comment = 'is-IS=entryNo er nauðsynlegt.';
         EntryNoFormatErr: Label 'entryNo must be a positive whole number.', Comment = 'is-IS=entryNo verður að vera jákvæð heiltala.';
         NotFoundErr: Label 'Reservation entry %1 was not found.', Comment = '%1 = entry number; is-IS=Frátekningarfærsla %1 fannst ekki.';
+        ExistingEntryLbl: Label 'an existing reservation entry number', Comment = 'is-IS=númer frátekningarfærslu sem er til';
+        ReadReservationsLbl: Label 'Read current reservations with Inventory.Reservation.Get and retry with an existing entryNo.', Comment = 'is-IS=Lestu núverandi frátekningar með Inventory.Reservation.Get og reyndu aftur með entryNo færslu sem er til.';
         NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
         IntegerExpectedTok: Label 'a positive JSON integer', Comment = 'is-IS=jákvæð JSON-heiltala';
         InconsistentPairErr: Label 'Reservation %1 does not contain a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.';
@@ -211,7 +213,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         EntryNo := Number;
         ReservationEntry.SetRange("Entry No.", EntryNo);
         if not ReservationEntry.FindFirst() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), ExistingEntryLbl, ReadReservationsLbl);
             exit;
         end;
         if ReservationEntry."Reservation Status" <> ReservationEntry."Reservation Status"::Reservation then begin
