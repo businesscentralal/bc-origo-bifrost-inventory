@@ -1,0 +1,22 @@
+const fs=require('fs'),assert=require('assert/strict'),{connect}=require('./mcp-lib.cjs');const E=__dirname;
+(async()=>{const dep=JSON.parse(fs.readFileSync(E+'/deployment-provenance.json')),fixture=JSON.parse(fs.readFileSync(E+'/attribute-fixture.json'));assert.equal(dep.candidateSha,fixture.sha);assert.ok(!fs.existsSync(E+'/coded-runtime-summary.json'),'Inspect prior runtime evidence before repeating scenarios');const m=await connect(),rows=[],created=[];
+async function error(id,type,data,lcid,expected){const r=await m.invoke('coded-'+id+'-'+lcid,type,data,lcid);let problems=[];try{assert.equal(r.status,'Error');assert.equal(r.code,expected);assert.ok(r.error);const h=await m.call('coded-help-'+id+'-'+lcid,'get_message_type_help',{messageType:type,detail:'full',lcid});assert.ok(h.chapters.errors.some(e=>e.code===expected),'Help lacks actual code');}catch(e){problems.push(e.message)}rows.push({scenario:id,type,lcid,expected,actual:r.code,passed:!problems.length,problems});fs.writeFileSync(E+'/coded-runtime-progress.json',JSON.stringify({sha:dep.candidateSha,rows,created},null,2));}
+try{const cases=[
+['reclass-missing','Inventory.Reclassification.Check',{},'MissingParameter'],
+['tracking-item-missing','Inventory.Tracking.Assign',{},'MissingParameter'],
+['tracking-quantity-missing','Inventory.Tracking.Assign',{itemNo:fixture.itemNo},'MissingParameter'],
+['tracking-lot-missing','Inventory.Tracking.Assign',{itemNo:fixture.itemNo,quantity:1},'MissingParameter'],
+['tracking-entry-missing','Inventory.Tracking.Delete',{},'MissingParameter'],
+['apply-entry-missing','Inventory.ItemApplication.Reapply',{},'MissingParameter'],
+['apply-target-missing','Inventory.ItemApplication.Reapply',{itemLedgerEntryNo:0},'MissingParameter'],
+['unapply-entry-missing','Inventory.ItemApplication.Unapply',{},'MissingParameter'],
+['assembly-undo-doc-missing','Inventory.Assembly.UndoPost',{},'MissingParameter'],
+['receipt-undo-doc-missing','Inventory.Transfer.UndoReceipt',{},'MissingParameter'],
+['shipment-undo-doc-missing','Inventory.Transfer.UndoShipment',{},'MissingParameter'],
+['price-native-selection','Inventory.Price.Update',{unitPrice:1},'BusinessCentralError'],
+['cost-native-selection','Inventory.Cost.Update',{},'BusinessCentralError'],
+['revaluation-native-selection','Inventory.Revaluation.Post',{},'BusinessCentralError'],
+['physical-native-selection','Inventory.PhysInventory.Post',{},'BusinessCentralError']];
+for(const lcid of [1033,1039])for(const [id,type,data,code]of cases)await error(id,type,data,lcid,code);
+for(const lcid of [1033,1039]){const type='Inventory.Tracking.Assign',r=await m.invoke('coded-owned-tracking-create-'+lcid,type,{itemNo:fixture.itemNo,quantity:1,lotNo:'LI152-AM-'+lcid},lcid);assert.equal(r.status,'Success');assert.ok(Number.isInteger(r.entryNo));created.push({entryNo:r.entryNo,lcid,deleted:false});fs.writeFileSync(E+'/coded-tracking-fixtures.json',JSON.stringify({sha:dep.candidateSha,containerId:dep.containerId,itemNo:fixture.itemNo,created},null,2));rows.push({scenario:'owned-tracking-created',type,lcid,passed:true});const d=await m.invoke('coded-owned-tracking-delete-'+lcid,'Inventory.Tracking.Delete',{entryNo:r.entryNo},lcid);assert.equal(d.status,'Success');created.at(-1).deleted=true;fs.writeFileSync(E+'/coded-tracking-fixtures.json',JSON.stringify({sha:dep.candidateSha,containerId:dep.containerId,itemNo:fixture.itemNo,created},null,2));rows.push({scenario:'owned-tracking-deleted',type:'Inventory.Tracking.Delete',lcid,passed:true});await error('deleted-tracking-notfound','Inventory.Tracking.Delete',{entryNo:r.entryNo},lcid,'RecordNotFound');}
+const s={sha:dep.candidateSha,containerId:dep.containerId,executed:rows.length,passed:rows.filter(x=>x.passed).length,failed:rows.filter(x=>!x.passed).length,skipped:0,createsOwnData:true,setup:'Fresh own Service item and two owned tracking specifications created by shipping MCP. Missing-parameter/native-selection cases use deliberately incomplete requests and never select existing customer records. All domains enabled through supported Web Client.',cleanup:'Both own tracking specifications deleted through MCP; repeated delete returned RecordNotFound. Item/attribute and setup restoration recorded separately.',rows};fs.writeFileSync(E+'/coded-runtime-summary.json',JSON.stringify(s,null,2));console.log(JSON.stringify({...s,rows:s.rows.filter(x=>!x.passed)}));}finally{await m.c.close()}})().catch(e=>{console.error(e.message);process.exitCode=1});

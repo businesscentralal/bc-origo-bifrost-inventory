@@ -1,0 +1,30 @@
+{
+  "sha": "805b1d6d65689358ef6ae9a6a2515c35eb05b1d3",
+  "containerId": "f0133160e482",
+  "verified": true,
+  "languages": [
+    1033,
+    1039
+  ],
+  "scenarios": [
+    "Message Types catalogue descriptions and direction captions in English and Icelandic",
+    "Inventory Setup15domain captions in both languages; enable/disable through supported UI and persisted reload",
+    "Self-created LI152 Final Verification attribute/option values visible; select exact own row and delete through supported UI",
+    "Original15setup booleans restored and verified after reload; language1033 restored via My Settings"
+  ],
+  "screenshots": [
+    "ui-805b1d6d-attribute-before-cleanup.png",
+    "ui-805b1d6d-attribute-cleanup.png",
+    "ui-805b1d6d-attribute-owned-selected.png",
+    "ui-805b1d6d-catalogue-en.png",
+    "ui-805b1d6d-catalogue-is.png",
+    "ui-805b1d6d-language-restored.png",
+    "ui-805b1d6d-setup-en-baseline.png",
+    "ui-805b1d6d-setup-en-disabled.png",
+    "ui-805b1d6d-setup-en-enabled.png",
+    "ui-805b1d6d-setup-is-disabled.png",
+    "ui-805b1d6d-setup-is.png",
+    "ui-805b1d6d-setup-restored.png"
+  ],
+  "cleanup": "All four exact fixture table counts0; ownitem API404; both tracking records delete+notfound; setup/language restored"
+}

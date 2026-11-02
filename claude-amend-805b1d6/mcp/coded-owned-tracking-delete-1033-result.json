@@ -1,0 +1,10 @@
+{
+  "startedAt": "2026-11-02T09:44:40.294Z",
+  "finishedAt": "2026-11-02T09:44:40.615Z",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"company\": \"CRONUS International Ltd.\",\n  \"messageType\": \"Inventory.Tracking.Delete\",\n  \"status\": \"Success\",\n  \"entryNo\": 0,\n  \"itemNo\": \"LI152-CF1102\",\n  \"lotNo\": \"LI152-AM-1033\",\n  \"serialNo\": \"\",\n  \"packageNo\": \"\"\n}"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "type": "Inventory.Attribute.Update",
+  "data": {
+    "itemNo": "LI152-CF1102",
+    "attributes": []
+  },
+  "lcid": 1033
+}

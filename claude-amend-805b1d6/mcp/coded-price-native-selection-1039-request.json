@@ -1,0 +1,7 @@
+{
+  "type": "Inventory.Price.Update",
+  "data": {
+    "unitPrice": 1
+  },
+  "lcid": 1039
+}

@@ -1,0 +1,19 @@
+{
+  "sha": "094637a74efeb071edaaf1e9817a0628a04f2ad8",
+  "executed": 467,
+  "passed": 465,
+  "failed": 2,
+  "skipped": 0,
+  "failures": [
+    {
+      "name": "Create_InvalidAttributes_MatchesHelpCode",
+      "class": "96900 Item Attribute Tests ori",
+      "message": "Assert.AreEqual failed. Expected:<data.attributes \u00ed bei\u00f0ninni ver\u00f0ur a\u00f0 vera fylki sem er ekki t\u00f3mt.> (Text). Actual:<Request data.attributes must be a non-empty array.> (Text). Icelandic refusal.."
+    },
+    {
+      "name": "Update_InvalidAttributes_MatchesHelpCode",
+      "class": "96900 Item Attribute Tests ori",
+      "message": "Assert.AreEqual failed. Expected:<data.attributes \u00ed bei\u00f0ninni ver\u00f0ur a\u00f0 vera fylki sem er ekki t\u00f3mt.> (Text). Actual:<Request data.attributes must be a non-empty array.> (Text). Icelandic refusal.."
+    }
+  ]
+}

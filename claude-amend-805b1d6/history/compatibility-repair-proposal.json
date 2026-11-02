@@ -1,0 +1,45 @@
+{
+  "recordedAt": "2026-11-02T09:18:41.414415+00:00",
+  "source": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/175#issuecomment-6573282692",
+  "repo": "businesscentralal/bc-origo-bifrost-inventory",
+  "owner": "worker-9",
+  "status": "DIAGNOSED; pending Architect175-vs-followup disposition; no compatibility source edits applied",
+  "candidateSha": "094637a74efeb071edaaf1e9817a0628a04f2ad8",
+  "readOnlyReference": {
+    "repo": "OrigoSoftwareSolutions/bc-origo-bifrost-core",
+    "localSha": "c22587cff1de47a46a5ee60517d2bfde58ee083c",
+    "purpose": "Inspect actual confirmation and help-composition rules; no source changes or deployment to foreign environment"
+  },
+  "findings": [
+    {
+      "tests": [
+        "PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed",
+        "ReclassificationDomainOff_NextStepIsIcelandicIn1039"
+      ],
+      "rootCause": "Dispatcher confirmation happens before implementation validation. Both request fixtures omit expectedCount. Default Confirm ori.GetConfirmCount returns1 for Inventory types without custom count interface.",
+      "proposedRepair": "Send expectedCount:1 in these two refusal requests, retaining exact PreconditionFailed/InvalidParameter, parameter and Icelandic nextStep assertions. Verify on declared old floor and nextFoundation because old floors must not reject the new request key. Do not turn off the production confirmation gate or weaken refusal expectations."
+    },
+    {
+      "tests": [
+        "AttributeCreate_RegisteredContract_DeclaresWriteChapters",
+        "AttributeUpdate_RegisteredContract_DeclaresWriteChapters",
+        "AttributeDefinition_RegisteredContract_HasNoTarget"
+      ],
+      "rootCause": "AssertAttributeLegacyPayloads compares composed ContractMgt.errors byte-for-byte with raw Parts.GetErrors. Next Foundation appends one shared Retryable entry only for effect=write. Direct interface error-count assertions still passed.",
+      "proposedRepair": "Retain exact app-owned error entries, order and legacy/canonical parity at the interface boundary. For composed contract, separately verify exact base entries plus at most the one documented Retryable addition with valid when/howToFix. A capability/version-aware check should require the addition when installed Foundation implements it; no arbitrary-entry allowance."
+    },
+    {
+      "tests": [
+        "CostingContracts_DiscloseReportOptions"
+      ],
+      "rootCause": "Next Foundation appends confirmation rule to effect.changes for irreversible types after preserving app text. Exact equality to app-owned sentence fails.",
+      "proposedRepair": "Retain exact app-owned text via Msg Contract interface and separately assert composed text equals app text plus the exact documented confirmation sentence when the composed contract declares expectedCount; else exact app text. Preserve idempotent=false and every native posting/queue claim."
+    }
+  ],
+  "verificationPlan": [
+    "Compile Inventory app/test with analyzers and existing supported floor; do not change pipeline/dependency floor.",
+    "Publish exact compiled candidate/readback before external verification.",
+    "Run full configured suite and self-seeded UI/MCP in owned container using explicit dependency provenance; compare current released/floor and nextFoundation artifact compatibility.",
+    "Claude explicitly resolves current pr:amend on new full SHA; Grok exact-tip clearance after applicable gates."
+  ]
+}

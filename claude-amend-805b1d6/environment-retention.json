@@ -1,0 +1,12 @@
+{
+  "containerId": "f0133160e482",
+  "containerName": "worker9-inventory152-20261102-w1",
+  "owner": "worker-9",
+  "state": "Stopped",
+  "recordedAt": "2026-11-02T09:52:51.675051+00:00",
+  "candidateSha": "805b1d6d65689358ef6ae9a6a2515c35eb05b1d3",
+  "fixturesCleaned": true,
+  "deleted": false,
+  "retainedFor": "PR175 amendment, issue152 acceptance and postmerge UAT/closure; do not delete before closure",
+  "stopRequestEvidence": "Private container-stop-receipt.json"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "Inventory.Attribute.Create",
+  "data": {
+    "itemNo": "LI152-CF1102",
+    "attributes": [
+      {
+        "name": "LI152 Final Verification",
+        "value": "Gloss",
+        "overwrite": true
+      }
+    ]
+  },
+  "lcid": 1033
+}

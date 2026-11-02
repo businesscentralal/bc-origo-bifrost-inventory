@@ -1,0 +1,5 @@
+{
+  "messageType": "Inventory.OrderTracking.Get",
+  "detail": "full",
+  "lcid": 1033
+}

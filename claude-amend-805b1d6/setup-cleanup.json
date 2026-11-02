@@ -1,0 +1,39 @@
+{
+  "sha": "805b1d6d65689358ef6ae9a6a2515c35eb05b1d3",
+  "restored": true,
+  "actual": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "expected": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true
+  ],
+  "verifiedAt": "2026-11-02T09:50:52.354Z"
+}

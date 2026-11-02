@@ -1,0 +1,5 @@
+{
+  "messageType": "Inventory.Price.Update",
+  "detail": "full",
+  "lcid": 1039
+}

@@ -1,0 +1,18 @@
+{
+  "type": "Data.Records.Set",
+  "data": {
+    "tableNumber": 10076836,
+    "data": [
+      {
+        "primaryKey": {
+          "Primary_Key": ""
+        },
+        "fields": {
+          "Attributes": true
+        }
+      }
+    ],
+    "force": true
+  },
+  "lcid": 1033
+}

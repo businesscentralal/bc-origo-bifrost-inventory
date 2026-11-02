@@ -1,0 +1,24 @@
+{
+  "candidateSha": "805b1d6d65689358ef6ae9a6a2515c35eb05b1d3",
+  "containerId": "f0133160e482",
+  "recordedAt": "2026-11-02T09:50:39.421Z",
+  "counts": [
+    {
+      "table": "Item",
+      "rows": 0
+    },
+    {
+      "table": "Attribute",
+      "rows": 0
+    },
+    {
+      "table": "Attribute Values",
+      "rows": 0
+    },
+    {
+      "table": "Attribute Mapping",
+      "rows": 0
+    }
+  ],
+  "query": "read-only sys.tables/sys.partitions for Inventory152 own fixture rows by exact IDs, SELECT only"
+}
