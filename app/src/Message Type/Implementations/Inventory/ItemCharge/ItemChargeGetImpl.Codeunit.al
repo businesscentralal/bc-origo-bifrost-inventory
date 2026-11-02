@@ -160,7 +160,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         PreconditionWhenLbl: Label 'The line is not an item charge line.', Comment = 'is-IS=Línan er ekki kostnaðaraukalína.';
         PreconditionFixLbl: Label 'Pass the line no. of a Charge (Item) line.', Comment = 'is-IS=Sendu línunúmer línu af gerðinni Kostnaðarauki (vara).';
         PermissionWhenLbl: Label 'The caller cannot read item charge assignments or the document.', Comment = 'is-IS=Kallandinn getur ekki lesið úthlutanir kostnaðarauka eða skjalið.';
-        PermissionFixLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -182,7 +182,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only reads the assignment rows of one charge line and the quantity that is still unassigned.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         exit(true);
     end;
 
@@ -338,8 +338,8 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     procedure RespondPermissionDenied(var Argument: Record "Message Argument ori"; ForWrite: Boolean)
     var
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        ReadNextStepLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
-        WriteNextStepLbl: Label 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.';
+        ReadNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        WriteNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         if ForWrite then
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', WritePermissionSetTok, WriteNextStepLbl)
@@ -354,7 +354,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     procedure RespondDomainDisabled(var Argument: Record "Message Argument ori")
     var
         DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
     end;

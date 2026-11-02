@@ -166,7 +166,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         StockWhenLbl: Label 'The item is Service or Non-Inventory, so it has no availability.', Comment = 'is-IS=Varan er þjónusta eða ekki birgðavara, svo hún hefur ekkert framboð.';
         StockFixLbl: Label 'Use an inventory item.', Comment = 'is-IS=Notaðu birgðavöru.';
         PermissionWhenLbl: Label 'The caller cannot read items, variants, or locations.', Comment = 'is-IS=Kallandinn getur ekki lesið vörur, afbrigði eða staðsetningar.';
-        PermissionFixLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -191,7 +191,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Reads projected availability by calendar period for one or more items.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Preconditions.Add('The Availability domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller can read items, item variants and locations.');
         Effect.Add('preconditions', Preconditions);
@@ -303,9 +303,9 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
         ItemVariant: Record "Item Variant";
         Location: Record Location;
         DomainDisabledErr: Label 'The Availability domain is turned off for this company.', Comment = 'is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        PermissionNextStepLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         if not InventorySetup.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);

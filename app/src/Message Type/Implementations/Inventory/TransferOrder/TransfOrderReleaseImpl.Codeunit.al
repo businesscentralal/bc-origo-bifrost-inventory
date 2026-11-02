@@ -156,7 +156,7 @@ codeunit 10076907 "Transf. Order Release Impl ori" implements "Msg Interface ori
             Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader)
         else
             if not Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
                 exit;
             end;
 

@@ -223,7 +223,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks BIFROST InvPost ori. Native preview executes posting with rollback and retains the posting gate.', 'Ask an administrator for the posting permission and required native permissions.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate. Native preview executes posting with rollback and retains the posting gate.', 'Ask an administrator for the posting permission and required native permissions.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'journalTemplateName or journalBatchName is absent.', 'Supply both journal selectors.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The journal template or batch does not exist.', 'Choose an existing batch.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The template is not Transfer or the batch has no lines.', 'Choose a nonempty reclassification batch.'));
@@ -237,7 +237,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Native posting is simulated and its ledger entries are captured. All simulated writes are rolled back; the journal and persisted ledger remain unchanged.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set and Inv. Posting Gate');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -293,7 +293,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     begin
         Notes := 'Runs native posting preview for one existing nonempty Transfer journal batch. Posting validation errors are returned instead of a successful line listing. ' +
             'Successful answers retain lineCount and lines and add preview, totals, entryCount and glEntryCount from captured entries. rollback is true only after native preview succeeds. ' +
-            'Preview does not commit the caller transaction or persist journal, item, value or G/L entry changes. The posting permission BIFROST InvPost ori and native posting permissions remain required because native posting is executed under rollback. ' +
+            'Preview does not commit the caller transaction or persist journal, item, value or G/L entry changes. The posting permission Inv. Posting Gate and native posting permissions remain required because native posting is executed under rollback. ' +
             'Inventory.Reclassification.Check only reads the template and counts transfer lines; it needs read permission and does not predict all posting errors. Use PreviewPost before the separate Post operation.';
         exit(true);
     end;

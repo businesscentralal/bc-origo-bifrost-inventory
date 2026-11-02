@@ -57,7 +57,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'post inventory cost,general ledger,report 1002', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,skýrsla 1002';
+        KeywordsLbl: Label 'post inventory cost,general ledger,cost posting', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,kostnaðarbókun';
     begin
         exit(KeywordsLbl);
     end;
@@ -144,7 +144,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign BIFROST InvPost ori in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign Inv. Posting Gate in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
         exit(true);
     end;
 
@@ -154,7 +154,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"the Bifrost \"Full Access\" permission set and Inv. Posting Gate","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
         exit(true);
     end;
 

@@ -178,7 +178,7 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         TypeNoWhenLbl: Label 'referenceTypeNo was sent for a barcode or a blank reference type.', Comment = 'is-IS=referenceTypeNo var sent fyrir strikamerki eða tóma tegund tilvísunar.';
         TypeNoFixLbl: Label 'Leave referenceTypeNo empty for barcodes.', Comment = 'is-IS=Skildu referenceTypeNo eftir tómt fyrir strikamerki.';
         PermissionWhenLbl: Label 'The caller cannot read item references or items.', Comment = 'is-IS=Kallandinn getur ekki lesið vörutilvísanir eða vörur.';
-        PermissionFixLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -200,7 +200,7 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only reads item references, items and GTINs; it never creates or changes a reference.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         exit(true);
     end;
 
@@ -321,9 +321,9 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         Item: Record Item;
         ItemReference: Record "Item Reference";
         DomainDisabledErr: Label 'The Item Reference domain is turned off for this company.', Comment = 'is-IS=Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á sviðinu á síðunni Uppsetning birgða.';
+        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        PermissionNextStepLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         if not InventorySetup.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);

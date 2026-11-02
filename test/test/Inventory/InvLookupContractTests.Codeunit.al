@@ -146,6 +146,11 @@ codeunit 96922 "Inv. Lookup Contract Tests"
                 Assert.AreEqual(EntryText(EnglishEntry, 'when'), EntryText(IcelandicEntry, 'when'), Name + ': stable English explanation ' + Code);
                 Assert.AreEqual(EntryText(EnglishEntry, 'fix'), EntryText(IcelandicEntry, 'fix'), Name + ': stable English next step ' + Code);
             end;
+            if Name in ['Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost'] then begin
+                EnglishEntry := ErrorByCode(EnglishErrors, 'MissingParameter');
+                Assert.IsTrue(EntryText(EnglishEntry, 'when').Contains('postingType'), Name + ': missing postingType uses the same documented code.');
+                Assert.IsTrue(EntryText(EnglishEntry, 'fix').Contains('Ship or Receive'), Name + ': actionable postingType guidance is retained.');
+            end;
             IcelandicEntry := ErrorByCode(IcelandicErrors, 'InvalidParameterFormat');
             Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('data is not a JSON object'), Name + ': English contract explanation');
             Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('no, systemId, recordSystemId, id'), Name + ': invariant identifier keys');

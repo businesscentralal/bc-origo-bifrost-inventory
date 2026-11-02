@@ -103,7 +103,7 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Sums the remaining quantity and value of the open item ledger entries of one item. No revaluation journal line is created or changed.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller can read item ledger entries.');
         Effect.Add('preconditions', Preconditions);
@@ -155,7 +155,7 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
         Clear(Notes);
         Notes := 'Despite its name this type does not calculate a revaluation journal: it reads, and it creates or changes no journal line. It sums over all open item ledger entries of the item, so there is no filter on location, variant or date. ' +
             'Each entry is valued at its actual plus expected cost amount, scaled by its remaining quantity, so the value is only as current as the last cost adjustment; run Inventory.AdjustCost.Run first when costIsAdjusted from Inventory.Cost.Get is false. ' +
-            'The item may be blocked. The caller needs BIFROST Read ori and read permission on item ledger entries, and the Costing domain must be on in Inventory Setup.';
+            'The item may be blocked. The caller needs the Bifrost "Read-Only" permission set and read permission on item ledger entries, and the Costing domain must be on in Inventory Setup.';
         exit(true);
     end;
 

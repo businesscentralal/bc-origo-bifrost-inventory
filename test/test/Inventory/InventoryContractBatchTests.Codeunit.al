@@ -509,8 +509,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Create', Enum::"Message Type ori"::"Inventory.Attribute.Create".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
-            'write', false, 7, 2, 0,
-            'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.',
+            'write', false, 7, 2, 1,
+            'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; set attributes[].overwrite to true or use Inventory.Attribute.Update to change an existing value.',
             'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.');
     end;
 
@@ -520,8 +520,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Update', Enum::"Message Type ori"::"Inventory.Attribute.Update".AsInteger(),
             'attributes:array:true,allowBlocked:boolean:false', 'status:string,itemNo:string,results:array',
-            'write', false, 6, 2, 0,
-            'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.',
+            'write', false, 6, 2, 1,
+            'Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.',
             'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.');
     end;
 
@@ -699,7 +699,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             end;
             'Inventory.Attribute.Update': begin
                 Index := 5;
-                Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
+                Expected := 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.';
             end;
             'Inventory.AttributeDefinition.Create': begin
                 Index := 3;
@@ -727,10 +727,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             AssertChapterJson(Contract, 'target', Parts.GetTarget(Legacy).AsToken())
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create'] then
-            AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken())
-        else
-            LibraryAssert.IsFalse(Contract.Contains('examples'), 'Create and Update examples remain absent.');
+        AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
@@ -780,7 +777,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Preconditions := ChapterToken.AsArray();
         LibraryAssert.AreEqual(3, Preconditions.Count(), 'Keep the domain, report and conflicting-filter preconditions.');
         Preconditions.Get(2, ChapterToken);
-        LibraryAssert.AreEqual('Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty.', ChapterToken.AsValue().AsText(), 'Report 795 rejects simultaneous effective filters.');
+        LibraryAssert.AreEqual('Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; the cost adjustment rejects both nonempty.', ChapterToken.AsValue().AsText(), 'Report 795 rejects simultaneous effective filters.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         Contract.Get('effect', ChapterToken);
         Effect := ChapterToken.AsObject();
@@ -795,12 +792,23 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract: JsonObject;
         Error: JsonObject;
         ValueToken: JsonToken;
+        ErrorToken: JsonToken;
+        Errors: JsonArray;
+        DispatcherDistinctionFound: Boolean;
     begin
         // PR #90 costing regression | Time: no Today/WorkDate dependency | Risk: metadata only; runtime tested separately.
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
-        GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
-        Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
+        Contract.Get('errors', ValueToken);
+        Errors := ValueToken.AsArray();
+        foreach ErrorToken in Errors do begin
+            Error := ErrorToken.AsObject();
+            Error.Get('code', ValueToken);
+            if ValueToken.AsValue().AsText() = 'BusinessCentralError' then begin
+                Error.Get('when', ValueToken);
+                DispatcherDistinctionFound := DispatcherDistinctionFound or ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead');
+            end;
+        end;
+        LibraryAssert.IsTrue(DispatcherDistinctionFound, 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
@@ -1012,13 +1020,13 @@ codeunit 96921 "Inventory Contract Batch Tests"
     local procedure AssertCostingCatalogue(TypeName: Text; Description: Text; Selection: Text; Keywords: Text)
     begin
         if TypeName = 'Inventory.AdjustCost.Run' then begin
-            LibraryAssert.AreEqual('Runs report 795 with optional item or category filter and explicit postToGL option.', Description, 'Exact AdjustCost description.');
+            LibraryAssert.AreEqual('Adjusts item costs with an optional item or category filter and an explicit postToGL option.', Description, 'Exact AdjustCost description.');
             LibraryAssert.AreEqual('Run Adjust Cost - Item Entries for a filtered set of items, and optionally post the corrections to the general ledger.', Selection, 'Exact AdjustCost selection.');
-            LibraryAssert.AreEqual('adjust cost,item entry correction,post to g/l,report 795', Keywords, 'Exact AdjustCost keywords.');
+            LibraryAssert.AreEqual('adjust cost,item entry correction,post to g/l,cost adjustment', Keywords, 'Exact AdjustCost keywords.');
         end else begin
             LibraryAssert.AreEqual('Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.', Description, 'Exact CostToGL description.');
             LibraryAssert.AreEqual('Post inventory value entries that are not yet posted to the general ledger.', Selection, 'Exact CostToGL selection.');
-            LibraryAssert.AreEqual('post inventory cost,general ledger,report 1002', Keywords, 'Exact CostToGL keywords.');
+            LibraryAssert.AreEqual('post inventory cost,general ledger,cost posting', Keywords, 'Exact CostToGL keywords.');
         end;
     end;
 

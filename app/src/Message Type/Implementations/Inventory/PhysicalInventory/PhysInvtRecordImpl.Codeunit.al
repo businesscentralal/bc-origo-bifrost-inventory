@@ -50,7 +50,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
     end;
 
 
@@ -197,11 +197,11 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Inventory.PhysInventory.Record only: journalTemplateName (or templateName), journalBatchName (or batchName) and lineNo are sent in data and name a journal line that does not exist.', 'Check the batch and lineNo, or run Inventory.PhysInventory.Calculate first.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
-        Errors.Add(ContractMgt.TextErrorEntry('counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', 'counts is absent, not an array or empty, an entry is not an object or names a line outside the batch, a line is repeated, lineNo and systemId name different lines, or qtyCounted is negative or not a number. Nothing is changed.', 'Send a nonempty counts array of distinct lines of the batch.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Unsupported journal parameter %1.', 'A key is sent that this type does not read, including a key inside a counts entry, or lineNo and quantity at the top level of Inventory.PhysInventory.RecordCount.', 'Remove the key; Inventory.PhysInventory.RecordCount takes counts only.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Business Central validation error text', 'A line is not a valid physical inventory line, or Business Central refuses the counted quantity. Every count of the call is rolled back.', 'Correct the line or the quantity named in the text and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Full Access" permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', 'counts is absent, not an array or empty, an entry is not an object or names a line outside the batch, a line is repeated, lineNo and systemId name different lines, or qtyCounted is negative or not a number. Nothing is changed.', 'Send a nonempty counts array of distinct lines of the batch.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read, including a key inside a counts entry, or lineNo and quantity at the top level of Inventory.PhysInventory.RecordCount.', 'Remove the key; Inventory.PhysInventory.RecordCount takes counts only.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central validation error text', 'A line is not a valid physical inventory line, or Business Central refuses the counted quantity. Every count of the call is rolled back.', 'Correct the line or the quantity named in the text and retry.'));
         exit(true);
     end;
 
@@ -212,7 +212,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Sets the counted quantity, Qty. (Phys. Inventory), on each line named in counts that has a qtyCounted, through the standard validation; Business Central then recalculates the adjustment quantity and entry type of the line. Lines without qtyCounted are left unchanged. Nothing is posted. The changes are committed with the answer; under Omit Commit the caller''s transaction commits instead.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         Effect.Add('rollback', false);

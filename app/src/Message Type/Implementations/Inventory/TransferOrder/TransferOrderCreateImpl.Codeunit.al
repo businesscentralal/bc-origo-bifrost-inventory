@@ -186,11 +186,11 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
         end;
 
         if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode));
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode), '', '', '', '');
             exit;
         end;
         if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode));
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode), '', '', '', '');
             exit;
         end;
 

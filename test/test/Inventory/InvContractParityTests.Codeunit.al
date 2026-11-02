@@ -1,6 +1,9 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -46,10 +49,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             else
                 Assert.AreNotEqual('', TextOf(Contract, 'notes'), TypeName + ' declares the notes.');
             Assert.IsTrue(ArrayOf(Contract, 'related').Count() > 0, TypeName + ' names at least one related type.');
-            if PinnedNoExamplesTypes().Contains(TypeName) then
-                Assert.IsFalse(Contract.Contains('examples'), TypeName + ' has no examples and an existing test pins that.')
-            else
-                Assert.IsTrue(ArrayOf(Contract, 'examples').Count() > 0, TypeName + ' declares at least one example.');
+            Assert.IsTrue(ArrayOf(Contract, 'examples').Count() > 0, TypeName + ' declares at least one example.');
             if NoParameterTypes().Contains(TypeName) then
                 Assert.IsFalse(Contract.Contains('parameters'), TypeName + ' reads no data key, so it declares no parameters.')
             else
@@ -121,7 +121,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         end;
     end;
 
-    /// <summary>Every error entry carries a machine code that exists, the condition and what to do; an entry without a code carries the error text.</summary>
+    /// <summary>Every error entry carries a machine code that exists, the condition and what to do; native failures declare BusinessCentralError.</summary>
     [Test]
     procedure EveryErrorEntry_CarriesCodeConditionAndFix()
     var
@@ -142,10 +142,8 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             Assert.IsTrue(ArrayOf(Contract, 'errors').Count() > 0, TypeName + ' lists its errors.');
             foreach Entry in ArrayOf(Contract, 'errors') do begin
                 EntryCode := TextOf(Entry.AsObject(), 'code');
-                if EntryCode = '' then
-                    Assert.AreNotEqual('', TextOf(Entry.AsObject(), 'error'), TypeName + ' error entry without a code carries the error text.')
-                else
-                    Assert.IsTrue(ErrorCodes.Contains(EntryCode), TypeName + ' error code ' + EntryCode + ' exists.');
+                Assert.AreNotEqual('', EntryCode, TypeName + ' every error entry carries its response code.');
+                Assert.IsTrue(ErrorCodes.Contains(EntryCode), TypeName + ' error code ' + EntryCode + ' exists.');
                 Assert.AreNotEqual('', TextOf(Entry.AsObject(), 'when'), TypeName + ' error ' + EntryCode + ' states when it is answered.');
                 Assert.AreNotEqual('', TextOf(Entry.AsObject(), 'fix'), TypeName + ' error ' + EntryCode + ' states what to do.');
                 EntryCount += 1;
@@ -321,12 +319,14 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked.');
     end;
 
-    /// <summary>The notes and overview of every type name no AL object and no internal procedure.</summary>
+    /// <summary>Every help chapter names permissions by their display names and contains no AL object or internal procedure reference.</summary>
     [Test]
     procedure NotesAndOverview_NameNoAlObjects()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         MessageType: Enum "Message Type ori";
+        Implementation: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
         Contract: JsonObject;
         TypeName: Text;
     begin
@@ -334,9 +334,178 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             TypeName := TypeNameOf(MessageType);
             Clear(Contract);
             ContractMgt.GetContract(MessageType, Contract);
-            AssertNamesNoAlObject(TextOf(Contract, 'notes'), TypeName + ' notes');
-            AssertNamesNoAlObject(TextOf(Contract, 'overview'), TypeName + ' overview');
+            AssertHelpTokenNamesNoAlObject(Contract.AsToken(), TypeName);
+            Implementation := MessageType;
+            Discovery := MessageType;
+            AssertNamesNoAlObject(Implementation.GetDescription(), TypeName + ' description');
+            AssertNamesNoAlObject(Discovery.GetSelectionDescription(), TypeName + ' selection description');
+            AssertNamesNoAlObject(Discovery.GetKeywords(), TypeName + ' keywords');
         end;
+    end;
+
+    /// <summary>Issue152 AC2: the guard rejects internal identifiers without rejecting ordinary words.</summary>
+    [Test]
+    procedure Scenario_AC02_HelpGuard_RejectsInternalNames()
+    begin
+        // Issue152 AC02 | Time: no date dependency | Risk: pure metadata guard.
+        Assert.AreNotEqual('', FindAlReference('Assign BIFROST InvPost ori.'), 'Internal permission names are rejected.');
+        Assert.AreNotEqual('', FindAlReference('Run report 795.'), 'Numbered reports are rejected.');
+        Assert.AreNotEqual('', FindAlReference('Calls Item Jnl.-Post Line.'), 'Internal procedure names are rejected.');
+        Assert.AreNotEqual('', FindAlReference('BIFROST Read ori'), 'A permission name at the end is rejected.');
+        Assert.AreEqual('', FindAlReference('Read the original order and assign Inv. Posting Gate.'), 'Ordinary words and display captions are accepted.');
+    end;
+
+    /// <summary>Issue152 AC2: examples for option definitions describe the values actually requested.</summary>
+    [Test]
+    procedure Scenario_AC02_OptionExample_IncludesCreatedValues()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        ExampleToken: JsonToken;
+        ExampleObject: JsonObject;
+        Response: JsonObject;
+    begin
+        // Issue152 AC02 | Time: no date dependency | Risk: metadata only, no attribute writes.
+        ContractMgt.GetContract("Message Type ori"::"Inventory.AttributeDefinition.Create", Contract);
+        ArrayOf(Contract, 'examples').Get(0, ExampleToken);
+        ExampleObject := ExampleToken.AsObject();
+        ExampleObject.Get('response', ExampleToken);
+        Response := ExampleToken.AsObject();
+        Assert.AreEqual(2, ArrayOf(Response, 'createdValues').Count(), 'The two requested option values appear in the example response.');
+    end;
+
+    /// <summary>Issue152 AC3: a disabled domain directs the caller to its administrator and supported setup page.</summary>
+    [Test]
+    procedure Scenario_AC03_DisabledDomain_NamesAdministratorAndPage()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Response: JsonObject;
+        NextStep: Text;
+        OriginalLanguage: Integer;
+    begin
+        // Issue152 AC03 | Time: no date dependency | Risk: setup changes are rolled back by the test runner.
+        InventorySetup.InsertIfNotExists();
+        InventorySetup.Attributes := false;
+        InventorySetup.Modify(true);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        OriginalLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'Disabled domain is refused.');
+        Response := TempArgument.GetResponseJson();
+        NextStep := TextOf(Response, 'nextStep');
+        Assert.IsTrue(NextStep.Contains('administrator'), 'The caller knows who can enable the domain.');
+        Assert.IsTrue(NextStep.Contains('Inv. Posting Gate'), 'The required assignable permission caption is named.');
+        Assert.IsTrue(NextStep.Contains('Inventory Setup page'), 'The supported page is named.');
+        Assert.IsTrue(NextStep.Contains('Data.Records.Set cannot'), 'The protected-table restriction is explicit.');
+        TempArgument.Delete();
+        Clear(TempArgument);
+        Clear(DomainGate);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        GlobalLanguage(1039);
+        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'The same gate applies in Icelandic.');
+        Response := TempArgument.GetResponseJson();
+        NextStep := TextOf(Response, 'nextStep');
+        Assert.IsTrue(NextStep.Contains('kerfisstjóra'), 'The Icelandic response names the administrator.');
+        Assert.IsTrue(NextStep.Contains('Bókunarhlið birgða'), 'The Icelandic permission caption is named.');
+        Assert.IsTrue(NextStep.Contains('Uppsetning birgða'), 'The Icelandic page is named.');
+        GlobalLanguage(OriginalLanguage);
+    end;
+
+    /// <summary>Issue152 AC2: former text-only missing-parameter responses match their help code.</summary>
+    [Test]
+    procedure Scenario_AC02_ExplicitMissingParameters_AreCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: metadata alone previously advertised codes absent from runtime.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup."Item Tracking" := true;
+        Setup."Item Application" := true;
+        Setup.Modify(true);
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.Tracking.Assign", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.Tracking.Delete", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.ItemApplication.Reapply", Request, 'MissingParameter');
+        AssertRuntimeError("Message Type ori"::"Inventory.ItemApplication.Unapply", Request, 'MissingParameter');
+    end;
+
+    /// <summary>Issue152 AC2: an owned non-transfer template returns the documented precondition code.</summary>
+    [Test]
+    procedure Scenario_AC02_ReclassWrongTemplate_IsCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: runtime and help disagree; owned template rolls back with the test.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Item);
+        Request.Add('templateName', JournalTemplate.Name);
+        Request.Add('batchName', 'OWNED');
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'PreconditionFailed');
+    end;
+
+    /// <summary>Issue152 AC2: a deleted owned template returns the documented not-found code.</summary>
+    [Test]
+    procedure Scenario_AC02_ReclassMissingTemplate_IsCoded()
+    var
+        Setup: Record "Inventory Setup ori";
+        JournalTemplate: Record "Item Journal Template";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: no customer fixture; create/delete our own unique template.
+        Setup.InsertIfNotExists();
+        Setup.Reclassification := true;
+        Setup.Modify(true);
+        LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Transfer);
+        Request.Add('templateName', JournalTemplate.Name);
+        Request.Add('batchName', 'OWNED');
+        JournalTemplate.Delete(true);
+        AssertRuntimeError("Message Type ori"::"Inventory.Reclassification.Check", Request, 'RecordNotFound');
+    end;
+
+    /// <summary>Issue152 AC2: a caught native validation error carries BusinessCentralError, matching help.</summary>
+    [Test]
+    procedure Scenario_AC02_NativeValidation_IsCoded()
+    var
+        DomainSetup: Codeunit "Inventory Test Library ori";
+        Request: JsonObject;
+    begin
+        // Time: none | Risk: malformed selection fails before business writes; no fixture is reused.
+        DomainSetup.EnableItemPrice();
+        Request.Add('unitPrice', 1);
+        AssertRuntimeError("Message Type ori"::"Inventory.Price.Update", Request, 'BusinessCentralError');
+    end;
+
+    local procedure AssertRuntimeError(MessageType: Enum "Message Type ori"; Request: JsonObject; ExpectedCode: Text)
+    var
+        Helper: Codeunit "Assembly Order Test Helper";
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Response: JsonObject;
+        Contract: JsonObject;
+        Entry: JsonToken;
+        Documented: Boolean;
+    begin
+        Helper.ProcessMessage(MessageType, Request, Response);
+        Assert.AreEqual('Error', TextOf(Response, 'status'), 'The runtime returns an error before changing business data.');
+        Assert.AreEqual(ExpectedCode, TextOf(Response, 'code'), TypeNameOf(MessageType) + ' runtime carries the expected machine code.');
+        Assert.AreNotEqual('', TextOf(Response, 'error'), 'The existing human-readable error is retained.');
+        ContractMgt.GetContract(MessageType, Contract);
+        foreach Entry in ArrayOf(Contract, 'errors') do
+            Documented := Documented or (TextOf(Entry.AsObject(), 'code') = ExpectedCode);
+        Assert.IsTrue(Documented, TypeNameOf(MessageType) + ' help documents the actual runtime code.');
     end;
 
     local procedure AssertParameterDescribed(Parameter: JsonObject; TypeName: Text; ParameterName: Text)
@@ -369,6 +538,29 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             Assert.AreEqual(TypeName, RequestType, TypeName + ' example request names its own type.');
     end;
 
+    local procedure AssertHelpTokenNamesNoAlObject(Token: JsonToken; Context: Text)
+    var
+        ObjectValue: JsonObject;
+        Child: JsonToken;
+        PropertyName: Text;
+    begin
+        if Token.IsObject() then begin
+            ObjectValue := Token.AsObject();
+            foreach PropertyName in ObjectValue.Keys() do begin
+                ObjectValue.Get(PropertyName, Child);
+                AssertHelpTokenNamesNoAlObject(Child, Context + '.' + PropertyName);
+            end;
+            exit;
+        end;
+        if Token.IsArray() then begin
+            foreach Child in Token.AsArray() do
+                AssertHelpTokenNamesNoAlObject(Child, Context);
+            exit;
+        end;
+        if not Token.AsValue().IsNull() then
+            AssertNamesNoAlObject(Token.AsValue().AsText(), Context);
+    end;
+
     local procedure AssertNamesNoAlObject(HelpText: Text; Context: Text)
     var
         Forbidden: Text;
@@ -384,6 +576,8 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         ObjectWord: Text;
     begin
         Lowered := LowerCase(HelpText);
+        if Lowered.EndsWith(' ori') then
+            exit(' ori');
         foreach Fragment in ForbiddenFragments() do
             if Lowered.Contains(LowerCase(Fragment)) then
                 exit(Fragment);
@@ -406,6 +600,12 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Fragments.Add('Gate ori');
         Fragments.Add('Process ori');
         Fragments.Add('Dispatcher.');
+        Fragments.Add(' ori ');
+        Fragments.Add(' ori.');
+        Fragments.Add(' ori,');
+        Fragments.Add(' ori)');
+        Fragments.Add('Item Jnl.-Post');
+        Fragments.Add('Assembly-Post.');
         Fragments.Add('OmitCommit');
         Fragments.Add('BC report');
         Fragments.Add('BC table');
@@ -525,12 +725,6 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.Attribute.Get');
         Names.Add('Inventory.AttributeDefinition.Create');
         Names.Add('Inventory.CostToGL.Test');
-    end;
-
-    local procedure PinnedNoExamplesTypes() Names: List of [Text]
-    begin
-        Names.Add('Inventory.Attribute.Create');
-        Names.Add('Inventory.Attribute.Update');
     end;
 
     local procedure PinnedNoWorkflowTypes() Names: List of [Text]

@@ -166,7 +166,7 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (BIFROST ItemPost ori) or write permission on the item journal.', 'Ask an administrator for BIFROST ItemPost ori.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (Item Posting Gate) or write permission on the item journal.', 'Ask an administrator for Item Posting Gate.'));
         exit(true);
     end;
 
@@ -177,7 +177,7 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is kept. The posting is run as a preview and every entry it creates is rolled back; the journal lines stay as they are.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori and BIFROST ItemPost ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set and Item Posting Gate');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         Effect.Add('rollback', true);
@@ -240,7 +240,7 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := 'Runs the standard posting preview of the journal lines and rolls it back, so no ledger entry, item register or journal change is kept. rollback is true in every Success answer. ' +
-            'The type needs the item posting permission (BIFROST ItemPost ori), like Inventory.PhysInventory.Post; without it the call is refused with PermissionDenied. ' +
+            'The type needs the item posting permission (Item Posting Gate), like Inventory.PhysInventory.Post; without it the call is refused with PermissionDenied. ' +
             'The whole batch is previewed, or only the lines in lineSystemIds. preview lists the captured entries per table; totals carries totalDebitLCY and totalCreditLCY and carries balanced only when G/L entries were captured. ' +
             'A batch without lines is refused with PreconditionFailed. A preview that would create nothing is answered NothingToPreview. An error that the preview raises is answered with code BusinessCentralError and Business Central''s own text. ' +
             'Each selected line must be a valid physical inventory line (item set and not blocked, adjustment entry type, Direct Cost value entry type, no item charge); otherwise the call fails with BusinessCentralError. Use Inventory.PhysInventory.Check for a list of line problems.';

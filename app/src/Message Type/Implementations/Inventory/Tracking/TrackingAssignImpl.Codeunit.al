@@ -96,12 +96,12 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'itemNo is required.', 'itemNo was not sent.', 'Send itemNo. This is a plain error text, not MissingParameter.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'quantity is required.', 'quantity was not sent.', 'Send quantity as a number.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'lotNo, serialNo, or packageNo is required.', 'None of lotNo, serialNo and packageNo was sent, or all that were sent are blank.', 'Send at least one of lotNo, serialNo and packageNo.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo is required.', 'itemNo was not sent.', 'Send itemNo.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'quantity is required.', 'quantity was not sent.', 'Send quantity as a number.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'lotNo, serialNo, or packageNo is required.', 'None of lotNo, serialNo and packageNo was sent, or all that were sent are blank.', 'Send at least one of lotNo, serialNo and packageNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native JSON or insert error text.', 'A key has a JSON type the call cannot read (for example an object where text or a number is expected), or the insert fails; Business Central raises its own text.', 'Send itemNo, lotNo, serialNo and packageNo as JSON strings and quantity as a JSON number.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Tracking domain is turned off for the company.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change the Tracking Specification table.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change tracking specifications.', 'Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change the Tracking Specification table.'));
         exit(true);
     end;
 
@@ -113,7 +113,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Inserts one Tracking Specification record with the item, quantity and lot, serial or package number sent, and commits it when the call finishes. The record is not linked to a document line or an entry, and nothing is posted.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', 'Tracking Specification');
         Effect.Add('posts', false);
@@ -169,7 +169,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Notes := 'Creates one Tracking Specification record from itemNo, quantity and at least one of lotNo, serialNo and packageNo. The call checks only that these keys are present: the item is not looked up, the quantity is not checked against stock or the item tracking code, and over-long codes are cut off. ' +
             'The record has no source document line or ledger entry, so Inventory.Tracking.Get, which reads by item or by document line, does not show it; use the entryNo of the answer with Inventory.Tracking.Delete to remove it. ' +
             'Every call inserts a new record, so repeating a call creates a duplicate. Bifrost commits the record when the call finishes; under Omit Commit the caller''s transaction commits instead. ' +
-            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs BIFROST Full ori and write permission on the Tracking Specification table. A missing key is answered as BusinessCentralError with the text shown in errors.';
+            'The Item Tracking domain must be turned on in Inventory Setup and the caller needs the Bifrost "Full Access" permission set and write permission on the Tracking Specification table. A missing key is answered as MissingParameter with the text shown in errors.';
         exit(true);
     end;
 
@@ -201,12 +201,12 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('itemNo', Token) then begin
-            Argument.RespondWithError(MissingItemErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingItemErr, '', '', '', '');
             exit;
         end;
         ItemNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ItemNo));
         if not RequestJson.Get('quantity', Token) then begin
-            Argument.RespondWithError(MissingQuantityErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingQuantityErr, '', '', '', '');
             exit;
         end;
         Quantity := Token.AsValue().AsDecimal();
@@ -217,7 +217,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         if RequestJson.Get('packageNo', Token) then
             PackageNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(PackageNo));
         if (LotNo = '') and (SerialNo = '') and (PackageNo = '') then begin
-            Argument.RespondWithError(MissingTrackingErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingTrackingErr, '', '', '', '');
             exit;
         end;
 

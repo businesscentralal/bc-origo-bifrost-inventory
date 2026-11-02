@@ -162,7 +162,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source line is not an item line, or the Reservations domain is turned off for the company.', 'Reserve for an item line, or turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NothingWhenLbl, NothingFixLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the source line or the supply it names.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The sales source item or line cannot be reserved: non-inventory item, Reserve Never, drop shipment, special order or missing shipment date.', 'Correct the source line reservation settings and retry.'));
         exit(true);
@@ -180,7 +180,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Creates reservation entries that tie the source line to available supply, and commits them when the call finishes. Nothing is posted; the source documents and the ledger entries stay as they are.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', true);
         Effect.Add('posts', false);
@@ -337,7 +337,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
                 exit;
             end;
 

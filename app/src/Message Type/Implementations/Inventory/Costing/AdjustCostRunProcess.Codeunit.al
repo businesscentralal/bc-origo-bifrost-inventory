@@ -24,7 +24,7 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ItemCategoryFilter := ReadText(RequestJson, 'itemCategoryFilter');
         PostToGL := ReadBoolean(RequestJson, 'postToGL');
         if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
-            Argument.RespondWithError(GetLastErrorText());
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
             exit;
         end;
         ResponseJson.Add('status', 'Success');

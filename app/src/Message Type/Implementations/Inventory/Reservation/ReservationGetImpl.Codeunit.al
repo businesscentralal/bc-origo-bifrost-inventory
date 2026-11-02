@@ -114,7 +114,7 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing. The reservation entries are read as they are; nothing is reserved, cancelled or posted.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', false);
         Effect.Add('posts', false);

@@ -83,7 +83,7 @@ codeunit 10076880 "Phys. Invt. Calc Impl ori" implements "Msg Interface ori", "M
     var
         ErrorJson: JsonObject;
     begin
-        ErrorJson.Add('code', 'InvalidParameter');
+        ErrorJson.Add('code', 'MissingParameter');
         ErrorJson.Add('when', 'journal template or batch is missing');
         Errors.Add(ErrorJson);
         exit(true);
@@ -156,12 +156,12 @@ codeunit 10076880 "Phys. Invt. Calc Impl ori" implements "Msg Interface ori", "M
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('journalTemplateName', Token) then begin
-            Argument.RespondWithError(MissingTemplateErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingTemplateErr, '', '', '', '');
             exit;
         end;
         TemplateName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(TemplateName));
         if not RequestJson.Get('journalBatchName', Token) then begin
-            Argument.RespondWithError(MissingBatchErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingBatchErr, '', '', '', '');
             exit;
         end;
         BatchName := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(BatchName));

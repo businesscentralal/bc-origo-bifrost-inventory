@@ -9,8 +9,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
 
     var
         AttributeGetOverviewLbl: Label 'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', Comment = 'is-IS=Les eigindaskilgreiningar og úthlutuð gildi fyrir eina eða fleiri vörur án þess að breyta gögnum í Business Central.';
-        AttributeCreateOverviewLbl: Label 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; conflicts require overwrite or the update message.', Comment = 'is-IS=Úthlutar einu eða fleiri eigindagildum á vöru. Fyrirliggjandi tengingar með sama gildi eru óbreyttar; árekstrar krefjast yfirskriftar eða uppfærsluskilaboða.';
-        AttributeUpdateOverviewLbl: Label 'Changes existing Item attribute mappings and returns the resulting values. Use Item.Attribute.Create when a mapping does not exist.', Comment = 'is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Item.Attribute.Create þegar tengingu vantar.';
+        AttributeCreateOverviewLbl: Label 'Assigns one or more attribute values to an Item. Existing equal mappings are idempotent; set attributes[].overwrite to true or use Inventory.Attribute.Update to change an existing value.', Comment = 'is-IS=Úthlutar einu eða fleiri eigindagildum á vöru. Fyrirliggjandi tengingar með sama gildi eru óbreyttar; stilltu attributes[].overwrite á true eða notaðu Inventory.Attribute.Update til að breyta fyrirliggjandi gildi.';
+        AttributeUpdateOverviewLbl: Label 'Changes existing Item attribute mappings and returns the resulting values. Use Inventory.Attribute.Create when a mapping does not exist.', Comment = 'is-IS=Breytir fyrirliggjandi eigindatengingum vöru og skilar gildunum eftir breytingu. Notaðu Inventory.Attribute.Create þegar tengingu vantar.';
         AttributeDefinitionOverviewLbl: Label 'Creates an Item Attribute definition and optional Option values independently of an Item.', Comment = 'is-IS=Stofnar eigindaskilgreiningu fyrir vörur og valfrjáls valkostagildi án tengingar við tiltekna vöru.';
         TransferCreateOverviewLbl: Label 'Creates a Transfer Order header and optional lines. The call allocates a new document number and is not idempotent.', Comment = 'is-IS=Stofnar haus flutningspöntunar og valfrjálsar línur. Kallið úthlutar nýju skjalanúmeri og endurtekið kall stofnar nýtt skjal.';
         TransferReleaseOverviewLbl: Label 'Releases an open Transfer Order so it can be posted.', Comment = 'is-IS=Útgefur opna flutningspöntun svo hægt sé að bóka hana.';
@@ -28,10 +28,10 @@ codeunit 10076919 "Inventory Contract Parts ori"
         AttributeCreateNotesLbl: Label 'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.', Comment = 'is-IS=Eigindagildi fylgja gagnategund skilgreiningarinnar. Stilltu createValueIfMissing á eigindahlut þegar stofna þarf valkostagildi. Lokaðar vörur krefjast allowBlocked.';
         AttributeUpdateNotesLbl: Label 'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.', Comment = 'is-IS=Uppfærsla nær aðeins til tenginga sem þegar eru til. Aðgerðin fer fram í aðskildu skrifferli.';
         TransferCreateNotesLbl: Label 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.', Comment = 'is-IS=Beiðnin er framkvæmd í heild eða alls ekki. Þegar línur eru gefnar nota svæðisheiti camelCase og hámarksfjöldi lína er 200. Dagsetningar nota YYYY-MM-DD.';
-        TransferPostNotesLbl: Label 'Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central''s own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires BIFROST InvPost ori in addition to BIFROST Full ori. Use Inventory.TransferOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst BIFROST InvPost ori auk BIFROST Full ori. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.';
+        TransferPostNotesLbl: Label 'Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central''s own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.';
         TransferPreviewNotesLbl: Label 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.', Comment = 'is-IS=Heppnuð forskoðun inniheldur rollback true. Ekkert er vistað, þar á meðal númer bókaðra skjala.';
         AssemblyCreateNotesLbl: Label 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.', Comment = 'is-IS=refreshLines er sjálfgefið true. postingDate er vinnudagsetning þegar henni er sleppt. quantity verður að vera jákvætt.';
-        AssemblyPostNotesLbl: Label 'Requires BIFROST InvPost ori in addition to BIFROST Full ori. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst BIFROST InvPost ori auk BIFROST Full ori. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.';
+        AssemblyPostNotesLbl: Label 'Requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.';
         AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur.';
 
     /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
@@ -47,10 +47,19 @@ codeunit 10076919 "Inventory Contract Parts ori"
             Subject.Add('description', 'The attribute definition is created from data; no subject record is used.');
         end else begin
             Forms.Add('guid');
-            Forms.Add('document no.');
+            if MessageType.StartsWith('Item.Attribute') or MessageType.StartsWith('Inventory.Attribute') then
+                Forms.Add('item no.')
+            else
+                Forms.Add('document no.');
             Subject.Add('use', 'optional');
             Subject.Add('forms', Forms);
-            Subject.Add('description', 'The subject identifies the Item, Transfer Header or Assembly Header; use data identifiers when subject is omitted.');
+            if MessageType.StartsWith('Item.Attribute') or MessageType.StartsWith('Inventory.Attribute') then
+                Subject.Add('description', 'The subject identifies the item by number or SystemId; use data item identifiers when subject is omitted.')
+            else
+                if MessageType.StartsWith('Inventory.TransferOrder.') then
+                    Subject.Add('description', 'The subject identifies the transfer order by number or SystemId; use data document identifiers when subject is omitted.')
+                else
+                    Subject.Add('description', 'The subject identifies the assembly order by number or SystemId; use data document identifiers when subject is omitted.');
         end;
         Envelope.Add('subject', Subject);
         Envelope.Add('dataRequired', true);
@@ -563,32 +572,32 @@ codeunit 10076919 "Inventory Contract Parts ori"
         if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then
             AddLookupErrors(Errors, 'Item');
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
-            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '');
+            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '', MessageType in ['Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost']);
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
             if MessageType = 'Inventory.AssemblyOrder.Post' then
-                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.')
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.', false)
             else
-                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '', false);
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
-                Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
+                Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" already has attribute "%2" with a different value.', 'The mapping conflicts and overwrite is false.', 'Set overwrite to true or use Item.Attribute.Update.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" already has attribute "%2" with a different value.', 'The item already has a different value and attributes[].overwrite is false.', 'Set overwrite to true on the attribute object, or use Inventory.Attribute.Update.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unknown attribute type.', 'Use Option, Text, Integer, Decimal or Date.'));
-                    Errors.Add(ContractMgt.TextErrorEntry('Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin
@@ -598,7 +607,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'directTransfer is not a boolean, a date key is not YYYY-MM-DD, or lines is not an array.', 'Send true or false, dates as YYYY-MM-DD and lines as an array.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'One or more transfer lines are invalid.', 'Correct the reported line fields and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LimitExceeded, 'A request can contain at most 200 lines.', 'Send no more than 200 lines.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own validation error text.', 'Transfer Header validation rejected a location, date or other value.', 'Read the error text and correct the request.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot write Transfer Header records');
                 end;
@@ -614,17 +623,17 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', 'postingType is not Ship or Receive. ShipReceive is named in the text but is refused as well.', 'Send Ship or Receive in two separate calls.'));
+
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', 'postingType is not Ship or Receive. ShipReceive is named in the text but is refused as well.', 'Send Ship or Receive in two separate calls.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the order is not ready to ship or receive.', 'Read the error text and correct the order or setup.'));
-                    AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks BIFROST InvPost ori, which posting requires in addition to BIFROST Full ori');
+                    AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks Inv. Posting Gate, which posting requires in addition to the Bifrost "Full Access" permission set');
                 end;
             'Inventory.TransferOrder.PreviewPost':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview produced no entries. Nothing would be posted.', 'Add a line quantity to ship or receive and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'Transfer order %1 has no lines to post.', 'The order has no lines.', 'Create the lines first and retry.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
+
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'The transfer posting preview failed.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
                 end;
@@ -635,7 +644,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'itemNo must be specified in the request JSON.', 'Send the parent item number.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'quantity must be specified and greater than 0 in the request JSON.', 'Send a positive quantity.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'quantity or quantityToAssemble is not a number, refreshLines is not a boolean, or a date key is not YYYY-MM-DD.', 'Send numbers as JSON numbers, true or false for refreshLines and dates as YYYY-MM-DD.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Field %1 is restricted for write. Cannot use value ''%2''.', 'A field-level write restriction blocks the requested value.', 'Remove the restricted field or grant the required permission.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own validation error text.', 'Assembly Header validation rejected the request.', 'Read the error text and correct the item, location, dates or quantity.'));
                     AddDomainErrors(Errors, 'Assembly', 'the caller cannot write Assembly Header records');
                 end;
@@ -657,7 +666,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.Post':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the components are not available.', 'Read the error text and correct the order or setup.'));
-                    AddDomainErrors(Errors, 'Assembly', 'the caller lacks BIFROST InvPost ori, which posting requires in addition to BIFROST Full ori');
+                    AddDomainErrors(Errors, 'Assembly', 'the caller lacks Inv. Posting Gate, which posting requires in addition to the Bifrost "Full Access" permission set');
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
@@ -683,12 +692,19 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'The domain is on, but ' + PermissionReason + '.', 'Assign the missing permission set to the caller.'));
     end;
 
-    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text)
+    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text; NeedsPostingType: Boolean)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MissingWhen: Text;
+        MissingNextStep: Text;
     begin
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter,
-            'No ' + RecordName + ' identifier in subject or data.', 'Send subject or an identifier key under data.'));
+        MissingWhen := 'No ' + RecordName + ' identifier in subject or data.';
+        MissingNextStep := 'Send subject or an identifier key under data.';
+        if NeedsPostingType then begin
+            MissingWhen += ' A non-direct transfer order also requires postingType.';
+            MissingNextStep += ' For a non-direct transfer, send postingType Ship or Receive.';
+        end;
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhen, MissingNextStep));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound,
             'An identifier was given but matches no ' + RecordName + '.', 'Check the value or look the record up first.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers,
@@ -723,107 +739,107 @@ codeunit 10076919 "Inventory Contract Parts ori"
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 begin
-                    SetEffect(Effect, 'read', 'Reads Item attribute definitions and the values assigned to the resolved Items. Nothing is changed.', true, 'BIFROST Read ori');
+                    SetEffect(Effect, 'read', 'Reads Item attribute definitions and the values assigned to the resolved Items. Nothing is changed.', true, 'the Bifrost "Read-Only" permission set');
                     Preconditions.Add('The Attributes domain is turned on in Inventory Setup.');
                     Preconditions.Add('At least one Item matches the subject, identifiers or tableView.');
                 end;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    SetEffect(Effect, 'write', 'Assigns attribute values to one Item. A missing value is created (an Option value only when createValueIfMissing is set) and an existing different value is replaced only when overwrite is set. The Item must not be blocked unless allowBlocked is set.', false, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Assigns attribute values to one Item. A missing value is created (an Option value only when createValueIfMissing is set) and an existing different value is replaced only when overwrite is set. The Item must not be blocked unless allowBlocked is set.', false, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Attributes domain is turned on in Inventory Setup.');
                     Preconditions.Add('The Item exists and is not blocked, or allowBlocked is true.');
                     Preconditions.Add('Each attribute definition already exists; create it with Inventory.AttributeDefinition.Create.');
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    SetEffect(Effect, 'write', 'Replaces the value of attribute mappings the Item already has. A missing value is created (an Option value only when createValueIfMissing is set). The Item must not be blocked unless allowBlocked is set.', false, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Replaces the value of attribute mappings the Item already has. A missing value is created (an Option value only when createValueIfMissing is set). The Item must not be blocked unless allowBlocked is set.', false, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Attributes domain is turned on in Inventory Setup.');
                     Preconditions.Add('The Item exists and is not blocked, or allowBlocked is true.');
                     Preconditions.Add('The Item already has a mapping for each attribute; use Inventory.Attribute.Create for a new one.');
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
-                    SetEffect(Effect, 'write', 'Creates one Item Attribute definition and, for type Option, the listed option values. No Item is changed.', false, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Creates one Item Attribute definition and, for type Option, the listed option values. No Item is changed.', false, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Attributes domain is turned on in Inventory Setup.');
                     Preconditions.Add('No attribute definition with the same name exists.');
                 end;
             'Inventory.TransferOrder.Create':
                 begin
-                    SetEffect(Effect, 'write', 'Creates a Transfer Header with a new number from the number series and, when lines are sent, the Transfer Lines. Nothing is posted.', false, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Creates a Transfer Header with a new number from the number series and, when lines are sent, the Transfer Lines. Nothing is posted.', false, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The locations and items sent exist.');
                 end;
             'Inventory.TransferOrder.Release':
                 begin
-                    SetEffect(Effect, 'write', 'Changes the status of the Transfer Header from Open to Released. An order that is already Released is returned unchanged.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Changes the status of the Transfer Header from Open to Released. An order that is already Released is returned unchanged.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists and passes the release checks of Business Central.');
                 end;
             'Inventory.TransferOrder.Reopen':
                 begin
-                    SetEffect(Effect, 'write', 'Changes the status of the Transfer Header from Released to Open. An order that is already Open is returned unchanged.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Changes the status of the Transfer Header from Released to Open. An order that is already Open is returned unchanged.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists.');
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    SetEffect(Effect, 'irreversible', 'Posts the Transfer Order as a shipment, a receipt or a direct transfer: creates the posted transfer shipment, receipt or direct transfer document with its item ledger and value entries, and updates or deletes the order. The call commits and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori and BIFROST InvPost ori');
+                    SetEffect(Effect, 'irreversible', 'Posts the Transfer Order as a shipment, a receipt or a direct transfer: creates the posted transfer shipment, receipt or direct transfer document with its item ledger and value entries, and updates or deletes the order. The call commits and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
-                    Preconditions.Add('The caller holds BIFROST InvPost ori in addition to BIFROST Full ori.');
+                    Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The order has lines and is ready to be shipped or received.');
                 end;
             'Inventory.TransferOrder.PreviewPost':
                 begin
-                    SetEffect(Effect, 'read', 'Simulates posting inside a transaction that is always rolled back. Nothing is written, including posted document numbers.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'read', 'Simulates posting inside a transaction that is always rolled back. Nothing is written, including posted document numbers.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order has at least one line.');
                 end;
             'Inventory.TransferOrder.Statistics':
                 begin
-                    SetEffect(Effect, 'read', 'Reads the lines of the Transfer Order and sums quantity, parcels, weights and volume. Nothing is changed.', true, 'BIFROST Read ori');
+                    SetEffect(Effect, 'read', 'Reads the lines of the Transfer Order and sums quantity, parcels, weights and volume. Nothing is changed.', true, 'the Bifrost "Read-Only" permission set');
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists.');
                 end;
             'Inventory.AssemblyOrder.Create':
                 begin
-                    SetEffect(Effect, 'write', 'Creates an Assembly Header with a new number from the number series and its component lines from the BOM of the parent item. Nothing is posted.', false, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Creates an Assembly Header with a new number from the number series and its component lines from the BOM of the parent item. Nothing is posted.', false, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The parent item exists and has an assembly BOM.');
                 end;
             'Inventory.AssemblyOrder.RefreshLines':
                 begin
-                    SetEffect(Effect, 'write', 'Re-validates the Item No. of the Assembly Header so Business Central rebuilds the component lines from the BOM of the parent item.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Re-validates the Item No. of the Assembly Header so Business Central rebuilds the component lines from the BOM of the parent item.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists.');
                 end;
             'Inventory.AssemblyOrder.Release':
                 begin
-                    SetEffect(Effect, 'write', 'Changes the status of the Assembly Header from Open to Released. An order that is already Released is returned unchanged.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Changes the status of the Assembly Header from Open to Released. An order that is already Released is returned unchanged.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists and passes the release checks of Business Central.');
                 end;
             'Inventory.AssemblyOrder.Reopen':
                 begin
-                    SetEffect(Effect, 'write', 'Changes the status of the Assembly Header from Released to Open. An order that is already Open is returned unchanged.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'write', 'Changes the status of the Assembly Header from Released to Open. An order that is already Open is returned unchanged.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists.');
                 end;
             'Inventory.AssemblyOrder.Post':
                 begin
-                    SetEffect(Effect, 'irreversible', 'Posts the Assembly Order: creates the posted assembly order with the item ledger and value entries for consumption and output. When quantityToAssemble is sent it is first written to the order. The call commits before posting starts and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori and BIFROST InvPost ori');
+                    SetEffect(Effect, 'irreversible', 'Posts the Assembly Order: creates the posted assembly order with the item ledger and value entries for consumption and output. When quantityToAssemble is sent it is first written to the order. The call commits before posting starts and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
-                    Preconditions.Add('The caller holds BIFROST InvPost ori in addition to BIFROST Full ori.');
+                    Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The components are available and the order has a quantity to assemble.');
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
-                    SetEffect(Effect, 'read', 'Simulates posting inside a transaction that is always rolled back. Nothing is written, including posted document numbers.', true, 'BIFROST Full ori');
+                    SetEffect(Effect, 'read', 'Simulates posting inside a transaction that is always rolled back. Nothing is written, including posted document numbers.', true, 'the Bifrost "Full Access" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order has at least one component line.');
                 end;
             'Inventory.AssemblyOrder.Statistics':
                 begin
-                    SetEffect(Effect, 'read', 'Reads the Assembly Header, counts the component lines and sums the expected and actual cost. Nothing is changed.', true, 'BIFROST Read ori');
+                    SetEffect(Effect, 'read', 'Reads the Assembly Header, counts the component lines and sums the expected and actual cost. Nothing is changed.', true, 'the Bifrost "Read-Only" permission set');
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The order exists.');
                 end;
@@ -1027,8 +1043,12 @@ codeunit 10076919 "Inventory Contract Parts ori"
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Examples.Add(ContractMgt.Example('Read item attributes', '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
+            'Item.Attribute.Create', 'Inventory.Attribute.Create':
+                Examples.Add(ContractMgt.Example('Assign an item attribute', '{"type":"Inventory.Attribute.Create","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Matte","createValueIfMissing":true}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Matte","changed":true,"attributeId":2,"valueId":1}]}'));
+            'Item.Attribute.Update', 'Inventory.Attribute.Update':
+                Examples.Add(ContractMgt.Example('Change an item attribute', '{"type":"Inventory.Attribute.Update","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Gloss"}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Gloss","changed":true,"attributeId":2,"valueId":2,"before":"Matte"}]}'));
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
-                Examples.Add(ContractMgt.Example('Create an option definition', '{"type":"Inventory.AttributeDefinition.Create","data":{"name":"Finish","type":"Option","optionValues":["Matte","Gloss"]}}', '{"status":"Success","attributeId":2,"attributeName":"Finish","type":"Option","createdValues":[]}'));
+                Examples.Add(ContractMgt.Example('Create an option definition', '{"type":"Inventory.AttributeDefinition.Create","data":{"name":"Finish","type":"Option","optionValues":["Matte","Gloss"]}}', '{"status":"Success","attributeId":2,"attributeName":"Finish","type":"Option","createdValues":[{"valueId":1,"value":"Matte"},{"valueId":2,"value":"Gloss"}]}'));
             'Inventory.TransferOrder.Create':
                 Examples.Add(ContractMgt.Example('Create a transfer order', '{"type":"Inventory.TransferOrder.Create","data":{"transferFromCode":"BLUE","transferToCode":"RED","directTransfer":true}}', '{"status":"Success","documentNo":"TO000456","statusAfter":"Open"}'));
             'Inventory.TransferOrder.Release':

@@ -100,7 +100,7 @@ codeunit 10076860 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'locationFilter or variantCode is not text, or the Costing domain is turned off in Inventory Setup.', 'Send locationFilter and variantCode as JSON text, or turn on the Costing domain in Inventory Setup.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'Invalid date or identifier.', 'Use ISO date and valid identifiers.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native Item read permission is absent.', 'Assign the appropriate read role.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Native inventory filter error.','A location or inventory filter cannot be applied.','Correct the native filter syntax.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native inventory filter error.','A location or inventory filter cannot be applied.','Correct the native filter syntax.'));
         exit(true);
     end;
 
@@ -114,7 +114,7 @@ codeunit 10076860 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
         Effect.Add('posts', false);
         Effect.Add('changes', 'None. Reads the current Item cost fields and the filtered inventory quantity.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori');
+        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
         Preconditions.Add('The Costing domain is turned on in Inventory Setup.');
         Preconditions.Add('The caller can read items.');
         Effect.Add('preconditions', Preconditions);

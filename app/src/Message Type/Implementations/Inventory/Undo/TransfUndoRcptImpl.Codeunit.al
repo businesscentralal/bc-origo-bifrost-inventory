@@ -85,10 +85,10 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the BIFROST InvPost ori permission set.', 'Assign BIFROST InvPost ori. Note that the type refuses every receipt anyway.'));
-        Errors.Add(ContractMgt.TextErrorEntry('documentNo must be specified.', 'documentNo was not sent. The answer carries the error text and no code.', 'Send documentNo, the number of the posted transfer receipt.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipt %1 was not found.', 'No Transfer Receipt Header has that number. The answer carries the error text and no code.', 'Check the number of the posted transfer receipt.'));
-        Errors.Add(ContractMgt.TextErrorEntry('Posted transfer receipts cannot be undone in this Business Central version.', 'The posted transfer receipt exists. Every such call is refused. The answer carries the error text and no code.', 'Do not call this type for a correction. Undo the shipment with Inventory.Transfer.UndoShipment, or correct the stock with a new posting.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller does not hold the Inv. Posting Gate permission set.', 'Assign Inv. Posting Gate. Note that the type refuses every receipt anyway.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo must be specified.', 'documentNo was not sent.', 'Send documentNo, the number of the posted transfer receipt.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Posted transfer receipt %1 was not found.', 'No Transfer Receipt Header has that number.', 'Check the number of the posted transfer receipt.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Posted transfer receipts cannot be undone in this Business Central version.', 'The posted transfer receipt exists. Every such call is refused.', 'Do not call this type for a correction. Undo the shipment with Inventory.Transfer.UndoShipment, or correct the stock with a new posting.'));
         exit(true);
     end;
 
@@ -99,7 +99,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only looks up the posted transfer receipt and then always answers an error, because receipt undo is not available in this Business Central version.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
         exit(true);
     end;
 
@@ -146,9 +146,9 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Success is never returned: a posted transfer receipt that exists is answered with an error, and one that does not exist is answered with a not found error. Neither answer carries an error code. ' +
+        Notes := 'Success is never returned: a posted transfer receipt that exists is answered with an error, and one that does not exist is answered with a not found error. The codes are PreconditionFailed and RecordNotFound, respectively. ' +
             'Nothing is changed, so nothing is committed and the call can be repeated. ' +
-            'The caller needs the Transfer Orders domain turned on in Inventory Setup and the BIFROST InvPost ori permission set, although nothing is posted. ' +
+            'The caller needs the Transfer Orders domain turned on in Inventory Setup and the Inv. Posting Gate permission set, although nothing is posted. ' +
             'Use Inventory.Transfer.UndoShipment to undo a posted transfer shipment. The type does not read subject.';
         exit(true);
     end;
@@ -175,14 +175,14 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
         if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError(MissingDocErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, '', '', '', '');
             exit;
         end;
         DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
         if not ReceiptHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError(StrSubstNo(NotFoundErr, DocumentNo));
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), '', '', '', '');
             exit;
         end;
-        Argument.RespondWithError(NotSupportedErr);
+        Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NotSupportedErr, '', '', '', '');
     end;
 }

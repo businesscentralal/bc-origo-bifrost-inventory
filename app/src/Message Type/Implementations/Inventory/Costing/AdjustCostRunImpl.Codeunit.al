@@ -48,7 +48,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the existing costing discovery keywords.</summary>
     procedure GetKeywords(): Text
     var
-        KeywordsLbl: Label 'adjust cost,item entry correction,post to g/l,report 795', Comment = 'is-IS=leiðrétta kostnað,leiðrétting vörufærslu,bóka á fjárhag,skýrsla 795';
+        KeywordsLbl: Label 'adjust cost,item entry correction,post to g/l,cost adjustment', Comment = 'is-IS=leiðrétta kostnað,leiðrétting vörufærslu,bóka á fjárhag,kostnaðarleiðrétting';
     begin
         exit(KeywordsLbl);
     end;
@@ -56,7 +56,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Runs report 795 with optional item or category filter and explicit postToGL option.', Comment = 'is-IS=Keyrir skýrslu 795 með valkvæmri vöru- eða flokkssíu og skýru postToGL-vali.';
+        DescriptionLbl: Label 'Adjusts item costs with an optional item or category filter and an explicit postToGL option.', Comment = 'is-IS=Leiðréttir vörukostnað með valkvæðri vöru- eða flokkssíu og skýru postToGL-vali.';
     begin
         exit(DescriptionLbl);
     end;
@@ -126,7 +126,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is turned off in Inventory Setup.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The caller does not hold the BIFROST InvPost ori permission set.","fix":"Ask an administrator to assign BIFROST InvPost ori."},{"error":"The error text of the Adjust Cost - Item Entries batch job.","when":"The batch job stops with an error, for example when itemNoFilter and itemCategoryFilter are both filled in or a filter is not valid. The error text is returned as it is, with code BusinessCentralError.","fix":"Correct the filters or the cost data named in the error text and check the item entries before you retry; no rollback or safe retry is promised."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure codeunit. Report 795 raises an error when both effective filters are nonempty. Direct invocation may raise instead; scalar/null conversion outcomes require supported-platform verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is turned off in Inventory Setup.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The caller does not hold the Inv. Posting Gate permission set.","fix":"Ask an administrator to assign Inv. Posting Gate."},{"error":"The error text of the Adjust Cost - Item Entries batch job.","when":"The batch job stops with an error, for example when itemNoFilter and itemCategoryFilter are both filled in or a filter is not valid. The error text is returned as it is, with code BusinessCentralError.","fix":"Correct the filters or the cost data named in the error text and check the item entries before you retry; no rollback or safe retry is promised.","code":"BusinessCentralError"},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure handler. The cost adjustment batch job raises an error when both effective filters are nonempty. Direct invocation may raise instead; scalar/null conversion outcomes require supported-platform verification.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
         exit(true);
     end;
 
@@ -136,7 +136,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Clear(Effect);
-        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Adjusts the cost of the matching item entries by running the Adjust Cost - Item Entries batch job. When postToGL is true the batch job also posts the adjustments to the general ledger in the same run. Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, and no rollback is promised if the job fails part way.","idempotent":false,"permissionSet":"BIFROST Full ori and BIFROST InvPost ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; report 795 rejects both nonempty."]}');
+        Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Adjusts the cost of the matching item entries by running the Adjust Cost - Item Entries batch job. When postToGL is true the batch job also posts the adjustments to the general ledger in the same run. Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, and no rollback is promised if the job fails part way.","idempotent":false,"permissionSet":"the Bifrost \"Full Access\" permission set and Inv. Posting Gate","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; the cost adjustment rejects both nonempty."]}');
         exit(true);
     end;
 
@@ -205,7 +205,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
             'postToGL defaults to false. With true the batch job posts the adjustments to the general ledger in the same run, so Inventory.CostToGL.Post is not needed afterwards. ' +
             'The batch job ends quietly when there are no item, application or value entries yet, and the answer is still Success: Success shows that the job finished, not that anything was adjusted or posted. ' +
             'Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, the call is not idempotent, and no rollback or safe retry is promised if the job fails part way. ' +
-            'The caller needs the BIFROST InvPost ori permission set, and the Costing domain must be on in Inventory Setup. Read costIsAdjusted with Inventory.Cost.Get to see whether items still need an adjustment run.';
+            'The caller needs the Inv. Posting Gate permission set, and the Costing domain must be on in Inventory Setup. Read costIsAdjusted with Inventory.Cost.Get to see whether items still need an adjustment run.';
         exit(true);
     end;
 }

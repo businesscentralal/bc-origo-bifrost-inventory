@@ -35,7 +35,7 @@ codeunit 96959 "Reserv. AutoReserve Perm"
         AutoImpl.ExecuteBifrostTask(TempArgument);
         ResponseJson := TempArgument.GetResponseJson();
         Assert.AreEqual('PermissionDenied', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvWrite ori'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'the Bifrost "Full Access" permission set with Inventory write permissions'), ReadText(ResponseJson, 'nextStep'));
     end;
 
     [Test]
@@ -57,7 +57,7 @@ codeunit 96959 "Reserv. AutoReserve Perm"
         TrackImpl.ExecuteBifrostTask(TempArgument);
         ResponseJson := TempArgument.GetResponseJson();
         Assert.AreEqual('PermissionDenied', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvRead ori'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'the Bifrost "Read-Only" permission set with Inventory read permissions'), ReadText(ResponseJson, 'nextStep'));
     end;
 
     local procedure ReadText(ResponseJson: JsonObject; KeyName: Text): Text
