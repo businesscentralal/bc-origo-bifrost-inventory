@@ -156,6 +156,9 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         PreviewArray: JsonArray;
         DocumentNo: Code[20];
         LCYCode: Code[10];
+        OriginalPostingDate: Date;
+        OriginalQuantityToAssemble: Decimal;
+        PreviewQuantityToAssemble: Decimal;
         EntryCount: Integer;
         GLEntryCount: Integer;
         Balanced: Boolean;
@@ -181,7 +184,13 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         DocumentNo := AssemblyHeader."No.";
         GLSetup.Get();
         LCYCode := GLSetup."LCY Code";
+        OriginalPostingDate := AssemblyHeader."Posting Date";
+        OriginalQuantityToAssemble := AssemblyHeader."Quantity to Assemble";
+        if not ApplyPreviewAdjustments(Argument, AssemblyHeader) then
+            exit;
+        PreviewQuantityToAssemble := AssemblyHeader."Quantity to Assemble";
         if not PreviewAssemblyOrder(AssemblyHeader, PostingPreviewEventHandler, PreviewErrorText) then begin
+            RestorePreviewAdjustments(AssemblyHeader, OriginalPostingDate, OriginalQuantityToAssemble);
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
             PostingPreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
@@ -193,8 +202,11 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
             repeat
                 PostingPreviewHelper.AddTableToPreview(PreviewArray, PostingPreviewEventHandler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", PreviewFieldNames);
             until TempDocumentEntry.Next() = 0;
-        if not PostingPreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then
+        if not PostingPreviewHelper.EvaluatePreviewOutcome(Argument, PreviewArray, PostingPreviewEventHandler, NothingToPostNextStepTok, TotalsJson, Balanced, EntryCount, GLEntryCount) then begin
+            RestorePreviewAdjustments(AssemblyHeader, OriginalPostingDate, OriginalQuantityToAssemble);
             exit;
+        end;
+        RestorePreviewAdjustments(AssemblyHeader, OriginalPostingDate, OriginalQuantityToAssemble);
         BuildPredictedNumbers(PredictedJson, PostingPreviewEventHandler);
         Summary := BuildSummary(DocumentNo, AssemblyHeader."Item No.", PreviewArray, PostingPreviewHelper.GLStatusSentence(GLEntryCount, Balanced));
         ResponseJson.Add('status', 'Success');
@@ -204,7 +216,7 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('itemNo', AssemblyHeader."Item No.");
         ResponseJson.Add('locationCode', AssemblyHeader."Location Code");
-        ResponseJson.Add('quantityToAssemble', AssemblyHeader."Quantity to Assemble");
+        ResponseJson.Add('quantityToAssemble', PreviewQuantityToAssemble);
         ResponseJson.Add('lcyCode', LCYCode);
         ResponseJson.Add('predictedNumbers', PredictedJson);
         ResponseJson.Add('totals', TotalsJson);
@@ -239,6 +251,43 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         SummaryTok: Label 'Assembly Order %1 (Item %2) preview produced %3 entries. %4', Comment = '%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence', Locked = true;
     begin
         exit(StrSubstNo(SummaryTok, DocumentNo, ItemNo, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
+    end;
+
+    local procedure ApplyPreviewAdjustments(var Argument: Record "Message Argument ori"; var AssemblyHeader: Record "Assembly Header"): Boolean
+    var
+        RequestValueReader: Codeunit "Request Value Reader ori";
+        RequestJson: JsonObject;
+        PostingDate: Date;
+        QuantityToAssemble: Decimal;
+    begin
+        RequestJson := Argument.GetRequestJson();
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+            exit(false);
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+            exit(false);
+        if (PostingDate = 0D) and (QuantityToAssemble <= 0) then
+            exit(true);
+        AssemblyHeader.SetHideValidationDialog(true);
+        if QuantityToAssemble > 0 then
+            AssemblyHeader.Validate("Quantity to Assemble", QuantityToAssemble);
+        if PostingDate <> 0D then
+            AssemblyHeader.Validate("Posting Date", PostingDate);
+        AssemblyHeader.Modify(true);
+        exit(true);
+    end;
+
+    local procedure RestorePreviewAdjustments(var AssemblyHeader: Record "Assembly Header"; OriginalPostingDate: Date; OriginalQuantityToAssemble: Decimal)
+    begin
+        if not AssemblyHeader.Get(AssemblyHeader."Document Type", AssemblyHeader."No.") then
+            exit;
+        if (AssemblyHeader."Posting Date" = OriginalPostingDate) and (AssemblyHeader."Quantity to Assemble" = OriginalQuantityToAssemble) then
+            exit;
+        AssemblyHeader.SetHideValidationDialog(true);
+        if AssemblyHeader."Quantity to Assemble" <> OriginalQuantityToAssemble then
+            AssemblyHeader.Validate("Quantity to Assemble", OriginalQuantityToAssemble);
+        if AssemblyHeader."Posting Date" <> OriginalPostingDate then
+            AssemblyHeader.Validate("Posting Date", OriginalPostingDate);
+        AssemblyHeader.Modify(true);
     end;
 
     local procedure PreviewAssemblyOrder(var AssemblyHeader: Record "Assembly Header"; var PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler"; var ErrorText: Text): Boolean

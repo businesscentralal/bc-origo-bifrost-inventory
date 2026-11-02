@@ -5,7 +5,7 @@ using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Close. Closes an inventory period through the Inventory Period record.
+/// Inventory.Period.Close. Closes an inventory period through the platform Close Inventory Period codeunit.
 /// </summary>
 codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -52,6 +52,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         InventoryPeriod: Record "Inventory Period";
+        CloseInventoryPeriod: Codeunit "Close Inventory Period";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -75,8 +76,12 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
             exit;
         end;
         if not InventoryPeriod.Closed then begin
-            InventoryPeriod.Validate(Closed, true);
-            InventoryPeriod.Modify(true);
+            CloseInventoryPeriod.SetHideDialog(true);
+            if not CloseInventoryPeriod.Run(InventoryPeriod) then begin
+                Argument.RespondWithError(GetLastErrorText());
+                exit;
+            end;
+            InventoryPeriod.Get(EndingDate);
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
@@ -146,7 +151,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Sets the Closed flag of the Inventory Period that ends on endingDate to true through the table validation. A period that is already closed is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('changes', 'Closes the Inventory Period that ends on endingDate through the platform Close Inventory Period codeunit, which also closes earlier open inventory periods and writes an inventory period entry for each period it closes. A period that is already closed is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
@@ -196,14 +201,14 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Closes the inventory period that ends on the given date. A period that is already closed is answered Success unchanged.';
+        Overview := 'Closes the inventory period that ends on the given date through the platform inventory-period close. A period that is already closed is answered Success unchanged.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Sets the Closed flag of the Inventory Period identified by endingDate and returns the period. It posts nothing and runs no other function; the change goes through the validation of the Inventory Period table. ' +
-            'The call is idempotent: a period that already has the requested state is not modified. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
+        Notes := 'Closes the Inventory Period identified by endingDate by running the platform Close Inventory Period codeunit with its confirmation and message dialog hidden. That close also closes every earlier open inventory period and writes an inventory period entry for each period it closes. A platform refusal, such as unadjusted cost or open negative inventory, is returned as an error and writes nothing. ' +
+            'The call is idempotent: a period that is already closed is not modified and the platform close is not run again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
             'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
             'The change commits with the answer; under Omit Commit the caller''s transaction commits instead. ' +
             'Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.';

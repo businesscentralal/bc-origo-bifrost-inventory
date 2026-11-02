@@ -32,7 +32,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         TransferPreviewNotesLbl: Label 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.', Comment = 'is-IS=Heppnuð forskoðun inniheldur rollback true. Ekkert er vistað, þar á meðal númer bókaðra skjala.';
         AssemblyCreateNotesLbl: Label 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.', Comment = 'is-IS=refreshLines er sjálfgefið true. postingDate er vinnudagsetning þegar henni er sleppt. quantity verður að vera jákvætt.';
         AssemblyPostNotesLbl: Label 'Requires BIFROST InvPost ori in addition to BIFROST Full ori. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst BIFROST InvPost ori auk BIFROST Full ori. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.';
-        AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur.';
+        AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries. postingDate and quantityToAssemble are applied for the preview the same way as Inventory.AssemblyOrder.Post, then the order is restored.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur. postingDate og quantityToAssemble eru notuð í forskoðuninni á sama hátt og í Inventory.AssemblyOrder.Post og pöntunin er síðan færð til baka.';
 
     /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEnvelope(MessageType: Text): JsonObject
@@ -396,7 +396,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Fields.Add(ContractMgt.ResponseField('remainingQuantity', 'decimal', 'Quantity still to assemble.'));
                     Fields.Add(ContractMgt.ResponseField('reservedQuantity', 'decimal', 'Quantity reserved.'));
                     Fields.Add(ContractMgt.ResponseField('assembleToOrder', 'boolean', 'Whether the order is linked to a sales order (assemble-to-order).'));
-                    Fields.Add(ContractMgt.ResponseField('status_', 'string', 'The order status, Open or Released. The name carries a trailing underscore because status holds the call result.'));
+                    Fields.Add(ContractMgt.ResponseField('orderStatus', 'string', 'The assembly order status, Open or Released. status holds the call result, so the order status is returned here.'));
+                    Fields.Add(ContractMgt.ResponseField('status_', 'string', 'Same value as orderStatus. Kept for callers that already read status_.'));
                     Fields.Add(ContractMgt.ResponseField('postingDate', 'string', 'Posting date in YYYY-MM-DD format.'));
                     Fields.Add(ContractMgt.ResponseField('dueDate', 'string', 'Due date in YYYY-MM-DD format.'));
                     Fields.Add(ContractMgt.ResponseField('startingDate', 'string', 'Starting date in YYYY-MM-DD format.'));
@@ -1054,7 +1055,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.PreviewPost':
                 Examples.Add(ContractMgt.Example('Preview posting an assembly order', '{"type":"Inventory.AssemblyOrder.PreviewPost","data":{"documentNo":"AO000456"}}', '{"status":"Success","entryCount":4,"glEntryCount":0,"rollback":true,"documentNo":"AO000456","itemNo":"1000","predictedNumbers":{"postedAssemblyNo":"32000001"}}'));
             'Inventory.AssemblyOrder.Statistics':
-                Examples.Add(ContractMgt.Example('Read assembly order statistics', '{"type":"Inventory.AssemblyOrder.Statistics","data":{"documentNo":"AO000456"}}', '{"status":"Success","documentNo":"AO000456","itemNo":"1000","quantity":1,"status_":"Open","lines":{"total":3,"item":3,"resource":0,"text":0}}'));
+                Examples.Add(ContractMgt.Example('Read assembly order statistics', '{"type":"Inventory.AssemblyOrder.Statistics","data":{"documentNo":"AO000456"}}', '{"status":"Success","documentNo":"AO000456","itemNo":"1000","quantity":1,"orderStatus":"Open","status_":"Open","lines":{"total":3,"item":3,"resource":0,"text":0}}'));
         end;
     end;
 
@@ -1132,7 +1133,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.PreviewPost':
                 Notes := AssemblyPreviewNotesLbl;
             'Inventory.AssemblyOrder.Statistics':
-                Notes := 'Reads only, in any status. lines counts the component lines by type. costs.totalExpectedCost sums the expected cost of the component lines and costs.totalActualCost the actual costs posted so far. The order status is returned in status_, because status holds the call result.';
+                Notes := 'Reads only, in any status. lines counts the component lines by type. costs.totalExpectedCost sums the expected cost of the component lines and costs.totalActualCost the actual costs posted so far. The order status is returned in orderStatus, because status holds the call result. status_ repeats orderStatus for callers that already read it.';
         end;
     end;
 

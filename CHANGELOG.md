@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-02) - remaining contract-parity defects (#159)
+
+- Removed the unused codeunit `Phys. Invt. Calc Impl ori` (10076880). `Inventory.PhysInventory.Calculate` stays on `Phys. Inv. Calc Impl ori` (10076883). No message type pointed at 10076880.
+- `Inventory.TransferOrder.Post` (10076903) refuses `ShipReceive` on a non-direct transfer and the error text no longer lists that value as valid. `Transfer Order Post Tests` (96914) covers the refusal.
+- `Inventory.AssemblyOrder.Release` (10076851) traps the native release with `Codeunit.Run`, including the Omit Commit path, the same way transfer release does.
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` for the preview and restores the order afterwards. `Inventory.AssemblyOrder.Statistics` (10076853) returns the order status in `orderStatus` and keeps `status_` as the same value.
+- `Inventory.ItemCharge.Get` (10076875) ignores a quote or blanket order found by SystemId, matching the document-number filter. `Inventory.ItemCharge.Assign` (10076873) refuses a target quantity above the charge quantity that is still assignable.
+- `Inventory.Cost.Get` (10076860) treats an empty `variantCode` as no variant restriction, the same way an empty `locationFilter` does not restrict the location.
+- `Inventory.ItemApplication.Get` (10076867) answers `InvalidParameter` when `itemLedgerEntryNo` is not a JSON integer. Listing applications by `Item Ledger Entry No.` stays as documented: an inbound entry shows the rows recorded on itself.
+- `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) call the platform `Close Inventory Period` codeunit with its dialog hidden. Closing also closes earlier open periods, reopening also reopens later closed periods, and each changed period gets an inventory period entry. A period that is already in the requested state is left unchanged. `Inv. Period Close Tests` (96979) covers the platform entry and the idempotent path.
+- `Inventory.PhysInventory.Check` (10076884) keeps answering an empty batch as Success with `validationResult` NotReady. Post and PreviewPost still refuse an empty batch. That split is the published contract.
+
 ### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
 
 - Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.

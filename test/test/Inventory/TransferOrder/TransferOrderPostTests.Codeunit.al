@@ -158,6 +158,33 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
+    procedure Post_ShipReceive_RefusesCombinedPosting()
+    var
+        FromLocation, ToLocation, InTransitLocation : Record Location;
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        RequestJson, ResponseJson : JsonObject;
+        StatusToken: JsonToken;
+        ResponseText: Text;
+    begin
+        // [SCENARIO] #159 ShipReceive is refused and is not described as a valid postingType
+        Initialize();
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 100);
+        Helper.CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
+
+        RequestJson.Add('postingType', 'ShipReceive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
+
+        ResponseJson.WriteTo(ResponseText);
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
+        Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'Status should be Error');
+        Assert.IsTrue(ResponseText.Contains('not accepted'), 'The refusal must say ShipReceive is not accepted.');
+        Assert.IsFalse(ResponseText.Contains('or "ShipReceive"'), 'The refusal must not list ShipReceive as a valid postingType.');
+    end;
+
+    [Test]
     procedure Post_DirectTransfer_ReceiptAndShipment_ReturnsBothDocuments()
     var
         TransferHeader: Record "Transfer Header";

@@ -94,7 +94,8 @@ codeunit 10076839 "Inventory Cost Read ori"
     begin
         if Request.Contains('locationFilter') then
             Item.SetFilter("Location Filter", LocationFilter);
-        if Request.Contains('variantCode') then
+        // An empty variantCode means no variant restriction, matching an empty locationFilter. A non-empty value stays an exact variant.
+        if Request.Contains('variantCode') and (VariantCode <> '') then
             Item.SetRange("Variant Filter", VariantCode);
         Item.SetLoadFields("No.", SystemId, "Costing Method", "Unit Cost", "Standard Cost", "Last Direct Cost", "Indirect Cost %", "Cost is Adjusted");
         if Item.FindSet() then
