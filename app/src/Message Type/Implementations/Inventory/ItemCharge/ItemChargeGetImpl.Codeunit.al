@@ -338,8 +338,8 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     procedure RespondPermissionDenied(var Argument: Record "Message Argument ori"; ForWrite: Boolean)
     var
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        ReadNextStepLbl: Label 'Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.';
-        WriteNextStepLbl: Label 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.';
+        ReadNextStepLbl: Label 'Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        WriteNextStepLbl: Label 'Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         if ForWrite then
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', WritePermissionSetTok, WriteNextStepLbl)

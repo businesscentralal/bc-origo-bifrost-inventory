@@ -376,9 +376,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -1846,9 +1846,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method NotFoundNextStep - NamedType NotFoundNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
@@ -2212,9 +2212,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method LoopNextStep - NamedType LoopNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.</source>
-          <target>Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
+          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 1067610360 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
@@ -3232,15 +3232,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2237090239 - NamedType 225315183" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType ReadNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2237090239 - NamedType 3562499966" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.</source>
-          <target>Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
+          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondPermissionDenied - NamedType WriteNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 243885405 - NamedType 2168394966" size-unit="char" translate="yes" xml:space="preserve">
@@ -3310,9 +3310,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -3826,9 +3826,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method RespondPermissionDenied - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 2237090239 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Read ori (extended by BIFROST InvRead ori) and a Business Central permission set that can read these tables.</source>
-          <target>Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Read ori (með viðbótinni BIFROST InvRead ori) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <source>Assign Bifrost Read-Only with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost lesaðgangi með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method RespondPermissionDenied - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 1814212218 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
@@ -4336,9 +4336,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change these tables.</source>
-          <target>Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu BIFROST Full ori (með viðbótinni BIFROST InvWrite ori) og Business Central heimildasafni sem getur breytt þessum töflum.</note>
+          <source>Assign Bifrost Full Access with Inventory write permissions and a Business Central permission set that can change these tables.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
