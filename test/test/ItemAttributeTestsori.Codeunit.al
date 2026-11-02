@@ -322,8 +322,8 @@ codeunit 96900 "Item Attribute Tests ori"
     var
         Item: Record Item;
         InventorySetup: Record "Inventory Setup ori";
-        Contract: Interface "Msg Contract ori";
         Helper: Codeunit "Assembly Order Test Helper";
+        Contract: Interface "Msg Contract ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Attributes: JsonArray;
