@@ -43,6 +43,6 @@ codeunit 96953 "Avail. By Period Perm"
         Assert.IsTrue(ResponseJson.Get('code', CodeToken), 'code missing');
         Assert.AreEqual('PermissionDenied', CodeToken.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', NextStepToken), 'nextStep missing');
-        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'BIFROST InvRead ori'), NextStepToken.AsValue().AsText());
+        Assert.AreNotEqual(0, StrPos(NextStepToken.AsValue().AsText(), 'Bifrost Read-Only with Inventory read permissions'), NextStepToken.AsValue().AsText());
     end;
 }

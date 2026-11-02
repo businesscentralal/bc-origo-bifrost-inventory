@@ -841,7 +841,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
 
     local procedure DeletesNextStep(): Text
     var
-        DeletesNextStepLbl: Label 'Use the BC page for deletes.', Comment = 'is-IS=Notaðu síðuna í BC til að eyða.';
+        DeletesNextStepLbl: Label 'Use the Item Categories page to delete a category.', Comment = 'is-IS=Notaðu síðuna Vöruflokkar til að eyða vöruflokki.';
     begin
         exit(DeletesNextStepLbl);
     end;

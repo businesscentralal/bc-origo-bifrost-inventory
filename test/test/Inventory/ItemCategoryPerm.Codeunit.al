@@ -33,7 +33,7 @@ codeunit 96957 "Item Category Perm"
         GetImpl.ExecuteBifrostTask(TempArgument);
         ResponseJson := TempArgument.GetResponseJson();
         Assert.AreEqual('PermissionDenied', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvRead ori'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Bifrost Read-Only with Inventory read permissions'), ReadText(ResponseJson, 'nextStep'));
     end;
 
     [Test]
@@ -53,7 +53,7 @@ codeunit 96957 "Item Category Perm"
         SetImpl.ExecuteBifrostTask(TempArgument);
         ResponseJson := TempArgument.GetResponseJson();
         Assert.AreEqual('PermissionDenied', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'BIFROST InvWrite ori'), ReadText(ResponseJson, 'nextStep'));
+        Assert.AreNotEqual(0, StrPos(ReadText(ResponseJson, 'nextStep'), 'Bifrost Full Access with Inventory write permissions'), ReadText(ResponseJson, 'nextStep'));
     end;
 
     local procedure ReadText(ResponseJson: JsonObject; KeyName: Text): Text
