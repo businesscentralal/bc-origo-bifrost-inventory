@@ -1,0 +1,20 @@
+{
+  "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "containerId": "f0c8d36d33b1",
+  "lcid": 1039,
+  "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+  "downloadName": "Inventory.TransferOrder.Post.json",
+  "selectedType": "Inventory.TransferOrder.Post",
+  "passed": 4,
+  "executed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "at": "2026-11-02T11:10:59.984Z",
+  "assertions": [
+    "Native UI selected exact Inventory type",
+    "Contract declares integer expectedCount",
+    "UI success example supplies confirmation",
+    "Icelandic description differs from English"
+  ],
+  "countCorrection": "Three contract assertions plus one locale assertion were executed successfully by ui-help.cjs1039; recorded actual4."
+}

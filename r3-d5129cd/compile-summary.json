@@ -1,0 +1,44 @@
+[
+  {
+    "project": "app",
+    "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+    "dirty": false,
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "command": [
+      "/workspace/tools/dotnet/dotnet",
+      "/workspace/tools/al/extension/bin/alc.dll",
+      "/project:/workspace/inventory176-worker7/app",
+      "/packagecachepath:/workspace/evidence/inventory176-worker7/symbols",
+      "/out:/workspace/evidence/inventory176-worker7/app.app",
+      "/errorlog:/workspace/evidence/inventory176-worker7/app-diagnostics.json",
+      "/SourceCommit:d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.CodeCop.dll",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.UICop.dll",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+    ],
+    "recordedAt": "2026-11-02T10:48:56.178336+00:00"
+  },
+  {
+    "project": "test",
+    "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+    "dirty": false,
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "command": [
+      "/workspace/tools/dotnet/dotnet",
+      "/workspace/tools/al/extension/bin/alc.dll",
+      "/project:/workspace/inventory176-worker7/test",
+      "/packagecachepath:/workspace/evidence/inventory176-worker7/symbols",
+      "/out:/workspace/evidence/inventory176-worker7/test.app",
+      "/errorlog:/workspace/evidence/inventory176-worker7/test-diagnostics.json",
+      "/SourceCommit:d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.CodeCop.dll",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.UICop.dll",
+      "/analyzer:/workspace/tools/al/extension/bin/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+    ],
+    "recordedAt": "2026-11-02T10:49:08.184013+00:00"
+  }
+]

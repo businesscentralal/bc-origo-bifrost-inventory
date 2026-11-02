@@ -1,0 +1,14 @@
+{
+  "containerId": "f0c8d36d33b1",
+  "workerId": "worker-7",
+  "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "before": {
+    "statusCode": 200,
+    "displayName": "dainn-worker7-inventory176-r3-main-20261102-w1"
+  },
+  "deleteStatus": 204,
+  "verifyStatus": 404,
+  "verifiedAbsent": true,
+  "at": "2026-11-02T11:11:45.679Z",
+  "scope": "Owned ephemeral verification environment; all native fixture state removed with container. Self-created MCP items deleted204 and absence verified separately. No foreign resources touched."
+}

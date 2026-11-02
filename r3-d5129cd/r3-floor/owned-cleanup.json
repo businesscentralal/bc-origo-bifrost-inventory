@@ -1,0 +1,14 @@
+{
+  "containerId": "f01a320b6d03",
+  "workerId": "worker-7",
+  "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "before": {
+    "statusCode": 200,
+    "displayName": "dainn-worker7-inventory176-r3-floor-20261102-w1"
+  },
+  "deleteStatus": 204,
+  "verifyStatus": 404,
+  "verifiedAbsent": true,
+  "at": "2026-11-02T11:10:59.680Z",
+  "scope": "Owned floor-profile ephemeral verification environment; all native fixture state removed with container. No MCP fixtures created on this profile; current-tip MCP fixture cleanup was independently verified on the main profile. No foreign resources touched."
+}

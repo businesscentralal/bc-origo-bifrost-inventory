@@ -1,0 +1,586 @@
+{
+  "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/176",
+  "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "criteria": {
+    "AC01": {
+      "status": "verified-native-both-profiles",
+      "types": 9,
+      "testCodeunit": 96978,
+      "scope": "Missing/wrong/matching count at valid targets, real native success for all9, no-ledger-mutation assertions on refusals in1033/1039",
+      "implementationStatus": "implemented",
+      "verificationSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    "AC02": {
+      "status": "verified-native-both-profiles",
+      "scope": "exact raw metadata plus separately checked framework additions",
+      "implementationStatus": "implemented",
+      "verificationSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    "AC03": {
+      "status": "verified-native-both-profiles",
+      "floor": "28.0.3.530",
+      "mainArtifactId": 13126632957,
+      "mainSha": "c8177c806854795271d45eaa682a3737ee8ddabf",
+      "mainVersion": "28.0.11.656",
+      "note": "Main artifact version differs numerically from PR build1919 but current main contains1151",
+      "main": "28.0.11.656",
+      "implementationStatus": "implemented",
+      "verificationSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    "AC04": {
+      "status": "verified-native-both-profiles",
+      "note": "Same two help corrections and regression coverage already published in175; no edits to175 branch",
+      "tests": [
+        "Create_InvalidAttributes_MatchesHelpCode",
+        "Update_InvalidAttributes_MatchesHelpCode"
+      ],
+      "implementationStatus": "implemented",
+      "verificationSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    "AC05": {
+      "status": "verified-current-tip",
+      "note": "No new labels; request JSON examples only",
+      "evidence": [
+        "r3-xlf-guard.log",
+        "r3-object-guard.log"
+      ],
+      "implementationStatus": "implemented",
+      "verificationSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    }
+  },
+  "nativeProfiles": {
+    "main": {
+      "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "containerId": "f0c8d36d33b1",
+      "fullSuite": true,
+      "extensionId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "total": 464,
+      "executed": 464,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 0,
+      "junitSha256": "6de209917971f1f813c5adf1f844b630b0c87bf0884c7022300197d03094571b",
+      "source": "Actual native JUnit testcase elements counted independently",
+      "failures": [],
+      "at": "2026-11-02T11:07:21.319457+00:00"
+    },
+    "floor": {
+      "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "containerId": "f01a320b6d03",
+      "fullSuite": true,
+      "extensionId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "total": 464,
+      "executed": 464,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 0,
+      "junitSha256": "75d10becd3f7f420df208acfe1429d199ac4811c5ec917891fc00196d10c8110",
+      "source": "Actual native JUnit testcase elements counted independently",
+      "failures": [],
+      "at": "2026-11-02T11:07:43.833439+00:00"
+    }
+  },
+  "ui": {
+    "1033": {
+      "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "containerId": "f0c8d36d33b1",
+      "lcid": 1033,
+      "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+      "downloadName": "Inventory.TransferOrder.Post.json",
+      "selectedType": "Inventory.TransferOrder.Post",
+      "passed": 3,
+      "executed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "at": "2026-11-02T11:10:04.231Z",
+      "assertions": [
+        "Native UI selected exact Inventory type",
+        "Contract declares integer expectedCount",
+        "UI success example supplies confirmation"
+      ]
+    },
+    "1039": {
+      "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "containerId": "f0c8d36d33b1",
+      "lcid": 1039,
+      "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+      "downloadName": "Inventory.TransferOrder.Post.json",
+      "selectedType": "Inventory.TransferOrder.Post",
+      "passed": 4,
+      "executed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "at": "2026-11-02T11:10:59.984Z",
+      "assertions": [
+        "Native UI selected exact Inventory type",
+        "Contract declares integer expectedCount",
+        "UI success example supplies confirmation",
+        "Icelandic description differs from English"
+      ],
+      "countCorrection": "Three contract assertions plus one locale assertion were executed successfully by ui-help.cjs1039; recorded actual4."
+    }
+  },
+  "mcp": {
+    "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+    "containerId": "f0c8d36d33b1",
+    "createsOwnData": true,
+    "lcids": [
+      1033,
+      1039
+    ],
+    "touchedMessageTypes": [
+      "Inventory.AdjustCost.Run",
+      "Inventory.CostToGL.Post",
+      "Inventory.TransferOrder.Post",
+      "Inventory.AssemblyOrder.Post",
+      "Inventory.Transfer.UndoShipment",
+      "Inventory.Assembly.UndoPost",
+      "Inventory.PhysInventory.Post",
+      "Inventory.Revaluation.Post",
+      "Inventory.Reclassification.Post",
+      "Inventory.Attribute.Create",
+      "Inventory.Attribute.Update"
+    ],
+    "scenarios": "All9 confirmation previews/mismatches and matching-count handler routing; costing success on self-created zero-stock items; deliberate unique absent-document/batch refusals; attribute empty-array parity and shared Retryable. Actual successful native posting/undo/journal writes are separately asserted by the full native suite.",
+    "executed": 94,
+    "passed": 94,
+    "failed": 0,
+    "skipped": 0,
+    "assertions": [
+      {
+        "name": "own-negative-selector-absent-Transfer Header-1033",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Assembly Header-1033",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Transfer Shipment Header-1033",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Posted Assembly Header-1033",
+        "passed": true
+      },
+      {
+        "name": "own-negative-batch-template-absent-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.AdjustCost.Run-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.AdjustCost.Run-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.AdjustCost.Run-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.AdjustCost.Run-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.CostToGL.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.CostToGL.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.CostToGL.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.CostToGL.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.TransferOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.TransferOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.TransferOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.TransferOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.AssemblyOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.AssemblyOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.AssemblyOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.AssemblyOrder.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Transfer.UndoShipment-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Transfer.UndoShipment-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Transfer.UndoShipment-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Transfer.UndoShipment-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Assembly.UndoPost-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Assembly.UndoPost-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Assembly.UndoPost-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Assembly.UndoPost-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.PhysInventory.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.PhysInventory.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.PhysInventory.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.PhysInventory.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Revaluation.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Revaluation.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Revaluation.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Revaluation.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Reclassification.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Reclassification.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Reclassification.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Reclassification.Post-1033",
+        "passed": true
+      },
+      {
+        "name": "write-retryable-Inventory.Attribute.Create-1033",
+        "passed": true
+      },
+      {
+        "name": "empty-array-parity-Inventory.Attribute.Create-1033",
+        "passed": true
+      },
+      {
+        "name": "write-retryable-Inventory.Attribute.Update-1033",
+        "passed": true
+      },
+      {
+        "name": "empty-array-parity-Inventory.Attribute.Update-1033",
+        "passed": true
+      },
+      {
+        "name": "definition-shared-retryable-1033",
+        "passed": true
+      },
+      {
+        "name": "self-created-item-preserved-1033",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Transfer Header-1039",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Assembly Header-1039",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Transfer Shipment Header-1039",
+        "passed": true
+      },
+      {
+        "name": "own-negative-selector-absent-Posted Assembly Header-1039",
+        "passed": true
+      },
+      {
+        "name": "own-negative-batch-template-absent-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.AdjustCost.Run-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.AdjustCost.Run-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.AdjustCost.Run-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.AdjustCost.Run-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.CostToGL.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.CostToGL.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.CostToGL.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.CostToGL.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.TransferOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.TransferOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.TransferOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.TransferOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.AssemblyOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.AssemblyOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.AssemblyOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.AssemblyOrder.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Transfer.UndoShipment-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Transfer.UndoShipment-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Transfer.UndoShipment-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Transfer.UndoShipment-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Assembly.UndoPost-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Assembly.UndoPost-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Assembly.UndoPost-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Assembly.UndoPost-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.PhysInventory.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.PhysInventory.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.PhysInventory.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.PhysInventory.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Revaluation.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Revaluation.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Revaluation.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Revaluation.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "help-confirmation-Inventory.Reclassification.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "preview-Inventory.Reclassification.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "wrong-count-Inventory.Reclassification.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "matching-count-handler-Inventory.Reclassification.Post-1039",
+        "passed": true
+      },
+      {
+        "name": "write-retryable-Inventory.Attribute.Create-1039",
+        "passed": true
+      },
+      {
+        "name": "empty-array-parity-Inventory.Attribute.Create-1039",
+        "passed": true
+      },
+      {
+        "name": "write-retryable-Inventory.Attribute.Update-1039",
+        "passed": true
+      },
+      {
+        "name": "empty-array-parity-Inventory.Attribute.Update-1039",
+        "passed": true
+      },
+      {
+        "name": "definition-shared-retryable-1039",
+        "passed": true
+      },
+      {
+        "name": "self-created-item-preserved-1039",
+        "passed": true
+      }
+    ],
+    "cleanup": [
+      {
+        "id": "ac4d3ebd-add6-f111-b7a5-a49980d9eca2",
+        "number": "D7I176E4",
+        "lcid": 1033,
+        "createdAt": "2026-11-02T11:08:13.815Z",
+        "createHttp": 201,
+        "deleteHttp": 204,
+        "absenceHttp": 200,
+        "absent": true
+      },
+      {
+        "id": "cb5c63c9-add6-f111-b7a5-a49980d9eca2",
+        "number": "D7I176I4",
+        "lcid": 1039,
+        "createdAt": "2026-11-02T11:08:41.976Z",
+        "createHttp": 201,
+        "deleteHttp": 204,
+        "absenceHttp": 200,
+        "absent": true
+      }
+    ],
+    "at": "2026-11-02T11:09:33.267Z"
+  },
+  "remainingWork": [
+    "Current-tip paired CI then guarded developer handoff",
+    "Claude exact-tip verification; Grok clearance; eligible non-author approval",
+    "Architect merge/deploy and Tester same-SHA UAT/closure"
+  ],
+  "cleanup": {
+    "main": {
+      "containerId": "f0c8d36d33b1",
+      "workerId": "worker-7",
+      "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "before": {
+        "statusCode": 200,
+        "displayName": "dainn-worker7-inventory176-r3-main-20261102-w1"
+      },
+      "deleteStatus": 204,
+      "verifyStatus": 404,
+      "verifiedAbsent": true,
+      "at": "2026-11-02T11:11:45.679Z",
+      "scope": "Owned ephemeral verification environment; all native fixture state removed with container. Self-created MCP items deleted204 and absence verified separately. No foreign resources touched."
+    },
+    "floor": {
+      "containerId": "f01a320b6d03",
+      "workerId": "worker-7",
+      "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+      "before": {
+        "statusCode": 200,
+        "displayName": "dainn-worker7-inventory176-r3-floor-20261102-w1"
+      },
+      "deleteStatus": 204,
+      "verifyStatus": 404,
+      "verifiedAbsent": true,
+      "at": "2026-11-02T11:10:59.680Z",
+      "scope": "Owned floor-profile ephemeral verification environment; all native fixture state removed with container. No MCP fixtures created on this profile; current-tip MCP fixture cleanup was independently verified on the main profile. No foreign resources touched."
+    }
+  }
+}

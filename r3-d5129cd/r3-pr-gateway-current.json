@@ -1,0 +1,586 @@
+{
+  "version": "28.3.2.0",
+  "project": "Bifrost Inventory",
+  "checks": {
+    "namespace": {
+      "pass": true,
+      "findings": []
+    },
+    "set_load_fields": {
+      "advisory": "Loops without SetLoadFields - consider it only for wide tables; not a gate failure",
+      "findings": [
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "severity": "low"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if not Line.FindSet() then",
+          "line": 552,
+          "severity": "low"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Reservation.FindSet() then",
+          "line": 590,
+          "severity": "low"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if not Line.FindSet() then",
+          "line": 812,
+          "severity": "low"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "text": "if not TransferShipmentLine.FindSet() then begin",
+          "line": 202,
+          "severity": "low"
+        }
+      ],
+      "pass": true
+    },
+    "app_json": {
+      "pass": true,
+      "findings": []
+    },
+    "today_vs_workdate": {
+      "pass": true,
+      "findings": []
+    },
+    "format_guid": {
+      "pass": true,
+      "findings": []
+    },
+    "modernization": {
+      "pass": true,
+      "findings": []
+    },
+    "page_code_minimal": {
+      "pass": true,
+      "findings": []
+    },
+    "read_isolation": {
+      "pass": false,
+      "findings": [
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "if Line.FindSet() then",
+          "line": 79,
+          "variable": "Line"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "text": "if not ItemJournalLine.FindFirst() then begin",
+          "line": 96,
+          "variable": "ItemJournalLine"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "text": "if not TransferShipmentLine.FindSet() then begin",
+          "line": 202,
+          "variable": "TransferShipmentLine"
+        }
+      ]
+    },
+    "event_subscriber_placement": {
+      "pass": true,
+      "findings": []
+    },
+    "reserved_var_names": {
+      "pass": false,
+      "findings": [
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "line": 194,
+          "variable": "Field",
+          "issue": "Variable name 'Field' is a reserved keyword"
+        },
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "line": 418,
+          "variable": "Field",
+          "issue": "Variable name 'Field' is a reserved keyword"
+        },
+        {
+          "file": "PhysInvtPostImpl.Codeunit.al",
+          "line": 115,
+          "variable": "Field",
+          "issue": "Variable name 'Field' is a reserved keyword"
+        }
+      ]
+    },
+    "format_evaluate_enum": {
+      "pass": true,
+      "findings": []
+    },
+    "global_variables": {
+      "pass": true,
+      "findings": []
+    },
+    "caption_translation": {
+      "skipped": null,
+      "findings": [],
+      "pass": true
+    },
+    "one_statement_per_line": {
+      "pass": false,
+      "findings": [
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure CheckParameters(Request: JsonObject; Operation: Text; AllowConfirmation: Boolean)",
+          "line": 400
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure Resolve(var Argument: Record \"Message Argument ori\"; JournalType: Enum \"Item Journal Template Type\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean",
+          "line": 420
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure ResolveSelection(var Argument: Record \"Message Argument ori\"; JournalType: Enum \"Item Journal Template Type\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean",
+          "line": 469
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure NormalizeAlias(var Request: JsonObject; AliasName: Text; Name: Text)",
+          "line": 478
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure ReadText(Request: JsonObject; Name: Text; Maximum: Integer): Text",
+          "line": 495
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure SelectLines(Request: JsonObject; Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\")",
+          "line": 512
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure ReadLines(var Line: Record \"Item Journal Line\"; JournalType: Enum \"Item Journal Template Type\"; var Results: JsonArray)",
+          "line": 548
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure AddProblem(var Problems: JsonArray; Code: Text; MessageText: Text; Parameter: Text)",
+          "line": 645
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure ResolveRevaluationBatch(var Argument: Record \"Message Argument ori\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean",
+          "line": 757
+        },
+        {
+          "file": "InventoryNativeJournal.Codeunit.al",
+          "text": "local procedure ReadTotals(var Line: Record \"Item Journal Line\"; var LinesToPost: Integer; var TotalQuantity: Decimal; var TotalAmount: Decimal)",
+          "line": 810
+        },
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "text": "local procedure AddDomainErrors(var Errors: JsonArray; DomainCaption: Text; PermissionReason: Text)",
+          "line": 674
+        },
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "text": "local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text)",
+          "line": 686
+        },
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "text": "local procedure SetEffect(var Effect: JsonObject; EffectKind: Text; Changes: Text; Idempotent: Boolean; PermissionSetName: Text)",
+          "line": 834
+        },
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "text": "procedure TryResolveItemNo(var Argument: Record \"Message Argument ori\"; RequestJson: JsonObject; Required: Boolean; var ItemNo: Code[20]): Boolean",
+          "line": 1173
+        }
+      ]
+    },
+    "confirm_in_page": {
+      "pass": true,
+      "findings": []
+    },
+    "changelog": {
+      "pass": false,
+      "findings": [
+        "No entry for version 28.3.2.0"
+      ]
+    },
+    "object_naming": {
+      "pass": true,
+      "findings": []
+    },
+    "data_classification": {
+      "pass": true,
+      "findings": []
+    },
+    "try_prefix_convention": {
+      "pass": false,
+      "findings": [
+        {
+          "file": "InventoryContractParts.Codeunit.al",
+          "line": 1173,
+          "procedure": "TryResolveItemNo",
+          "issue": "Procedure 'TryResolveItemNo' uses Try prefix but has no [TryFunction] attribute"
+        }
+      ]
+    },
+    "with_statements": {
+      "pass": true,
+      "findings": []
+    },
+    "hardcoded_values": {
+      "pass": true,
+      "findings": []
+    },
+    "xml_doc_comments": {
+      "pass": false,
+      "findings": [
+        {
+          "file": "CostToGLPostImpl.Codeunit.al",
+          "line": 217,
+          "procedure": "GetNotes"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 14,
+          "procedure": "IsEnabled"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 21,
+          "procedure": "GetFilterTableNo"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 26,
+          "procedure": "GetDescription"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 33,
+          "procedure": "GetKeywords"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 40,
+          "procedure": "GetSelectionDescription"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 47,
+          "procedure": "GetMessageDirection"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 52,
+          "procedure": "ExecuteBifrostTask"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 111,
+          "procedure": "GetEnvelope"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 118,
+          "procedure": "GetTarget"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 127,
+          "procedure": "GetParameters"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 137,
+          "procedure": "GetResponse"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 151,
+          "procedure": "GetErrors"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 167,
+          "procedure": "GetEffect"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 179,
+          "procedure": "GetMetering"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 184,
+          "procedure": "GetRelated"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 194,
+          "procedure": "GetWorkflow"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 207,
+          "procedure": "GetExamples"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 219,
+          "procedure": "GetOverview"
+        },
+        {
+          "file": "ReclassPostImpl.Codeunit.al",
+          "line": 225,
+          "procedure": "GetNotes"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 10,
+          "procedure": "IsEnabled"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 18,
+          "procedure": "GetFilterTableNo"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 23,
+          "procedure": "GetDescription"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 30,
+          "procedure": "GetKeywords"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 37,
+          "procedure": "GetSelectionDescription"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 44,
+          "procedure": "GetEnvelope"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 57,
+          "procedure": "GetTarget"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 65,
+          "procedure": "GetParameters"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 73,
+          "procedure": "GetResponse"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 85,
+          "procedure": "GetErrors"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 97,
+          "procedure": "GetEffect"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 113,
+          "procedure": "GetMetering"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 118,
+          "procedure": "GetRelated"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 127,
+          "procedure": "GetWorkflow"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 139,
+          "procedure": "GetExamples"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 147,
+          "procedure": "GetOverview"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 153,
+          "procedure": "GetNotes"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 161,
+          "procedure": "GetMessageDirection"
+        },
+        {
+          "file": "AssemblyUndoPostImpl.Codeunit.al",
+          "line": 166,
+          "procedure": "ExecuteBifrostTask"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 13,
+          "procedure": "IsEnabled"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 21,
+          "procedure": "GetFilterTableNo"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 26,
+          "procedure": "GetDescription"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 33,
+          "procedure": "GetKeywords"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 40,
+          "procedure": "GetSelectionDescription"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 47,
+          "procedure": "GetEnvelope"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 61,
+          "procedure": "GetTarget"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 69,
+          "procedure": "GetParameters"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 78,
+          "procedure": "GetResponse"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 90,
+          "procedure": "GetErrors"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 103,
+          "procedure": "GetEffect"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 117,
+          "procedure": "GetMetering"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 122,
+          "procedure": "GetRelated"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 131,
+          "procedure": "GetWorkflow"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 143,
+          "procedure": "GetExamples"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 151,
+          "procedure": "GetOverview"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 157,
+          "procedure": "GetNotes"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 165,
+          "procedure": "GetMessageDirection"
+        },
+        {
+          "file": "TransferUndoShptImpl.Codeunit.al",
+          "line": 170,
+          "procedure": "ExecuteBifrostTask"
+        }
+      ]
+    },
+    "commit_in_loop": {
+      "pass": true,
+      "findings": []
+    }
+  },
+  "summary": {
+    "failed": 6,
+    "total": 23,
+    "ready": false,
+    "passed": 17
+  },
+  "mode": "diff (vs origin/main)",
+  "files_scanned": 9,
+  "publisher": "Origo",
+  "total_al_files": 110
+}

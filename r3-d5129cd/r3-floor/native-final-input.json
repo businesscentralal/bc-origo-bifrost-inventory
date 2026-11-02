@@ -1,0 +1,28 @@
+{
+  "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "containerId": "f01a320b6d03",
+  "foundation": "28.0.3.530",
+  "artifacts": [
+    {
+      "path": "/workspace/evidence/inventory176-worker7/app.app",
+      "sha256": "8d2aa38f69ea3eea1f45952c510e61c14071ce7da511d4021ccd08df26e42d15",
+      "sourceSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    {
+      "path": "/workspace/evidence/inventory176-worker7/test.app",
+      "sha256": "f23eb432ccc3b8cb231bce6e01e298d71e72ae7c968463affa560e277a58c060",
+      "sourceSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    {
+      "path": "/workspace/evidence/inventory176-worker7/floor-app.app",
+      "sha256": "d4c3e1f0c7a5b7e3f26ca337b94b4158b27c0b5a33f161a369c4959f492cd425",
+      "sourceSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    },
+    {
+      "path": "/workspace/evidence/inventory176-worker7/floor-test.app",
+      "sha256": "ff8a0b4dc7dcf3b3bf8173bf2eed4fd73696397f128c6a640ad5ef96dd7ea799",
+      "sourceSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9"
+    }
+  ],
+  "expectedDeclaredTests": 464
+}

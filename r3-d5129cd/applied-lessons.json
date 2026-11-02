@@ -1,0 +1,19 @@
+{
+  "lessons": [
+    "inventory175-claude6573282692-composed-contracts-worker9",
+    "inventory175-claude6573282692-attribute-array-code-worker9",
+    "inventory165-next-foundation-confirmation-worker8-20261031",
+    "inventory176-dainn-dispatch-locale-and-request-shape-20261102"
+  ],
+  "standardsSnapshot": {
+    "version": "4.3.0",
+    "updated": "2026-05-24",
+    "mountedFilesTimestamp": "2026-10-01",
+    "gitProvenance": "snapshot has no .git; no fresh synchronization claimed"
+  },
+  "applications": [
+    "Preserve exact raw metadata and validate shared composition additions separately",
+    "Dual-dependency exact-tip suite provenance",
+    "Explicit bilingual public dispatcher regressions with owned records"
+  ]
+}

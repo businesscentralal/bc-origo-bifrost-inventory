@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ac4d3ebd-add6-f111-b7a5-a49980d9eca2",
+    "number": "D7I176E4",
+    "lcid": 1033,
+    "createdAt": "2026-11-02T11:08:13.815Z",
+    "createHttp": 201,
+    "deleteHttp": 204,
+    "absenceHttp": 200,
+    "absent": true
+  },
+  {
+    "id": "cb5c63c9-add6-f111-b7a5-a49980d9eca2",
+    "number": "D7I176I4",
+    "lcid": 1039,
+    "createdAt": "2026-11-02T11:08:41.976Z",
+    "createHttp": 201,
+    "deleteHttp": 204,
+    "absenceHttp": 200,
+    "absent": true
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "server": "@playwright/mcp",
+  "tool": "browser_run_code_unsafe",
+  "sha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "containerId": "f0c8d36d33b1",
+  "at": "2026-11-02T11:10:37.780Z",
+  "ok": true,
+  "logs": [
+    "Selected actual own-user UI language 1039"
+  ]
+}

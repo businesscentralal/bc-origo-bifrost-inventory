@@ -1,0 +1,12 @@
+{
+  "pid": 42619,
+  "owner": "worker-7",
+  "candidateSha": "d5129cd6ae5a06a60c22ec187a44c8ec1533e2f9",
+  "containerId": "f0c8d36d33b1",
+  "startedAt": "2026-11-02T10:58:24.657753+00:00",
+  "status": "finished",
+  "stage": "full-suite-running",
+  "deployedAt": "2026-11-02T11:00:26.512662+00:00",
+  "exitCode": 0,
+  "finishedAt": "2026-11-02T11:07:21.348828+00:00"
+}
