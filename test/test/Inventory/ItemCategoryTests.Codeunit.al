@@ -309,7 +309,7 @@ codeunit 96956 "Item Category Tests"
         RightCode := CreateCategory('');
         ResponseJson := CallSet(CategoryRequest(LeftCode, 'Moved', RightCode, EmptyAttributes()));
         Assert.AreEqual('PreconditionFailed', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreEqual('Use the BC page for deletes.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+        Assert.AreEqual('Use the Item Categories page to delete a category.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
         ItemCategory.Get(LeftCode);
         Assert.AreEqual('', ItemCategory."Parent Category", 'parent unchanged');
         Assert.AreNotEqual('Moved', ItemCategory.Description, 'description unchanged');
@@ -331,7 +331,7 @@ codeunit 96956 "Item Category Tests"
         RequestJson.Add('delete', true);
         ResponseJson := CallSet(RequestJson);
         Assert.AreEqual('PreconditionFailed', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreEqual('Use the BC page for deletes.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+        Assert.AreEqual('Use the Item Categories page to delete a category.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
         Assert.IsTrue(ItemCategory.Get(CategoryCode), 'category still exists');
         DeleteCategory(CategoryCode);
     end;
