@@ -156,6 +156,11 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format; the date on the order is used when omitted.'));
                     Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble before posting; written to the order and committed before posting, used only when greater than zero.'));
                 end;
+            'Inventory.AssemblyOrder.PreviewPost':
+                begin
+                    Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format, applied for the preview and then restored; the date on the order is used when omitted.'));
+                    Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble for the preview; applied when greater than zero and then restored. Nothing is posted.'));
+                end;
         end;
     end;
 
@@ -566,7 +571,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
             AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '');
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
-            if MessageType = 'Inventory.AssemblyOrder.Post' then
+            if MessageType in ['Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost'] then
                 AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.')
             else
                 AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');

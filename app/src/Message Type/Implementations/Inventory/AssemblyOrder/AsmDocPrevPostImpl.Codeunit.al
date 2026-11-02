@@ -62,8 +62,11 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Parameters := Parts.GetParameters('Inventory.AssemblyOrder.PreviewPost');
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean

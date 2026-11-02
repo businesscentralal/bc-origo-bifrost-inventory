@@ -3957,6 +3957,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lokar birgðatímabili. Tímabil sem er þegar lokað skilar árangri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 2816415221 - NamedType 3740601590" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Inventory Period cannot be closed because there is at least one item with unadjusted entries in the current period.\Run the Close Inventory Period - Test report to identify item ledger entries for the affected items.</source>
+          <target>Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein vara hefur óleiðréttar færslur á tímabilinu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein vara hefur óleiðréttar færslur á tímabilinu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method PlatformCloseRefusal - NamedType UnadjustedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 2816415221 - NamedType 1222039610" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Inventory Period cannot be closed because there is negative inventory for one or more items.\Run the Close Inventory Period - Test report to identify item ledger entries for the affected items.</source>
+          <target>Ekki er hægt að loka birgðatímabilinu vegna þess að ein eða fleiri vörur eru með neikvæða birgðastöðu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að ein eða fleiri vörur eru með neikvæða birgðastöðu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method PlatformCloseRefusal - NamedType NegativeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 2816415221 - NamedType 2439123581" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Inventory Period cannot be closed because there is at least one %1 Order in the current period that has not been adjusted.\Run the Close Inventory Period - Test report to identify the affected orders.</source>
+          <target>Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein %1 pöntun á tímabilinu hefur ekki verið leiðrétt.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna viðkomandi pantanir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = order type, is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein %1 pöntun á tímabilinu hefur ekki verið leiðrétt.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna viðkomandi pantanir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method PlatformCloseRefusal - NamedType OrderErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 425395417 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads inventory periods.</source>
           <target>Les birgðatímabil.</target>

@@ -472,7 +472,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('related');
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');
