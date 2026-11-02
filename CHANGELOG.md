@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
+
+- Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.
+
+- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
+- Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
+- Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
+
 ### Fixed (2026-10-25) - catalogue quality guard compiles (inventory#152, PR 163)
 
 - Test codeunit 96971 now imports `System.TestLibraries.Utilities` (which resolves `Codeunit "Library Assert"`; `GlobalLanguage` is an AL built-in) and is renamed from the 32-character `Inv. Catalogue Quality Tests ori` to the 28-character `Inv. Catalogue Quality Tests` (AL0305 object-name length limit 30). No behaviour, test, object ID or catalogue text changed; the guard still reads description, selection description and keywords of every Inventory message type in LCID 1033 and 1039.
