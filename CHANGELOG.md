@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
+
+- Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.
+
+- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
+- Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
+- Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
 ### Fixed (2026-10-31) - transfer posting test confirmation (#150)
 
 - Transfer posting and undo fixtures in codeunit 96914 explicitly confirm their single owned transfer document with `expectedCount: 1`. This keeps the posting, receipt and rollback assertions reachable when Foundation confirmation is enabled; the gate and all existing assertions remain in place.

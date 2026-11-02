@@ -574,13 +574,13 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 Errors.Add(ContractMgt.TextErrorEntry('No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" already has attribute "%2" with a different value.', 'The mapping conflicts and overwrite is false.', 'Set overwrite to true or use Item.Attribute.Update.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.TextErrorEntry('Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
@@ -1036,7 +1036,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Reopen':
                 Examples.Add(ContractMgt.Example('Reopen a transfer order', '{"type":"Inventory.TransferOrder.Reopen","data":{"documentNo":"TO000456"}}', '{"status":"Success","documentNo":"TO000456","transferFromCode":"BLUE","transferToCode":"RED","directTransfer":true,"statusBefore":"Released","statusAfter":"Open"}'));
             'Inventory.TransferOrder.Post':
-                Examples.Add(ContractMgt.Example('Ship a released transfer order', '{"type":"Inventory.TransferOrder.Post","data":{"documentNo":"TO000456","postingType":"Ship"}}', '{"status":"Success","documentNo":"TO000456","postingType":"Ship","directTransfer":false,"postedShipmentNo":"109001","postedReceiptNo":"","orderDeleted":false,"postingDate":"2026-10-22"}'));
+                Examples.Add(ContractMgt.Example('Ship a released transfer order', '{"type":"Inventory.TransferOrder.Post","data":{"expectedCount":1,"documentNo":"TO000456","postingType":"Ship"}}', '{"status":"Success","documentNo":"TO000456","postingType":"Ship","directTransfer":false,"postedShipmentNo":"109001","postedReceiptNo":"","orderDeleted":false,"postingDate":"2026-10-22"}'));
             'Inventory.TransferOrder.PreviewPost':
                 Examples.Add(ContractMgt.Example('Preview shipping a transfer order', '{"type":"Inventory.TransferOrder.PreviewPost","data":{"documentNo":"TO000456","postingType":"Ship"}}', '{"status":"Success","entryCount":2,"glEntryCount":0,"rollback":true,"documentNo":"TO000456","postingType":"Ship","predictedNumbers":{"postedShipmentNo":"109001"}}'));
             'Inventory.TransferOrder.Statistics':
@@ -1050,7 +1050,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.Reopen':
                 Examples.Add(ContractMgt.Example('Reopen an assembly order', '{"type":"Inventory.AssemblyOrder.Reopen","data":{"documentNo":"AO000456"}}', '{"status":"Success","documentNo":"AO000456","itemNo":"1000","statusBefore":"Released","statusAfter":"Open"}'));
             'Inventory.AssemblyOrder.Post':
-                Examples.Add(ContractMgt.Example('Post an assembly order', '{"type":"Inventory.AssemblyOrder.Post","data":{"documentNo":"AO000456","postingDate":"2026-10-22"}}', '{"status":"Success","documentNo":"AO000456","postedDocumentNo":"32000001","itemNo":"1000","postingDate":"2026-10-22","assembleToOrder":false}'));
+                Examples.Add(ContractMgt.Example('Post an assembly order', '{"type":"Inventory.AssemblyOrder.Post","data":{"expectedCount":1,"documentNo":"AO000456","postingDate":"2026-10-22"}}', '{"status":"Success","documentNo":"AO000456","postedDocumentNo":"32000001","itemNo":"1000","postingDate":"2026-10-22","assembleToOrder":false}'));
             'Inventory.AssemblyOrder.PreviewPost':
                 Examples.Add(ContractMgt.Example('Preview posting an assembly order', '{"type":"Inventory.AssemblyOrder.PreviewPost","data":{"documentNo":"AO000456"}}', '{"status":"Success","entryCount":4,"glEntryCount":0,"rollback":true,"documentNo":"AO000456","itemNo":"1000","predictedNumbers":{"postedAssemblyNo":"32000001"}}'));
             'Inventory.AssemblyOrder.Statistics':

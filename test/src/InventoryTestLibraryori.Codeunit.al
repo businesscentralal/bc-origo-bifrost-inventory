@@ -66,12 +66,36 @@ codeunit 96902 "Inventory Test Library ori"
         RequestText: Text;
         ResponseText: Text;
     begin
+        ConfirmRequest(MessageType, RequestJson);
         RequestJson.WriteTo(RequestText);
         RequestContent.AddText(RequestText);
         Dispatcher.Execute(MessageType, MessageVersion::"1.0", Subject, '', 'application/json', RequestContent, ResponseContent, ResponseContentType, OmitCommit);
         ResponseContent.GetSubText(ResponseText, 1);
         if ResponseText <> '' then
             ResponseJson.ReadFrom(ResponseText);
+    end;
+
+    /// <summary>Confirms the one subject of an irreversible test request when Foundation advertises confirmation.</summary>
+    /// <param name="MessageType">The actual dispatched type.</param>
+    /// <param name="Request">Receives expectedCount without replacing an explicitly tested count.</param>
+    procedure ConfirmRequest(MessageType: Enum "Message Type ori"; var Request: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameters: JsonToken;
+        Parameter: JsonToken;
+        Name: JsonToken;
+    begin
+        if Request.Contains('expectedCount') then
+            exit;
+        ContractMgt.GetContract(MessageType, Contract);
+        if Contract.Get('parameters', Parameters) then
+            foreach Parameter in Parameters.AsArray() do
+                if Parameter.AsObject().Get('name', Name) then
+                    if Name.AsValue().AsText() = 'expectedCount' then begin
+                        Request.Add('expectedCount', 1);
+                        exit;
+                    end;
     end;
 
     /// <summary>Creates a unique Option attribute with two option values.</summary>
