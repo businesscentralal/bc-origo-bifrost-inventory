@@ -222,12 +222,14 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Clear(Item);
         CreateStock(Item, 10);
         CreateBatch(Batch, "Item Journal Template Type"::Transfer);
-        LibraryWarehouse.CreateLocation(Location);
+        LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
         LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 2);
         Line.Validate("New Location Code", Location.Code);
         Line.Modify(true);
         Clear(Request);
-        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", Batch."Journal Template Name" + '|' + Batch.Name, Request, Response);
+        Request.Add('journalTemplateName', Batch."Journal Template Name");
+        Request.Add('journalBatchName', Batch.Name);
+        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", '', Request, Response);
         Item.SetRange("Location Filter", Location.Code);
         Item.CalcFields(Inventory);
         Assert.AreEqual(2, Item.Inventory, 'Confirmed native reclassification moves the owned stock.');
@@ -239,6 +241,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Values: Record "Value Entry";
         BeforeEntries: Integer;
         BeforeValues: Integer;
+        StatusToken: JsonToken;
+        ResponseText: Text;
     begin
         BeforeEntries := Entries.Count();
         BeforeValues := Values.Count();
@@ -256,7 +260,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Request.Replace('expectedCount', 1);
         end;
         Response := DispatchWithSubject(MessageType, Subject, Request);
-        AssertText(Response, 'status', 'Success');
+        Response.WriteTo(ResponseText);
+        Assert.IsTrue(Response.Get('status', StatusToken), 'Native result carries status.');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Confirmed native execution: ' + ResponseText);
     end;
 
     local procedure CreateStock(var Item: Record Item; Quantity: Decimal)
