@@ -1,0 +1,8 @@
+{
+  "mainSha": "c8177c806854795271d45eaa682a3737ee8ddabf",
+  "core1151Merge": "62fde654",
+  "isAncestor": true,
+  "artifactId": 13126632957,
+  "installedVersion": "28.0.11.656",
+  "note": "Current main TestApps; issue cites an older PR-numbered .2147483647.1919 build; version numbering schemes are not compared numerically."
+}

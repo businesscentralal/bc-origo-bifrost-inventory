@@ -1,0 +1,13 @@
+{
+  "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "containerId": "f07d572102a0",
+  "lcid": 1033,
+  "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+  "downloadName": "Inventory.TransferOrder.Post.json",
+  "selectedType": "Inventory.TransferOrder.Post",
+  "passed": 3,
+  "executed": 3,
+  "failed": 0,
+  "skipped": 0,
+  "at": "2026-11-02T10:26:07.557Z"
+}

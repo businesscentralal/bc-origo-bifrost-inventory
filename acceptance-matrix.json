@@ -1,0 +1,155 @@
+{
+  "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/176",
+  "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "criteria": {
+    "AC01": {
+      "status": "verified-native-both-dependencies",
+      "types": 9,
+      "testCodeunit": 96978,
+      "scope": "Missing/wrong/matching count at valid targets, real native success for all9, no-ledger-mutation assertions on refusals in1033/1039"
+    },
+    "AC02": {
+      "status": "verified-native-both-dependencies",
+      "scope": "exact raw metadata plus separately checked framework additions"
+    },
+    "AC03": {
+      "status": "verified-current-candidate",
+      "floor": "28.0.3.530",
+      "mainArtifactId": 13126632957,
+      "mainSha": "c8177c806854795271d45eaa682a3737ee8ddabf",
+      "mainVersion": "28.0.11.656",
+      "note": "Main artifact version differs numerically from PR build1919 but current main contains1151",
+      "floorStatus": "464/464/0/0",
+      "mainStatus": "464/464/0/0",
+      "main": "28.0.11.656"
+    },
+    "AC04": {
+      "status": "verified-native-both-dependencies-and-lcids",
+      "note": "Same two help corrections and regression coverage already published in175; no edits to175 branch",
+      "tests": [
+        "Create_InvalidAttributes_MatchesHelpCode",
+        "Update_InvalidAttributes_MatchesHelpCode"
+      ]
+    },
+    "AC05": {
+      "status": "verified-isIS-sync-and-no-enUS-XLF",
+      "note": "No new labels; request JSON examples only",
+      "evidence": "xlf-guard.log;object-guard.log;no new labels;no en-US XLF"
+    }
+  },
+  "nativeProfiles": {
+    "foundation530": {
+      "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+      "containerId": "f05fb077d871",
+      "fullSuite": true,
+      "extensionId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "total": 464,
+      "executed": 464,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 0,
+      "junitSha256": "114f8e095ba2f0f03e15bcbdd488632b76cd2450e4832484c45c510948695438",
+      "source": "Actual native JUnit testcase elements counted independently",
+      "failures": [],
+      "at": "2026-11-02T10:18:13.721571+00:00"
+    },
+    "foundationMain656": {
+      "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+      "containerId": "f07d572102a0",
+      "fullSuite": true,
+      "extensionId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "total": 464,
+      "executed": 464,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 0,
+      "junitSha256": "ec430f0869b17a2a3b15723740c2b4e13abf4f8f99615df8fcf4594da0418e53",
+      "source": "Actual native JUnit testcase elements counted independently",
+      "failures": [],
+      "at": "2026-11-02T10:15:29.079146+00:00"
+    }
+  },
+  "ui": {
+    "1033": {
+      "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+      "containerId": "f07d572102a0",
+      "lcid": 1033,
+      "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+      "downloadName": "Inventory.TransferOrder.Post.json",
+      "selectedType": "Inventory.TransferOrder.Post",
+      "passed": 3,
+      "executed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "at": "2026-11-02T10:26:07.557Z"
+    },
+    "1039": {
+      "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+      "containerId": "f07d572102a0",
+      "lcid": 1039,
+      "scenario": "Native Bifrost Setup Show All; select Inventory.TransferOrder.Post and Download Help; assert selected type, integer expectedCount and confirmed success example",
+      "downloadName": "Inventory.TransferOrder.Post.json",
+      "selectedType": "Inventory.TransferOrder.Post",
+      "passed": 3,
+      "executed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "at": "2026-11-02T10:25:49.570Z"
+    }
+  },
+  "mcp": {
+    "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+    "containerId": "f07d572102a0",
+    "createsOwnData": true,
+    "lcids": [
+      1033,
+      1039
+    ],
+    "touchedMessageTypes": [
+      "Inventory.AdjustCost.Run",
+      "Inventory.CostToGL.Post",
+      "Inventory.TransferOrder.Post",
+      "Inventory.AssemblyOrder.Post",
+      "Inventory.Transfer.UndoShipment",
+      "Inventory.Assembly.UndoPost",
+      "Inventory.PhysInventory.Post",
+      "Inventory.Revaluation.Post",
+      "Inventory.Reclassification.Post",
+      "Inventory.Attribute.Create",
+      "Inventory.Attribute.Update"
+    ],
+    "scenarios": "All9 confirmation previews/mismatches and matching-count handler routing; costing success on self-created zero-stock items; deliberate unique absent-document/batch refusals; attribute empty-array parity and shared Retryable. Actual successful native posting/undo/journal writes are separately asserted by the full native suite.",
+    "executed": 94,
+    "passed": 94,
+    "failed": 0,
+    "skipped": 0,
+    "cleanup": [
+      {
+        "id": "49033190-a8d6-f111-b7a5-a3acc78c7dbf",
+        "number": "D7I176E4",
+        "lcid": 1033,
+        "createdAt": "2026-11-02T10:31:10.624Z",
+        "createHttp": 201,
+        "deleteHttp": 204,
+        "absenceHttp": 200,
+        "absent": true
+      },
+      {
+        "id": "58493f96-a8d6-f111-b7a5-a3acc78c7dbf",
+        "number": "D7I176I4",
+        "lcid": 1039,
+        "createdAt": "2026-11-02T10:31:29.189Z",
+        "createHttp": 201,
+        "deleteHttp": 204,
+        "absenceHttp": 200,
+        "absent": true
+      }
+    ],
+    "at": "2026-11-02T10:31:47.340Z"
+  },
+  "remainingWork": [
+    "Publish acceptance evidence and create PR",
+    "Paired CI, guarded review handoff, Claude exact-tip verification, Grok clearance and eligible non-author approval",
+    "Architect merge/deploy, Tester same-SHA UAT and actual issue closure"
+  ]
+}

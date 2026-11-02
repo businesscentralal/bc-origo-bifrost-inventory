@@ -1,0 +1,19 @@
+{
+  "mainSha": "29be84b5af34a206347fd1f348bf830fffd7090f",
+  "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "results": [
+    {
+      "phase": "main",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "phase": "candidate",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "at": "2026-11-02T10:13:43.769338+00:00"
+}

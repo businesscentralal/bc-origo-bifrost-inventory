@@ -1,0 +1,15 @@
+{
+  "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "containerId": "f05fb077d871",
+  "fullSuite": true,
+  "extensionId": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+  "total": 464,
+  "executed": 464,
+  "passed": 464,
+  "failed": 0,
+  "skipped": 0,
+  "junitSha256": "114f8e095ba2f0f03e15bcbdd488632b76cd2450e4832484c45c510948695438",
+  "source": "Actual native JUnit testcase elements counted independently",
+  "failures": [],
+  "at": "2026-11-02T10:18:13.721571+00:00"
+}

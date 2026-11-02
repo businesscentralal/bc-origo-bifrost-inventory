@@ -1,0 +1,38 @@
+{
+  "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "containerId": "f07d572102a0",
+  "fields": [
+    {
+      "name": "Attributes",
+      "before": true,
+      "after": true
+    },
+    {
+      "name": "Transfer Orders",
+      "before": true,
+      "after": true
+    },
+    {
+      "name": "Assembly",
+      "before": true,
+      "after": true
+    },
+    {
+      "name": "Physical Inventory",
+      "before": false,
+      "after": true
+    },
+    {
+      "name": "Costing",
+      "before": true,
+      "after": true
+    },
+    {
+      "name": "Reclassification",
+      "before": true,
+      "after": true
+    }
+  ],
+  "summary": "Enable normal Inventory domains for owned fixtures; no EULA/licence/HTTP/quota/write-guard changes",
+  "at": "2026-11-02T10:15:55.225Z"
+}

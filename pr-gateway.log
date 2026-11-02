@@ -1,0 +1,108 @@
+{
+  "checks": {
+    "commit_in_loop": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "try_prefix_convention": {
+      "pass": false,
+      "findings_count": 1
+    },
+    "confirm_in_page": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "hardcoded_values": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "data_classification": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "reserved_var_names": {
+      "pass": false,
+      "findings_count": 3
+    },
+    "today_vs_workdate": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "page_code_minimal": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "format_evaluate_enum": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "modernization": {
+      "pass": false,
+      "findings_count": 2
+    },
+    "format_guid": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "xml_doc_comments": {
+      "pass": false,
+      "findings_count": 58
+    },
+    "one_statement_per_line": {
+      "pass": false,
+      "findings_count": 13
+    },
+    "caption_translation": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "changelog": {
+      "pass": false,
+      "findings_count": 1
+    },
+    "namespace": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "with_statements": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "read_isolation": {
+      "pass": false,
+      "findings_count": 9
+    },
+    "object_naming": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "event_subscriber_placement": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "global_variables": {
+      "pass": true,
+      "findings_count": 0
+    },
+    "set_load_fields": {
+      "pass": true,
+      "findings_count": 5
+    },
+    "app_json": {
+      "pass": true,
+      "findings_count": 0
+    }
+  },
+  "summary": {
+    "passed": 16,
+    "total": 23,
+    "failed": 7,
+    "ready": false
+  },
+  "version": "28.3.2.0",
+  "files_scanned": 9,
+  "mode": "diff (vs origin/main)",
+  "publisher": "Origo",
+  "project": "Bifrost Inventory",
+  "total_al_files": 110
+}

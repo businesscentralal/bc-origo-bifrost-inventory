@@ -1,0 +1,14 @@
+{
+  "containerId": "f05fb077d871",
+  "workerId": "worker-7",
+  "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "before": {
+    "statusCode": 200,
+    "displayName": "dainn-worker7-inventory176-floor-20261102-w1"
+  },
+  "deleteStatus": 204,
+  "verifyStatus": 404,
+  "verifiedAbsent": true,
+  "at": "2026-11-02T10:20:57.837Z",
+  "scope": "Owned ephemeral floor environment; all native fixture state removed with container; no foreign resources touched"
+}

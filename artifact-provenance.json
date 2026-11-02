@@ -1,0 +1,46 @@
+[
+  {
+    "file": "/workspace/evidence/inventory176-worker7/floor-app.app",
+    "sha256": "99839b93944b67eb1be66bfb91d74835eae45c528c23ba8367faaddd01d7833b",
+    "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+    "app": {
+      "Id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+      "Name": "Bifrost Inventory",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    }
+  },
+  {
+    "file": "/workspace/evidence/inventory176-worker7/floor-test.app",
+    "sha256": "db538cfd0d1702e2912d4ee1a7ccad3870787dceb0f38963ee01091dd321d0dd",
+    "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+    "app": {
+      "Id": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "Name": "Bifrost Inventory - Tests",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    }
+  },
+  {
+    "file": "/workspace/evidence/inventory176-worker7/app.app",
+    "sha256": "ad86e320cb8cb5d28afa931f5b09ce12f81a075fb272efbe4fa726c8b6e12f06",
+    "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+    "app": {
+      "Id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+      "Name": "Bifrost Inventory",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    }
+  },
+  {
+    "file": "/workspace/evidence/inventory176-worker7/test.app",
+    "sha256": "7cc340ed22ca7acc502e564a8cf94d6b78507bb9e4c0f1f02f47638a132d9d35",
+    "candidateSha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+    "app": {
+      "Id": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "Name": "Bifrost Inventory - Tests",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    }
+  }
+]

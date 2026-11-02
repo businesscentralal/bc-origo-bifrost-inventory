@@ -1,0 +1,813 @@
+{
+  "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "rawGatewayReady": false,
+  "rawSummary": {
+    "ready": false,
+    "passed": 16,
+    "total": 23,
+    "failed": 7
+  },
+  "allAppFindingsExistInOriginalMainSource": true,
+  "evidenceMethod": "Each reported statement/declaration/pattern checked against git show origin/main:path at baseline29be84b. No guard edits, suppressions or exclusions. Parameter-semicolon findings are procedure declarations; version-heading check conflicts with existing Unreleased format; explicit #176 changelog entry is present.",
+  "findings": [
+    {
+      "check": "changelog",
+      "finding": "No entry for version 28.3.2.0",
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 79,
+        "text": "if Line.FindSet() then",
+        "variable": "Line"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 96,
+        "text": "if not ItemJournalLine.FindFirst() then begin",
+        "variable": "ItemJournalLine"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "read_isolation",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 202,
+        "text": "if not TransferShipmentLine.FindSet() then begin",
+        "variable": "TransferShipmentLine"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 420,
+        "text": "local procedure Resolve(var Argument: Record \"Message Argument ori\"; JournalType: Enum \"Item Journal Template Type\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 469,
+        "text": "local procedure ResolveSelection(var Argument: Record \"Message Argument ori\"; JournalType: Enum \"Item Journal Template Type\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 478,
+        "text": "local procedure NormalizeAlias(var Request: JsonObject; AliasName: Text; Name: Text)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 495,
+        "text": "local procedure ReadText(Request: JsonObject; Name: Text; Maximum: Integer): Text"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 512,
+        "text": "local procedure SelectLines(Request: JsonObject; Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\")"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 548,
+        "text": "local procedure ReadLines(var Line: Record \"Item Journal Line\"; JournalType: Enum \"Item Journal Template Type\"; var Results: JsonArray)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 645,
+        "text": "local procedure AddProblem(var Problems: JsonArray; Code: Text; MessageText: Text; Parameter: Text)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 757,
+        "text": "local procedure ResolveRevaluationBatch(var Argument: Record \"Message Argument ori\"; var Batch: Record \"Item Journal Batch\"; var Line: Record \"Item Journal Line\"): Boolean"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryNativeJournal.Codeunit.al",
+        "line": 810,
+        "text": "local procedure ReadTotals(var Line: Record \"Item Journal Line\"; var LinesToPost: Integer; var TotalQuantity: Decimal; var TotalAmount: Decimal)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "line": 674,
+        "text": "local procedure AddDomainErrors(var Errors: JsonArray; DomainCaption: Text; PermissionReason: Text)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "line": 686,
+        "text": "local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "line": 834,
+        "text": "local procedure SetEffect(var Effect: JsonObject; EffectKind: Text; Changes: Text; Idempotent: Boolean; PermissionSetName: Text)"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "one_statement_per_line",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "line": 1173,
+        "text": "procedure TryResolveItemNo(var Argument: Record \"Message Argument ori\"; RequestJson: JsonObject; Required: Boolean; var ItemNo: Code[20]): Boolean"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "reserved_var_names",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "issue": "Variable name 'Field' is a reserved keyword",
+        "line": 194,
+        "variable": "Field"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "reserved_var_names",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "issue": "Variable name 'Field' is a reserved keyword",
+        "line": 418,
+        "variable": "Field"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "reserved_var_names",
+      "finding": {
+        "file": "PhysInvtPostImpl.Codeunit.al",
+        "issue": "Variable name 'Field' is a reserved keyword",
+        "line": 115,
+        "variable": "Field"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "CostToGLPostImpl.Codeunit.al",
+        "line": 217,
+        "procedure": "GetNotes"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 14,
+        "procedure": "IsEnabled"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 21,
+        "procedure": "GetFilterTableNo"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 26,
+        "procedure": "GetDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 33,
+        "procedure": "GetKeywords"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 40,
+        "procedure": "GetSelectionDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 47,
+        "procedure": "GetMessageDirection"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 52,
+        "procedure": "ExecuteBifrostTask"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 111,
+        "procedure": "GetEnvelope"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 118,
+        "procedure": "GetTarget"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 127,
+        "procedure": "GetParameters"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 137,
+        "procedure": "GetResponse"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 151,
+        "procedure": "GetErrors"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 167,
+        "procedure": "GetEffect"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 179,
+        "procedure": "GetMetering"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 184,
+        "procedure": "GetRelated"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 194,
+        "procedure": "GetWorkflow"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 207,
+        "procedure": "GetExamples"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 219,
+        "procedure": "GetOverview"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "ReclassPostImpl.Codeunit.al",
+        "line": 225,
+        "procedure": "GetNotes"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 10,
+        "procedure": "IsEnabled"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 18,
+        "procedure": "GetFilterTableNo"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 23,
+        "procedure": "GetDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 30,
+        "procedure": "GetKeywords"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 37,
+        "procedure": "GetSelectionDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 44,
+        "procedure": "GetEnvelope"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 57,
+        "procedure": "GetTarget"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 65,
+        "procedure": "GetParameters"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 73,
+        "procedure": "GetResponse"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 85,
+        "procedure": "GetErrors"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 97,
+        "procedure": "GetEffect"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 113,
+        "procedure": "GetMetering"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 118,
+        "procedure": "GetRelated"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 127,
+        "procedure": "GetWorkflow"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 139,
+        "procedure": "GetExamples"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 147,
+        "procedure": "GetOverview"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 153,
+        "procedure": "GetNotes"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 161,
+        "procedure": "GetMessageDirection"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "AssemblyUndoPostImpl.Codeunit.al",
+        "line": 166,
+        "procedure": "ExecuteBifrostTask"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 13,
+        "procedure": "IsEnabled"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 21,
+        "procedure": "GetFilterTableNo"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 26,
+        "procedure": "GetDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 33,
+        "procedure": "GetKeywords"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 40,
+        "procedure": "GetSelectionDescription"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 47,
+        "procedure": "GetEnvelope"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 61,
+        "procedure": "GetTarget"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 69,
+        "procedure": "GetParameters"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 78,
+        "procedure": "GetResponse"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 90,
+        "procedure": "GetErrors"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 103,
+        "procedure": "GetEffect"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 117,
+        "procedure": "GetMetering"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 122,
+        "procedure": "GetRelated"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 131,
+        "procedure": "GetWorkflow"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 143,
+        "procedure": "GetExamples"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 151,
+        "procedure": "GetOverview"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 157,
+        "procedure": "GetNotes"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 165,
+        "procedure": "GetMessageDirection"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "xml_doc_comments",
+      "finding": {
+        "file": "TransferUndoShptImpl.Codeunit.al",
+        "line": 170,
+        "procedure": "ExecuteBifrostTask"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "modernization",
+      "finding": {
+        "severity": "warn",
+        "matched": "NAS",
+        "transition": "MOD-JOBQUEUE-001",
+        "modern": "Enhanced Job Queue with recurrence, Task Scheduler, external notifications on failure",
+        "area": "Job Queue & Scheduling",
+        "file": "InventoryContractParts.Codeunit.al"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "modernization",
+      "finding": {
+        "severity": "warn",
+        "matched": "NAS",
+        "transition": "MOD-JOBQUEUE-001",
+        "modern": "Enhanced Job Queue with recurrence, Task Scheduler, external notifications on failure",
+        "area": "Job Queue & Scheduling",
+        "file": "CostToGLPostImpl.Codeunit.al"
+      },
+      "presentInUnchangedMainSource": true
+    },
+    {
+      "check": "try_prefix_convention",
+      "finding": {
+        "file": "InventoryContractParts.Codeunit.al",
+        "issue": "Procedure 'TryResolveItemNo' uses Try prefix but has no [TryFunction] attribute",
+        "line": 1173,
+        "procedure": "TryResolveItemNo"
+      },
+      "presentInUnchangedMainSource": true
+    }
+  ],
+  "manualReview": "Public production interfaces and Foundation530 floor preserved; count accepted only on posting validation paths. Existing domain/native posting guards remain. All9 real native successful operations and no-ledger-change refusals are asserted in both1033/1039. XLF and AppSourceCop compatibility pass."
+}

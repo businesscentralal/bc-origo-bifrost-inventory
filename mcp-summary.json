@@ -1,0 +1,428 @@
+{
+  "sha": "25b223a6619a7884a8c64c90b3e7708b55b85b81",
+  "containerId": "f07d572102a0",
+  "createsOwnData": true,
+  "lcids": [
+    1033,
+    1039
+  ],
+  "touchedMessageTypes": [
+    "Inventory.AdjustCost.Run",
+    "Inventory.CostToGL.Post",
+    "Inventory.TransferOrder.Post",
+    "Inventory.AssemblyOrder.Post",
+    "Inventory.Transfer.UndoShipment",
+    "Inventory.Assembly.UndoPost",
+    "Inventory.PhysInventory.Post",
+    "Inventory.Revaluation.Post",
+    "Inventory.Reclassification.Post",
+    "Inventory.Attribute.Create",
+    "Inventory.Attribute.Update"
+  ],
+  "scenarios": "All9 confirmation previews/mismatches and matching-count handler routing; costing success on self-created zero-stock items; deliberate unique absent-document/batch refusals; attribute empty-array parity and shared Retryable. Actual successful native posting/undo/journal writes are separately asserted by the full native suite.",
+  "executed": 94,
+  "passed": 94,
+  "failed": 0,
+  "skipped": 0,
+  "assertions": [
+    {
+      "name": "own-negative-selector-absent-Transfer Header-1033",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Assembly Header-1033",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Transfer Shipment Header-1033",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Posted Assembly Header-1033",
+      "passed": true
+    },
+    {
+      "name": "own-negative-batch-template-absent-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.AdjustCost.Run-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.AdjustCost.Run-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.AdjustCost.Run-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.AdjustCost.Run-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.CostToGL.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.CostToGL.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.CostToGL.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.CostToGL.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.TransferOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.TransferOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.TransferOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.TransferOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.AssemblyOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.AssemblyOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.AssemblyOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.AssemblyOrder.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Transfer.UndoShipment-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Transfer.UndoShipment-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Transfer.UndoShipment-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Transfer.UndoShipment-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Assembly.UndoPost-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Assembly.UndoPost-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Assembly.UndoPost-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Assembly.UndoPost-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.PhysInventory.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.PhysInventory.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.PhysInventory.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.PhysInventory.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Revaluation.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Revaluation.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Revaluation.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Revaluation.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Reclassification.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Reclassification.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Reclassification.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Reclassification.Post-1033",
+      "passed": true
+    },
+    {
+      "name": "write-retryable-Inventory.Attribute.Create-1033",
+      "passed": true
+    },
+    {
+      "name": "empty-array-parity-Inventory.Attribute.Create-1033",
+      "passed": true
+    },
+    {
+      "name": "write-retryable-Inventory.Attribute.Update-1033",
+      "passed": true
+    },
+    {
+      "name": "empty-array-parity-Inventory.Attribute.Update-1033",
+      "passed": true
+    },
+    {
+      "name": "definition-shared-retryable-1033",
+      "passed": true
+    },
+    {
+      "name": "self-created-item-preserved-1033",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Transfer Header-1039",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Assembly Header-1039",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Transfer Shipment Header-1039",
+      "passed": true
+    },
+    {
+      "name": "own-negative-selector-absent-Posted Assembly Header-1039",
+      "passed": true
+    },
+    {
+      "name": "own-negative-batch-template-absent-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.AdjustCost.Run-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.AdjustCost.Run-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.AdjustCost.Run-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.AdjustCost.Run-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.CostToGL.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.CostToGL.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.CostToGL.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.CostToGL.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.TransferOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.TransferOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.TransferOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.TransferOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.AssemblyOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.AssemblyOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.AssemblyOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.AssemblyOrder.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Transfer.UndoShipment-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Transfer.UndoShipment-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Transfer.UndoShipment-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Transfer.UndoShipment-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Assembly.UndoPost-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Assembly.UndoPost-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Assembly.UndoPost-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Assembly.UndoPost-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.PhysInventory.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.PhysInventory.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.PhysInventory.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.PhysInventory.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Revaluation.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Revaluation.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Revaluation.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Revaluation.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "help-confirmation-Inventory.Reclassification.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "preview-Inventory.Reclassification.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "wrong-count-Inventory.Reclassification.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "matching-count-handler-Inventory.Reclassification.Post-1039",
+      "passed": true
+    },
+    {
+      "name": "write-retryable-Inventory.Attribute.Create-1039",
+      "passed": true
+    },
+    {
+      "name": "empty-array-parity-Inventory.Attribute.Create-1039",
+      "passed": true
+    },
+    {
+      "name": "write-retryable-Inventory.Attribute.Update-1039",
+      "passed": true
+    },
+    {
+      "name": "empty-array-parity-Inventory.Attribute.Update-1039",
+      "passed": true
+    },
+    {
+      "name": "definition-shared-retryable-1039",
+      "passed": true
+    },
+    {
+      "name": "self-created-item-preserved-1039",
+      "passed": true
+    }
+  ],
+  "cleanup": [
+    {
+      "id": "49033190-a8d6-f111-b7a5-a3acc78c7dbf",
+      "number": "D7I176E4",
+      "lcid": 1033,
+      "createdAt": "2026-11-02T10:31:10.624Z",
+      "createHttp": 201,
+      "deleteHttp": 204,
+      "absenceHttp": 200,
+      "absent": true
+    },
+    {
+      "id": "58493f96-a8d6-f111-b7a5-a3acc78c7dbf",
+      "number": "D7I176I4",
+      "lcid": 1039,
+      "createdAt": "2026-11-02T10:31:29.189Z",
+      "createHttp": 201,
+      "deleteHttp": 204,
+      "absenceHttp": 200,
+      "absent": true
+    }
+  ],
+  "at": "2026-11-02T10:31:47.340Z"
+}

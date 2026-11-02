@@ -1,0 +1,22 @@
+[
+  {
+    "id": "49033190-a8d6-f111-b7a5-a3acc78c7dbf",
+    "number": "D7I176E4",
+    "lcid": 1033,
+    "createdAt": "2026-11-02T10:31:10.624Z",
+    "createHttp": 201,
+    "deleteHttp": 204,
+    "absenceHttp": 200,
+    "absent": true
+  },
+  {
+    "id": "58493f96-a8d6-f111-b7a5-a3acc78c7dbf",
+    "number": "D7I176I4",
+    "lcid": 1039,
+    "createdAt": "2026-11-02T10:31:29.189Z",
+    "createHttp": 201,
+    "deleteHttp": 204,
+    "absenceHttp": 200,
+    "absent": true
+  }
+]
