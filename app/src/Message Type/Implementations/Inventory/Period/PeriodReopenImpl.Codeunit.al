@@ -5,7 +5,7 @@ using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Reopen. Reopens a closed inventory period through the platform Close Inventory Period codeunit.
+/// Inventory.Period.Reopen. Reopens a closed inventory period through the platform inventory-period reopen.
 /// </summary>
 codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -52,12 +52,12 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         InventoryPeriod: Record "Inventory Period";
-        CloseInventoryPeriod: Codeunit "Close Inventory Period";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
+        PlatformError: Text;
         MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
         NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date, is-IS=Birgðatímabil sem endar %1 fannst ekki.';
     begin
@@ -76,10 +76,11 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
             exit;
         end;
         if InventoryPeriod.Closed then begin
-            CloseInventoryPeriod.SetHideDialog(true);
-            CloseInventoryPeriod.SetReOpen(true);
-            if not CloseInventoryPeriod.Run(InventoryPeriod) then begin
-                Argument.RespondWithError(GetLastErrorText());
+            // Same catch boundary as Inventory.Period.Close: the platform refusal must stay text on the response.
+            if not TryReopenPeriod(InventoryPeriod) then begin
+                PlatformError := GetLastErrorText();
+                ClearLastError();
+                Argument.RespondWithError(PlatformError);
                 exit;
             end;
             InventoryPeriod.Get(EndingDate);
@@ -152,7 +153,7 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Reopens the Inventory Period that ends on endingDate through the platform Close Inventory Period codeunit, which also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A period that is already open is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('changes', 'Reopens the Inventory Period that ends on endingDate through the platform inventory-period reopen, which also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A period that is already open is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
@@ -208,11 +209,26 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Reopens the Inventory Period identified by endingDate by running the platform Close Inventory Period codeunit as a reopen, with its confirmation and message dialog hidden. That reopen also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A platform refusal is returned as an error and writes nothing. ' +
+        Notes := 'Reopens the Inventory Period identified by endingDate by running the platform inventory-period reopen with its confirmation and message dialog hidden. That reopen also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A platform refusal is returned as an error and writes nothing. ' +
             'The call is idempotent: a period that is already open is not modified and the platform reopen is not run again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
             'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
-            'The change commits with the answer; under Omit Commit the caller''s transaction commits instead. ' +
+            'The change is saved with the caller''s transaction. ' +
             'Use Inventory.Period.Get first to see the periods and Inventory.Period.Close to undo the change.';
         exit(true);
+    end;
+
+    [TryFunction]
+    local procedure TryReopenPeriod(var InventoryPeriod: Record "Inventory Period")
+    var
+        CloseInventoryPeriod: Codeunit "Close Inventory Period";
+        PlatformError: Text;
+    begin
+        CloseInventoryPeriod.SetHideDialog(true);
+        CloseInventoryPeriod.SetReOpen(true);
+        if CloseInventoryPeriod.Run(InventoryPeriod) then
+            exit;
+        PlatformError := GetLastErrorText();
+        ClearLastError();
+        Error(PlatformError);
     end;
 }
