@@ -532,7 +532,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertAttributeContract('Inventory.AttributeDefinition.Create', Enum::"Message Type ori"::"Inventory.AttributeDefinition.Create".AsInteger(),
             'name:string:true,type:string:true,unitOfMeasure:string:false,optionValues:array:false',
             'status:string,attributeId:integer,attributeName:string,type:string,createdValues:array',
-            'write', false, 4, 2, 1,
+            'write', false, 7, 2, 1,
             'Creates an Item Attribute definition and optional Option values independently of an Item.', '');
     end;
 
@@ -702,8 +702,12 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 Expected := 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.';
             end;
             'Inventory.AttributeDefinition.Create': begin
-                Index := 3;
-                Expected := 'Item attribute "%1" already exists.';
+                Errors.Get(6, Token);
+                Entry := Token.AsObject();
+                AssertJsonText(Entry, 'code', 'PreconditionFailed');
+                AssertJsonText(Entry, 'when', 'The definition name is already used.');
+                AssertJsonText(Entry, 'fix', 'Use the existing definition or choose another name.');
+                exit;
             end;
         end;
         Errors.Get(Index, Token);
@@ -800,7 +804,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
+        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Request scalar conversions are validated before the report') > 0, 'Native report failures are distinguished from preflight format errors.');
+        GetNamedMember(Contract, 'errors', 'code', 'InvalidParameterFormat', Error);
+        Error.Get('when', ValueToken);
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('postToGL'), 'The Boolean format refusal is explicitly documented.');
+        GetNamedMember(Contract, 'errors', 'code', 'MultipleErrors', Error);
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
@@ -903,7 +911,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Four independently specified adjustment error branches.')
+                    LibraryAssert.AreEqual(6, ArrayChapter.Count(), 'Six independently specified adjustment error branches, including typed formats and collected errors.')
                 else begin
                     LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Domain, posting permission and native posting/selection failures.');
                     Clear(ObjectChapter);

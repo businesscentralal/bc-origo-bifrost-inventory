@@ -23,6 +23,20 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreateRefusals)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned151 fixtures';
+                ToolTip = 'Creates new owned physical-count batches and periods once; refuses existing fixtures.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateRefusalFixtures();
+                    SeedState := 'Create owned151 fixtures completed.';
+                end;
+            }
             action(CreateTracking)
             {
                 ApplicationArea = All;

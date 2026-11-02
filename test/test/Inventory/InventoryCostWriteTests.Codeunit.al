@@ -100,8 +100,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('lastDirectCost', 99);
         InitArgument(TempArgument, Item."No.", Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Assert.ExpectedError('Inventory.Revaluation.Post');
+        CostWrite.UpdateCost(TempArgument);
+        AssertGuard(TempArgument, 'PreconditionFailed', 'Inventory.Revaluation.Post');
         Item.Get(Item."No.");
         Assert.AreEqual(PreviousCost, Item."Last Direct Cost", 'Refusal does not write a card cost.');
     end;
@@ -123,8 +123,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('unitCost', 18);
         InitArgument(TempArgument, Item."No.", Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Assert.ExpectedError('blocked');
+        CostWrite.UpdateCost(TempArgument);
+        AssertGuard(TempArgument, 'PreconditionFailed', 'blocked');
         Item.Get(Item."No.");
         Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Blocked refusal preserves cost.');
         Request.Add('allowBlocked', true);
@@ -150,8 +150,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('expectedCostingMethod', 'Average');
         InitArgument(TempArgument, Item."No.", Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Assert.ExpectedError('expectedCostingMethod');
+        CostWrite.UpdateCost(TempArgument);
+        AssertGuard(TempArgument, 'PreconditionFailed', 'expectedCostingMethod');
         Item.Get(Item."No.");
         Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Method refusal precedes modification.');
     end;
@@ -162,6 +162,7 @@ codeunit 96937 "Inventory Cost Write Tests"
     var
         Item: Record Item;
         TempArgument: Record "Message Argument ori" temporary;
+        Reader: Codeunit "Request Value Reader ori";
         FieldAccess: TestPage "Field Accesses ori";
         Request: JsonObject;
         PreviousCost: Decimal;
@@ -170,20 +171,22 @@ codeunit 96937 "Inventory Cost Write Tests"
         CreateItem(Item, Item."Costing Method"::FIFO);
         PreviousCost := Item."Unit Cost";
         FieldAccess.OpenEdit();
+        // Scope the empty page row before changing the user control; a new unfiltered row
+        // can otherwise retain the default Both restriction at the all-tables key.
+        FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
+        FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Last Direct Cost")));
         FieldAccess.CurrentUserName.SetValue(UserId());
-        FieldAccess.New();
         FieldAccess."Table No.".SetValue(Database::Item);
         FieldAccess."Field No.".SetValue(Item.FieldNo("Last Direct Cost"));
         FieldAccess."Restriction Type".SetValue('Write');
         FieldAccess.Close();
+        Assert.IsFalse(Reader.IsFieldWriteRestricted(Database::Item, Item.FieldNo("Unit Cost")), 'Fixture restricts only Last Direct Cost, not Unit Cost.');
+        Assert.IsTrue(Reader.IsFieldWriteRestricted(Database::Item, Item.FieldNo("Last Direct Cost")), 'Fixture really restricts Last Direct Cost.');
         Request.Add('unitCost', 99);
         Request.Add('lastDirectCost', 88);
         InitArgument(TempArgument, Item."No.", Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Assert.ExpectedError('Permission denied');
-        Item.Get(Item."No.");
-        Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Another permitted field is not written first.');
+        CostWrite.UpdateCost(TempArgument);
         FieldAccess.OpenEdit();
         FieldAccess.CurrentUserName.SetValue(UserId());
         FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
@@ -191,6 +194,9 @@ codeunit 96937 "Inventory Cost Write Tests"
         Assert.IsTrue(FieldAccess.First(), 'Find the self-created field restriction for cleanup.');
         FieldAccess."Restriction Type".SetValue('None');
         FieldAccess.Close();
+        AssertGuard(TempArgument, 'PermissionDenied', 'Permission denied');
+        Item.Get(Item."No.");
+        Assert.AreEqual(PreviousCost, Item."Unit Cost", 'Another permitted field is not written first.');
     end;
 
     /// <summary>Missing selection cannot turn a card update into an all-items operation.</summary>
@@ -204,8 +210,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Request.Add('unitCost', 1);
         InitArgument(TempArgument, '', Request);
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Assert.ExpectedError('exactly one item');
+        CostWrite.UpdateCost(TempArgument);
+        AssertGuard(TempArgument, 'MissingParameter', 'exactly one item');
     end;
 
     /// <summary>Null is not silently coerced into a zero-cost write.</summary>
@@ -298,8 +304,8 @@ codeunit 96937 "Inventory Cost Write Tests"
         Commit();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        asserterror CostWrite.UpdateCost(TempArgument);
-        Refusal := GetLastErrorText();
+        CostWrite.UpdateCost(TempArgument);
+        Refusal := ResponseText(TempArgument.GetResponseJson(), 'error');
         GlobalLanguage(PreviousLanguage);
         Assert.AreEqual('Vara ' + Item."No." + ' er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.', Refusal, 'Native refusal is entirely Icelandic apart from the invariant request key.');
         Item.Get(Item."No.");
@@ -368,4 +374,28 @@ codeunit 96937 "Inventory Cost Write Tests"
         TempArgument.Insert(true);
         TempArgument.SetRequestJson(Request);
     end;
+    local procedure AssertGuard(var Argument: Record "Message Argument ori"; Code: Text; MessagePart: Text)
+    var
+        Response: JsonObject;
+        ResponseJson: Text;
+    begin
+        Response := Argument.GetResponseJson();
+        Response.WriteTo(ResponseJson);
+        Assert.AreEqual('Error', ResponseText(Response, 'status'), 'Guard returns structured Error.');
+        Assert.AreEqual(Code, ResponseText(Response, 'code'), 'Guard has the shared typed code. ' + ResponseJson);
+        Assert.IsTrue(ResponseText(Response, 'error').Contains(MessagePart), 'The actual guard reason is preserved.');
+        Assert.IsTrue(ResponseText(Response, 'parameter') <> '', 'Guard identifies its parameter.');
+        Assert.IsTrue(ResponseText(Response, 'expected') <> '', 'Guard explains the expected value.');
+        Assert.IsTrue(ResponseText(Response, 'nextStep') <> '', 'Guard explains recovery.');
+    end;
+
+    local procedure ResponseText(Response: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if Response.Get(Name, Token) then
+            exit(Token.AsValue().AsText());
+        exit('');
+    end;
+
 }

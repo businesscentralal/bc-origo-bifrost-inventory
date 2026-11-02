@@ -16,10 +16,29 @@ codeunit 10076925 "Inventory Tracking Write ori"
     var
         ResponseEntry: Record "Reservation Entry";
         DeleteTracking: Boolean;
+        TrackingNextStepLbl: Label 'Read Inventory.Tracking.Get for the source and send valid tracking entries for that source.', Comment = 'is-IS=Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.';
+        SourceExpectedLbl: Label 'A SalesLine, PurchaseLine or TransferLine source.', Comment = 'is-IS=Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.';
+        EntryExpectedLbl: Label 'A tracking number and positive base quantity; serial tracking uses one base unit.', Comment = 'is-IS=Rakningarnúmer og jákvætt grunnmagn; raðnúmerarakning notar eina grunneiningu.';
 
     trigger OnRun()
     begin
         Execute(Rec);
+    end;
+
+    /// <summary>Preserves native failure text with the exact source selector and actionable tracking context.</summary>
+    procedure RespondWithFailure(var Argument: Record "Message Argument ori")
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Request: JsonObject;
+        Source: JsonToken;
+        Received: Text;
+    begin
+        Request := Argument.GetRequestJson();
+        if Request.Get('source', Source) then
+            Source.WriteTo(Received)
+        else
+            Received := '<missing>';
+        Parts.RespondWithNativeContext(Argument, 'source', Received, SourceExpectedLbl, TrackingNextStepLbl);
     end;
 
     /// <summary>Selects removal of tracking rather than assignment for this invocation.</summary>
@@ -53,7 +72,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
         if not Resolver.Resolve(Argument, Request, 'source', true, SourceRef, SourceSpecification, Direction) then
             exit;
         if not (SourceRef.Number in [Database::"Sales Line", Database::"Purchase Line", Database::"Transfer Line"]) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidSourceErr, 'source.type', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidSourceErr, 'source.type', Format(SourceRef.Number, 0, 9), SourceExpectedLbl, TrackingNextStepLbl);
             exit;
         end;
         if not Resolver.ReadText(Argument, Request, 'itemNo', false, ItemNo) then
@@ -75,12 +94,12 @@ codeunit 10076925 "Inventory Tracking Write ori"
             end else
                 Entries.Add(Request);
             if (Entries.Count() < 1) or (Entries.Count() > 200) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', '', 'array', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', Format(Token), InvalidEntriesErr, TrackingNextStepLbl);
                 exit;
             end;
             foreach Entry in Entries do begin
                 if not Entry.IsObject() then begin
-                    Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', '', 'object', '');
+                    Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', Format(Entry), 'object', TrackingNextStepLbl);
                     exit;
                 end;
                 Count += 1;
@@ -147,7 +166,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
            (StrLen(SerialNo) > MaxStrLen(Specification."Serial No.")) or
            (StrLen(PackageNo) > MaxStrLen(Specification."Package No."))
         then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidTrackingErr, 'entries', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidTrackingErr, 'entries', Format(Entry), EntryExpectedLbl, TrackingNextStepLbl);
             exit(false);
         end;
         Specification."Lot No." := CopyStr(LotNo, 1, MaxStrLen(Specification."Lot No."));

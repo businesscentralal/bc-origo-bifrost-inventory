@@ -236,7 +236,7 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     local procedure BuildSummary(DocumentNo: Code[20]; ItemNo: Code[20]; var PreviewArray: JsonArray; GLStatusText: Text): Text
     var
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
-        SummaryTok: Label 'Assembly Order %1 (Item %2) preview produced %3 entries. %4', Comment = '%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence', Locked = true;
+        SummaryTok: Label 'Assembly Order %1 (Item %2) preview produced %3 entries. %4', Comment = '%1=Document No., %2=Item No., %3=entry count, %4=G/L status sentence; is-IS=Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4';
     begin
         exit(StrSubstNo(SummaryTok, DocumentNo, ItemNo, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
     end;
