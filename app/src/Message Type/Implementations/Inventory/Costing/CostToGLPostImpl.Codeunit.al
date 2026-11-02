@@ -198,7 +198,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post pending inventory cost for one item',
-            '{"type":"Inventory.CostToGL.Post","data":{"itemNoFilter":"1000","documentNoFilter":""}}',
+            '{"type":"Inventory.CostToGL.Post","data":{"expectedCount":1,"itemNoFilter":"1000","documentNoFilter":""}}',
             '{"status":"Success","itemNoFilter":"1000","documentNoFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
         exit(true);
     end;

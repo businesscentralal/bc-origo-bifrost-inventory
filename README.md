@@ -24,7 +24,7 @@ and `Data.Records.Set`.
 
 ### Message types
 
-The list is the `Message Type ori` enum extensions under `app/src/Message Type/`. `Help.Bifrost.Get`
+The active roster is implemented by the `Message Type ori` enum extensions under `app/src/Message Type/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
 and `Help.Implementation.Get` return the same list and each type's contract at runtime.
 
 | Type | Direction | Purpose |
@@ -55,12 +55,11 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
 | `Inventory.CostToGL.Test` | Inbound | Test the inventory cost to G/L item filter without posting |
-| `Inventory.Tracking.Assign` | Inbound | Assign lot, serial, or package tracking through Item Tracking Management |
-| `Inventory.Tracking.Delete` | Inbound | Delete an item tracking specification |
+| `Inventory.Tracking.Assign` | Inbound | Assign lot, serial or package tracking to an explicit document line through native Item Tracking Lines |
+| `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
-| `Inventory.Transfer.UndoReceipt` | Inbound | Undo a posted transfer receipt |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
 | `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
@@ -383,3 +382,32 @@ and `supportedLocales` `["en-US", "is-IS"]`, so every help page must exist in bo
 ---
 
 © 2026 Origo ehf.
+
+### Source-bound item tracking
+
+`Inventory.Tracking.Assign` now requires `source: {"type":"PurchaseLine", "systemId":"<line GUID>"}` (also `SalesLine` and `TransferLine`). Send a positive base `quantity` plus `lotNo`, `serialNo` or `packageNo`; serial quantity must be one. Optional `itemNo` must match the source. For multiple allocations use `entries` with those tracking values. Read `Inventory.Tracking.Get` with the same source, then remove one unreserved `ReservationEntry` using `Inventory.Tracking.Delete` with that source and its `entryNo`. The calls use native tracking and do not insert unlinked tracking specifications.
+
+`Inventory.Transfer.UndoReceipt` is disabled and removed from the active shipped roster because the supported platform has no native transfer receipt undo. Its released enum identifier remains solely for binary compatibility; it does not undo receipts. Return received goods with a new transfer order. `Inventory.Transfer.UndoShipment` refuses already-received lines with `PreconditionFailed` and that next step.
+
+Tracking write helper: codeunit `10076925 Inventory Tracking Write ori`; native regressions: `96974 Inv. Source Tracking Tests ori`. The explicit test-only MCP fixture `96973` adds owned tracking sources.
+
+### Confirm irreversible requests (Foundation core#1151)
+
+On Foundation versions that expose `expectedCount` in the composed help contract, all nine
+Inventory types declaring `irreversible` use the Foundation confirmation protocol:
+`Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.Revaluation.Post`,
+`Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`, `Inventory.TransferOrder.Post`,
+`Inventory.AssemblyOrder.Post`, `Inventory.Transfer.UndoShipment` and `Inventory.Assembly.UndoPost`.
+Call without `data.expectedCount` first: `ConfirmationRequired` reports the count in `expected`
+and changes no business data. Inspect the preview and repeat the same request with that count.
+A stale or wrong count returns `ConfirmationMismatch` and changes nothing. These types use
+Foundation's default single-subject count of **1** (one document, batch or invocation), not
+the number of journal lines or ledger entries; confirmation does not prove the target exists.
+The handler still validates the target, domain and native posting permissions afterwards.
+Foundation's company confirmation setting controls whether an omitted count is required; a
+supplied count is always checked. Never disable confirmation to make a request succeed.
+The minimum supported Foundation remains 28.0.3.530, which predates this protocol; inspect
+the deployed help contract before sending confirmation controls to that version.
+
+Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
+app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.

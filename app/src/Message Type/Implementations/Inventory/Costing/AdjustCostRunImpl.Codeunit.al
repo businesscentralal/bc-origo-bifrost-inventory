@@ -180,7 +180,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Adjust the costs of item 1000 without posting to the general ledger',
-            '{"type":"Inventory.AdjustCost.Run","data":{"itemNoFilter":"1000","postToGL":false}}',
+            '{"type":"Inventory.AdjustCost.Run","data":{"expectedCount":1,"itemNoFilter":"1000","postToGL":false}}',
             '{"status":"Success","itemNoFilter":"1000","itemCategoryFilter":"","postToGL":false}'));
         exit(true);
     end;

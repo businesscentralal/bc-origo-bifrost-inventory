@@ -211,7 +211,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post the reclassification batch DEFAULT',
-            '{"type":"Inventory.Reclassification.Post","data":{"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}}',
+            '{"type":"Inventory.Reclassification.Post","data":{"expectedCount":1,"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}}',
             '{"status":"Success","journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}'));
         exit(true);
     end;

@@ -5,6 +5,30 @@
 ### Fixed (2026-11-02) - Inventory help and runtime error parity (#152)
 - #152: complete remaining Inventory help error codes, attribute examples and subject descriptions; use permission display captions instead of AL names. Preserve published statistics direction and response fields. Strengthen contract guard 96970 across all help chapters and document protected setup administration; improve disabled-domain guidance (10076922). Return coded errors on explicit refusal paths, align error help with MissingParameter/RecordNotFound/PreconditionFailed and native BusinessCentralError, and exercise runtime envelopes in regression tests (96970). Normalize permission captions and Icelandic guidance, including the native journal gate (10076840); keep XLF synchronized.
 - Correct Attribute.Create/Update invalid-array help to the existing caught `BusinessCentralError` response (10076919); regress missing, empty and non-array attributes in both languages through the real dispatcher (96900).
+- Merge main: keep source-bound tracking (#150/#165) and Foundation confirmation (#176) while preserving the coded refusal help above. Tracking.Assign/Delete help names the Bifrost "Full Access" permission set, and UndoShipment documents the received-line PreconditionFailed.
+
+### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
+
+- Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.
+
+- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
+- Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
+- Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
+### Fixed (2026-10-31) - transfer posting test confirmation (#150)
+
+- Transfer posting and undo fixtures in codeunit 96914 explicitly confirm their single owned transfer document with `expectedCount: 1`. This keeps the posting, receipt and rollback assertions reachable when Foundation confirmation is enabled; the gate and all existing assertions remain in place.
+
+### Fixed (2026-10-24) - Contract guard declaration identity (#150)
+
+- Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
+
+### Fixed (2026-10-23) - issue #150
+
+- Tracking.Assign/Get/Delete now round-trip native source-bound lot, serial and package tracking. A source line SystemId is required; deletion affects only the selected unreserved entry. Single-entry response fields are retained, native posting remains separate and Omit Commit retains caller transaction ownership.
+- UndoShipment explicitly refuses received transfer lines with PreconditionFailed and a return-transfer next step; the selected-shipment repair is inherited from #159.
+- Correction to the earlier shipped roster: UndoReceipt is disabled, not a working undo feature. The released enum remains for compatibility only; no native Undo Transfer Receipt codeunit exists in the configured BC symbols. Use a new transfer order for received goods. Historical changelog entries describe earlier releases, not current availability.
+- Objects: codeunits 10076897 Tracking Assign Impl ori, 10076899 Tracking Delete Impl ori, 10076900 Tracking Get Impl ori, 10076910 Transfer Undo Shpt Impl ori, 10076911 Transf Undo Rcpt Impl ori; new codeunit 10076925 Inventory Tracking Write ori; permission extension 10076836 BIFROST InvWrite ori; new test codeunit 96974 Inv. Source Tracking Tests ori; test codeunit 96914 Transfer Order Post Tests and explicit fixture codeunit/page 96973. Updated README, contracts and is-IS translations.
 
 ### Fixed (2026-10-25) - catalogue quality guard compiles (inventory#152, PR 163)
 
