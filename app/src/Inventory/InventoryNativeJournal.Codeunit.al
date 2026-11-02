@@ -120,7 +120,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Results: JsonArray;
     begin
         Line.LockTable();
-        CheckParameters(Argument.GetRequestJson(), '');
+        CheckParameters(Argument.GetRequestJson(), 'Post');
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
@@ -402,7 +402,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
-            if not (ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) then
+            if not ((ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) or
+                    ((Operation = 'Post') and (ParameterName = 'expectedCount'))) then
                 case Operation of
                     'Calculate':
                         if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
@@ -677,7 +678,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalQuantity: Decimal;
         TotalAmount: Decimal;
     begin
-        CheckPostParameters(Argument.GetRequestJson());
+        CheckPostParameters(Argument.GetRequestJson(), true);
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
         Line.LockTable();
@@ -721,7 +722,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalAmount: Decimal;
         Balanced: Boolean;
     begin
-        CheckPostParameters(Argument.GetRequestJson());
+        CheckPostParameters(Argument.GetRequestJson(), false);
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
         ReadTotals(Line, LinesToPost, TotalQuantity, TotalAmount);
@@ -820,12 +821,13 @@ codeunit 10076840 "Inventory Native Journal ori"
         Line.FindFirst();
     end;
 
-    local procedure CheckPostParameters(Request: JsonObject)
+    local procedure CheckPostParameters(Request: JsonObject; Posting: Boolean)
     var
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
-            if not (ParameterName in ['templateName', 'batchName', 'batchId', 'id', 'systemId', 'recordSystemId']) then
+            if not ((ParameterName in ['templateName', 'batchName', 'batchId', 'id', 'systemId', 'recordSystemId']) or
+                    (Posting and (ParameterName = 'expectedCount'))) then
                 Error(RevalParameterErr, ParameterName);
     end;
 }

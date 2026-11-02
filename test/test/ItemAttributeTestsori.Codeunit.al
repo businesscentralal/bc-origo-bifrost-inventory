@@ -304,4 +304,84 @@ codeunit 96900 "Item Attribute Tests ori"
         Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping", false), '7505');
         Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::Item, false), 'Item 27 must not be restricted');
     end;
+    /// <summary>Invalid attribute arrays retain their actual caught-error code in runtime and help.</summary>
+    [Test]
+    procedure Create_InvalidAttributes_MatchesHelpCode()
+    begin
+        AssertInvalidAttributes("Message Type ori"::"Inventory.Attribute.Create");
+    end;
+
+    /// <summary>Update documents the caught BC error for missing, empty and non-array attributes.</summary>
+    [Test]
+    procedure Update_InvalidAttributes_MatchesHelpCode()
+    begin
+        AssertInvalidAttributes("Message Type ori"::"Inventory.Attribute.Update");
+    end;
+
+    local procedure AssertInvalidAttributes(MessageType: Enum "Message Type ori")
+    var
+        Item: Record Item;
+        InventorySetup: Record "Inventory Setup ori";
+        Contract: Interface "Msg Contract ori";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Attributes: JsonArray;
+        Errors: JsonArray;
+        Entry: JsonToken;
+        Token: JsonToken;
+        LanguageId: Integer;
+        PreviousLanguage: Integer;
+        Scenario: Integer;
+        Found: Boolean;
+        AttributesEnabled: Boolean;
+    begin
+        Library.Initialize();
+        InventorySetup.InsertIfNotExists();
+        AttributesEnabled := InventorySetup.Attributes;
+        InventorySetup.Attributes := true;
+        InventorySetup.Modify(true);
+        Item.Init();
+        Item."No." := CopyStr('ZZ152' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, MaxStrLen(Item."No."));
+        Item.Description := 'Inventory attribute refusal test';
+        Item.Insert(true);
+        Contract := MessageType;
+        Contract.GetErrors(Errors);
+        foreach Entry in Errors do
+            if Entry.AsObject().Get('when', Token) then
+                if Token.AsValue().AsText() = 'Request data.attributes must be a non-empty array.' then begin
+                    Found := true;
+                    Assert.IsTrue(Entry.AsObject().Get('code', Token), 'Invalid array help needs a code.');
+                    Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Help preserves the caught runtime error code.');
+                end;
+        Assert.IsTrue(Found, 'Help must describe invalid attribute arrays.');
+        PreviousLanguage := GlobalLanguage();
+        for LanguageId := 1033 to 1039 do
+            if LanguageId in [1033, 1039] then begin
+                GlobalLanguage(LanguageId);
+                for Scenario := 1 to 3 do begin
+                    Clear(RequestJson);
+                    case Scenario of
+                        2:
+                            RequestJson.Add('attributes', Attributes);
+                        3:
+                            RequestJson.Add('attributes', 'not an array');
+                    end;
+                    ResponseJson := Library.ExecuteType(MessageType, Item."No.", RequestJson, false);
+                    Library.AssertStatus(ResponseJson, 'Error');
+                    Assert.IsTrue(ResponseJson.Get('code', Token), 'Runtime error needs a code.');
+                    Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Invalid array runtime code matches help.');
+                    Assert.IsTrue(ResponseJson.Get('error', Token), 'Runtime error needs text.');
+                    if LanguageId = 1033 then
+                        Assert.AreEqual('Request data.attributes must be a non-empty array.', Token.AsValue().AsText(), 'English refusal.')
+                    else
+                        Assert.AreEqual('data.attributes í beiðninni verður að vera fylki sem er ekki tómt.', Token.AsValue().AsText(), 'Icelandic refusal.');
+                end;
+            end;
+        GlobalLanguage(PreviousLanguage);
+        Item.Delete(true);
+        InventorySetup.Get();
+        InventorySetup.Attributes := AttributesEnabled;
+        InventorySetup.Modify(true);
+    end;
+
 }

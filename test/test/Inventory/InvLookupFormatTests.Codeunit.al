@@ -337,6 +337,7 @@ codeunit 96923 "Inv. Lookup Format Tests"
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Subject: Text[250]; Payload: Text) Response: JsonObject
     var
         Dispatcher: Codeunit "Dispatcher ori";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         RequestContent: BigText;
         ResponseContent: BigText;
         ResponseContentType: Text[100];
@@ -344,10 +345,14 @@ codeunit 96923 "Inv. Lookup Format Tests"
         EmptyTaskId: Guid;
         ResponseTime: Duration;
         ResponseText: Text;
+        Request: JsonObject;
         PreviousLanguage: Integer;
     begin
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1033);
+        Request.ReadFrom(Payload);
+        InventoryLibrary.ConfirmRequest(MessageType, Request);
+        Request.WriteTo(Payload);
         RequestContent.AddText(Payload);
         Dispatcher.EnqueueAndProcess(MessageType, "Message Version ori"::"1.0", Subject, '', '', RequestContent,
             EmptyTaskId, 0, MessageId, ResponseContent, ResponseContentType, ResponseTime);
