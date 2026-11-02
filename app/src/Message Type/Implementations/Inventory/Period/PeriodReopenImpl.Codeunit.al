@@ -1,6 +1,5 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
@@ -52,12 +51,12 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         InventoryPeriod: Record "Inventory Period";
+        PeriodWrite: Codeunit "Period Platform Write ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
-        PlatformError: Text;
         MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
         NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date, is-IS=Birgðatímabil sem endar %1 fannst ekki.';
     begin
@@ -76,13 +75,8 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
             exit;
         end;
         if InventoryPeriod.Closed then begin
-            // Same catch boundary as Inventory.Period.Close: the platform refusal must stay text on the response.
-            if not TryReopenPeriod(InventoryPeriod) then begin
-                PlatformError := GetLastErrorText();
-                ClearLastError();
-                Argument.RespondWithError(PlatformError);
-                exit;
-            end;
+            // Codeunit.Run of Close Inventory Period is a nested try function and cannot insert the entry.
+            PeriodWrite.ApplyReopen(InventoryPeriod);
             InventoryPeriod.Get(EndingDate);
         end;
         ResponseJson.Add('status', 'Success');
@@ -215,20 +209,5 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
             'The change is saved with the caller''s transaction. ' +
             'Use Inventory.Period.Get first to see the periods and Inventory.Period.Close to undo the change.';
         exit(true);
-    end;
-
-    [TryFunction]
-    local procedure TryReopenPeriod(var InventoryPeriod: Record "Inventory Period")
-    var
-        CloseInventoryPeriod: Codeunit "Close Inventory Period";
-        PlatformError: Text;
-    begin
-        CloseInventoryPeriod.SetHideDialog(true);
-        CloseInventoryPeriod.SetReOpen(true);
-        if CloseInventoryPeriod.Run(InventoryPeriod) then
-            exit;
-        PlatformError := GetLastErrorText();
-        ClearLastError();
-        Error(PlatformError);
     end;
 }
