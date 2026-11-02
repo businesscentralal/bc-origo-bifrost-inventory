@@ -97,6 +97,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Transfer Shipment Header has that number.', 'Check the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.TextErrorEntry('Posted transfer shipment %1 has no lines to undo.', 'The posted transfer shipment has no line that is not a correction line, so there is nothing to undo. The answer carries the error text and no code.', 'Check that the shipment is the original posted shipment and not one that only holds correction lines.'));
         Errors.Add(ContractMgt.TextErrorEntry('The error text of Business Central', 'Business Central refuses the undo of one line, for example because the line was already undone. The answer carries Business Central''s own error text and no code.', 'Read the text and correct the cause in Business Central. Lines that came before the refused line may already be undone: read the posted shipment before you send the call again.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected shipment line has already been received.', 'Create a new transfer order to return the received goods to their original location.'));
         exit(true);
     end;
 
@@ -123,7 +124,6 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Transfer.UndoReceipt', 'Use it for a posted transfer receipt; it only answers that receipt undo is not available in this version.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.TransferOrder.Post', 'Post the transfer order instead of undoing a posted shipment.'));
         exit(true);
     end;
@@ -171,6 +171,8 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     var
         TransferShipmentHeader: Record "Transfer Shipment Header";
         TransferShipmentLine: Record "Transfer Shipment Line";
+        TransferLine: Record "Transfer Line";
+        TransferReceiptLine: Record "Transfer Receipt Line";
         Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
         RequestJson: JsonObject;
@@ -179,6 +181,9 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         DocumentNo: Code[20];
         MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
         NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.';
+        ReceivedErr: Label 'Transfer shipment %1 has already been received and cannot be undone.', Comment = '%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.';
+        ReceivedNextStepTxt: Label 'Create a new transfer order to return the received goods to the original location.', Comment = 'is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.';
+        UnreceivedTxt: Label 'A posted shipment whose selected transfer lines have not been received.', Comment = 'is-IS=Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.';
         NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.';
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
@@ -203,6 +208,19 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
             Argument.RespondWithError(StrSubstNo(NoLinesErr, DocumentNo));
             exit;
         end;
+        repeat
+            TransferReceiptLine.SetRange("Transfer Order No.", TransferShipmentLine."Transfer Order No.");
+            TransferReceiptLine.SetRange("Line No.", TransferShipmentLine."Trans. Order Line No.");
+            TransferReceiptLine.SetFilter(Quantity, '<>0');
+            if (not TransferReceiptLine.IsEmpty()) or
+               (TransferLine.Get(TransferShipmentLine."Transfer Order No.", TransferShipmentLine."Trans. Order Line No.") and
+                (TransferLine."Qty. Received (Base)" > 0))
+            then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ReceivedErr, DocumentNo), 'documentNo', DocumentNo, UnreceivedTxt, ReceivedNextStepTxt);
+                exit;
+            end;
+        until TransferShipmentLine.Next() = 0;
+        TransferShipmentLine.FindSet();
         UndoShipment.SetHideDialog(true);
         if Argument."Omit Commit" then
             UndoShipment.Run(TransferShipmentLine)

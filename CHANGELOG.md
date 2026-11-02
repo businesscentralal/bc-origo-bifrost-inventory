@@ -22,6 +22,20 @@
 - Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
 - Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
 
+### Fixed (2026-10-31) - transfer posting test confirmation (#150)
+
+- Transfer posting and undo fixtures in codeunit 96914 explicitly confirm their single owned transfer document with `expectedCount: 1`. This keeps the posting, receipt and rollback assertions reachable when Foundation confirmation is enabled; the gate and all existing assertions remain in place.
+
+### Fixed (2026-10-24) - Contract guard declaration identity (#150)
+
+- Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
+
+### Fixed (2026-10-23) - issue #150
+
+- Tracking.Assign/Get/Delete now round-trip native source-bound lot, serial and package tracking. A source line SystemId is required; deletion affects only the selected unreserved entry. Single-entry response fields are retained, native posting remains separate and Omit Commit retains caller transaction ownership.
+- UndoShipment explicitly refuses received transfer lines with PreconditionFailed and a return-transfer next step; the selected-shipment repair is inherited from #159.
+- Correction to the earlier shipped roster: UndoReceipt is disabled, not a working undo feature. The released enum remains for compatibility only; no native Undo Transfer Receipt codeunit exists in the configured BC symbols. Use a new transfer order for received goods. Historical changelog entries describe earlier releases, not current availability.
+- Objects: codeunits 10076897 Tracking Assign Impl ori, 10076899 Tracking Delete Impl ori, 10076900 Tracking Get Impl ori, 10076910 Transfer Undo Shpt Impl ori, 10076911 Transf Undo Rcpt Impl ori; new codeunit 10076925 Inventory Tracking Write ori; permission extension 10076836 BIFROST InvWrite ori; new test codeunit 96974 Inv. Source Tracking Tests ori; test codeunit 96914 Transfer Order Post Tests and explicit fixture codeunit/page 96973. Updated README, contracts and is-IS translations.
 
 ### Fixed (2026-10-25) - catalogue quality guard compiles (inventory#152, PR 163)
 
