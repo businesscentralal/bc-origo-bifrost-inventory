@@ -12,7 +12,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Issue 159: real reclassification preview captures native entries without persisting posting changes.</summary>
-codeunit 96971 "Reclass Preview Tests ori"
+codeunit 96977 "Reclass Preview Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;

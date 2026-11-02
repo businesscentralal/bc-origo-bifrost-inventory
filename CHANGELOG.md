@@ -6,6 +6,10 @@
 
 - `Inventory.Reservation.Cancel` now includes localized `expected` and `nextStep` context when `entryNo` does not exist, directing callers to `Inventory.Reservation.Get`. The `RecordNotFound` code, selector context and cancellation behavior are preserved (codeunit 10076892). English and Icelandic regressions verify the response and unchanged reservation data (test codeunit 96975). The test-only fixture page 96973 can display the real refusal for an absent selector during bilingual Web Client verification.
 
+### Added — issue #158
+
+- Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.
+
 ### Fixed (2026-10-25) - transfer posting help (#151)
 
 - Correct the TransferOrder.Post invalid postingType condition in contract help (10076919). ShipReceive remains refused; the description no longer claims it appears in the runtime error text. No posting behavior or accepted values change.
@@ -16,17 +20,54 @@
 
 - Issue151 first refusal family: Period.Close/Reopen (10076877/10076879) validate ISO dates before lookup, report missing periods with invariant dates and actionable translated context; AdjustCost.Run process10076859 validates boolean/filter values before running report795 and collects independent format errors. Native bilingual regression codeunit96975. Additional issue151 repairs collect assembly/transfer/attribute-definition/reservation/cost inputs, code assembly undo/transfer posting and cost guards, translate preview summaries, return invariant Reservation.Get statuses and ignore only truly empty physical-posting rows. Journal helper10076840 now raises coded rollback-safe refusals and native line context; tracking helpers10076841/10076925 provide expected values and next actions. New read-process codeunit10076926 preserves coded synchronous Check/Preview failures through rollback isolation, with execute permission only in existing read/write permission extensions. Native journal and tracking failures retain their original BusinessCentralError text with the selected source/batch context and translated recovery fields. Metadata, isolated lookup collection and explicit test fixtures are updated; runtime/independent verification remains tracked at each candidate.
 
+### Fixed (2026-10-31) - transfer posting test confirmation (#150)
+
+- Transfer posting and undo fixtures in codeunit 96914 explicitly confirm their single owned transfer document with `expectedCount: 1`. This keeps the posting, receipt and rollback assertions reachable when Foundation confirmation is enabled; the gate and all existing assertions remain in place.
+
 ### Fixed (2026-10-24) - Contract guard declaration identity (#150)
 
 - Ignore permission-set object references when locating AL declarations. This preserves the actual tracking writer header and operation-specific parameter reads regardless of file enumeration order; add source regressions for both orders and a genuine mismatch (`Test-ContractParameterKeys.ps1`; no runtime object or allow-list change).
 
-### Fixed — issue #150
+### Fixed (2026-10-23) - issue #150
+
 - Tracking.Assign/Get/Delete now round-trip native source-bound lot, serial and package tracking. A source line SystemId is required; deletion affects only the selected unreserved entry. Single-entry response fields are retained, native posting remains separate and Omit Commit retains caller transaction ownership.
 - UndoShipment explicitly refuses received transfer lines with PreconditionFailed and a return-transfer next step; the selected-shipment repair is inherited from #159.
 - Correction to the earlier shipped roster: UndoReceipt is disabled, not a working undo feature. The released enum remains for compatibility only; no native Undo Transfer Receipt codeunit exists in the configured BC symbols. Use a new transfer order for received goods. Historical changelog entries describe earlier releases, not current availability.
 - Objects: codeunits 10076897 Tracking Assign Impl ori, 10076899 Tracking Delete Impl ori, 10076900 Tracking Get Impl ori, 10076910 Transfer Undo Shpt Impl ori, 10076911 Transf Undo Rcpt Impl ori; new codeunit 10076925 Inventory Tracking Write ori; permission extension 10076836 BIFROST InvWrite ori; new test codeunit 96974 Inv. Source Tracking Tests ori; test codeunit 96914 Transfer Order Post Tests and explicit fixture codeunit/page 96973. Updated README, contracts and is-IS translations.
 
+### Fixed (2026-10-25) - catalogue quality guard compiles (inventory#152, PR 163)
+
+- Test codeunit 96971 now imports `System.TestLibraries.Utilities` (which resolves `Codeunit "Library Assert"`; `GlobalLanguage` is an AL built-in) and is renamed from the 32-character `Inv. Catalogue Quality Tests ori` to the 28-character `Inv. Catalogue Quality Tests` (AL0305 object-name length limit 30). No behaviour, test, object ID or catalogue text changed; the guard still reads description, selection description and keywords of every Inventory message type in LCID 1033 and 1039.
+
+### Added (2026-10-23) - catalogue quality guard (inventory#152, AC1)
+
+- New test codeunit 96971 `Inv. Catalogue Quality Tests` (test range 96900-96999; 28 characters, within the 30-character AL0305 object-name limit): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
+
+
+### Fixed (2026-10-29) - registration under restricted licence administration (#173)
+
+- `Inventory Registration ori` (codeunit 10076845) declares `InherentPermissions = X` and `InherentEntitlements = X`, so its `OnRegisterApps` subscriber can run when a restricted licence administrator opens Bifröst Setup. No permission set is widened.
+- `Inv. Registration Tests ori` (codeunit 96972) opens Foundation's actual Setup page under `BIFROST LicAdm ori` plus the test-only `Inv Setup Test` baseline (96972). The baseline includes Microsoft's `D365 Basic - Read` platform baseline, Foundation Read and the execute-only `All Objects` test role for the complete internal Setup dependencies at the supported 28.0.3.530 floor, then excludes the Execute grant on `Inventory Registration ori` through `Inv Reg Excl Test` (96973). This preserves the inherent-Execute regression without granting general administration: direct Setup writes are denied, the page remains non-editable and the licence-administrator action is visible. No tenant permission role or user assignment is created. The test does not invoke Sync or write licence, EULA or trial state.
+
+### Fixed (2026-10-25) - domain usage review corrections (#147)
+
+- `Inventory Setup ori` (table 10076836) checks for a nonblank ledger location before loading the per-item location comparison. A blank-only ledger leaves Reclassification off without fetching every row into AL; mixed blank/nonblank locations still participate in the unchanged mapping. `Inventory Domain Usage Tests` (96963) covers both cases, including a 1000-entry bounded-read regression and actual setup-page creation.
+- `Inventory Setup ori` (table 10076836) stops at the first matching usage signal. Reclassification reads the item ledger only when Location, Bin Content and Warehouse Entry supply no signal; the other multi-signal checks also return early. The domain mapping is unchanged.
+- `Inventory Install ori` (codeunit 10076835) registers the domain-usage upgrade tag for newly created companies, preserving later administrator opt-outs on the next upgrade. `Inventory Domain Usage Tests` (96963) covers new-company tag registration, preserved opt-outs, bounded reads with an existing Location and the per-item ledger-location fallback.
+
+### Fixed (2026-10-23) - company domain defaults from usage (#147)
+
+- `Inventory Setup ori` table 10076836 derives new-row defaults from native company data. `Inventory Upgrade ori` (10076836) runs the same off-to-on evaluation once per company under its own upgrade tag; `Inventory Install ori` (10076835) applies it on fresh installs. Enabled domains and absent rows are preserved, and unchanged rows are not modified. No licence, consent or HTTP setting is written.
+- Usage mapping: attributes → Item Attribute; transfer → in-transit Location/Transfer Header/Transfer Route; assembly → BOM Component/Assembly Header/Production BOM Header; reservations → Reservation-status entries; tracking → tracking codes, tracked Items or lot/serial/package entries; physical inventory → recording headers, physical ledger or counting-period Items; costing → Value Entry/order adjustment; reclassification → locations, bins, warehouse entries or multiple ledger locations per Item; application → Item Application Entry; periods → Inventory Period; prices → Item Price List Lines; references → Item Reference; availability → Items/ledger entries (valid demand/supply refers to Items); charges → Item Charge; categories → Item Category/categorized Items. README documents the mapping and the existing Foundation discovery boundary for disabled types.
+- Native regressions in `Inventory Domain Usage Tests` (96963) cover all fifteen domains with and without data, the actual setup page/insert trigger, upgrade tagging, existing enabled switches, missing setup, idempotence and distinguishing transfer/reservation signals. The test app adds Microsoft's System Application Test Library for supported upgrade-tag fixture cleanup. `.claude/CLAUDE.md` no longer describes the superseded opt-in default.
+
+### Fixed (2026-10-29) - Reclassification test allocation after main integration (#159, PR #164)
+
+- Move `Reclass Check Perm Tests ori` from codeunit 96972 to 96976 and `Reclass Preview Tests ori` from 96971 to 96977. This avoids registration test 96972 introduced by #174 and preserves the allocations already used by open PRs #165 (96974), #166 (96975) and #172 (96971). Test assertions and production behavior are unchanged; all suites remain included.
+
 ### Fixed (2026-10-24) - Native reclassification preview and reservation consistency (#159, partial)
+
+- Test-only fixture codeunit/page 96973 supports the isolated owned `CRONUS W8 Inv164` company with a separate `R8` record prefix, preserving existing `W8` fixtures during exact-tip re-verification after the main merge. Existing fixture and company guards remain.
 
 - Correct the cross-reference in Reclassification.Post notes to describe PreviewPost as native posting simulation with captured entries and rollback (10076888; PR #164 F1).
 
@@ -69,7 +110,7 @@
 ### Changed (2026-10-20) - object IDs moved to 10076835–10077034
 
 - Every app object now uses the single range 10076835–10077034; `app.json` drops 10036885–10036934 and 70013400–70013499. Names, behaviour and the test range 96900–96999 are unchanged. README lists the new IDs.
-- Message type enum values follow: each value is the ID of its implementation codeunit (for example `Inventory.Cost.Get` 10076860 on `Cost Get Impl ori`). `Inventory.PhysInventory.Record` takes the ID of `Phys. Invt. Record Impl ori` (10076882); `Inventory.PhysInventory.RecordCount`, which shares that codeunit, is 10076925.
+- Message type enum values follow: each value is the ID of its implementation codeunit (for example `Inventory.Cost.Get` 10076860 on `Cost Get Impl ori`). `Inventory.PhysInventory.Record` takes the ID of `Phys. Invt. Record Impl ori` (10076882); `Inventory.PhysInventory.RecordCount`, which shares that codeunit, is 10076924.
 - Earlier entries below keep the IDs that were valid when they were written.
 - An installation from an earlier build stores the old enum values: uninstall it with its data before publishing this build.
 

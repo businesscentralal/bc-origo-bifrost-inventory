@@ -35,9 +35,9 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryWarehouse: Codeunit "Library - Warehouse";
     begin
-        if CompanyName() <> 'CRONUS International Ltd.' then
+        if not IsOwnedCompany() then
             Error('This explicit test seed is limited to the owned CRONUS verification company.');
-        if Item.Get('W8PRV-EN') or Item.Get('W8PRV-IS') or JournalTemplate.Get('W8PRV') then
+        if Item.Get(FixtureCode('PRV-EN')) or Item.Get(FixtureCode('PRV-IS')) or JournalTemplate.Get(FixtureShortCode('PRV')) then
             Error('Owned fixture already exists. Inspect actual state; never replay the seed.');
         GLSetup.Get();
         GLSetup."Journal Templ. Name Mandatory" := false;
@@ -55,17 +55,17 @@ codeunit 96973 "Inv. MCP Fixture ori"
         FeatureSetup.Reservations := true;
         FeatureSetup.Modify();
         LibraryWarehouse.CreateLocation(Location);
-        Location.Rename('W8PRV');
+        Location.Rename(FixtureShortCode('PRV'));
         LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Transfer);
-        JournalTemplate.Rename('W8PRV');
+        JournalTemplate.Rename(FixtureShortCode('PRV'));
         LibraryInventory.CreateItemJournalTemplateByType(StockTemplate, StockTemplate.Type::Item);
-        StockTemplate.Rename('W8PRVSTK');
+        StockTemplate.Rename(FixtureShortCode('PRVSTK'));
         LibraryInventory.CreateItemJournalBatch(StockBatch, StockTemplate.Name);
         StockBatch.Rename(StockTemplate.Name, 'OWNED');
-        CreateScenario('W8PRV-EN', 'EN', StockBatch, Location.Code);
-        CreateScenario('W8PRV-IS', 'IS', StockBatch, Location.Code);
-        CreateScenario('W8PRV-FAIL', 'FAIL', StockBatch, Location.Code);
-        CreateScenario('W8PRV-OTHER', 'OTHER', StockBatch, Location.Code);
+        CreateScenario(FixtureCode('PRV-EN'), 'EN', StockBatch, Location.Code);
+        CreateScenario(FixtureCode('PRV-IS'), 'IS', StockBatch, Location.Code);
+        CreateScenario(FixtureCode('PRV-FAIL'), 'FAIL', StockBatch, Location.Code);
+        CreateScenario(FixtureCode('PRV-OTHER'), 'OTHER', StockBatch, Location.Code);
         CreateEmptyBatch();
     end;
 
@@ -211,12 +211,12 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Line.Validate("Unit Amount", 12);
         Line.Modify(true);
         LibraryInventory.PostItemJournalLine(StockBatch."Journal Template Name", StockBatch.Name);
-        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRV');
-        Batch.Rename('W8PRV', BatchName);
+        LibraryInventory.CreateItemJournalBatch(Batch, FixtureShortCode('PRV'));
+        Batch.Rename(FixtureShortCode('PRV'), BatchName);
         LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 2);
         Line.Validate("New Location Code", NewLocation);
         if BatchName = 'FAIL' then
-            Line."Item No." := 'W8PRV-NOT-FOUND';
+            Line."Item No." := FixtureCode('PRV-NOT-FOUND');
         Line.Modify(false);
     end;
 
@@ -225,8 +225,8 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Batch: Record "Item Journal Batch";
         LibraryInventory: Codeunit "Library - Inventory";
     begin
-        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRV');
-        Batch.Rename('W8PRV', 'EMPTY');
+        LibraryInventory.CreateItemJournalBatch(Batch, FixtureShortCode('PRV'));
+        Batch.Rename(FixtureShortCode('PRV'), 'EMPTY');
     end;
     /// <summary>Completes only the inspected partial seed; it never repeats an existing stock posting.</summary>
     procedure CompletePreviewFixture()
@@ -238,25 +238,25 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Entry: Record "Item Ledger Entry";
         LibraryInventory: Codeunit "Library - Inventory";
     begin
-        if CompanyName() <> 'CRONUS International Ltd.' then
+        if not IsOwnedCompany() then
             Error('Owned company required.');
-        Item.Get('W8PRV-FAIL');
+        Item.Get(FixtureCode('PRV-FAIL'));
         Entry.SetRange("Item No.", Item."No.");
         if Entry.Count() <> 1 then
             Error('Inspect owned stock before recovery.');
         Entry.FindFirst();
         Entry.TestField(Quantity, 10);
-        if Batch.Get('W8PRV', 'FAIL') or Item.Get('W8PRV-OTHER') or Batch.Get('W8PRV', 'EMPTY') then
+        if Batch.Get(FixtureShortCode('PRV'), 'FAIL') or Item.Get(FixtureCode('PRV-OTHER')) or Batch.Get(FixtureShortCode('PRV'), 'EMPTY') then
             Error('Recovery target already exists; inspect before another action.');
-        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRV');
-        Batch.Rename('W8PRV', 'FAIL');
-        LibraryInventory.CreateItemJournalLine(Line, 'W8PRV', 'FAIL', Line."Entry Type"::Transfer, 'W8PRV-FAIL', 2);
-        Line.Validate("New Location Code", 'W8PRV');
+        LibraryInventory.CreateItemJournalBatch(Batch, FixtureShortCode('PRV'));
+        Batch.Rename(FixtureShortCode('PRV'), 'FAIL');
+        LibraryInventory.CreateItemJournalLine(Line, FixtureShortCode('PRV'), 'FAIL', Line."Entry Type"::Transfer, FixtureCode('PRV-FAIL'), 2);
+        Line.Validate("New Location Code", FixtureShortCode('PRV'));
         // Explicit corrupt test fixture: native preview must reject it without changing journal or ledger records.
-        Line."Item No." := 'W8PRV-NOT-FOUND';
+        Line."Item No." := FixtureCode('PRV-NOT-FOUND');
         Line.Modify(false);
-        StockBatch.Get('W8PRVSTK', 'OWNED');
-        CreateScenario('W8PRV-OTHER', 'OTHER', StockBatch, 'W8PRV');
+        StockBatch.Get(FixtureShortCode('PRVSTK'), 'OWNED');
+        CreateScenario(FixtureCode('PRV-OTHER'), 'OTHER', StockBatch, FixtureShortCode('PRV'));
         CreateEmptyBatch();
     end;
 
@@ -268,9 +268,9 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Customer: Record Customer;
         LibrarySales: Codeunit "Library - Sales";
     begin
-        if (CompanyName() <> 'CRONUS International Ltd.') or not (Suffix in ['EN', 'IS']) then
+        if not IsOwnedCompany() or not (Suffix in ['EN', 'IS']) then
             Error('Owned company and scenario required.');
-        if Item.Get('W8ASM-' + Suffix) or Item.Get('W8TRF-' + Suffix) or Item.Get('W8CHI1-' + Suffix) then
+        if Item.Get(FixtureCode('ASM-' + Suffix)) or Item.Get(FixtureCode('TRF-' + Suffix)) or Item.Get(FixtureCode('CHI1-' + Suffix)) then
             Error('Posting fixture exists; inspect state, do not replay.');
         FeatureSetup.Get();
         FeatureSetup.Assembly := true;
@@ -278,10 +278,10 @@ codeunit 96973 "Inv. MCP Fixture ori"
         FeatureSetup."Item Charge" := true;
         FeatureSetup.Modify(true);
         if Suffix = 'EN' then begin
-            if Customer.Get('W8PRV-CUST') then
+            if Customer.Get(FixtureCode('PRV-CUST')) then
                 Error('Owned customer already exists.');
             LibrarySales.CreateCustomer(Customer);
-            Customer.Rename('W8PRV-CUST');
+            Customer.Rename(FixtureCode('PRV-CUST'));
             ConfigureReservationVAT();
         end;
         CreateAssemblyFixture(Suffix);
@@ -299,9 +299,9 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryAssembly: Codeunit "Library - Assembly";
     begin
         LibraryInventory.CreateItem(Component);
-        Component.Rename('W8CMP-' + Suffix);
+        Component.Rename(FixtureCode('CMP-' + Suffix));
         LibraryInventory.CreateItem(ParentItem);
-        ParentItem.Rename('W8ASM-' + Suffix);
+        ParentItem.Rename(FixtureCode('ASM-' + Suffix));
         ParentItem.Validate("Replenishment System", ParentItem."Replenishment System"::Assembly);
         ParentItem.Validate("Assembly Policy", ParentItem."Assembly Policy"::"Assemble-to-Stock");
         ParentItem.Modify(true);
@@ -325,7 +325,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryWarehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
         LibraryWarehouse.CreateInTransitLocation(InTransit);
         LibraryInventory.CreateItem(Item);
-        Item.Rename('W8TRF-' + Suffix);
+        Item.Rename(FixtureCode('TRF-' + Suffix));
         PostOwnedStock(Item."No.", FromLocation.Code, 'TRF' + Suffix, 30);
         LibraryWarehouse.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransit.Code);
         LibraryWarehouse.CreateTransferLine(Header, Line, Item."No.", 4);
@@ -339,15 +339,15 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Line: Record "Item Journal Line";
         LibraryInventory: Codeunit "Library - Inventory";
     begin
-        if Batch.Get('W8PRVSTK', BatchName) then
+        if Batch.Get(FixtureShortCode('PRVSTK'), BatchName) then
             Error('Owned stock batch exists.');
-        LibraryInventory.CreateItemJournalBatch(Batch, 'W8PRVSTK');
-        Batch.Rename('W8PRVSTK', BatchName);
-        LibraryInventory.CreateItemJournalLine(Line, 'W8PRVSTK', BatchName, Line."Entry Type"::"Positive Adjmt.", ItemNo, Quantity);
+        LibraryInventory.CreateItemJournalBatch(Batch, FixtureShortCode('PRVSTK'));
+        Batch.Rename(FixtureShortCode('PRVSTK'), BatchName);
+        LibraryInventory.CreateItemJournalLine(Line, FixtureShortCode('PRVSTK'), BatchName, Line."Entry Type"::"Positive Adjmt.", ItemNo, Quantity);
         Line.Validate("Location Code", LocationCode);
         Line.Validate("Unit Amount", 12);
         Line.Modify(true);
-        LibraryInventory.PostItemJournalLine('W8PRVSTK', BatchName);
+        LibraryInventory.PostItemJournalLine(FixtureShortCode('PRVSTK'), BatchName);
     end;
 
     local procedure CreateChargeFixture(Suffix: Code[2])
@@ -361,17 +361,17 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryPurchase: Codeunit "Library - Purchase";
     begin
         LibraryPurchase.CreateVendor(Vendor);
-        Vendor.Rename('W8CHGV-' + Suffix);
+        Vendor.Rename(FixtureCode('CHGV-' + Suffix));
         LibraryInventory.CreateItemCharge(Charge);
-        Charge.Rename('W8CHG-' + Suffix);
+        Charge.Rename(FixtureCode('CHG-' + Suffix));
         LibraryPurchase.CreatePurchHeader(Header, Header."Document Type"::Order, Vendor."No.");
         LibraryInventory.CreateItem(Item);
-        Item.Rename('W8CHI1-' + Suffix);
+        Item.Rename(FixtureCode('CHI1-' + Suffix));
         LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, Item."No.", 2);
         Line.Validate("Direct Unit Cost", 10);
         Line.Modify(true);
         LibraryInventory.CreateItem(Item);
-        Item.Rename('W8CHI2-' + Suffix);
+        Item.Rename(FixtureCode('CHI2-' + Suffix));
         LibraryPurchase.CreatePurchaseLine(Line, Header, Line.Type::Item, Item."No.", 2);
         Line.Validate("Direct Unit Cost", 20);
         Line.Modify(true);
@@ -391,9 +391,9 @@ codeunit 96973 "Inv. MCP Fixture ori"
         LibraryERM: Codeunit "Library - ERM";
         LibrarySales: Codeunit "Library - Sales";
     begin
-        if CompanyName() <> 'CRONUS International Ltd.' then
+        if not IsOwnedCompany() then
             Error('Owned company required.');
-        Customer.Get('W8PRV-CUST');
+        Customer.Get(FixtureCode('PRV-CUST'));
         Header.SetRange("Sell-to Customer No.", Customer."No.");
         if not Header.IsEmpty() then
             Error('Sales source already exists; inspect it before changing its fixture setup.');
@@ -402,7 +402,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Customer.Validate("Gen. Bus. Posting Group", GenBusGroup.Code);
         Customer.Validate("VAT Bus. Posting Group", VATSetup."VAT Bus. Posting Group");
         Customer.Modify(true);
-        Item.Get('W8PRV-EN');
+        Item.Get(FixtureCode('PRV-EN'));
         Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
@@ -412,7 +412,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         SalesLine.Validate("Shipment Date", WorkDate());
         SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
         SalesLine.Modify(true);
-        Item.Get('W8PRV-IS');
+        Item.Get(FixtureCode('PRV-IS'));
         Item.Validate("VAT Prod. Posting Group", VATSetup."VAT Prod. Posting Group");
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
@@ -425,4 +425,28 @@ codeunit 96973 "Inv. MCP Fixture ori"
         SalesLine.Modify(true);
     end;
 
+    /// <summary>Reports whether this company's isolated preview fixture already exists.</summary>
+    procedure FixtureExists(): Boolean
+    var
+        Item: Record Item;
+    begin
+        exit(Item.Get(FixtureCode('PRV-EN')));
+    end;
+
+    local procedure IsOwnedCompany(): Boolean
+    begin
+        exit(CompanyName() in ['CRONUS International Ltd.', 'CRONUS W8 Inv164']);
+    end;
+
+    local procedure FixtureShortCode(Suffix: Text): Code[10]
+    begin
+        exit(CopyStr(FixtureCode(Suffix), 1, 10));
+    end;
+
+    local procedure FixtureCode(Suffix: Text): Code[20]
+    begin
+        if CompanyName() = 'CRONUS W8 Inv164' then
+            exit(CopyStr('R8' + Suffix, 1, 20));
+        exit(CopyStr('W8' + Suffix, 1, 20));
+    end;
 }

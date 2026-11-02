@@ -25,6 +25,36 @@ codeunit 96902 "Inventory Test Library ori"
         IsInitialized := true;
     end;
 
+    /// <summary>Explicitly enables the reservation domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableReservations()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Reservations := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the physical inventory domain for a test of its independent behavior or permissions.</summary>
+    procedure EnablePhysicalInventory()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup."Phys. Inventory" := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the item price domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableItemPrice()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup."Item Price" := true;
+        Setup.Modify(true);
+    end;
+
     /// <summary>Dispatches a message type via Foundation Dispatcher and returns the response JSON.</summary>
     procedure ExecuteType(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; OmitCommit: Boolean) ResponseJson: JsonObject
     var
