@@ -1,0 +1,42 @@
+[
+  {
+    "ac": "AC1",
+    "status": "already-present and developer verified at current candidate",
+    "evidence": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/152#issuecomment-6545119940",
+    "sha": "0e708df0442ce0d7de7f52cede7e7d0eb69f07e5",
+    "note": "PR172 guard and Tester AC1 pass only. No new candidate pass.",
+    "currentSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+    "native": "461/461 configured suite including catalogue label/runtime guard",
+    "mcp": "59types x2LCID=118fullhelp calls;177catalogue fields differ across English/Icelandic"
+  },
+  {
+    "ac": "AC2",
+    "status": "implemented and developer verified at current candidate",
+    "note": "PR160 largely covered items2\u20136 but retained pinned help exceptions and AL implementation names; inspect main and avoid open165/166/168/171 scopes.",
+    "details": [
+      "Every error has code and every type has examples.",
+      "Correct canonical attribute names, nested overwrite, option values and typed subjects.",
+      "Existing tracking quantity, statistics response/count corrections retained from PR160; physical aliases documented.",
+      "Internal AL/permission names removed and recursive guard strengthened.",
+      "Published Statistics Inbound and status_ compatibility retained, docs reconcile effect vs protocol."
+    ],
+    "currentSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+    "native": "461/461 configured suite",
+    "mcp": "118fullhelp calls and9selfseeded attribute examples/refusals all passed"
+  },
+  {
+    "ac": "AC3",
+    "status": "implemented and developer verified; own setup baseline restored",
+    "evidence": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/162",
+    "note": "Usage-based setup defaults merged; remaining end-user setup guidance must be checked.",
+    "details": "Shared and seven local domain refusals name administrator, Inv. Posting Gate caption and Inventory Setup page; no Data.Records.Set bypass. PR162 defaults preserved.",
+    "currentSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+    "mcp": "118disabled-domain calls passed;2protected writes correctly refused includingforce; baseline restored with exact15boolean readback",
+    "ui": "Inventory Setup in1033/1039; toggles changed via supported page only"
+  },
+  {
+    "ac": "AC4",
+    "status": "XLF/CHANGELOG and developer bilingual checks verified; independent Claude and postmerge UAT pending",
+    "currentSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883"
+  }
+]

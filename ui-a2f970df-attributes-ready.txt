@@ -1,0 +1,191 @@
+- form "Item Attributes":
+  - button "Skip to main content"
+  - navigation "Main navigation":
+    - menubar:
+      - menuitem "CRONUS International Ltd.":
+        - heading "CRONUS International Ltd." [level=1]
+      - menuitem "Finance"
+      - menuitem "Cash Management"
+      - menuitem "Sales"
+      - menuitem "Purchasing"
+      - menuitem "Shopify"
+      - menuitem "All Reports"
+      - menuitem "Explore all business features for my role in Business Central"
+  - menubar:
+    - heading "Item Attributes:" [level=2]
+    - 'button "Item Attributes: All"': All
+    - menuitem "Search Item Attributes":
+      - searchbox "Search Item Attributes"
+    - menuitem "Enter analysis mode"
+    - menuitem "New"
+    - menuitem "Delete"
+    - menuitem "Edit List"
+    - menuitem "Item Attribute Values"
+    - menuitem "Translations"
+    - menuitem "Share": 
+    - menuitemcheckbox "Toggle filter": 
+    - menuitem "List layout selected"
+    - menuitemcheckbox "Toggle wide layout": 
+    - menuitemcheckbox "Not bookmarked": 
+  - main:
+    - grid "Item Attributes":
+      - rowgroup:
+        - row "Name Open menu for Name More Options Type Open menu for Type Values Open menu for Values Blocked Open menu for Blocked":
+          - columnheader "Name Open menu for Name":
+            - button "Name"
+            - button "Open menu for Name"
+          - columnheader "More Options"
+          - columnheader "Type Open menu for Type":
+            - button "Type"
+            - button "Open menu for Type"
+          - columnheader "Values Open menu for Values":
+            - text: Values
+            - button "Open menu for Values"
+          - columnheader "Blocked Open menu for Blocked":
+            - button "Blocked"
+            - button "Open menu for Blocked"
+      - row "Name Color Type Values Red,Orange,Yellow,Green,Blue,Violet,Purple,Black,White Blocked" [selected]:
+        - gridcell "Name Color":
+          - button "Name Color": Color
+        - gridcell:
+          - button "Show more options"
+        - gridcell "Type":
+          - textbox "Type"
+        - gridcell "Values Red,Orange,Yellow,Green,Blue,Violet,Purple,Black,White":
+          - button "Values Red,Orange,Yellow,Green,Blue,Violet,Purple,Black,White": Red,Orange,Yellow,Green,Blue,Violet,Purple,Black,White
+        - gridcell "Blocked":
+          - checkbox "Blocked" [disabled]
+      - row "Name Depth Show more options Type Decimal Values Blocked (Blank)":
+        - gridcell "Name Depth":
+          - button "Name Depth": Depth
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Decimal":
+          - textbox "Type Decimal"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Width Show more options Type Decimal Values Blocked (Blank)":
+        - gridcell "Name Width":
+          - button "Name Width": Width
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Decimal":
+          - textbox "Type Decimal"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Height Show more options Type Decimal Values Blocked (Blank)":
+        - gridcell "Name Height":
+          - button "Name Height": Height
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Decimal":
+          - textbox "Type Decimal"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Material Description Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Material Description":
+          - button "Name Material Description": Material Description
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Model Year Show more options Type Integer Values Blocked (Blank)":
+        - gridcell "Name Model Year":
+          - button "Name Model Year": Model Year
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Integer":
+          - textbox "Type Integer"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Material (Surface) Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Material (Surface)":
+          - button "Name Material (Surface)": Material (Surface)
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Material (Legs) Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Material (Legs)":
+          - button "Name Material (Legs)": Material (Legs)
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Adjustable height Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Adjustable height":
+          - button "Name Adjustable height": Adjustable height
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Assembly required Show more options Type Option Values Yes,No Blocked (Blank)":
+        - gridcell "Name Assembly required":
+          - button "Name Assembly required": Assembly required
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Option":
+          - textbox "Type Option"
+        - gridcell "Values Yes,No":
+          - button "Values Yes,No": Yes,No
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Cable management Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Cable management":
+          - button "Name Cable management": Cable management
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name Certifications Show more options Type Text Values Blocked (Blank)":
+        - gridcell "Name Certifications":
+          - button "Name Certifications": Certifications
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Text":
+          - textbox "Type Text"
+        - gridcell "Values":
+          - button "Values"
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+      - row "Name LI152 Help Verification Show more options Type Option Values Matte,Gloss Blocked (Blank)":
+        - gridcell "Name LI152 Help Verification":
+          - button "Name LI152 Help Verification": LI152 Help Verification
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Type Option":
+          - textbox "Type Option"
+        - gridcell "Values Matte,Gloss":
+          - button "Values Matte,Gloss": Matte,Gloss
+        - gridcell "Blocked (Blank)":
+          - checkbox "Blocked (Blank)"
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.
+- paragraph: List with title "Item Attributes" now has 13 items

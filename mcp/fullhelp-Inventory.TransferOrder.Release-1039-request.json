@@ -1,0 +1,5 @@
+{
+  "messageType": "Inventory.TransferOrder.Release",
+  "detail": "full",
+  "lcid": 1039
+}

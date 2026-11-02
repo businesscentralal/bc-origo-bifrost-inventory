@@ -1,0 +1,18 @@
+Microsoft (R) AL Compiler version 17.0.44.19451
+Copyright (C) Microsoft Corporation. All rights reserved
+
+Compilation started for project 'Bifrost Inventory - Tests' containing '65' files at '00:32:03.932'.
+
+test/src/InvCostReadTest.PermissionSet.al(4,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/InventoryTrackingReadTests.Codeunit.al(7,1): info AA0477: The using statements are not in a sorted order.
+test/src/InventoryCostWriteObserver.Codeunit.al(5,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/InvPostingGateTests.Codeunit.al(6,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/AssemblyOrder/AssemblyOrderPostTests.Codeunit.al(6,1): info AA0477: The using statements are not in a sorted order.
+test/src/codeunit/InvMcpFixture.Codeunit.al(6,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/InventoryPhysicalTests.Codeunit.al(8,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/InvContractParityTests.Codeunit.al(5,1): info AA0477: The using statements are not in a sorted order.
+test/test/Inventory/InventoryDomainUsageTests.Codeunit.al(10,1): info AA0477: The using statements are not in a sorted order.
+test/src/InvMcpFixture.Page.al(4,12): info AW0006: The page 'Inv. MCP Fixture ori' should use the UsageCategory and ApplicationArea properties to be searchable.
+
+Compilation ended at '00:32:13.793'.
+

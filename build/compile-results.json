@@ -1,0 +1,50 @@
+{
+  "startedAt": "2026-11-02T00:31:50.555665+00:00",
+  "finishedAt": "2026-11-02T00:32:14.885829+00:00",
+  "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "cleanAtStart": true,
+  "cleanAtEnd": true,
+  "exactTip": true,
+  "results": [
+    {
+      "part": "app",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "command": [
+        "/workspace/tools/dotnet10/dotnet",
+        "/workspace/evidence/attachments158-worker9/al17/extension/bin/linux/alc.dll",
+        "/project:/workspace/inventory152-worker9/app",
+        "/packagecachepath:/workspace/evidence/inventory152-litr-20261102/build/symbols",
+        "/out:/workspace/evidence/inventory152-litr-20261102/build/app.app",
+        "/sourceCommit:a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+        "/buildBy:worker-9-owned-verification",
+        "/buildUrl:https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+        "/analyzer:/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.CodeCop.dll,/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.UICop.dll,/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+      ],
+      "packageExists": true,
+      "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+      "packageSha256": "a391434d20e8ba45ae0f913ad58d2d39f3a97dc5ed5b0da386ab34f5bf869a21"
+    },
+    {
+      "part": "test",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "command": [
+        "/workspace/tools/dotnet10/dotnet",
+        "/workspace/evidence/attachments158-worker9/al17/extension/bin/linux/alc.dll",
+        "/project:/workspace/inventory152-worker9/test",
+        "/packagecachepath:/workspace/evidence/inventory152-litr-20261102/build/symbols",
+        "/out:/workspace/evidence/inventory152-litr-20261102/build/test.app",
+        "/sourceCommit:a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+        "/buildBy:worker-9-owned-verification",
+        "/buildUrl:https://github.com/businesscentralal/bc-origo-bifrost-inventory/commit/a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+        "/analyzer:/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.CodeCop.dll,/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.UICop.dll,/workspace/evidence/attachments158-worker9/al17/extension/bin/Analyzers/Microsoft.Dynamics.Nav.AppSourceCop.dll"
+      ],
+      "packageExists": true,
+      "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+      "packageSha256": "73badb3e87184a47f705f43df4571b053370215b6b1ffbcd8ebe4a77df04786c"
+    }
+  ]
+}

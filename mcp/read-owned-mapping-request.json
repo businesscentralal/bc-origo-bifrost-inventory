@@ -1,0 +1,7 @@
+{
+  "type": "Inventory.Attribute.Get",
+  "data": {
+    "itemNo": "LI152-1102"
+  },
+  "lcid": 1033
+}

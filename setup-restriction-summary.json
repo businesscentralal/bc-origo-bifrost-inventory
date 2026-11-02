@@ -1,0 +1,35 @@
+{
+  "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "executed": 2,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "rows": [
+    {
+      "force": false,
+      "response": {
+        "status": "Error",
+        "code": "PermissionDenied",
+        "error": "Table 10076836 (Inventory Setup ori) cannot be written via Data.Records.Set. This is an internal table.",
+        "parameter": "tableNumber",
+        "received": "10076836",
+        "expected": "a table the user may write through the generic data types",
+        "nextStep": "Choose a table the user may access through the generic data types. This restriction cannot be bypassed by the request.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Data.Records.Set\". Always read the help before calling a message type."
+      }
+    },
+    {
+      "force": true,
+      "response": {
+        "status": "Error",
+        "code": "PermissionDenied",
+        "error": "Table 10076836 (Inventory Setup ori) cannot be written via Data.Records.Set. This is an internal table.",
+        "parameter": "tableNumber",
+        "received": "10076836",
+        "expected": "a table the user may write through the generic data types",
+        "nextStep": "Choose a table the user may access through the generic data types. This restriction cannot be bypassed by the request.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Data.Records.Set\". Always read the help before calling a message type."
+      }
+    }
+  ]
+}

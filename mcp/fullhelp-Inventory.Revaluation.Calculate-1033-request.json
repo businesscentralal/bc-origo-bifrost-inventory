@@ -1,0 +1,5 @@
+{
+  "messageType": "Inventory.Revaluation.Calculate",
+  "detail": "full",
+  "lcid": 1033
+}

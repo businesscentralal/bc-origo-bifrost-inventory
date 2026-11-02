@@ -1,0 +1,531 @@
+- form "Bifrost Message Types - Inventory.Tracking.Get":
+  - main:
+    - button "Back"
+    - heading "Inventory.Tracking.Get" [level=1]
+    - button "Toggle wide layout": 
+    - heading "Bifrost Message Types" [level=2]
+    - grid "Message Type List ori":
+      - rowgroup:
+        - row "Error Name, sorted in Ascending order Ascending Open menu for Name More Options Description Open menu for Description Filter Table No. Open menu for Filter Table No. Direction Open menu for Direction":
+          - columnheader "Error"
+          - columnheader "Name, sorted in Ascending order Ascending Open menu for Name":
+            - button "Name, sorted in Ascending order": Name
+            - img "Ascending"
+            - button "Open menu for Name"
+          - columnheader "More Options"
+          - columnheader "Description Open menu for Description":
+            - button "Description"
+            - button "Open menu for Description"
+          - columnheader "Filter Table No. Open menu for Filter Table No.":
+            - button "Filter Table No."
+            - button "Open menu for Filter Table No."
+          - columnheader "Direction Open menu for Direction":
+            - button "Direction"
+            - button "Open menu for Direction"
+      - row "Name, sorted in Ascending order Inventory.Revaluation.Calculate Show more options Description Calculates remaining inventory quantity and value for an item. Filter Table No. 32 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Revaluation.Calculate":
+          - textbox "Name, sorted in Ascending order Inventory.Revaluation.Calculate"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Calculates remaining inventory quantity and value for an item.":
+          - textbox "Description Calculates remaining inventory quantity and value for an item."
+        - gridcell "Filter Table No. 32":
+          - textbox "Filter Table No. 32"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Inventory.Revaluation.Post Show more options Description Posts all lines of a Revaluation item journal batch. Filter Table No. 233 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Revaluation.Post":
+          - textbox "Name, sorted in Ascending order Inventory.Revaluation.Post"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Posts all lines of a Revaluation item journal batch.":
+          - textbox "Description Posts all lines of a Revaluation item journal batch."
+        - gridcell "Filter Table No. 233":
+          - textbox "Filter Table No. 233"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.Revaluation.PreviewPost Show more options Description Runs native revaluation posting preview and returns captured entries without committing. Filter Table No. 233 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Revaluation.PreviewPost":
+          - textbox "Name, sorted in Ascending order Inventory.Revaluation.PreviewPost"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Runs native revaluation posting preview and returns captured entries without committing.":
+          - textbox "Description Runs native revaluation posting preview and returns captured entries without committing."
+        - gridcell "Filter Table No. 233":
+          - textbox "Filter Table No. 233"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.Tracking.Assign Show more options Description Creates a tracking specification record with a lot, serial or package number and a quantity for an item. Filter Table No. 336 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Tracking.Assign":
+          - textbox "Name, sorted in Ascending order Inventory.Tracking.Assign"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Creates a tracking specification record with a lot, serial or package number and a quantity for an item.":
+          - textbox "Description Creates a tracking specification record with a lot, serial or package number and a quantity for an item."
+        - gridcell "Filter Table No. 336":
+          - textbox "Filter Table No. 336"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.Tracking.Delete Show more options Description Deletes a tracking specification record by its entry number. Filter Table No. 336 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Tracking.Delete":
+          - textbox "Name, sorted in Ascending order Inventory.Tracking.Delete"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Deletes a tracking specification record by its entry number.":
+          - textbox "Description Deletes a tracking specification record by its entry number."
+        - gridcell "Filter Table No. 336":
+          - textbox "Filter Table No. 336"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Description Filter Table No. Direction" [selected]:
+        - rowheader
+        - gridcell "Name, sorted in Ascending order":
+          - textbox "Name, sorted in Ascending order"
+        - gridcell:
+          - button "Show more options"
+        - gridcell "Description":
+          - textbox "Description"
+        - gridcell "Filter Table No.":
+          - textbox "Filter Table No."
+        - gridcell "Direction":
+          - textbox "Direction"
+      - row "Name, sorted in Ascending order Inventory.TrackingAvailability.Get Show more options Description Reads tracked inventory, reserved quantities and availability by location and variant. Filter Table No. 27 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TrackingAvailability.Get":
+          - textbox "Name, sorted in Ascending order Inventory.TrackingAvailability.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Reads tracked inventory, reserved quantities and availability by location and variant.":
+          - textbox "Description Reads tracked inventory, reserved quantities and availability by location and variant."
+        - gridcell "Filter Table No. 27":
+          - textbox "Filter Table No. 27"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Inventory.Transfer.UndoReceipt Show more options Description Undoes a posted transfer receipt by writing corrective item ledger entries. Filter Table No. 5746 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Transfer.UndoReceipt":
+          - textbox "Name, sorted in Ascending order Inventory.Transfer.UndoReceipt"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Undoes a posted transfer receipt by writing corrective item ledger entries.":
+          - textbox "Description Undoes a posted transfer receipt by writing corrective item ledger entries."
+        - gridcell "Filter Table No. 5746":
+          - textbox "Filter Table No. 5746"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.Transfer.UndoShipment Show more options Description Undoes a posted transfer shipment with corrective entries. Filter Table No. 5744 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.Transfer.UndoShipment":
+          - textbox "Name, sorted in Ascending order Inventory.Transfer.UndoShipment"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Undoes a posted transfer shipment with corrective entries.":
+          - textbox "Description Undoes a posted transfer shipment with corrective entries."
+        - gridcell "Filter Table No. 5744":
+          - textbox "Filter Table No. 5744"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.TransferOrder.Create Show more options Description Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines. Filter Table No. 5740 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.Create":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.Create"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.":
+          - textbox "Description Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines."
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.TransferOrder.Post Show more options Description Posts a transfer order (ship/receive, or ship+receive for direct transfers). Filter Table No. 5740 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.Post":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.Post"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Posts a transfer order (ship/receive, or ship+receive for direct transfers).":
+          - textbox "Description Posts a transfer order (ship/receive, or ship+receive for direct transfers)."
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.TransferOrder.PreviewPost Show more options Description Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes. Filter Table No. 5740 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.PreviewPost":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.PreviewPost"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.":
+          - textbox "Description Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes."
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.TransferOrder.Release Show more options Description Releases a transfer order, changing its status from Open to Released. Filter Table No. 5740 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.Release":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.Release"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Releases a transfer order, changing its status from Open to Released.":
+          - textbox "Description Releases a transfer order, changing its status from Open to Released."
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Inventory.TransferOrder.Reopen Show more options Description Reopens a transfer order, changing its status from Released to Open. Filter Table No. 5740 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.Reopen":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.Reopen"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Reopens a transfer order, changing its status from Released to Open.":
+          - textbox "Description Reopens a transfer order, changing its status from Released to Open."
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - 'row "Name, sorted in Ascending order Inventory.TransferOrder.Statistics Show more options Description Returns transfer order statistics: line quantity, parcels, net/gross weight, volume and reservation state. Filter Table No. 5740 Direction Inbound"':
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Inventory.TransferOrder.Statistics":
+          - textbox "Name, sorted in Ascending order Inventory.TransferOrder.Statistics"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - 'gridcell "Description Returns transfer order statistics: line quantity, parcels, net/gross weight, volume and reservation state."':
+          - 'textbox "Description Returns transfer order statistics: line quantity, parcels, net/gross weight, volume and reservation state."'
+        - gridcell "Filter Table No. 5740":
+          - textbox "Filter Table No. 5740"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Item.Availability.Get Show more options Description Retrieves calculated item availability per location including inventory, reservations, requirements, and receipts. Filter Table No. 27 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Item.Availability.Get":
+          - textbox "Name, sorted in Ascending order Item.Availability.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves calculated item availability per location including inventory, reservations, requirements, and receipts.":
+          - textbox "Description Retrieves calculated item availability per location including inventory, reservations, requirements, and receipts."
+        - gridcell "Filter Table No. 27":
+          - textbox "Filter Table No. 27"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Item.Inventory.Get Show more options Description Retrieves physical on-hand inventory quantities by location for one or more items. Filter Table No. 27 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Item.Inventory.Get":
+          - textbox "Name, sorted in Ascending order Item.Inventory.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves physical on-hand inventory quantities by location for one or more items.":
+          - textbox "Description Retrieves physical on-hand inventory quantities by location for one or more items."
+        - gridcell "Filter Table No. 27":
+          - textbox "Filter Table No. 27"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Item.Price.Get Show more options Description Retrieves item price information based on configured price calculation rules. Filter Table No. 27 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Item.Price.Get":
+          - textbox "Name, sorted in Ascending order Item.Price.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves item price information based on configured price calculation rules.":
+          - textbox "Description Retrieves item price information based on configured price calculation rules."
+        - gridcell "Filter Table No. 27":
+          - textbox "Filter Table No. 27"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Memory.Company.Get Show more options Description Retrieves company-scoped memory records. Filter Table No. 10077893 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.Company.Get":
+          - textbox "Name, sorted in Ascending order Memory.Company.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves company-scoped memory records.":
+          - textbox "Description Retrieves company-scoped memory records."
+        - gridcell "Filter Table No. 10077893":
+          - textbox "Filter Table No. 10077893"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Memory.Company.List Show more options Description Lists company-scoped memory records (id and description only). Filter Table No. 10077893 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.Company.List":
+          - textbox "Name, sorted in Ascending order Memory.Company.List"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Lists company-scoped memory records (id and description only).":
+          - textbox "Description Lists company-scoped memory records (id and description only)."
+        - gridcell "Filter Table No. 10077893":
+          - textbox "Filter Table No. 10077893"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Memory.Company.Set Show more options Description Inserts or updates company-scoped memory records. Filter Table No. 10077893 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.Company.Set":
+          - textbox "Name, sorted in Ascending order Memory.Company.Set"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Inserts or updates company-scoped memory records.":
+          - textbox "Description Inserts or updates company-scoped memory records."
+        - gridcell "Filter Table No. 10077893":
+          - textbox "Filter Table No. 10077893"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Memory.User.Get Show more options Description Retrieves user-scoped memory records. Filter Table No. 10077894 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.User.Get":
+          - textbox "Name, sorted in Ascending order Memory.User.Get"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves user-scoped memory records.":
+          - textbox "Description Retrieves user-scoped memory records."
+        - gridcell "Filter Table No. 10077894":
+          - textbox "Filter Table No. 10077894"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Memory.User.List Show more options Description Lists user-scoped memory records (id and description only). Filter Table No. 10077894 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.User.List":
+          - textbox "Name, sorted in Ascending order Memory.User.List"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Lists user-scoped memory records (id and description only).":
+          - textbox "Description Lists user-scoped memory records (id and description only)."
+        - gridcell "Filter Table No. 10077894":
+          - textbox "Filter Table No. 10077894"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Memory.User.Set Show more options Description Inserts or updates user-scoped memory records. Filter Table No. 10077894 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Memory.User.Set":
+          - textbox "Name, sorted in Ascending order Memory.User.Set"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Inserts or updates user-scoped memory records.":
+          - textbox "Description Inserts or updates user-scoped memory records."
+        - gridcell "Filter Table No. 10077894":
+          - textbox "Filter Table No. 10077894"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Project.Ledger.CreateSalesCreditMemo Show more options Description Creates Sales Credit Memo(s) from project planning lines. Filter Table No. 1003 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Project.Ledger.CreateSalesCreditMemo":
+          - textbox "Name, sorted in Ascending order Project.Ledger.CreateSalesCreditMemo"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Creates Sales Credit Memo(s) from project planning lines.":
+          - textbox "Description Creates Sales Credit Memo(s) from project planning lines."
+        - gridcell "Filter Table No. 1003":
+          - textbox "Filter Table No. 1003"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Project.Ledger.CreateSalesInvoice Show more options Description Creates Sales Invoice(s) from billable project planning lines. Filter Table No. 1003 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Project.Ledger.CreateSalesInvoice":
+          - textbox "Name, sorted in Ascending order Project.Ledger.CreateSalesInvoice"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Creates Sales Invoice(s) from billable project planning lines.":
+          - textbox "Description Creates Sales Invoice(s) from billable project planning lines."
+        - gridcell "Filter Table No. 1003":
+          - textbox "Filter Table No. 1003"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Projects.ProjectJournal.Check Show more options Description Validates a project journal batch and returns readiness status. Filter Table No. 237 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Projects.ProjectJournal.Check":
+          - textbox "Name, sorted in Ascending order Projects.ProjectJournal.Check"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Validates a project journal batch and returns readiness status.":
+          - textbox "Description Validates a project journal batch and returns readiness status."
+        - gridcell "Filter Table No. 237":
+          - textbox "Filter Table No. 237"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Projects.ProjectJournal.Create Show more options Description Adds project journal lines to an existing batch. Without lines, inserts blank lines with the BC defaults. Filter Table No. 237 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Projects.ProjectJournal.Create":
+          - textbox "Name, sorted in Ascending order Projects.ProjectJournal.Create"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Adds project journal lines to an existing batch. Without lines, inserts blank lines with the BC defaults.":
+          - textbox "Description Adds project journal lines to an existing batch. Without lines, inserts blank lines with the BC defaults."
+        - gridcell "Filter Table No. 237":
+          - textbox "Filter Table No. 237"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Projects.ProjectJournal.Post Show more options Description Posts a project journal batch and returns posting statistics. Filter Table No. 237 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Projects.ProjectJournal.Post":
+          - textbox "Name, sorted in Ascending order Projects.ProjectJournal.Post"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Posts a project journal batch and returns posting statistics.":
+          - textbox "Description Posts a project journal batch and returns posting statistics."
+        - gridcell "Filter Table No. 237":
+          - textbox "Filter Table No. 237"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Projects.ProjectJournal.PreviewPost Show more options Description Simulates posting a project journal batch and returns the resulting ledger entries (Job Ledger Entry, Item Ledger Entry, G/L Entry where applicable) without committing changes. Filter Table No. 237 Direction Both":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Projects.ProjectJournal.PreviewPost":
+          - textbox "Name, sorted in Ascending order Projects.ProjectJournal.PreviewPost"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Simulates posting a project journal batch and returns the resulting ledger entries (Job Ledger Entry, Item Ledger Entry, G/L Entry where applicable) without committing changes.":
+          - textbox "Description Simulates posting a project journal batch and returns the resulting ledger entries (Job Ledger Entry, Item Ledger Entry, G/L Entry where applicable) without committing changes."
+        - gridcell "Filter Table No. 237":
+          - textbox "Filter Table No. 237"
+        - gridcell "Direction Both":
+          - textbox "Direction Both"
+      - row "Name, sorted in Ascending order Projects.ProjectJournal.Update Show more options Description Deletes selected project journal lines from one existing batch and optionally renumbers its documents. Filter Table No. 237 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Projects.ProjectJournal.Update":
+          - textbox "Name, sorted in Ascending order Projects.ProjectJournal.Update"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Deletes selected project journal lines from one existing batch and optionally renumbers its documents.":
+          - textbox "Description Deletes selected project journal lines from one existing batch and optionally renumbers its documents."
+        - gridcell "Filter Table No. 237":
+          - textbox "Filter Table No. 237"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.BlanketOrder.MakeOrder Show more options Description Converts a purchase blanket order into a purchase order, as the Make Order action on the blanket order does. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.BlanketOrder.MakeOrder":
+          - textbox "Name, sorted in Ascending order Purchase.BlanketOrder.MakeOrder"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Converts a purchase blanket order into a purchase order, as the Make Order action on the blanket order does.":
+          - textbox "Description Converts a purchase blanket order into a purchase order, as the Make Order action on the blanket order does."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Document.Create Show more options Description Creates a new purchase document for a specified vendor and document type, with optional lines. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.Create":
+          - textbox "Name, sorted in Ascending order Purchase.Document.Create"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Creates a new purchase document for a specified vendor and document type, with optional lines.":
+          - textbox "Description Creates a new purchase document for a specified vendor and document type, with optional lines."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Document.Post Show more options Description Posts a purchase document and returns information about all resulting posted documents. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.Post":
+          - textbox "Name, sorted in Ascending order Purchase.Document.Post"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Posts a purchase document and returns information about all resulting posted documents.":
+          - textbox "Description Posts a purchase document and returns information about all resulting posted documents."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Document.PreviewPost Show more options Description Simulates posting a purchase document and returns the resulting ledger entries (G/L, VAT, Item, Value, Vendor Ledger, Detailed Vendor Ledger) without committing changes. Filter Table No. 38 Direction Both":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.PreviewPost":
+          - textbox "Name, sorted in Ascending order Purchase.Document.PreviewPost"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Simulates posting a purchase document and returns the resulting ledger entries (G/L, VAT, Item, Value, Vendor Ledger, Detailed Vendor Ledger) without committing changes.":
+          - textbox "Description Simulates posting a purchase document and returns the resulting ledger entries (G/L, VAT, Item, Value, Vendor Ledger, Detailed Vendor Ledger) without committing changes."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Both":
+          - textbox "Direction Both"
+      - row "Name, sorted in Ascending order Purchase.Document.Release Show more options Description Releases a purchase document, changing its status from Open to Released. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.Release":
+          - textbox "Name, sorted in Ascending order Purchase.Document.Release"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Releases a purchase document, changing its status from Open to Released.":
+          - textbox "Description Releases a purchase document, changing its status from Open to Released."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Document.Reopen Show more options Description Reopens a purchase document, changing its status from Released to Open. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.Reopen":
+          - textbox "Name, sorted in Ascending order Purchase.Document.Reopen"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Reopens a purchase document, changing its status from Released to Open.":
+          - textbox "Description Reopens a purchase document, changing its status from Released to Open."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Document.Statistics Show more options Description Retrieves purchase document statistics including amounts, VAT totals, quantities, weight and volume. Filter Table No. 38 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Document.Statistics":
+          - textbox "Name, sorted in Ascending order Purchase.Document.Statistics"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Retrieves purchase document statistics including amounts, VAT totals, quantities, weight and volume.":
+          - textbox "Description Retrieves purchase document statistics including amounts, VAT totals, quantities, weight and volume."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+      - row "Name, sorted in Ascending order Purchase.PurchaseInvoice.Cancel Show more options Description Cancels a posted purchase invoice by posting a cancelling purchase credit memo. Filter Table No. 122 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.PurchaseInvoice.Cancel":
+          - textbox "Name, sorted in Ascending order Purchase.PurchaseInvoice.Cancel"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Cancels a posted purchase invoice by posting a cancelling purchase credit memo.":
+          - textbox "Description Cancels a posted purchase invoice by posting a cancelling purchase credit memo."
+        - gridcell "Filter Table No. 122":
+          - textbox "Filter Table No. 122"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.PurchaseInvoice.Correct Show more options Description Cancels a posted purchase invoice and creates a new draft purchase invoice (corrective workflow). Filter Table No. 122 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.PurchaseInvoice.Correct":
+          - textbox "Name, sorted in Ascending order Purchase.PurchaseInvoice.Correct"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Cancels a posted purchase invoice and creates a new draft purchase invoice (corrective workflow).":
+          - textbox "Description Cancels a posted purchase invoice and creates a new draft purchase invoice (corrective workflow)."
+        - gridcell "Filter Table No. 122":
+          - textbox "Filter Table No. 122"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Purchase.Quote.MakeOrder Show more options Description Converts a purchase quote into a purchase order, as the Make Order action on the quote does. Filter Table No. 38 Direction Inbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Purchase.Quote.MakeOrder":
+          - textbox "Name, sorted in Ascending order Purchase.Quote.MakeOrder"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Converts a purchase quote into a purchase order, as the Make Order action on the quote does.":
+          - textbox "Description Converts a purchase quote into a purchase order, as the Make Order action on the quote does."
+        - gridcell "Filter Table No. 38":
+          - textbox "Filter Table No. 38"
+        - gridcell "Direction Inbound":
+          - textbox "Direction Inbound"
+      - row "Name, sorted in Ascending order Resources.ResourceJournal.Check Show more options Description Validates a resource journal batch and returns readiness status. Filter Table No. 236 Direction Outbound":
+        - rowheader
+        - gridcell "Name, sorted in Ascending order Resources.ResourceJournal.Check":
+          - textbox "Name, sorted in Ascending order Resources.ResourceJournal.Check"
+        - gridcell "Show more options":
+          - button "Show more options"
+        - gridcell "Description Validates a resource journal batch and returns readiness status.":
+          - textbox "Description Validates a resource journal batch and returns readiness status."
+        - gridcell "Filter Table No. 236":
+          - textbox "Filter Table No. 236"
+        - gridcell "Direction Outbound":
+          - textbox "Direction Outbound"
+- paragraph: Name, sorted in Ascending order
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.
+- paragraph: List with title "Bifrost Message Types - Inventory.Tracking.Get" now has 120 items

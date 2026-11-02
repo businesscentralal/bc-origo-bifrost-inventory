@@ -1,0 +1,11 @@
+{
+  "startedAt": "2026-11-02T00:36:09.844Z",
+  "finishedAt": "2026-11-02T00:36:10.220Z",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"status\":\"Error\",\"code\":\"InvalidParameter\",\"error\":\"Flutningspantanir sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.\",\"nextStep\":\"Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.\",\"hint\":\"Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \\\"Help.Implementation.Get\\\" með subject \\\"Inventory.TransferOrder.Reopen\\\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund.\"}"
+    }
+  ],
+  "isError": true
+}

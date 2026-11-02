@@ -1,0 +1,10 @@
+{
+  "startedAt": "2026-11-02T00:37:42.083Z",
+  "finishedAt": "2026-11-02T00:37:42.361Z",
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"company\": \"CRONUS International Ltd.\",\n  \"messageType\": \"Inventory.Attribute.Create\",\n  \"status\": \"Success\",\n  \"itemNo\": \"LI152-1102\",\n  \"results\": [\n    {\n      \"attributeName\": \"LI152 Help Verification\",\n      \"value\": \"Gloss\",\n      \"changed\": true,\n      \"attributeId\": 69,\n      \"valueId\": 175,\n      \"before\": \"Matte\"\n    }\n  ]\n}"
+    }
+  ]
+}

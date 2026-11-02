@@ -1,0 +1,12 @@
+{
+  "type": "Inventory.AttributeDefinition.Create",
+  "data": {
+    "name": "LI152 Help Verification",
+    "type": "Option",
+    "optionValues": [
+      "Matte",
+      "Gloss"
+    ]
+  },
+  "lcid": 1033
+}

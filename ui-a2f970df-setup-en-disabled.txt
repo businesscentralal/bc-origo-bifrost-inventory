@@ -1,0 +1,47 @@
+- form "Inventory Setup":
+  - main:
+    - button "Go to the previous document of the same type"
+    - button "Back"
+    - button "Make changes on the page"
+    - button "Share this page with other users or apps"
+    - button "Create a new entry."
+    - button "Delete the information"
+    - button "Not bookmarked": 
+    - button "This page will close in this window and it will open in a pop-up window.": 
+    - button "Toggle wide layout": 
+    - text: Inventory Setup
+    - menubar
+    - button "Domains" [expanded]:
+      - heading "Domains" [level=2]
+    - button "Attributes"
+    - checkbox "Attributes" [disabled]
+    - button "Transfer Orders"
+    - checkbox "Transfer Orders" [disabled]
+    - button "Assembly"
+    - checkbox "Assembly" [disabled]
+    - button "Reservations"
+    - checkbox "Reservations" [disabled]
+    - button "Item Tracking"
+    - checkbox "Item Tracking" [disabled]
+    - button "Physical Inventory"
+    - checkbox "Physical Inventory" [disabled]
+    - button "Costing"
+    - checkbox "Costing" [disabled]
+    - button "Reclassification"
+    - checkbox "Reclassification" [disabled]
+    - button "Item Application"
+    - checkbox "Item Application" [disabled]
+    - button "Inventory Period"
+    - checkbox "Inventory Period" [disabled]
+    - button "Item Price"
+    - checkbox "Item Price" [disabled]
+    - button "Item Reference"
+    - checkbox "Item Reference" [disabled]
+    - button "Availability"
+    - checkbox "Availability" [disabled]
+    - button "Item Charge"
+    - checkbox "Item Charge" [disabled]
+    - button "Item Category"
+    - checkbox "Item Category" [disabled]
+    - button "Go to the next document of the same type"
+- text: Use the Left and Right arrow keys to adjust the size. Use the Escape key to undo or the Enter key to accept.

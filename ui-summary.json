@@ -1,0 +1,27 @@
+{
+  "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "containerId": "f0133160e482",
+  "verified": true,
+  "languages": [
+    1033,
+    1039
+  ],
+  "scenarios": [
+    "Message Type catalogue descriptions/directions in English and Icelandic",
+    "Inventory Setup captions/usage-based flags in both languages",
+    "Turn off all15domains through supported administrator page, read back, then restore exact baseline",
+    "Owned option attribute shows Matte/Gloss; delete uniquely filtered own attribute and confirm absence"
+  ],
+  "screenshots": [
+    "ui-a2f970df-attribute-cleanup-empty.png",
+    "ui-a2f970df-attributes-before-cleanup.png",
+    "ui-a2f970df-attributes-ready.png",
+    "ui-a2f970df-catalogue-en.png",
+    "ui-a2f970df-catalogue-is-initial.png",
+    "ui-a2f970df-owned-attribute.png",
+    "ui-a2f970df-setup-en-disabled.png",
+    "ui-a2f970df-setup-en-restored.png",
+    "ui-a2f970df-setup-is-before.png",
+    "ui-a2f970df-setup-is-disabled.png"
+  ]
+}

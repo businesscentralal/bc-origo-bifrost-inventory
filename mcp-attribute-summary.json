@@ -1,0 +1,79 @@
+{
+  "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "containerId": "f0133160e482",
+  "executed": 9,
+  "passed": 9,
+  "failed": 0,
+  "skipped": 0,
+  "fixture": {
+    "itemNo": "LI152-1102",
+    "attributeName": "LI152 Help Verification",
+    "owner": "worker-9",
+    "containerId": "f0133160e482",
+    "itemId": "0ff44ea0-55d6-f111-b7a5-bb7b4722c3c5",
+    "createdAt": "2026-11-02T00:37:31.712Z",
+    "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883"
+  },
+  "rows": [
+    {
+      "scenario": "Option definition creates both requested values",
+      "passed": true
+    },
+    {
+      "scenario": "missing-mapping-1033",
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "missing-mapping-1039",
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "create-matte",
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "conflict-1033",
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "conflict-1039",
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "nested-overwrite",
+      "type": "Inventory.Attribute.Create",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "update-matte",
+      "type": "Inventory.Attribute.Update",
+      "lcid": 1039,
+      "passed": true,
+      "problems": []
+    },
+    {
+      "scenario": "read-owned-mapping",
+      "type": "Inventory.Attribute.Get",
+      "lcid": 1033,
+      "passed": true,
+      "problems": []
+    }
+  ]
+}

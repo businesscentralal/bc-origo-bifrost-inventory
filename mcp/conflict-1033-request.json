@@ -1,0 +1,14 @@
+{
+  "type": "Inventory.Attribute.Create",
+  "data": {
+    "itemNo": "LI152-1102",
+    "attributes": [
+      {
+        "name": "LI152 Help Verification",
+        "value": "Gloss",
+        "overwrite": false
+      }
+    ]
+  },
+  "lcid": 1033
+}

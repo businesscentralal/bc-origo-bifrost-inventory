@@ -1,0 +1,45 @@
+{
+  "candidateSha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+  "recordedAt": "2026-11-02T00:32:46.897Z",
+  "containerId": "f0133160e482",
+  "containerName": "worker9-inventory152-20261102-w1",
+  "company": "CRONUS International Ltd.",
+  "foundationVersion": "28.0.10.632",
+  "apps": [
+    {
+      "Id": "7505e808-6e52-4b96-a328-82573391297a",
+      "Name": "Bifrost Foundation",
+      "Publisher": "Origo",
+      "Version": "28.0.10.632"
+    },
+    {
+      "Id": "02701c94-c962-4825-92c7-ef9f70311a2b",
+      "Name": "Bifrost Inventory",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    },
+    {
+      "Id": "a886b2cb-7da0-4784-8163-42956dbdd5ec",
+      "Name": "Bifrost Inventory - Tests",
+      "Publisher": "Origo",
+      "Version": "28.3.2.0"
+    }
+  ],
+  "artifacts": [
+    {
+      "part": "app",
+      "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+      "sha256": "a391434d20e8ba45ae0f913ad58d2d39f3a97dc5ed5b0da386ab34f5bf869a21"
+    },
+    {
+      "part": "test",
+      "sha": "a2f970df9cd3c805e75ec9b3a37b36152b72b883",
+      "sha256": "73badb3e87184a47f705f43df4571b053370215b6b1ffbcd8ebe4a77df04786c"
+    }
+  ],
+  "publication": "candidate-publication.json",
+  "publishReceipts": [
+    "publish-app-result.json",
+    "publish-test-result.json"
+  ]
+}
