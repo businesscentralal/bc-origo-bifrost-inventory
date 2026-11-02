@@ -400,6 +400,12 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.IsTrue(NextStep.Contains('Inv. Posting Gate'), 'The required assignable permission caption is named.');
         Assert.IsTrue(NextStep.Contains('Inventory Setup page'), 'The supported page is named.');
         Assert.IsTrue(NextStep.Contains('Data.Records.Set cannot'), 'The protected-table restriction is explicit.');
+        TempArgument.Delete();
+        Clear(TempArgument);
+        Clear(DomainGate);
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         GlobalLanguage(1039);
         Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'The same gate applies in Icelandic.');
         Response := TempArgument.GetResponseJson();

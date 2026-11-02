@@ -128,7 +128,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Assert.IsTrue(ResponseJson.Get('code', Token), 'code missing');
         Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
-        Assert.AreEqual('Kveiktu á sviðinu á síðunni Uppsetning birgða.', Token.AsValue().AsText(), 'nextStep');
+        Assert.AreEqual('Biðjið kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.', Token.AsValue().AsText(), 'nextStep');
     end;
 
     local procedure AssertMissing(MessageType: Enum "Message Type ori"; LanguageId: Integer; ExpectedError: Text; ExpectedExpected: Text; ExpectedNext: Text)

@@ -792,12 +792,23 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract: JsonObject;
         Error: JsonObject;
         ValueToken: JsonToken;
+        ErrorToken: JsonToken;
+        Errors: JsonArray;
+        DispatcherDistinctionFound: Boolean;
     begin
         // PR #90 costing regression | Time: no Today/WorkDate dependency | Risk: metadata only; runtime tested separately.
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
-        GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
-        Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Direct invocation may raise instead') > 0, 'Direct errors must remain distinct from dispatcher responses.');
+        Contract.Get('errors', ValueToken);
+        Errors := ValueToken.AsArray();
+        foreach ErrorToken in Errors do begin
+            Error := ErrorToken.AsObject();
+            Error.Get('code', ValueToken);
+            if ValueToken.AsValue().AsText() = 'BusinessCentralError' then begin
+                Error.Get('when', ValueToken);
+                DispatcherDistinctionFound := DispatcherDistinctionFound or ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead');
+            end;
+        end;
+        LibraryAssert.IsTrue(DispatcherDistinctionFound, 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
