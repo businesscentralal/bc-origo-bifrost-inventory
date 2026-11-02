@@ -583,13 +583,13 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" already has attribute "%2" with a different value.', 'The item already has a different value and attributes[].overwrite is false.', 'Set overwrite to true on the attribute object, or use Inventory.Attribute.Update.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
