@@ -572,12 +572,12 @@ codeunit 10076919 "Inventory Contract Parts ori"
         if MessageType in ['Item.Attribute.Get', 'Inventory.Attribute.Get', 'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update'] then
             AddLookupErrors(Errors, 'Item');
         if MessageType in ['Inventory.TransferOrder.Release', 'Inventory.TransferOrder.Reopen', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.TransferOrder.Statistics'] then
-            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '');
+            AddDocumentLookupErrors(Errors, 'Transfer Header', 'transferOrderNo', '', '', MessageType in ['Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost']);
         if MessageType in ['Inventory.AssemblyOrder.RefreshLines', 'Inventory.AssemblyOrder.Release', 'Inventory.AssemblyOrder.Reopen', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyOrder.Statistics'] then
             if MessageType = 'Inventory.AssemblyOrder.Post' then
-                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.')
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', ' postingDate is not YYYY-MM-DD, or quantityToAssemble is not a number; nothing is posted.', ' Send postingDate as YYYY-MM-DD and quantityToAssemble as a JSON number.', false)
             else
-                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '');
+                AddDocumentLookupErrors(Errors, 'Assembly Header', 'assemblyOrderNo', '', '', false);
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
@@ -623,7 +623,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
+
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', 'postingType is not Ship or Receive. ShipReceive is named in the text but is refused as well.', 'Send Ship or Receive in two separate calls.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the order is not ready to ship or receive.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks Inv. Posting Gate, which posting requires in addition to the Bifrost "Full Access" permission set');
@@ -632,7 +632,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview produced no entries. Nothing would be posted.', 'Add a line quantity to ship or receive and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'Transfer order %1 has no lines to post.', 'The order has no lines.', 'Create the lines first and retry.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
+
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'The transfer posting preview failed.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
@@ -692,12 +692,19 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'The domain is on, but ' + PermissionReason + '.', 'Assign the missing permission set to the caller.'));
     end;
 
-    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text)
+    local procedure AddDocumentLookupErrors(var Errors: JsonArray; RecordName: Text; DocumentAlias: Text; ExtraWhen: Text; ExtraNextStep: Text; NeedsPostingType: Boolean)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MissingWhen: Text;
+        MissingNextStep: Text;
     begin
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter,
-            'No ' + RecordName + ' identifier in subject or data.', 'Send subject or an identifier key under data.'));
+        MissingWhen := 'No ' + RecordName + ' identifier in subject or data.';
+        MissingNextStep := 'Send subject or an identifier key under data.';
+        if NeedsPostingType then begin
+            MissingWhen += ' A non-direct transfer order also requires postingType.';
+            MissingNextStep += ' For a non-direct transfer, send postingType Ship or Receive.';
+        end;
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhen, MissingNextStep));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound,
             'An identifier was given but matches no ' + RecordName + '.', 'Check the value or look the record up first.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers,
