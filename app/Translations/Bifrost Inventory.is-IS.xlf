@@ -1996,9 +1996,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method CreateAttributeNextStep - NamedType CreateNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 248841345 - NamedType 2604574095" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Use the Item Categories page to delete a category.</source>
-          <target>Notaðu síðuna Vöruflokkar til að eyða vöruflokki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu síðuna Vöruflokkar til að eyða vöruflokki.</note>
+          <source>Use the Item Categories page to delete or reparent a category.</source>
+          <target>Notaðu síðuna Vöruflokkar til að eyða vöruflokki eða breyta yfirflokki hans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu síðuna Vöruflokkar til að eyða vöruflokki eða breyta yfirflokki hans.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method DeletesNextStep - NamedType DeletesNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 1246678659 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
