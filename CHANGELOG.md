@@ -5,7 +5,7 @@
 ### Fixed (2026-11-03) - receipt undo is not a shipped operation (#150)
 
 - `Inventory.Transfer.UndoReceipt` (codeunit 10076911 `Transf Undo Rcpt Impl ori`) stays disabled. Its overview and notes are translated labels, and the in-repo help plus the posting-permission list no longer present it as a working undo. The released enum value remains. The configured BC symbols still have no `Undo Transfer Receipt` codeunit, so success is not invented.
-- Test codeunit 96914 `Transfer Order Post Tests` posts an owned transfer receipt and calls the type in 1033 and 1039. The answer is `PreconditionFailed`, the receipt stays, and no further item ledger entry is posted.
+- Test codeunit 96914 `Transfer Order Post Tests` posts an owned transfer receipt and calls the type in 1033 and 1039. The answer is `PreconditionFailed`, the receipt stays, and no further item ledger entry is posted. Helper 96904 passes that Windows language id through, because a zero language id uses the company default rather than the test's `GlobalLanguage`.
 
 ### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
 

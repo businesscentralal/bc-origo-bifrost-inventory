@@ -176,7 +176,8 @@ codeunit 96914 "Transfer Order Post Tests"
             Assert.AreEqual('Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd.', Description, 'Icelandic description does not advertise a working undo.')
         else
             Assert.AreEqual('Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Description, 'English description does not advertise a working undo.');
-        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoReceipt", Request, Response);
+        // A language id of 0 selects the company default inside the dispatcher, so the call must pass 1033 or 1039 itself.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoReceipt", Request, LanguageId, Response);
         GlobalLanguage(SavedLanguage);
         Assert.IsTrue(Response.Get('status', Token), 'Refusal has a status. ' + JsonText(Response));
         Assert.AreEqual('Error', Token.AsValue().AsText(), 'UndoReceipt never succeeds.');
