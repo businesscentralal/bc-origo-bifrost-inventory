@@ -8,7 +8,7 @@ using Microsoft.Assembly.Posting;
 /// posting-preview transaction. Bind this manual subscriber before Gen. Jnl.-Post Preview runs.
 /// The preview rolls the write back, so the stored assembly order is unchanged and no Commit is used.
 /// </summary>
-codeunit 10076926 "Asm. Preview Adjust ori"
+codeunit 10076929 "Asm. Preview Adjust ori"
 {
     Access = Internal;
     EventSubscriberInstance = Manual;

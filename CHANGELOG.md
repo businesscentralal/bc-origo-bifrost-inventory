@@ -4,7 +4,8 @@
 
 ### Fixed (2026-11-03) - preview adjustments and period help (#159)
 
-- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` inside the posting preview, through `Asm. Preview Adjust ori` (10076926) on `Assembly-Post.OnBeforeOnRun`. The preview rolls that write back, so the stored posting date and quantity to assemble stay unchanged and the call does not Commit. `Asm. Doc Prev. Post Tests` (96905) previews an order that has lines with both keys and checks the order afterwards.
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` inside the posting preview, through `Asm. Preview Adjust ori` (10076929) on `Assembly-Post.OnBeforeOnRun`. The preview rolls that write back, so the stored posting date and quantity to assemble stay unchanged and the call does not Commit. `Asm. Doc Prev. Post Tests` (96905) previews an order that has lines with both keys and checks the order afterwards.
+- Renumbered the internal preview adjustment helper from 10076926 to 10076929 to avoid the earlier `Inventory Read Process ori` allocation in #151 / PRs #166, #168 and #171. No public procedure or message contract changed.
 - `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) help now says the checks and writes of Close Inventory Period (5820) are reproduced and that 5820 is not run, so `OnRunOnBeforeCheck` is not raised. Notes and overview do not name an AL object. Reopen no longer says a platform refusal writes nothing. Icelandic notes are in the is-IS translation.
 
 ### Fixed (2026-11-02) - remaining contract-parity defects (#159)
