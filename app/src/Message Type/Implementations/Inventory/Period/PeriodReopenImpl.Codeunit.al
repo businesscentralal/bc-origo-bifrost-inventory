@@ -1,11 +1,10 @@
 namespace Origo.Bifrost.Inventory;
 
-using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Reopen. Reopens a closed inventory period.
+/// Inventory.Period.Reopen. Reproduces the platform inventory-period reopen writes. Codeunit 5820 is not run.
 /// </summary>
 codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -52,6 +51,7 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         InventoryPeriod: Record "Inventory Period";
+        PeriodWrite: Codeunit "Period Platform Write ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -75,8 +75,9 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
             exit;
         end;
         if InventoryPeriod.Closed then begin
-            InventoryPeriod.Validate(Closed, false);
-            InventoryPeriod.Modify(true);
+            // Codeunit.Run of Close Inventory Period is a nested try function and cannot insert the entry.
+            PeriodWrite.ApplyReopen(InventoryPeriod);
+            InventoryPeriod.Get(EndingDate);
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
@@ -146,7 +147,7 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Clears the Closed flag of the Inventory Period that ends on endingDate through the table validation. A period that is already open is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('changes', 'Reopens the Inventory Period that ends on endingDate by reproducing the inventory period entries of Close Inventory Period (5820), without running 5820, so OnRunOnBeforeCheck is not raised. The reopen also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A period that is already open is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
         Effect.Add('writes', true);
@@ -196,17 +197,15 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Reopens the inventory period that ends on the given date. A period that is already open is answered Success unchanged.';
+        Overview := 'Reopens the inventory period that ends on the given date by reproducing the platform reopen writes. Close Inventory Period (5820) is not run, so OnRunOnBeforeCheck is not raised. A period that is already open is answered Success unchanged.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Reopens the Inventory Period identified by endingDate by reproducing the writes of Close Inventory Period (5820). This message does not run 5820, so its OnRunOnBeforeCheck integration event is not raised. The reopen also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. The call is idempotent: a period that is already open is not modified and the reopen is not applied again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. The change is saved with the caller''s transaction. Use Inventory.Period.Get first to see the periods and Inventory.Period.Close to undo the change.', Comment = 'is-IS=Enduropnar birgðatímabilið sem endingDate vísar á með því að endurgera skrif Close Inventory Period (5820). Skilaboðin keyra ekki 5820, svo samþættingaratburðurinn OnRunOnBeforeCheck er ekki vakinn. Enduropnunin opnar einnig hvert síðara lokað birgðatímabil og skrifar birgðatímabilsfærslu fyrir hvert tímabil sem hún opnar. Kallið er óbreytilegt: tímabili sem er þegar opið er ekki breytt og enduropnunin er ekki framkvæmd aftur. Aðeins tímabil sem þegar er til er hægt að breyta og engin skilaboð stofna tímabil, svo endingDate sem passar við ekkert tímabil fær svarið RecordNotFound. Lénið Inventory Period verður að vera kveikt í Inventory Setup (vöntun á uppsetningarlínu telst sem kveikt). Kallarinn þarf skrifheimild á töfluna Inventory Period; ekki er krafist bókunarheimildar. Breytingin er vistuð með færslu kallandans. Notaðu Inventory.Period.Get fyrst til að sjá tímabilin og Inventory.Period.Close til að afturkalla breytinguna.';
     begin
-        Notes := 'Clears the Closed flag of the Inventory Period identified by endingDate and returns the period. It posts nothing and runs no other function; the change goes through the validation of the Inventory Period table. ' +
-            'The call is idempotent: a period that already has the requested state is not modified. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
-            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
-            'The change commits with the answer; under Omit Commit the caller''s transaction commits instead. ' +
-            'Use Inventory.Period.Get first to see the periods and Inventory.Period.Close to undo the change.';
+        Notes := NotesLbl;
         exit(true);
     end;
 }

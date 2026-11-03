@@ -2,11 +2,36 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-03) - merge main contract-parity fixes into the help branch
+
+- Merge main `c667066` (#159 / #179) and keep the #152 display captions on assembly and transfer notes in `Inventory Contract Parts ori` (10076919). The assembly preview note keeps main's rollback sentence for `postingDate` and `quantityToAssemble`.
+- `Inventory.ItemApplication.Get` (10076867) keeps main's `InvalidParameter` when `itemLedgerEntryNo` is not a JSON integer.
+- Unused codeunit `Phys. Invt. Calc Impl ori` (10076880) stays deleted. `Inventory.PhysInventory.Calculate` remains on `Phys. Inv. Calc Impl ori` (10076883).
+- Contract batch tests (96921) keep main's rule: the shared `Retryable` row is required only when installed Foundation is 28.0.11 or newer. Transfer posting tests (96914) still send `expectedCount` only when the composed contract declares it.
+
+### Fixed (2026-11-03) - preview adjustments and period help (#159)
+
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` inside the posting preview, through `Asm. Preview Adjust ori` (10076929) on `Assembly-Post.OnBeforeOnRun`. The preview rolls that write back, so the stored posting date and quantity to assemble stay unchanged and the call does not Commit. `Asm. Doc Prev. Post Tests` (96905) previews an order that has lines with both keys and checks the order afterwards.
+- Renumbered the internal preview adjustment helper from 10076926 to 10076929 to avoid the earlier `Inventory Read Process ori` allocation in #151 / PRs #166, #168 and #171. No public procedure or message contract changed.
+- `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) help now says the checks and writes of Close Inventory Period (5820) are reproduced and that 5820 is not run, so `OnRunOnBeforeCheck` is not raised. Notes and overview do not name an AL object. Reopen no longer says a platform refusal writes nothing. Icelandic notes are in the is-IS translation.
+
+### Fixed (2026-11-02) - remaining contract-parity defects (#159)
+
+- Removed the unused codeunit `Phys. Invt. Calc Impl ori` (10076880). `Inventory.PhysInventory.Calculate` stays on `Phys. Inv. Calc Impl ori` (10076883). No message type pointed at 10076880.
+- `Inventory.TransferOrder.Post` (10076903) refuses `ShipReceive` on a non-direct transfer and the error text no longer lists that value as valid. `Transfer Order Post Tests` (96914) covers the refusal.
+- `Inventory.AssemblyOrder.Release` (10076851) traps the native release with `Codeunit.Run`, including the Omit Commit path, the same way transfer release does.
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` for the preview and restores the order afterwards. The contract in `Inventory Contract Parts ori` (10076919) declares both keys, and the invalid-format error names them. `Inv. Contract Parity Tests ori` (96970) no longer treats this type as parameter-less. `Inventory.AssemblyOrder.Statistics` (10076853) returns the order status in `orderStatus` and keeps `status_` as the same value.
+- `Inventory.ItemCharge.Get` (10076875) ignores a quote or blanket order found by SystemId, matching the document-number filter. `Inventory.ItemCharge.Assign` (10076873) refuses a target quantity above the charge quantity that is still assignable.
+- `Inventory.Cost.Get` (10076860) keeps an empty `variantCode` as an exact blank-variant filter. An empty `locationFilter` still clears the location filter.
+- `Inventory.ItemApplication.Get` (10076867) answers `InvalidParameter` when `itemLedgerEntryNo` is not a JSON integer. Listing applications by `Item Ledger Entry No.` stays as documented: an inbound entry shows the rows recorded on itself.
+- `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) apply the same checks and inventory period entries as platform codeunit `Close Inventory Period` (5820), through `Period Platform Write ori` (10076928). Running 5820 is a nested try function under the message task and cannot insert the entry, so the write stays in the caller transaction. There is no Commit and no StartSession. A close refusal (unadjusted cost, an unadjusted finished order, or open negative inventory) is returned as response text and writes nothing. Closing also closes earlier open periods, reopening also reopens later closed periods, and each changed period gets an inventory period entry. A period that is already in the requested state is left unchanged. `Inv. Period Close Tests` (96979) covers the entry and the idempotent path.
+- `Inventory.PhysInventory.Check` (10076884) keeps answering an empty batch as Success with `validationResult` NotReady. Post and PreviewPost still refuse an empty batch. That split is the published contract.
+- Contract regressions in `Inventory Contract Batch Tests` (96921) expect the shared `Retryable` entry only when the installed Foundation is 28.0.11 or newer. Release 28.0.10 exposes the enum and does not append the entry.
+- `Transfer Order Post Tests` (96914) send `expectedCount` only when the composed contract declares it. Foundation 28.0.10 rejects that key on `Inventory.TransferOrder.Post` and `Inventory.Transfer.UndoShipment` because those types do not declare it.
+
 ### Fixed (2026-11-03) - confirmation fixtures on strict Foundation
 
-- Transfer posting tests (96914) send `expectedCount` only when the deployed contract declares it. Foundation 28.0.10.632 refuses an undeclared key on a non-read type, and this build does not advertise confirmation on `Inventory.TransferOrder.Post` or `Inventory.Transfer.UndoShipment`.
-- Contract batch tests (96921) require the shared `Retryable` error row only when the contract reader injects it after `GetErrors`. Foundation 28.0.10.632 has the error code and does not inject it.
-- Merging main (#185) keeps `Inventory.Transfer.UndoReceipt` (10076911) on the coded MissingParameter and RecordNotFound contract and the Inv. Posting Gate display caption. The translated notes label from that merge uses the same caption. The new receipt fixture in test codeunit 96914 sends `expectedCount` only when the deployed contract advertises it.
+- Merging main (#185) keeps `Inventory.Transfer.UndoReceipt` (10076911) on the coded MissingParameter and RecordNotFound contract and the Inv. Posting Gate display caption. The translated notes label from that merge uses the same caption.
 
 ### Fixed (2026-11-02) - Inventory help and runtime error parity (#152)
 - #152: complete remaining Inventory help error codes, attribute examples and subject descriptions; use permission display captions instead of AL names. Preserve published statistics direction and response fields. Strengthen contract guard 96970 across all help chapters and document protected setup administration; improve disabled-domain guidance (10076922). Return coded errors on explicit refusal paths, align error help with MissingParameter/RecordNotFound/PreconditionFailed and native BusinessCentralError, and exercise runtime envelopes in regression tests (96970). Normalize permission captions and Icelandic guidance, including the native journal gate (10076840); keep XLF synchronized.

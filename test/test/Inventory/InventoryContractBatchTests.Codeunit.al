@@ -472,7 +472,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('related');
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');
@@ -762,13 +762,21 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
         ActualContract.Add('errors', Filtered);
         AssertChapterJson(ActualContract, 'errors', Expected.AsToken());
-        // Foundation 28.0.10.632 publishes Retryable in the shared conventions and the error-code enum, but
-        // GetContract returns GetErrors unchanged. Require the shared row only when the reader actually injected it.
-        if TypeName = 'Inventory.Attribute.Get' then
-            LibraryAssert.AreEqual(0, RetryableCount, 'Read types do not acquire Retryable.')
+        if (TypeName <> 'Inventory.Attribute.Get') and FoundationAppendsSharedRetryable() then
+            LibraryAssert.AreEqual(1, RetryableCount, 'Foundation 28.0.11 appends exactly one shared Retryable entry.')
         else
-            if RetryableCount <> 0 then
-                LibraryAssert.AreEqual(1, RetryableCount, 'A reader that injects Retryable adds exactly one shared entry.');
+            LibraryAssert.AreEqual(0, RetryableCount, 'This Foundation does not append a shared Retryable entry.');
+    end;
+
+    local procedure FoundationAppendsSharedRetryable(): Boolean
+    var
+        Info: ModuleInfo;
+    begin
+        // GetContract appends Retryable for a write effect from Foundation 28.0.11.
+        // Release 28.0.10 has the enum and copies GetErrors unchanged. Release 28.0.3 has neither.
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            Error('Bifrost Foundation is not installed.');
+        exit(Info.AppVersion >= Version.Create(28, 0, 11, 0));
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)

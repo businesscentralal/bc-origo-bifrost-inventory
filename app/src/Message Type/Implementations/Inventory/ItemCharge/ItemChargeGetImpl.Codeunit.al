@@ -402,7 +402,8 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
             if not Evaluate(SystemId, ReadText(RequestJson, SystemIdKeyTok)) then
                 exit(0);
             if PurchHeader.GetBySystemId(SystemId) then
-                exit(1);
+                if IsAssignablePurchaseDocument(PurchHeader."Document Type") then
+                    exit(1);
             exit(0);
         end;
         PurchHeader.SetRange("No.", CopyStr(ReadText(RequestJson, 'documentNo'), 1, MaxStrLen(PurchHeader."No.")));
@@ -427,7 +428,8 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
             if not Evaluate(SystemId, ReadText(RequestJson, SystemIdKeyTok)) then
                 exit(0);
             if SalesHeader.GetBySystemId(SystemId) then
-                exit(1);
+                if IsAssignableSalesDocument(SalesHeader."Document Type") then
+                    exit(1);
             exit(0);
         end;
         SalesHeader.SetRange("No.", CopyStr(ReadText(RequestJson, 'documentNo'), 1, MaxStrLen(SalesHeader."No.")));
@@ -435,6 +437,16 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         if not SalesHeader.FindFirst() then
             exit(0);
         exit(SalesHeader.Count());
+    end;
+
+    local procedure IsAssignablePurchaseDocument(DocumentType: Enum "Purchase Document Type"): Boolean
+    begin
+        exit(DocumentType in [DocumentType::Order, DocumentType::Invoice, DocumentType::"Return Order", DocumentType::"Credit Memo"]);
+    end;
+
+    local procedure IsAssignableSalesDocument(DocumentType: Enum "Sales Document Type"): Boolean
+    begin
+        exit(DocumentType in [DocumentType::Order, DocumentType::Invoice, DocumentType::"Return Order", DocumentType::"Credit Memo"]);
     end;
 
     /// <summary>

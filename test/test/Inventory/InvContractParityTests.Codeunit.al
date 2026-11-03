@@ -695,7 +695,6 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.AssemblyOrder.RefreshLines');
         Names.Add('Inventory.AssemblyOrder.Release');
         Names.Add('Inventory.AssemblyOrder.Reopen');
-        Names.Add('Inventory.AssemblyOrder.PreviewPost');
         Names.Add('Inventory.AssemblyOrder.Statistics');
     end;
 
