@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-03T18:58:18.388Z",
+  "newId": 10076929,
+  "reason": "Preserve earlier#151 reader10076926 without changing any foreign source",
+  "checked": [
+    {
+      "pr": 185,
+      "sha": "4c952955dec1cba70adf46728dbc6a295acf3b70",
+      "branch": "codex/inventory-150-worker11",
+      "codeunit10076929Claimed": false
+    },
+    {
+      "pr": 184,
+      "sha": "7e77a660cc938fe956c9e07ac09f070002684be6",
+      "branch": "ci/31-help-links-guard",
+      "codeunit10076929Claimed": false
+    },
+    {
+      "pr": 175,
+      "sha": "93ceaf57c9d4519817a06ef22158124e2ad52da5",
+      "branch": "fix/litr-inventory152-help-quality",
+      "codeunit10076929Claimed": false
+    },
+    {
+      "pr": 171,
+      "sha": "d5d3e01852feb54cb26bf1c5a1a52667192493c7",
+      "branch": "fix/worker8-inventory169-cancel-nextstep",
+      "codeunit10076929Claimed": false
+    },
+    {
+      "pr": 168,
+      "sha": "d2ed36d41a91a6fa79226c99a9b6793d53881b9e",
+      "branch": "fix/worker8-inventory148-coded-refusals",
+      "codeunit10076929Claimed": false
+    },
+    {
+      "pr": 166,
+      "sha": "ebf33d5b11c0a7566cbba5d78716005488cd4329",
+      "branch": "fix/worker8-inventory151-refusal-contract",
+      "codeunit10076929Claimed": false
+    }
+  ]
+}
