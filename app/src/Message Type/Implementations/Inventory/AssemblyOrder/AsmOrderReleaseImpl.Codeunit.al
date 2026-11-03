@@ -140,7 +140,6 @@ codeunit 10076851 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
         AssemblyHeader: Record "Assembly Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
-        ReleaseAssemblyDoc: Codeunit "Release Assembly Document";
         ResponseJson: JsonObject;
         StatusBefore: Text;
     begin
@@ -158,7 +157,14 @@ codeunit 10076851 "Asm. Order Release Impl ori" implements "Msg Interface ori", 
             Argument."Content Type" := Argument.GetContentTypeJson();
             exit;
         end;
-        ReleaseAssemblyDoc.Run(AssemblyHeader);
+        // Codeunit.Run traps the release the same way TransferOrder.Release does, so a native refusal is an error answer instead of an unhandled abort.
+        if Argument."Omit Commit" then
+            Codeunit.Run(Codeunit::"Release Assembly Document", AssemblyHeader)
+        else
+            if not Codeunit.Run(Codeunit::"Release Assembly Document", AssemblyHeader) then begin
+                Argument.RespondWithError(GetLastErrorText());
+                exit;
+            end;
         AssemblyHeader.Find();
         BuildSuccessResponse(AssemblyHeader, StatusBefore, ResponseJson);
         Argument.SetResponseJson(ResponseJson);
