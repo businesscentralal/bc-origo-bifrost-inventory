@@ -94,7 +94,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         LineCount: Integer;
         Verdict: Text;
     begin
-        CheckParameters(Argument, Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         LineCount := Line.Count();
@@ -144,7 +144,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Results: JsonArray;
     begin
         Line.LockTable();
-        CheckParameters(Argument, Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '', true);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if JournalType = JournalType::"Phys. Inventory" then
@@ -188,7 +188,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         GLEntryCount: Integer;
         Balanced: Boolean;
     begin
-        CheckParameters(Argument, Argument.GetRequestJson(), '');
+        CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
         if Line.IsEmpty() then begin
@@ -239,7 +239,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         IncludeNoTransactions: Boolean;
     begin
         Request := Argument.GetRequestJson();
-        CheckParameters(Argument, Request, 'Calculate');
+        CheckParameters(Argument, Request, 'Calculate', false);
         Line.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then
             exit;
@@ -295,7 +295,7 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Request := Argument.GetRequestJson();
         NormalizeLegacyCount(Argument, Request);
-        CheckParameters(Argument, Request, 'RecordCount');
+        CheckParameters(Argument, Request, 'RecordCount', false);
         Lines.LockTable();
         if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Lines) then
             exit;
@@ -424,12 +424,13 @@ codeunit 10076840 "Inventory Native Journal ori"
         exit(Number);
     end;
 
-    local procedure CheckParameters(var Argument: Record "Message Argument ori"; Request: JsonObject; Operation: Text)
+    local procedure CheckParameters(var Argument: Record "Message Argument ori"; Request: JsonObject; Operation: Text; AllowConfirmation: Boolean)
     var
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
-            if not (ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) then
+            if not ((ParameterName in ['templateName', 'batchName', 'journalTemplateName', 'journalBatchName']) or
+                    (AllowConfirmation and (ParameterName = 'expectedCount'))) then
                 case Operation of
                     'Calculate':
                         if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
@@ -717,7 +718,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalQuantity: Decimal;
         TotalAmount: Decimal;
     begin
-        CheckPostParameters(Argument, Argument.GetRequestJson());
+        CheckPostParameters(Argument, Argument.GetRequestJson(), true);
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
         Line.LockTable();
@@ -761,7 +762,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         TotalAmount: Decimal;
         Balanced: Boolean;
     begin
-        CheckPostParameters(Argument, Argument.GetRequestJson());
+        CheckPostParameters(Argument, Argument.GetRequestJson(), false);
         if not ResolveRevaluationBatch(Argument, Batch, Line) then
             exit;
         ReadTotals(Argument, Line, LinesToPost, TotalQuantity, TotalAmount);
@@ -885,12 +886,13 @@ codeunit 10076840 "Inventory Native Journal ori"
         exit(Serialized);
     end;
 
-    local procedure CheckPostParameters(var Argument: Record "Message Argument ori"; Request: JsonObject)
+    local procedure CheckPostParameters(var Argument: Record "Message Argument ori"; Request: JsonObject; Posting: Boolean)
     var
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
-            if not (ParameterName in ['templateName', 'batchName', 'batchId', 'id', 'systemId', 'recordSystemId']) then
+            if not ((ParameterName in ['templateName', 'batchName', 'batchId', 'id', 'systemId', 'recordSystemId']) or
+                    (Posting and (ParameterName = 'expectedCount'))) then
                 RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(RevalParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
     end;
 }

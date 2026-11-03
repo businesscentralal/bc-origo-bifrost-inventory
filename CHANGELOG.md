@@ -2,9 +2,21 @@
 
 ## [Unreleased]
 
-### Added — issue #158
+### Added (2026-11-03) - Inventory setup wizard (#158)
 
-- Five-step Inventory Assisted Setup: operations overview, read-only HTTP status with Foundation setup link, actual permission guidance, read-only company domains and explicit completion. Page10076836, registration10076924, management10076927 and bilingual tests96920. Inventory Setup10076835 links to the wizard; existing read/full/posting permissions grant execution only. The guide never writes HTTP settings, assigns permissions or toggles domains. Closing early does not mark completion. Codeunit10076925 remains the released/native tracking helper from #150.
+- Five-step Assisted Setup "Set up Bifrost Inventory" (Extensions group): what the app adds, read-only HTTP status with a link to Foundation's setup wizard, access guidance, read-only company domains and explicit completion. Page 10076836, registration codeunit 10076924, management codeunit 10076927 and bilingual tests 96920. Inventory Setup (10076835) gets a Setup Wizard action. The guide never writes HTTP settings, assigns permissions or toggles domains; closing early does not mark completion. Execute permission for the new objects is added to the existing BIFROST Read/Full extensions and to BIFROST InvPost ori (the app's only assignable set, required by the PermissionCoverage guard); the InvPost grant awaits Gunnar's product decision (Architect 1793461090) before merge.
+
+### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
+
+- `Inventory.AdjustCost.Run` (codeunit 10076858 `Adjust Cost Run Impl ori`) now calls `AssertIsLicensed` and then `AssertVersion1` after the Costing domain gate and before report 795 runs, like the other Inventory costing types. `Inventory.CostToGL.Post` (10076861) already had both checks on main (#177); this change adds regression coverage for it. Test codeunit 96918 `Inv. Posting Gate Tests` gains an unlicensed-call refusal test for each of the two types.
+
+### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
+
+- Keep the native journal operation selector separate from its posting-confirmation flag (10076840), so the contract-key guard does not mistake internal Calculate/Post/RecordCount selectors for request keys. No guard or allow-list changes.
+
+- Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
+- Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
+- Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
 
 ### Fixed (2026-10-25) - transfer posting help (#151)
 

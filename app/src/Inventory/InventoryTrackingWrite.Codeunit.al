@@ -94,7 +94,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
             end else
                 Entries.Add(Request);
             if (Entries.Count() < 1) or (Entries.Count() > 200) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', Format(Token), InvalidEntriesErr, TrackingNextStepLbl);
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntriesErr, 'entries', Format(Token), 'array', TrackingNextStepLbl);
                 exit;
             end;
             foreach Entry in Entries do begin
