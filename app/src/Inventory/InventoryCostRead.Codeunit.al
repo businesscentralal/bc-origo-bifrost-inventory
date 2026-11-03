@@ -94,6 +94,7 @@ codeunit 10076839 "Inventory Cost Read ori"
     begin
         if Request.Contains('locationFilter') then
             Item.SetFilter("Location Filter", LocationFilter);
+        // An empty variantCode is an exact blank variant. SetRange('') selects that variant; skipping it would sum every variant.
         if Request.Contains('variantCode') then
             Item.SetRange("Variant Filter", VariantCode);
         Item.SetLoadFields("No.", SystemId, "Costing Method", "Unit Cost", "Standard Cost", "Last Direct Cost", "Indirect Cost %", "Cost is Adjusted");

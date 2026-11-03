@@ -1,11 +1,12 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Close. Closes an inventory period through the Inventory Period record.
+/// Inventory.Period.Close. Reproduces the platform inventory-period close checks and writes. Codeunit 5820 is not run.
 /// </summary>
 codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -52,11 +53,13 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         InventoryPeriod: Record "Inventory Period";
+        PeriodWrite: Codeunit "Period Platform Write ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Token: JsonToken;
         EndingDate: Date;
+        PlatformError: Text;
         MissingDateErr: Label 'endingDate is required.', Comment = 'is-IS=endingDate er nauðsynlegt.';
         NotFoundErr: Label 'Inventory period ending %1 was not found.', Comment = '%1 = ending date, is-IS=Birgðatímabil sem endar %1 fannst ekki.';
     begin
@@ -75,8 +78,15 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
             exit;
         end;
         if not InventoryPeriod.Closed then begin
-            InventoryPeriod.Validate(Closed, true);
-            InventoryPeriod.Modify(true);
+            // Codeunit.Run of Close Inventory Period is a nested try function and cannot insert the entry.
+            // The same read-only checks are answered here. A passing period is closed in this transaction.
+            PlatformError := PlatformCloseRefusal(EndingDate);
+            if PlatformError <> '' then begin
+                Argument.RespondWithError(PlatformError);
+                exit;
+            end;
+            PeriodWrite.ApplyClose(InventoryPeriod);
+            InventoryPeriod.Get(EndingDate);
         end;
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('endingDate', Format(InventoryPeriod."Ending Date", 0, 9));
@@ -146,7 +156,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Sets the Closed flag of the Inventory Period that ends on endingDate to true through the table validation. A period that is already closed is left as it is and answered Success. Nothing is posted. The change commits with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('changes', 'Closes the Inventory Period that ends on endingDate by reproducing the checks and inventory period entries of Close Inventory Period (5820), without running 5820, so OnRunOnBeforeCheck is not raised. The close also closes earlier open inventory periods and writes an inventory period entry for each period it closes. A period that is already closed is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
@@ -196,17 +206,54 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Closes the inventory period that ends on the given date. A period that is already closed is answered Success unchanged.';
+        Overview := 'Closes the inventory period that ends on the given date by reproducing the platform close checks and writes. Close Inventory Period (5820) is not run, so OnRunOnBeforeCheck is not raised. A period that is already closed is answered Success unchanged.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Closes the Inventory Period identified by endingDate by reproducing the checks and writes of Close Inventory Period (5820). This message does not run 5820, so its OnRunOnBeforeCheck integration event is not raised. The close also closes every earlier open inventory period and writes an inventory period entry for each period it closes. A refusal, such as unadjusted cost, an unadjusted finished order or open negative inventory, is returned as an error and writes nothing. The call is idempotent: a period that is already closed is not modified and the close is not applied again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. The change is saved with the caller''s transaction. Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.', Comment = 'is-IS=Lokar birgðatímabilinu sem endingDate vísar á með því að endurgera athuganir og skrif Close Inventory Period (5820). Skilaboðin keyra ekki 5820, svo samþættingaratburðurinn OnRunOnBeforeCheck er ekki vakinn. Lokunin lokar einnig hverju eldra opnu birgðatímabili og skrifar birgðatímabilsfærslu fyrir hvert tímabil sem hún lokar. Höfnun, svo sem óleiðréttur kostnaður, óleiðrétt lokin pöntun eða opin neikvæð birgðastaða, kemur til baka sem villa og skrifar ekkert. Kallið er óbreytilegt: tímabili sem er þegar lokað er ekki breytt og lokunin er ekki framkvæmd aftur. Aðeins tímabil sem þegar er til er hægt að breyta og engin skilaboð stofna tímabil, svo endingDate sem passar við ekkert tímabil fær svarið RecordNotFound. Lénið Inventory Period verður að vera kveikt í Inventory Setup (vöntun á uppsetningarlínu telst sem kveikt). Kallarinn þarf skrifheimild á töfluna Inventory Period; ekki er krafist bókunarheimildar. Breytingin er vistuð með færslu kallandans. Notaðu Inventory.Period.Get fyrst til að sjá tímabilin og Inventory.Period.Reopen til að afturkalla breytinguna.';
     begin
-        Notes := 'Sets the Closed flag of the Inventory Period identified by endingDate and returns the period. It posts nothing and runs no other function; the change goes through the validation of the Inventory Period table. ' +
-            'The call is idempotent: a period that already has the requested state is not modified. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
-            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
-            'The change commits with the answer; under Omit Commit the caller''s transaction commits instead. ' +
-            'Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.';
+        Notes := NotesLbl;
         exit(true);
+    end;
+
+    /// <summary>
+    /// Same refusal order as the platform inventory-period close, without raising Error().
+    /// </summary>
+    local procedure PlatformCloseRefusal(EndingDate: Date): Text
+    var
+        InvtAdjmtEntryOrder: Record "Inventory Adjmt. Entry (Order)";
+        ValueEntry: Record "Value Entry";
+        ItemLedgEntry: Record "Item Ledger Entry";
+        AvgCostEntryPointHandler: Codeunit "Avg. Cost Entry Point Handler";
+        UnadjustedErr: Label 'The Inventory Period cannot be closed because there is at least one item with unadjusted entries in the current period.\Run the Close Inventory Period - Test report to identify item ledger entries for the affected items.', Comment = 'is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein vara hefur óleiðréttar færslur á tímabilinu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.';
+        NegativeErr: Label 'The Inventory Period cannot be closed because there is negative inventory for one or more items.\Run the Close Inventory Period - Test report to identify item ledger entries for the affected items.', Comment = 'is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að ein eða fleiri vörur eru með neikvæða birgðastöðu.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna vörufærslurnar.';
+        OrderErr: Label 'The Inventory Period cannot be closed because there is at least one %1 Order in the current period that has not been adjusted.\Run the Close Inventory Period - Test report to identify the affected orders.', Comment = '%1 = order type, is-IS=Ekki er hægt að loka birgðatímabilinu vegna þess að að minnsta kosti ein %1 pöntun á tímabilinu hefur ekki verið leiðrétt.\Keyrðu prófunarskýrsluna Loka birgðatímabili til að finna viðkomandi pantanir.';
+    begin
+        if not AvgCostEntryPointHandler.IsEntriesAdjusted('', EndingDate) then
+            exit(UnadjustedErr);
+
+        InvtAdjmtEntryOrder.SetCurrentKey("Cost is Adjusted");
+        InvtAdjmtEntryOrder.SetRange("Cost is Adjusted", false);
+        InvtAdjmtEntryOrder.SetRange("Is Finished", true);
+        if InvtAdjmtEntryOrder.FindSet() then
+            repeat
+                ValueEntry.SetCurrentKey("Order Type", "Order No.", "Order Line No.");
+                ValueEntry.SetRange("Order Type", InvtAdjmtEntryOrder."Order Type");
+                ValueEntry.SetRange("Order No.", InvtAdjmtEntryOrder."Order No.");
+                ValueEntry.SetRange("Order Line No.", InvtAdjmtEntryOrder."Order Line No.");
+                ValueEntry.SetFilter("Item Ledger Entry Type", '%1|%2',
+                  ValueEntry."Item Ledger Entry Type"::Output, ValueEntry."Item Ledger Entry Type"::"Assembly Output");
+                ValueEntry.SetRange("Valuation Date", 0D, EndingDate);
+                if not ValueEntry.IsEmpty() then
+                    exit(StrSubstNo(OrderErr, InvtAdjmtEntryOrder."Order Type"));
+            until InvtAdjmtEntryOrder.Next() = 0;
+
+        ItemLedgEntry.SetRange(Open, true);
+        ItemLedgEntry.SetRange(Positive, false);
+        ItemLedgEntry.SetRange("Posting Date", 0D, EndingDate);
+        if not ItemLedgEntry.IsEmpty() then
+            exit(NegativeErr);
     end;
 }

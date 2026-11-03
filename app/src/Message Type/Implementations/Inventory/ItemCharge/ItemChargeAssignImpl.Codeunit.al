@@ -274,7 +274,7 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'The charge is spread over the quantity to invoice on the charge line. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
+        NotesLbl: Label 'The charge is spread over the quantity to invoice on the charge line. The sum of targets.qtyToAssign must stay within the quantity still assignable, which is quantity to invoice plus quantity invoiced minus quantity already assigned; a larger sum is refused and nothing is written. Assigning again replaces the earlier assignment rows of that charge line; replacedCount is the number of rows the charge line had before the call, and rows that are already partly invoiced are not deleted: their quantity to assign is set to zero and they keep their invoiced quantity. A refusal writes nothing. A successful call saves the assignment but does not post the document; post it with the purchase or sales posting message type. Generic record writes to the assignment tables are refused, so use this type to change them. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Kostnaðaraukanum er dreift á magnið til reikningsfærslu á kostnaðaraukalínunni. Summa targets.qtyToAssign verður að haldast innan magnsins sem enn má úthluta, sem er magn til reikningsfærslu að viðbættu reikningsfærðu magni að frádregnu magni sem þegar er úthlutað; stærri summu er hafnað og ekkert er skrifað. Ef úthlutað er aftur koma nýjar úthlutunarlínur í stað fyrri lína þeirrar kostnaðaraukalínu; replacedCount er fjöldi lína sem kostnaðaraukalínan hafði fyrir kallið og línum sem eru þegar reikningsfærðar að hluta er ekki eytt: magn til úthlutunar er sett á núll og þær halda reikningsfærðu magni sínu. Höfnun skrifar ekkert. Vel heppnað kall vistar úthlutunina en bókar ekki skjalið; bókaðu það með bókunarskilaboðategund innkaupa eða sölu. Almennar skráaskrif í úthlutunartöflurnar eru ekki leyfð, svo notaðu þessa tegund til að breyta þeim. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -810,6 +810,8 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         ChargeAssgnt."Item Charge No." := PurchLine."No.";
         ChargeAssgnt."Unit Cost" := ChargeUnitCost(PurchLine."Line Amount" - PurchLine."Inv. Discount Amount", PurchLine.Quantity, PurchLine."VAT %", PurchHeader."Prices Including VAT", Currency);
         if HasTargets then begin
+            PurchLine.CalcFields("Qty. Assigned");
+            AssertTargetQuantityWithinCharge(PurchLine."Qty. to Invoice" + PurchLine."Quantity Invoiced" - PurchLine."Qty. Assigned", Targets);
             InsertPurchaseTargets(ChargeAssgnt, Targets, Currency, LastLineNo);
             exit(ReplacedCount);
         end;
@@ -845,6 +847,8 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         ChargeAssgnt."Item Charge No." := SalesLine."No.";
         ChargeAssgnt."Unit Cost" := ChargeUnitCost(SalesLine."Line Amount" - SalesLine."Inv. Discount Amount", SalesLine.Quantity, SalesLine."VAT %", SalesHeader."Prices Including VAT", Currency);
         if HasTargets then begin
+            SalesLine.CalcFields("Qty. Assigned");
+            AssertTargetQuantityWithinCharge(SalesLine."Qty. to Invoice" + SalesLine."Quantity Invoiced" - SalesLine."Qty. Assigned", Targets);
             InsertSalesTargets(ChargeAssgnt, Targets, Currency, LastLineNo);
             exit(ReplacedCount);
         end;
@@ -907,6 +911,18 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
         if PricesIncludingVat then
             LineAmount := Round(LineAmount / (1 + VatPercent / 100), Currency."Amount Rounding Precision");
         exit(Round(LineAmount / Quantity, Currency."Unit-Amount Rounding Precision"));
+    end;
+
+    local procedure AssertTargetQuantityWithinCharge(AssignableQty: Decimal; Targets: JsonArray)
+    var
+        TargetToken: JsonToken;
+        AssignedQty: Decimal;
+        TooMuchErr: Label 'The assigned quantity %1 is greater than the charge quantity still assignable, %2.', Comment = '%1 = requested quantity, %2 = assignable quantity, is-IS=Úthlutað magn %1 er meira en kostnaðaraukamagnið sem enn má úthluta, %2.';
+    begin
+        foreach TargetToken in Targets do
+            AssignedQty += GetImpl.ReadDecimal(TargetToken.AsObject(), QtyToAssignKeyTok);
+        if AssignedQty > AssignableQty then
+            Error(TooMuchErr, AssignedQty, AssignableQty);
     end;
 
     local procedure InsertPurchaseTargets(ChargeAssgnt: Record "Item Charge Assignment (Purch)"; Targets: JsonArray; Currency: Record Currency; var NextLineNo: Integer)

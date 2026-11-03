@@ -160,7 +160,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         PostReceipt: Boolean;
         PostTransfer: Boolean;
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
-        InvalidPostingTypeErr: Label 'postingType must be "Ship", "Receive", or "ShipReceive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship", "Receive" eða "ShipReceive". Móttekið: %1';
+        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
             exit;
