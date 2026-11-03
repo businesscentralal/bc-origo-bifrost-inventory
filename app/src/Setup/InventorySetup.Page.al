@@ -83,6 +83,20 @@ page 10076835 "Inventory Setup ori"
         }
     }
 
+    actions
+    {
+        area(Processing)
+        {
+            action(SetupWizard)
+            {
+                Caption = 'Setup Wizard', Comment = 'is-IS=Uppsetningarhjálp';
+                ToolTip = 'Opens the guided setup for Bifrost Inventory.', Comment = 'is-IS=Opnar leiðsagða uppsetningu Bifröst birgða.';
+                Image = Setup;
+                RunObject = page "Inventory Setup Wizard ori";
+            }
+        }
+    }
+
     trigger OnOpenPage()
     begin
         Rec.InsertIfNotExists();
