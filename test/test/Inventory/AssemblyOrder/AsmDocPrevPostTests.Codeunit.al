@@ -247,10 +247,16 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
                 Fields := FieldsToken.AsObject();
                 if TableId = Database::"Item Ledger Entry" then
                     if Fields.Get('EntryType', ValueToken) then
-                        if ValueToken.AsValue().AsText() = 'Assembly Output' then
+                        if ValueToken.AsValue().AsText() = 'Assembly Output' then begin
                             if Fields.Get('Quantity', ValueToken) then
                                 if ValueToken.AsValue().AsText() = Format(ExpectedQuantity, 0, 9) then
                                     FoundOutput := true;
+                            // This Foundation build includes Posting Date on the item ledger preview.
+                            // G/L Entry is absent when the preview posts no general ledger lines.
+                            if Fields.Get('PostingDate', ValueToken) then
+                                if ValueToken.AsValue().AsText() = Format(ExpectedPostingDate, 0, 9) then
+                                    FoundPostingDate := true;
+                        end;
                 if TableId = Database::"G/L Entry" then
                     if Fields.Get('PostingDate', ValueToken) then
                         if ValueToken.AsValue().AsText() = Format(ExpectedPostingDate, 0, 9) then
