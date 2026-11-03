@@ -20,6 +20,9 @@
 - `Inventory.PhysInventory.Check` (10076884) keeps answering an empty batch as Success with `validationResult` NotReady. Post and PreviewPost still refuse an empty batch. That split is the published contract.
 - Contract regressions in `Inventory Contract Batch Tests` (96921) expect the shared `Retryable` entry only when the installed Foundation is 28.0.11 or newer. Release 28.0.10 exposes the enum and does not append the entry.
 - `Transfer Order Post Tests` (96914) send `expectedCount` only when the composed contract declares it. Foundation 28.0.10 rejects that key on `Inventory.TransferOrder.Post` and `Inventory.Transfer.UndoShipment` because those types do not declare it.
+### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
+
+- `Inventory.AdjustCost.Run` (codeunit 10076858 `Adjust Cost Run Impl ori`) now calls `AssertIsLicensed` and then `AssertVersion1` after the Costing domain gate and before report 795 runs, like the other Inventory costing types. `Inventory.CostToGL.Post` (10076861) already had both checks on main (#177); this change adds regression coverage for it. Test codeunit 96918 `Inv. Posting Gate Tests` gains an unlicensed-call refusal test for each of the two types.
 
 ### Fixed (2026-11-02) - Foundation confirmation and composed contracts (#176)
 
