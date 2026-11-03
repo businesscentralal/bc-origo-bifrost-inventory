@@ -6496,9 +6496,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Http - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3550083798 - Control 1077820653 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
-          <source>You do not have permission to change extension settings. Ask an administrator with the SUPER permission set (or write permission on table NAV App Setting) to enable Allow HttpClient Requests for the applications listed above.</source>
-          <target>Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir forritin hér að ofan.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir forritin hér að ofan.</note>
+          <source>You do not have permission to change extension settings. Ask an administrator with the SUPER permission set (or write permission on table NAV App Setting) to enable Allow HttpClient Requests for the Bifrost Inventory extension.</source>
+          <target>Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir Bifröst birgðaviðbótina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir Bifröst birgðaviðbótina.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Administrator - Property InstructionalText</note>
         </trans-unit>
         <trans-unit id="Page 3550083798 - Control 2079942224 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">

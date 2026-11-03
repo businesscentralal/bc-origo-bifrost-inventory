@@ -98,6 +98,7 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; var ResponseJson: JsonObject)
     var
         Dispatcher: Codeunit "Dispatcher ori";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         RequestContent: BigText;
         ResponseContent: BigText;
         ResponseContentType: Text[100];
@@ -107,6 +108,7 @@ codeunit 96904 "Transfer Order Test Helper"
         RequestText: Text;
         ResponseText: Text;
     begin
+        InventoryLibrary.ConfirmRequest(MessageType, RequestJson);
         RequestJson.WriteTo(RequestText);
         if RequestText <> '' then
             RequestContent.AddText(RequestText);

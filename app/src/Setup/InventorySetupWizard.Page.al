@@ -1,8 +1,8 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using System.Security.User;
 using System.Security.AccessControl;
+using System.Security.User;
 
 /// <summary>Explains Inventory setup and delegates HTTP changes to Foundation.</summary>
 page 10076836 "Inventory Setup Wizard ori"
@@ -41,7 +41,7 @@ page 10076836 "Inventory Setup Wizard ori"
                 {
                     ShowCaption = false;
                     Visible = not CanChangeHttp;
-                    InstructionalText = 'You do not have permission to change extension settings. Ask an administrator with the SUPER permission set (or write permission on table NAV App Setting) to enable Allow HttpClient Requests for the applications listed above.', Comment = 'is-IS=Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir forritin hér að ofan.';
+                    InstructionalText = 'You do not have permission to change extension settings. Ask an administrator with the SUPER permission set (or write permission on table NAV App Setting) to enable Allow HttpClient Requests for the Bifrost Inventory extension.', Comment = 'is-IS=Þú hefur ekki heimild til að breyta stillingum viðbóta. Biddu kerfisstjóra sem hefur SUPER heimildasamstæðuna (eða skrifheimild á töfluna NAV App Setting) um að virkja Leyfa HttpClient-beiðnir fyrir Bifröst birgðaviðbótina.';
                 }
             }
             group(AccessStep)
