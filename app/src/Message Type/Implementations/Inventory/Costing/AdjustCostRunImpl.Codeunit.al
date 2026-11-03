@@ -28,6 +28,8 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
         Process.RunAdjustCost(Argument);
     end;
 
