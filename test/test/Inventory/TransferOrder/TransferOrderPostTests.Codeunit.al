@@ -6,6 +6,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -49,6 +50,20 @@ codeunit 96914 "Transfer Order Post Tests"
     procedure UndoShipment_ReceivedIsCodedAndPreserved_IS()
     begin
         VerifyReceivedRefusal(1039);
+    end;
+
+    [Test]
+    procedure UndoReceipt_PostedReceipt_RefusesInEnglish()
+    begin
+        // Story #150, AC3 | Time: WorkDate from the transfer posting helper | Risk: None
+        VerifyReceiptUndoRefusal(1033);
+    end;
+
+    [Test]
+    procedure UndoReceipt_PostedReceipt_RefusesInIcelandic()
+    begin
+        // Story #150, AC3 | Time: WorkDate from the transfer posting helper | Risk: None
+        VerifyReceiptUndoRefusal(1039);
     end;
 
     local procedure VerifyReceivedRefusal(LanguageId: Integer)
@@ -133,6 +148,84 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual(0, OtherLine.Count(), 'Another owned shipment is untouched.');
         OtherLine.SetRange("Correction Line", false);
         Assert.AreEqual(2, OtherLine.Count(), 'Both other shipment lines remain unchanged.');
+    end;
+
+    local procedure VerifyReceiptUndoRefusal(LanguageId: Integer)
+    var
+        ReceiptHeader: Record "Transfer Receipt Header";
+        Entries: Record "Item Ledger Entry";
+        Impl: Codeunit "Transf Undo Rcpt Impl ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ReceiptNo: Code[20];
+        BeforeCount: Integer;
+        SavedLanguage: Integer;
+        Description: Text;
+        ErrorText: Text;
+    begin
+        ReceiptNo := CreatePostedReceipt();
+        Assert.IsTrue(ReceiptHeader.Get(ReceiptNo), 'Owned receipt exists before the refusal.');
+        BeforeCount := Entries.Count();
+        Request.Add('documentNo', ReceiptNo);
+        SavedLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Assert.IsFalse(Impl.IsEnabled(), 'The compatibility identifier stays out of discovery.');
+        Description := Impl.GetDescription();
+        if LanguageId = 1039 then
+            Assert.AreEqual('Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd.', Description, 'Icelandic description does not advertise a working undo.')
+        else
+            Assert.AreEqual('Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Description, 'English description does not advertise a working undo.');
+        // A language id of 0 selects the company default inside the dispatcher, so the call must pass 1033 or 1039 itself.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoReceipt", Request, LanguageId, Response);
+        GlobalLanguage(SavedLanguage);
+        Assert.IsTrue(Response.Get('status', Token), 'Refusal has a status. ' + JsonText(Response));
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'UndoReceipt never succeeds.');
+        Assert.IsTrue(Response.Get('code', Token), 'An existing receipt has a coded refusal.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'An existing receipt is PreconditionFailed.');
+        Assert.IsTrue(Response.Get('error', Token), 'Refusal carries the error text.');
+        ErrorText := Token.AsValue().AsText();
+        if LanguageId = 1039 then
+            Assert.AreEqual('Ekki er hægt að afturkalla bókaðar millifærslumóttökur í þessari útgáfu Business Central.', ErrorText, 'Icelandic refusal.')
+        else
+            Assert.AreEqual('Posted transfer receipts cannot be undone in this Business Central version.', ErrorText, 'English refusal.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Refusal names the next step.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Next step is not empty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Refusal posts no further item ledger entry.');
+        Assert.IsTrue(ReceiptHeader.Get(ReceiptNo), 'The posted receipt remains.');
+    end;
+
+    local procedure CreatePostedReceipt() ReceiptNo: Code[20]
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        Header: Record "Transfer Header";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
+    begin
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 10);
+        Helper.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(Header, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
+        DocumentNo := Header."No.";
+        ConfirmIfAdvertised("Message Type ori"::"Inventory.TransferOrder.Post", Request);
+        Request.Add('postingType', 'Ship');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
+        Assert.IsTrue(Response.Get('status', Token), 'Ship status missing.');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned shipment posts before the receipt. ' + JsonText(Response));
+        Clear(Request);
+        Clear(Response);
+        ConfirmIfAdvertised("Message Type ori"::"Inventory.TransferOrder.Post", Request);
+        Request.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
+        Assert.IsTrue(Response.Get('status', Token), 'Receive status missing.');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned receipt posts. ' + JsonText(Response));
+        Assert.IsTrue(Response.Get('postedReceiptNo', Token), 'postedReceiptNo missing.');
+        ReceiptNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
     end;
 
     local procedure CreateUndoShipment() ShipmentNo: Code[20]

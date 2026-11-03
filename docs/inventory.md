@@ -14,7 +14,8 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
 - Inventory.TransferOrder.Create, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics
-- Inventory.Transfer.UndoShipment and Inventory.Transfer.UndoReceipt
+- Inventory.Transfer.UndoShipment
+- Inventory.Transfer.UndoReceipt is not an active type. The released identifier stays for compatibility and is excluded from discovery, because this platform has no native undo of a posted transfer receipt. Return the goods with a new transfer order.
 - Inventory.Assembly.UndoPost
 - Inventory.Tracking.Get, Assign, Delete, and TrackingAvailability.Get
 - Inventory.Reservation.Get, Create, Cancel, and AutoReserve

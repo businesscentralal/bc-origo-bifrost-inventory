@@ -6,6 +6,7 @@
 
 - Transfer posting tests (96914) send `expectedCount` only when the deployed contract declares it. Foundation 28.0.10.632 refuses an undeclared key on a non-read type, and this build does not advertise confirmation on `Inventory.TransferOrder.Post` or `Inventory.Transfer.UndoShipment`.
 - Contract batch tests (96921) require the shared `Retryable` error row only when the contract reader injects it after `GetErrors`. Foundation 28.0.10.632 has the error code and does not inject it.
+- Merging main (#185) keeps `Inventory.Transfer.UndoReceipt` (10076911) on the coded MissingParameter and RecordNotFound contract and the Inv. Posting Gate display caption. The translated notes label from that merge uses the same caption. The new receipt fixture in test codeunit 96914 sends `expectedCount` only when the deployed contract advertises it.
 
 ### Fixed (2026-11-02) - Inventory help and runtime error parity (#152)
 - #152: complete remaining Inventory help error codes, attribute examples and subject descriptions; use permission display captions instead of AL names. Preserve published statistics direction and response fields. Strengthen contract guard 96970 across all help chapters and document protected setup administration; improve disabled-domain guidance (10076922). Return coded errors on explicit refusal paths, align error help with MissingParameter/RecordNotFound/PreconditionFailed and native BusinessCentralError, and exercise runtime envelopes in regression tests (96970). Normalize permission captions and Icelandic guidance, including the native journal gate (10076840); keep XLF synchronized.
@@ -15,6 +16,11 @@
 ### Added (2026-11-03) - Inventory setup wizard (#158)
 
 - Five-step Assisted Setup "Set up Bifrost Inventory" (Extensions group): what the app adds, read-only HTTP status with a link to Foundation's setup wizard, access guidance, read-only company domains and explicit completion. Page 10076836, registration codeunit 10076924, management codeunit 10076927 and bilingual tests 96920. Inventory Setup (10076835) gets a Setup Wizard action. The guide never writes HTTP settings, assigns permissions or toggles domains; closing early does not mark completion. Execute permission for the new objects is added to the existing BIFROST Read/Full extensions and to BIFROST InvPost ori (the app's only assignable set, required by the PermissionCoverage guard); the InvPost grant awaits Gunnar's product decision (Architect 1793461090) before merge.
+
+### Fixed (2026-11-03) - receipt undo is not a shipped operation (#150)
+
+- `Inventory.Transfer.UndoReceipt` (codeunit 10076911 `Transf Undo Rcpt Impl ori`) stays disabled. Its overview and notes are translated labels, and the in-repo help plus the posting-permission list no longer present it as a working undo. The released enum value remains. The configured BC symbols still have no `Undo Transfer Receipt` codeunit, so success is not invented.
+- Test codeunit 96914 `Transfer Order Post Tests` posts an owned transfer receipt and calls the type in 1033 and 1039. The answer is `PreconditionFailed`, the receipt stays, and no further item ledger entry is posted. Helper 96904 passes that Windows language id through, because a zero language id uses the company default rather than the test's `GlobalLanguage`.
 
 ### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
 
