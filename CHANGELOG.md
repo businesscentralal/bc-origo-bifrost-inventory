@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-03) - receipt undo is not a shipped operation (#150)
+
+- `Inventory.Transfer.UndoReceipt` (codeunit 10076911 `Transf Undo Rcpt Impl ori`) stays disabled. Its overview and notes are translated labels, and the in-repo help plus the posting-permission list no longer present it as a working undo. The released enum value remains. The configured BC symbols still have no `Undo Transfer Receipt` codeunit, so success is not invented.
+- Test codeunit 96914 `Transfer Order Post Tests` posts an owned transfer receipt and calls the type in 1033 and 1039. The answer is `PreconditionFailed`, the receipt stays, and no further item ledger entry is posted.
+
 ### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
 
 - `Inventory.AdjustCost.Run` (codeunit 10076858 `Adjust Cost Run Impl ori`) now calls `AssertIsLicensed` and then `AssertVersion1` after the Costing domain gate and before report 795 runs, like the other Inventory costing types. `Inventory.CostToGL.Post` (10076861) already had both checks on main (#177); this change adds regression coverage for it. Test codeunit 96918 `Inv. Posting Gate Tests` gains an unlicensed-call refusal test for each of the two types.

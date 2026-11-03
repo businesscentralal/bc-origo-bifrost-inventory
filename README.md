@@ -146,7 +146,8 @@ own them.
 Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`,
-`Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` and `Inventory.Transfer.UndoReceipt`.
+`Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post` and `Inventory.Revaluation.PreviewPost`.
+`Inventory.Transfer.UndoReceipt` is not one of them: it is disabled, it does not post, and it is absent from the active roster.
 
 ---
 
