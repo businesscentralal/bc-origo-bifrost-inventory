@@ -1,8 +1,8 @@
 namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
-using System.Security.User;
 using System.Security.AccessControl;
+using System.Security.User;
 
 /// <summary>Explains Inventory setup and delegates HTTP changes to Foundation.</summary>
 page 10076836 "Inventory Setup Wizard ori"
