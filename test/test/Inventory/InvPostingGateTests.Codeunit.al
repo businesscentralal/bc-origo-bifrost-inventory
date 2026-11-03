@@ -242,12 +242,13 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Impl: Codeunit "Adjust Cost Run Impl ori";
     begin
         // [SCENARIO] #182 AC01/AC02: with the Costing domain on and the caller allowed, an unlicensed call stops at the license check before report 795 runs.
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := true;
         Setup.Modify(true);
-        LowerToInvWrite(LibraryLowerPermissions);
-        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        LibraryLowerPermissions.AddPermissionSet('Inv Cost Write Test');
         PrepareUnlicensedArgument(TempArgument);
         asserterror Impl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check before any costing work');
@@ -262,12 +263,13 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Impl: Codeunit "Cost To GL Post Impl ori";
     begin
         // [SCENARIO] #182 AC01/AC02: with the Costing domain on and the caller allowed, an unlicensed call stops at the license check before report 1002 runs.
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := true;
         Setup.Modify(true);
-        LowerToInvWrite(LibraryLowerPermissions);
-        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        LibraryLowerPermissions.AddPermissionSet('Inv Cost Write Test');
         PrepareUnlicensedArgument(TempArgument);
         asserterror Impl.ExecuteBifrostTask(TempArgument);
         Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check before any costing work');
