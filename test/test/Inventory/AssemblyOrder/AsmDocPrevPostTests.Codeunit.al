@@ -180,7 +180,9 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
         // [SCENARIO] #159 review: both preview keys run against an order with lines and roll back.
         Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
         Helper.CreatePositiveAdjustment(ComponentItem."No.", 100);
-        Helper.CreateAssemblyOrder(AssemblyHeader, ParentItem."No.", 1);
+        // Remaining quantity is the order quantity. Preview a smaller legal quantity so the
+        // platform check "cannot be higher than the Remaining Quantity" does not refuse the call.
+        Helper.CreateAssemblyOrder(AssemblyHeader, ParentItem."No.", 4);
         OriginalPostingDate := AssemblyHeader."Posting Date";
         OriginalQuantity := AssemblyHeader."Quantity to Assemble";
         AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
@@ -191,15 +193,15 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
 
         RequestJson.Add('documentNo', AssemblyHeader."No.");
         RequestJson.Add('postingDate', Format(PreviewPostingDate, 0, 9));
-        RequestJson.Add('quantityToAssemble', OriginalQuantity + 1);
+        RequestJson.Add('quantityToAssemble', OriginalQuantity - 2);
         Helper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.PreviewPost", RequestJson, ResponseJson);
 
         ResponseJson.WriteTo(ResponseText);
         Assert.IsTrue(ResponseJson.Get('status', Token), ResponseText);
         Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
         Assert.IsTrue(ResponseJson.Get('quantityToAssemble', Token), ResponseText);
-        Assert.AreEqual(OriginalQuantity + 1, Token.AsValue().AsDecimal(), 'The preview answer uses the requested quantity.');
-        AssertAdjustedPreview(ResponseJson, OriginalQuantity + 1, PreviewPostingDate);
+        Assert.AreEqual(OriginalQuantity - 2, Token.AsValue().AsDecimal(), 'The preview answer uses the requested quantity.');
+        AssertAdjustedPreview(ResponseJson, OriginalQuantity - 2, PreviewPostingDate);
 
         AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, AssemblyHeader."No.");
         Assert.AreEqual(OriginalPostingDate, AssemblyHeader."Posting Date", 'Preview must not keep postingDate.');
