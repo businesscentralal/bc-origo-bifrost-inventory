@@ -6,7 +6,7 @@ using Microsoft.Inventory.Setup;
 using Origo.Bifrost;
 
 /// <summary>
-/// Inventory.Period.Close. Closes an inventory period through the platform inventory-period close.
+/// Inventory.Period.Close. Reproduces the platform inventory-period close checks and writes. Codeunit 5820 is not run.
 /// </summary>
 codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -156,7 +156,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Closes the Inventory Period that ends on endingDate through the platform inventory-period close, which also closes earlier open inventory periods and writes an inventory period entry for each period it closes. A period that is already closed is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
+        Effect.Add('changes', 'Closes the Inventory Period that ends on endingDate by reproducing the checks and inventory period entries of platform codeunit Close Inventory Period, without running that codeunit, so OnRunOnBeforeCheck is not raised. The close also closes earlier open inventory periods and writes an inventory period entry for each period it closes. A period that is already closed is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
@@ -206,17 +206,15 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Closes the inventory period that ends on the given date through the platform inventory-period close. A period that is already closed is answered Success unchanged.';
+        Overview := 'Closes the inventory period that ends on the given date by reproducing the platform close checks and writes. Codeunit Close Inventory Period is not run, so OnRunOnBeforeCheck is not raised. A period that is already closed is answered Success unchanged.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Closes the Inventory Period identified by endingDate by reproducing the checks and writes of platform codeunit Close Inventory Period. This message does not run that codeunit, so its OnRunOnBeforeCheck integration event is not raised. The close also closes every earlier open inventory period and writes an inventory period entry for each period it closes. A refusal, such as unadjusted cost, an unadjusted finished order or open negative inventory, is returned as an error and writes nothing. The call is idempotent: a period that is already closed is not modified and the close is not applied again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. The change is saved with the caller''s transaction. Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.', Comment = 'is-IS=Lokar birgðatímabilinu sem endingDate vísar á með því að endurgera athuganir og skrif kóðaeiningarinnar Close Inventory Period. Skilaboðin keyra ekki þá kóðaeiningu, svo samþættingaratburðurinn OnRunOnBeforeCheck er ekki vakinn. Lokunin lokar einnig hverju eldra opnu birgðatímabili og skrifar birgðatímabilsfærslu fyrir hvert tímabil sem hún lokar. Höfnun, svo sem óleiðréttur kostnaður, óleiðrétt lokin pöntun eða opin neikvæð birgðastaða, kemur til baka sem villa og skrifar ekkert. Kallið er óbreytilegt: tímabili sem er þegar lokað er ekki breytt og lokunin er ekki framkvæmd aftur. Aðeins tímabil sem þegar er til er hægt að breyta og engin skilaboð stofna tímabil, svo endingDate sem passar við ekkert tímabil fær svarið RecordNotFound. Lénið Inventory Period verður að vera kveikt í Inventory Setup (vöntun á uppsetningarlínu telst sem kveikt). Kallarinn þarf skrifheimild á töfluna Inventory Period; ekki er krafist bókunarheimildar. Breytingin er vistuð með færslu kallandans. Notaðu Inventory.Period.Get fyrst til að sjá tímabilin og Inventory.Period.Reopen til að afturkalla breytinguna.';
     begin
-        Notes := 'Closes the Inventory Period identified by endingDate by running the platform inventory-period close with its confirmation and message dialog hidden. That close also closes every earlier open inventory period and writes an inventory period entry for each period it closes. A platform refusal, such as unadjusted cost or open negative inventory, is returned as an error and writes nothing. ' +
-            'The call is idempotent: a period that is already closed is not modified and the platform close is not run again. Only an existing period can be changed, and no message type creates periods, so an endingDate that matches no period is answered RecordNotFound. ' +
-            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on). The caller needs write permission on the Inventory Period table; no posting permission set is required. ' +
-            'The change is saved with the caller''s transaction. ' +
-            'Use Inventory.Period.Get first to see the periods and Inventory.Period.Reopen to undo the change.';
+        Notes := NotesLbl;
         exit(true);
     end;
 

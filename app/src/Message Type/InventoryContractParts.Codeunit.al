@@ -32,7 +32,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         TransferPreviewNotesLbl: Label 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.', Comment = 'is-IS=Heppnuð forskoðun inniheldur rollback true. Ekkert er vistað, þar á meðal númer bókaðra skjala.';
         AssemblyCreateNotesLbl: Label 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.', Comment = 'is-IS=refreshLines er sjálfgefið true. postingDate er vinnudagsetning þegar henni er sleppt. quantity verður að vera jákvætt.';
         AssemblyPostNotesLbl: Label 'Requires BIFROST InvPost ori in addition to BIFROST Full ori. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst BIFROST InvPost ori auk BIFROST Full ori. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.';
-        AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries. postingDate and quantityToAssemble are applied for the preview the same way as Inventory.AssemblyOrder.Post, then the order is restored.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur. postingDate og quantityToAssemble eru notuð í forskoðuninni á sama hátt og í Inventory.AssemblyOrder.Post og pöntunin er síðan færð til baka.';
+        AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries. postingDate and quantityToAssemble, when sent, are applied inside that preview and roll back with it, so the stored posting date and quantity to assemble stay unchanged.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur. postingDate og quantityToAssemble, þegar þau eru send, eru notuð inni í forskoðuninni og afturköllast með henni, svo vistuð bókunardagsetning og magn til samsetningar haldast óbreytt.';
 
     /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEnvelope(MessageType: Text): JsonObject
@@ -158,8 +158,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
-                    Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format, applied for the preview and then restored; the date on the order is used when omitted.'));
-                    Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble for the preview; applied when greater than zero and then restored. Nothing is posted.'));
+                    Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format, applied inside the rolled-back preview; the stored date is unchanged. The date on the order is used when omitted.'));
+                    Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble for the preview, applied inside the rolled-back preview when greater than zero. The stored quantity is unchanged and nothing is posted.'));
                 end;
         end;
     end;

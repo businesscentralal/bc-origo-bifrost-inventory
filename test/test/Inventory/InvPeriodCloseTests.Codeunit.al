@@ -6,7 +6,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
-/// Proves Inventory.Period.Close and Inventory.Period.Reopen use the platform close codeunit.
+/// Proves Inventory.Period.Close and Inventory.Period.Reopen write the same period entries as the platform close.
 /// </summary>
 codeunit 96979 "Inv. Period Close Tests"
 {
