@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-03) - confirmation fixtures on strict Foundation
+
+- Transfer posting tests (96914) send `expectedCount` only when the deployed contract declares it. Foundation 28.0.10.632 refuses an undeclared key on a non-read type, and this build does not advertise confirmation on `Inventory.TransferOrder.Post` or `Inventory.Transfer.UndoShipment`.
+- Contract batch tests (96921) require the shared `Retryable` error row only when the contract reader injects it after `GetErrors`. Foundation 28.0.10.632 has the error code and does not inject it.
+
 ### Fixed (2026-11-02) - Inventory help and runtime error parity (#152)
 - #152: complete remaining Inventory help error codes, attribute examples and subject descriptions; use permission display captions instead of AL names. Preserve published statistics direction and response fields. Strengthen contract guard 96970 across all help chapters and document protected setup administration; improve disabled-domain guidance (10076922). Return coded errors on explicit refusal paths, align error help with MissingParameter/RecordNotFound/PreconditionFailed and native BusinessCentralError, and exercise runtime envelopes in regression tests (96970). Normalize permission captions and Icelandic guidance, including the native journal gate (10076840); keep XLF synchronized.
 - Correct Attribute.Create/Update invalid-array help to the existing caught `BusinessCentralError` response (10076919); regress missing, empty and non-array attributes in both languages through the real dispatcher (96900).

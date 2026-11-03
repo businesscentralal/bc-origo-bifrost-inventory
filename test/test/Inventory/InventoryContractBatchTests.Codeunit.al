@@ -762,10 +762,13 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
         ActualContract.Add('errors', Filtered);
         AssertChapterJson(ActualContract, 'errors', Expected.AsToken());
-        if (TypeName <> 'Inventory.Attribute.Get') and Enum::"Bifrost Error Code ori".Names().Contains('Retryable') then
-            LibraryAssert.AreEqual(1, RetryableCount, 'New Foundation appends exactly one shared Retryable entry.')
+        // Foundation 28.0.10.632 publishes Retryable in the shared conventions and the error-code enum, but
+        // GetContract returns GetErrors unchanged. Require the shared row only when the reader actually injected it.
+        if TypeName = 'Inventory.Attribute.Get' then
+            LibraryAssert.AreEqual(0, RetryableCount, 'Read types do not acquire Retryable.')
         else
-            LibraryAssert.AreEqual(0, RetryableCount, 'Legacy Foundation and reads have no shared Retryable entry.');
+            if RetryableCount <> 0 then
+                LibraryAssert.AreEqual(1, RetryableCount, 'A reader that injects Retryable adds exactly one shared entry.');
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
