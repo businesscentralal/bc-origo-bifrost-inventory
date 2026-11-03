@@ -9,7 +9,7 @@ using Microsoft.Inventory.Setup;
 /// refuses the inventory period entry insert. These procedures are ordinary calls, so the insert stays
 /// in the caller's transaction. There is no Commit and no StartSession.
 /// </summary>
-codeunit 10076924 "Period Platform Write ori"
+codeunit 10076928 "Period Platform Write ori"
 {
     Access = Internal;
     Permissions = tabledata "Inventory Period" = rimd,
