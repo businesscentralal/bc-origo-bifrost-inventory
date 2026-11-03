@@ -1,0 +1,23 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "runId": 41700763850,
+  "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/41700763850",
+  "status": "completed",
+  "conclusion": "success",
+  "tests": {
+    "fullSuite": true,
+    "executed": 501,
+    "passed": 501,
+    "failed": 0,
+    "skipped": 0,
+    "jobId": 126149989298,
+    "jobUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/41700763850/job/126149989298",
+    "artifactId": 13265671281
+  },
+  "sourceGuards": {
+    "runId": 41700763713,
+    "conclusion": "success"
+  },
+  "excerpt": "ci-test-counts-excerpt.log",
+  "readBackAt": "2026-11-03T19:39:16.732Z"
+}
