@@ -150,6 +150,14 @@ Types that need the posting permission: `Inventory.TransferOrder.Post`, `Invento
 
 ---
 
+## Set up with the wizard
+
+Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → Setup Wizard**. Review the operations, HTTP status, access and company domains, then choose **Finish** to record completion. The HTTP action opens Foundation's setup; Inventory never writes the HTTP setting. Only `BIFROST InvPost ori` is separately assignable. The attribute read/write sets are included through Foundation Read/Full roles. The guide does not assign access or change domains. Closing early preserves the existing completion state. [Inventory documentation](https://docs.bifrost.origo.is/en-us/inventory/).
+
+### Setja upp með uppsetningarhjálp
+
+Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Uppsetningu birgða → Uppsetningarhjálp**. Farðu yfir aðgerðir, HTTP-stöðu, aðgang og svið fyrirtækisins. Veldu **Ljúka** til að skrá að yfirferð sé lokið. HTTP-aðgerðin opnar uppsetningu Foundation; birgðaviðbótin breytir ekki HTTP-stillingunni. Aðeins `BIFROST InvPost ori` er sérstaklega úthlutanleg; les- og skrifheimildir vörueiginleika fylgja Read/Full-heimildum Foundation. Leiðarvísirinn úthlutar ekki aðgangi og breytir ekki sviðum. Ef lokað er fyrr helst fyrri lokastaða óbreytt.
+
 ## Setup & Configuration
 
 1. Install Bifrost Foundation 28.0.3.530 or later and complete its setup (Bifröst Setup).
