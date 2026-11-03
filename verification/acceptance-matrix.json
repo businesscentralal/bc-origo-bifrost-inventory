@@ -1,0 +1,99 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "repo": "businesscentralal/bc-origo-bifrost-inventory",
+  "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/159",
+  "scope": "PR179 findings10/11 and their listed amendments; #159 broader AC families retain separate PR/source custody.",
+  "amendments": [
+    {
+      "finding": "Preview adjustment write transaction",
+      "source": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/179#issuecomment-6601279482",
+      "implementation": "Already implemented: manual Assembly-Post.OnBeforeOnRun subscriber applies adjustments inside preview; no Commit",
+      "regression": "96905 PreviewPost_Adjustments_LeaveOrderUnchanged uses actual lines/stock; asserts requested quantity/date and unchanged header/line/no posted order",
+      "status": "DEVELOPER_VERIFIED_CURRENT_TIP",
+      "evidence": {
+        "compile": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/compile-result.json",
+        "native": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/native-full-counts.json",
+        "mcp": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/mcp-summary.json",
+        "ui": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/ui-summary.json"
+      }
+    },
+    {
+      "finding": "Period help reproduces platform instead of running it, and no OnRunOnBeforeCheck",
+      "source": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/179#issuecomment-6601279482",
+      "implementation": "Already implemented: Close/Reopen Notes and effect both disclose checks/writes reproduction and omitted integration event; is-IS updated; reopen refusal sentence removed",
+      "status": "DEVELOPER_VERIFIED_CURRENT_TIP",
+      "evidence": {
+        "compile": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/compile-result.json",
+        "native": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/native-full-counts.json",
+        "mcp": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/mcp-summary.json",
+        "ui": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/ui-summary.json"
+      }
+    },
+    {
+      "finding": "Codeunit10076924 collision",
+      "source": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/179#issuecomment-6601497268",
+      "implementation": "Already implemented by30c7419: Period Platform Write ori10076928; CHANGELOG updated",
+      "status": "DEVELOPER_VERIFIED_CURRENT_TIP",
+      "evidence": {
+        "compile": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/compile-result.json",
+        "native": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/native-full-counts.json",
+        "mcp": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/mcp-summary.json",
+        "ui": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/ui-summary.json"
+      }
+    },
+    {
+      "finding": "Additional10076926 open-PR collision",
+      "source": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/166#pullrequestreview-5757673444",
+      "implementation": "Own internal preview helper renumbered10076929; no foreign reader/wizard source changed.",
+      "status": "DEVELOPER_VERIFIED_CURRENT_TIP",
+      "evidence": "/workspace/evidence/inventory179-amend-worker3-20261103/allocation-readback.json"
+    }
+  ],
+  "remaining": [
+    "Current-tip pairedCI terminal green result",
+    "Genuine exact-tip independent Claude verification and resolution of pr:amend",
+    "Current-tip Grok clearance and eligible approval",
+    "Architect merge/deployment and Tester UAT; no issue completion claimed"
+  ],
+  "notClaimed": "Source confirmation or a process exit is not issue acceptance/delivery.",
+  "currentParentChange": "Authored3f5482d ID repair retained by Gunnar signed main merge78c170e. Main receipt-undo changes included in full501, without claiming issue150 delivery.",
+  "developerCounts": {
+    "compile": {
+      "app": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "testApp": {
+        "errors": 0,
+        "warnings": 0
+      }
+    },
+    "native": {
+      "executed": 501,
+      "passed": 501,
+      "failed": 0,
+      "skipped": 0
+    },
+    "mcp": {
+      "executed": 28,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "types": 11,
+      "lcids": [
+        1033,
+        1039
+      ]
+    },
+    "ui": {
+      "executed": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "lcids": [
+        1033,
+        1039
+      ]
+    }
+  }
+}

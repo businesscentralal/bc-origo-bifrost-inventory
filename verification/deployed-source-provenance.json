@@ -1,0 +1,20 @@
+[
+  {
+    "file": "Origo.Bifrost_Inventory.28.3.2.0.app",
+    "version": "28.3.2.0",
+    "source": {
+      "RepositoryUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory",
+      "Commit": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f"
+    },
+    "sha256": "f339f384c206e51bcbdceae0a2b3660bd580b777fee9bb09f734f7617bfe8c5a"
+  },
+  {
+    "file": "Origo.Bifrost_Inventory_Tests.28.3.2.0.app",
+    "version": "28.3.2.0",
+    "source": {
+      "RepositoryUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory",
+      "Commit": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f"
+    },
+    "sha256": "ef383d02f24761ac1d8a9138d3313909ca8d6987cee34211a860f6dfd83c2cf0"
+  }
+]

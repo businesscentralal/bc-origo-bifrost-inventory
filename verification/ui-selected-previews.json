@@ -1,0 +1,434 @@
+[
+  {
+    "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+    "suffix": "EN",
+    "lcid": 1033,
+    "id": "26f444ce-8a18-440f-bb89-8cb608ef5d7f",
+    "time": "2026-11-03T19:23:36.903Z",
+    "intentAt": "2026-11-03T19:23:14.806Z",
+    "documentNo": "A00020",
+    "answer": {
+      "status": "Success",
+      "entryCount": 4,
+      "glEntryCount": 0,
+      "rollback": true,
+      "summary": "Assembly Order A00020 (Item W8ASM-EN) preview produced 4 entries. No G/L entries would be posted.",
+      "documentNo": "A00020",
+      "itemNo": "W8ASM-EN",
+      "locationCode": "",
+      "quantityToAssemble": 1,
+      "lcyCode": "GBP",
+      "predictedNumbers": {
+        "postedAssemblyNo": "***"
+      },
+      "totals": {
+        "totalDebitLCY": 0,
+        "totalCreditLCY": 0
+      },
+      "preview": [
+        {
+          "tableId": 32,
+          "tableName": "Item Ledger Entry",
+          "tableCaption": "Item Ledger Entry",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": "3AF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999938"
+              },
+              "fields": {
+                "Description": "GU00000045",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-EN",
+                "DimensionSetID": [],
+                "Country_RegionCode": "",
+                "ItemNo_": "W8CMP-EN",
+                "EntryType": "Assembly Consumption",
+                "SerialNo_": "",
+                "LotNo_": "",
+                "PackageNo_": "",
+                "LocationCode": "",
+                "Quantity": "-1",
+                "InvoicedQuantity": "-1",
+                "RemainingQuantity": "0",
+                "Open": "false",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "-12",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "-18.58",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryQuantity": "0",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": ""
+              }
+            },
+            {
+              "id": "40F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999937"
+              },
+              "fields": {
+                "Description": "",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-EN",
+                "DimensionSetID": [],
+                "Country_RegionCode": "",
+                "ItemNo_": "W8ASM-EN",
+                "EntryType": "Assembly Output",
+                "SerialNo_": "",
+                "LotNo_": "",
+                "PackageNo_": "",
+                "LocationCode": "",
+                "Quantity": "1",
+                "InvoicedQuantity": "1",
+                "RemainingQuantity": "1",
+                "Open": "true",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "0",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "0",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryQuantity": "0",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": ""
+              }
+            }
+          ]
+        },
+        {
+          "tableId": 5802,
+          "tableName": "Value Entry",
+          "tableCaption": "Value Entry",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": "3CF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999918"
+              },
+              "fields": {
+                "Description": "GU00000045",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "Gen_Bus_PostingGroup": "DOMESTIC",
+                "Gen_Prod_PostingGroup": "MISC",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-EN",
+                "DimensionSetID": [],
+                "Type": " ",
+                "ItemNo_": "W8CMP-EN",
+                "EntryType": "Direct Cost",
+                "LocationCode": "",
+                "InvoicedQuantity": "-1",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "-12",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "-18.58",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryType": "Assembly Consumption",
+                "Adjustment": "false",
+                "ItemChargeNo_": "",
+                "CostPostedtoG_L": "0",
+                "ItemLedgerEntryQuantity": "-1",
+                "ValuedQuantity": "-1",
+                "CostperUnit": "12",
+                "ValuedByAverageCost": "false",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": "",
+                "No_": "",
+                "DiscountAmount": "0"
+              }
+            },
+            {
+              "id": "43F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999917"
+              },
+              "fields": {
+                "Description": "",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "Gen_Bus_PostingGroup": "DOMESTIC",
+                "Gen_Prod_PostingGroup": "MISC",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-EN",
+                "DimensionSetID": [],
+                "Type": " ",
+                "ItemNo_": "W8ASM-EN",
+                "EntryType": "Direct Cost",
+                "LocationCode": "",
+                "InvoicedQuantity": "1",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "0",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "0",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryType": "Assembly Output",
+                "Adjustment": "false",
+                "ItemChargeNo_": "",
+                "CostPostedtoG_L": "0",
+                "ItemLedgerEntryQuantity": "1",
+                "ValuedQuantity": "1",
+                "CostperUnit": "0",
+                "ValuedByAverageCost": "false",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": "",
+                "No_": "",
+                "DiscountAmount": "0"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+    "suffix": "IS",
+    "lcid": 1039,
+    "id": "7ce2a4ba-3c66-49b9-91a1-8a571ee30148",
+    "time": "2026-11-03T19:23:41.447Z",
+    "intentAt": "2026-11-03T19:23:19.360Z",
+    "documentNo": "A00021",
+    "answer": {
+      "status": "Success",
+      "entryCount": 4,
+      "glEntryCount": 0,
+      "rollback": true,
+      "summary": "Assembly Order A00021 (Item W8ASM-IS) preview produced 4 entries. Engar fjárhagsfærslur yrðu bókaðar.",
+      "documentNo": "A00021",
+      "itemNo": "W8ASM-IS",
+      "locationCode": "",
+      "quantityToAssemble": 1,
+      "lcyCode": "GBP",
+      "predictedNumbers": {
+        "postedAssemblyNo": "***"
+      },
+      "totals": {
+        "totalDebitLCY": 0,
+        "totalCreditLCY": 0
+      },
+      "preview": [
+        {
+          "tableId": 32,
+          "tableName": "Item Ledger Entry",
+          "tableCaption": "Birgðafærsla",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": "59F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999936"
+              },
+              "fields": {
+                "Description": "GU00000161",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-IS",
+                "DimensionSetID": [],
+                "Country_RegionCode": "",
+                "ItemNo_": "W8CMP-IS",
+                "EntryType": "Assembly Consumption",
+                "SerialNo_": "",
+                "LotNo_": "",
+                "PackageNo_": "",
+                "LocationCode": "",
+                "Quantity": "-1",
+                "InvoicedQuantity": "-1",
+                "RemainingQuantity": "0",
+                "Open": "false",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "-12",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "-18.58",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryQuantity": "0",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": ""
+              }
+            },
+            {
+              "id": "5FF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999935"
+              },
+              "fields": {
+                "Description": "",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-IS",
+                "DimensionSetID": [],
+                "Country_RegionCode": "",
+                "ItemNo_": "W8ASM-IS",
+                "EntryType": "Assembly Output",
+                "SerialNo_": "",
+                "LotNo_": "",
+                "PackageNo_": "",
+                "LocationCode": "",
+                "Quantity": "1",
+                "InvoicedQuantity": "1",
+                "RemainingQuantity": "1",
+                "Open": "true",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "0",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "0",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryQuantity": "0",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": ""
+              }
+            }
+          ]
+        },
+        {
+          "tableId": 5802,
+          "tableName": "Value Entry",
+          "tableCaption": "Virðisfærsla",
+          "entryCount": 2,
+          "entries": [
+            {
+              "id": "5BF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999916"
+              },
+              "fields": {
+                "Description": "GU00000161",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "Gen_Bus_PostingGroup": "DOMESTIC",
+                "Gen_Prod_PostingGroup": "MISC",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-IS",
+                "DimensionSetID": [],
+                "Type": " ",
+                "ItemNo_": "W8CMP-IS",
+                "EntryType": "Direct Cost",
+                "LocationCode": "",
+                "InvoicedQuantity": "-1",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "-12",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "-18.58",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryType": "Assembly Consumption",
+                "Adjustment": "false",
+                "ItemChargeNo_": "",
+                "CostPostedtoG_L": "0",
+                "ItemLedgerEntryQuantity": "-1",
+                "ValuedQuantity": "-1",
+                "CostperUnit": "12",
+                "ValuedByAverageCost": "false",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": "",
+                "No_": "",
+                "DiscountAmount": "0"
+              }
+            },
+            {
+              "id": "62F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+              "primaryKey": {
+                "EntryNo_": "-1999999915"
+              },
+              "fields": {
+                "Description": "",
+                "PostingDate": "2026-11-11",
+                "DocumentType": "Posted Assembly",
+                "DocumentNo_": "***",
+                "ExternalDocumentNo_": "",
+                "Gen_Bus_PostingGroup": "DOMESTIC",
+                "Gen_Prod_PostingGroup": "MISC",
+                "SourceType": "Item",
+                "SourceNo_": "W8ASM-IS",
+                "DimensionSetID": [],
+                "Type": " ",
+                "ItemNo_": "W8ASM-IS",
+                "EntryType": "Direct Cost",
+                "LocationCode": "",
+                "InvoicedQuantity": "1",
+                "OrderType": "Assembly",
+                "SalesAmountExpected": "0",
+                "SalesAmountActual": "0",
+                "CostAmountExpected": "0",
+                "CostAmountActual": "0",
+                "CostAmountNonInvtbl_": "0",
+                "CostAmountExpectedACY": "0",
+                "CostAmountActualACY": "0",
+                "CostAmountNonInvtbl_ACY": "0",
+                "ItemLedgerEntryType": "Assembly Output",
+                "Adjustment": "false",
+                "ItemChargeNo_": "",
+                "CostPostedtoG_L": "0",
+                "ItemLedgerEntryQuantity": "1",
+                "ValuedQuantity": "1",
+                "CostperUnit": "0",
+                "ValuedByAverageCost": "false",
+                "JobNo_": "",
+                "JobTaskNo_": "",
+                "VariantCode": "",
+                "No_": "",
+                "DiscountAmount": "0"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

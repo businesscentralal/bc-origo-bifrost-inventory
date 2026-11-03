@@ -1,0 +1,137 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "containerId": "f0ea6533065f",
+  "createsOwnData": true,
+  "executed": 18,
+  "passed": 18,
+  "failed": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1033,
+      "name": "mcp-assembly-preview-adjust-EN",
+      "evidence": "mcp-assembly-preview-adjust-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1033,
+      "name": "mcp-assembly-statistics-EN",
+      "evidence": "mcp-assembly-statistics-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1033,
+      "name": "mcp-assembly-release-EN",
+      "evidence": "mcp-assembly-release-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1033,
+      "name": "mcp-cost-blank-variant-EN",
+      "evidence": "mcp-cost-blank-variant-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1033,
+      "name": "mcp-item-application-invalid-EN",
+      "evidence": "mcp-item-application-invalid-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-overquantity-EN",
+      "evidence": "mcp-itemcharge-overquantity-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-no-overassignment-EN",
+      "evidence": "mcp-itemcharge-no-overassignment-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1033,
+      "name": "mcp-transfer-reject-shipreceive-EN",
+      "evidence": "mcp-transfer-reject-shipreceive-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "name": "mcp-phys-reject-transfer-template-EN",
+      "evidence": "mcp-phys-reject-transfer-template-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1039,
+      "name": "mcp-assembly-preview-adjust-IS",
+      "evidence": "mcp-assembly-preview-adjust-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1039,
+      "name": "mcp-assembly-statistics-IS",
+      "evidence": "mcp-assembly-statistics-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1039,
+      "name": "mcp-assembly-release-IS",
+      "evidence": "mcp-assembly-release-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1039,
+      "name": "mcp-cost-blank-variant-IS",
+      "evidence": "mcp-cost-blank-variant-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1039,
+      "name": "mcp-item-application-invalid-IS",
+      "evidence": "mcp-item-application-invalid-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-overquantity-IS",
+      "evidence": "mcp-itemcharge-overquantity-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-no-overassignment-IS",
+      "evidence": "mcp-itemcharge-no-overassignment-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1039,
+      "name": "mcp-transfer-reject-shipreceive-IS",
+      "evidence": "mcp-transfer-reject-shipreceive-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "name": "mcp-phys-reject-transfer-template-IS",
+      "evidence": "mcp-phys-reject-transfer-template-IS.json",
+      "passed": true
+    }
+  ]
+}

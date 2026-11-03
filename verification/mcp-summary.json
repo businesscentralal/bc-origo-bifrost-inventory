@@ -1,0 +1,256 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "containerId": "f0ea6533065f",
+  "owner": "worker-3",
+  "appVersion": "28.3.2.0",
+  "foundationVersion": "28.0.11.664",
+  "createsOwnData": true,
+  "executed": 28,
+  "passed": 28,
+  "failed": 0,
+  "skipped": 0,
+  "touchedMessageTypes": [
+    "Inventory.AssemblyOrder.PreviewPost",
+    "Inventory.AssemblyOrder.Statistics",
+    "Inventory.AssemblyOrder.Release",
+    "Inventory.Cost.Get",
+    "Inventory.ItemApplication.Get",
+    "Inventory.ItemCharge.Assign",
+    "Inventory.ItemCharge.Get",
+    "Inventory.TransferOrder.Post",
+    "Inventory.PhysInventory.Check",
+    "Inventory.Period.Close",
+    "Inventory.Period.Reopen"
+  ],
+  "lcids": [
+    1033,
+    1039
+  ],
+  "fixtures": {
+    "assembly": [
+      "A00020/W8ASM-EN/W8CMP-EN",
+      "A00021/W8ASM-IS/W8CMP-IS"
+    ],
+    "purchase": [
+      "106024/W8CHGV-EN",
+      "106025/W8CHGV-IS"
+    ],
+    "transfer": [
+      "1004/W8TRF-EN",
+      "1005/W8TRF-IS"
+    ],
+    "costItems": [
+      "W8PRV-EN",
+      "W8PRV-IS"
+    ],
+    "periods": [
+      "2000-01-31",
+      "2000-02-29"
+    ],
+    "physicalBatch": "X179PHYS|X179EMPTY",
+    "initialPeriodEntries": 16,
+    "finalPeriodEntries": 24,
+    "ownership": "Created fresh in this worker-owned container through explicit test-app UI actions and nativeBCpages; no customer/shared fixtures, no guard/consent/trial/licence changes"
+  },
+  "cases": [
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1033,
+      "name": "mcp-assembly-preview-adjust-EN",
+      "evidence": "mcp-assembly-preview-adjust-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1033,
+      "name": "mcp-assembly-statistics-EN",
+      "evidence": "mcp-assembly-statistics-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1033,
+      "name": "mcp-assembly-release-EN",
+      "evidence": "mcp-assembly-release-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1033,
+      "name": "mcp-cost-blank-variant-EN",
+      "evidence": "mcp-cost-blank-variant-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1033,
+      "name": "mcp-item-application-invalid-EN",
+      "evidence": "mcp-item-application-invalid-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-overquantity-EN",
+      "evidence": "mcp-itemcharge-overquantity-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-no-overassignment-EN",
+      "evidence": "mcp-itemcharge-no-overassignment-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1033,
+      "name": "mcp-transfer-reject-shipreceive-EN",
+      "evidence": "mcp-transfer-reject-shipreceive-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "name": "mcp-phys-reject-transfer-template-EN",
+      "evidence": "mcp-phys-reject-transfer-template-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1039,
+      "name": "mcp-assembly-preview-adjust-IS",
+      "evidence": "mcp-assembly-preview-adjust-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1039,
+      "name": "mcp-assembly-statistics-IS",
+      "evidence": "mcp-assembly-statistics-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1039,
+      "name": "mcp-assembly-release-IS",
+      "evidence": "mcp-assembly-release-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1039,
+      "name": "mcp-cost-blank-variant-IS",
+      "evidence": "mcp-cost-blank-variant-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1039,
+      "name": "mcp-item-application-invalid-IS",
+      "evidence": "mcp-item-application-invalid-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-overquantity-IS",
+      "evidence": "mcp-itemcharge-overquantity-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-no-overassignment-IS",
+      "evidence": "mcp-itemcharge-no-overassignment-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1039,
+      "name": "mcp-transfer-reject-shipreceive-IS",
+      "evidence": "mcp-transfer-reject-shipreceive-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "name": "mcp-phys-reject-transfer-template-IS",
+      "evidence": "mcp-phys-reject-transfer-template-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-cascade-EN",
+      "evidence": "mcp-period-close-cascade-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-idempotent-EN",
+      "evidence": "mcp-period-close-idempotent-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-cascade-EN",
+      "evidence": "mcp-period-reopen-cascade-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-idempotent-EN",
+      "evidence": "mcp-period-reopen-idempotent-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-cascade-IS",
+      "evidence": "mcp-period-close-cascade-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-idempotent-IS",
+      "evidence": "mcp-period-close-idempotent-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-cascade-IS",
+      "evidence": "mcp-period-reopen-cascade-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-idempotent-IS",
+      "evidence": "mcp-period-reopen-idempotent-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "name": "mcp-phys-empty-1033",
+      "evidence": "mcp-phys-empty-1033.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "name": "mcp-phys-empty-1039",
+      "evidence": "mcp-phys-empty-1039.json",
+      "passed": true
+    }
+  ],
+  "cleanup": "Verified owned container deletion is recorded separately in cleanup-result.json; all owned fixtures removed with the resource.",
+  "at": "2026-11-03T19:25:02.289Z",
+  "cleanupEvidence": "/workspace/evidence/inventory179-amend-worker3-20261103/tip-78c170e/cleanup-result.json"
+}

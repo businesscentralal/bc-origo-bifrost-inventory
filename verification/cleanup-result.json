@@ -1,0 +1,11 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "owner": "worker-3",
+  "containerId": "f0ea6533065f",
+  "verifiedDeleted": true,
+  "statusCode": 404,
+  "readBackAt": "2026-11-03T19:30:26.033Z",
+  "fixtureCleanup": "All self-created fixtures, native posting data and user-local settings belonged solely to this deleted ephemeral container. No foreign resources deleted.",
+  "activeConnectionRestoredToPriorState": true,
+  "languageRestorationEvidence": "ui-restoration-readback.json"
+}

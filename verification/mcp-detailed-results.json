@@ -1,0 +1,1418 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "containerId": "f0ea6533065f",
+  "cases": [
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1033,
+      "name": "mcp-assembly-preview-adjust-EN",
+      "evidence": "mcp-assembly-preview-adjust-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": "A00020",
+          "postingDate": "2026-11-11",
+          "quantityToAssemble": 1
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:14.806Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 4,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Assembly Order A00020 (Item W8ASM-EN) preview produced 4 entries. No G/L entries would be posted.",
+        "documentNo": "A00020",
+        "itemNo": "W8ASM-EN",
+        "locationCode": "",
+        "quantityToAssemble": 1,
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedAssemblyNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "3AF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999938"
+                },
+                "fields": {
+                  "Description": "GU00000045",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8CMP-EN",
+                  "EntryType": "Assembly Consumption",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-1",
+                  "InvoicedQuantity": "-1",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-12",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-18.58",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "40F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999937"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8ASM-EN",
+                  "EntryType": "Assembly Output",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "1",
+                  "InvoicedQuantity": "1",
+                  "RemainingQuantity": "1",
+                  "Open": "true",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "3CF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999918"
+                },
+                "fields": {
+                  "Description": "GU00000045",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8CMP-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-1",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-12",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-18.58",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Consumption",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-1",
+                  "ValuedQuantity": "-1",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "43F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999917"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8ASM-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "1",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Output",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "1",
+                  "ValuedQuantity": "1",
+                  "CostperUnit": "0",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1033,
+      "name": "mcp-assembly-statistics-EN",
+      "evidence": "mcp-assembly-statistics-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.Statistics",
+        "data": {
+          "documentNo": "A00020"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:15.762Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.Statistics",
+        "status": "Success",
+        "documentNo": "A00020",
+        "systemId": "8C7B2977-B6D7-F111-B7A5-8A14307E1954",
+        "itemNo": "W8ASM-EN",
+        "variantCode": "",
+        "description": "GL00000006",
+        "locationCode": "",
+        "unitOfMeasureCode": "BAG",
+        "quantity": 2,
+        "quantityToAssemble": 2,
+        "assembledQuantity": 0,
+        "remainingQuantity": 2,
+        "reservedQuantity": 0,
+        "assembleToOrder": false,
+        "orderStatus": "Open",
+        "status_": "Open",
+        "postingDate": "2026-11-01",
+        "dueDate": "2026-11-01",
+        "startingDate": "2026-10-31",
+        "endingDate": "2026-10-31",
+        "lines": {
+          "total": 1,
+          "item": 1,
+          "resource": 0,
+          "text": 0
+        },
+        "costs": {
+          "totalExpectedCost": 24,
+          "totalActualCost": 0,
+          "actualMaterialCost": 0,
+          "actualResourceCost": 0,
+          "actualCapacityCost": 0,
+          "actualCapacityOverhead": 0,
+          "actualMfgOverhead": 0,
+          "unitCost": 0,
+          "indirectCostPercent": 0,
+          "overheadRate": 0
+        }
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1033,
+      "name": "mcp-assembly-release-EN",
+      "evidence": "mcp-assembly-release-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.Release",
+        "data": {
+          "documentNo": "A00020"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:16.058Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.Release",
+        "status": "Success",
+        "documentNo": "A00020",
+        "systemId": "8C7B2977-B6D7-F111-B7A5-8A14307E1954",
+        "itemNo": "W8ASM-EN",
+        "statusBefore": "Open",
+        "statusAfter": "Released"
+      }
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1033,
+      "name": "mcp-cost-blank-variant-EN",
+      "evidence": "mcp-cost-blank-variant-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Cost.Get",
+        "subject": "W8PRV-EN",
+        "data": {
+          "variantCode": ""
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:16.366Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "W8PRV-EN",
+        "itemId": "9A240946-B6D7-F111-B7A5-8A14307E1954",
+        "costingMethod": "FIFO",
+        "unitCost": 12,
+        "standardCost": 0,
+        "lastDirectCost": 12,
+        "indirectCostPct": 0,
+        "costIsAdjusted": false,
+        "costIsPostedToGL": false,
+        "inventory": 10,
+        "locationFilter": "",
+        "variantFilter": "''",
+        "items": [
+          {
+            "itemNo": "W8PRV-EN",
+            "itemId": "9A240946-B6D7-F111-B7A5-8A14307E1954",
+            "costingMethod": "FIFO",
+            "unitCost": 12,
+            "standardCost": 0,
+            "lastDirectCost": 12,
+            "indirectCostPct": 0,
+            "costIsAdjusted": false,
+            "costIsPostedToGL": false,
+            "inventory": 10,
+            "locationFilter": "",
+            "variantFilter": "''"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1033,
+      "name": "mcp-item-application-invalid-EN",
+      "evidence": "mcp-item-application-invalid-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemApplication.Get",
+        "data": {
+          "itemLedgerEntryNo": "not-an-integer"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:16.583Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "InvalidParameter",
+        "error": "itemLedgerEntryNo must be a JSON integer.",
+        "parameter": "itemLedgerEntryNo",
+        "expected": "integer",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.ItemApplication.Get\". Always read the help before calling a message type."
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-overquantity-EN",
+      "evidence": "mcp-itemcharge-overquantity-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemCharge.Assign",
+        "data": {
+          "documentType": "purchase",
+          "documentNo": "106024",
+          "lineNo": 30000,
+          "targets": [
+            {
+              "appliesToDocType": "order",
+              "documentNo": "106024",
+              "lineNo": 10000,
+              "qtyToAssign": 5
+            }
+          ]
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:17.060Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "BusinessCentralError",
+        "error": "The assigned quantity 5 is greater than the charge quantity still assignable, 4.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.ItemCharge.Assign\". Always read the help before calling a message type."
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1033,
+      "name": "mcp-itemcharge-no-overassignment-EN",
+      "evidence": "mcp-itemcharge-no-overassignment-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemCharge.Get",
+        "data": {
+          "documentType": "purchase",
+          "documentNo": "106024",
+          "lineNo": 30000
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:17.529Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.ItemCharge.Get",
+        "status": "Success",
+        "documentType": "purchase",
+        "documentNo": "106024",
+        "lineNo": 30000,
+        "itemChargeNo": "GU00000160",
+        "quantity": 4,
+        "qtyToAssign": 0,
+        "qtyAssigned": 0,
+        "unassignedQuantity": 4,
+        "assignments": []
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1033,
+      "name": "mcp-transfer-reject-shipreceive-EN",
+      "evidence": "mcp-transfer-reject-shipreceive-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": "1004",
+          "postingType": "ShipReceive",
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:17.757Z",
+      "transportIsError": true,
+      "response": {
+        "uncodedErrorText": "postingType must be \"Ship\" or \"Receive\". \"ShipReceive\" is not accepted on a non-direct transfer. Received: ShipReceive"
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "name": "mcp-phys-reject-transfer-template-EN",
+      "evidence": "mcp-phys-reject-transfer-template-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.PhysInventory.Check",
+        "subject": "W8PRV|EMPTY",
+        "data": {},
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:18.306Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "BusinessCentralError",
+        "error": "Type must be equal to 'Phys. Inventory'  in Item Journal Template: Name=W8PRV. Current value is 'Transfer'."
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.PreviewPost",
+      "lcid": 1039,
+      "name": "mcp-assembly-preview-adjust-IS",
+      "evidence": "mcp-assembly-preview-adjust-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": "A00021",
+          "postingDate": "2026-11-11",
+          "quantityToAssemble": 1
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:19.360Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 4,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Assembly Order A00021 (Item W8ASM-IS) preview produced 4 entries. Engar fjárhagsfærslur yrðu bókaðar.",
+        "documentNo": "A00021",
+        "itemNo": "W8ASM-IS",
+        "locationCode": "",
+        "quantityToAssemble": 1,
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedAssemblyNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Birgðafærsla",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "59F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999936"
+                },
+                "fields": {
+                  "Description": "GU00000161",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8CMP-IS",
+                  "EntryType": "Assembly Consumption",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-1",
+                  "InvoicedQuantity": "-1",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-12",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-18.58",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "5FF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999935"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8ASM-IS",
+                  "EntryType": "Assembly Output",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "1",
+                  "InvoicedQuantity": "1",
+                  "RemainingQuantity": "1",
+                  "Open": "true",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Virðisfærsla",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "5BF93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999916"
+                },
+                "fields": {
+                  "Description": "GU00000161",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8CMP-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-1",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-12",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-18.58",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Consumption",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-1",
+                  "ValuedQuantity": "-1",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "62F93F0E-BCD7-F111-B7A5-861FE483C8E0",
+                "primaryKey": {
+                  "EntryNo_": "-1999999915"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-11-11",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8ASM-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "1",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Output",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "1",
+                  "ValuedQuantity": "1",
+                  "CostperUnit": "0",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Statistics",
+      "lcid": 1039,
+      "name": "mcp-assembly-statistics-IS",
+      "evidence": "mcp-assembly-statistics-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.Statistics",
+        "data": {
+          "documentNo": "A00021"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:20.338Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.Statistics",
+        "status": "Success",
+        "documentNo": "A00021",
+        "systemId": "C88F13C7-B6D7-F111-B7A5-8A14307E1954",
+        "itemNo": "W8ASM-IS",
+        "variantCode": "",
+        "description": "GL00000012",
+        "locationCode": "",
+        "unitOfMeasureCode": "BAG",
+        "quantity": 2,
+        "quantityToAssemble": 2,
+        "assembledQuantity": 0,
+        "remainingQuantity": 2,
+        "reservedQuantity": 0,
+        "assembleToOrder": false,
+        "orderStatus": "Open",
+        "status_": "Open",
+        "postingDate": "2026-11-01",
+        "dueDate": "2026-11-01",
+        "startingDate": "2026-10-31",
+        "endingDate": "2026-10-31",
+        "lines": {
+          "total": 1,
+          "item": 1,
+          "resource": 0,
+          "text": 0
+        },
+        "costs": {
+          "totalExpectedCost": 24,
+          "totalActualCost": 0,
+          "actualMaterialCost": 0,
+          "actualResourceCost": 0,
+          "actualCapacityCost": 0,
+          "actualCapacityOverhead": 0,
+          "actualMfgOverhead": 0,
+          "unitCost": 0,
+          "indirectCostPercent": 0,
+          "overheadRate": 0
+        }
+      }
+    },
+    {
+      "type": "Inventory.AssemblyOrder.Release",
+      "lcid": 1039,
+      "name": "mcp-assembly-release-IS",
+      "evidence": "mcp-assembly-release-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.AssemblyOrder.Release",
+        "data": {
+          "documentNo": "A00021"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:20.596Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.Release",
+        "status": "Success",
+        "documentNo": "A00021",
+        "systemId": "C88F13C7-B6D7-F111-B7A5-8A14307E1954",
+        "itemNo": "W8ASM-IS",
+        "statusBefore": "Open",
+        "statusAfter": "Released"
+      }
+    },
+    {
+      "type": "Inventory.Cost.Get",
+      "lcid": 1039,
+      "name": "mcp-cost-blank-variant-IS",
+      "evidence": "mcp-cost-blank-variant-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Cost.Get",
+        "subject": "W8PRV-IS",
+        "data": {
+          "variantCode": ""
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:20.837Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "W8PRV-IS",
+        "itemId": "AB68604E-B6D7-F111-B7A5-8A14307E1954",
+        "costingMethod": "FIFO",
+        "unitCost": 12,
+        "standardCost": 0,
+        "lastDirectCost": 12,
+        "indirectCostPct": 0,
+        "costIsAdjusted": false,
+        "costIsPostedToGL": false,
+        "inventory": 10,
+        "locationFilter": "",
+        "variantFilter": "''",
+        "items": [
+          {
+            "itemNo": "W8PRV-IS",
+            "itemId": "AB68604E-B6D7-F111-B7A5-8A14307E1954",
+            "costingMethod": "FIFO",
+            "unitCost": 12,
+            "standardCost": 0,
+            "lastDirectCost": 12,
+            "indirectCostPct": 0,
+            "costIsAdjusted": false,
+            "costIsPostedToGL": false,
+            "inventory": 10,
+            "locationFilter": "",
+            "variantFilter": "''"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Inventory.ItemApplication.Get",
+      "lcid": 1039,
+      "name": "mcp-item-application-invalid-IS",
+      "evidence": "mcp-item-application-invalid-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemApplication.Get",
+        "data": {
+          "itemLedgerEntryNo": "not-an-integer"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:21.072Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "InvalidParameter",
+        "error": "itemLedgerEntryNo verður að vera JSON heiltala.",
+        "parameter": "itemLedgerEntryNo",
+        "expected": "integer",
+        "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.ItemApplication.Get\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Assign",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-overquantity-IS",
+      "evidence": "mcp-itemcharge-overquantity-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemCharge.Assign",
+        "data": {
+          "documentType": "purchase",
+          "documentNo": "106025",
+          "lineNo": 30000,
+          "targets": [
+            {
+              "appliesToDocType": "order",
+              "documentNo": "106025",
+              "lineNo": 10000,
+              "qtyToAssign": 5
+            }
+          ]
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:21.618Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "BusinessCentralError",
+        "error": "Úthlutað magn 5 er meira en kostnaðaraukamagnið sem enn má úthluta, 4.",
+        "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.ItemCharge.Assign\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+      }
+    },
+    {
+      "type": "Inventory.ItemCharge.Get",
+      "lcid": 1039,
+      "name": "mcp-itemcharge-no-overassignment-IS",
+      "evidence": "mcp-itemcharge-no-overassignment-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.ItemCharge.Get",
+        "data": {
+          "documentType": "purchase",
+          "documentNo": "106025",
+          "lineNo": 30000
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:22.070Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.ItemCharge.Get",
+        "status": "Success",
+        "documentType": "purchase",
+        "documentNo": "106025",
+        "lineNo": 30000,
+        "itemChargeNo": "GU00000276",
+        "quantity": 4,
+        "qtyToAssign": 0,
+        "qtyAssigned": 0,
+        "unassignedQuantity": 4,
+        "assignments": []
+      }
+    },
+    {
+      "type": "Inventory.TransferOrder.Post",
+      "lcid": 1039,
+      "name": "mcp-transfer-reject-shipreceive-IS",
+      "evidence": "mcp-transfer-reject-shipreceive-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": "1005",
+          "postingType": "ShipReceive",
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:22.306Z",
+      "transportIsError": true,
+      "response": {
+        "uncodedErrorText": "postingType verður að vera \"Ship\" eða \"Receive\". \"ShipReceive\" er ekki tekið á millifærslu sem er ekki bein. Móttekið: ShipReceive"
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "name": "mcp-phys-reject-transfer-template-IS",
+      "evidence": "mcp-phys-reject-transfer-template-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.PhysInventory.Check",
+        "subject": "W8PRV|EMPTY",
+        "data": {},
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:22.754Z",
+      "transportIsError": true,
+      "response": {
+        "status": "Error",
+        "code": "BusinessCentralError",
+        "error": "Tegund must be equal to 'Raunbirgðir'  in Sniðmát birgðabókar: Heiti=W8PRV. Current value is 'Millifærsla'."
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-cascade-EN",
+      "evidence": "mcp-period-close-cascade-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "2000-02-29"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:25.091Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Close",
+        "status": "Success",
+        "endingDate": "2000-02-29",
+        "name": "X179IS",
+        "closed": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-idempotent-EN",
+      "evidence": "mcp-period-close-idempotent-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "2000-02-29"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:25.820Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Close",
+        "status": "Success",
+        "endingDate": "2000-02-29",
+        "name": "X179IS",
+        "closed": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-cascade-EN",
+      "evidence": "mcp-period-reopen-cascade-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": "2000-01-31"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:26.619Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Reopen",
+        "status": "Success",
+        "endingDate": "2000-01-31",
+        "name": "January 2000",
+        "closed": false
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-idempotent-EN",
+      "evidence": "mcp-period-reopen-idempotent-EN.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": "2000-01-31"
+        },
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:27.431Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Reopen",
+        "status": "Success",
+        "endingDate": "2000-01-31",
+        "name": "January 2000",
+        "closed": false
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-cascade-IS",
+      "evidence": "mcp-period-close-cascade-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "2000-02-29"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:28.098Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Close",
+        "status": "Success",
+        "endingDate": "2000-02-29",
+        "name": "X179IS",
+        "closed": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-idempotent-IS",
+      "evidence": "mcp-period-close-idempotent-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "2000-02-29"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:28.771Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Close",
+        "status": "Success",
+        "endingDate": "2000-02-29",
+        "name": "X179IS",
+        "closed": true
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-cascade-IS",
+      "evidence": "mcp-period-reopen-cascade-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": "2000-01-31"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:29.543Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Reopen",
+        "status": "Success",
+        "endingDate": "2000-01-31",
+        "name": "January 2000",
+        "closed": false
+      }
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-idempotent-IS",
+      "evidence": "mcp-period-reopen-idempotent-IS.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": "2000-01-31"
+        },
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:30.331Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Period.Reopen",
+        "status": "Success",
+        "endingDate": "2000-01-31",
+        "name": "January 2000",
+        "closed": false
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1033,
+      "name": "mcp-phys-empty-1033",
+      "evidence": "mcp-phys-empty-1033.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.PhysInventory.Check",
+        "subject": "X179PHYS|X179EMPTY",
+        "data": {},
+        "lcid": 1033
+      },
+      "invokedAt": "2026-11-03T19:23:33.099Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Check",
+        "status": "Success",
+        "templateName": "X179PHYS",
+        "batchName": "X179EMPTY",
+        "validationResult": "NotReady",
+        "lineCount": 0,
+        "errorCount": 1,
+        "warningCount": 0,
+        "errors": [
+          {
+            "code": "PreconditionFailed",
+            "error": "The selected journal contains no lines.",
+            "parameter": "batchName",
+            "nextStep": "Correct the selected journal lines before posting."
+          }
+        ],
+        "warnings": []
+      }
+    },
+    {
+      "type": "Inventory.PhysInventory.Check",
+      "lcid": 1039,
+      "name": "mcp-phys-empty-1039",
+      "evidence": "mcp-phys-empty-1039.json",
+      "passed": true,
+      "request": {
+        "type": "Inventory.PhysInventory.Check",
+        "subject": "X179PHYS|X179EMPTY",
+        "data": {},
+        "lcid": 1039
+      },
+      "invokedAt": "2026-11-03T19:23:33.334Z",
+      "transportIsError": false,
+      "response": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Check",
+        "status": "Success",
+        "templateName": "X179PHYS",
+        "batchName": "X179EMPTY",
+        "validationResult": "NotReady",
+        "lineCount": 0,
+        "errorCount": 1,
+        "warningCount": 0,
+        "errors": [
+          {
+            "code": "PreconditionFailed",
+            "error": "Valin bók inniheldur engar línur.",
+            "parameter": "batchName",
+            "nextStep": "Leiðréttu valdar bókarlínur áður en bókað er."
+          }
+        ],
+        "warnings": []
+      }
+    }
+  ],
+  "previewSourceReadbacks": [
+    {
+      "name": "mcp-assembly-before-EN.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "8C7B2977-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "No_": "A00020"
+            },
+            "fields": {
+              "PostingDate": "2026-11-01",
+              "Quantity": "2",
+              "AssembledQuantity": "0",
+              "QuantitytoAssemble": "2",
+              "Status": "Open"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-after-EN.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "8C7B2977-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "No_": "A00020"
+            },
+            "fields": {
+              "PostingDate": "2026-11-01",
+              "Quantity": "2",
+              "AssembledQuantity": "0",
+              "QuantitytoAssemble": "2",
+              "Status": "Open"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-lines-before-EN.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "8D7B2977-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "DocumentNo_": "A00020",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "Quantity": "2",
+              "QuantitytoConsume": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-lines-after-EN.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "8D7B2977-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "DocumentNo_": "A00020",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "Quantity": "2",
+              "QuantitytoConsume": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-before-IS.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "C88F13C7-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Pöntun",
+              "No_": "A00021"
+            },
+            "fields": {
+              "PostingDate": "2026-11-01",
+              "Quantity": "2",
+              "AssembledQuantity": "0",
+              "QuantitytoAssemble": "2",
+              "Status": "Opin"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-after-IS.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "C88F13C7-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Pöntun",
+              "No_": "A00021"
+            },
+            "fields": {
+              "PostingDate": "2026-11-01",
+              "Quantity": "2",
+              "AssembledQuantity": "0",
+              "QuantitytoAssemble": "2",
+              "Status": "Opin"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-lines-before-IS.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "C98F13C7-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Pöntun",
+              "DocumentNo_": "A00021",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "Quantity": "2",
+              "QuantitytoConsume": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mcp-assembly-lines-after-IS.json",
+      "response": {
+        "status": "Success",
+        "result": [
+          {
+            "id": "C98F13C7-B6D7-F111-B7A5-8A14307E1954",
+            "primaryKey": {
+              "DocumentType": "Pöntun",
+              "DocumentNo_": "A00021",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "Quantity": "2",
+              "QuantitytoConsume": "2"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

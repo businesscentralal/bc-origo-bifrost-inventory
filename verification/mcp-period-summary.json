@@ -1,0 +1,71 @@
+{
+  "sha": "78c170e1e3d6aeca28a0cef578891ec2e945ee4f",
+  "containerId": "f0ea6533065f",
+  "createsOwnData": true,
+  "fixtureDates": [
+    "2000-01-31",
+    "2000-02-29"
+  ],
+  "executed": 8,
+  "passed": 8,
+  "failed": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-cascade-EN",
+      "evidence": "mcp-period-close-cascade-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1033,
+      "name": "mcp-period-close-idempotent-EN",
+      "evidence": "mcp-period-close-idempotent-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-cascade-EN",
+      "evidence": "mcp-period-reopen-cascade-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1033,
+      "name": "mcp-period-reopen-idempotent-EN",
+      "evidence": "mcp-period-reopen-idempotent-EN.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-cascade-IS",
+      "evidence": "mcp-period-close-cascade-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Close",
+      "lcid": 1039,
+      "name": "mcp-period-close-idempotent-IS",
+      "evidence": "mcp-period-close-idempotent-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-cascade-IS",
+      "evidence": "mcp-period-reopen-cascade-IS.json",
+      "passed": true
+    },
+    {
+      "type": "Inventory.Period.Reopen",
+      "lcid": 1039,
+      "name": "mcp-period-reopen-idempotent-IS",
+      "evidence": "mcp-period-reopen-idempotent-IS.json",
+      "passed": true
+    }
+  ]
+}
