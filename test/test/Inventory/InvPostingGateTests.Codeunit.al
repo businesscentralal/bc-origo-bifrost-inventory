@@ -233,6 +233,48 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Assert.AreEqual(0, StrPos(GetLastErrorText(), 'Posting denied'), 'Preview must not be blocked by the posting gate');
     end;
 
+    [Test]
+    procedure AdjustCostRun_PassesDomainGate_ChecksLicenseBeforeWork()
+    var
+        Setup: Record "Inventory Setup ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        Impl: Codeunit "Adjust Cost Run Impl ori";
+    begin
+        // [SCENARIO] #182 AC01/AC02: with the Costing domain on and the caller allowed, an unlicensed call stops at the license check before report 795 runs.
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Costing := true;
+        Setup.Modify(true);
+        LibraryLowerPermissions.AddPermissionSet('Inv Cost Write Test');
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror Impl.ExecuteBifrostTask(TempArgument);
+        Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check before any costing work');
+    end;
+
+    [Test]
+    procedure CostToGLPost_PassesDomainGate_ChecksLicenseBeforeWork()
+    var
+        Setup: Record "Inventory Setup ori";
+        TempArgument: Record "Message Argument ori" temporary;
+        LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        Impl: Codeunit "Cost To GL Post Impl ori";
+    begin
+        // [SCENARIO] #182 AC01/AC02: with the Costing domain on and the caller allowed, an unlicensed call stops at the license check before report 1002 runs.
+        LibraryLowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Costing := true;
+        Setup.Modify(true);
+        LibraryLowerPermissions.AddPermissionSet('Inv Cost Write Test');
+        PrepareUnlicensedArgument(TempArgument);
+        asserterror Impl.ExecuteBifrostTask(TempArgument);
+        Assert.AreNotEqual(0, StrPos(GetLastErrorText(), 'license'), 'Expected the license check before any costing work');
+    end;
+
     local procedure LowerToInvWrite(var LibraryLowerPermissions: Codeunit "Library - Lower Permissions")
     begin
         // Restrictive tests start as D365 Full Access until this library replaces that set.
