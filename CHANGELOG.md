@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
+
+- Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
+
+
 ### Fixed (2026-11-03) - preview adjustments and period help (#159)
 
 - `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` inside the posting preview, through `Asm. Preview Adjust ori` (10076929) on `Assembly-Post.OnBeforeOnRun`. The preview rolls that write back, so the stored posting date and quantity to assemble stay unchanged and the call does not Commit. `Asm. Doc Prev. Post Tests` (96905) previews an order that has lines with both keys and checks the order afterwards.
