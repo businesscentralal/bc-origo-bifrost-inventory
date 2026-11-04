@@ -6,6 +6,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -51,6 +52,20 @@ codeunit 96914 "Transfer Order Post Tests"
         VerifyReceivedRefusal(1039);
     end;
 
+    [Test]
+    procedure UndoReceipt_PostedReceipt_RefusesInEnglish()
+    begin
+        // Story #150, AC3 | Time: WorkDate from the transfer posting helper | Risk: None
+        VerifyReceiptUndoRefusal(1033);
+    end;
+
+    [Test]
+    procedure UndoReceipt_PostedReceipt_RefusesInIcelandic()
+    begin
+        // Story #150, AC3 | Time: WorkDate from the transfer posting helper | Risk: None
+        VerifyReceiptUndoRefusal(1039);
+    end;
+
     local procedure VerifyReceivedRefusal(LanguageId: Integer)
     var
         Shipment: Record "Transfer Shipment Header";
@@ -65,15 +80,15 @@ codeunit 96914 "Transfer Order Post Tests"
     begin
         ShipmentNo := CreateUndoShipment();
         Shipment.Get(ShipmentNo);
-        Request.Add('expectedCount', 1);
         Request.Add('postingType', 'Receive');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", Request);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Shipment."Transfer Order No.", Request, Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Own shipment is actually received before refusal verification.');
         BeforeCount := Entries.Count();
         Clear(Request);
-        Request.Add('expectedCount', 1);
         Request.Add('documentNo', ShipmentNo);
+        Confirm("Message Type ori"::"Inventory.Transfer.UndoShipment", Request);
         SavedLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
@@ -108,8 +123,8 @@ codeunit 96914 "Transfer Order Post Tests"
             Observer.SetUndoFailure(ShipmentNo, '');
             BindSubscription(Observer);
         end;
-        Request.Add('expectedCount', 1);
         Request.Add('documentNo', ShipmentNo);
+        Confirm("Message Type ori"::"Inventory.Transfer.UndoShipment", Request);
         Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
         if FailSecondLine then
             UnbindSubscription(Observer);
@@ -135,6 +150,84 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual(2, OtherLine.Count(), 'Both other shipment lines remain unchanged.');
     end;
 
+    local procedure VerifyReceiptUndoRefusal(LanguageId: Integer)
+    var
+        ReceiptHeader: Record "Transfer Receipt Header";
+        Entries: Record "Item Ledger Entry";
+        Impl: Codeunit "Transf Undo Rcpt Impl ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ReceiptNo: Code[20];
+        BeforeCount: Integer;
+        SavedLanguage: Integer;
+        Description: Text;
+        ErrorText: Text;
+    begin
+        ReceiptNo := CreatePostedReceipt();
+        Assert.IsTrue(ReceiptHeader.Get(ReceiptNo), 'Owned receipt exists before the refusal.');
+        BeforeCount := Entries.Count();
+        Request.Add('documentNo', ReceiptNo);
+        SavedLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Assert.IsFalse(Impl.IsEnabled(), 'The compatibility identifier stays out of discovery.');
+        Description := Impl.GetDescription();
+        if LanguageId = 1039 then
+            Assert.AreEqual('Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd.', Description, 'Icelandic description does not advertise a working undo.')
+        else
+            Assert.AreEqual('Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Description, 'English description does not advertise a working undo.');
+        // A language id of 0 selects the company default inside the dispatcher, so the call must pass 1033 or 1039 itself.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoReceipt", Request, LanguageId, Response);
+        GlobalLanguage(SavedLanguage);
+        Assert.IsTrue(Response.Get('status', Token), 'Refusal has a status. ' + JsonText(Response));
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'UndoReceipt never succeeds.');
+        Assert.IsTrue(Response.Get('code', Token), 'An existing receipt has a coded refusal.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'An existing receipt is PreconditionFailed.');
+        Assert.IsTrue(Response.Get('error', Token), 'Refusal carries the error text.');
+        ErrorText := Token.AsValue().AsText();
+        if LanguageId = 1039 then
+            Assert.AreEqual('Ekki er hægt að afturkalla bókaðar millifærslumóttökur í þessari útgáfu Business Central.', ErrorText, 'Icelandic refusal.')
+        else
+            Assert.AreEqual('Posted transfer receipts cannot be undone in this Business Central version.', ErrorText, 'English refusal.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Refusal names the next step.');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'Next step is not empty.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Refusal posts no further item ledger entry.');
+        Assert.IsTrue(ReceiptHeader.Get(ReceiptNo), 'The posted receipt remains.');
+    end;
+
+    local procedure CreatePostedReceipt() ReceiptNo: Code[20]
+    var
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        Header: Record "Transfer Header";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
+    begin
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 10);
+        Helper.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(Header, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
+        DocumentNo := Header."No.";
+        Request.Add('expectedCount', 1);
+        Request.Add('postingType', 'Ship');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
+        Assert.IsTrue(Response.Get('status', Token), 'Ship status missing.');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned shipment posts before the receipt. ' + JsonText(Response));
+        Clear(Request);
+        Clear(Response);
+        Request.Add('expectedCount', 1);
+        Request.Add('postingType', 'Receive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
+        Assert.IsTrue(Response.Get('status', Token), 'Receive status missing.');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned receipt posts. ' + JsonText(Response));
+        Assert.IsTrue(Response.Get('postedReceiptNo', Token), 'postedReceiptNo missing.');
+        ReceiptNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
+    end;
+
     local procedure CreateUndoShipment() ShipmentNo: Code[20]
     var
         FromLocation: Record Location;
@@ -151,8 +244,8 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.CreateTransferLine(Header, Item."No.", 10);
         Helper.CreateTransferLine(Header, Item."No.", 5);
         Codeunit.Run(Codeunit::"Release Transfer Document", Header);
-        Request.Add('expectedCount', 1);
         Request.Add('postingType', 'Ship');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", Request);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Header."No.", Request, Response);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned shipment fixture posts. ' + JsonText(Response));
@@ -176,8 +269,8 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
         Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
 
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Ship');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
@@ -202,12 +295,39 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
         Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
 
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Bogus');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
         Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'Status should be Error');
+    end;
+
+    [Test]
+    procedure Post_ShipReceive_RefusesCombinedPosting()
+    var
+        FromLocation, ToLocation, InTransitLocation : Record Location;
+        Item: Record Item;
+        TransferHeader: Record "Transfer Header";
+        RequestJson, ResponseJson : JsonObject;
+        StatusToken: JsonToken;
+        ResponseText: Text;
+    begin
+        // [SCENARIO] #159 ShipReceive is refused and is not described as a valid postingType
+        Initialize();
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 100);
+        Helper.CreateTransferHeader(TransferHeader, FromLocation.Code, ToLocation.Code, InTransitLocation.Code);
+        Helper.CreateTransferLine(TransferHeader, Item."No.", 10);
+        Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
+
+        RequestJson.Add('postingType', 'ShipReceive');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
+
+        ResponseJson.WriteTo(ResponseText);
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
+        Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'Status should be Error');
+        Assert.IsTrue(ResponseText.Contains('not accepted'), 'The refusal must say ShipReceive is not accepted.');
+        Assert.IsFalse(ResponseText.Contains('or "ShipReceive"'), 'The refusal must not list ShipReceive as a valid postingType.');
     end;
 
     [Test]
@@ -236,7 +356,7 @@ codeunit 96914 "Transfer Order Post Tests"
         TransferLine.Modify(true);
 
         // The owned request names one transfer document, even when both posting legs run.
-        RequestJson.Add('expectedCount', 1);
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
         Helper.RestoreDirectTransferPosting(OriginalSetup);
 
@@ -273,16 +393,16 @@ codeunit 96914 "Transfer Order Post Tests"
         Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
         DocumentNo := TransferHeader."No.";
 
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Ship');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'ship status missing');
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Ship should succeed');
 
         Clear(RequestJson);
         Clear(ResponseJson);
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Receive');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'receive status missing');
@@ -317,8 +437,8 @@ codeunit 96914 "Transfer Order Post Tests"
         Codeunit.Run(Codeunit::"Release Transfer Document", TransferHeader);
         DocumentNo := TransferHeader."No.";
 
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Ship');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'ship status missing');
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Ship should succeed');
@@ -330,8 +450,8 @@ codeunit 96914 "Transfer Order Post Tests"
 
         Clear(RequestJson);
         Clear(ResponseJson);
-        RequestJson.Add('expectedCount', 1);
         RequestJson.Add('postingType', 'Receive');
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'receive status missing');
@@ -343,6 +463,14 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.IsTrue(TransferHeader.Get(DocumentNo), 'A partial receive keeps the transfer order');
         Assert.IsTrue(ResponseJson.Get('orderDeleted', StatusToken), 'orderDeleted missing');
         Assert.IsFalse(StatusToken.AsValue().AsBoolean(), 'orderDeleted must be false after a partial receive');
+    end;
+
+    local procedure Confirm(MessageType: Enum "Message Type ori"; var Request: JsonObject)
+    var
+        Library: Codeunit "Inventory Test Library ori";
+    begin
+        // Foundation 28.0.10 rejects an undeclared expectedCount. Send it only when the composed contract declares it.
+        Library.ConfirmRequest(MessageType, Request);
     end;
 
     local procedure JsonText(ResponseJson: JsonObject): Text

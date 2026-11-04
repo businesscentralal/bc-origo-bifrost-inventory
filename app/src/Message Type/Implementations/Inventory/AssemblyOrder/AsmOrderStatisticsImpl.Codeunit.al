@@ -208,6 +208,8 @@ codeunit 10076853 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
         ResponseJson.Add('remainingQuantity', AssemblyHeader."Remaining Quantity");
         ResponseJson.Add('reservedQuantity', AssemblyHeader."Reserved Quantity");
         ResponseJson.Add('assembleToOrder', AssemblyHeader."Assemble to Order");
+        ResponseJson.Add('orderStatus', StatusToText(AssemblyHeader.Status));
+        // status_ stays so callers that already read the documented workaround keep working. status itself is the call result.
         ResponseJson.Add('status_', StatusToText(AssemblyHeader.Status));
         ResponseJson.Add('postingDate', Format(AssemblyHeader."Posting Date", 0, 9));
         ResponseJson.Add('dueDate', Format(AssemblyHeader."Due Date", 0, 9));

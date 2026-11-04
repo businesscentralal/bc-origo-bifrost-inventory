@@ -34,6 +34,10 @@ codeunit 96907 "Asm. Order Statistics Tests"
 
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success');
+        Assert.IsTrue(ResponseJson.Get('orderStatus', StatusToken), 'orderStatus missing');
+        Assert.AreEqual('Open', StatusToken.AsValue().AsText(), 'orderStatus should be Open');
+        Assert.IsTrue(ResponseJson.Get('status_', StatusToken), 'status_ missing');
+        Assert.AreEqual('Open', StatusToken.AsValue().AsText(), 'status_ should repeat orderStatus');
     end;
 
     [Test]

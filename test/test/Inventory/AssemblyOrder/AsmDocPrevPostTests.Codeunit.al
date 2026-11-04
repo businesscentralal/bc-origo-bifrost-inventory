@@ -1,7 +1,10 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
+using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
@@ -178,6 +181,117 @@ codeunit 96905 "Asm. Doc Prev. Post Tests"
         Assert.IsFalse(ResponseJson.Contains('callstack'), 'Posting errors must not expose a callstack');
         Assert.IsTrue(AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, AssemblyHeader."No."), 'Order must remain');
         Assert.AreEqual(AssemblyHeader.Status::Open, AssemblyHeader.Status, 'Failure must not post source');
+    end;
+
+    /// <summary>
+    /// postingDate and quantityToAssemble are used by the preview and do not stay on the order.
+    /// </summary>
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure PreviewPost_Adjustments_LeaveOrderUnchanged()
+    var
+        ParentItem: Record Item;
+        ComponentItem: Record Item;
+        AssemblyHeader: Record "Assembly Header";
+        AssemblyLine: Record "Assembly Line";
+        PostedAssemblyHeader: Record "Posted Assembly Header";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+        OriginalPostingDate: Date;
+        PreviewPostingDate: Date;
+        OriginalQuantity: Decimal;
+        LineQuantity: Decimal;
+        ResponseText: Text;
+    begin
+        // [SCENARIO] #159 review: both preview keys run against an order with lines and roll back.
+        Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
+        Helper.CreatePositiveAdjustment(ComponentItem."No.", 100);
+        // Remaining quantity is the order quantity. Preview a smaller legal quantity so the
+        // platform check "cannot be higher than the Remaining Quantity" does not refuse the call.
+        Helper.CreateAssemblyOrder(AssemblyHeader, ParentItem."No.", 4);
+        OriginalPostingDate := AssemblyHeader."Posting Date";
+        OriginalQuantity := AssemblyHeader."Quantity to Assemble";
+        AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
+        AssemblyLine.SetRange("Document No.", AssemblyHeader."No.");
+        AssemblyLine.FindFirst();
+        LineQuantity := AssemblyLine."Quantity to Consume";
+        PreviewPostingDate := CalcDate('<+10D>', OriginalPostingDate);
+
+        RequestJson.Add('documentNo', AssemblyHeader."No.");
+        RequestJson.Add('postingDate', Format(PreviewPostingDate, 0, 9));
+        RequestJson.Add('quantityToAssemble', OriginalQuantity - 2);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.PreviewPost", RequestJson, ResponseJson);
+
+        ResponseJson.WriteTo(ResponseText);
+        Assert.IsTrue(ResponseJson.Get('status', Token), ResponseText);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
+        Assert.IsTrue(ResponseJson.Get('quantityToAssemble', Token), ResponseText);
+        Assert.AreEqual(OriginalQuantity - 2, Token.AsValue().AsDecimal(), 'The preview answer uses the requested quantity.');
+        AssertAdjustedPreview(ResponseJson, OriginalQuantity - 2, PreviewPostingDate);
+
+        AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, AssemblyHeader."No.");
+        Assert.AreEqual(OriginalPostingDate, AssemblyHeader."Posting Date", 'Preview must not keep postingDate.');
+        Assert.AreEqual(OriginalQuantity, AssemblyHeader."Quantity to Assemble", 'Preview must not keep quantityToAssemble.');
+        AssemblyLine.FindFirst();
+        Assert.AreEqual(LineQuantity, AssemblyLine."Quantity to Consume", 'Preview must not keep the component quantity.');
+        PostedAssemblyHeader.SetCurrentKey("Order No.");
+        PostedAssemblyHeader.SetRange("Order No.", AssemblyHeader."No.");
+        Assert.IsTrue(PostedAssemblyHeader.IsEmpty(), 'Preview must not post the order.');
+    end;
+
+    local procedure AssertAdjustedPreview(ResponseJson: JsonObject; ExpectedQuantity: Decimal; ExpectedPostingDate: Date)
+    var
+        PreviewToken: JsonToken;
+        TableToken: JsonToken;
+        EntryToken: JsonToken;
+        FieldsToken: JsonToken;
+        ValueToken: JsonToken;
+        EntriesToken: JsonToken;
+        TableJson: JsonObject;
+        EntryJson: JsonObject;
+        Fields: JsonObject;
+        Entries: JsonArray;
+        ResponseText: Text;
+        FoundOutput: Boolean;
+        FoundPostingDate: Boolean;
+        TableId: Integer;
+    begin
+        ResponseJson.WriteTo(ResponseText);
+        Assert.IsTrue(ResponseJson.Get('preview', PreviewToken), ResponseText);
+        foreach TableToken in PreviewToken.AsArray() do begin
+            TableJson := TableToken.AsObject();
+            if not TableJson.Get('tableId', ValueToken) then
+                continue;
+            TableId := ValueToken.AsValue().AsInteger();
+            if not TableJson.Get('entries', EntriesToken) then
+                continue;
+            Entries := EntriesToken.AsArray();
+            foreach EntryToken in Entries do begin
+                EntryJson := EntryToken.AsObject();
+                if not EntryJson.Get('fields', FieldsToken) then
+                    continue;
+                Fields := FieldsToken.AsObject();
+                if TableId = Database::"Item Ledger Entry" then
+                    if Fields.Get('EntryType', ValueToken) then
+                        if ValueToken.AsValue().AsText() = 'Assembly Output' then begin
+                            if Fields.Get('Quantity', ValueToken) then
+                                if ValueToken.AsValue().AsText() = Format(ExpectedQuantity, 0, 9) then
+                                    FoundOutput := true;
+                            // This Foundation build includes Posting Date on the item ledger preview.
+                            // G/L Entry is absent when the preview posts no general ledger lines.
+                            if Fields.Get('PostingDate', ValueToken) then
+                                if ValueToken.AsValue().AsText() = Format(ExpectedPostingDate, 0, 9) then
+                                    FoundPostingDate := true;
+                        end;
+                if TableId = Database::"G/L Entry" then
+                    if Fields.Get('PostingDate', ValueToken) then
+                        if ValueToken.AsValue().AsText() = Format(ExpectedPostingDate, 0, 9) then
+                            FoundPostingDate := true;
+            end;
+        end;
+        Assert.IsTrue(FoundOutput, 'Preview output quantity must be the requested quantity. ' + ResponseText);
+        Assert.IsTrue(FoundPostingDate, 'Preview G/L posting date must be the requested date. ' + ResponseText);
     end;
 
 }

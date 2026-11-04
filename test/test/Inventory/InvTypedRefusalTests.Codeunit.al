@@ -636,6 +636,8 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         foreach MessageType in Types do begin
+            // The helper adds confirmation keys to the JsonObject for posting calls.
+            Clear(Request);
             Response := Library.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
             AssertRefusal(Response, 'BusinessCentralError', 'journalBatch');
             Assert.AreEqual(Batch."Journal Template Name" + '|' + Batch.Name, TextValue(Response, 'received'), 'Actual selected batch context.');

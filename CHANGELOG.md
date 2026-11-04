@@ -8,9 +8,42 @@
 
 ### Added — issue #158
 
+### Fixed (2026-11-04) - isolate native refusal test requests (#151)
+
+- `Inv. Typed Refusal Tests ori` (96975) starts each journal-context invocation with a fresh request. A posting call's helper-added `expectedCount` no longer reaches the following read-only preview. All native error, context and no-write assertions remain unchanged.
+
+### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
+
+- Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
+
+
+### Fixed (2026-11-03) - preview adjustments and period help (#159)
+
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` inside the posting preview, through `Asm. Preview Adjust ori` (10076929) on `Assembly-Post.OnBeforeOnRun`. The preview rolls that write back, so the stored posting date and quantity to assemble stay unchanged and the call does not Commit. `Asm. Doc Prev. Post Tests` (96905) previews an order that has lines with both keys and checks the order afterwards.
+- Renumbered the internal preview adjustment helper from 10076926 to 10076929 to avoid the earlier `Inventory Read Process ori` allocation in #151 / PRs #166, #168 and #171. No public procedure or message contract changed.
+- `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) help now says the checks and writes of Close Inventory Period (5820) are reproduced and that 5820 is not run, so `OnRunOnBeforeCheck` is not raised. Notes and overview do not name an AL object. Reopen no longer says a platform refusal writes nothing. Icelandic notes are in the is-IS translation.
+
+### Fixed (2026-11-02) - remaining contract-parity defects (#159)
+
+- Removed the unused codeunit `Phys. Invt. Calc Impl ori` (10076880). `Inventory.PhysInventory.Calculate` stays on `Phys. Inv. Calc Impl ori` (10076883). No message type pointed at 10076880.
+- `Inventory.TransferOrder.Post` (10076903) refuses `ShipReceive` on a non-direct transfer and the error text no longer lists that value as valid. `Transfer Order Post Tests` (96914) covers the refusal.
+- `Inventory.AssemblyOrder.Release` (10076851) traps the native release with `Codeunit.Run`, including the Omit Commit path, the same way transfer release does.
+- `Inventory.AssemblyOrder.PreviewPost` (10076849) applies `postingDate` and `quantityToAssemble` for the preview and restores the order afterwards. The contract in `Inventory Contract Parts ori` (10076919) declares both keys, and the invalid-format error names them. `Inv. Contract Parity Tests ori` (96970) no longer treats this type as parameter-less. `Inventory.AssemblyOrder.Statistics` (10076853) returns the order status in `orderStatus` and keeps `status_` as the same value.
+- `Inventory.ItemCharge.Get` (10076875) ignores a quote or blanket order found by SystemId, matching the document-number filter. `Inventory.ItemCharge.Assign` (10076873) refuses a target quantity above the charge quantity that is still assignable.
+- `Inventory.Cost.Get` (10076860) keeps an empty `variantCode` as an exact blank-variant filter. An empty `locationFilter` still clears the location filter.
+- `Inventory.ItemApplication.Get` (10076867) answers `InvalidParameter` when `itemLedgerEntryNo` is not a JSON integer. Listing applications by `Item Ledger Entry No.` stays as documented: an inbound entry shows the rows recorded on itself.
+- `Inventory.Period.Close` (10076877) and `Inventory.Period.Reopen` (10076879) apply the same checks and inventory period entries as platform codeunit `Close Inventory Period` (5820), through `Period Platform Write ori` (10076928). Running 5820 is a nested try function under the message task and cannot insert the entry, so the write stays in the caller transaction. There is no Commit and no StartSession. A close refusal (unadjusted cost, an unadjusted finished order, or open negative inventory) is returned as response text and writes nothing. Closing also closes earlier open periods, reopening also reopens later closed periods, and each changed period gets an inventory period entry. A period that is already in the requested state is left unchanged. `Inv. Period Close Tests` (96979) covers the entry and the idempotent path.
+- `Inventory.PhysInventory.Check` (10076884) keeps answering an empty batch as Success with `validationResult` NotReady. Post and PreviewPost still refuse an empty batch. That split is the published contract.
+- Contract regressions in `Inventory Contract Batch Tests` (96921) expect the shared `Retryable` entry only when the installed Foundation is 28.0.11 or newer. Release 28.0.10 exposes the enum and does not append the entry.
+- `Transfer Order Post Tests` (96914) send `expectedCount` only when the composed contract declares it. Foundation 28.0.10 rejects that key on `Inventory.TransferOrder.Post` and `Inventory.Transfer.UndoShipment` because those types do not declare it.
 ### Added (2026-11-03) - Inventory setup wizard (#158)
 
 - Five-step Assisted Setup "Set up Bifrost Inventory" (Extensions group): what the app adds, read-only HTTP status with a link to Foundation's setup wizard, access guidance, read-only company domains and explicit completion. Page 10076836, registration codeunit 10076924, management codeunit 10076927 and bilingual tests 96920. Inventory Setup (10076835) gets a Setup Wizard action. The guide never writes HTTP settings, assigns permissions or toggles domains; closing early does not mark completion. Execute permission for the new objects is added to the existing BIFROST Read/Full extensions and to BIFROST InvPost ori (the app's only assignable set, required by the PermissionCoverage guard); the InvPost grant awaits Gunnar's product decision (Architect 1793461090) before merge.
+
+### Fixed (2026-11-03) - receipt undo is not a shipped operation (#150)
+
+- `Inventory.Transfer.UndoReceipt` (codeunit 10076911 `Transf Undo Rcpt Impl ori`) stays disabled. Its overview and notes are translated labels, and the in-repo help plus the posting-permission list no longer present it as a working undo. The released enum value remains. The configured BC symbols still have no `Undo Transfer Receipt` codeunit, so success is not invented.
+- Test codeunit 96914 `Transfer Order Post Tests` posts an owned transfer receipt and calls the type in 1033 and 1039. The answer is `PreconditionFailed`, the receipt stays, and no further item ledger entry is posted. Helper 96904 passes that Windows language id through, because a zero language id uses the company default rather than the test's `GlobalLanguage`.
 
 ### Fixed (2026-11-03) - Adjust Cost licence and version checks (#182)
 

@@ -62,8 +62,11 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
     end;
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Parameters := Parts.GetParameters('Inventory.AssemblyOrder.PreviewPost');
+        exit(true);
     end;
 
     procedure GetResponse(var Response: JsonObject): Boolean
@@ -156,6 +159,9 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         PreviewArray: JsonArray;
         DocumentNo: Code[20];
         LCYCode: Code[10];
+        RequestedPostingDate: Date;
+        RequestedQuantity: Decimal;
+        PreviewQuantityToAssemble: Decimal;
         EntryCount: Integer;
         GLEntryCount: Integer;
         Balanced: Boolean;
@@ -181,7 +187,12 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         DocumentNo := AssemblyHeader."No.";
         GLSetup.Get();
         LCYCode := GLSetup."LCY Code";
-        if not PreviewAssemblyOrder(AssemblyHeader, PostingPreviewEventHandler, PreviewErrorText) then begin
+        PreviewQuantityToAssemble := AssemblyHeader."Quantity to Assemble";
+        if not ReadPreviewAdjustments(Argument, RequestedPostingDate, RequestedQuantity) then
+            exit;
+        if RequestedQuantity > 0 then
+            PreviewQuantityToAssemble := RequestedQuantity;
+        if not PreviewAssemblyOrder(AssemblyHeader, RequestedPostingDate, RequestedQuantity, PostingPreviewEventHandler, PreviewErrorText) then begin
             if PreviewErrorText = '' then
                 PreviewErrorText := PreviewFailedErr;
             PostingPreviewHelper.RespondWithPreviewError(Argument, PreviewErrorText, NothingToPostNextStepTok);
@@ -204,7 +215,7 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         ResponseJson.Add('documentNo', DocumentNo);
         ResponseJson.Add('itemNo', AssemblyHeader."Item No.");
         ResponseJson.Add('locationCode', AssemblyHeader."Location Code");
-        ResponseJson.Add('quantityToAssemble', AssemblyHeader."Quantity to Assemble");
+        ResponseJson.Add('quantityToAssemble', PreviewQuantityToAssemble);
         ResponseJson.Add('lcyCode', LCYCode);
         ResponseJson.Add('predictedNumbers', PredictedJson);
         ResponseJson.Add('totals', TotalsJson);
@@ -241,16 +252,35 @@ codeunit 10076849 "Asm. Doc Prev. Post Impl ori" implements "Msg Interface ori",
         exit(StrSubstNo(SummaryTok, DocumentNo, ItemNo, PostingPreviewHelper.CountPreviewEntries(PreviewArray), GLStatusText));
     end;
 
-    local procedure PreviewAssemblyOrder(var AssemblyHeader: Record "Assembly Header"; var PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler"; var ErrorText: Text): Boolean
+    local procedure ReadPreviewAdjustments(var Argument: Record "Message Argument ori"; var PostingDate: Date; var QuantityToAssemble: Decimal): Boolean
+    var
+        RequestValueReader: Codeunit "Request Value Reader ori";
+        RequestJson: JsonObject;
+    begin
+        RequestJson := Argument.GetRequestJson();
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+            exit(false);
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+            exit(false);
+        exit(true);
+    end;
+
+    local procedure PreviewAssemblyOrder(var AssemblyHeader: Record "Assembly Header"; PostingDate: Date; QuantityToAssemble: Decimal; var PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler"; var ErrorText: Text): Boolean
     var
         GenJnlPostPreview: Codeunit "Gen. Jnl.-Post Preview";
         AssemblyPostYesNo: Codeunit "Assembly-Post (Yes/No)";
+        PreviewAdjust: Codeunit "Asm. Preview Adjust ori";
     begin
         AssemblyHeader.SetHideValidationDialog(true);
+        // Adjust inside the preview run. Modify before Run would open a write transaction, and
+        // Codeunit.Run may not use its return value inside one. The preview rolls the write back.
+        PreviewAdjust.SetAdjustments(PostingDate, QuantityToAssemble);
+        BindSubscription(PreviewAdjust);
         BindSubscription(AssemblyPostYesNo);
         GenJnlPostPreview.SetContext(AssemblyPostYesNo, AssemblyHeader);
         if GenJnlPostPreview.Run() then;
         UnbindSubscription(AssemblyPostYesNo);
+        UnbindSubscription(PreviewAdjust);
         if not GenJnlPostPreview.IsSuccess() then begin
             ErrorText := GetLastErrorText();
             exit(false);

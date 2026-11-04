@@ -9,8 +9,7 @@ name: Source Guards
 # passed with an empty allow-list.
 # Icelandic xlf parity (#32) needs the compiler-generated g.xlf, so the build runs it: .AL-Go/PostCompileApp.ps1 calls
 # tools/Test-IcelandicXlfInSync.ps1 after the final app compile. Its self-test runs here.
-# Help links (tools/Test-HelpLinks.ps1, #31) stay unwired until businesscentralal/bifrost main has help/inventory/
-# in both locales (businesscentralal/bifrost#108).
+# Help links (#31) use the unchanged guard against the documentation repository, including both locales.
 # Unique object IDs, build inputs and the symbol-alias gate were ported from Bifrost Attachments (19.10.2026);
 # the AppSource build gate itself runs inside the AL-Go build (tools/AppSourceBuildGate.md).
 
@@ -176,3 +175,24 @@ jobs:
       - name: The xlf guard checks itself (the build compares the real g.xlf)
         shell: pwsh
         run: ./tools/Test-IcelandicXlfInSync.ps1 -SelfTest
+
+  HelpLinks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout current documentation
+        uses: actions/checkout@v4
+        with:
+          repository: businesscentralal/bifrost
+          ref: main
+          path: .help-docs
+          persist-credentials: false
+
+      - name: Record documentation revision
+        run: git -C .help-docs rev-parse HEAD
+
+      - name: Every page links to help in both languages
+        shell: pwsh
+        run: ./tools/Test-HelpLinks.ps1 -DocsPath ./.help-docs
