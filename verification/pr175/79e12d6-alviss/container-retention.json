@@ -1,0 +1,14 @@
+{
+  "id": "f080d8570b5c",
+  "displayName": "alviss-worker4-inventory175-20261104",
+  "imageTag": "sandbox-28.5.54151.57488-w1",
+  "status": {
+    "state": "Stopped",
+    "imageBuilding": false,
+    "imageBuildError": false
+  },
+  "owner": "worker-4",
+  "sourceSha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "checkedAt": "2026-11-04T05:43:25.816410+00:00",
+  "retention": "Owned instance retained for PR175 amendments/UAT closure; fixture cleanup complete; Stop requested204; actual state shown above, no deletion claimed. Resume only for changed candidate/amendment or postmerge closure."
+}

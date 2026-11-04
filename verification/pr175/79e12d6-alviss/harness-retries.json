@@ -1,0 +1,27 @@
+{
+  "sourceChanged": false,
+  "mcp": [
+    {
+      "fixtureSetupFailure": "MCP transport failure set_records",
+      "reason": "Data.Records.Set honors Blocked write guard on Description. No guard changed and no force used. Resume after fresh collision read using standard BC item API through origo for owned fixture creation; retain118 proven help scenarios."
+    },
+    {
+      "harnessFailure": "MCP transport failure invoke_message_type",
+      "reason": "Expected business error is returned by origo as isError with appended help. Parse the first JSON response, validate code/text and retain the already-executed first refusal. Do not recreate owned item or repeat118 metadata scenarios."
+    },
+    {
+      "harnessFailure": "MCP tool failure get_records",
+      "reason": "Resume using recorded successes; SystemId is returned implicitly as record.id, not a selectable Item field. Use No. only for exact fixture cleanup read. Do not recreate item or repeat successful132 scenarios."
+    }
+  ],
+  "ui": [
+    {
+      "error": "Playwright MCP ui-login failed: {\"content\":[{\"type\":\"text\",\"text\":\"### Error\\nError: Browser is already in use for /home/node/.cache/ms-playwright-mcp/mcp-chrome-c52ddf6, use --isolated to run multiple instances of the same browser\"}],\"isError\":true}",
+      "executed": 0,
+      "repair": "Use isolated Playwright MCP browser profile, preserving existing profile; current UI2/2 passed and language restored."
+    }
+  ],
+  "newSuppressions": 0,
+  "newExclusions": 0,
+  "weakenedAssertions": 0
+}

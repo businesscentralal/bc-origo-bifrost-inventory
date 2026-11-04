@@ -1,0 +1,56 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "containerId": "f080d8570b5c",
+  "dependency": "Foundation28.0.10.632",
+  "currentOwnedResults": [
+    {
+      "codeunit": "96900 Item Attribute Tests ori",
+      "method": "Create_InvalidAttributes_MatchesHelpCode",
+      "passed": true,
+      "duration": "5.797"
+    },
+    {
+      "codeunit": "96900 Item Attribute Tests ori",
+      "method": "Update_InvalidAttributes_MatchesHelpCode",
+      "passed": true,
+      "duration": "0.19"
+    },
+    {
+      "codeunit": "96921 Inventory Contract Batch Tests",
+      "method": "PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed",
+      "passed": true,
+      "duration": "0.113"
+    },
+    {
+      "codeunit": "96921 Inventory Contract Batch Tests",
+      "method": "AttributeCreate_RegisteredContract_DeclaresWriteChapters",
+      "passed": true,
+      "duration": "0.01"
+    },
+    {
+      "codeunit": "96921 Inventory Contract Batch Tests",
+      "method": "AttributeUpdate_RegisteredContract_DeclaresWriteChapters",
+      "passed": true,
+      "duration": "0.007"
+    },
+    {
+      "codeunit": "96921 Inventory Contract Batch Tests",
+      "method": "AttributeDefinition_RegisteredContract_HasNoTarget",
+      "passed": true,
+      "duration": "0.01"
+    },
+    {
+      "codeunit": "96921 Inventory Contract Batch Tests",
+      "method": "CostingContracts_DiscloseReportOptions",
+      "passed": true,
+      "duration": "0.01"
+    },
+    {
+      "codeunit": "96930 Inventory Item Refusal Tests",
+      "method": "ReclassificationDomainOff_NextStepIsIcelandicIn1039",
+      "passed": true,
+      "duration": "0.024"
+    }
+  ],
+  "nextFoundationComposedBranch": "Source updated and verified for syntax; nextFoundation runtime branch remains an explicit independent verification scenario, not claimed executed by the released632 run."
+}

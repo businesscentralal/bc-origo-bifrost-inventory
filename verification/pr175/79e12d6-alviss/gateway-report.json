@@ -1,0 +1,29 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "newCodeChanges": false,
+  "standardsCommit": "52ba4754cfd614e4a7c50af87b30149b18b313e3",
+  "layer1": {
+    "script": "Invoke-PrepareForPR.ps1",
+    "filesScanned": 57,
+    "passedChecks": 17,
+    "failedChecks": 6,
+    "initialHarnessFailure": "Linux USERPROFILE unset caused fallback path binding failure. Retried with actual /home/node USERPROFILE and repository root to resolve changed paths. No source/policy change."
+  },
+  "layer2": {
+    "scope": "PR175 help/runtime-parity and latest amendment findings; no new source edit. Existing reviewed wider scope remains disclosed.",
+    "compile": "Both apps zero error/warning with3analyzers + latestreleasedInventory28.3.1.81 baseline; clean sourceHEAD79e12d6.",
+    "breakingChanges": "No app IDs, object ranges, published procedures or fields changed in this execution. Existing PR intentionally adds machine error codes; direction/status_ retained.",
+    "tests": "Owned full508/508 source+compiled methods exact; zero failures/skips",
+    "localization": "MCP59types1033/1039 and Playwright MCP UI1033/1039 passed; UI language restored",
+    "receiptFindings": "Source confirms six Claude items and empty-array advisory implemented; current-tip runtime verification still required.",
+    "widerFinding": "Two current single-argument RespondWithError paths in PeriodCloseImpl:85 and AsmOrderReleaseImpl:165 were already disclosed by prior owner; outside this exact receipt repair, unchanged.",
+    "layer1FindingsDisposition": "Existing advisory mechanical findings retained in full report; no new suppression or broad unrelated cleanup."
+  },
+  "readyForHandoff": true,
+  "remaining": [
+    "Publish sanitized evidence",
+    "Canonical handoff",
+    "Independent verification/clearance/approval/merge/deploy/UAT"
+  ],
+  "developerChecksComplete": true
+}

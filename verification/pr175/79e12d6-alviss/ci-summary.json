@@ -1,0 +1,23 @@
+{
+  "ci-default-output": {
+    "errors": 0,
+    "warnings": 0,
+    "compiler": "Microsoft (R) AL Compiler version 17.0.42.60745"
+  },
+  "ci-test-output": {
+    "errors": 0,
+    "warnings": 0,
+    "compiler": "Microsoft (R) AL Compiler version 17.0.42.60745"
+  },
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "runUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/41771516855",
+  "tests": {
+    "executed": 508,
+    "passed": 508,
+    "failed": 0,
+    "skipped": 0
+  },
+  "testSource": "Digest-verified TestResults.xml artifact13296360717",
+  "buildAndTestJobs": "Default126382355153/Test126385009895 success",
+  "provenanceLimitation": "CI PR run uses generated merge checkout; exact-head check runs and local exact-head compile/deployment retained independently."
+}

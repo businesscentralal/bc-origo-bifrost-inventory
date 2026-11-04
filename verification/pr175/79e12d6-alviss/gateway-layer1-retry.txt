@@ -1,0 +1,108 @@
+{
+  "version": "28.3.2.0",
+  "summary": {
+    "total": 23,
+    "failed": 6,
+    "passed": 17,
+    "ready": false
+  },
+  "mode": "diff (vs origin/main)",
+  "files_scanned": 57,
+  "project": "Bifrost Inventory",
+  "checks": {
+    "modernization": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "confirm_in_page": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "object_naming": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "changelog": {
+      "findings_count": 1,
+      "pass": false
+    },
+    "one_statement_per_line": {
+      "findings_count": 131,
+      "pass": false
+    },
+    "try_prefix_convention": {
+      "findings_count": 3,
+      "pass": false
+    },
+    "app_json": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "page_code_minimal": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "hardcoded_values": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "with_statements": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "xml_doc_comments": {
+      "findings_count": 669,
+      "pass": false
+    },
+    "reserved_var_names": {
+      "findings_count": 8,
+      "pass": false
+    },
+    "format_evaluate_enum": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "event_subscriber_placement": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "caption_translation": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "format_guid": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "set_load_fields": {
+      "findings_count": 15,
+      "pass": true
+    },
+    "today_vs_workdate": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "namespace": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "commit_in_loop": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "read_isolation": {
+      "findings_count": 56,
+      "pass": false
+    },
+    "data_classification": {
+      "findings_count": 0,
+      "pass": true
+    },
+    "global_variables": {
+      "findings_count": 0,
+      "pass": true
+    }
+  },
+  "total_al_files": 115,
+  "publisher": "Origo"
+}

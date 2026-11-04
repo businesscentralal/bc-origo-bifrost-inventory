@@ -1,0 +1,32 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "containerId": "f080d8570b5c",
+  "appVersion": "28.3.2.417",
+  "tool": "Playwright MCP browser_run_code_unsafe",
+  "startedAt": "2026-11-04T05:40:41.191Z",
+  "scenarios": [
+    {
+      "lcid": 1033,
+      "page": 10076835,
+      "scenario": "Native Inventory Setup opens with translated title/domain controls; no permission refusal",
+      "passed": true,
+      "evidence": "ui-setup-1033-mcp.json",
+      "screenshot": "ui-setup-1033.png"
+    },
+    {
+      "lcid": 1039,
+      "page": 10076835,
+      "scenario": "Native Inventory Setup opens with translated title/domain controls; no permission refusal",
+      "passed": true,
+      "evidence": "ui-setup-1039-mcp.json",
+      "screenshot": "ui-setup-1039.png"
+    }
+  ],
+  "executed": 2,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "languageRestored": true,
+  "verified": true,
+  "finishedAt": "2026-11-04T05:41:25.660Z"
+}

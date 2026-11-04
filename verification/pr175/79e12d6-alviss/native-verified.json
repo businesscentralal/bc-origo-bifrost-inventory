@@ -1,0 +1,14 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "containerId": "f080d8570b5c",
+  "artifactSha256": "02671437a4a2418fc4182dcd491ee07977b72d1def405995343e913d176d053d",
+  "expectedCompiledAndSourceMethods": 508,
+  "actualExecuted": 508,
+  "passed": 508,
+  "failed": 0,
+  "skipped": 0,
+  "codeunits": 53,
+  "missing": [],
+  "unexpected": [],
+  "verified": true
+}

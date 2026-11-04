@@ -1,0 +1,48 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "issueUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/152",
+  "prUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/175",
+  "amendmentSource": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/pull/175#issuecomment-6573282692",
+  "sourceReviewSha": "ba52cd12aaf18b3f5c78268846ddc09cf3bec927",
+  "sourceStatus": "All requested code present at intake; no duplicate commit",
+  "families": [
+    {
+      "AC": "Receipt1/6: confirmation does not mask actual refusal",
+      "implementation": "ConfirmRequest in InventoryTestLibrary, called by Transfer/Assembly helpers; preserved PreconditionFailed/InvalidParameter assertions",
+      "verification": "PASS at79e12d6 on owned BC28.5/Foundation28.0.10.632: full508/508; specific eight receipt regressions pass;59types/132MCP scenarios pass;UI1033/1039 pass;fixture cleanup/language restoration verified. Newer Foundation branch not runtime-executed here."
+    },
+    {
+      "AC": "Receipt2-4: composed error chapters",
+      "implementation": "Raw app error equality preserved. Shared Retryable count exact0/1 conditional on deployed Foundation>=28.0.11. Inventory.Attribute.Get asserts zero.",
+      "verification": "PASS at79e12d6 on owned BC28.5/Foundation28.0.10.632: full508/508; specific eight receipt regressions pass;59types/132MCP scenarios pass;UI1033/1039 pass;fixture cleanup/language restoration verified. Newer Foundation branch not runtime-executed here."
+    },
+    {
+      "AC": "Receipt5: costing effect",
+      "implementation": "Exact application posting sentence and conditional Foundation expectedCount addition asserted",
+      "verification": "PASS at79e12d6 on owned BC28.5/Foundation28.0.10.632: full508/508; specific eight receipt regressions pass;59types/132MCP scenarios pass;UI1033/1039 pass;fixture cleanup/language restoration verified. Newer Foundation branch not runtime-executed here."
+    },
+    {
+      "AC": "Receipt advisory: invalid attribute arrays",
+      "implementation": "Help BusinessCentralError; real dispatcher missing/empty/non-array attribute tests in both locales",
+      "verification": "PASS at79e12d6 on owned BC28.5/Foundation28.0.10.632: full508/508; specific eight receipt regressions pass;59types/132MCP scenarios pass;UI1033/1039 pass;fixture cleanup/language restoration verified. Newer Foundation branch not runtime-executed here."
+    },
+    {
+      "AC": "152AC1/2/3/4 help/localization/setup",
+      "implementation": "Bilingual labelled catalogues/error parity/regressions and admin setup guidance; XLF/change log included. Statistics public direction/status_ preserved.",
+      "verification": "PASS at79e12d6 on owned BC28.5/Foundation28.0.10.632: full508/508; specific eight receipt regressions pass;59types/132MCP scenarios pass;UI1033/1039 pass;fixture cleanup/language restoration verified. Newer Foundation branch not runtime-executed here."
+    }
+  ],
+  "appliedLessons": [
+    "inventory175-claude6573282692-attribute-array-code-worker9",
+    "inventory175-claude6573282692-composed-contracts-worker9",
+    "inventory175-review5731279910-changelog-worker9",
+    "inventory175-review5731279910-error-code-parity-worker9",
+    "inventory175-review5731279910-icelandic-worker9",
+    "inventory175-review5731279910-native-gate-caption-worker9",
+    "inventory175-review5731279910-permission-captions-worker9",
+    "inventory175-review5731279910-xlf-bom-worker9"
+  ],
+  "noNewSuppressions": true,
+  "runtimeLimitation": "Source updated and verified for syntax; nextFoundation runtime branch remains an explicit independent verification scenario, not claimed executed by the released632 run.",
+  "reviewAndUat": "Independent exact-tip Claude verification/amend disposition, Grok clearance, approval, Architect merge/deployment and Tester UAT remain separate. No issue closure claimed."
+}

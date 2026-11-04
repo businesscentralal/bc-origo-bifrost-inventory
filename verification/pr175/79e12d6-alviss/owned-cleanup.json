@@ -1,0 +1,35 @@
+{
+  "sha": "79e12d697e611a5438a5d202c7654913cfe66ee3",
+  "containerId": "f080d8570b5c",
+  "owner": "worker-4",
+  "at": "2026-11-04T05:42:17.319942+00:00",
+  "mcpItem": {
+    "created": 1,
+    "deleted": 1,
+    "remaining": 0,
+    "readback": {
+      "company": "CRONUS International Ltd.",
+      "table": "Item",
+      "skip": 0,
+      "take": 2,
+      "count": 0,
+      "records": [],
+      "noOfRecords": 0
+    }
+  },
+  "nativeSentinels": {
+    "company": "CRONUS International Ltd.",
+    "table": "Item",
+    "skip": 0,
+    "take": 20,
+    "count": 0,
+    "records": [],
+    "noOfRecords": 0
+  },
+  "nativeIsolation": "Runner130450 TestIsolation=Codeunit;508results match exact source and compiled508methods; representative sentinel readback0. Not a census of all demonstration-company tables.",
+  "uiLanguageRestored1033": true,
+  "uiProductSettingsChanged": false,
+  "consentTrialLicenseHttpWrites": 0,
+  "retainedContainer": "Stop after verification; retain owned instance for PR175 amendment/postmerge closure; no deletion claimed. Prior172 retained container untouched.",
+  "verified": true
+}
