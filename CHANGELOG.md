@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-04) - isolate native refusal test requests (#151)
+
+- `Inv. Typed Refusal Tests ori` (96975) starts each journal-context invocation with a fresh request. A posting call's helper-added `expectedCount` no longer reaches the following read-only preview. All native error, context and no-write assertions remain unchanged.
+
 ### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
 
 - Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
