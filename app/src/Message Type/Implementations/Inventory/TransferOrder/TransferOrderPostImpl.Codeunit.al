@@ -165,7 +165,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         NativeExpectedTxt: Label 'A transfer order that passes native posting validation.', Comment = 'is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.';
         NativeNextStepTxt: Label 'Correct the selected document and inspect its posted state before retrying.', Comment = 'is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.';
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
-        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". Móttekið: %1';
+        InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
             exit;
