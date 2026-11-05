@@ -526,7 +526,16 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         Response := Library.ExecuteType(MessageType, '', Request, false);
-        AssertRefusal(Response, ExpectedUnknownKeyCode(IsReadType), 'unknownJournalKey');
+        if (not IsReadType) and FoundationRefusesUnknownWriteKeys() then begin
+            // Foundation-owned received metadata is tracked by https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/issues/1277.
+            Assert.AreEqual('Error', TextValue(Response, 'status'), 'Structured error status.');
+            Assert.AreEqual('UnknownParameter', TextValue(Response, 'code'), 'Stable shared error code.');
+            Assert.AreEqual('unknownJournalKey', TextValue(Response, 'parameter'), 'Failing request value is named.');
+            Assert.IsTrue(TextValue(Response, 'expected') <> '', 'Expected value is present.');
+            Assert.IsTrue(TextValue(Response, 'nextStep') <> '', 'Caller gets an actionable next step.');
+            Assert.IsFalse(TextValue(Response, 'error').Contains('NavJsonValue'), 'No raw runtime conversion text.');
+        end else
+            AssertRefusal(Response, ExpectedUnknownKeyCode(IsReadType), 'unknownJournalKey');
         GlobalLanguage(OldLanguage);
     end;
 
