@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-05) - Reservation.Cancel RecordNotFound refusal (#169)
+
+- `Inventory.Reservation.Cancel` (10076892, `Reservation Cancel Impl ori`) answers `RecordNotFound` for an absent `entryNo` with `expected` (a positive JSON integer) and an actionable `nextStep` that points to `Inventory.Reservation.Get`, as the #151 refusal contract requires. `Reservation Create Tests` (96946) `Cancel_UnknownEntry_ReturnsRecordNotFound` asserts `received`, `expected` and `nextStep`. No public procedure or field changed.
+
 ### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
 
 - Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
