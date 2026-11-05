@@ -190,6 +190,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
         IntegerExpectedTok: Label 'a positive JSON integer', Comment = 'is-IS=jákvæð JSON-heiltala';
         InconsistentPairErr: Label 'Reservation %1 does not contain a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.';
+        ListReservationsLbl: Label 'Read the current reservations with Inventory.Reservation.Get and send the entryNo of an entry that exists.', Comment = 'is-IS=Lestu núverandi frátekningar með Inventory.Reservation.Get og sendu entryNo færslu sem er til.';
         InspectPairLbl: Label 'Inspect both reservation entries and correct their native reservation state before retrying.', Comment = 'is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
@@ -211,7 +212,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         EntryNo := Number;
         ReservationEntry.SetRange("Entry No.", EntryNo);
         if not ReservationEntry.FindFirst() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), IntegerExpectedTok, ListReservationsLbl);
             exit;
         end;
         if ReservationEntry."Reservation Status" <> ReservationEntry."Reservation Status"::Reservation then begin
