@@ -485,37 +485,37 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
     [Test]
     procedure Calculate_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Calculate");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Calculate", false);
     end;
 
     [Test]
     procedure RecordCount_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.RecordCount");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.RecordCount", false);
     end;
 
     [Test]
     procedure Check_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Check");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Check", true);
     end;
 
     [Test]
     procedure PhysicalPost_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Post");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.PhysInventory.Post", false);
     end;
 
     [Test]
     procedure RevaluationPost_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.Post");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.Post", false);
     end;
 
     [Test]
     procedure RevaluationPreview_UnknownParameterCoded_EN()
     begin
-        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.PreviewPost");
+        CheckJournalUnknown(1033, "Message Type ori"::"Inventory.Revaluation.PreviewPost", true);
     end;
 
     [Test]
@@ -527,37 +527,37 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
     [Test]
     procedure Calculate_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Calculate");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Calculate", false);
     end;
 
     [Test]
     procedure RecordCount_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.RecordCount");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.RecordCount", false);
     end;
 
     [Test]
     procedure Check_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Check");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Check", true);
     end;
 
     [Test]
     procedure PhysicalPost_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Post");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.PhysInventory.Post", false);
     end;
 
     [Test]
     procedure RevaluationPost_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.Post");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.Post", false);
     end;
 
     [Test]
     procedure RevaluationPreview_UnknownParameterCoded_IS()
     begin
-        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.PreviewPost");
+        CheckJournalUnknown(1039, "Message Type ori"::"Inventory.Revaluation.PreviewPost", true);
     end;
 
     [Test]
@@ -566,7 +566,7 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         CheckTrackingSource(1039);
     end;
 
-    local procedure CheckJournalUnknown(LanguageId: Integer; MessageType: Enum "Message Type ori")
+    local procedure CheckJournalUnknown(LanguageId: Integer; MessageType: Enum "Message Type ori"; IsReadType: Boolean)
     var
         Request: JsonObject;
         Response: JsonObject;
@@ -578,8 +578,27 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         OldLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         Response := Library.ExecuteType(MessageType, '', Request, false);
-        AssertRefusal(Response, 'InvalidParameter', 'unknownJournalKey');
+        AssertRefusal(Response, ExpectedUnknownKeyCode(IsReadType), 'unknownJournalKey');
         GlobalLanguage(OldLanguage);
+    end;
+
+    local procedure ExpectedUnknownKeyCode(IsReadType: Boolean): Text
+    begin
+        // Foundation refuses unknown keys on non-read types with the shared UnknownParameter code
+        // before Inventory runs (core#1160). Read types still reach Inventory's own InvalidParameter check.
+        if (not IsReadType) and FoundationRefusesUnknownWriteKeys() then
+            exit('UnknownParameter');
+        exit('InvalidParameter');
+    end;
+
+    local procedure FoundationRefusesUnknownWriteKeys(): Boolean
+    var
+        Info: ModuleInfo;
+    begin
+        // core#1160 (strict non-read request keys) first shipped in Foundation release 28.0.10.
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            Error('Bifrost Foundation is not installed.');
+        exit(Info.AppVersion >= Version.Create(28, 0, 10, 0));
     end;
 
     local procedure CheckTrackingSource(LanguageId: Integer)
