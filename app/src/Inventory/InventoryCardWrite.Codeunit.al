@@ -15,8 +15,9 @@ codeunit 10076837 "Inventory Card Write ori"
         BlockedErr: Label 'Item %1 is blocked. Set allowBlocked=true only when the blocked-item change is intended.', Comment = '%1 = item number; is-IS=Vara %1 er lokuð. Stilltu allowBlocked=true aðeins ef breyting á lokaðri vöru er fyrirhuguð.';
         MethodErr: Label 'expectedCostingMethod does not match the current costing method %1.', Comment = '%1 = current method; is-IS=expectedCostingMethod passar ekki við núverandi kostnaðaraðferð %1.';
         FieldDeniedErr: Label 'Permission denied to write item cost field %1.', Comment = '%1 = field number; is-IS=Heimild hafnað til að breyta kostnaðarreit vöru %1.';
+        CostExpectedLbl: Label 'One eligible non-Standard item and permitted native cost values.', Comment = 'is-IS=Ein gjaldgeng vara sem notar ekki staðalkostnað og leyfileg innbyggð kostnaðargildi.';
+        CostNextStepLbl: Label 'Correct the item selection and cost values; use Inventory.Revaluation.Post for Standard items and lastDirectCost when native unitCost validation refuses an item with entries.', Comment = 'is-IS=Leiðréttu vöruval og kostnaðargildi; notaðu Inventory.Revaluation.Post fyrir staðalkostnaðarvörur og lastDirectCost þegar innbyggð unitCost-prófun hafnar vöru með færslum.';
         CostWriteDeniedErr: Label 'Permission denied to update item costs.', Comment = 'is-IS=Heimild hafnað til að uppfæra vörukostnað.';
-        TextErr: Label 'expectedCostingMethod must be text.', Comment = 'is-IS=expectedCostingMethod verður að vera texti.';
         ParameterErr: Label 'Unsupported price parameter %1.', Comment = '%1 = parameter name; is-IS=Verðfæribreytan %1 er ekki studd.';
         IdentifierErr: Label 'Item selection parameter %1 must be nonempty text.', Comment = '%1 = parameter name; is-IS=Vöruvalsfæribreytan %1 verður að vera texti sem er ekki tómur.';
         PriceWriteDeniedErr: Label 'Permission denied to update item unit price.', Comment = 'is-IS=Heimild hafnað til að uppfæra einingarverð vöru.';
@@ -25,66 +26,71 @@ codeunit 10076837 "Inventory Card Write ori"
     procedure UpdateCost(var Argument: Record "Message Argument ori")
     var
         Item: Record Item;
-        Lookup: Codeunit "Document Lookup ori";
         Reader: Codeunit "Request Value Reader ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         Request: JsonObject;
         Response: JsonObject;
         Before: JsonObject;
         Warnings: JsonArray;
-        Token: JsonToken;
         ExpectedMethod: Text;
         MethodName: Text;
-        Serialized: Text;
         UnitCost: Decimal;
         LastDirectCost: Decimal;
         StandardCost: Decimal;
         AllowBlocked: Boolean;
+        HasSelection: Boolean;
+        Found: Boolean;
+        ReadOk: Boolean;
     begin
-        if not Item.WritePermission() then
-            Error(CostWriteDeniedErr);
-        Request := Argument.GetRequestJson();
-        if (Argument.Subject = '') and not Request.Contains('itemNo') and not Request.Contains('itemId') and
-           not Request.Contains('id') and not Request.Contains('systemId') and not Request.Contains('recordSystemId') and not Request.Contains('tableView')
-        then
-            Error(SelectionErr);
-        if not Request.Contains('unitCost') and not Request.Contains('lastDirectCost') and not Request.Contains('standardCost') then
-            Error(NoFieldsErr);
-        if not Reader.TryReadBoolean(Argument, Request, 'allowBlocked', false, AllowBlocked) then
+        if not Item.WritePermission() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, CostWriteDeniedErr, 'itemNo', Argument.Subject, CostExpectedLbl, CostNextStepLbl);
             exit;
+        end;
+        Request := Argument.GetRequestJson();
+        HasSelection := (Argument.Subject <> '') or Request.Contains('itemNo') or Request.Contains('itemId') or
+            Request.Contains('id') or Request.Contains('systemId') or Request.Contains('recordSystemId') or Request.Contains('tableView');
+        if not HasSelection then
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, SelectionErr, 'itemNo', '<missing>', CostExpectedLbl, CostNextStepLbl);
+        if not Request.Contains('unitCost') and not Request.Contains('lastDirectCost') and not Request.Contains('standardCost') then
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, NoFieldsErr, 'unitCost', '<missing>', CostExpectedLbl, CostNextStepLbl);
+        ReadOk := Reader.TryReadBoolean(Argument, Request, 'allowBlocked', false, AllowBlocked);
         if Request.Contains('unitCost') then
             if not Reader.TryReadDecimal(Argument, Request, 'unitCost', true, UnitCost) then
-                exit;
+                ReadOk := false;
         if Request.Contains('lastDirectCost') then
             if not Reader.TryReadDecimal(Argument, Request, 'lastDirectCost', true, LastDirectCost) then
-                exit;
+                ReadOk := false;
         if Request.Contains('standardCost') then
             if not Reader.TryReadDecimal(Argument, Request, 'standardCost', true, StandardCost) then
-                exit;
-        if Request.Get('expectedCostingMethod', Token) then begin
-            Token.WriteTo(Serialized);
-            if not Token.IsValue() or not Serialized.StartsWith('"') then
-                Error(TextErr);
-            ExpectedMethod := Token.AsValue().AsText();
+                ReadOk := false;
+        ExpectedMethod := Parts.ReadRequestText(Request, 'expectedCostingMethod', Argument, false, 30);
+        if HasSelection then begin
+            Found := FindCostItem(Argument, Request, Item);
+            if Found then
+                if Item.Count() <> 1 then
+                    Argument.AddError("Bifrost Error Code ori"::AmbiguousRecord, SelectionErr, 'itemNo', Argument.Subject, CostExpectedLbl, CostNextStepLbl)
+                else
+                    Item.FindFirst();
         end;
-        Item.LockTable();
-        if not Lookup.FindItemRange(Argument, Item) then
+        if Parts.RespondToProblems(Argument) or not ReadOk or not Found then
             exit;
-        if Item.Count() <> 1 then
-            Error(SelectionErr);
-        Item.FindFirst();
+        Item.LockTable();
+        Item.Get(Item."No.");
         if Item."Costing Method" = Item."Costing Method"::Standard then
-            Error(StandardErr);
+            Argument.AddError("Bifrost Error Code ori"::PreconditionFailed, StandardErr, 'itemNo', Item."No.", CostExpectedLbl, CostNextStepLbl);
         if Item.Blocked and not AllowBlocked then
-            Error(BlockedErr, Item."No.");
+            Argument.AddError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(BlockedErr, Item."No."), 'allowBlocked', 'false', CostExpectedLbl, CostNextStepLbl);
         MethodName := Item."Costing Method".Names().Get(Item."Costing Method".Ordinals().IndexOf(Item."Costing Method".AsInteger()));
         if Request.Contains('expectedCostingMethod') and (UpperCase(ExpectedMethod) <> UpperCase(MethodName)) then
-            Error(MethodErr, MethodName);
+            Argument.AddError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(MethodErr, MethodName), 'expectedCostingMethod', ExpectedMethod, MethodName, CostNextStepLbl);
         if Request.Contains('unitCost') then
-            CheckField(Reader, Item.FieldNo("Unit Cost"));
+            CheckCostField(Argument, Reader, Item.FieldNo("Unit Cost"), 'unitCost');
         if Request.Contains('lastDirectCost') then
-            CheckField(Reader, Item.FieldNo("Last Direct Cost"));
+            CheckCostField(Argument, Reader, Item.FieldNo("Last Direct Cost"), 'lastDirectCost');
         if Request.Contains('standardCost') then
-            CheckField(Reader, Item.FieldNo("Standard Cost"));
+            CheckCostField(Argument, Reader, Item.FieldNo("Standard Cost"), 'standardCost');
+        if Parts.RespondToProblems(Argument) then
+            exit;
         Before := CostFields(Item);
         if Request.Contains('lastDirectCost') then
             Item.Validate("Last Direct Cost", LastDirectCost);
@@ -102,6 +108,44 @@ codeunit 10076837 "Inventory Card Write ori"
         Response.Add('warnings', Warnings);
         Argument.SetResponseJson(Response);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure FindCostItem(var Argument: Record "Message Argument ori"; Request: JsonObject; var Item: Record Item): Boolean
+    var
+        TempLookupArgument: Record "Message Argument ori" temporary;
+        Lookup: Codeunit "Document Lookup ori";
+        Problems: JsonArray;
+        Problem: JsonToken;
+        Code: Enum "Bifrost Error Code ori";
+        Found: Boolean;
+    begin
+        TempLookupArgument.Init();
+        TempLookupArgument.ID := CreateGuid();
+        TempLookupArgument.Version := Argument.Version;
+        TempLookupArgument.Type := Argument.Type;
+        TempLookupArgument.Subject := Argument.Subject;
+        TempLookupArgument.Insert();
+        TempLookupArgument.SetRequestJson(Request);
+        Found := Lookup.FindItemRange(TempLookupArgument, Item);
+        Problems := TempLookupArgument.GetCollectedErrorsJson();
+        foreach Problem in Problems do begin
+            if not Evaluate(Code, ProblemText(Problem.AsObject(), 'code')) then
+                Code := Code::BusinessCentralError;
+            Argument.AddError(Code, ProblemText(Problem.AsObject(), 'message'), ProblemText(Problem.AsObject(), 'parameter'),
+                ProblemText(Problem.AsObject(), 'received'), ProblemText(Problem.AsObject(), 'expected'), ProblemText(Problem.AsObject(), 'nextStep'));
+        end;
+        if not Found and (Problems.Count() = 0) then
+            Argument.SetResponseJson(TempLookupArgument.GetResponseJson());
+        exit(Found);
+    end;
+
+    local procedure ProblemText(Problem: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if Problem.Get(Name, Token) then
+            exit(Token.AsValue().AsText());
+        exit('');
     end;
 
     /// <summary>Checks parameters and permissions before Validate/Modify; caller owns the Codeunit.Run rollback boundary.</summary>
@@ -170,10 +214,10 @@ codeunit 10076837 "Inventory Card Write ori"
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    local procedure CheckField(Reader: Codeunit "Request Value Reader ori"; FieldNo: Integer)
+    local procedure CheckCostField(var Argument: Record "Message Argument ori"; Reader: Codeunit "Request Value Reader ori"; FieldNo: Integer; Parameter: Text)
     begin
         if Reader.IsFieldWriteRestricted(Database::Item, FieldNo) then
-            Error(FieldDeniedErr, FieldNo);
+            Argument.AddError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldDeniedErr, FieldNo), Parameter, Format(FieldNo, 0, 9), CostExpectedLbl, CostNextStepLbl);
     end;
 
     local procedure CostFields(Item: Record Item) Fields: JsonObject

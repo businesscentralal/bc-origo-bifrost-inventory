@@ -70,15 +70,15 @@ codeunit 96922 "Inv. Lookup Contract Tests"
 
     /// <summary>Create and Item range lookups retain their distinct non-strict contracts.</summary>
     [Test]
-    procedure NonLookupTypes_ErrorsChapter_NoMultipleErrors()
+    procedure CreateTypes_DeclareCollectionAndAttributeReadsDoNot()
     begin
-        // [GIVEN] Non-document lookups; [WHEN] read errors; [THEN] no accidental aggregation declaration.
-        AssertCodeCount('Inventory.TransferOrder.Create', 'MultipleErrors', 0);
-        AssertCodeCount('Inventory.AssemblyOrder.Create', 'MultipleErrors', 0);
+        // [GIVEN] Create preflight collects independent errors; attribute reads retain their existing contract.
+        AssertCodeCount('Inventory.TransferOrder.Create', 'MultipleErrors', 1);
+        AssertCodeCount('Inventory.AssemblyOrder.Create', 'MultipleErrors', 1);
         AssertCodeCount('Inventory.Attribute.Get', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.Attribute.Create', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.Attribute.Update', 'MultipleErrors', 0);
-        AssertCodeCount('Inventory.AttributeDefinition.Create', 'MultipleErrors', 0);
+        AssertCodeCount('Inventory.AttributeDefinition.Create', 'MultipleErrors', 1);
     end;
 
     /// <summary>Blocked attribute refusal translates its sentence while retaining the item and protocol key.</summary>
@@ -166,10 +166,11 @@ codeunit 96922 "Inv. Lookup Contract Tests"
     begin
         foreach Entry in Errors do
             if Entry.AsObject().Get('code', Value) then
-                if Value.AsValue().AsText() = Code then begin
-                    Result := Entry.AsObject();
-                    Count += 1;
-                end;
+                if Value.AsValue().AsText() = Code then
+                    if (Code <> 'MissingParameter') or not EntryText(Entry.AsObject(), 'when').Contains('postingType') then begin
+                        Result := Entry.AsObject();
+                        Count += 1;
+                    end;
         Assert.AreEqual(1, Count, 'Exactly one stable ' + Code + ' entry in each language.');
     end;
 

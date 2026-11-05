@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
+
+- Test codeunit 96975 `Inv. Typed Refusal Tests ori`: the `*_UnknownParameterCoded_*` tests for the non-read types Inventory.PhysInventory.Calculate, Inventory.PhysInventory.RecordCount, Inventory.PhysInventory.Post and Inventory.Revaluation.Post expect Foundation's shared `UnknownParameter` code when Foundation 28.0.10 or later refuses unknown request keys before Inventory runs (core#1160). The read types Inventory.PhysInventory.Check and Inventory.Revaluation.PreviewPost still expect Inventory's own `InvalidParameter`. The eight Foundation-owned unknown-key cases retain parameter, expected and nextStep checks; the received assertion awaits Foundation [#1277](https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/issues/1277), per the acting Architect’s PR #166 ruling on 2026-11-05. Inventory-owned refusals keep all received assertions.
+
+### Fixed (2026-11-04) - isolate native refusal test requests (#151)
+
+- `Inv. Typed Refusal Tests ori` (96975) starts each journal-context invocation with a fresh request. A posting call's helper-added `expectedCount` no longer reaches the following read-only preview. All native error, context and no-write assertions remain unchanged.
+
 ### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
 
 - Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
@@ -46,6 +54,16 @@
 - Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
 - Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
 - Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
+### Fixed (2026-10-25) - transfer posting help (#151)
+
+- Correct the TransferOrder.Post invalid postingType condition in contract help (10076919). ShipReceive remains refused; the description no longer claims it appears in the runtime error text. No posting behavior or accepted values change.
+
+### Fixed
+
+- Cost refusal regression fixture (96937) scopes its Field Access page before editing the user control, verifies that only Last Direct Cost is restricted and restores its row before assertions. This prevents unintended wildcard restrictions and cascading failures; product permission and aggregation behavior is unchanged.
+
+- Issue151 first refusal family: Period.Close/Reopen (10076877/10076879) validate ISO dates before lookup, report missing periods with invariant dates and actionable translated context; AdjustCost.Run process10076859 validates boolean/filter values before running report795 and collects independent format errors. Native bilingual regression codeunit96975. Additional issue151 repairs collect assembly/transfer/attribute-definition/reservation/cost inputs, code assembly undo/transfer posting and cost guards, translate preview summaries, return invariant Reservation.Get statuses and ignore only truly empty physical-posting rows. Journal helper10076840 now raises coded rollback-safe refusals and native line context; tracking helpers10076841/10076925 provide expected values and next actions. New read-process codeunit10076926 preserves coded synchronous Check/Preview failures through rollback isolation, with execute permission only in existing read/write permission extensions. Native journal and tracking failures retain their original BusinessCentralError text with the selected source/batch context and translated recovery fields. Metadata, isolated lookup collection and explicit test fixtures are updated; runtime/independent verification remains tracked at each candidate.
 
 ### Fixed (2026-10-31) - transfer posting test confirmation (#150)
 

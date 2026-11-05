@@ -24,6 +24,9 @@ codeunit 10076841 "Inventory Tracking Read ori"
     Access = Internal;
 
     var
+        RequestNextStepLbl: Label 'Correct the named tracking parameter and retry with an existing permitted source.', Comment = 'is-IS=Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.';
+        SourceExpectedLbl: Label 'A supported existing source with the required read or write permission.', Comment = 'is-IS=Studdur fyrirliggjandi uppruni með nauðsynlegri les- eða ritheimild.';
+        FilterExpectedLbl: Label 'locationCode and variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.', Comment = 'is-IS=locationCode og variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.';
         LocationFilter: Text;
         LocationCode: Text;
         VariantCode: Text;
@@ -33,6 +36,8 @@ codeunit 10076841 "Inventory Tracking Read ori"
         Skip: Integer;
         Take: Integer;
         InvalidFilterErr: Label 'The tracking filter or paging value is invalid.', Comment = 'is-IS=Rakningarsía eða síðugildi er ógilt.';
+        TrackingExpectedTxt: Label 'Existing item tracking for the selected item or source line.', Comment = 'is-IS=Vörurakning sem er til fyrir valda vöru eða upprunalínu.';
+        TrackingNextStepTxt: Label 'Check the item, source and filters; assign tracking to the source line before reading it.', Comment = 'is-IS=Athugaðu vöru, uppruna og síur; úthlutaðu rakningu á upprunalínuna áður en hún er lesin.';
         NoTrackingErr: Label 'No item tracking found matching the specified criteria.', Comment = 'is-IS=Engin vörurakning fannst sem passar við tilgreind skilyrði.';
         PermissionErr: Label 'Permission denied for the requested tracking data.', Comment = 'is-IS=Heimild hafnað fyrir umbeðin rakningargögn.';
         MissingSelectionErr: Label 'Select an item or a source line.', Comment = 'is-IS=Veldu vöru eða upprunalínu.';
@@ -136,7 +141,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
                 until Specification.Next() = 0;
         end;
         if Lines.Count() = 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoTrackingErr, '', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoTrackingErr, 'itemNo', Item."No.", TrackingExpectedTxt, TrackingNextStepTxt);
             exit;
         end;
         Response.Add('itemNo', Item."No.");
@@ -298,7 +303,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
         then
             exit(false);
         if (StrLen(LocationCode) > 10) or (StrLen(VariantCode) > 10) or (StrLen(LotNo) > 50) or (StrLen(SerialNo) > 50) or (StrLen(PackageNo) > 50) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, '', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, 'locationCode|variantCode|lotNo|serialNo|packageNo', LocationCode + '|' + VariantCode + '|' + LotNo + '|' + SerialNo + '|' + PackageNo, FilterExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         if Request.Contains('skip') then
@@ -318,7 +323,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
         if not Reader.TryReadDecimal(Argument, Request, KeyName, true, Number) then
             exit(false);
         if (Number < Minimum) or (Number > Maximum) or (Number <> Round(Number, 1)) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, KeyName, Format(Number, 0, 9), IntegerRangeExpectedLbl, '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidFilterErr, KeyName, Format(Number, 0, 9), IntegerRangeExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         Value := Number;
@@ -387,7 +392,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
         SourceRef.Open(TableNo);
         if SourceRef.ReadPermission() then
             exit(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, '', '', '', '');
+        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, 'tableNo', Format(TableNo, 0, 9), SourceExpectedLbl, RequestNextStepLbl);
         exit(false);
     end;
 
@@ -488,11 +493,11 @@ codeunit 10076841 "Inventory Tracking Read ori"
         Clear(Specification);
         Direction := Direction::Outbound;
         if not Request.Get(KeyName, Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName, '', 'object', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName, '<missing>', 'object', RequestNextStepLbl);
             exit(false);
         end;
         if not Token.IsObject() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidSourceErr, KeyName), KeyName, '', 'object', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidSourceErr, KeyName), KeyName, Format(Token), 'object', RequestNextStepLbl);
             exit(false);
         end;
         Source := Token.AsObject();
@@ -500,13 +505,13 @@ codeunit 10076841 "Inventory Tracking Read ori"
             exit(false);
         TableNo := SourceTableNo(TypeName);
         if TableNo = 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.type', TypeName, '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.type', TypeName, SourceExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         if not ReadText(Argument, Source, 'systemId', true, IdText) then
             exit(false);
         if not Evaluate(SourceId, IdText) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.systemId', IdText, 'guid', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.systemId', IdText, 'guid', RequestNextStepLbl);
             exit(false);
         end;
         if not ReadText(Argument, Source, 'transferDirection', false, DirectionText) then
@@ -516,18 +521,18 @@ codeunit 10076841 "Inventory Tracking Read ori"
             'Inbound':
                 Direction := Direction::Inbound;
             else begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.transferDirection', DirectionText, 'Outbound|Inbound', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidSourceErr, KeyName), KeyName + '.transferDirection', DirectionText, 'Outbound|Inbound', RequestNextStepLbl);
                 exit(false);
             end;
         end;
         SourceRef.Open(TableNo);
         if not SourceRef.ReadPermission() or (NeedWrite and (TableNo <> Database::"Item Ledger Entry") and not SourceRef.WritePermission()) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, SourcePermissionErr, KeyName, '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, SourcePermissionErr, KeyName, '', SourceExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         // Full-record by native contract: InitFromSalesLine, InitFromPurchLine or InitFromTransLine consumes this record.
         if not SourceRef.GetBySystemId(SourceId) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingSourceErr, KeyName + '.systemId', IdText, '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, MissingSourceErr, KeyName + '.systemId', IdText, SourceExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         InitializeSpecification(SourceRef, Direction, Specification);
@@ -595,7 +600,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
             'Transfer.Order':
                 TypeName := 'TransferLine';
             else begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, '', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, SourceExpectedLbl, RequestNextStepLbl);
                 exit(false);
             end;
         end;
@@ -608,12 +613,12 @@ codeunit 10076841 "Inventory Tracking Read ori"
             if not Reader.TryReadDecimal(Argument, Request, 'lineNo', true, LineNo) then
                 exit(false);
             if (StrLen(DocumentNo) > 20) or (LineNo <= 0) or (LineNo > 2147483647) or (LineNo <> Round(LineNo, 1)) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, DocumentErr, 'lineNo', Format(LineNo, 0, 9), 'positive integer; documentNo max 20 characters', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, DocumentErr, 'lineNo', Format(LineNo, 0, 9), 'positive integer; documentNo max 20 characters', RequestNextStepLbl);
                 exit(false);
             end;
             PermissionRef.Open(SourceTableNo(TypeName));
             if not PermissionRef.ReadPermission() or (NeedWrite and not PermissionRef.WritePermission()) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, SourcePermissionErr, 'documentType', DocumentType, '', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, SourcePermissionErr, 'documentType', DocumentType, SourceExpectedLbl, RequestNextStepLbl);
                 exit(false);
             end;
             case TypeName of
@@ -637,7 +642,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
                 end;
             end;
             if not Found then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, DocumentErr, 'documentNo', DocumentNo, '', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, DocumentErr, 'documentNo', DocumentNo, SourceExpectedLbl, RequestNextStepLbl);
                 exit(false);
             end;
         end;
@@ -648,7 +653,7 @@ codeunit 10076841 "Inventory Tracking Read ori"
         if not Resolve(Argument, SourceRequest, 'source', NeedWrite, SourceRef, Specification, Direction) then
             exit(false);
         if (TypeName <> 'TransferLine') and (Specification."Source Subtype" <> Subtype) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentErr, 'documentType', DocumentType, SourceExpectedLbl, RequestNextStepLbl);
             exit(false);
         end;
         exit(true);
@@ -725,17 +730,17 @@ codeunit 10076841 "Inventory Tracking Read ori"
         if not Request.Get(KeyName, Token) then begin
             if not Required then
                 exit(true);
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidTextErr, KeyName), KeyName, '', 'string', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidTextErr, KeyName), KeyName, '', 'string', RequestNextStepLbl);
             exit(false);
         end;
         Token.WriteTo(Serialized);
         if CopyStr(Serialized, 1, 1) <> '"' then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidTextErr, KeyName), KeyName, Serialized, 'string', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(InvalidTextErr, KeyName), KeyName, Serialized, 'string', RequestNextStepLbl);
             exit(false);
         end;
         Value := Token.AsValue().AsText();
         if Required and (Value = '') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidTextErr, KeyName), KeyName, '', 'nonempty string', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(InvalidTextErr, KeyName), KeyName, '', 'nonempty string', RequestNextStepLbl);
             exit(false);
         end;
         exit(true);
