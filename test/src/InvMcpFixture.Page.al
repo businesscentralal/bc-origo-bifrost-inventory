@@ -1,5 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Tracking;
+using Origo.Bifrost;
+
 /// <summary>Explicit Web Client entry point for creating the test app's owned MCP fixtures; never included in the product app.</summary>
 page 96973 "Inv. MCP Fixture ori"
 {
@@ -23,6 +26,17 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CheckMissingReservation)
+            {
+                ApplicationArea = All;
+                Caption = 'Check missing reservation';
+                ToolTip = 'Displays the real cancellation refusal for a verified absent selector in the owned test company.';
+                Image = TestReport;
+                trigger OnAction()
+                begin
+                    ShowMissingReservation();
+                end;
+            }
             action(CreateRefusals)
             {
                 ApplicationArea = All;
@@ -130,6 +144,23 @@ page 96973 "Inv. MCP Fixture ori"
 
     var
         SeedState: Text;
+
+    local procedure ShowMissingReservation()
+    var
+        ReservationEntry: Record "Reservation Entry";
+        Helper: Codeunit "Transfer Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Only the owned CRONUS verification company is supported.');
+        ReservationEntry.SetRange("Entry No.", 2147483000);
+        if not ReservationEntry.IsEmpty() then
+            Error('The test selector exists; no cancellation was attempted.');
+        Request.Add('entryNo', 2147483000);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        Response.WriteTo(SeedState);
+    end;
 
     local procedure ReadState()
     var

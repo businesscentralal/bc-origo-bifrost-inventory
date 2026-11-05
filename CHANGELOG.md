@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-10-25) - missing reservation recovery (#169)
+
+- `Inventory.Reservation.Cancel` now includes localized `expected` and `nextStep` context when `entryNo` does not exist, directing callers to `Inventory.Reservation.Get`. The `RecordNotFound` code, selector context and cancellation behavior are preserved (codeunit 10076892). English and Icelandic regressions verify the response and unchanged reservation data (test codeunit 96975). The test-only fixture page 96973 can display the real refusal for an absent selector during bilingual Web Client verification.
+
 ### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
 
 - Test codeunit 96975 `Inv. Typed Refusal Tests ori`: the `*_UnknownParameterCoded_*` tests for the non-read types Inventory.PhysInventory.Calculate, Inventory.PhysInventory.RecordCount, Inventory.PhysInventory.Post and Inventory.Revaluation.Post expect Foundation's shared `UnknownParameter` code when Foundation 28.0.10 or later refuses unknown request keys before Inventory runs (core#1160). The read types Inventory.PhysInventory.Check and Inventory.Revaluation.PreviewPost still expect Inventory's own `InvalidParameter`. All other refusal assertions (parameter, received, expected, nextStep) are unchanged.

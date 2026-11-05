@@ -22,6 +22,58 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Assert: Codeunit "Library Assert";
         Library: Codeunit "Inventory Test Library ori";
 
+    /// <summary>Missing cancellation selectors return actionable English context without changing reservations.</summary>
+    [Test]
+    procedure ReservationCancel_NotFound_EN()
+    begin
+        CheckCancelNotFound(1033);
+    end;
+
+    /// <summary>Missing cancellation selectors return actionable Icelandic context without changing reservations.</summary>
+    [Test]
+    procedure ReservationCancel_NotFound_IS()
+    begin
+        CheckCancelNotFound(1039);
+    end;
+
+    local procedure CheckCancelNotFound(LanguageId: Integer)
+    var
+        ReservationEntry: Record "Reservation Entry";
+        Helper: Codeunit "Transfer Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryNo: Integer;
+        BeforeCount: Integer;
+        OldLanguage: Integer;
+    begin
+        EnableDomains();
+        BeforeCount := ReservationEntry.Count();
+        EntryNo := 2147483000;
+        ReservationEntry.SetRange("Entry No.", EntryNo);
+        while not ReservationEntry.IsEmpty() do begin
+            EntryNo -= 1;
+            ReservationEntry.SetRange("Entry No.", EntryNo);
+        end;
+        Request.Add('entryNo', EntryNo);
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        GlobalLanguage(OldLanguage);
+
+        AssertRefusal(Response, 'RecordNotFound', 'entryNo');
+        Assert.AreEqual(Format(EntryNo, 0, 9), TextValue(Response, 'received'), 'Preserve the absent selector as an invariant integer.');
+        if LanguageId = 1039 then begin
+            Assert.AreEqual('númer frátekningarfærslu sem er til', TextValue(Response, 'expected'), 'Icelandic expected selector.');
+            Assert.AreEqual('Lestu núverandi frátekningar með Inventory.Reservation.Get og reyndu aftur með entryNo færslu sem er til.', TextValue(Response, 'nextStep'), 'Icelandic recovery identifies the reservation read operation.');
+        end else begin
+            Assert.AreEqual('an existing reservation entry number', TextValue(Response, 'expected'), 'English expected selector.');
+            Assert.AreEqual('Read current reservations with Inventory.Reservation.Get and retry with an existing entryNo.', TextValue(Response, 'nextStep'), 'English recovery identifies the reservation read operation.');
+        end;
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'The missing selector remains absent.');
+        ReservationEntry.Reset();
+        Assert.AreEqual(BeforeCount, ReservationEntry.Count(), 'Refusing an absent selector does not create or cancel reservations.');
+    end;
+
     [Test]
     procedure PeriodClose_InvalidDates_EN()
     begin
