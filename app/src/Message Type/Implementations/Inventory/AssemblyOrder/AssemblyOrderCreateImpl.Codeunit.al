@@ -186,7 +186,7 @@ codeunit 10076854 "Assembly Order Create Impl ori" implements "Msg Interface ori
             exit;
         end;
         if RequestValueReader.IsFieldWriteRestricted(Database::"Assembly Header", AssemblyHeader.FieldNo("Item No.")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo));
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, AssemblyHeader.FieldCaption("Item No."), ItemNo), '', '', '', '');
             exit;
         end;
         if RequestJson.Get('variantCode', Token) then

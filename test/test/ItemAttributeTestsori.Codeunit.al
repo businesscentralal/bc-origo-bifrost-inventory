@@ -367,6 +367,8 @@ codeunit 96900 "Item Attribute Tests ori"
                         3:
                             RequestJson.Add('attributes', 'not an array');
                     end;
+                    Clear(ResponseJson);
+                    // EnqueueAndProcess preserves the requested language; Execute uses the company default.
                     Helper.ProcessMessage(MessageType, Item."No.", RequestJson, ResponseJson);
                     Library.AssertStatus(ResponseJson, 'Error');
                     Assert.IsTrue(ResponseJson.Get('code', Token), 'Runtime error needs a code.');
