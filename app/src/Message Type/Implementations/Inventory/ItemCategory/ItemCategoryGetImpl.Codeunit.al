@@ -574,7 +574,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign BIFROST Read ori with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         exit(PermissionNextStepLbl);
     end;

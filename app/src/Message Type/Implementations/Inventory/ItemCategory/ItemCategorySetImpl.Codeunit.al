@@ -848,7 +848,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign BIFROST Full ori with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         exit(PermissionNextStepLbl);
     end;

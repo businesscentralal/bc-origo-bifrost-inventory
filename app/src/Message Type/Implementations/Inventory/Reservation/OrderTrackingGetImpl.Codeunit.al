@@ -165,7 +165,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
         NotFoundWhenLbl: Label 'No line or item ledger entry matches the identifiers.', Comment = 'is-IS=Engin lína eða birgðafærsla passar við auðkennin.';
         NotFoundFixLbl: Label 'Check the document and line no.', Comment = 'is-IS=Athugaðu fylgiskjalið og línunúmerið.';
         PermissionWhenLbl: Label 'The caller cannot read reservation entries or the source table.', Comment = 'is-IS=Kallandinn getur ekki lesið frátekningarfærslur eða upprunatöfluna.';
-        PermissionFixLbl: Label 'Assign BIFROST Read ori (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
@@ -301,7 +301,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     local procedure RespondPermissionDenied(var Argument: Record "Message Argument ori")
     var
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        PermissionNextStepLbl: Label 'Assign BIFROST Read ori with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);
     end;

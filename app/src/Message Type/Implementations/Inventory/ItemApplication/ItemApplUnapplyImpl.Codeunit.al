@@ -165,7 +165,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Notes := 'entryNo is the Entry No. of an item application entry, as listed by Inventory.ItemApplication.Get. The standard unapply logic decides what can be unapplied: it refuses, for example, an application to an outbound transfer, drop shipments, and entries whose posting date is in a closed inventory period. The refusal text is returned as BusinessCentralError. ' +
             'A missing key is answered with MissingParameter; an entry number that does not exist is answered with RecordNotFound. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. Use Inventory.ItemApplication.Reapply afterwards to apply the item ledger entry to another entry. ' +
-            'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+            'The caller needs the Bifrost "Full Access" permission set and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
     end;
 

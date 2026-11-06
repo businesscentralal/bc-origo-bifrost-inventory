@@ -21,7 +21,7 @@ codeunit 10076905 "Transfer Order Stats Impl ori" implements "Msg Interface ori"
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Returns transfer order statistics: line quantity, parcels, net/gross weight, and volume.', Comment = 'is-IS=Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd og rúmmáli.';
+        DescriptionLbl: Label 'Returns transfer order statistics: line quantity, parcels, net/gross weight and volume.', Comment = 'is-IS=Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd og rúmmáli.';
     begin
         exit(DescriptionLbl);
     end;
