@@ -4,7 +4,7 @@
 
 ### Fixed (2026-11-06) - compose coded refusals with the current parent (#148, #155)
 
-- Merged PR #166 into the existing #168 candidate. `Item Appl. Get Impl ori` (10076867) retains #166's entry-number parser, `InvalidParameter` format refusal and optional metadata, per Claude's composition disposition. Its help declares that retained code. The four bilingual Get refusal cases in `Inventory Item Refusal Tests` (96930) assert that exact parent shape; Unapply/Reapply and Inventory-owned refusal checks remain intact. Attribute help and the child's localized domain-denial completion remain present.
+- Merged PR #166 into the existing #168 candidate. `Item Appl. Get Impl ori` (10076867) retains #166's entry-number parser, `InvalidParameter` format refusal and optional metadata, per Claude's composition disposition. Its help declares that retained code. The four bilingual Get refusal cases in `Inventory Item Refusal Tests` (96930) assert that exact parent shape; Unapply/Reapply and Inventory-owned refusal checks remain intact. Attribute help and the child's localized domain-denial completion remain present. The inherited malformed-array parity tests in `Item Attribute Tests ori` (96900) now assert issue #148's `InvalidLine`, parameter, expected shape and exact bilingual next step, alongside the existing exact error text.
 
 ### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
 

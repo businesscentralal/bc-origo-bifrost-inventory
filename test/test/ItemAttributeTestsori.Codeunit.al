@@ -346,14 +346,14 @@ codeunit 96900 "Item Attribute Tests ori"
         Assert.IsTrue(TempArgument.IsTableWriteRestrictedForDataRecords(Database::"Item Attribute Value Mapping", false), '7505');
         Assert.IsFalse(TempArgument.IsTableWriteRestrictedForDataRecords(Database::Item, false), 'Item 27 must not be restricted');
     end;
-    /// <summary>Invalid attribute arrays retain their actual caught-error code in runtime and help.</summary>
+    /// <summary>Invalid attribute arrays return the coded issue148 refusal declared by help.</summary>
     [Test]
     procedure Create_InvalidAttributes_MatchesHelpCode()
     begin
         AssertInvalidAttributes("Message Type ori"::"Inventory.Attribute.Create");
     end;
 
-    /// <summary>Update documents the caught BC error for missing, empty and non-array attributes.</summary>
+    /// <summary>Update documents InvalidLine for missing, empty and non-array attributes.</summary>
     [Test]
     procedure Update_InvalidAttributes_MatchesHelpCode()
     begin
@@ -387,14 +387,15 @@ codeunit 96900 "Item Attribute Tests ori"
         Item."No." := CopyStr('ZZ152' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, MaxStrLen(Item."No."));
         Item.Description := 'Inventory attribute refusal test';
         Item.Insert(true);
+        // Story148 AC01 supersedes the older help-only175 BusinessCentralError expectation.
         Contract := MessageType;
         Contract.GetErrors(Errors);
         foreach Entry in Errors do
             if Entry.AsObject().Get('when', Token) then
-                if Token.AsValue().AsText() = 'Request data.attributes must be a non-empty array.' then begin
+                if Token.AsValue().AsText() = 'attributes is absent, empty, not an array, or contains an entry that is not an object.' then begin
                     Found := true;
                     Assert.IsTrue(Entry.AsObject().Get('code', Token), 'Invalid array help needs a code.');
-                    Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Help preserves the caught runtime error code.');
+                    Assert.AreEqual('InvalidLine', Token.AsValue().AsText(), 'Issue148 help declares the coded validation refusal.');
                 end;
         Assert.IsTrue(Found, 'Help must describe invalid attribute arrays.');
         PreviousLanguage := GlobalLanguage();
@@ -412,7 +413,19 @@ codeunit 96900 "Item Attribute Tests ori"
                     Helper.ProcessMessage(MessageType, Item."No.", RequestJson, ResponseJson);
                     Library.AssertStatus(ResponseJson, 'Error');
                     Assert.IsTrue(ResponseJson.Get('code', Token), 'Runtime error needs a code.');
-                    Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Invalid array runtime code matches help.');
+                    Assert.AreEqual('InvalidLine', Token.AsValue().AsText(), 'Invalid array runtime code matches help.');
+                    Assert.IsTrue(ResponseJson.Get('parameter', Token), 'Invalid array refusal names the parameter.');
+                    Assert.AreEqual('attributes', Token.AsValue().AsText(), 'Invalid array parameter.');
+                    Assert.IsTrue(ResponseJson.Get('expected', Token), 'Invalid array refusal states the expected shape.');
+                    if LanguageId = 1033 then
+                        Assert.AreEqual('a non-empty array of attribute objects', Token.AsValue().AsText(), 'English expected shape.')
+                    else
+                        Assert.AreEqual('fylki eigindahluta sem er ekki tómt', Token.AsValue().AsText(), 'Icelandic expected shape.');
+                    Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'Invalid array refusal has a next step.');
+                    if LanguageId = 1033 then
+                        Assert.AreEqual('Send at least one attribute object in data.attributes.', Token.AsValue().AsText(), 'English next step.')
+                    else
+                        Assert.AreEqual('Sendu a.m.k. einn eigindahlut í data.attributes.', Token.AsValue().AsText(), 'Icelandic next step.');
                     Assert.IsTrue(ResponseJson.Get('error', Token), 'Runtime error needs text.');
                     if LanguageId = 1033 then
                         Assert.AreEqual('Request data.attributes must be a non-empty array.', Token.AsValue().AsText(), 'English refusal.')
