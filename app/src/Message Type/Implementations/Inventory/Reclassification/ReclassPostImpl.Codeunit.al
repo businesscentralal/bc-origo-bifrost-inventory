@@ -170,7 +170,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts every line of the item journal batch through the standard item journal batch posting: item ledger and value entries are created, an item register is written and the posted lines leave the journal. The posting commits. It does not create or post a transfer order.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         exit(true);

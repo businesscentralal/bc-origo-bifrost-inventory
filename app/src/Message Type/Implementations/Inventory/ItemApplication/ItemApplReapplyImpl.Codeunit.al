@@ -105,7 +105,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Effect.Add('posts', false);
         Effect.Add('changes', 'Applies one item ledger entry to another with the standard item application logic: item application entries and the remaining quantities of the two entries change, and item costs can need a new adjustment run. No document is posted. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Preconditions.Add('The Item Application domain is turned on in Inventory Setup.');
         Preconditions.Add('Both item ledger entries exist.');
         Preconditions.Add('The posting date of the entry is in an open inventory period.');
@@ -166,7 +166,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         Notes := 'Both numbers are Entry Nos of item ledger entries; read them with Inventory.ItemApplication.Get first. The standard item application logic decides what is allowed, so its rules apply: for example an entry whose posting date is in a closed inventory period is refused. The refusal text is returned as BusinessCentralError. ' +
             'A missing key is answered with MissingParameter; an entry number that does not exist is answered with RecordNotFound. ' +
             'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. ' +
-            'The caller needs the Bifrost "Full Access" permission set and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+            'The caller needs BIFROST Full ori and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
         exit(true);
     end;
 

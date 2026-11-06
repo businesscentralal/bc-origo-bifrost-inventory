@@ -139,7 +139,7 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No inventory period ends on endingDate.', 'Read the periods with Inventory.Period.Get and send the ending date of one of them.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central error text', 'endingDate is not a date, or Business Central refuses the change of the period.', 'Send endingDate as YYYY-MM-DD, or correct the cause in the text and retry.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Inventory Period domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Full Access" permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Inventory Period table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Full ori.'));
         exit(true);
     end;
 
@@ -149,7 +149,7 @@ codeunit 10076879 "Period Reopen Impl ori" implements "Msg Interface ori", "Msg 
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Reopens the Inventory Period that ends on endingDate by reproducing the inventory period entries of Close Inventory Period (5820), without running 5820, so OnRunOnBeforeCheck is not raised. The reopen also reopens every later closed inventory period and writes an inventory period entry for each period it reopens. A period that is already open is left as it is and answered Success. Nothing is posted. The change is saved with the caller''s transaction.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         exit(true);

@@ -92,7 +92,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate or cannot write Transfer Shipment Header records.', 'Assign Inv. Posting Gate, the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change the posted transfer tables.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate or cannot write Transfer Shipment Header records.', 'Assign Inv. Posting Gate, BIFROST Full ori (extended by Inventory write permissions) and a Business Central permission set that can change the posted transfer tables.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo was not sent.', 'Send documentNo, the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Transfer Shipment Header has that number.', 'Check the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Posted transfer shipment %1 has no lines to undo.', 'The posted transfer shipment has no line that is not a correction line, so there is nothing to undo.', 'Check that the shipment is the original posted shipment and not one that only holds correction lines.'));
@@ -110,7 +110,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Undoes every line of the posted transfer shipment that is not a correction line, as one filtered native undo operation, which posts the corrective entries. The posted document is not deleted. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;

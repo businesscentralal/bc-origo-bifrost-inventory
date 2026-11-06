@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-06) - Issue 152 review amendments
+
+- `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.
+- `effect.permissionSet` again holds one assignable permission set ID (`BIFROST Full ori` or `BIFROST Read ori`) on every Inventory type, the same shape as Foundation. The help-text guard (96970 `NotesAndOverview_NameNoAlObjects`) exempts that single structured field; captions such as Inv. Posting Gate stay in the error and notes text.
+
 ### Fixed (2026-11-03) - merge main contract-parity fixes into the help branch
 
 - Merge main `c667066` (#159 / #179) and keep the #152 display captions on assembly and transfer notes in `Inventory Contract Parts ori` (10076919). The assembly preview note keeps main's rollback sentence for `postingDate` and `quantityToAssemble`.

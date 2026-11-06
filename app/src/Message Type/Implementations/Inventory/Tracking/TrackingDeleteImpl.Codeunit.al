@@ -99,7 +99,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid, or the domain is disabled.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected line or tracking entry does not exist on that source.', 'Read Inventory.Tracking.Get for the selected source and use its entryNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected tracking is reserved or cannot be removed.', 'Cancel the reservation using Inventory.Reservation.Cancel before removing its tracking.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native source or tracking permissions are missing.', 'Assign the Bifrost "Full Access" permission set and the required Business Central document and reservation permissions.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native source or tracking permissions are missing.', 'Assign BIFROST Full ori and the required Business Central document and reservation permissions.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native item tracking validation refuses the operation.', 'Correct the source or tracking values in Business Central. A standalone failure rolls back; Omit Commit propagates the failure to the caller transaction.'));
         exit(true);
     end;
@@ -112,7 +112,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'write');
         Effect.Add('changes', 'Changes only unposted tracking on the selected source using native item tracking and reservation handling. No direct persistent Tracking Specification inserts and no ledger postings. Standalone calls commit on success; Omit Commit stays in the caller transaction.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
         Effect.Add('writes', 'Reservation Entry');
         Effect.Add('posts', false);

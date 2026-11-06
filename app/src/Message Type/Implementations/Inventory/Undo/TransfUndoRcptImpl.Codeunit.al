@@ -98,7 +98,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
         Effect.Add('posts', false);
         Effect.Add('changes', 'Nothing. The call only looks up the posted transfer receipt and then always answers an error, because receipt undo is not available in this Business Central version.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Inv. Posting Gate');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         exit(true);
     end;
 

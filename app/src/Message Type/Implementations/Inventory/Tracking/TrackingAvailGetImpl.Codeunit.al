@@ -145,7 +145,7 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingItemErr, MissingItemWhenTxt, ItemNoNextStepTxt));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A source object, identifier, number, date, filter or array has an invalid type or range.', 'Use the declared JSON types and valid ranges.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, quantity is unavailable, the source is closed, or the company domain is disabled.', 'Correct the selection and quantity; check Inventory Setup and native source rules.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, pairing or tracking values are unsupported, the source is closed, or the company domain is disabled.', 'Correct the selection; check Inventory Setup and native source rules.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'A requested item identifier cannot be resolved by Foundation.', 'Correct the item selector; no tracked stock is a successful empty page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks required domain or native table permissions.', 'Ask an administrator for the required permissions.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Native item selection or filter error.', 'Foundation rejects the item selector or a native filter cannot be evaluated.', 'Correct the item selection and Business Central filter syntax.'));
@@ -158,7 +158,7 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is changed. Reads the open tracked item ledger entries of the item and the quantity reserved against them.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
         exit(true);
     end;

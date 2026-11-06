@@ -132,7 +132,7 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('posts', false);
         Effect.Add('changes', 'Sets the Unit Price on one Item card. No price list, no cost and no ledger entries are changed. All checks run before the change, and a failure changes nothing. Business Central commits the change when the call finishes; under Omit Commit the commit is left to the caller.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Preconditions.Add('The Item Price domain is turned on in Inventory Setup.');
         Preconditions.Add('Exactly one item is selected, and it is not blocked unless allowBlocked is true.');
         Preconditions.Add('The caller can write items and the Unit Price field.');

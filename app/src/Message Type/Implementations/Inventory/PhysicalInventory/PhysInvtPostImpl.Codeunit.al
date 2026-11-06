@@ -173,7 +173,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts the selected lines of the Phys. Inventory journal batch through the standard item journal batch posting: item ledger entries, physical inventory ledger entries, value entries and an item register are created and the posted lines leave the journal. The posting commits with the answer; under Omit Commit the caller''s transaction commits instead. It cannot be undone by a message type of this app.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set and Item Posting Gate');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         Effect.Add('rollback', false);

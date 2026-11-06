@@ -5710,9 +5710,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2491728684 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Returns transfer order statistics: line quantity, parcels, net/gross weight, volume and reservation state.</source>
-          <target>Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd, rúmmáli og stöðu frátekningar.</note>
+          <source>Returns transfer order statistics: line quantity, parcels, net/gross weight and volume.</source>
+          <target>Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd og rúmmáli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar tölfræði millifærslupöntunar: magni á línum, pökkum, nettó- og brúttóþyngd og rúmmáli.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Stats Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2491728684 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">

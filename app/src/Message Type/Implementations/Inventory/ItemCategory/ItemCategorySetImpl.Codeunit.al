@@ -218,7 +218,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
         Effect.Add('posts', false);
         Effect.Add('changes', 'Creates the item category, or changes the description of an existing one, and stores the listed attribute defaults on it. A value equal to the one inherited from a parent category removes the own row of the category for that attribute. Categories are never deleted or moved. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Full Access" permission set');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
         exit(true);
     end;
@@ -848,7 +848,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
+        PermissionNextStepLbl: Label 'Assign BIFROST Full ori with Inventory write permissions and a Business Central permission set that can change these tables.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.';
     begin
         exit(PermissionNextStepLbl);
     end;

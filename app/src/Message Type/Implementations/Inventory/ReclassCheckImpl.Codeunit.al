@@ -155,7 +155,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Reclassification domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Read-Only" permission set.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'templateName and batchName are required.', 'The template or the batch name is absent or empty.', 'Send templateName and batchName, or their journal aliases.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Item journal template %1 was not found.', 'No item journal template has that name.', 'Check templateName.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Template %1 is not a reclassification template.', 'The template exists but its type is not Transfer.', 'Use a reclassification template.'));
@@ -168,7 +168,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Nothing is written or posted. The template is looked up and the lines of the batch whose entry type is Transfer are counted.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'the Bifrost "Read-Only" permission set');
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);

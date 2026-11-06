@@ -181,7 +181,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             EffectKind := TextOf(EffectObject, 'effect');
             Assert.IsTrue(EffectKind in ['read', 'write', 'irreversible'], TypeName + ' effect is read, write or irreversible.');
             Assert.AreNotEqual('', TextOf(EffectObject, 'changes'), TypeName + ' effect states what changes.');
-            Assert.AreNotEqual('', TextOf(EffectObject, 'permissionSet'), TypeName + ' effect names the permission set.');
+            Assert.IsTrue(TextOf(EffectObject, 'permissionSet') in ['BIFROST Full ori', 'BIFROST Read ori'], TypeName + ' effect.permissionSet holds one assignable permission set ID.');
             Assert.IsTrue(EffectObject.Contains('idempotent'), TypeName + ' effect states whether it is idempotent.');
             Direction := Implementation.GetMessageDirection();
             if EffectKind = 'read' then
@@ -353,6 +353,25 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.AreNotEqual('', FindAlReference('Calls Item Jnl.-Post Line.'), 'Internal procedure names are rejected.');
         Assert.AreNotEqual('', FindAlReference('BIFROST Read ori'), 'A permission name at the end is rejected.');
         Assert.AreEqual('', FindAlReference('Read the original order and assign Inv. Posting Gate.'), 'Ordinary words and display captions are accepted.');
+    end;
+
+    /// <summary>Issue152 AC2 item 4: read-only tracking and statistics help does not promise inputs or answer fields that do not exist.</summary>
+    [Test]
+    procedure Scenario_AC02_ReadHelp_PromisesNothingMissing()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        ContractText: Text;
+    begin
+        // Issue152 AC02 | Time: no date dependency | Risk: metadata only, no data touched.
+        ContractMgt.GetContract("Message Type ori"::"Inventory.Tracking.Get", Contract);
+        Contract.WriteTo(ContractText);
+        Assert.IsFalse(LowerCase(ContractText).Contains('quantity is'), 'Tracking.Get declares no quantity input, so its errors do not mention one.');
+        Assert.IsFalse(LowerCase(ContractText).Contains('selection and quantity'), 'Tracking.Get errors do not advise correcting a quantity.');
+        Clear(Contract);
+        ContractMgt.GetContract("Message Type ori"::"Inventory.TransferOrder.Statistics", Contract);
+        Contract.WriteTo(ContractText);
+        Assert.IsFalse(LowerCase(ContractText).Contains('reservation state'), 'TransferOrder.Statistics answers no reservation state, so help does not promise one.');
     end;
 
     /// <summary>Issue152 AC2: examples for option definitions describe the values actually requested.</summary>
@@ -546,10 +565,12 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     begin
         if Token.IsObject() then begin
             ObjectValue := Token.AsObject();
-            foreach PropertyName in ObjectValue.Keys() do begin
-                ObjectValue.Get(PropertyName, Child);
-                AssertHelpTokenNamesNoAlObject(Child, Context + '.' + PropertyName);
-            end;
+            // effect.permissionSet is a structured contract field that keeps the assignable permission set ID (Issue152 story revision 05.11.2026); every other field is help text.
+            foreach PropertyName in ObjectValue.Keys() do
+                if PropertyName <> 'permissionSet' then begin
+                    ObjectValue.Get(PropertyName, Child);
+                    AssertHelpTokenNamesNoAlObject(Child, Context + '.' + PropertyName);
+                end;
             exit;
         end;
         if Token.IsArray() then begin
