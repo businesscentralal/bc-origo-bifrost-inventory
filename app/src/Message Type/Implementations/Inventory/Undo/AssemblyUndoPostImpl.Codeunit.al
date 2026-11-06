@@ -141,7 +141,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Examples.Add(ContractMgt.Example('Undo posted assembly 132001', '{"type":"Inventory.Assembly.UndoPost","data":{"documentNo":"132001"}}', '{"status":"Success","documentNo":"132001"}'));
+        Examples.Add(ContractMgt.Example('Undo posted assembly 132001', '{"type":"Inventory.Assembly.UndoPost","data":{"expectedCount":1,"documentNo":"132001"}}', '{"status":"Success","documentNo":"132001"}'));
         exit(true);
     end;
 

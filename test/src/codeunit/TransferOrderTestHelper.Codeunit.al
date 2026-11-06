@@ -88,7 +88,15 @@ codeunit 96904 "Transfer Order Test Helper"
     /// </summary>
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; var ResponseJson: JsonObject)
     begin
-        ProcessMessage(MessageType, '', RequestJson, ResponseJson);
+        ProcessMessage(MessageType, '', RequestJson, GlobalLanguage(), ResponseJson);
+    end;
+
+    /// <summary>
+    /// Dispatches in an explicit Windows language. Zero still means the company default, which is what a language id of 0 selects inside the dispatcher.
+    /// </summary>
+    internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; WindowsLanguageId: Integer; var ResponseJson: JsonObject)
+    begin
+        ProcessMessage(MessageType, '', RequestJson, WindowsLanguageId, ResponseJson);
     end;
 
     /// <summary>
@@ -96,8 +104,17 @@ codeunit 96904 "Transfer Order Test Helper"
     /// The subject is the document number when the message type reads it from there.
     /// </summary>
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; var ResponseJson: JsonObject)
+    begin
+        ProcessMessage(MessageType, Subject, RequestJson, GlobalLanguage(), ResponseJson);
+    end;
+
+    /// <summary>
+    /// Dispatches with a subject and an explicit Windows language id.
+    /// </summary>
+    internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; WindowsLanguageId: Integer; var ResponseJson: JsonObject)
     var
         Dispatcher: Codeunit "Dispatcher ori";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         RequestContent: BigText;
         ResponseContent: BigText;
         ResponseContentType: Text[100];
@@ -107,6 +124,7 @@ codeunit 96904 "Transfer Order Test Helper"
         RequestText: Text;
         ResponseText: Text;
     begin
+        InventoryLibrary.ConfirmRequest(MessageType, RequestJson);
         RequestJson.WriteTo(RequestText);
         if RequestText <> '' then
             RequestContent.AddText(RequestText);
@@ -118,7 +136,7 @@ codeunit 96904 "Transfer Order Test Helper"
             '',
             RequestContent,
             EmptyTaskId,
-            GlobalLanguage(),
+            WindowsLanguageId,
             MessageId,
             ResponseContent,
             ResponseContentType,

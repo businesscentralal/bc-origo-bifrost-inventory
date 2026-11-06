@@ -6,7 +6,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Issue 159: Check requires reads only; real posting preview retains the posting gate.</summary>
-codeunit 96972 "Reclass Check Perm Tests ori"
+codeunit 96976 "Reclass Check Perm Tests ori"
 {
     Subtype = Test;
     TestPermissions = Restrictive;

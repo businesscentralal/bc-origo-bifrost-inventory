@@ -146,7 +146,8 @@ own them.
 Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`,
-`Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` and `Inventory.Transfer.UndoReceipt`.
+`Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post` and `Inventory.Revaluation.PreviewPost`.
+`Inventory.Transfer.UndoReceipt` is not one of them: it is disabled, it does not post, and it is absent from the active roster.
 
 ---
 
@@ -167,10 +168,35 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
    Item Reference, Availability, Item Charge and Item Category.
-   All domains start on except **Reclassification**, which starts off once the setup record exists.
-   Item Reference, Availability, Item Charge and Item Category start on in a new company; a company
-   that already had an Inventory Setup record before they were added gets them off after the
-   upgrade, so turn them on here.
+   Domain defaults now follow the company's inventory usage. New rows start off and enable the
+   domains for which usage exists. A one-time, per-company upgrade raises the same flags on
+   existing rows, including Reclassification. It never turns an enabled domain off and makes no
+   write when nothing changes. Later manual choices remain in place; the upgrade does not run
+   again. If no setup row exists, the existing all-domains-enabled rule still applies.
+   Calls that reach a disabled domain's implementation return a coded refusal with a next step
+   pointing to Inventory Setup. Foundation can omit disabled types from discovery and reject a
+   call before it reaches the implementation; this app cannot change that Foundation behavior.
+
+   | Domain | Usage that enables it (any listed signal is sufficient) |
+   | --- | --- |
+   | Attributes | Item Attribute records |
+   | Transfer Orders | An in-transit Location, Transfer Header or Transfer Route |
+   | Assembly | BOM Component, Assembly Header or Production BOM Header |
+   | Reservations | Reservation Entry with status Reservation |
+   | Item Tracking | Item Tracking Code, an Item with a tracking code, or lot/serial/package tracking on Reservation Entry, Tracking Specification or Item Ledger Entry |
+   | Physical Inventory | Phys. Invt. Record Header, Phys. Inventory Ledger Entry, or an Item with a counting period |
+   | Costing | Value Entry or Inventory Adjmt. Entry (Order) |
+   | Reclassification | Location, Bin Content, Warehouse Entry, or one Item with ledger entries in more than one location |
+   | Item Application | Item Application Entry |
+   | Inventory Period | Inventory Period |
+   | Item Price | Price List Line with Asset Type Item |
+   | Item Reference | Item Reference |
+   | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
+   | Item Charge | Item Charge |
+   | Item Category | Item Category or an Item with a category code |
+
+   Usage checks only read company data. A source the caller cannot read supplies no signal; no
+   extra business-data permission is granted. Administrators can still enable any domain manually.
 4. Grant permissions:
    - Foundation's `BIFROST Read ori` and `BIFROST Full ori` roles are extended by
      `BIFROST InvRead ori` and `BIFROST InvWrite ori`; no separate assignment is needed for reads
@@ -373,3 +399,24 @@ and `supportedLocales` `["en-US", "is-IS"]`, so every help page must exist in bo
 `Inventory.Transfer.UndoReceipt` is disabled and removed from the active shipped roster because the supported platform has no native transfer receipt undo. Its released enum identifier remains solely for binary compatibility; it does not undo receipts. Return received goods with a new transfer order. `Inventory.Transfer.UndoShipment` refuses already-received lines with `PreconditionFailed` and that next step.
 
 Tracking write helper: codeunit `10076925 Inventory Tracking Write ori`; native regressions: `96974 Inv. Source Tracking Tests ori`. The explicit test-only MCP fixture `96973` adds owned tracking sources.
+
+### Confirm irreversible requests (Foundation core#1151)
+
+On Foundation versions that expose `expectedCount` in the composed help contract, all nine
+Inventory types declaring `irreversible` use the Foundation confirmation protocol:
+`Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.Revaluation.Post`,
+`Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`, `Inventory.TransferOrder.Post`,
+`Inventory.AssemblyOrder.Post`, `Inventory.Transfer.UndoShipment` and `Inventory.Assembly.UndoPost`.
+Call without `data.expectedCount` first: `ConfirmationRequired` reports the count in `expected`
+and changes no business data. Inspect the preview and repeat the same request with that count.
+A stale or wrong count returns `ConfirmationMismatch` and changes nothing. These types use
+Foundation's default single-subject count of **1** (one document, batch or invocation), not
+the number of journal lines or ledger entries; confirmation does not prove the target exists.
+The handler still validates the target, domain and native posting permissions afterwards.
+Foundation's company confirmation setting controls whether an omitted count is required; a
+supplied count is always checked. Never disable confirmation to make a request succeed.
+The minimum supported Foundation remains 28.0.3.530, which predates this protocol; inspect
+the deployed help contract before sending confirmation controls to that version.
+
+Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
+app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.

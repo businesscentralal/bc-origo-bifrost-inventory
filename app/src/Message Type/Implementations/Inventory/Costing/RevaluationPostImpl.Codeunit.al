@@ -168,7 +168,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post the Revaluation batch DEFAULT of template REVAL',
-            '{"type":"Inventory.Revaluation.Post","data":{"templateName":"REVAL","batchName":"DEFAULT"}}',
+            '{"type":"Inventory.Revaluation.Post","data":{"expectedCount":1,"templateName":"REVAL","batchName":"DEFAULT"}}',
             '{"status":"Success","templateName":"REVAL","batchName":"DEFAULT","linesPosted":2,"totalQuantity":0,"totalAmount":120.5,"itemRegisterNo":58,"fromValueEntryNo":912,"toValueEntryNo":913}'));
         exit(true);
     end;

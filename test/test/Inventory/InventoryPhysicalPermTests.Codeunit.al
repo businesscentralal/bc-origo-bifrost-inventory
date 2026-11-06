@@ -12,6 +12,7 @@ codeunit 96945 "Inventory Physical Perm Tests"
     TestPermissions = Restrictive;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
 
     /// <summary>Native journal write rights alone never enable physical posting.</summary>
@@ -82,6 +83,9 @@ codeunit 96945 "Inventory Physical Perm Tests"
 
     local procedure LowerToNativeWriter(var LowerPermissions: Codeunit "Library - Lower Permissions")
     begin
+        // Prepare the company toggle before restoring the exact restricted caller below.
+        LowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnablePhysicalInventory();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Phys Native Test');
     end;

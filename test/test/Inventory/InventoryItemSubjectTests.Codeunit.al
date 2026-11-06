@@ -15,6 +15,7 @@ codeunit 96931 "Inventory Item Subject Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
         Helper: Codeunit "Assembly Order Test Helper";
@@ -89,6 +90,7 @@ codeunit 96931 "Inventory Item Subject Tests"
         Index: Integer;
         SawItemA: Boolean;
     begin
+        DomainSetup.EnableReservations();
         LibraryInventory.CreateItem(ItemA);
         LibraryInventory.CreateItem(ItemB);
         InsertReservation(ItemA."No.", 'INVSUBJA');

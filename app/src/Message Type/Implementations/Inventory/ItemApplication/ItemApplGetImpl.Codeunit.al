@@ -107,7 +107,7 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, ErrorHelp1Lbl, ErrorHelp2Lbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp3Lbl, ErrorHelp4Lbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, ErrorHelp5Lbl, ErrorHelp6Lbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, ErrorHelp7Lbl, ErrorHelp8Lbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, ErrorHelp7Lbl, ErrorHelp8Lbl));
         exit(true);
     end;
 
@@ -190,7 +190,10 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         ResponseJson: JsonObject;
         Entries: JsonArray;
         EntryJson: JsonObject;
+        Token: JsonToken;
         ItemLedgerEntryNo: Integer;
+        MissingEntryErr: Label 'itemLedgerEntryNo is required.', Comment = 'is-IS=itemLedgerEntryNo er nauðsynlegt.';
+        NotIntegerErr: Label 'itemLedgerEntryNo must be a JSON integer.', Comment = 'is-IS=itemLedgerEntryNo verður að vera JSON heiltala.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", false, false) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
@@ -199,8 +202,14 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not Parts.TryReadEntryNo(RequestJson, 'itemLedgerEntryNo', Argument, ItemLedgerEntryNo) then
+        if not RequestJson.Get('itemLedgerEntryNo', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingEntryErr, 'itemLedgerEntryNo', '', '', '');
             exit;
+        end;
+        if not TryReadEntryNo(Token, ItemLedgerEntryNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, NotIntegerErr, 'itemLedgerEntryNo', '', 'integer', '');
+            exit;
+        end;
         ItemApplicationEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntryNo);
         if ItemApplicationEntry.FindSet() then
             repeat
@@ -217,5 +226,11 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
         ResponseJson.Add('entries', Entries);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    [TryFunction]
+    local procedure TryReadEntryNo(Token: JsonToken; var ItemLedgerEntryNo: Integer)
+    begin
+        ItemLedgerEntryNo := Token.AsValue().AsInteger();
     end;
 }

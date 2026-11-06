@@ -223,7 +223,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post the whole batch DEFAULT',
-            '{"type":"Inventory.PhysInventory.Post","subject":"PHYS. INV.|DEFAULT"}',
+            '{"type":"Inventory.PhysInventory.Post","subject":"PHYS. INV.|DEFAULT","data":{"expectedCount":1}}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","postedLineCount":1,"itemRegisterNo":1250,"fromEntryNo":8812,"toEntryNo":8812,"fromPhysInventoryEntryNo":410,"toPhysInventoryEntryNo":410,"result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"itemNo":"1000","quantity":2,"locationCode":"","newLocationCode":"","binCode":"","newBinCode":"","lotNo":"","newLotNo":"","serialNo":"","newSerialNo":"","packageNo":"","newPackageNo":"","tracking":[]}]}'));
         exit(true);
     end;

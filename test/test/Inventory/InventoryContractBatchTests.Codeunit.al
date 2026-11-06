@@ -11,6 +11,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         LibraryAssert: Codeunit System.TestLibraries.Utilities."Library Assert";
 
     [Test]
@@ -312,6 +313,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         ResponseJson: JsonObject;
         Token: JsonToken;
     begin
+        DomainSetup.EnablePhysicalInventory();
         // [GIVEN] The help contract names PreconditionFailed for an empty batch.
         LibraryAssert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.PhysInventory.Post", Contract), 'Inventory.PhysInventory.Post must declare a contract.');
         GetNamedMember(Contract, 'errors', 'code', 'PreconditionFailed', ErrorEntry);
@@ -470,7 +472,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('related');
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');
@@ -710,7 +712,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
         AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
-        AssertChapterJson(Contract, 'errors', Parts.GetErrors(Legacy).AsToken());
+        AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
@@ -718,6 +720,55 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
+    var
+        Implementation: Interface "Msg Contract ori";
+        RawErrors: JsonArray;
+        Actual: JsonToken;
+        Entry: JsonToken;
+        Code: JsonToken;
+        Filtered: JsonArray;
+        RawContract: JsonObject;
+        ActualContract: JsonObject;
+        RetryableCount: Integer;
+        CodeText: Text;
+    begin
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Implementation.GetErrors(RawErrors);
+        RawContract.Add('errors', RawErrors);
+        AssertChapterJson(RawContract, 'errors', Expected.AsToken());
+        LibraryAssert.IsTrue(Contract.Get('errors', Actual), 'Composed errors chapter exists.');
+        foreach Entry in Actual.AsArray() do begin
+            CodeText := '';
+            if Entry.AsObject().Get('code', Code) then
+                CodeText := Code.AsValue().AsText();
+            if CodeText = 'Retryable' then begin
+                RetryableCount += 1;
+                LibraryAssert.AreNotEqual('Inventory.Attribute.Get', TypeName, 'Read types do not acquire Retryable.');
+                LibraryAssert.IsTrue(Entry.AsObject().Contains('when'), 'Retryable states its condition.');
+                LibraryAssert.IsTrue(Entry.AsObject().Contains('fix'), 'Retryable states its recovery.');
+            end else
+                Filtered.Add(Entry);
+        end;
+        ActualContract.Add('errors', Filtered);
+        AssertChapterJson(ActualContract, 'errors', Expected.AsToken());
+        if (TypeName <> 'Inventory.Attribute.Get') and FoundationAppendsSharedRetryable() then
+            LibraryAssert.AreEqual(1, RetryableCount, 'Foundation 28.0.11 appends exactly one shared Retryable entry.')
+        else
+            LibraryAssert.AreEqual(0, RetryableCount, 'This Foundation does not append a shared Retryable entry.');
+    end;
+
+    local procedure FoundationAppendsSharedRetryable(): Boolean
+    var
+        Info: ModuleInfo;
+    begin
+        // GetContract appends Retryable for a write effect from Foundation 28.0.11.
+        // Release 28.0.10 has the enum and copies GetErrors unchanged. Release 28.0.3 has neither.
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            Error('Bifrost Foundation is not installed.');
+        exit(Info.AppVersion >= Version.Create(28, 0, 11, 0));
     end;
 
     local procedure AssertChapterJson(Contract: JsonObject; Chapter: Text; Expected: JsonToken)
@@ -811,9 +862,28 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Contract.Get('effect', ChapterToken);
         Effect := ChapterToken.AsObject();
         Effect.Get('changes', ChapterToken);
-        LibraryAssert.AreEqual('Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.', ChapterToken.AsValue().AsText(), 'Applied filters, posting boundary and actual queue counts are declared.');
+        AssertCostingEffectChanges(ChapterToken.AsValue().AsText());
         Effect.Get('idempotent', ChapterToken);
         LibraryAssert.IsFalse(ChapterToken.AsValue().AsBoolean(), 'No safe retry or idempotence guarantee is established.');
+    end;
+
+    local procedure AssertCostingEffectChanges(ComposedChanges: Text)
+    var
+        Implementation: Interface "Msg Contract ori";
+        RawEffect: JsonObject;
+        RawChanges: JsonToken;
+        Expected: Text;
+    begin
+        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.';
+        Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
+        Implementation.GetEffect(RawEffect);
+        RawEffect.Get('changes', RawChanges);
+        LibraryAssert.AreEqual(Expected, RawChanges.AsValue().AsText(), 'Exact application posting contract.');
+        LibraryAssert.IsTrue(ComposedChanges.StartsWith(Expected), 'Composition preserves the entire application contract.');
+        if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
+            LibraryAssert.IsTrue(ComposedChanges.Substring(StrLen(Expected) + 1).Contains('expectedCount'), 'Foundation appends its confirmation rule.')
+        else
+            LibraryAssert.AreEqual(Expected, ComposedChanges, 'Legacy Foundation does not enrich the effect.');
     end;
 
     /// <summary>Checks omitted chapters clear reused interface outputs.</summary>

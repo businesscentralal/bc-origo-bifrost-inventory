@@ -25,6 +25,36 @@ codeunit 96902 "Inventory Test Library ori"
         IsInitialized := true;
     end;
 
+    /// <summary>Explicitly enables the reservation domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableReservations()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Reservations := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the physical inventory domain for a test of its independent behavior or permissions.</summary>
+    procedure EnablePhysicalInventory()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup."Phys. Inventory" := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the item price domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableItemPrice()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup."Item Price" := true;
+        Setup.Modify(true);
+    end;
+
     /// <summary>Dispatches a message type via Foundation Dispatcher and returns the response JSON.</summary>
     procedure ExecuteType(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; OmitCommit: Boolean) ResponseJson: JsonObject
     var
@@ -36,12 +66,36 @@ codeunit 96902 "Inventory Test Library ori"
         RequestText: Text;
         ResponseText: Text;
     begin
+        ConfirmRequest(MessageType, RequestJson);
         RequestJson.WriteTo(RequestText);
         RequestContent.AddText(RequestText);
         Dispatcher.Execute(MessageType, MessageVersion::"1.0", Subject, '', 'application/json', RequestContent, ResponseContent, ResponseContentType, OmitCommit);
         ResponseContent.GetSubText(ResponseText, 1);
         if ResponseText <> '' then
             ResponseJson.ReadFrom(ResponseText);
+    end;
+
+    /// <summary>Confirms the one subject of an irreversible test request when Foundation advertises confirmation.</summary>
+    /// <param name="MessageType">The actual dispatched type.</param>
+    /// <param name="Request">Receives expectedCount without replacing an explicitly tested count.</param>
+    procedure ConfirmRequest(MessageType: Enum "Message Type ori"; var Request: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Parameters: JsonToken;
+        Parameter: JsonToken;
+        Name: JsonToken;
+    begin
+        if Request.Contains('expectedCount') then
+            exit;
+        ContractMgt.GetContract(MessageType, Contract);
+        if Contract.Get('parameters', Parameters) then
+            foreach Parameter in Parameters.AsArray() do
+                if Parameter.AsObject().Get('name', Name) then
+                    if Name.AsValue().AsText() = 'expectedCount' then begin
+                        Request.Add('expectedCount', 1);
+                        exit;
+                    end;
     end;
 
     /// <summary>Creates a unique Option attribute with two option values.</summary>

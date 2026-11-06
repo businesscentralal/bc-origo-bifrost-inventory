@@ -21,6 +21,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
     TestPermissions = Disabled;
 
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         Assert: Codeunit "Library Assert";
         Helper: Codeunit "Assembly Order Test Helper";
 
@@ -109,6 +110,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
     begin
+        DomainSetup.EnablePhysicalInventory();
         RequestJson.Add('journalTemplateName', 'ZZC-NONE');
         RequestJson.Add('journalBatchName', 'ZZC-NONE');
         RequestJson.Add('lineNo', 999999);
@@ -1173,8 +1175,16 @@ codeunit 96930 "Inventory Item Refusal Tests"
         end;
         BeforeApplications := ApplicationEntry.Count();
         BeforeLedger := LedgerEntry.Count();
+        // Claude composition disposition 6678237689: ItemApplication.Get retains #166's refusal shape.
+        if (MessageType = "Message Type ori"::"Inventory.ItemApplication.Get") and (Scenario = 'Format') then begin
+            ErrorCode := 'InvalidParameter';
+            ErrorText := Choose(LanguageId, 'itemLedgerEntryNo must be a JSON integer.', 'itemLedgerEntryNo verður að vera JSON heiltala.');
+        end;
         Dispatch(MessageType, Request, LanguageId, Response);
-        AssertRefusal(Response, ErrorCode, ParameterName, ErrorText, NextStep);
+        if MessageType = "Message Type ori"::"Inventory.ItemApplication.Get" then
+            AssertParentApplicationGetRefusal(Response, ErrorCode, ErrorText, Scenario = 'Format')
+        else
+            AssertRefusal(Response, ErrorCode, ParameterName, ErrorText, NextStep);
         Assert.AreEqual(BeforeApplications, ApplicationEntry.Count(), 'No application mutation on refusal.');
         Assert.AreEqual(BeforeLedger, LedgerEntry.Count(), 'No ledger mutation on refusal.');
         Contract := MessageType;
@@ -1683,6 +1693,28 @@ codeunit 96930 "Inventory Item Refusal Tests"
         GlobalLanguage(LanguageId);
         Helper.ProcessMessage(MessageType, RequestJson, ResponseJson);
         GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure AssertParentApplicationGetRefusal(Response: JsonObject; ExpectedCode: Text; ExpectedError: Text; IsFormatRefusal: Boolean)
+    var
+        Token: JsonToken;
+    begin
+        // #166's parser and metadata are retained by Claude's composition ruling 6678237689.
+        Assert.IsTrue(Response.Get('status', Token), 'status missing');
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'status');
+        Assert.IsTrue(Response.Get('code', Token), 'code missing');
+        Assert.AreEqual(ExpectedCode, Token.AsValue().AsText(), 'parent refusal code');
+        Assert.IsTrue(Response.Get('parameter', Token), 'parameter missing');
+        Assert.AreEqual('itemLedgerEntryNo', Token.AsValue().AsText(), 'parent refusal parameter');
+        Assert.IsTrue(Response.Get('error', Token), 'error missing');
+        Assert.AreEqual(ExpectedError, Token.AsValue().AsText(), 'parent localized error');
+        Assert.IsFalse(Response.Contains('nextStep'), 'Parent Get refusal has no nextStep.');
+        Assert.IsFalse(Response.Contains('received'), 'Parent Get refusal has no received value.');
+        if IsFormatRefusal then begin
+            Assert.IsTrue(Response.Get('expected', Token), 'parent expected missing');
+            Assert.AreEqual('integer', Token.AsValue().AsText(), 'parent expected');
+        end else
+            Assert.IsFalse(Response.Contains('expected'), 'Parent missing-key refusal has no expected value.');
     end;
 
     local procedure AssertRefusal(ResponseJson: JsonObject; ExpectedCode: Text; ExpectedParameter: Text; ExpectedError: Text; ExpectedNext: Text)

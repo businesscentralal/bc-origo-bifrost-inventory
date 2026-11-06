@@ -31,7 +31,7 @@ README "Objects" lists every object with its ID. In short:
   the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
   tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
-  fields 21-24. New domains are opt-in for companies that already have a setup row (no upgrade code switches them on).
+  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
 ## Test object IDs (unchanged by the renumbering)
 
