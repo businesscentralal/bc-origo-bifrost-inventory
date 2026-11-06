@@ -17,8 +17,8 @@ codeunit 10076844 "Item Attribute Resolve ori"
         AttributeNotFoundErr: Label 'Item attribute "%1" was not found.', Comment = '%1 = Attribute name or id||is-IS=Vörueigindin "%1" fannst ekki.';
         AttributeTypeMismatchErr: Label 'Attribute "%1" has type %2; request type %3 does not match.', Comment = '%1 = Name, %2 = Actual type, %3 = Requested type||is-IS=Eigindin "%1" er af gerðinni %2; gerðin %3 í beiðninni passar ekki.';
         OptionValueMissingErr: Label 'Option value "%1" was not found for attribute "%2". Pass createValueIfMissing: true to create it.', Comment = '%1 = Value, %2 = Attribute name||is-IS=Valkostsgildið "%1" fannst ekki fyrir eigindina "%2". Sendu createValueIfMissing: true til að stofna það.';
-        MappingConflictErr: Label 'Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Item.Attribute.Update.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Item.Attribute.Update.';
-        MappingMissingErr: Label 'Item "%1" has no mapping for attribute "%2". Use Item.Attribute.Create first.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Item.Attribute.Create fyrst.';
+        MappingConflictErr: Label 'Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Inventory.Attribute.Update.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.';
+        MappingMissingErr: Label 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.', Comment = '%1 = Item No., %2 = Attribute name||is-IS=Varan "%1" hefur enga tengingu við eigindina "%2". Notaðu Inventory.Attribute.Create fyrst.';
         ItemBlockedErr: Label 'Item "%1" is blocked. Pass allowBlocked: true to override.', Comment = '%1 = Item No.||is-IS=Varan "%1" er lokuð. Sendu allowBlocked: true til að leyfa breytinguna.';
         AttributesRequiredErr: Label 'Request data.attributes must be a non-empty array.', Comment = 'is-IS=data.attributes í beiðninni verður að vera fylki sem er ekki tómt.';
         NameRequiredErr: Label 'Attribute definition requires data.name.', Comment = 'is-IS=Skilgreining eigindar krefst data.name.';
@@ -26,6 +26,185 @@ codeunit 10076844 "Item Attribute Resolve ori"
         DuplicateAttributeErr: Label 'Item attribute "%1" already exists.', Comment = '%1 = Attribute name||is-IS=Vörueigindin "%1" er þegar til.';
         UnknownTypeErr: Label 'Unknown attribute type "%1". Expected Option, Text, Integer, Decimal, or Date.', Comment = '%1 = Type name||is-IS=Óþekkt gerð eigindar "%1". Búist var við Option, Text, Integer, Decimal eða Date.';
         ValueRequiredErr: Label 'A value is required for attribute "%1".', Comment = '%1 = Attribute name||is-IS=Gildi er nauðsynlegt fyrir eigindina "%1".';
+
+    /// <summary>Validates every mapping request without creating values or changing mappings.</summary>
+    procedure ValidateMappings(var Argument: Record "Message Argument ori"; Updating: Boolean): Boolean
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Attributes: JsonArray;
+        Token: JsonToken;
+        Entry: JsonToken;
+        Index: Integer;
+        ArrayExpectedLbl: Label 'a non-empty array of attribute objects', Comment = 'is-IS=fylki eigindahluta sem er ekki tómt';
+        ArrayNextLbl: Label 'Send at least one attribute object in data.attributes.', Comment = 'is-IS=Sendu a.m.k. einn eigindahlut í data.attributes.';
+        ObjectErr: Label 'Each attribute entry must be an object.', Comment = 'is-IS=Hver eigindafærsla verður að vera hlutur.';
+        ObjectExpectedLbl: Label 'an attribute object', Comment = 'is-IS=eigindahlutur';
+        ObjectNextLbl: Label 'Send name or attributeId and a value in each attribute object.', Comment = 'is-IS=Sendu name eða attributeId og gildi í hverjum eigindahlut.';
+        BlockedExpectedLbl: Label 'an unblocked item or allowBlocked true', Comment = 'is-IS=ólokuð vara eða allowBlocked true';
+        BlockedNextLbl: Label 'Unblock the item or send allowBlocked true for an intentional write.', Comment = 'is-IS=Opnaðu vöruna eða sendu allowBlocked true fyrir fyrirhugaða breytingu.';
+    begin
+        Request := Argument.GetRequestJson();
+        if not Request.Get('attributes', Token) then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidLine, AttributesRequiredErr, 'attributes', '', ArrayExpectedLbl, ArrayNextLbl));
+        if not Token.IsArray() then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidLine, AttributesRequiredErr, 'attributes', '', ArrayExpectedLbl, ArrayNextLbl));
+        Attributes := Token.AsArray();
+        if Attributes.Count() = 0 then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidLine, AttributesRequiredErr, 'attributes', '', ArrayExpectedLbl, ArrayNextLbl));
+        if not ResolveSingleItem(Argument, Item) then
+            exit(false);
+        if Item.Blocked and not GetBool(Request, 'allowBlocked', false) then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ItemBlockedErr, Item."No."), 'allowBlocked', 'false', BlockedExpectedLbl, BlockedNextLbl));
+        foreach Entry in Attributes do begin
+            Index += 1;
+            if not Entry.IsObject() then
+                exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidLine, ObjectErr, AttributePath(Index, ''), '', ObjectExpectedLbl, ObjectNextLbl));
+            if not ValidateMapping(Argument, Item, Entry.AsObject(), Index, Updating) then
+                exit(false);
+        end;
+        exit(true);
+    end;
+
+    local procedure ValidateMapping(var Argument: Record "Message Argument ori"; Item: Record Item; Request: JsonObject; Index: Integer; Updating: Boolean): Boolean
+    var
+        Attribute: Record "Item Attribute";
+        NamedAttribute: Record "Item Attribute";
+        RequestedType: Record "Item Attribute";
+        Value: Record "Item Attribute Value";
+        Mapping: Record "Item Attribute Value Mapping";
+        AttributeId: Integer;
+        AttributeName: Text;
+        RequestedTypeText: Text;
+        ValueText: Text;
+        IdentityErr: Label 'An attribute name or attributeId is required.', Comment = 'is-IS=Heiti eigindar eða attributeId er nauðsynlegt.';
+        IdentityExpectedLbl: Label 'an existing attribute name or attributeId', Comment = 'is-IS=heiti fyrirliggjandi eigindar eða attributeId';
+        IdentityNextLbl: Label 'Send an existing attribute or create it with Inventory.AttributeDefinition.Create.', Comment = 'is-IS=Sendu fyrirliggjandi eigind eða stofnaðu hana með Inventory.AttributeDefinition.Create.';
+        ConflictErr: Label 'attributeId and name identify different attributes.', Comment = 'is-IS=attributeId og name auðkenna ólíkar eigindir.';
+        ConflictNextLbl: Label 'Send one identifier or identifiers for the same attribute.', Comment = 'is-IS=Sendu eitt auðkenni eða auðkenni sömu eigindar.';
+        ValueExpectedLbl: Label 'a value matching the attribute type', Comment = 'is-IS=gildi sem passar við gerð eigindar';
+        ValueNextLbl: Label 'Send value, numericValue or dateValue matching the attribute type.', Comment = 'is-IS=Sendu value, numericValue eða dateValue sem passar við gerð eigindar.';
+        OptionNextLbl: Label 'Send an existing option value or set createValueIfMissing true on this attribute.', Comment = 'is-IS=Sendu fyrirliggjandi valkostsgildi eða stilltu createValueIfMissing true á þessari eigind.';
+        MappingExpectedLbl: Label 'an existing item attribute mapping', Comment = 'is-IS=fyrirliggjandi tenging vörueigindar';
+        MappingNextLbl: Label 'Create the mapping with Inventory.Attribute.Create first.', Comment = 'is-IS=Stofnaðu tenginguna fyrst með Inventory.Attribute.Create.';
+        OverwriteExpectedLbl: Label 'the existing value or overwrite true', Comment = 'is-IS=fyrirliggjandi gildi eða overwrite true';
+        OverwriteNextLbl: Label 'Set overwrite true on this attribute or use Inventory.Attribute.Update.', Comment = 'is-IS=Stilltu overwrite true á þessari eigind eða notaðu Inventory.Attribute.Update.';
+    begin
+        AttributeId := GetInteger(Request, 'attributeId');
+        AttributeName := GetText(Request, 'name');
+        if AttributeName = '' then
+            AttributeName := GetText(Request, 'attributeName');
+        if (AttributeId = 0) and (AttributeName = '') then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::MissingParameter, IdentityErr, AttributePath(Index, 'name'), '', IdentityExpectedLbl, IdentityNextLbl));
+        if not FindAttribute(AttributeId, AttributeName, Attribute) then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::RecordNotFound, StrSubstNo(AttributeNotFoundErr, AttributeName), AttributePath(Index, 'name'), AttributeName, IdentityExpectedLbl, IdentityNextLbl));
+        if (AttributeId <> 0) and (AttributeName <> '') then
+            if FindAttribute(0, AttributeName, NamedAttribute) then
+                if Attribute.ID <> NamedAttribute.ID then
+                    exit(Refuse(Argument, "Bifrost Error Code ori"::ConflictingIdentifiers, ConflictErr, AttributePath(Index, 'attributeId'), Format(AttributeId, 0, 9), IdentityExpectedLbl, ConflictNextLbl));
+        RequestedTypeText := GetText(Request, 'type');
+        if RequestedTypeText <> '' then begin
+            if not TryParseType(RequestedTypeText, RequestedType) then
+                exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnknownTypeErr, RequestedTypeText), AttributePath(Index, 'type'), RequestedTypeText, ValueExpectedLbl, ValueNextLbl));
+            if RequestedType.Type <> Attribute.Type then
+                exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(AttributeTypeMismatchErr, Attribute.Name, TypeName(Attribute), RequestedTypeText), AttributePath(Index, 'type'), RequestedTypeText, ValueExpectedLbl, ValueNextLbl));
+        end;
+        if not Request.Contains('value') and not Request.Contains('numericValue') and not Request.Contains('dateValue') then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::MissingParameter, StrSubstNo(ValueRequiredErr, Attribute.Name), AttributePath(Index, 'value'), '', ValueExpectedLbl, ValueNextLbl));
+        if not FindRequestedValue(Attribute, Request, Value) then begin
+            ClearLastError();
+            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ValueRequiredErr, Attribute.Name), AttributePath(Index, 'value'), '', ValueExpectedLbl, ValueNextLbl));
+        end;
+        if (Attribute.Type = Attribute.Type::Option) and (Value.ID = 0) and not GetBool(Request, 'createValueIfMissing', false) then begin
+            ValueText := GetText(Request, 'value');
+            exit(Refuse(Argument, "Bifrost Error Code ori"::RecordNotFound, StrSubstNo(OptionValueMissingErr, ValueText, Attribute.Name), AttributePath(Index, 'value'), ValueText, ValueExpectedLbl, OptionNextLbl));
+        end;
+        if Mapping.Get(Database::Item, Item."No.", Attribute.ID) then begin
+            if not Updating and (Mapping."Item Attribute Value ID" <> Value.ID) and not GetBool(Request, 'overwrite', false) then
+                exit(Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(MappingConflictErr, Item."No.", Attribute.Name), AttributePath(Index, 'overwrite'), 'false', OverwriteExpectedLbl, OverwriteNextLbl));
+        end else
+            if Updating then
+                exit(Refuse(Argument, "Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MappingMissingErr, Item."No.", Attribute.Name), AttributePath(Index, 'name'), Attribute.Name, MappingExpectedLbl, MappingNextLbl));
+        exit(true);
+    end;
+
+    // Read-only TryFunction: conversion failures become a coded refusal before any write process runs.
+    [TryFunction]
+    local procedure FindRequestedValue(Attribute: Record "Item Attribute"; Request: JsonObject; var Value: Record "Item Attribute Value")
+    var
+        TextValue: Text;
+        NumericValue: Decimal;
+        DateValue: Date;
+    begin
+        Clear(Value);
+        Value.SetRange("Attribute ID", Attribute.ID);
+        TextValue := GetText(Request, 'value');
+        case Attribute.Type of
+            Attribute.Type::Option, Attribute.Type::Text:
+                begin
+                    if TextValue = '' then
+                        Error(ValueRequiredErr, Attribute.Name);
+                    Value.SetRange(Value, CopyStr(TextValue, 1, MaxStrLen(Value.Value)));
+                end;
+            Attribute.Type::Integer, Attribute.Type::Decimal:
+                begin
+                    if not GetDecimal(Request, 'numericValue', NumericValue) then
+                        if not Evaluate(NumericValue, TextValue, 9) then
+                            Error(ValueRequiredErr, Attribute.Name);
+                    if (Attribute.Type = Attribute.Type::Integer) and (NumericValue <> Round(NumericValue, 1)) then
+                        Error(ValueRequiredErr, Attribute.Name);
+                    Value.SetRange("Numeric Value", NumericValue);
+                end;
+            Attribute.Type::Date:
+                begin
+                    if not GetDate(Request, 'dateValue', DateValue) then
+                        if not Evaluate(DateValue, TextValue, 9) then
+                            Error(ValueRequiredErr, Attribute.Name);
+                    Value.SetRange("Date Value", DateValue);
+                end;
+        end;
+        if Value.FindFirst() then;
+    end;
+
+    /// <summary>Checks definition identity and type before the write process starts.</summary>
+    procedure ValidateDefinition(var Argument: Record "Message Argument ori"): Boolean
+    var
+        Attribute: Record "Item Attribute";
+        Request: JsonObject;
+        NameText: Text;
+        TypeText: Text;
+        NameExpectedLbl: Label 'a new non-empty attribute name', Comment = 'is-IS=nýtt heiti eigindar sem er ekki tómt';
+        NameNextLbl: Label 'Send a new name or use the existing attribute definition.', Comment = 'is-IS=Sendu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu eigindar.';
+        TypeExpectedLbl: Label 'Option, Text, Integer, Decimal or Date', Comment = 'is-IS=Option, Text, Integer, Decimal eða Date';
+        TypeNextLbl: Label 'Send Option, Text, Integer, Decimal or Date in data.type.', Comment = 'is-IS=Sendu Option, Text, Integer, Decimal eða Date í data.type.';
+    begin
+        Request := Argument.GetRequestJson();
+        NameText := GetText(Request, 'name');
+        TypeText := GetText(Request, 'type');
+        if NameText = '' then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::MissingParameter, NameRequiredErr, 'name', '', NameExpectedLbl, NameNextLbl));
+        if TypeText = '' then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::MissingParameter, TypeRequiredErr, 'type', '', TypeExpectedLbl, TypeNextLbl));
+        if not TryParseType(TypeText, Attribute) then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnknownTypeErr, TypeText), 'type', TypeText, TypeExpectedLbl, TypeNextLbl));
+        Attribute.SetRange(Name, CopyStr(NameText, 1, MaxStrLen(Attribute.Name)));
+        if not Attribute.IsEmpty() then
+            exit(Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(DuplicateAttributeErr, NameText), 'name', NameText, NameExpectedLbl, NameNextLbl));
+        exit(true);
+    end;
+
+    local procedure AttributePath(Index: Integer; KeyName: Text): Text
+    begin
+        if KeyName = '' then
+            exit('attributes[' + Format(Index, 0, 9) + ']');
+        exit('attributes[' + Format(Index, 0, 9) + '].' + KeyName);
+    end;
+
+    local procedure Refuse(var Argument: Record "Message Argument ori"; ErrorCode: Enum "Bifrost Error Code ori"; ErrorText: Text; ParameterName: Text; Received: Text; Expected: Text; NextStep: Text): Boolean
+    begin
+        Argument.RespondWithError(ErrorCode, ErrorText, ParameterName, Received, Expected, NextStep);
+        exit(false);
+    end;
 
     /// <summary>Returns the Option member name for an Item Attribute Type (never Format of ordinal).</summary>
     /// <param name="ItemAttribute">The attribute whose Type to emit.</param>
@@ -187,13 +366,15 @@ codeunit 10076844 "Item Attribute Resolve ori"
     procedure ResolveSingleItem(var Argument: Record "Message Argument ori"; var Item: Record Item): Boolean
     var
         DocumentLookup: Codeunit "Document Lookup ori";
+        ItemExpectedLbl: Label 'an existing item', Comment = 'is-IS=fyrirliggjandi vara';
+        ItemNextLbl: Label 'Send an item identifier or filter matching an existing item.', Comment = 'is-IS=Sendu vöruauðkenni eða síu sem passar við fyrirliggjandi vöru.';
     begin
         Item.Reset();
         Item.SetLoadFields("No.", SystemId, Blocked, Type);
         if not DocumentLookup.FindItemRange(Argument, Item) then
             exit(false);
         if not Item.FindFirst() then begin
-            Argument.RespondWithError(NoItemsErr);
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, NoItemsErr, 'itemNo', '', ItemExpectedLbl, ItemNextLbl);
             exit(false);
         end;
         exit(true);

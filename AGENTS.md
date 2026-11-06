@@ -15,7 +15,7 @@
   Inventory Setup page/table. It must stay assignable: nothing else grants posting, and the
   permission-coverage guard needs an assignable set for the setup page. No Foundation `Setup ori`
   tabledata grants.
-- Foundation floor 28.0.3.530 (release `28.0.3`, probed by `.AL-Go/settings.json`);
+- Foundation floor 28.0.8.617 (release `28.0.8`, probed by `.AL-Go/settings.json`);
   `application` floor 28.3.0.0. CodeCop, UICop and AppSourceCop run on app and test app with
   `failOn: warning`.
 - Context-sensitive help: `contextSensitiveHelpUrl` `https://docs.bifrost.origo.is/{0}/help/inventory/`;

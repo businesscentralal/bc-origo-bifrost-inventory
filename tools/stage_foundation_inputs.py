@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 import zipfile
 from pathlib import Path, PurePosixPath
-from appsource_gate import GateError, require, file_hash, package_info, rejected_receipt
+from appsource_gate import FOUNDATION_CANDIDATE, GateError, require, file_hash, package_info, rejected_receipt
 
 FOUNDATION = '7505e808-6e52-4b96-a328-82573391297a'
 SOURCE = '336b91d9fff11b71ae5cd75dee08186d4218bf07'
@@ -33,7 +33,17 @@ BUILD_URL = f'https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/ac
 MAX_FILES = 128
 MAX_BYTES = 128 * 1024 * 1024
 
+DEFAULT_PROFILE = 'release617'
 PROFILES = {
+    'release617': dict(source=FOUNDATION_CANDIDATE['sourceCommit'], run=39680460724, attempt=1,
+        releaseTag=FOUNDATION_CANDIDATE['releaseTag'],
+        artifacts={
+            'Apps': (FOUNDATION_CANDIDATE['releaseAssetId'], FOUNDATION_CANDIDATE['archiveSha256']),
+            'TestApps': (663995606, '6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be'),
+        },
+        identity=FOUNDATION_CANDIDATE['identity'], pin=FOUNDATION_CANDIDATE['sha256'],
+        testPin='74ac22899743c09e46f2089a95f49d59594200108ee005b634eb9cc08a3e60d1',
+        buildUrl=FOUNDATION_CANDIDATE['buildUrl']),
     'controlled523': dict(source=SOURCE, run=RUN, attempt=2, artifacts=ARTIFACTS,
                           identity=IDENTITY, pin=PIN, testPin=TEST_PIN, buildUrl=BUILD_URL),
     'candidate530': dict(source='8ec074f4ac69ac9bde15807cf16d21bee045332f', run=37679390622, attempt=1,
@@ -67,6 +77,10 @@ def provenance_check(kind, provenance, archive, profile="controlled523"):
     artifact, sha = config["artifacts"][kind]
     expected = dict(repository='OrigoSoftwareSolutions/bc-origo-bifrost-core', sourceSha=config["source"],
                     run=config["run"], attempt=config["attempt"], artifactId=artifact, archiveSha256=sha, expired=False, conclusion='success')
+    if config.get('releaseTag'):
+        expected.pop('expired')
+        expected['releaseTag'] = config['releaseTag']
+        expected['releaseAssetId'] = expected.pop('artifactId')
     require(provenance == expected, 'Missing/expired/wrong-source artifact provenance')
     require(Path(archive).is_file() and Path(archive).stat().st_size <= MAX_BYTES, 'Missing/oversized artifact archive')
     require(file_hash(archive) == sha, 'Changed artifact archive')
@@ -157,7 +171,7 @@ def validate(receipt_path, context, install_apps, install_tests, symbols=None):
 
 def stage(request, destination):
     """Use immutable archives and a fresh directory. Never delete another input."""
-    profile = request.get('profile', 'candidate530')
+    profile = request.get('profile', DEFAULT_PROFILE)
     profile_config(profile)
     context = request['context']
     context_check(context)
@@ -193,7 +207,7 @@ def _foundation_filename(identity):
     return f"{identity['publisher']}_{identity['name']}_{identity['version']}.app"
 
 
-def restore_overwritten_foundation(root, fetch_archive, profile="candidate530", symbols=None):
+def restore_overwritten_foundation(root, fetch_archive, profile=DEFAULT_PROFILE, symbols=None):
     """Put the approved Apps package back when TestApps extracted over the same filename.
 
     AL-Go writes both artifacts into `.dependencies` as `Publisher_Name_Version.app`.
@@ -338,7 +352,7 @@ def _download_url_once(url, token, destination):
     request = urllib.request.Request(url, headers={
         "Authorization": "Bearer " + token,
         "User-Agent": "bifrost-inventory",
-        "Accept": "application/vnd.github+json",
+        "Accept": "application/octet-stream" if "/releases/assets/" in url else "application/vnd.github+json",
     })
     opener = urllib.request.build_opener(_StopRedirect)
     try:
@@ -372,11 +386,14 @@ def _download_url(url, token, destination):
         time.sleep(attempt + 1)
 
 
-def download_apps_archive(destination, profile="candidate530"):
+def download_apps_archive(destination, profile=DEFAULT_PROFILE):
     config = profile_config(profile)
     artifact_id = config["artifacts"]["Apps"][0]
     url = ("https://api.github.com/repos/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/artifacts/"
            + str(artifact_id) + "/zip")
+    if config.get("releaseTag"):
+        url = ("https://api.github.com/repos/OrigoSoftwareSolutions/bc-origo-bifrost-core/releases/assets/"
+               + str(artifact_id))
     errors = []
     for name, token, decoded in _token_candidates():
         try:

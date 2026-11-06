@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-06) - compose coded refusals with the current parent (#148, #155)
+
+- Merged PR #166 into the existing #168 candidate. `Item Appl. Get Impl ori` (10076867) retains #166's entry-number parser, `InvalidParameter` format refusal and optional metadata, per Claude's composition disposition. Its help declares that retained code. The four bilingual Get refusal cases in `Inventory Item Refusal Tests` (96930) assert that exact parent shape; Unapply/Reapply and Inventory-owned refusal checks remain intact. Attribute help and the child's localized domain-denial completion remain present. The inherited malformed-array parity tests in `Item Attribute Tests ori` (96900) now assert issue #148's `InvalidLine`, parameter, expected shape and exact bilingual next step, alongside the existing exact error text.
+
 ### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
 
 - Test codeunit 96975 `Inv. Typed Refusal Tests ori`: the `*_UnknownParameterCoded_*` tests for the non-read types Inventory.PhysInventory.Calculate, Inventory.PhysInventory.RecordCount, Inventory.PhysInventory.Post and Inventory.Revaluation.Post expect Foundation's shared `UnknownParameter` code when Foundation 28.0.10 or later refuses unknown request keys before Inventory runs (core#1160). The read types Inventory.PhysInventory.Check and Inventory.Revaluation.PreviewPost still expect Inventory's own `InvalidParameter`. The eight Foundation-owned unknown-key cases retain parameter, expected and nextStep checks; the received assertion awaits Foundation [#1277](https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/issues/1277), per the acting Architect’s PR #166 ruling on 2026-11-05. Inventory-owned refusals keep all received assertions.
@@ -54,6 +58,15 @@
 - Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
 - Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
 - Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
+### Fixed (2026-10-25) - coded Inventory refusals and public help (#148, #155)
+
+- Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
+- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Check/Post help includes missing or foreign-batch lineSystemIds, matching the InvalidParameter selection refusal.
+- Reclassification and ItemApplication now return coded, localized refusals. ItemApplication.Unapply/Reapply use existing Inventory Write Process 10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. Reclassification.Post preserves native BC text and adds selected-batch recovery context. Malformed reads use InvalidParameterFormat. Parent #151 strict validation remains intact.
+- Attribute, physical inventory and older-type help declares actual codes, remedies and examples. Public help remains English at both LCIDs under Architect disposition 1792832435; tests use the public contract path and separately verify translated runtime refusals and native error parity in 1033/1039. No new objects or permission grants.
+- Use the released Foundation 28.0.8.617 public error-context API (Architect 1792830947). Align app/test dependency floors, the dependency probe, AppSource gate and collision restoration with that published release, including exact production/test archive hashes and source provenance. Preserve no-friend, signature-content and compatibility checks; no Foundation source changes.
+- Objects: codeunits 10076840, 10076842, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076915, 10076917 and 10076919; tests 96900, 96918, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
 
 ### Fixed (2026-10-25) - transfer posting help (#151)
 
