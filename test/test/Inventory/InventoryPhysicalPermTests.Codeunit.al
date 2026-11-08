@@ -43,7 +43,7 @@ codeunit 96945 "Inventory Physical Perm Tests"
         Response := TempArgument.GetResponseJson();
         Response.Get('code', Token);
         Assert.AreEqual('PermissionDenied', Token.AsValue().AsText(), 'Posting denial uses the public permission code.');
-        Assert.IsTrue(TempArgument.GetResponseText().Contains('BIFROST ItemPost ori'), 'Refusal identifies the existing item-posting capability.');
+        Assert.IsTrue(TempArgument.GetResponseText().Contains('Item Posting Gate'), 'Refusal identifies the existing item-posting capability.');
     end;
 
     /// <summary>The existing item-posting token enables the physical posting adapter.</summary>

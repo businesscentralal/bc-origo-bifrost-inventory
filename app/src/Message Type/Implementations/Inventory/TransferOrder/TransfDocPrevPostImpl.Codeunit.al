@@ -211,12 +211,12 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
                             PostingType := PostingType::Receive;
                         end;
                     else begin
-                        Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), '', '', '', '');
                         exit;
                     end;
                 end;
             end else begin
-                Argument.RespondWithError(MissingPostingTypeErr);
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingPostingTypeErr, '', '', '', '');
                 exit;
             end;
         GLSetup.Get();

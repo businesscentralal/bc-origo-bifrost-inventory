@@ -188,16 +188,16 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
                         PostReceipt := true;
                     'shipreceive', 'ship+receive':
                         begin
-                            Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), '', '', '', '');
                             exit;
                         end;
                     else begin
-                        Argument.RespondWithError(StrSubstNo(InvalidPostingTypeErr, PostingTypeText));
+                        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), '', '', '', '');
                         exit;
                     end;
                 end;
             end else begin
-                Argument.RespondWithError(MissingPostingTypeErr);
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingPostingTypeErr, '', '', '', '');
                 exit;
             end;
 
@@ -207,7 +207,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Commit();
         if not TransferOrderPostYesNo.Run(TransferHeader) then begin
             UnbindSubscription(TransferPostSubscriber);
-            Argument.RespondWithError(GetLastErrorText());
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
             exit;
         end;
         UnbindSubscription(TransferPostSubscriber);
