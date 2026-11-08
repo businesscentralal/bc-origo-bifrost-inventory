@@ -4929,6 +4929,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType InconsistentPairErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 1124592277" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the current reservations with Inventory.Reservation.Get and send the entryNo of an entry that exists.</source>
+          <target>Lestu núverandi frátekningar með Inventory.Reservation.Get og sendu entryNo færslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu núverandi frátekningar með Inventory.Reservation.Get og sendu entryNo færslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method ExecuteBifrostTask - NamedType ListReservationsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3571782927 - NamedType 2486900890" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inspect both reservation entries and correct their native reservation state before retrying.</source>
           <target>Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.</target>

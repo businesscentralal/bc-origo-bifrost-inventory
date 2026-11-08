@@ -206,6 +206,13 @@ codeunit 96946 "Reservation Create Tests"
         Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('parameter', Token), 'parameter missing');
         Assert.AreEqual('entryNo', Token.AsValue().AsText(), 'parameter');
+        // [THEN] The refusal carries received, expected and an actionable nextStep (#151 refusal contract, #169).
+        Assert.IsTrue(ResponseJson.Get('received', Token), 'received missing');
+        Assert.AreEqual(Format(EntryNo + 1000, 0, 9), Token.AsValue().AsText(), 'received');
+        Assert.IsTrue(ResponseJson.Get('expected', Token), 'expected missing');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'expected must not be empty');
+        Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
+        Assert.IsTrue(Token.AsValue().AsText().Contains('Inventory.Reservation.Get'), 'nextStep names Inventory.Reservation.Get');
     end;
 
     [Test]
