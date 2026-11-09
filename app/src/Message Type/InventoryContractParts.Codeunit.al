@@ -590,6 +590,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
             Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'An item or location named in a create request does not exist.', 'Choose existing records and correct all reported values.'));
         end;
         case MessageType of
+            'Item.Attribute.Get', 'Inventory.Attribute.Get':
+                Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
             'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'attributes is absent, empty, not an array, or contains an entry that is not an object.', 'Send at least one attribute object in data.attributes.'));
@@ -604,7 +606,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unknown attribute type.', 'Use Option, Text, Integer, Decimal or Date.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin
@@ -1275,7 +1277,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Response: JsonObject;
         Token: JsonToken;
         ParameterName: Text;
-        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including BIFROST InvPost ori for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal BIFROST InvPost ori fyrir bókunarforskoðun.';
+        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Inv. Posting Gate fyrir bókunarforskoðun.';
     begin
         Response := Argument.GetResponseJson();
         if not Response.Get('code', Token) then
