@@ -163,7 +163,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         ErrorHelp1Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
         ErrorHelp2Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
         ErrorHelp3Lbl: Label 'The caller has no read permission on the Item Journal Line table.', Comment = 'is-IS=Kallandi hefur ekki lesheimild á vörubókarlínum.';
-        ErrorHelp4Lbl: Label 'Ask an administrator for a permission set that grants it, for example BIFROST Read ori.', Comment = 'is-IS=Biddu stjórnanda um heimildasafn sem veitir aðgang, til dæmis BIFROST Read ori.';
+        ErrorHelp4Lbl: Label 'Ask an administrator for a permission set that grants it, for example the Bifrost "Read-Only" permission set.', Comment = 'is-IS=Biddu stjórnanda um heimildasafn sem veitir aðgang, til dæmis Bifrost-heimildasafnið „Lesaðgangur“.';
         ErrorHelp5Lbl: Label 'templateName and batchName are required.', Comment = 'is-IS=templateName og batchName eru nauðsynleg.';
         ErrorHelp6Lbl: Label 'The template or the batch name is absent or empty.', Comment = 'is-IS=Heiti sniðmáts eða keyrslu vantar eða er tómt.';
         ErrorHelp7Lbl: Label 'Send templateName and batchName, or their journal aliases.', Comment = 'is-IS=Sendu templateName og batchName eða samheitin journalTemplateName og journalBatchName.';

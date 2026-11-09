@@ -159,8 +159,8 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ErrorHelp8Lbl: Label 'Send journalBatchName.', Comment = 'is-IS=Sendu journalBatchName.';
         ErrorHelp9Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
         ErrorHelp10Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
-        ErrorHelp11Lbl: Label 'The caller lacks the posting permission set BIFROST InvPost ori.', Comment = 'is-IS=Kallandi hefur ekki bókunarheimildasafnið BIFROST InvPost ori.';
-        ErrorHelp12Lbl: Label 'Ask an administrator for BIFROST InvPost ori.', Comment = 'is-IS=Biddu stjórnanda um BIFROST InvPost ori.';
+        ErrorHelp11Lbl: Label 'The caller lacks the posting permission set Inv. Posting Gate.', Comment = 'is-IS=Kallandi hefur ekki bókunarheimildasafnið Inv. Posting Gate.';
+        ErrorHelp12Lbl: Label 'Ask an administrator for Inv. Posting Gate.', Comment = 'is-IS=Biddu stjórnanda um Inv. Posting Gate.';
         ErrorHelp13Lbl: Label 'The selected batch has no lines or native posting fails; native error text is preserved unchanged.', Comment = 'is-IS=Valin keyrsla hefur engar línur eða bókun mistekst; upprunaleg villuboð kerfisins haldast óbreytt.';
         ErrorHelp14Lbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
         ErrorHelp15Lbl: Label 'A journal selector is not JSON text.', Comment = 'is-IS=Bókarval er ekki JSON-texti.';
@@ -187,7 +187,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Effect.Add('effect', 'irreversible');
         Effect.Add('changes', 'Posts every line of the item journal batch through the standard item journal batch posting: item ledger and value entries are created, an item register is written and the posted lines leave the journal. The posting commits. It does not create or post a transfer order.');
         Effect.Add('idempotent', false);
-        Effect.Add('permissionSet', 'BIFROST Full ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         exit(true);
@@ -235,7 +235,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Posts every line of a reclassification journal batch through the standard item journal batch posting. Posting is permanent and needs the BIFROST InvPost ori permission set.';
+        Overview := 'Posts every line of a reclassification journal batch through the standard item journal batch posting. Posting is permanent and needs the Inv. Posting Gate permission set.';
         exit(true);
     end;
 
@@ -244,7 +244,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Notes := 'Posting is permanent and commits. All lines of the batch are posted; the call has no line selection. It does not create or post a transfer order. ' +
             'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
             'A batch without lines, or one that does not exist, returns PreconditionFailed. A posting error returns PreconditionFailed with Business Central''s unchanged text and the selected batch; posting is rolled back. ' +
-            'The caller needs the BIFROST InvPost ori permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'The caller needs the Inv. Posting Gate permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
             'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
     end;

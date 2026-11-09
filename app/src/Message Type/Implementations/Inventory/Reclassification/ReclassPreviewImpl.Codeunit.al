@@ -218,7 +218,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ErrorHelp1Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
         ErrorHelp2Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
-        ErrorHelp3Lbl: Label 'The caller lacks BIFROST InvPost ori. Native preview executes posting with rollback and retains the posting gate.', Comment = 'is-IS=Kallandi hefur ekki BIFROST InvPost ori. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.';
+        ErrorHelp3Lbl: Label 'The caller lacks Inv. Posting Gate. Native preview executes posting with rollback and retains the posting gate.', Comment = 'is-IS=Kallandi hefur ekki Inv. Posting Gate. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.';
         ErrorHelp4Lbl: Label 'Ask an administrator for the posting permission and required native permissions.', Comment = 'is-IS=Biddu stjórnanda um bókunarheimild og nauðsynlegar kerfisheimildir.';
         ErrorHelp5Lbl: Label 'journalTemplateName or journalBatchName is absent.', Comment = 'is-IS=journalTemplateName eða journalBatchName vantar.';
         ErrorHelp6Lbl: Label 'Supply both journal selectors.', Comment = 'is-IS=Tilgreindu bæði bókarsniðmát og keyrslu.';
@@ -251,7 +251,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Effect.Add('effect', 'read');
         Effect.Add('changes', 'Native posting is simulated and its ledger entries are captured. All simulated writes are rolled back; the journal and persisted ledger remain unchanged.');
         Effect.Add('idempotent', true);
-        Effect.Add('permissionSet', 'BIFROST Read ori and BIFROST InvPost ori');
+        Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
         Effect.Add('posts', false);
         exit(true);
@@ -307,7 +307,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     begin
         Notes := 'Runs native posting preview for one existing nonempty Transfer journal batch. Posting validation errors are returned instead of a successful line listing. ' +
             'Successful answers retain lineCount and lines and add preview, totals, entryCount and glEntryCount from captured entries. rollback is true only after native preview succeeds. ' +
-            'Preview does not commit the caller transaction or persist journal, item, value or G/L entry changes. The posting permission BIFROST InvPost ori and native posting permissions remain required because native posting is executed under rollback. ' +
+            'Preview does not commit the caller transaction or persist journal, item, value or G/L entry changes. The posting permission Inv. Posting Gate and native posting permissions remain required because native posting is executed under rollback. ' +
             'Inventory.Reclassification.Check only reads the template and counts transfer lines; it needs read permission and does not predict all posting errors. Use PreviewPost before the separate Post operation.';
         exit(true);
     end;

@@ -137,7 +137,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Assert.IsTrue(ResponseJson.Get('code', Token), 'code missing');
         Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'code');
         Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
-        Assert.AreEqual('Kveiktu á sviðinu á síðunni Uppsetning birgða.', Token.AsValue().AsText(), 'nextStep');
+        Assert.AreEqual('Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.', Token.AsValue().AsText(), 'nextStep');
     end;
 
     local procedure AssertMissing(MessageType: Enum "Message Type ori"; LanguageId: Integer; ExpectedError: Text; ExpectedExpected: Text; ExpectedNext: Text)
@@ -689,7 +689,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
                     Mapping.Insert(true);
                     ErrorCode := 'PreconditionFailed';
                     ParameterName := 'attributes[1].overwrite';
-                    ErrorText := StrSubstNo(Choose(LanguageId, 'Item "%1" already has attribute "%2" with a different value. Pass overwrite: true or use Inventory.Attribute.Update.', 'Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Sendu overwrite: true eða notaðu Inventory.Attribute.Update.'), Item."No.", Attribute.Name);
+                    ErrorText := StrSubstNo(Choose(LanguageId, 'Item "%1" already has attribute "%2" with a different value. Set attributes[].overwrite to true or use Inventory.Attribute.Update.', 'Varan "%1" hefur þegar eigindina "%2" með öðru gildi. Stilltu attributes[].overwrite á true eða notaðu Inventory.Attribute.Update.'), Item."No.", Attribute.Name);
                     Expected := Choose(LanguageId, 'the existing value or overwrite true', 'fyrirliggjandi gildi eða overwrite true');
                     NextStep := Choose(LanguageId, 'Set overwrite true on this attribute or use Inventory.Attribute.Update.', 'Stilltu overwrite true á þessari eigind eða notaðu Inventory.Attribute.Update.');
                 end;
