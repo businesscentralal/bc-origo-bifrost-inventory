@@ -171,12 +171,11 @@ codeunit 96922 "Inv. Lookup Contract Tests"
     begin
         foreach Entry in Errors do
             if Entry.AsObject().Get('code', Value) then
-                if Value.AsValue().AsText() = Code then
-                    // The identifier entry also documents postingType on transfers; only exclude postingType-only entries.
-                    if (Code <> 'MissingParameter') or EntryText(Entry.AsObject(), 'when').Contains('identifier in subject or data.') then begin
-                        Result := Entry.AsObject();
-                        Count += 1;
-                    end;
+                if Value.AsValue().AsText() = Code then begin
+                    // The shared entry includes postingType; count it too so duplicate codes still fail.
+                    Result := Entry.AsObject();
+                    Count += 1;
+                end;
         Assert.AreEqual(1, Count, 'Exactly one stable ' + Code + ' entry in each language.');
     end;
 

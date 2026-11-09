@@ -107,14 +107,14 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 begin
-                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Attribute mapping objects containing name or id, value, and optional type-specific values.');
+                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Attribute objects containing name or attributeId and value, numericValue or dateValue. Each object may set overwrite (default false) and createValueIfMissing (default false for missing Option values).');
                     Parameter.Add('children', AttributeChildren(true));
                     Parameters.Add(Parameter);
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
                 end;
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Existing attribute mapping objects containing name or id and the replacement value.');
+                    Parameter := ContractMgt.Parameter('attributes', 'array', true, 'Existing mapping objects containing name or attributeId and value, numericValue or dateValue. Each object may set createValueIfMissing (default false for missing Option values).');
                     Parameter.Add('children', AttributeChildren(false));
                     Parameters.Add(Parameter);
                     Parameters.Add(ContractMgt.Parameter('allowBlocked', 'boolean', false, 'Allow writing to a blocked item. Default false.'));
@@ -177,10 +177,10 @@ codeunit 10076919 "Inventory Contract Parts ori"
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Children.Add(ContractMgt.Parameter('attributeId', 'integer', false, 'Numeric id of the attribute definition. Tried first when it is not 0; the name is used when no attribute has that id.'));
+        Children.Add(ContractMgt.Parameter('attributeId', 'integer', false, 'Numeric id of the attribute definition. Tried first when it is not 0; the name is used when no attribute has that id. If both identify existing but different attributes, the request is refused.'));
         Children.Add(ContractMgt.Parameter('name', 'string', false, 'Name of the attribute definition. Send name or attributeId.'));
         Children.Add(ContractMgt.Parameter('attributeName', 'string', false, 'Alias of name; read only when name is empty.'));
-        Children.Add(ContractMgt.Parameter('type', 'string', false, 'Optional check: Option, Text, Integer, Decimal or Date. An element whose type differs from the definition is refused; an unrecognised type text is ignored.'));
+        Children.Add(ContractMgt.Parameter('type', 'string', false, 'Optional check: Option, Text, Integer, Decimal or Date. An element whose type differs from the definition, or whose type text is unrecognised, is refused.'));
         Children.Add(ContractMgt.Parameter('value', 'string', false, 'The value as text. Required for Option and Text. For Integer, Decimal and Date it is used when numericValue or dateValue is not sent (decimal point as separator, dates as YYYY-MM-DD).'));
         Children.Add(ContractMgt.Parameter('numericValue', 'number', false, 'Value of an Integer or Decimal attribute; takes precedence over value.'));
         Children.Add(ContractMgt.Parameter('dateValue', 'string', false, 'Value of a Date attribute in YYYY-MM-DD format; takes precedence over value.'));
@@ -592,16 +592,14 @@ codeunit 10076919 "Inventory Contract Parts ori"
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No items found matching the specified criteria.', 'The Item range resolved to no records.', 'Send a subject, item identifier or tableView that matches an Item.'));
-            'Item.Attribute.Create', 'Inventory.Attribute.Create':
+            'Item.Attribute.Create', 'Inventory.Attribute.Create', 'Item.Attribute.Update', 'Inventory.Attribute.Update':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" already has attribute "%2" with a different value.', 'The item already has a different value and attributes[].overwrite is false.', 'Set overwrite to true on the attribute object, or use Inventory.Attribute.Update.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" is blocked. Pass allowBlocked: true to override.', 'The resolved Item is blocked.', 'Set allowBlocked to true only when the write is intentional.'));
-                end;
-            'Item.Attribute.Update', 'Inventory.Attribute.Update':
-                begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Request data.attributes must be a non-empty array.', 'Send at least one attribute object.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item "%1" has no mapping for attribute "%2". Use Inventory.Attribute.Create first.', 'The mapping does not exist.', 'Create the mapping first or identify an existing mapping.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'attributes is absent, empty, not an array, or contains an entry that is not an object.', 'Send at least one attribute object in data.attributes.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'An attribute object has no name or attributeId, or no value.', 'Send name or attributeId and value, numericValue or dateValue in each object.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The attribute, option value, or (for Update) item mapping does not exist.', 'Create the definition with Inventory.AttributeDefinition.Create; use createValueIfMissing for an option value, or Inventory.Attribute.Create for a missing mapping.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The requested type or value does not match the attribute type.', 'Send the actual type and a value of that type.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, 'attributeId and name identify different attributes.', 'Send one identifier or identifiers for the same attribute.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The item is blocked, or Create would replace a different value without overwrite.', 'Set allowBlocked only for an intentional write; set overwrite on the attribute or use Inventory.Attribute.Update.'));
                 end;
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 begin
@@ -634,7 +632,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1', 'postingType is not Ship or Receive (ShipReceive is refused too).', 'Send Ship or Receive in two separate calls.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the order is not ready to ship or receive.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks Inv. Posting Gate, which posting requires in addition to the Bifrost "Full Access" permission set');
@@ -643,7 +640,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview produced no entries. Nothing would be posted.', 'Add a line quantity to ship or receive and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'Transfer order %1 has no lines to post.', 'The order has no lines.', 'Create the lines first and retry.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'The transfer posting preview failed.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
@@ -1056,9 +1052,9 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
                 Examples.Add(ContractMgt.Example('Read item attributes', '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
-                Examples.Add(ContractMgt.Example('Assign an item attribute', '{"type":"Inventory.Attribute.Create","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Matte","createValueIfMissing":true}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Matte","changed":true,"attributeId":2,"valueId":1}]}'));
+                Examples.Add(ContractMgt.Example('Assign an attribute', '{"type":"Inventory.Attribute.Create","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Matte","overwrite":false,"createValueIfMissing":false}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Matte","changed":true,"attributeId":2,"valueId":1}]}'));
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
-                Examples.Add(ContractMgt.Example('Change an item attribute', '{"type":"Inventory.Attribute.Update","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Gloss"}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Gloss","changed":true,"attributeId":2,"valueId":2,"before":"Matte"}]}'));
+                Examples.Add(ContractMgt.Example('Update an attribute', '{"type":"Inventory.Attribute.Update","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Gloss","createValueIfMissing":false}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","before":"Matte","after":"Gloss","attributeId":2,"valueId":2}]}'));
             'Item.AttributeDefinition.Create', 'Inventory.AttributeDefinition.Create':
                 Examples.Add(ContractMgt.Example('Create an option definition', '{"type":"Inventory.AttributeDefinition.Create","data":{"name":"Finish","type":"Option","optionValues":["Matte","Gloss"]}}', '{"status":"Success","attributeId":2,"attributeName":"Finish","type":"Option","createdValues":[{"valueId":1,"value":"Matte"},{"valueId":2,"value":"Gloss"}]}'));
             'Inventory.TransferOrder.Create':
@@ -1278,6 +1274,54 @@ codeunit 10076919 "Inventory Contract Parts ori"
         if Required and (Value = '') then
             Argument.AddError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, Name), Name, Serialized, StrSubstNo(ExpectedTxt, MaximumLength), StrSubstNo(NextStepTxt, Name));
         exit(Value);
+    end;
+
+    /// <summary>Adds actionable field context to the four scoped older-type domain refusals.</summary>
+    procedure CompleteOlderDomainRefusal(var Argument: Record "Message Argument ori")
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+        ParameterName: Text;
+        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.';
+    begin
+        Response := Argument.GetResponseJson();
+        if not Response.Get('code', Token) then
+            exit;
+        ParameterName := 'domain';
+        if Token.AsValue().AsText() = 'PermissionDenied' then begin
+            ParameterName := 'permissionSet';
+            if Response.Contains('nextStep') then
+                Response.Replace('nextStep', PermissionNextLbl)
+            else
+                Response.Add('nextStep', PermissionNextLbl);
+        end;
+        if Response.Contains('parameter') then
+            Response.Replace('parameter', ParameterName)
+        else
+            Response.Add('parameter', ParameterName);
+        Argument.SetResponseJson(Response);
+    end;
+
+    /// <summary>Reads a required item-application entry number without a platform conversion error.</summary>
+    procedure TryReadEntryNo(Request: JsonObject; Name: Text; var Argument: Record "Message Argument ori"; var EntryNo: Integer): Boolean
+    var
+        Token: JsonToken;
+        Serialized: Text;
+        MissingErr: Label '%1 is required.', Comment = '%1 = parameter name; is-IS=%1 er nauðsynlegt.';
+        FormatErr: Label '%1 must be a JSON integer.', Comment = '%1 = parameter name; is-IS=%1 verður að vera JSON-heiltala.';
+        ExpectedLbl: Label 'a JSON integer identifying an existing entry', Comment = 'is-IS=JSON-heiltala sem auðkennir fyrirliggjandi færslu';
+        NextLbl: Label 'Send %1 as a JSON integer from Inventory.ItemApplication.Get.', Comment = '%1 = parameter name; is-IS=Sendu %1 sem JSON-heiltölu úr Inventory.ItemApplication.Get.';
+    begin
+        if not Request.Get(Name, Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingErr, Name), Name, '', ExpectedLbl, StrSubstNo(NextLbl, Name));
+            exit(false);
+        end;
+        Token.WriteTo(Serialized);
+        if not Token.IsValue() or (DelChr(Serialized, '=', '-0123456789') <> '') or not Evaluate(EntryNo, Serialized, 9) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, Name), Name, Serialized, ExpectedLbl, StrSubstNo(NextLbl, Name));
+            exit(false);
+        end;
+        exit(true);
     end;
 
     /// <summary>Responds once with every collected request problem; single errors retain their specific code.</summary>

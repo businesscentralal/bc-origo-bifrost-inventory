@@ -2,9 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-09) - compose current help with coded refusals (#148, #155)
+
+- Icelandic posting-permission guidance uses the existing localized caption Bókunarhlið birgða; English uses Inv. Posting Gate. Exact bilingual permission-denial tests remain.
+- Keep one MissingParameter help entry for TransferOrder.Post/PreviewPost: the shared entry covers the identifier and postingType; remove the duplicate postingType-only declarations. The exact one-entry assertion remains.
+- Reconcile composed strict tests (96918, 96921, 96922): current permission captions, all five Attribute.Get help entries, and exactly one combined MissingParameter entry including postingType. No assertion is disabled or skipped.
+- Merge parent #166 through `b364159` into #168, retaining current help captions and permission-set identifiers alongside the bilingual coded refusals in codeunits 10076844, 10076887, 10076888, 10076889, 10076868 and 10076869. Keep the current attribute overwrite guidance and exact bilingual assertions in 96930, and retain the child malformed-array and atomic-write contracts. Parent hold and post-deployment UAT remain pending.
 ### Fixed (2026-11-09) - refusal help regressions after merging main (#151)
 
-- Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 identifies the shared missing-document entry by its identifier guidance, preserving the combined transfer `postingType` guidance and exact code-count assertions in both languages.
+- Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 counts every matching error code, preserving strict uniqueness of the combined identifier and `postingType` entry in both languages.
 - Live MCP found that the shared item-number resolver (10076919, used by Reservation.Get and Cost.Get) accepted JSON booleans and omitted `received` for objects/arrays or a missing required selection. Those typed refusals now preserve the received value. String, numeric and optional-null selection behavior remains compatible; bilingual regressions in codeunit 96975 create their own numeric item to verify compatibility.
 
 ### Fixed (2026-11-09) - keep typed Inventory refusals on current main (#151)
@@ -15,6 +21,10 @@
 
 - `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.
 - `effect.permissionSet` again holds one assignable permission set ID (`BIFROST Full ori` or `BIFROST Read ori`) on every Inventory type, the same shape as Foundation. The help-text guard (96970 `NotesAndOverview_NameNoAlObjects`) exempts that single structured field; captions such as Inv. Posting Gate stay in the error and notes text.
+
+### Fixed (2026-11-06) - compose coded refusals with the current parent (#148, #155)
+
+- Merged PR #166 into the existing #168 candidate. `Item Appl. Get Impl ori` (10076867) retains #166's entry-number parser, `InvalidParameter` format refusal and optional metadata, per Claude's composition disposition. Its help declares that retained code. The four bilingual Get refusal cases in `Inventory Item Refusal Tests` (96930) assert that exact parent shape; Unapply/Reapply and Inventory-owned refusal checks remain intact. Attribute help and the child's localized domain-denial completion remain present. The inherited malformed-array parity tests in `Item Attribute Tests ori` (96900) now assert issue #148's `InvalidLine`, parameter, expected shape and exact bilingual next step, alongside the existing exact error text.
 
 ### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
 
@@ -84,6 +94,15 @@
 - Irreversible success examples document `data.expectedCount: 1` for all nine Inventory posting/costing/undo types (10076858, 10076861, 10076866, 10076881, 10076888, 10076909, 10076910 and shared parts 10076919); README explains missing/wrong/matching confirmation and the default single-subject count. `Inventory Native Journal ori` (10076840) accepts this Foundation control only on physical/reclassification/revaluation posting paths, preserving strict preview/check parameter validation.
 - Test helpers (96902/96903/96904) supply confirmation only when the deployed Foundation advertises it. Contract regressions (96921) preserve exact raw app metadata and separately verify Foundation's shared `Retryable` entry and confirmation effect; confirmation regressions (96978) exercise missing/wrong/matching counts in 1033/1039 without changing the released Foundation 28.0.3.530 floor.
 - Correct Attribute.Create/Update empty-array help to the existing `BusinessCentralError` response in `Inventory Contract Parts ori` (10076919); runtime behavior is unchanged, with malformed-array regressions in 96900 (same scoped correction already published in PR #175).
+
+### Fixed (2026-10-25) - coded Inventory refusals and public help (#148, #155)
+
+- Attribute Create/Update validate the entire request before starting their write process. Missing/invalid entries, unknown attributes/options, conflicting identifiers, blocked items and conflicting or missing mappings return structured, translated refusals. AttributeDefinition.Create returns coded missing/type/duplicate refusals. Runtime and help name the registered Inventory.Attribute types.
+- Physical inventory missing batches return RecordNotFound; missing or foreign-batch count lines return InvalidLine before any quantity changes. Other native validation remains BusinessCentralError. Check/Post help includes missing or foreign-batch lineSystemIds, matching the InvalidParameter selection refusal.
+- Reclassification and ItemApplication now return coded, localized refusals. ItemApplication.Unapply/Reapply use existing Inventory Write Process 10076842 for native failure rollback and coded response context; Omit Commit still propagates failures to its caller. Reclassification.Post preserves native BC text and adds selected-batch recovery context. Malformed reads use InvalidParameterFormat. Parent #151 strict validation remains intact.
+- Attribute, physical inventory and older-type help declares actual codes, remedies and examples. Public help remains English at both LCIDs under Architect disposition 1792832435; tests use the public contract path and separately verify translated runtime refusals and native error parity in 1033/1039. No new objects or permission grants.
+- Use the released Foundation 28.0.8.617 public error-context API (Architect 1792830947). Align app/test dependency floors, the dependency probe, AppSource gate and collision restoration with that published release, including exact production/test archive hashes and source provenance. Preserve no-friend, signature-content and compatibility checks; no Foundation source changes.
+- Objects: codeunits 10076840, 10076842, 10076844, 10076867–10076869, 10076881–10076885, 10076887–10076889, 10076915, 10076917 and 10076919; tests 96900, 96918, 96921, 96930, 96944 and 96970. No new object IDs or app-version change. Empty Attribute.Get filters retain the Foundation range resolver's RecordNotFound response.
 
 ### Fixed (2026-10-25) - transfer posting help (#151)
 

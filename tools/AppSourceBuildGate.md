@@ -1,3 +1,28 @@
+## Current Foundation release profile (24 October 2026)
+
+Production compilation and collision restoration use **release617**, the published
+Foundation release `28.0.8` (app `28.0.8.617`). Both app manifests and the source
+input floor agree. The exact package/source/build/compiler pins are in
+`appsource_gate.FOUNDATION_CANDIDATE`; staging shares those production pins.
+Apps release asset `663995787` has archive SHA256
+`55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1`;
+TestApps asset `663995606` has SHA256
+`6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be`.
+Source is `398b62521c043b2b4ba2ee1d626813f3ccb85711`, build `39680460724`.
+Only the exact known TestApps collision can be replaced, using the immutable
+release asset endpoint and verified archive/package hashes. Unknown inputs fail
+before download or mutation. The compiler still requires zero friend grants and
+signature content; this is not a Windows trust verdict.
+
+`controlled523` and `candidate530` remain explicit historical regression profiles;
+neither can satisfy the current compiler gate. Historical notes below describe
+their original evidence, not the current production default. Set
+`APPSOURCE_GATE_FOUNDATION_CANDIDATE` to the exact released617 Apps package when
+running the compiler-gate regressions. New release-profile tests require
+`FOUNDATION_RELEASE617_ARTIFACTS` with `Apps.zip` and `TestApps.zip`.
+
+---
+
 # AppSource build gate
 
 Ported on 2026-10-19 from Bifrost Attachments (`bc-origo-bifrost-attachments`, issue #78,
