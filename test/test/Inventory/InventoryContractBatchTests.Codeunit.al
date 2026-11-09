@@ -499,7 +499,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Get', Enum::"Message Type ori"::"Inventory.Attribute.Get".AsInteger(),
             'includeUnassigned:boolean:false,attributeNames:array:false,attributeIds:array:false',
-            'status:string,items:array', 'read', true, 4, 3, 1,
+            'status:string,items:array', 'read', true, 5, 3, 1,
             'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', '');
     end;
 
