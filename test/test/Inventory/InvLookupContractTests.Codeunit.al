@@ -172,7 +172,8 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         foreach Entry in Errors do
             if Entry.AsObject().Get('code', Value) then
                 if Value.AsValue().AsText() = Code then
-                    if (Code <> 'MissingParameter') or not EntryText(Entry.AsObject(), 'when').Contains('postingType') then begin
+                    // The identifier entry also documents postingType on transfers; only exclude postingType-only entries.
+                    if (Code <> 'MissingParameter') or EntryText(Entry.AsObject(), 'when').Contains('identifier in subject or data.') then begin
                         Result := Entry.AsObject();
                         Count += 1;
                     end;

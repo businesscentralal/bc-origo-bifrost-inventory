@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-09) - refusal help regressions after merging main (#151)
+
+- Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 identifies the shared missing-document entry by its identifier guidance, preserving the combined transfer `postingType` guidance and exact code-count assertions in both languages.
+
 ### Fixed (2026-11-09) - keep typed Inventory refusals on current main (#151)
 
-- Merge main `25aa5a1` (#175 / #152) into the refusal contract. Main keeps field-write checks, help captions (`Inv. Posting Gate`, `Full Access`) and `effect.permissionSet` IDs. #151 keeps typed refusal codes and parameter, expected and nextStep on the refusal paths in codeunits 10076854, 10076858, 10076859, 10076863, 10076866, 10076881, 10076882, 10076883, 10076893, 10076901, 10076902, 10076903, 10076909 and 10076919, and in test codeunit 96921. Duplicate attribute names stay `BusinessCentralError` because `Item Attribute Resolve ori` (10076844) still raises that native error. `pr:on-hold` on PR #166 is unchanged.
+- Merge main `25aa5a1` (#175 / #152) into the refusal contract. Main keeps field-write checks, help captions (`Inv. Posting Gate`, `Full Access`) and `effect.permissionSet` IDs. #151 keeps typed refusal codes and parameter, expected and nextStep on the refusal paths in codeunits 10076854, 10076858, 10076859, 10076863, 10076866, 10076881, 10076882, 10076883, 10076893, 10076901, 10076902, 10076903, 10076909 and 10076919, and in test codeunit 96921. Duplicate attribute names are refused by the typed preflight before the native resolver runs. `pr:on-hold` on PR #166 is unchanged.
 
 ### Fixed (2026-11-06) - Issue 152 review amendments
 

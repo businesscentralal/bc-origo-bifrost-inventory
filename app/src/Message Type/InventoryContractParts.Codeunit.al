@@ -608,7 +608,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.name.', 'Send a non-empty name.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'Attribute definition requires data.type.', 'Send Option, Text, Integer, Decimal or Date.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unknown attribute type.', 'Use Option, Text, Integer, Decimal or Date.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
+                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Item attribute "%1" already exists.', 'The definition name is already used.', 'Use the existing definition or choose another name.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin
