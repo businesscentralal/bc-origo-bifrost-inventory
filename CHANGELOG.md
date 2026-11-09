@@ -5,6 +5,7 @@
 ### Fixed (2026-11-09) - refusal help regressions after merging main (#151)
 
 - Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 identifies the shared missing-document entry by its identifier guidance, preserving the combined transfer `postingType` guidance and exact code-count assertions in both languages.
+- Live MCP found that the shared item-number resolver (10076919, used by Reservation.Get and Cost.Get) accepted JSON booleans and omitted `received` for objects/arrays or a missing required selection. Those typed refusals now preserve the received value. String, numeric and optional-null selection behavior remains compatible; bilingual regressions in codeunit 96975 create their own numeric item to verify compatibility.
 
 ### Fixed (2026-11-09) - keep typed Inventory refusals on current main (#151)
 

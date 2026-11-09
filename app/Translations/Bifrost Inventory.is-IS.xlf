@@ -1258,9 +1258,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 2939025630" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNo must be a JSON value.</source>
-          <target>itemNo verður að vera JSON-gildi.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera JSON-gildi.</note>
+          <source>itemNo must be a JSON string or number.</source>
+          <target>itemNo verður að vera JSON-strengur eða tala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera JSON-strengur eða tala.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TryResolveItemNo - NamedType ItemNoFormatErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 2257520777 - NamedType 3312263147" size-unit="char" translate="yes" xml:space="preserve">
