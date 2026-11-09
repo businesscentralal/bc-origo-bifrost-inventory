@@ -27,6 +27,31 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
     end;
 
     [Test]
+    procedure PreviewSummary_IsIcelandic()
+    var
+        OldLanguage: Integer;
+    begin
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
+        PreviewPost_ShipReleased_ReturnsPreviewAndRollsBack();
+        GlobalLanguage(OldLanguage);
+    end;
+
+    local procedure AssertLocalizedSummary(Response: JsonObject)
+    var
+        Token: JsonToken;
+        Summary: Text;
+    begin
+        Assert.IsTrue(Response.Get('summary', Token), 'Summary is returned.');
+        Summary := Token.AsValue().AsText();
+        if GlobalLanguage() = 1039 then begin
+            Assert.IsTrue(Summary.StartsWith('Forskoðun'), 'One translated summary label is used.');
+            Assert.IsFalse(Summary.Contains('preview produced'), 'No English summary prefix at1039.');
+        end else
+            Assert.IsTrue(Summary.Contains('preview produced'), 'English summary remains meaningful.');
+    end;
+
+    [Test]
     procedure PreviewPost_ShipReleased_ReturnsPreviewAndRollsBack()
     var
         FromLocation, ToLocation, InTransitLocation : Record Location;
@@ -51,6 +76,8 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
         Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
         Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success');
         Assert.IsTrue(ResponseJson.Get('predictedNumbers', PredictedToken), 'predictedNumbers missing');
+
+        AssertLocalizedSummary(ResponseJson);
 
         // [THEN] Transfer header should NOT have changed (preview rolled back)
         AfterTransferHeader.Get(TransferHeader."No.");
