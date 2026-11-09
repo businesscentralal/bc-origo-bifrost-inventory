@@ -632,7 +632,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
             'Inventory.TransferOrder.Post':
                 begin
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive, or create a direct transfer.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1', 'postingType is not Ship or Receive (ShipReceive is refused too).', 'Send Ship or Receive in two separate calls.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'Business Central refused the posting, for example because the order is not ready to ship or receive.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller lacks Inv. Posting Gate, which posting requires in addition to the Bifrost "Full Access" permission set');
@@ -641,7 +640,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'The preview produced no entries. Nothing would be posted.', 'Add a line quantity to ship or receive and retry.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::NothingToPreview, 'Transfer order %1 has no lines to post.', 'The order has no lines.', 'Create the lines first and retry.'));
-                    Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', 'postingType is missing for a non-direct transfer order.', 'Send postingType Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'postingType must be "Ship" or "Receive". Received: %1', 'postingType is neither Ship nor Receive.', 'Send Ship or Receive.'));
                     Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central''s own posting error text.', 'The transfer posting preview failed.', 'Read the error text and correct the order or setup.'));
                     AddDomainErrors(Errors, 'Transfer Orders', 'the caller cannot read Transfer Header records');
