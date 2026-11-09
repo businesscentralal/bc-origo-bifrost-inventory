@@ -212,14 +212,14 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper.CreateTransferLine(Header, Item."No.", 10);
         Codeunit.Run(Codeunit::"Release Transfer Document", Header);
         DocumentNo := Header."No.";
-        Request.Add('expectedCount', 1);
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", Request);
         Request.Add('postingType', 'Ship');
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
         Assert.IsTrue(Response.Get('status', Token), 'Ship status missing.');
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Owned shipment posts before the receipt. ' + JsonText(Response));
         Clear(Request);
         Clear(Response);
-        Request.Add('expectedCount', 1);
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", Request);
         Request.Add('postingType', 'Receive');
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, Request, Response);
         Assert.IsTrue(Response.Get('status', Token), 'Receive status missing.');

@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-09) - keep typed Inventory refusals on current main (#151)
+
+- Merge main `25aa5a1` (#175 / #152) into the refusal contract. Main keeps field-write checks, help captions (`Inv. Posting Gate`, `Full Access`) and `effect.permissionSet` IDs. #151 keeps typed refusal codes and parameter, expected and nextStep on the refusal paths in codeunits 10076854, 10076858, 10076859, 10076863, 10076866, 10076881, 10076882, 10076883, 10076893, 10076901, 10076902, 10076903, 10076909 and 10076919, and in test codeunit 96921. Duplicate attribute names stay `BusinessCentralError` because `Item Attribute Resolve ori` (10076844) still raises that native error. `pr:on-hold` on PR #166 is unchanged.
+
+### Fixed (2026-11-06) - Issue 152 review amendments
+
+- `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.
+- `effect.permissionSet` again holds one assignable permission set ID (`BIFROST Full ori` or `BIFROST Read ori`) on every Inventory type, the same shape as Foundation. The help-text guard (96970 `NotesAndOverview_NameNoAlObjects`) exempts that single structured field; captions such as Inv. Posting Gate stay in the error and notes text.
+
 ### Fixed (2026-11-05) - unknown journal keys follow Foundation's shared refusal (#151)
 
 - Test codeunit 96975 `Inv. Typed Refusal Tests ori`: the `*_UnknownParameterCoded_*` tests for the non-read types Inventory.PhysInventory.Calculate, Inventory.PhysInventory.RecordCount, Inventory.PhysInventory.Post and Inventory.Revaluation.Post expect Foundation's shared `UnknownParameter` code when Foundation 28.0.10 or later refuses unknown request keys before Inventory runs (core#1160). The read types Inventory.PhysInventory.Check and Inventory.Revaluation.PreviewPost still expect Inventory's own `InvalidParameter`. The eight Foundation-owned unknown-key cases retain parameter, expected and nextStep checks; the received assertion awaits Foundation [#1277](https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/issues/1277), per the acting Architect’s PR #166 ruling on 2026-11-05. Inventory-owned refusals keep all received assertions.
@@ -10,10 +19,16 @@
 
 - `Inv. Typed Refusal Tests ori` (96975) starts each journal-context invocation with a fresh request. A posting call's helper-added `expectedCount` no longer reaches the following read-only preview. All native error, context and no-write assertions remain unchanged.
 
+### Fixed (2026-11-03) - merge main contract-parity fixes into the help branch
+
+- Merge main `c667066` (#159 / #179) and keep the #152 display captions on assembly and transfer notes in `Inventory Contract Parts ori` (10076919). The assembly preview note keeps main's rollback sentence for `postingDate` and `quantityToAssemble`.
+- `Inventory.ItemApplication.Get` (10076867) keeps main's `InvalidParameter` when `itemLedgerEntryNo` is not a JSON integer.
+- Unused codeunit `Phys. Invt. Calc Impl ori` (10076880) stays deleted. `Inventory.PhysInventory.Calculate` remains on `Phys. Inv. Calc Impl ori` (10076883).
+- Contract batch tests (96921) keep main's rule: the shared `Retryable` row is required only when installed Foundation is 28.0.11 or newer. Transfer posting tests (96914) still send `expectedCount` only when the composed contract declares it.
+
 ### Changed (2026-11-03) - Help links guard runs in Source Guards (#31)
 
 - Source Guards runs `tools/Test-HelpLinks.ps1` (unchanged) in a new `HelpLinks` job against the current `businesscentralal/bifrost` main, so every page must link to a help page that exists in both en-US and is-IS. The job logs the documentation revision it checked. Workflow change only, no app change.
-
 
 ### Fixed (2026-11-03) - preview adjustments and period help (#159)
 
@@ -34,6 +49,16 @@
 - `Inventory.PhysInventory.Check` (10076884) keeps answering an empty batch as Success with `validationResult` NotReady. Post and PreviewPost still refuse an empty batch. That split is the published contract.
 - Contract regressions in `Inventory Contract Batch Tests` (96921) expect the shared `Retryable` entry only when the installed Foundation is 28.0.11 or newer. Release 28.0.10 exposes the enum and does not append the entry.
 - `Transfer Order Post Tests` (96914) send `expectedCount` only when the composed contract declares it. Foundation 28.0.10 rejects that key on `Inventory.TransferOrder.Post` and `Inventory.Transfer.UndoShipment` because those types do not declare it.
+
+### Fixed (2026-11-03) - confirmation fixtures on strict Foundation
+
+- Merging main (#185) keeps `Inventory.Transfer.UndoReceipt` (10076911) on the coded MissingParameter and RecordNotFound contract and the Inv. Posting Gate display caption. The translated notes label from that merge uses the same caption.
+
+### Fixed (2026-11-02) - Inventory help and runtime error parity (#152)
+- #152: complete remaining Inventory help error codes, attribute examples and subject descriptions; use permission display captions instead of AL names. Preserve published statistics direction and response fields. Strengthen contract guard 96970 across all help chapters and document protected setup administration; improve disabled-domain guidance (10076922). Return coded errors on explicit refusal paths, align error help with MissingParameter/RecordNotFound/PreconditionFailed and native BusinessCentralError, and exercise runtime envelopes in regression tests (96970). Normalize permission captions and Icelandic guidance, including the native journal gate (10076840); keep XLF synchronized.
+- Correct Attribute.Create/Update invalid-array help to the existing caught `BusinessCentralError` response (10076919); regress missing, empty and non-array attributes in both languages through the real dispatcher (96900).
+- Merge main: keep source-bound tracking (#150/#165) and Foundation confirmation (#176) while preserving the coded refusal help above. Tracking.Assign/Delete help names the Bifrost "Full Access" permission set, and UndoShipment documents the received-line PreconditionFailed.
+
 ### Added (2026-11-03) - Inventory setup wizard (#158)
 
 - Five-step Assisted Setup "Set up Bifrost Inventory" (Extensions group): what the app adds, read-only HTTP status with a link to Foundation's setup wizard, access guidance, read-only company domains and explicit completion. Page 10076836, registration codeunit 10076924, management codeunit 10076927 and bilingual tests 96920. Inventory Setup (10076835) gets a Setup Wizard action. The guide never writes HTTP settings, assigns permissions or toggles domains; closing early does not mark completion. Execute permission for the new objects is added to the existing BIFROST Read/Full extensions and to BIFROST InvPost ori (the app's only assignable set, required by the PermissionCoverage guard); the InvPost grant awaits Gunnar's product decision (Architect 1793461090) before merge.
@@ -87,7 +112,6 @@
 ### Added (2026-10-23) - catalogue quality guard (inventory#152, AC1)
 
 - New test codeunit 96971 `Inv. Catalogue Quality Tests` (test range 96900-96999; 28 characters, within the 30-character AL0305 object-name limit): for every Inventory message type it reads the catalogue `description`, `selection description` and `keywords` through the `Msg Interface ori` / `Msg Discovery ori` interfaces in LCID 1033 and 1039 and fails on a text that is empty at either language or identical in both languages, i.e. a missing `is-IS=` target, an empty target or a `Locked` (non-translatable) catalogue label. This is the guard required by issue #152 AC1; the catalogue texts themselves are already present on main (958/958 in `app/Translations/Bifrost Inventory.is-IS.xlf`, verified live by Claude at PR 160).
-
 
 ### Fixed (2026-10-29) - registration under restricted licence administration (#173)
 
