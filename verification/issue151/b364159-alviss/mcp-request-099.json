@@ -1,0 +1,345 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.TransferOrder.PreviewPost",
+    "detail": "full",
+    "lcid": 1033
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.TransferOrder.PreviewPost",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.TransferOrder.PreviewPost",
+      "isEnabled": true,
+      "filterTableNo": 5740,
+      "description": "Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.",
+      "selectionDescription": "Previews transfer posting without committing; use Post to perform the irreversible shipment or receipt.",
+      "messageDirection": "Inbound",
+      "keywords": [
+        "preview transfer posting",
+        "simulate stock transfer",
+        "what would the transfer post"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "optional",
+          "forms": [
+            "guid",
+            "document no."
+          ],
+          "description": "The subject identifies the transfer order by number or SystemId; use data document identifiers when subject is omitted."
+        },
+        "dataRequired": true,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "subject",
+          "form": "guid",
+          "description": "The SystemId of the document header."
+        },
+        {
+          "source": "subject",
+          "form": "document no.",
+          "description": "The No. of the document header."
+        },
+        {
+          "source": "data.systemId, data.recordSystemId, data.id",
+          "form": "guid",
+          "description": "The SystemId of the document header."
+        },
+        {
+          "source": "data.documentNo, data.transferOrderNo, data.no",
+          "form": "document no.",
+          "description": "The Transfer Order No."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "postingType",
+          "type": "string",
+          "required": false,
+          "description": "Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer."
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success when preview captured entries."
+          },
+          {
+            "name": "entryCount",
+            "type": "integer",
+            "description": "Total predicted entries."
+          },
+          {
+            "name": "glEntryCount",
+            "type": "integer",
+            "description": "Predicted G/L entry count."
+          },
+          {
+            "name": "rollback",
+            "type": "boolean",
+            "description": "Always true; the preview is rolled back."
+          },
+          {
+            "name": "summary",
+            "type": "string",
+            "description": "Human-readable preview summary."
+          },
+          {
+            "name": "documentNo",
+            "type": "string",
+            "description": "The Transfer Order No."
+          },
+          {
+            "name": "transferFromCode",
+            "type": "string",
+            "description": "Source location."
+          },
+          {
+            "name": "transferToCode",
+            "type": "string",
+            "description": "Destination location."
+          },
+          {
+            "name": "directTransfer",
+            "type": "boolean",
+            "description": "Whether the order is direct."
+          },
+          {
+            "name": "postingType",
+            "type": "string",
+            "description": "Ship, Receive or DirectTransfer as previewed."
+          },
+          {
+            "name": "lcyCode",
+            "type": "string",
+            "description": "The local currency code of the company."
+          },
+          {
+            "name": "predictedNumbers",
+            "type": "object",
+            "description": "Predicted posted document numbers.",
+            "children": [
+              {
+                "name": "postedShipmentNo",
+                "type": "string",
+                "description": "Predicted shipment number; only for postingType Ship."
+              },
+              {
+                "name": "postedReceiptNo",
+                "type": "string",
+                "description": "Predicted receipt number; only for postingType Receive."
+              },
+              {
+                "name": "postedDirectTransferNo",
+                "type": "string",
+                "description": "Predicted direct transfer number; only for a direct transfer."
+              }
+            ]
+          },
+          {
+            "name": "totals",
+            "type": "object",
+            "description": "Predicted G/L totals when applicable.",
+            "children": [
+              {
+                "name": "balanced",
+                "type": "boolean",
+                "description": "Whether the predicted G/L entries balance; only present when G/L entries were captured."
+              },
+              {
+                "name": "totalDebitLCY",
+                "type": "decimal",
+                "description": "Total predicted debit in local currency."
+              },
+              {
+                "name": "totalCreditLCY",
+                "type": "decimal",
+                "description": "Total predicted credit in local currency."
+              }
+            ]
+          },
+          {
+            "name": "preview",
+            "type": "array",
+            "description": "Captured entries grouped by table.",
+            "children": [
+              {
+                "name": "tableId",
+                "type": "integer",
+                "description": "Business Central table number of the captured entries."
+              },
+              {
+                "name": "tableName",
+                "type": "string",
+                "description": "Table name."
+              },
+              {
+                "name": "tableCaption",
+                "type": "string",
+                "description": "Table caption."
+              },
+              {
+                "name": "entryCount",
+                "type": "integer",
+                "description": "Number of captured entries in this table."
+              },
+              {
+                "name": "entries",
+                "type": "array",
+                "description": "The captured entries as field-value objects."
+              }
+            ]
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "MissingParameter",
+          "when": "No Transfer Header identifier in subject or data. A non-direct transfer order also requires postingType.",
+          "fix": "Send subject or an identifier key under data. For a non-direct transfer, send postingType Ship or Receive."
+        },
+        {
+          "code": "RecordNotFound",
+          "when": "An identifier was given but matches no Transfer Header.",
+          "fix": "Check the value or look the record up first."
+        },
+        {
+          "code": "ConflictingIdentifiers",
+          "when": "Two identifiers were given that point to different records.",
+          "fix": "Send one identifier."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "data is not a JSON object (parameter data); an identifier key under data (documentNo, transferOrderNo, no, systemId, recordSystemId, id) is not a JSON string (null, a number, a boolean, an object or an array); or a SystemId is not a GUID. parameter names the key.",
+          "fix": "Send data as a JSON object, each identifier as a JSON string and a SystemId as a GUID. Nothing is looked up while one is wrong."
+        },
+        {
+          "code": "MultipleErrors",
+          "when": "More than one identifier key is of the wrong type; errors[] lists each, in the order the keys are read. Nothing is looked up while one is wrong.",
+          "fix": "Fix every listed key and send the request again."
+        },
+        {
+          "code": "NothingToPreview",
+          "when": "The preview produced no entries. Nothing would be posted.",
+          "fix": "Add a line quantity to ship or receive and retry."
+        },
+        {
+          "code": "NothingToPreview",
+          "error": "Transfer order %1 has no lines to post.",
+          "when": "The order has no lines.",
+          "fix": "Create the lines first and retry."
+        },
+        {
+          "code": "MissingParameter",
+          "error": "For a non-direct transfer order, postingType must be \"Ship\" or \"Receive\".",
+          "when": "postingType is missing for a non-direct transfer order.",
+          "fix": "Send postingType Ship or Receive."
+        },
+        {
+          "code": "InvalidParameter",
+          "error": "postingType must be \"Ship\" or \"Receive\". Received: %1",
+          "when": "postingType is neither Ship nor Receive.",
+          "fix": "Send Ship or Receive."
+        },
+        {
+          "code": "BusinessCentralError",
+          "error": "Business Central's own posting error text.",
+          "when": "The transfer posting preview failed.",
+          "fix": "Read the error text and correct the order or setup."
+        },
+        {
+          "code": "InvalidParameter",
+          "error": "The Transfer Orders domain is turned off for this company. Turn it on from Inventory Setup.",
+          "when": "The Transfer Orders domain is turned off on the Inventory Setup page.",
+          "fix": "Turn the domain on from the Inventory Setup page."
+        },
+        {
+          "code": "PermissionDenied",
+          "error": "Permission denied for this inventory message type.",
+          "when": "The domain is on, but the caller cannot read Transfer Header records.",
+          "fix": "Assign the missing permission set to the caller."
+        }
+      ],
+      "effect": {
+        "effect": "read",
+        "changes": "Simulates posting inside a transaction that is always rolled back. Nothing is written, including posted document numbers.",
+        "idempotent": true,
+        "permissionSet": "BIFROST Full ori",
+        "preconditions": [
+          "The Transfer Orders domain is turned on in Inventory Setup.",
+          "The order has at least one line."
+        ]
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.TransferOrder.Post",
+          "useInsteadWhen": "Actually post after the preview is correct."
+        },
+        {
+          "name": "Inventory.TransferOrder.Statistics",
+          "useInsteadWhen": "Inspect quantities before previewing."
+        }
+      ],
+      "workflow": {
+        "steps": [
+          {
+            "messageType": "Inventory.TransferOrder.Statistics",
+            "purpose": "Check quantities and totals."
+          },
+          {
+            "messageType": "Inventory.TransferOrder.PreviewPost",
+            "purpose": "Preview the posting."
+          },
+          {
+            "messageType": "Inventory.TransferOrder.Post",
+            "purpose": "Post after the preview is acceptable."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Preview shipping a transfer order",
+          "request": {
+            "type": "Inventory.TransferOrder.PreviewPost",
+            "data": {
+              "documentNo": "TO000456",
+              "postingType": "Ship"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "entryCount": 2,
+            "glEntryCount": 0,
+            "rollback": true,
+            "documentNo": "TO000456",
+            "postingType": "Ship",
+            "predictedNumbers": {
+              "postedShipmentNo": "109001"
+            }
+          }
+        }
+      ],
+      "overview": "Simulates Transfer Order posting, returns predicted entries and always rolls back the transaction.",
+      "notes": "A successful preview includes rollback true. Nothing is persisted, including posted document numbers."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}

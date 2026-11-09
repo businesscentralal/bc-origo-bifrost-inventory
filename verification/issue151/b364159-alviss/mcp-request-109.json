@@ -1,0 +1,396 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.Cost.Get",
+    "detail": "full",
+    "lcid": 1033
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.Cost.Get",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.Cost.Get",
+      "isEnabled": true,
+      "filterTableNo": 27,
+      "description": "Reads item cost fields that are not exposed by the foundation app.",
+      "selectionDescription": "Returns current costing fields and native filtered inventory for one or more items.",
+      "messageDirection": "Outbound",
+      "keywords": [
+        "read item cost",
+        "unit cost",
+        "inventory value"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "optional",
+          "forms": [
+            "itemNo",
+            "systemId"
+          ],
+          "description": "Subject wins over data identifiers and tableView."
+        },
+        "dataRequired": false,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "subject",
+          "form": "guid",
+          "description": "The SystemId of the Item."
+        },
+        {
+          "source": "subject",
+          "form": "item no.",
+          "description": "The No. of the Item."
+        },
+        {
+          "source": "data.itemNo",
+          "form": "item no.",
+          "description": "The No. of the Item; used when subject is empty."
+        },
+        {
+          "source": "data.itemId, data.id, data.systemId, data.recordSystemId",
+          "form": "guid",
+          "description": "The SystemId of the Item; any one of the four keys."
+        },
+        {
+          "source": "data.tableView",
+          "form": "table view",
+          "description": "An Item table view that selects the item it can select several items, and the answer then lists them in items."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "itemNo",
+          "type": "string",
+          "required": false,
+          "description": "Item number. The message subject is the same item number when this key is omitted; a different item number in subject and itemNo is refused. Required unless a SystemId or tableView selects the items."
+        },
+        {
+          "name": "itemId",
+          "type": "string",
+          "required": false,
+          "description": "The SystemId of the Item; used after the subject and itemNo."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Alias for the Item SystemId."
+        },
+        {
+          "name": "systemId",
+          "type": "string",
+          "required": false,
+          "description": "Alias for the Item SystemId."
+        },
+        {
+          "name": "recordSystemId",
+          "type": "string",
+          "required": false,
+          "description": "Alias for the Item SystemId."
+        },
+        {
+          "name": "tableView",
+          "type": "string",
+          "required": false,
+          "description": "An Item table view; it can select several items."
+        },
+        {
+          "name": "locationFilter",
+          "type": "string",
+          "required": false,
+          "description": "Business Central filter on the location code, applied to the inventory quantity only; card costs do not change."
+        },
+        {
+          "name": "variantCode",
+          "type": "string",
+          "required": false,
+          "description": "Exact variant code, applied to the inventory quantity only; an empty value does not restrict the variant. Card costs do not change."
+        },
+        {
+          "name": "asOfDate",
+          "type": "string",
+          "required": false,
+          "description": "Upper bound for the posting date as YYYY-MM-DD, applied to the inventory quantity only. Costs and the two cost flags stay current."
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success."
+          },
+          {
+            "name": "itemNo",
+            "type": "string",
+            "description": "Item number; only when exactly one item is selected."
+          },
+          {
+            "name": "itemId",
+            "type": "string",
+            "description": "Item SystemId; only when exactly one item is selected."
+          },
+          {
+            "name": "costingMethod",
+            "type": "string",
+            "description": "Invariant costing-method member name; only when exactly one item is selected."
+          },
+          {
+            "name": "unitCost",
+            "type": "decimal",
+            "description": "Current Item Unit Cost; only when exactly one item is selected."
+          },
+          {
+            "name": "standardCost",
+            "type": "decimal",
+            "description": "Current Item Standard Cost; only when exactly one item is selected."
+          },
+          {
+            "name": "lastDirectCost",
+            "type": "decimal",
+            "description": "Current Item Last Direct Cost; only when exactly one item is selected."
+          },
+          {
+            "name": "indirectCostPct",
+            "type": "decimal",
+            "description": "Current Item Indirect Cost %; only when exactly one item is selected."
+          },
+          {
+            "name": "costIsAdjusted",
+            "type": "boolean",
+            "description": "Current Item adjustment flag; only when exactly one item is selected."
+          },
+          {
+            "name": "costIsPostedToGL",
+            "type": "boolean",
+            "description": "Native current pending-cost FlowField; only when exactly one item is selected."
+          },
+          {
+            "name": "inventory",
+            "type": "decimal",
+            "description": "Calculated stock quantity with location/variant and optional asOfDate; only when exactly one item is selected."
+          },
+          {
+            "name": "locationFilter",
+            "type": "string",
+            "description": "Effective native location filter; only when exactly one item is selected."
+          },
+          {
+            "name": "variantFilter",
+            "type": "string",
+            "description": "Effective native variant filter; only when exactly one item is selected."
+          },
+          {
+            "name": "asOfDate",
+            "type": "string",
+            "description": "Optional ISO upper posting date for inventory only; only when exactly one item is selected."
+          },
+          {
+            "name": "items",
+            "type": "array",
+            "description": "One current cost snapshot per selected item.",
+            "children": [
+              {
+                "name": "itemNo",
+                "type": "string",
+                "description": "Item number."
+              },
+              {
+                "name": "itemId",
+                "type": "string",
+                "description": "Item SystemId."
+              },
+              {
+                "name": "costingMethod",
+                "type": "string",
+                "description": "Invariant costing-method member name."
+              },
+              {
+                "name": "unitCost",
+                "type": "decimal",
+                "description": "Current Item Unit Cost."
+              },
+              {
+                "name": "standardCost",
+                "type": "decimal",
+                "description": "Current Item Standard Cost."
+              },
+              {
+                "name": "lastDirectCost",
+                "type": "decimal",
+                "description": "Current Item Last Direct Cost."
+              },
+              {
+                "name": "indirectCostPct",
+                "type": "decimal",
+                "description": "Current Item Indirect Cost %."
+              },
+              {
+                "name": "costIsAdjusted",
+                "type": "boolean",
+                "description": "Current Item adjustment flag."
+              },
+              {
+                "name": "costIsPostedToGL",
+                "type": "boolean",
+                "description": "Native current pending-cost FlowField."
+              },
+              {
+                "name": "inventory",
+                "type": "decimal",
+                "description": "Native stock quantity with location/variant and optional asOfDate."
+              },
+              {
+                "name": "locationFilter",
+                "type": "string",
+                "description": "Effective native location filter."
+              },
+              {
+                "name": "variantFilter",
+                "type": "string",
+                "description": "Effective native variant filter."
+              },
+              {
+                "name": "asOfDate",
+                "type": "string",
+                "description": "Optional ISO upper posting date for inventory only."
+              }
+            ]
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "MissingParameter",
+          "error": "itemNo is required.",
+          "when": "Neither data.itemNo nor subject was sent.",
+          "fix": "Send data.itemNo or the item number as subject."
+        },
+        {
+          "code": "ConflictingIdentifiers",
+          "error": "subject and itemNo name different items.",
+          "when": "subject and data.itemNo were both sent and do not match.",
+          "fix": "Send one item number, or make subject and data.itemNo the same."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "error": "itemNo must be a JSON value.",
+          "when": "data.itemNo is an object or an array.",
+          "fix": "Send the item number as text in data.itemNo."
+        },
+        {
+          "code": "RecordNotFound",
+          "error": "Item {itemNo} was not found.",
+          "when": "The item number, SystemId or tableView matches no item.",
+          "fix": "Check the item number or the selection."
+        },
+        {
+          "code": "InvalidParameter",
+          "when": "locationFilter or variantCode is not text, or the Costing domain is turned off in Inventory Setup.",
+          "fix": "Send locationFilter and variantCode as JSON text, or turn on the Costing domain in Inventory Setup."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "Invalid date or identifier.",
+          "fix": "Use ISO date and valid identifiers."
+        },
+        {
+          "code": "PermissionDenied",
+          "when": "Native Item read permission is absent.",
+          "fix": "Assign the appropriate read role."
+        },
+        {
+          "code": "BusinessCentralError",
+          "error": "Native inventory filter error.",
+          "when": "A location or inventory filter cannot be applied.",
+          "fix": "Correct the native filter syntax."
+        }
+      ],
+      "effect": {
+        "effect": "read",
+        "writes": false,
+        "posts": false,
+        "changes": "None. Reads the current Item cost fields and the filtered inventory quantity.",
+        "idempotent": true,
+        "permissionSet": "BIFROST Read ori",
+        "preconditions": [
+          "The Costing domain is turned on in Inventory Setup.",
+          "The caller can read items."
+        ]
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.AdjustCost.Run",
+          "useInsteadWhen": "Use it when costIsAdjusted is false, to bring item costs up to date."
+        },
+        {
+          "name": "Inventory.Revaluation.Calculate",
+          "useInsteadWhen": "Use it to read the remaining quantity and value of one item from its open item ledger entries; this type reads the current card costs."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Read the current cost and inventory of item 1000 as of a date",
+          "request": {
+            "type": "Inventory.Cost.Get",
+            "data": {
+              "itemNo": "1000",
+              "asOfDate": "2026-10-14"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "itemNo": "1000",
+            "itemId": "6f1c1d2e-0000-0000-0000-000000000001",
+            "costingMethod": "FIFO",
+            "unitCost": 12.5,
+            "standardCost": 0,
+            "lastDirectCost": 12,
+            "indirectCostPct": 0,
+            "costIsAdjusted": true,
+            "costIsPostedToGL": true,
+            "inventory": 40,
+            "locationFilter": "",
+            "variantFilter": "",
+            "asOfDate": "2026-10-14",
+            "items": [
+              {
+                "itemNo": "1000",
+                "itemId": "6f1c1d2e-0000-0000-0000-000000000001",
+                "costingMethod": "FIFO",
+                "unitCost": 12.5,
+                "standardCost": 0,
+                "lastDirectCost": 12,
+                "indirectCostPct": 0,
+                "costIsAdjusted": true,
+                "costIsPostedToGL": true,
+                "inventory": 40,
+                "locationFilter": "",
+                "variantFilter": "",
+                "asOfDate": "2026-10-14"
+              }
+            ]
+          }
+        }
+      ],
+      "overview": "Reads current item costs and filtered inventory for one or more items.",
+      "notes": "Select the item with the message subject (an item number or SystemId), data.itemNo, an item SystemId key or data.tableView; a call with none of them is refused. One selected item is also answered at the top level, several items only in items. Unit cost, standard cost, last direct cost, indirect cost percent and both flags are current card values. locationFilter, variantCode and asOfDate change the inventory quantity only: asOfDate counts item ledger entries up to that posting date, and no historical card cost is available. An empty variantCode does not restrict the variant, the same way an empty locationFilter does not restrict the location; a non-empty variantCode is an exact variant. costIsAdjusted false means Inventory.AdjustCost.Run is due; costIsPostedToGL false means value entries are not yet posted to the general ledger. Nothing is changed."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}

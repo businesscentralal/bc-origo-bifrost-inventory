@@ -1,0 +1,20 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.PhysInventory.Post",
+    "data": {
+      "templateName": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "ConfirmationRequired",
+    "error": "Ekki er hægt að afturkalla þetta kall og það var ekki keyrt. Það myndi hafa áhrif á 1 (færsla true). Engu var breytt.",
+    "parameter": "expectedCount",
+    "expected": "1",
+    "nextStep": "Sendu sömu beiðni aftur með expectedCount stillt á 1.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.PhysInventory.Post\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

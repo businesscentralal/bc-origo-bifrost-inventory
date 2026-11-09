@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Period.Reopen",
+    "data": {
+      "endingDate": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Færibreyta \"endingDate\" hefur gildið \"true\", sem er ekki í gildu sniði (dagsetning). Væntanlegt er YYYY-MM-DD.",
+    "parameter": "endingDate",
+    "received": "true",
+    "expected": "YYYY-MM-DD",
+    "nextStep": "Sendu dagsetninguna á forminu YYYY-MM-DD.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Period.Reopen\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

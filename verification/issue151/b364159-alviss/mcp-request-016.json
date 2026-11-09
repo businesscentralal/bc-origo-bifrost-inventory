@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Assembly.UndoPost",
+    "data": {
+      "expectedCount": 1
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MissingParameter",
+    "error": "documentNo er nauðsynlegt.",
+    "parameter": "documentNo",
+    "received": "<missing>",
+    "expected": "JSON-strengur með að hámarki 20 stöfum.",
+    "nextStep": "Sendu documentNo sem texta á skjalfestu sniði.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Assembly.UndoPost\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

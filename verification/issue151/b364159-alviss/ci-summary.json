@@ -1,0 +1,39 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "testedMergeSha": "0ad627cef88ed1d55220b0fa6c340d9c879587b5",
+  "baseSha": "25aa5a13ad415994ca6098747d5bbd9d04a453e9",
+  "runUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/42623776319",
+  "defaultJob": {
+    "id": 129183244651,
+    "conclusion": "success",
+    "errors": 0,
+    "warnings": 0
+  },
+  "testJob": {
+    "id": 129188068958,
+    "conclusion": "success",
+    "errors": 0,
+    "warnings": 0
+  },
+  "tests": [
+    {
+      "file": "TestResults.xml",
+      "executed": 561,
+      "passed": 561,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "fullSuite": true,
+  "executed": 561,
+  "passed": 561,
+  "failed": 0,
+  "skipped": 0,
+  "artifactId": 13679225779,
+  "artifactDigestVerified": true,
+  "physicalContainer": "f048bb2441ed",
+  "testProductRepublishVerified": true,
+  "releasedCompatibilityBaseline": "28.3.1.81",
+  "appSourceBeforePostFinalizePipeline": "passed",
+  "optionalSkippedJobs": "Cleanup/optional workflow jobs are not AL test skips."
+}

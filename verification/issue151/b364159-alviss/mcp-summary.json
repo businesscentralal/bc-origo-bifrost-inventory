@@ -1,0 +1,1807 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "appVersion": "28.3.2.452",
+  "foundationVersion": "28.0.12.679",
+  "startedAt": "2026-11-09T13:23:35.177Z",
+  "touchedMessageTypes": [
+    "Inventory.Period.Close",
+    "Inventory.Period.Reopen",
+    "Inventory.AdjustCost.Run",
+    "Inventory.TransferOrder.Post",
+    "Inventory.Assembly.UndoPost",
+    "Inventory.Cost.Update",
+    "Inventory.Tracking.Assign",
+    "Inventory.Tracking.Delete",
+    "Inventory.Tracking.Get",
+    "Inventory.PhysInventory.Calculate",
+    "Inventory.PhysInventory.Check",
+    "Inventory.PhysInventory.Post",
+    "Inventory.PhysInventory.Record",
+    "Inventory.PhysInventory.RecordCount",
+    "Inventory.PhysInventory.PreviewPost",
+    "Inventory.Revaluation.Post",
+    "Inventory.Revaluation.PreviewPost",
+    "Inventory.AttributeDefinition.Create",
+    "Inventory.AssemblyOrder.PreviewPost",
+    "Inventory.TransferOrder.PreviewPost",
+    "Inventory.AssemblyOrder.Create",
+    "Inventory.TransferOrder.Create",
+    "Inventory.Reservation.Create",
+    "Inventory.Reservation.Get",
+    "Inventory.Cost.Get"
+  ],
+  "createsOwnData": true,
+  "dataSetup": "Fresh request objects per type/language. Malformed values are created by this harness; no customer/shared business record is selected. Explicit own test fixture seed and additional mutation scenarios are recorded separately.",
+  "executed": 100,
+  "passed": 100,
+  "failed": 0,
+  "skipped": 0,
+  "scenarios": [
+    {
+      "key": "invoke-Inventory.Period.Close-1033",
+      "passed": true,
+      "at": "2026-11-09T13:23:40.672Z"
+    },
+    {
+      "key": "invoke-Inventory.Period.Close-1039",
+      "passed": true,
+      "at": "2026-11-09T13:23:41.266Z"
+    },
+    {
+      "key": "invoke-Inventory.Period.Reopen-1033",
+      "passed": true,
+      "at": "2026-11-09T13:23:41.790Z"
+    },
+    {
+      "key": "invoke-Inventory.Period.Reopen-1039",
+      "passed": true,
+      "at": "2026-11-09T13:23:42.684Z"
+    },
+    {
+      "key": "invoke-Inventory.AdjustCost.Run-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:08.469Z"
+    },
+    {
+      "key": "invoke-Inventory.AdjustCost.Run-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:09.376Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:10.280Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:11.345Z"
+    },
+    {
+      "key": "invoke-Inventory.Assembly.UndoPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:12.461Z"
+    },
+    {
+      "key": "invoke-Inventory.Assembly.UndoPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:13.408Z"
+    },
+    {
+      "key": "invoke-Inventory.Cost.Update-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:13.863Z"
+    },
+    {
+      "key": "invoke-Inventory.Cost.Update-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:14.380Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Assign-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:14.864Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Assign-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:15.347Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Delete-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:15.812Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Delete-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:16.455Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:16.915Z"
+    },
+    {
+      "key": "invoke-Inventory.Tracking.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:17.441Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Calculate-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:17.894Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Calculate-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:18.378Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Check-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:18.883Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Check-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:19.627Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:20.728Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:21.780Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Record-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:22.415Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.Record-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:22.877Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.RecordCount-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:23.473Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.RecordCount-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:23.926Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:24.466Z"
+    },
+    {
+      "key": "invoke-Inventory.PhysInventory.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:24.939Z"
+    },
+    {
+      "key": "invoke-Inventory.Revaluation.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:25.899Z"
+    },
+    {
+      "key": "invoke-Inventory.Revaluation.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:27.067Z"
+    },
+    {
+      "key": "invoke-Inventory.Revaluation.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:27.654Z"
+    },
+    {
+      "key": "invoke-Inventory.Revaluation.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:28.187Z"
+    },
+    {
+      "key": "invoke-Inventory.AttributeDefinition.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:28.663Z"
+    },
+    {
+      "key": "invoke-Inventory.AttributeDefinition.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:29.138Z"
+    },
+    {
+      "key": "invoke-Inventory.AssemblyOrder.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:29.585Z"
+    },
+    {
+      "key": "invoke-Inventory.AssemblyOrder.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:30.053Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:30.677Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:31.309Z"
+    },
+    {
+      "key": "invoke-Inventory.AssemblyOrder.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:31.997Z"
+    },
+    {
+      "key": "invoke-Inventory.AssemblyOrder.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:32.726Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:33.332Z"
+    },
+    {
+      "key": "invoke-Inventory.TransferOrder.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:33.812Z"
+    },
+    {
+      "key": "invoke-Inventory.Reservation.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:34.701Z"
+    },
+    {
+      "key": "invoke-Inventory.Reservation.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:35.353Z"
+    },
+    {
+      "key": "invoke-Inventory.Reservation.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:35.824Z"
+    },
+    {
+      "key": "invoke-Inventory.Reservation.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:36.415Z"
+    },
+    {
+      "key": "invoke-Inventory.Cost.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:36.864Z"
+    },
+    {
+      "key": "invoke-Inventory.Cost.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:37.604Z"
+    },
+    {
+      "key": "help-Inventory.Period.Close-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:37.862Z"
+    },
+    {
+      "key": "help-Inventory.Period.Close-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:38.285Z"
+    },
+    {
+      "key": "help-Inventory.Period.Reopen-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:38.522Z"
+    },
+    {
+      "key": "help-Inventory.Period.Reopen-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:38.754Z"
+    },
+    {
+      "key": "help-Inventory.AdjustCost.Run-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:39.059Z"
+    },
+    {
+      "key": "help-Inventory.AdjustCost.Run-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:39.280Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:39.545Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:39.781Z"
+    },
+    {
+      "key": "help-Inventory.Assembly.UndoPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:40.280Z"
+    },
+    {
+      "key": "help-Inventory.Assembly.UndoPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:40.509Z"
+    },
+    {
+      "key": "help-Inventory.Cost.Update-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:40.737Z"
+    },
+    {
+      "key": "help-Inventory.Cost.Update-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:40.959Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Assign-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:41.220Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Assign-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:41.445Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Delete-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:41.682Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Delete-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:41.911Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:42.362Z"
+    },
+    {
+      "key": "help-Inventory.Tracking.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:42.616Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Calculate-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:42.849Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Calculate-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:43.190Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Check-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:43.420Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Check-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:43.657Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:43.885Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:44.270Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Record-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:44.496Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.Record-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:44.725Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.RecordCount-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:44.963Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.RecordCount-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:45.340Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:45.582Z"
+    },
+    {
+      "key": "help-Inventory.PhysInventory.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:45.810Z"
+    },
+    {
+      "key": "help-Inventory.Revaluation.Post-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:46.208Z"
+    },
+    {
+      "key": "help-Inventory.Revaluation.Post-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:46.439Z"
+    },
+    {
+      "key": "help-Inventory.Revaluation.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:46.670Z"
+    },
+    {
+      "key": "help-Inventory.Revaluation.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:46.933Z"
+    },
+    {
+      "key": "help-Inventory.AttributeDefinition.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:47.389Z"
+    },
+    {
+      "key": "help-Inventory.AttributeDefinition.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:47.649Z"
+    },
+    {
+      "key": "help-Inventory.AssemblyOrder.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:47.888Z"
+    },
+    {
+      "key": "help-Inventory.AssemblyOrder.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:48.371Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.PreviewPost-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:48.640Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.PreviewPost-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:48.891Z"
+    },
+    {
+      "key": "help-Inventory.AssemblyOrder.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:49.292Z"
+    },
+    {
+      "key": "help-Inventory.AssemblyOrder.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:49.541Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:49.780Z"
+    },
+    {
+      "key": "help-Inventory.TransferOrder.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:50.032Z"
+    },
+    {
+      "key": "help-Inventory.Reservation.Create-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:50.290Z"
+    },
+    {
+      "key": "help-Inventory.Reservation.Create-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:50.658Z"
+    },
+    {
+      "key": "help-Inventory.Reservation.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:50.960Z"
+    },
+    {
+      "key": "help-Inventory.Reservation.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:51.446Z"
+    },
+    {
+      "key": "help-Inventory.Cost.Get-1033",
+      "passed": true,
+      "at": "2026-11-09T13:25:51.890Z"
+    },
+    {
+      "key": "help-Inventory.Cost.Get-1039",
+      "passed": true,
+      "at": "2026-11-09T13:25:52.364Z"
+    }
+  ],
+  "requests": [
+    {
+      "seq": 0,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "31.12.2026"
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-000.json"
+    },
+    {
+      "seq": 1,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Period.Close",
+        "data": {
+          "endingDate": "31.12.2026"
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-001.json"
+    },
+    {
+      "seq": 2,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-002.json"
+    },
+    {
+      "seq": 3,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Period.Reopen",
+        "data": {
+          "endingDate": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-003.json"
+    },
+    {
+      "seq": 4,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AdjustCost.Run",
+        "data": {
+          "postToGL": "maybe"
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-004.json"
+    },
+    {
+      "seq": 5,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AdjustCost.Run",
+        "data": {
+          "postToGL": "maybe",
+          "itemNoFilter": "W8PRV-EN"
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-005.json"
+    },
+    {
+      "seq": 6,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AdjustCost.Run",
+        "data": {
+          "postToGL": "maybe",
+          "itemNoFilter": "W8PRV-EN",
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-006.json"
+    },
+    {
+      "seq": 7,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AdjustCost.Run",
+        "data": {
+          "postToGL": "maybe",
+          "itemNoFilter": "W8PRV-EN"
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-007.json"
+    },
+    {
+      "seq": 8,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AdjustCost.Run",
+        "data": {
+          "postToGL": "maybe",
+          "itemNoFilter": "W8PRV-EN",
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-008.json"
+    },
+    {
+      "seq": 9,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-009.json"
+    },
+    {
+      "seq": 10,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": true,
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-010.json"
+    },
+    {
+      "seq": 11,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-011.json"
+    },
+    {
+      "seq": 12,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Post",
+        "data": {
+          "documentNo": true,
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-012.json"
+    },
+    {
+      "seq": 13,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Assembly.UndoPost",
+        "data": {},
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-013.json"
+    },
+    {
+      "seq": 14,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Assembly.UndoPost",
+        "data": {
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-014.json"
+    },
+    {
+      "seq": 15,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Assembly.UndoPost",
+        "data": {},
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-015.json"
+    },
+    {
+      "seq": 16,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Assembly.UndoPost",
+        "data": {
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-016.json"
+    },
+    {
+      "seq": 17,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Update",
+        "data": {
+          "itemNo": "W4I151-MISSING",
+          "unitCost": "bad-cost",
+          "lastDirectCost": {}
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-017.json"
+    },
+    {
+      "seq": 18,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Update",
+        "data": {
+          "itemNo": "W4I151-MISSING",
+          "unitCost": "bad-cost",
+          "lastDirectCost": {}
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-018.json"
+    },
+    {
+      "seq": 19,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Assign",
+        "data": {
+          "source": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-019.json"
+    },
+    {
+      "seq": 20,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Assign",
+        "data": {
+          "source": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-020.json"
+    },
+    {
+      "seq": 21,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Delete",
+        "data": {
+          "source": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-021.json"
+    },
+    {
+      "seq": 22,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Delete",
+        "data": {
+          "source": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-022.json"
+    },
+    {
+      "seq": 23,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Get",
+        "data": {
+          "source": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-023.json"
+    },
+    {
+      "seq": 24,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Tracking.Get",
+        "data": {
+          "source": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-024.json"
+    },
+    {
+      "seq": 25,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Calculate",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-025.json"
+    },
+    {
+      "seq": 26,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Calculate",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-026.json"
+    },
+    {
+      "seq": 27,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Check",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-027.json"
+    },
+    {
+      "seq": 28,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Check",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-028.json"
+    },
+    {
+      "seq": 29,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-029.json"
+    },
+    {
+      "seq": 30,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": true,
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-030.json"
+    },
+    {
+      "seq": 31,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-031.json"
+    },
+    {
+      "seq": 32,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": true,
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-032.json"
+    },
+    {
+      "seq": 33,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Record",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-033.json"
+    },
+    {
+      "seq": 34,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Record",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-034.json"
+    },
+    {
+      "seq": 35,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.RecordCount",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-035.json"
+    },
+    {
+      "seq": 36,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.RecordCount",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-036.json"
+    },
+    {
+      "seq": 37,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.PreviewPost",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-037.json"
+    },
+    {
+      "seq": 38,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.PreviewPost",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-038.json"
+    },
+    {
+      "seq": 39,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.Post",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-039.json"
+    },
+    {
+      "seq": 40,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.Post",
+        "data": {
+          "templateName": true,
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-040.json"
+    },
+    {
+      "seq": 41,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.Post",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-041.json"
+    },
+    {
+      "seq": 42,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.Post",
+        "data": {
+          "templateName": true,
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-042.json"
+    },
+    {
+      "seq": 43,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.PreviewPost",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-043.json"
+    },
+    {
+      "seq": 44,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Revaluation.PreviewPost",
+        "data": {
+          "templateName": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-044.json"
+    },
+    {
+      "seq": 45,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AttributeDefinition.Create",
+        "data": {},
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-045.json"
+    },
+    {
+      "seq": 46,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AttributeDefinition.Create",
+        "data": {},
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-046.json"
+    },
+    {
+      "seq": 47,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-047.json"
+    },
+    {
+      "seq": 48,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-048.json"
+    },
+    {
+      "seq": 49,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.PreviewPost",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-049.json"
+    },
+    {
+      "seq": 50,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.PreviewPost",
+        "data": {
+          "documentNo": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-050.json"
+    },
+    {
+      "seq": 51,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.Create",
+        "data": {
+          "itemNo": "W4I151-MISSING",
+          "locationCode": "W4NOMISSING",
+          "quantity": -1,
+          "postingDate": "bad-date"
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-051.json"
+    },
+    {
+      "seq": 52,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.Create",
+        "data": {
+          "itemNo": "W4I151-MISSING",
+          "locationCode": "W4NOMISSING",
+          "quantity": -1,
+          "postingDate": "bad-date"
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-052.json"
+    },
+    {
+      "seq": 53,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Create",
+        "data": {
+          "transferFromCode": "W4NOFROM",
+          "transferToCode": "W4NOTO",
+          "inTransitCode": "W4NOVIA",
+          "postingDate": "bad-date",
+          "receiptDate": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-053.json"
+    },
+    {
+      "seq": 54,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.Create",
+        "data": {
+          "transferFromCode": "W4NOFROM",
+          "transferToCode": "W4NOTO",
+          "inTransitCode": "W4NOVIA",
+          "postingDate": "bad-date",
+          "receiptDate": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-054.json"
+    },
+    {
+      "seq": 55,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Create",
+        "data": {},
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-055.json"
+    },
+    {
+      "seq": 56,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Create",
+        "data": {},
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-056.json"
+    },
+    {
+      "seq": 57,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-057.json"
+    },
+    {
+      "seq": 58,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-058.json"
+    },
+    {
+      "seq": 59,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": true
+        },
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-059.json"
+    },
+    {
+      "seq": 60,
+      "tool": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": true
+        },
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-060.json"
+    },
+    {
+      "seq": 61,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Period.Close",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-061.json"
+    },
+    {
+      "seq": 62,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Period.Close",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-062.json"
+    },
+    {
+      "seq": 63,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Period.Reopen",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-063.json"
+    },
+    {
+      "seq": 64,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Period.Reopen",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-064.json"
+    },
+    {
+      "seq": 65,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AdjustCost.Run",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-065.json"
+    },
+    {
+      "seq": 66,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AdjustCost.Run",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-066.json"
+    },
+    {
+      "seq": 67,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.Post",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-067.json"
+    },
+    {
+      "seq": 68,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.Post",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-068.json"
+    },
+    {
+      "seq": 69,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Assembly.UndoPost",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-069.json"
+    },
+    {
+      "seq": 70,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Assembly.UndoPost",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-070.json"
+    },
+    {
+      "seq": 71,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Cost.Update",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-071.json"
+    },
+    {
+      "seq": 72,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Cost.Update",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-072.json"
+    },
+    {
+      "seq": 73,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Assign",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-073.json"
+    },
+    {
+      "seq": 74,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Assign",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-074.json"
+    },
+    {
+      "seq": 75,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Delete",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-075.json"
+    },
+    {
+      "seq": 76,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Delete",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-076.json"
+    },
+    {
+      "seq": 77,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Get",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-077.json"
+    },
+    {
+      "seq": 78,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Tracking.Get",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-078.json"
+    },
+    {
+      "seq": 79,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Calculate",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-079.json"
+    },
+    {
+      "seq": 80,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Calculate",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-080.json"
+    },
+    {
+      "seq": 81,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Check",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-081.json"
+    },
+    {
+      "seq": 82,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Check",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-082.json"
+    },
+    {
+      "seq": 83,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Post",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-083.json"
+    },
+    {
+      "seq": 84,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Post",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-084.json"
+    },
+    {
+      "seq": 85,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Record",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-085.json"
+    },
+    {
+      "seq": 86,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.Record",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-086.json"
+    },
+    {
+      "seq": 87,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.RecordCount",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-087.json"
+    },
+    {
+      "seq": 88,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.RecordCount",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-088.json"
+    },
+    {
+      "seq": 89,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.PreviewPost",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-089.json"
+    },
+    {
+      "seq": 90,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.PhysInventory.PreviewPost",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-090.json"
+    },
+    {
+      "seq": 91,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Revaluation.Post",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-091.json"
+    },
+    {
+      "seq": 92,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Revaluation.Post",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-092.json"
+    },
+    {
+      "seq": 93,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Revaluation.PreviewPost",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-093.json"
+    },
+    {
+      "seq": 94,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Revaluation.PreviewPost",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-094.json"
+    },
+    {
+      "seq": 95,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AttributeDefinition.Create",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-095.json"
+    },
+    {
+      "seq": 96,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AttributeDefinition.Create",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-096.json"
+    },
+    {
+      "seq": 97,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-097.json"
+    },
+    {
+      "seq": 98,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-098.json"
+    },
+    {
+      "seq": 99,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.PreviewPost",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-099.json"
+    },
+    {
+      "seq": 100,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.PreviewPost",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-100.json"
+    },
+    {
+      "seq": 101,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AssemblyOrder.Create",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-101.json"
+    },
+    {
+      "seq": 102,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.AssemblyOrder.Create",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-102.json"
+    },
+    {
+      "seq": 103,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.Create",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-103.json"
+    },
+    {
+      "seq": 104,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.TransferOrder.Create",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-104.json"
+    },
+    {
+      "seq": 105,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Reservation.Create",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-105.json"
+    },
+    {
+      "seq": 106,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Reservation.Create",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-106.json"
+    },
+    {
+      "seq": 107,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Reservation.Get",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-107.json"
+    },
+    {
+      "seq": 108,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Reservation.Get",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-108.json"
+    },
+    {
+      "seq": 109,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Cost.Get",
+        "detail": "full",
+        "lcid": 1033
+      },
+      "evidence": "mcp-request-109.json"
+    },
+    {
+      "seq": 110,
+      "tool": "get_message_type_help",
+      "args": {
+        "messageType": "Inventory.Cost.Get",
+        "detail": "full",
+        "lcid": 1039
+      },
+      "evidence": "mcp-request-110.json"
+    }
+  ],
+  "attempts": [
+    {
+      "key": "invoke-Inventory.AdjustCost.Run-1033",
+      "failed": true,
+      "reason": "Inventory.AdjustCost.Run code\n+ actual - expected\n\n+ 'ConfirmationRequired'\n- 'InvalidParameterFormat'\n",
+      "at": "2026-11-09T13:23:43.318Z"
+    }
+  ],
+  "lastError": "Inventory.AdjustCost.Run code\n+ actual - expected\n\n+ 'ConfirmationRequired'\n- 'InvalidParameterFormat'\n",
+  "finishedAt": "2026-11-09T13:25:52.378Z",
+  "verified": true,
+  "compileDependencyVersion": "28.0.10.632",
+  "dependencyProvenance": "runtime-provenance-correction.json"
+}

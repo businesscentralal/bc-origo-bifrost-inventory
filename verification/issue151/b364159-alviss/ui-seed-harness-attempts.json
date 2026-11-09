@@ -1,0 +1,18 @@
+{
+  "attempts": [
+    {
+      "phase": "Initialseed",
+      "reason": "Waited for Getting ready and opened collapsed Actions; no fixture write before readiness."
+    },
+    {
+      "phase": "Refusalseed",
+      "reason": "Initial seed finished asynchronously; actual4ownitems/6batches read before a missing second action was retried. No successful stock post repeated."
+    },
+    {
+      "phase": "PostingISseed",
+      "reason": "ENseed completed, ownnative DueDate-before-workdate informational dialog intercepted next Actions click. Readback confirms ENfixtures and0ISfixtures; only missing ISseed retried in fresh session."
+    }
+  ],
+  "productSourceChangesForHarness": 0,
+  "credentialsChanged": false
+}

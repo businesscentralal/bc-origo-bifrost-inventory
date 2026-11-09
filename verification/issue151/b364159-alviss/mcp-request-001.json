@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Period.Close",
+    "data": {
+      "endingDate": "31.12.2026"
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Færibreyta \"endingDate\" hefur gildið \"31.12.2026\", sem er ekki í gildu sniði (dagsetning). Væntanlegt er YYYY-MM-DD.",
+    "parameter": "endingDate",
+    "received": "31.12.2026",
+    "expected": "YYYY-MM-DD",
+    "nextStep": "Sendu endingDate aftur sem 2026-12-31.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Period.Close\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

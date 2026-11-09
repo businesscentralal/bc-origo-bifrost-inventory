@@ -1,0 +1,42 @@
+{
+  "sourceChangesForHarness": 0,
+  "sourceSuppressions": 0,
+  "newExclusions": 0,
+  "weakenedProductAssertions": 0,
+  "native": [
+    {
+      "result": "12passed/incomplete; not a full pass",
+      "reason": "Runtime96901missing-emit dialog; tool incorrectly returnedoktrue. Same-container NST restart, explicit full range and compiled/JUnit method census then561/561. Root-inbox tool finding retained."
+    },
+    {
+      "result": "Native harness setup failed before test execution",
+      "reason": "Custom suite incompatible with extensionId; DEFAULT/full-range run used. Raw errors retained privately."
+    }
+  ],
+  "mcp": {
+    "base": [
+      {
+        "key": "invoke-Inventory.AdjustCost.Run-1033",
+        "failed": true,
+        "reason": "Inventory.AdjustCost.Run code\n+ actual - expected\n\n+ 'ConfirmationRequired'\n- 'InvalidParameterFormat'\n",
+        "at": "2026-11-09T13:23:43.318Z"
+      }
+    ],
+    "live": [
+      {
+        "executed": 4,
+        "passed": 3,
+        "failed": 1,
+        "error": "Expected values to be strictly equal:\n\n1 !== 0\n",
+        "evidence": "mcp-live-attempt1-summary.json",
+        "assessment": "Harness assumed Check ignores blank rows; its contract validates all selected rows and correctly reports native line20000. Keep Post testing the full batch, select the own item line explicitly for Check/Preview. RecordCount already succeeded and must not repeat."
+      }
+    ],
+    "detail": "Required expectedCount confirmation was supplied using fresh request objects. Check validates selected blank rows by design; select own item line for Check/Preview and still post the full batch with blank-row assertion. Prior successful RecordCount/stock posts were not replayed."
+  },
+  "ui": {
+    "restoration": "Initial translated-selector cleanup failed after both UI scenarios passed; actual DOM inspected, user language restored1033 and read back. Original attempt retained.",
+    "seed": "Read actual fixture state before each missing action retry; own stock postings never replayed."
+  },
+  "deployment": "Unchanged632publish returned duplicate422 without mutation; read existing dependency and publish only changed452 artifacts. Runtime later679; raw suite header/package source prove accepted final checks used679, not632."
+}

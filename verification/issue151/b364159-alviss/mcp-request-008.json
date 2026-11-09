@@ -1,0 +1,23 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AdjustCost.Run",
+    "data": {
+      "postToGL": "maybe",
+      "itemNoFilter": "W8PRV-EN",
+      "expectedCount": 1
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Færibreyta \"postToGL\" hefur gildið \"maybe\", sem er ekki í gildu sniði (rökgildi (true eða false)). Væntanlegt er true eða false.",
+    "parameter": "postToGL",
+    "received": "maybe",
+    "expected": "true eða false",
+    "nextStep": "Sendu true eða false.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.AdjustCost.Run\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

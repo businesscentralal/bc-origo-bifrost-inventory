@@ -1,0 +1,49 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Reservation.Create",
+    "data": {},
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Correct the reported request values before retrying.",
+    "errors": [
+      {
+        "code": "MissingParameter",
+        "error": "sourceType is required.",
+        "parameter": "sourceType",
+        "received": "<missing>",
+        "expected": "a JSON integer",
+        "nextStep": "Correct the source identifiers and quantity; read the source line before retrying."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "sourceNo is required.",
+        "parameter": "sourceNo",
+        "received": "<missing>",
+        "expected": "a JSON string",
+        "nextStep": "Correct the source identifiers and quantity; read the source line before retrying."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "sourceLineNo is required.",
+        "parameter": "sourceLineNo",
+        "received": "<missing>",
+        "expected": "a JSON integer",
+        "nextStep": "Correct the source identifiers and quantity; read the source line before retrying."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "quantity must be greater than zero.",
+        "parameter": "quantity",
+        "received": "<missing>",
+        "expected": "a quantity greater than 0",
+        "nextStep": "Correct the source identifiers and quantity; read the source line before retrying."
+      }
+    ],
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Reservation.Create\". Always read the help before calling a message type."
+  }
+}

@@ -1,0 +1,13 @@
+Microsoft (R) AL Compiler version 18.0.41.62505
+Copyright (C) Microsoft Corporation. All rights reserved
+
+Compilation started for project 'Bifrost Inventory' containing '116' files at '13:13:21.168'.
+
+evidence/inventory151-alviss-20261109T1310/compile-source/app/src/Inventory/InventoryWriteProcess.Codeunit.al(8,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory151-alviss-20261109T1310/compile-source/app/src/Message Type/Implementations/Inventory/Reclassification/ReclassPreviewImpl.Codeunit.al(6,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory151-alviss-20261109T1310/compile-source/app/src/Message Type/Implementations/Inventory/TransferOrder/TransferOrderCreateImpl.Codeunit.al(4,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory151-alviss-20261109T1310/compile-source/app/src/Setup/InventorySetup.Table.al(10,1): info AA0477: The using statements are not in a sorted order.
+evidence/inventory151-alviss-20261109T1310/compile-source/app/src/Message Type/Implementations/Inventory/Undo/TransferUndoShptImpl.Codeunit.al(206,9): info AA0210: The table Transfer Shipment Line does not contain a key with the field Correction Line.
+
+Compilation ended at '13:13:41.903'.
+

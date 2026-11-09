@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.TransferOrder.PreviewPost",
+    "data": {
+      "documentNo": true
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Parameter \"documentNo\" has value \"true\", which is not a valid text. Expected a JSON string.",
+    "parameter": "documentNo",
+    "received": "true",
+    "expected": "a JSON string",
+    "nextStep": "Send the value as a JSON string.",
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.TransferOrder.PreviewPost\". Always read the help before calling a message type."
+  }
+}

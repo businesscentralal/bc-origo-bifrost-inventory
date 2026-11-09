@@ -1,0 +1,60 @@
+[
+  {
+    "ac": "AC1",
+    "developer": "Verified typed refusal regression cases, both LCIDs; live-MCP boolean itemNo defect fixed without dropping numeric compatibility.",
+    "evidence": [
+      "native-verified.json",
+      "mcp-summary.json",
+      "mcp-numeric-summary.json"
+    ],
+    "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/151",
+    "sourceSha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+    "independentVerification": "Pending after real hold disposition and developer handoff"
+  },
+  {
+    "ac": "AC2",
+    "developer": "App-owned metadata checked; native failing-line context retained. Duplicate-definition advertised code matches preflight. Only the existing eight Foundation-owned received assertions remain outside this PR per6664192510/core1277; no new exception.",
+    "evidence": [
+      "mcp-summary.json",
+      "native-verified.json",
+      "gateway-review.json"
+    ],
+    "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/151",
+    "sourceSha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+    "independentVerification": "Pending after real hold disposition and developer handoff"
+  },
+  {
+    "ac": "AC3",
+    "developer": "Collected Assembly4/Transfer5/Cost3/Attribute2/Reservation request problems tested in1033/1039 before writes.",
+    "evidence": [
+      "mcp-summary.json",
+      "native-verified.json"
+    ],
+    "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/151",
+    "sourceSha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+    "independentVerification": "Pending after real hold disposition and developer handoff"
+  },
+  {
+    "ac": "AC4",
+    "developer": "Native regressions plus14live scenarios: both localized assembly/transfer summaries, preview rollback, only one item row posted per physical batch while its blank row remains, each own stock10to8once.",
+    "evidence": [
+      "mcp-live-summary.json"
+    ],
+    "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/151",
+    "sourceSha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+    "independentVerification": "Pending after real hold disposition and developer handoff"
+  },
+  {
+    "ac": "AC5",
+    "developer": "561/561native,146/146MCP,2/2UI1033/1039; XLF synchronized, CHANGELOG and two lessons updated. Independent current-tip verification/review/UAT/final container deletion remain pending.",
+    "evidence": [
+      "native-verified.json",
+      "ui-summary.json",
+      "ci-summary.json",
+      "owned-cleanup-retention.json"
+    ],
+    "issue": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/issues/151",
+    "sourceSha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+    "independentVerification": "Pending after real hold disposition and developer handoff"
+  }
+]

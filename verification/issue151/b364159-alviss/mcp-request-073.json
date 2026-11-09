@@ -1,0 +1,291 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.Tracking.Assign",
+    "detail": "full",
+    "lcid": 1033
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.Tracking.Assign",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.Tracking.Assign",
+      "isEnabled": true,
+      "filterTableNo": 337,
+      "description": "Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.",
+      "selectionDescription": "Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.",
+      "messageDirection": "Inbound",
+      "keywords": [
+        "assign lot",
+        "assign serial",
+        "assign package",
+        "item tracking"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "notUsed",
+          "forms": [],
+          "description": "Select the document line with data.source.type and data.source.systemId."
+        },
+        "dataRequired": true,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "data.source",
+          "form": "document line",
+          "description": "Select SalesLine, PurchaseLine or TransferLine by its SystemId. The source line determines the item and native tracking pointer."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "source",
+          "type": "object",
+          "required": true,
+          "description": "Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound."
+        },
+        {
+          "name": "itemNo",
+          "type": "string",
+          "required": false,
+          "description": "Optional item consistency check; must match the selected source line."
+        },
+        {
+          "name": "quantity",
+          "type": "number",
+          "required": false,
+          "description": "Positive base quantity for one tracking assignment. Required unless entries is supplied. A serial number requires exactly one base unit."
+        },
+        {
+          "name": "lotNo",
+          "type": "string",
+          "required": false,
+          "description": "Lot number, at most 50 characters; at least one tracking number is required."
+        },
+        {
+          "name": "serialNo",
+          "type": "string",
+          "required": false,
+          "description": "Serial number, at most 50 characters."
+        },
+        {
+          "name": "packageNo",
+          "type": "string",
+          "required": false,
+          "description": "Package number, at most 50 characters."
+        },
+        {
+          "name": "expirationDate",
+          "type": "string",
+          "required": false,
+          "description": "Optional ISO date YYYY-MM-DD, subject to native item tracking rules."
+        },
+        {
+          "name": "entries",
+          "type": "array",
+          "required": false,
+          "description": "Optional 1..200 tracking objects instead of the top-level tracking values. All values are checked before writes.",
+          "children": [
+            {
+              "name": "quantity",
+              "type": "number",
+              "required": true,
+              "description": "Positive base quantity. A serial number requires exactly one base unit."
+            },
+            {
+              "name": "lotNo",
+              "type": "string",
+              "required": false,
+              "description": "Lot number, at most 50 characters. At least one tracking number is required."
+            },
+            {
+              "name": "serialNo",
+              "type": "string",
+              "required": false,
+              "description": "Serial number, at most 50 characters."
+            },
+            {
+              "name": "packageNo",
+              "type": "string",
+              "required": false,
+              "description": "Package number, at most 50 characters."
+            },
+            {
+              "name": "expirationDate",
+              "type": "string",
+              "required": false,
+              "description": "Optional ISO date YYYY-MM-DD, subject to native item tracking rules."
+            }
+          ]
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success when the source tracking entry was inserted."
+          },
+          {
+            "name": "entryNo",
+            "type": "integer",
+            "description": "The entry number of the new record. Pass it to Inventory.Tracking.Delete to remove the record."
+          },
+          {
+            "name": "itemNo",
+            "type": "string",
+            "description": "The item number that was stored."
+          },
+          {
+            "name": "lotNo",
+            "type": "string",
+            "description": "The lot number that was stored; blank when none was sent."
+          },
+          {
+            "name": "serialNo",
+            "type": "string",
+            "description": "The serial number that was stored; blank when none was sent."
+          },
+          {
+            "name": "packageNo",
+            "type": "string",
+            "description": "The package number that was stored; blank when none was sent."
+          },
+          {
+            "name": "quantity",
+            "type": "decimal",
+            "description": "The quantity that was stored, in the base unit of measure."
+          },
+          {
+            "name": "entriesAssigned",
+            "type": "integer",
+            "description": "Number of selected tracking entries processed. Single-entry responses also retain entryNo, itemNo and tracking fields."
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "MissingParameter",
+          "when": "A source selector, quantity or entryNo is absent.",
+          "fix": "Send the required source and tracking parameters."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "A selector or tracking value has the wrong JSON type.",
+          "fix": "Use the declared JSON types, positive integer entry numbers and ISO dates."
+        },
+        {
+          "code": "InvalidParameter",
+          "when": "The source, quantity, tracking numbers or item consistency check is invalid, or the domain is disabled.",
+          "fix": "Use an enabled source with valid native item tracking and a positive base quantity."
+        },
+        {
+          "code": "RecordNotFound",
+          "when": "The selected line or tracking entry does not exist on that source.",
+          "fix": "Read Inventory.Tracking.Get for the selected source and use its entryNo."
+        },
+        {
+          "code": "PreconditionFailed",
+          "when": "The selected tracking is reserved or cannot be removed.",
+          "fix": "Cancel the reservation using Inventory.Reservation.Cancel before removing its tracking."
+        },
+        {
+          "code": "PermissionDenied",
+          "when": "Native source or tracking permissions are missing.",
+          "fix": "Assign the Bifrost \"Full Access\" permission set and the required Business Central document and reservation permissions."
+        },
+        {
+          "code": "BusinessCentralError",
+          "when": "Native item tracking validation refuses the operation.",
+          "fix": "Correct the source or tracking values in Business Central. A standalone failure rolls back; Omit Commit propagates the failure to the caller transaction."
+        },
+        {
+          "code": "Retryable",
+          "when": "A transient lock or deadlock caught while writing or posting. The error preserves Business Central's original text. Uncaught errors are Retryable only for types with effect write.",
+          "fix": "Retry the same call after a few seconds; nothing was changed."
+        }
+      ],
+      "effect": {
+        "effect": "write",
+        "changes": "Changes only unposted tracking on the selected source using native item tracking and reservation handling. No direct persistent Tracking Specification inserts and no ledger postings. Standalone calls commit on success; Omit Commit stays in the caller transaction.",
+        "idempotent": false,
+        "permissionSet": "BIFROST Full ori",
+        "preconditions": [
+          "Item Tracking is enabled and the caller can write the selected source and reservation entries."
+        ],
+        "writes": "Reservation Entry",
+        "posts": false
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.Tracking.Delete",
+          "useInsteadWhen": "Remove one unreserved tracking entry by source and entryNo."
+        },
+        {
+          "name": "Inventory.TrackingAvailability.Get",
+          "useInsteadWhen": "Read which lots, serial and package numbers exist and what is available before assigning."
+        },
+        {
+          "name": "Inventory.Tracking.Get",
+          "useInsteadWhen": "Read the tracking of an item or document line instead of creating a specification."
+        }
+      ],
+      "workflow": {
+        "steps": [
+          {
+            "messageType": "Inventory.Tracking.Assign",
+            "purpose": "Assign tracking to your own selected document line."
+          },
+          {
+            "messageType": "Inventory.Tracking.Get",
+            "purpose": "Read the same source and keep its ReservationEntry entryNo."
+          },
+          {
+            "messageType": "Inventory.Tracking.Delete",
+            "purpose": "Remove one unreserved entryNo from the same source when no longer needed."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Use your own purchase line SystemId and tracking entry",
+          "request": {
+            "type": "Inventory.Tracking.Assign",
+            "data": {
+              "source": {
+                "type": "PurchaseLine",
+                "systemId": "11111111-1111-1111-1111-111111111111"
+              },
+              "quantity": 2,
+              "lotNo": "LOT-A"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "entryNo": 210,
+            "itemNo": "1000",
+            "lotNo": "LOT-A",
+            "serialNo": "",
+            "packageNo": ""
+          }
+        }
+      ],
+      "overview": "Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.",
+      "notes": "Select an existing SalesLine, PurchaseLine or TransferLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete requires the source and one unreserved entryNo, so another document cannot be affected. No ledger entries are posted. No unlinked persistent Tracking Specification is inserted. Native failures roll back standalone calls; Omit Commit leaves transaction ownership with the caller and propagates native failures. Repeating an assignment may add quantity; read the source before retrying."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}

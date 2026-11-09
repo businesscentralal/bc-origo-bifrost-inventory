@@ -1,0 +1,49 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Reservation.Create",
+    "data": {},
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.",
+    "errors": [
+      {
+        "code": "MissingParameter",
+        "error": "sourceType er nauðsynlegt.",
+        "parameter": "sourceType",
+        "received": "<missing>",
+        "expected": "JSON-heiltala",
+        "nextStep": "Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "sourceNo er nauðsynlegt.",
+        "parameter": "sourceNo",
+        "received": "<missing>",
+        "expected": "JSON-strengur",
+        "nextStep": "Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "sourceLineNo er nauðsynlegt.",
+        "parameter": "sourceLineNo",
+        "received": "<missing>",
+        "expected": "JSON-heiltala",
+        "nextStep": "Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "quantity verður að vera stærra en núll.",
+        "parameter": "quantity",
+        "received": "<missing>",
+        "expected": "magn stærra en 0",
+        "nextStep": "Leiðréttu upprunaauðkenni og magn; lestu upprunalínuna áður en þú reynir aftur."
+      }
+    ],
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Reservation.Create\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

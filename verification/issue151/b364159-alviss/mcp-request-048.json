@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AssemblyOrder.PreviewPost",
+    "data": {
+      "documentNo": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Færibreyta \"documentNo\" hefur gildið \"true\", sem er ekki í gildu sniði (texti). Væntanlegt er JSON-strengur.",
+    "parameter": "documentNo",
+    "received": "true",
+    "expected": "JSON-strengur",
+    "nextStep": "Sendu gildið sem JSON-streng.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.AssemblyOrder.PreviewPost\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.PhysInventory.Calculate",
+    "data": {
+      "templateName": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Færibreytan templateName verður að vera texti sem er ekki tómur og er að hámarki 10 stafir.",
+    "parameter": "templateName",
+    "received": "true",
+    "expected": "JSON-texti sem er ekki tómur og er að hámarki 10 stafir.",
+    "nextStep": "Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.PhysInventory.Calculate\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

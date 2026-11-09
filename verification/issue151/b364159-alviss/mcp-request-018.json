@@ -1,0 +1,44 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Cost.Update",
+    "data": {
+      "itemNo": "W4I151-MISSING",
+      "unitCost": "bad-cost",
+      "lastDirectCost": {}
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.",
+    "errors": [
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Færibreyta \"unitCost\" hefur gildið \"bad-cost\", sem er ekki í gildu sniði (tugabrot). Væntanlegt er tala.",
+        "parameter": "unitCost",
+        "received": "bad-cost",
+        "expected": "tala",
+        "nextStep": "Sendu upphæðina sem JSON-tölu, t.d. 1234.56."
+      },
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Færibreyta \"lastDirectCost\" hefur gildið \"{}\", sem er ekki í gildu sniði (tugabrot). Væntanlegt er tala.",
+        "parameter": "lastDirectCost",
+        "received": "{}",
+        "expected": "tala",
+        "nextStep": "Sendu upphæðina sem JSON-tölu, t.d. 1234.56."
+      },
+      {
+        "code": "RecordNotFound",
+        "parameter": "itemNo",
+        "received": "W4I151-MISSING",
+        "expected": "númer færslu sem er til í töflunni Item",
+        "nextStep": "Athugaðu númerið með Data.Records.Get á töflunni Item."
+      }
+    ],
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Cost.Update\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

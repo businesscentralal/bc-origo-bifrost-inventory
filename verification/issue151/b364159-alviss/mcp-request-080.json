@@ -1,0 +1,291 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.PhysInventory.Calculate",
+    "detail": "full",
+    "lcid": 1039
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.PhysInventory.Calculate",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.PhysInventory.Calculate",
+      "isEnabled": true,
+      "filterTableNo": 233,
+      "description": "Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.",
+      "selectionDescription": "Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.",
+      "messageDirection": "Inbound",
+      "keywords": [
+        "reikna birgðir",
+        "birgðatalning",
+        "vörutalning",
+        "talningarbók",
+        "fylla talningarbók"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "optional",
+          "forms": [
+            "TEMPLATE|BATCH",
+            "systemId"
+          ],
+          "description": "Identifies the journal batch as TEMPLATE|BATCH, or as the SystemId of the Item Journal Batch. Without a subject, send templateName and batchName in data. Every selector that is sent must name the same batch."
+        },
+        "dataRequired": true,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "subject",
+          "form": "TEMPLATE|BATCH",
+          "description": "The journal template name and the batch name, each at most 10 characters, separated by a vertical bar. The template must be a Phys. Inventory template that is not recurring."
+        },
+        {
+          "source": "subject",
+          "form": "guid",
+          "description": "The SystemId of the Item Journal Batch."
+        },
+        {
+          "source": "data.templateName, data.batchName",
+          "form": "journal template and batch name",
+          "description": "The template and the batch together. data.journalTemplateName and data.journalBatchName are accepted as aliases."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "templateName",
+          "type": "string",
+          "required": false,
+          "description": "Name of an existing Phys. Inventory journal template that is not recurring, at most 10 characters. Send it with batchName unless subject identifies the batch."
+        },
+        {
+          "name": "batchName",
+          "type": "string",
+          "required": false,
+          "description": "Name of an existing journal batch of that template, at most 10 characters. Every selector that is sent must name the same batch."
+        },
+        {
+          "name": "journalTemplateName",
+          "type": "string",
+          "required": false,
+          "description": "Alias of templateName. A value that differs from templateName, ignoring case, is refused."
+        },
+        {
+          "name": "journalBatchName",
+          "type": "string",
+          "required": false,
+          "description": "Alias of batchName. A value that differs from batchName, ignoring case, is refused."
+        },
+        {
+          "name": "postingDate",
+          "type": "string",
+          "required": true,
+          "description": "Posting date written to every calculated journal line, YYYY-MM-DD.",
+          "format": "YYYY-MM-DD"
+        },
+        {
+          "name": "documentNo",
+          "type": "string",
+          "required": true,
+          "description": "Document number written to every calculated journal line, at most 20 characters."
+        },
+        {
+          "name": "itemNo",
+          "type": "string",
+          "required": false,
+          "description": "Item number filter, a Business Central filter expression of at most 2048 characters such as 1000..1999. Omit it to include every eligible item."
+        },
+        {
+          "name": "locationCode",
+          "type": "string",
+          "required": false,
+          "description": "Location filter for the calculation, a filter expression of at most 2048 characters."
+        },
+        {
+          "name": "variantCode",
+          "type": "string",
+          "required": false,
+          "description": "Variant filter for the calculation, a filter expression of at most 2048 characters."
+        },
+        {
+          "name": "itemsNotOnInventory",
+          "type": "boolean",
+          "required": false,
+          "description": "Include items with zero inventory. Default false.",
+          "default": false
+        },
+        {
+          "name": "includeItemsWithNoTransactions",
+          "type": "boolean",
+          "required": false,
+          "description": "Include items with no ledger transactions. Default false.",
+          "default": false
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success when the calculation ran."
+          },
+          {
+            "name": "templateName",
+            "type": "string",
+            "description": "The journal template of the selected batch."
+          },
+          {
+            "name": "batchName",
+            "type": "string",
+            "description": "The selected journal batch."
+          },
+          {
+            "name": "linesCreated",
+            "type": "integer",
+            "description": "Number of lines the batch has after the calculation; 0 when no item was eligible."
+          },
+          {
+            "name": "posted",
+            "type": "boolean",
+            "description": "Always false: the journal is not posted."
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "MissingParameter",
+          "when": "postingDate is absent, null or empty.",
+          "fix": "Send postingDate as YYYY-MM-DD."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "postingDate is not a date in YYYY-MM-DD form, or itemsNotOnInventory or includeItemsWithNoTransactions is not a JSON boolean.",
+          "fix": "Correct the value as the answer indicates."
+        },
+        {
+          "code": "InvalidParameter",
+          "when": "The Physical Inventory domain is turned off for this company in Inventory Setup.",
+          "fix": "Turn the domain on from the Inventory Setup page."
+        },
+        {
+          "code": "PermissionDenied",
+          "when": "The caller has no write permission on the Item Journal Line table.",
+          "fix": "Ask an administrator for a permission set that grants it, for example the Bifrost \"Full Access\" permission set."
+        },
+        {
+          "code": "PreconditionFailed",
+          "error": "Calculate requires an empty physical inventory batch.",
+          "when": "The batch already has lines.",
+          "fix": "Use an empty batch, or work on the existing lines with Inventory.PhysInventory.RecordCount."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "error": "Parameter documentNo must be nonempty text of at most 20 characters.",
+          "when": "documentNo is absent, empty, not text or longer than 20 characters.",
+          "fix": "Send a document number of at most 20 characters."
+        },
+        {
+          "code": "InvalidParameter",
+          "error": "Unsupported journal parameter %1.",
+          "when": "A key is sent that this type does not read.",
+          "fix": "Remove the key; only the batch selectors and the declared parameters are accepted."
+        },
+        {
+          "code": "InvalidParameter",
+          "error": "Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.",
+          "when": "No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, the batch does not exist, or its template is not a Phys. Inventory template or is recurring.",
+          "fix": "Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors."
+        },
+        {
+          "code": "Retryable",
+          "when": "A transient lock or deadlock caught while writing or posting. The error preserves Business Central's original text. Uncaught errors are Retryable only for types with effect write.",
+          "fix": "Retry the same call after a few seconds; nothing was changed."
+        }
+      ],
+      "effect": {
+        "effect": "write",
+        "changes": "Inserts one line per eligible item into the empty Phys. Inventory journal batch, with the calculated quantity, the posting date and the document number. Nothing is posted and no ledger entry is created. The lines are committed with the answer; under Omit Commit the caller's transaction commits instead.",
+        "idempotent": false,
+        "permissionSet": "BIFROST Full ori",
+        "writes": true,
+        "posts": false,
+        "rollback": false
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.PhysInventory.RecordCount",
+          "useInsteadWhen": "Use it to enter the counted quantities on the lines this call created."
+        },
+        {
+          "name": "Inventory.PhysInventory.Check",
+          "useInsteadWhen": "Use it to find line problems before posting the count."
+        },
+        {
+          "name": "Inventory.PhysInventory.PreviewPost",
+          "useInsteadWhen": "Use it to see the entries a posting would create without keeping them."
+        },
+        {
+          "name": "Inventory.PhysInventory.Post",
+          "useInsteadWhen": "Use it to post the counted lines to the ledger."
+        }
+      ],
+      "workflow": {
+        "steps": [
+          {
+            "messageType": "Inventory.PhysInventory.Calculate",
+            "purpose": "Fill the empty journal batch with the expected stock."
+          },
+          {
+            "messageType": "Inventory.PhysInventory.RecordCount",
+            "purpose": "Enter the counted quantity on each line."
+          },
+          {
+            "messageType": "Inventory.PhysInventory.Check",
+            "purpose": "Find line problems before posting."
+          },
+          {
+            "messageType": "Inventory.PhysInventory.Post",
+            "purpose": "Post the count; the adjustments are written to the ledger."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Calculate the expected stock of item 1000 into an empty batch",
+          "request": {
+            "type": "Inventory.PhysInventory.Calculate",
+            "subject": "PHYS. INV.|DEFAULT",
+            "data": {
+              "postingDate": "2026-10-14",
+              "documentNo": "COUNT-001",
+              "itemNo": "1000"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "templateName": "PHYS. INV.",
+            "batchName": "DEFAULT",
+            "linesCreated": 1,
+            "posted": false
+          }
+        }
+      ],
+      "overview": "Fills an empty Phys. Inventory journal batch with one line per eligible item, using the Calculate Inventory function; nothing is posted. postingDate and documentNo are required.",
+      "notes": "Runs the Calculate Inventory function of the physical inventory journal into one empty batch. Nothing is posted and no ledger entry is created. The batch must already exist, belong to a Phys. Inventory template that is not recurring, and have no lines; a batch with lines is refused. postingDate (YYYY-MM-DD) and documentNo (at most 20 characters) are required and are written to every line. itemNo, locationCode and variantCode are Business Central filter expressions of at most 2048 characters; without them every eligible item is calculated. itemsNotOnInventory and includeItemsWithNoTransactions default to false. linesCreated is the number of lines the batch has afterwards and can be 0. Any key that is not declared is refused. The lines are committed with the answer; under Omit Commit the caller's transaction commits instead. A failure rolls back the lines already created. Under Omit Commit an error is raised to the caller instead of being answered with the error text. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs write permission on the Item Journal Line table. Call Inventory.PhysInventory.RecordCount next to enter the counted quantities."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}

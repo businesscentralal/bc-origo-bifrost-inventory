@@ -1,0 +1,54 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AssemblyOrder.Create",
+    "data": {
+      "itemNo": "W4I151-MISSING",
+      "locationCode": "W4NOMISSING",
+      "quantity": -1,
+      "postingDate": "bad-date"
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Correct the reported request values before retrying.",
+    "errors": [
+      {
+        "code": "InvalidParameter",
+        "error": "locationCode must be text of at most 10 characters.",
+        "parameter": "locationCode",
+        "received": "W4NOMISSING",
+        "expected": "A JSON string of at most 10 characters.",
+        "nextStep": "Send locationCode as text in the documented format."
+      },
+      {
+        "code": "InvalidParameter",
+        "error": "quantity must be specified and greater than 0 in the request JSON.",
+        "parameter": "quantity",
+        "received": "-1",
+        "expected": "A quantity greater than 0 in data.quantity.",
+        "nextStep": "Send the quantity to assemble in data.quantity."
+      },
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Parameter \"postingDate\" has value \"bad-date\", which is not a valid date. Expected YYYY-MM-DD.",
+        "parameter": "postingDate",
+        "received": "bad-date",
+        "expected": "YYYY-MM-DD",
+        "nextStep": "Send the date as YYYY-MM-DD."
+      },
+      {
+        "code": "RecordNotFound",
+        "error": "itemNo W4I151-MISSING was not found.",
+        "parameter": "itemNo",
+        "received": "W4I151-MISSING",
+        "expected": "An existing item number.",
+        "nextStep": "Select an existing item and location, then correct every reported value."
+      }
+    ],
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.AssemblyOrder.Create\". Always read the help before calling a message type."
+  }
+}

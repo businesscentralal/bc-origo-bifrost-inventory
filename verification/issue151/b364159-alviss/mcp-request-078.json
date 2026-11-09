@@ -1,0 +1,586 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.Tracking.Get",
+    "detail": "full",
+    "lcid": 1039
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.Tracking.Get",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.Tracking.Get",
+      "isEnabled": true,
+      "filterTableNo": 27,
+      "description": "Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.",
+      "selectionDescription": "Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.",
+      "messageDirection": "Outbound",
+      "keywords": [
+        "lesa rakningu",
+        "loturakning",
+        "raðnúmerarakning",
+        "pakkarakning"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "optional",
+          "forms": [
+            "guid",
+            "item no."
+          ],
+          "description": "The subject is the SystemId of a Sales Line, Purchase Line or Transfer Line (selects that source) or the SystemId or No. of the Item; data selects the same things when subject is blank."
+        },
+        "dataRequired": false,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "data.source",
+          "form": "object",
+          "description": "A Sales Line, Purchase Line or Transfer Line selected by type and systemId (and transferDirection). A source takes precedence over every other selector."
+        },
+        {
+          "source": "data.documentType + data.documentNo + data.lineNo",
+          "form": "document type, document no. and line no.",
+          "description": "A Sales Line, Purchase Line or Transfer Line selected by document type, document number and line number. It takes precedence over subject and item selectors."
+        },
+        {
+          "source": "data.documentType + data.systemId",
+          "form": "document type and guid",
+          "description": "The same line selected by its SystemId, with documentType instead of documentNo and lineNo."
+        },
+        {
+          "source": "subject",
+          "form": "guid",
+          "description": "The SystemId of a Sales Line, Purchase Line or Transfer Line selects that source; any other SystemId is read as the SystemId of the Item."
+        },
+        {
+          "source": "subject",
+          "form": "item no.",
+          "description": "The No. of the Item; it takes precedence over the item identifiers in data."
+        },
+        {
+          "source": "data.itemNo",
+          "form": "item no.",
+          "description": "The No. of the Item, used when subject is blank."
+        },
+        {
+          "source": "data.itemId, data.id, data.systemId, data.recordSystemId",
+          "form": "guid",
+          "description": "The SystemId of the Item, tried in this order after itemNo."
+        },
+        {
+          "source": "data.tableView",
+          "form": "table view",
+          "description": "An Item table view; the first matching item is read, so filter to one item for an exact selection."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "itemNo",
+          "type": "string",
+          "required": false,
+          "description": "Item number; subject takes precedence."
+        },
+        {
+          "name": "itemId",
+          "type": "string",
+          "required": false,
+          "description": "Item SystemId."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Item SystemId alias."
+        },
+        {
+          "name": "systemId",
+          "type": "string",
+          "required": false,
+          "description": "Item SystemId, or document line SystemId with documentType."
+        },
+        {
+          "name": "recordSystemId",
+          "type": "string",
+          "required": false,
+          "description": "Item SystemId alias."
+        },
+        {
+          "name": "tableView",
+          "type": "string",
+          "required": false,
+          "description": "Business Central Item table view in SetView syntax. Item mode only, after subject and item identifiers; reads tracking for the first matching item. Filter to one item for an exact selection."
+        },
+        {
+          "name": "locationFilter",
+          "type": "string",
+          "required": false,
+          "description": "Business Central location filter."
+        },
+        {
+          "name": "locationCode",
+          "type": "string",
+          "required": false,
+          "description": "Exact location code; intersects locationFilter."
+        },
+        {
+          "name": "variantCode",
+          "type": "string",
+          "required": false,
+          "description": "Exact variant code, including blank."
+        },
+        {
+          "name": "lotNo",
+          "type": "string",
+          "required": false,
+          "description": "Exact lot number, including blank."
+        },
+        {
+          "name": "serialNo",
+          "type": "string",
+          "required": false,
+          "description": "Exact serial number, including blank."
+        },
+        {
+          "name": "packageNo",
+          "type": "string",
+          "required": false,
+          "description": "Exact package number, including blank."
+        },
+        {
+          "name": "skip",
+          "type": "integer",
+          "required": false,
+          "description": "Number of rows to skip; default 0."
+        },
+        {
+          "name": "take",
+          "type": "integer",
+          "required": false,
+          "description": "Page size 1..10000; default 100."
+        },
+        {
+          "name": "source",
+          "type": "object",
+          "required": false,
+          "description": "The source line to read tracking for. Source takes precedence over the legacy document fields.",
+          "children": [
+            {
+              "name": "type",
+              "type": "string",
+              "required": true,
+              "description": "SalesLine, PurchaseLine or TransferLine."
+            },
+            {
+              "name": "systemId",
+              "type": "string",
+              "required": true,
+              "description": "The SystemId (GUID) of the source line."
+            },
+            {
+              "name": "transferDirection",
+              "type": "string",
+              "required": false,
+              "description": "Outbound (default) or Inbound; selects the shipment or the receipt side of a TransferLine."
+            }
+          ]
+        },
+        {
+          "name": "documentType",
+          "type": "string",
+          "required": false,
+          "description": "Sales.Order, Sales.Invoice, Sales.CreditMemo, Sales.ReturnOrder, Purchase.Order, Purchase.Invoice, Purchase.CreditMemo, Purchase.ReturnOrder or Transfer.Order. The unqualified Order, Invoice, Credit Memo and Return Order mean the Sales types. Quotes and blanket orders are not supported."
+        },
+        {
+          "name": "documentNo",
+          "type": "string",
+          "required": false,
+          "description": "Document number with documentType and lineNo, up to 20 characters. Not used when systemId selects the line."
+        },
+        {
+          "name": "lineNo",
+          "type": "integer",
+          "required": false,
+          "description": "Positive document line number, with documentType and documentNo."
+        },
+        {
+          "name": "transferDirection",
+          "type": "string",
+          "required": false,
+          "description": "Outbound (default) or Inbound for transfers, with documentType Transfer.Order."
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success after the operation completes."
+          },
+          {
+            "name": "itemNo",
+            "type": "string",
+            "description": "Item on the selected source or item."
+          },
+          {
+            "name": "quantityBase",
+            "type": "decimal",
+            "description": "Sum of all matching signed tracking rows before paging; not available stock."
+          },
+          {
+            "name": "sourceType",
+            "type": "string",
+            "description": "Source mode only: the source kind, for example SalesLine, PurchaseLine or TransferLine."
+          },
+          {
+            "name": "sourceTableNo",
+            "type": "integer",
+            "description": "Source mode only: the table number of the source line."
+          },
+          {
+            "name": "sourceSubtype",
+            "type": "integer",
+            "description": "Source mode only: the document type ordinal of the source line, or the transfer direction."
+          },
+          {
+            "name": "documentType",
+            "type": "string",
+            "description": "Source mode only: the document type of the source line, for example Purchase.Order."
+          },
+          {
+            "name": "sourceId",
+            "type": "string",
+            "description": "Source mode only: the document number of the source line."
+          },
+          {
+            "name": "documentNo",
+            "type": "string",
+            "description": "Source mode only: the document number of the source line, as sourceId."
+          },
+          {
+            "name": "sourceBatchName",
+            "type": "string",
+            "description": "Source mode only: the batch name of the source line; blank for document lines."
+          },
+          {
+            "name": "sourceProdOrderLine",
+            "type": "integer",
+            "description": "Source mode only: the production order line of the source line; 0 for document lines."
+          },
+          {
+            "name": "sourceRefNo",
+            "type": "integer",
+            "description": "Source mode only: the line number of the source line."
+          },
+          {
+            "name": "lineNo",
+            "type": "integer",
+            "description": "Source mode only: the line number of the source line, as sourceRefNo."
+          },
+          {
+            "name": "trackingLines",
+            "type": "array",
+            "description": "The tracking rows of the page: remaining ledger entries and nonzero reservation entries in item mode; reservation and tracking specification rows in source mode.",
+            "children": [
+              {
+                "name": "source",
+                "type": "string",
+                "description": "Where the row comes from: ItemLedgerEntry, ReservationEntry or TrackingSpecification."
+              },
+              {
+                "name": "entryNo",
+                "type": "integer",
+                "description": "The entry number in the table the row comes from."
+              },
+              {
+                "name": "itemNo",
+                "type": "string",
+                "description": "The item number of the row."
+              },
+              {
+                "name": "lotNo",
+                "type": "string",
+                "description": "The lot number; blank when the row has none."
+              },
+              {
+                "name": "serialNo",
+                "type": "string",
+                "description": "The serial number; blank when the row has none."
+              },
+              {
+                "name": "packageNo",
+                "type": "string",
+                "description": "The package number; blank when the row has none."
+              },
+              {
+                "name": "locationCode",
+                "type": "string",
+                "description": "The location code of the row."
+              },
+              {
+                "name": "variantCode",
+                "type": "string",
+                "description": "The variant code of the row."
+              },
+              {
+                "name": "quantityBase",
+                "type": "decimal",
+                "description": "The signed quantity of the row in the base unit of measure; for a ledger entry the remaining quantity."
+              },
+              {
+                "name": "expirationDate",
+                "type": "string",
+                "description": "The expiration date in YYYY-MM-DD form when the item tracking code uses expiration dates; otherwise blank."
+              },
+              {
+                "name": "positive",
+                "type": "boolean",
+                "description": "Reservation rows only: true on the supply side."
+              },
+              {
+                "name": "reservationStatus",
+                "type": "string",
+                "description": "Reservation rows only: Reservation, Tracking, Surplus or Prospect."
+              },
+              {
+                "name": "sourceType",
+                "type": "string",
+                "description": "Reservation rows only: the source kind the row belongs to."
+              },
+              {
+                "name": "sourceTableNo",
+                "type": "integer",
+                "description": "Reservation rows only: the table number of the source."
+              },
+              {
+                "name": "sourceSubtype",
+                "type": "integer",
+                "description": "Reservation rows only: the source subtype."
+              },
+              {
+                "name": "documentType",
+                "type": "string",
+                "description": "Reservation rows only: the document type of the source, for example Sales.Order."
+              },
+              {
+                "name": "sourceId",
+                "type": "string",
+                "description": "Reservation rows only: the document number of the source."
+              },
+              {
+                "name": "documentNo",
+                "type": "string",
+                "description": "Reservation rows only: the document number of the source, as sourceId."
+              },
+              {
+                "name": "sourceBatchName",
+                "type": "string",
+                "description": "Reservation rows only: the batch name of the source."
+              },
+              {
+                "name": "sourceProdOrderLine",
+                "type": "integer",
+                "description": "Reservation rows only: the production order line of the source."
+              },
+              {
+                "name": "sourceRefNo",
+                "type": "integer",
+                "description": "Reservation rows only: the line number of the source."
+              },
+              {
+                "name": "lineNo",
+                "type": "integer",
+                "description": "Reservation rows only: the line number of the source, as sourceRefNo."
+              },
+              {
+                "name": "quantityHandledBase",
+                "type": "decimal",
+                "description": "Tracking specification rows only: the quantity already handled, in the base unit of measure."
+              },
+              {
+                "name": "quantityInvoicedBase",
+                "type": "decimal",
+                "description": "Tracking specification rows only: the quantity already invoiced, in the base unit of measure."
+              }
+            ]
+          },
+          {
+            "name": "noOfLines",
+            "type": "integer",
+            "description": "Rows returned after skip and take."
+          },
+          {
+            "name": "totalNoOfLines",
+            "type": "integer",
+            "description": "All matching rows before paging."
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "MissingParameter",
+          "when": "A required source or document identifier is absent.",
+          "fix": "Supply the required selector and data described in parameters."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "A source object, identifier, number, date, filter or array has an invalid type or range.",
+          "fix": "Use the declared JSON types and valid ranges."
+        },
+        {
+          "code": "InvalidParameter",
+          "when": "The source, pairing or tracking values are unsupported, the source is closed, or the company domain is disabled.",
+          "fix": "Correct the selection; check Inventory Setup and native source rules."
+        },
+        {
+          "code": "RecordNotFound",
+          "when": "A selected source is missing or no tracking rows match before paging.",
+          "fix": "Check the source and intersected filters; paging alone does not cause this error."
+        },
+        {
+          "code": "PermissionDenied",
+          "when": "The caller lacks required domain or native table permissions.",
+          "fix": "Ask an administrator for the required permissions."
+        },
+        {
+          "code": "BusinessCentralError",
+          "error": "Native item selection or filter error.",
+          "when": "Foundation rejects the item selector or a native filter cannot be evaluated.",
+          "fix": "Correct the item selection and Business Central filter syntax."
+        }
+      ],
+      "effect": {
+        "effect": "read",
+        "changes": "Nothing is changed. Reads lot, serial and package tracking from item ledger entries, reservation entries and tracking specifications.",
+        "idempotent": true,
+        "permissionSet": "BIFROST Read ori",
+        "writes": false
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.TrackingAvailability.Get",
+          "useInsteadWhen": "Read how much of each lot, serial or package is in stock and available after reservations, instead of tracking rows."
+        },
+        {
+          "name": "Inventory.Tracking.Assign",
+          "useInsteadWhen": "Assign native tracking to an existing source line instead of reading tracking."
+        },
+        {
+          "name": "Inventory.Tracking.Delete",
+          "useInsteadWhen": "Delete one unreserved ReservationEntry entryNo on the same source line."
+        },
+        {
+          "name": "Inventory.Reservation.Get",
+          "useInsteadWhen": "Read the reservations of an item or line instead of its tracking numbers."
+        }
+      ],
+      "examples": [
+        {
+          "title": "Read tracking on an owned purchase line",
+          "request": {
+            "type": "Inventory.Tracking.Get",
+            "data": {
+              "source": {
+                "type": "PurchaseLine",
+                "systemId": "11111111-1111-1111-1111-111111111111"
+              },
+              "take": 100
+            }
+          },
+          "response": {
+            "status": "Success",
+            "itemNo": "1000",
+            "quantityBase": 2,
+            "sourceType": "PurchaseLine",
+            "sourceTableNo": 39,
+            "sourceSubtype": 1,
+            "documentType": "Purchase.Order",
+            "sourceId": "106001",
+            "documentNo": "106001",
+            "sourceBatchName": "",
+            "sourceProdOrderLine": 0,
+            "sourceRefNo": 10000,
+            "lineNo": 10000,
+            "trackingLines": [
+              {
+                "source": "ReservationEntry",
+                "entryNo": 210,
+                "itemNo": "1000",
+                "lotNo": "LOT0001",
+                "serialNo": "",
+                "packageNo": "",
+                "locationCode": "BLUE",
+                "variantCode": "",
+                "quantityBase": 2,
+                "expirationDate": "",
+                "positive": true,
+                "reservationStatus": "Surplus",
+                "sourceType": "PurchaseLine",
+                "sourceTableNo": 39,
+                "sourceSubtype": 1,
+                "documentType": "Purchase.Order",
+                "sourceId": "106001",
+                "documentNo": "106001",
+                "sourceBatchName": "",
+                "sourceProdOrderLine": 0,
+                "sourceRefNo": 10000,
+                "lineNo": 10000
+              }
+            ],
+            "noOfLines": 1,
+            "totalNoOfLines": 1
+          },
+          "description": "Create your own compatible item, document line and stock first; replace illustrative identifiers with those owned records. Normal licensing and permissions apply."
+        },
+        {
+          "title": "Read the lot tracking of item 1000 at location BLUE",
+          "request": {
+            "type": "Inventory.Tracking.Get",
+            "data": {
+              "itemNo": "1000",
+              "locationCode": "BLUE"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "itemNo": "1000",
+            "quantityBase": 10,
+            "trackingLines": [
+              {
+                "source": "ItemLedgerEntry",
+                "entryNo": 45,
+                "itemNo": "1000",
+                "lotNo": "LOT0001",
+                "serialNo": "",
+                "packageNo": "",
+                "locationCode": "BLUE",
+                "variantCode": "",
+                "quantityBase": 10,
+                "expirationDate": ""
+              }
+            ],
+            "noOfLines": 1,
+            "totalNoOfLines": 1
+          }
+        }
+      ],
+      "overview": "Reads lot, serial and package tracking for an item or document line.",
+      "notes": "Read only. Source selection takes precedence over item selection. Item mode returns tracked remaining ledger entries and nonzero reservation entries; source mode returns reservation and tracking specification rows. quantityBase totals all matching rows before paging, not available stock. Expiration is the native entry date only when Use Expiration Dates is enabled; otherwise blank, never 0D. No matching tracking returns RecordNotFound; paging past existing rows returns an empty page."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}

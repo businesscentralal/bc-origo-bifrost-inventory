@@ -1,0 +1,33 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AttributeDefinition.Create",
+    "data": {},
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Correct the reported request values before retrying.",
+    "errors": [
+      {
+        "code": "MissingParameter",
+        "error": "name is required.",
+        "parameter": "name",
+        "received": "<missing>",
+        "expected": "A JSON string of at most 250 characters.",
+        "nextStep": "Send name as text in the documented format."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "type is required.",
+        "parameter": "type",
+        "received": "<missing>",
+        "expected": "A JSON string of at most 20 characters.",
+        "nextStep": "Send type as text in the documented format."
+      }
+    ],
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.AttributeDefinition.Create\". Always read the help before calling a message type."
+  }
+}

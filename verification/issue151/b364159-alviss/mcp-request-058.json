@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Reservation.Get",
+    "data": {
+      "itemNo": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "itemNo verður að vera JSON-strengur eða tala.",
+    "parameter": "itemNo",
+    "received": "true",
+    "expected": "JSON-strengur eða tala.",
+    "nextStep": "Sendu vörunúmerið sem texta í data.itemNo.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Reservation.Get\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

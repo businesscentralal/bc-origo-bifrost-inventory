@@ -1,0 +1,33 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AttributeDefinition.Create",
+    "data": {},
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.",
+    "errors": [
+      {
+        "code": "MissingParameter",
+        "error": "name er nauðsynlegt.",
+        "parameter": "name",
+        "received": "<missing>",
+        "expected": "JSON-strengur með að hámarki 250 stöfum.",
+        "nextStep": "Sendu name sem texta á skjalfestu sniði."
+      },
+      {
+        "code": "MissingParameter",
+        "error": "type er nauðsynlegt.",
+        "parameter": "type",
+        "received": "<missing>",
+        "expected": "JSON-strengur með að hámarki 20 stöfum.",
+        "nextStep": "Sendu type sem texta á skjalfestu sniði."
+      }
+    ],
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.AttributeDefinition.Create\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

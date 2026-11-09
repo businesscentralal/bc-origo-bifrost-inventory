@@ -1,0 +1,819 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "startedAt": "2026-11-09T13:25:52.681Z",
+  "executed": 22,
+  "passed": 22,
+  "failed": 0,
+  "skipped": 0,
+  "scenarios": [
+    {
+      "key": "Inventory.Reservation.Get-1033-invalid-false",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1033-invalid-{}",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1033-invalid-[]",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1033-number",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1033-string",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1039-invalid-false",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1039-invalid-{}",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1039-invalid-[]",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1039-number",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Reservation.Get-1039-string",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1033-invalid-false",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1033-invalid-{}",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1033-invalid-[]",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1033-number",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1033-string",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1039-invalid-false",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1039-invalid-{}",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1039-invalid-[]",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1039-number",
+      "passed": true
+    },
+    {
+      "key": "Inventory.Cost.Get-1039-string",
+      "passed": true
+    },
+    {
+      "key": "cost-missing-1033",
+      "passed": true
+    },
+    {
+      "key": "cost-missing-1039",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(1510452))",
+        "fields": [
+          "No.",
+          "Description"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      },
+      "isError": false
+    },
+    {
+      "name": "bc_api_request",
+      "args": {
+        "entity": "items",
+        "method": "POST",
+        "body": {
+          "number": "1510452",
+          "displayName": "Alviss issue151 numeric compatibility",
+          "type": "Inventory"
+        }
+      },
+      "result": {
+        "entity": "items",
+        "method": "POST",
+        "statusCode": 201,
+        "durationMs": 2290,
+        "created": {
+          "@odata.context": "https://cosmo-alpaca-enterprise.westeurope.cloudapp.azure.com/BC/api/v2.0/$metadata#companies(68567d1c-5dc0-f111-85bf-3833c5d19c4c)/items/$entity",
+          "@odata.etag": "W/\"JzIwOzE2MzcwODQyODU1MTQ4NzAzOTQyMTswMDsn\"",
+          "id": "78c4e112-41dc-f111-b7a5-801f3d175c0d",
+          "number": "1510452",
+          "displayName": "Alviss issue151 numeric compatibility",
+          "displayName2": "",
+          "type": "Inventory",
+          "itemCategoryId": "00000000-0000-0000-0000-000000000000",
+          "itemCategoryCode": "",
+          "blocked": false,
+          "gtin": "",
+          "inventory": 0,
+          "unitPrice": 0,
+          "priceIncludesTax": false,
+          "unitCost": 0,
+          "taxGroupId": "00000000-0000-0000-0000-000000000000",
+          "taxGroupCode": "",
+          "baseUnitOfMeasureId": "00000000-0000-0000-0000-000000000000",
+          "baseUnitOfMeasureCode": "",
+          "generalProductPostingGroupId": "00000000-0000-0000-0000-000000000000",
+          "generalProductPostingGroupCode": "",
+          "inventoryPostingGroupId": "00000000-0000-0000-0000-000000000000",
+          "inventoryPostingGroupCode": "",
+          "lastModifiedDateTime": "2026-11-09T13:26:00.39Z"
+        }
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(1510452))",
+        "fields": [
+          "No.",
+          "Description"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "No_": "1510452"
+            },
+            "fields": {
+              "Description": "Alviss issue151 numeric compatibility"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": false
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "false",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Reservation.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": {}
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "{}",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Reservation.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": []
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "[]",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Reservation.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": 1510452
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": []
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "1510452"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": []
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": false
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "false",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Reservation.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": {}
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "{}",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Reservation.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": []
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "[]",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Reservation.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": 1510452
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": []
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "1510452"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": []
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": false
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "false",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Cost.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": {}
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "{}",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Cost.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": []
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo must be a JSON string or number.",
+        "parameter": "itemNo",
+        "received": "[]",
+        "expected": "A JSON string or number.",
+        "nextStep": "Send the item number as text in data.itemNo.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Cost.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": 1510452
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "1510452",
+        "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+        "costingMethod": "FIFO",
+        "unitCost": 0,
+        "standardCost": 0,
+        "lastDirectCost": 0,
+        "indirectCostPct": 0,
+        "costIsAdjusted": true,
+        "costIsPostedToGL": true,
+        "inventory": 0,
+        "locationFilter": "",
+        "variantFilter": "",
+        "items": [
+          {
+            "itemNo": "1510452",
+            "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "costingMethod": "FIFO",
+            "unitCost": 0,
+            "standardCost": 0,
+            "lastDirectCost": 0,
+            "indirectCostPct": 0,
+            "costIsAdjusted": true,
+            "costIsPostedToGL": true,
+            "inventory": 0,
+            "locationFilter": "",
+            "variantFilter": ""
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": "1510452"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "1510452",
+        "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+        "costingMethod": "FIFO",
+        "unitCost": 0,
+        "standardCost": 0,
+        "lastDirectCost": 0,
+        "indirectCostPct": 0,
+        "costIsAdjusted": true,
+        "costIsPostedToGL": true,
+        "inventory": 0,
+        "locationFilter": "",
+        "variantFilter": "",
+        "items": [
+          {
+            "itemNo": "1510452",
+            "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "costingMethod": "FIFO",
+            "unitCost": 0,
+            "standardCost": 0,
+            "lastDirectCost": 0,
+            "indirectCostPct": 0,
+            "costIsAdjusted": true,
+            "costIsPostedToGL": true,
+            "inventory": 0,
+            "locationFilter": "",
+            "variantFilter": ""
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": false
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "false",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Cost.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": {}
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "{}",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Cost.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": []
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "InvalidParameterFormat",
+        "error": "itemNo ver\u00f0ur a\u00f0 vera JSON-strengur e\u00f0a tala.",
+        "parameter": "itemNo",
+        "received": "[]",
+        "expected": "JSON-strengur e\u00f0a tala.",
+        "nextStep": "Sendu v\u00f6run\u00fameri\u00f0 sem texta \u00ed data.itemNo.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Cost.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": 1510452
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "1510452",
+        "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+        "costingMethod": "FIFO",
+        "unitCost": 0,
+        "standardCost": 0,
+        "lastDirectCost": 0,
+        "indirectCostPct": 0,
+        "costIsAdjusted": true,
+        "costIsPostedToGL": true,
+        "inventory": 0,
+        "locationFilter": "",
+        "variantFilter": "",
+        "items": [
+          {
+            "itemNo": "1510452",
+            "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "costingMethod": "FIFO",
+            "unitCost": 0,
+            "standardCost": 0,
+            "lastDirectCost": 0,
+            "indirectCostPct": 0,
+            "costIsAdjusted": true,
+            "costIsPostedToGL": true,
+            "inventory": 0,
+            "locationFilter": "",
+            "variantFilter": ""
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {
+          "itemNo": "1510452"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Cost.Get",
+        "status": "Success",
+        "itemNo": "1510452",
+        "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+        "costingMethod": "FIFO",
+        "unitCost": 0,
+        "standardCost": 0,
+        "lastDirectCost": 0,
+        "indirectCostPct": 0,
+        "costIsAdjusted": true,
+        "costIsPostedToGL": true,
+        "inventory": 0,
+        "locationFilter": "",
+        "variantFilter": "",
+        "items": [
+          {
+            "itemNo": "1510452",
+            "itemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "costingMethod": "FIFO",
+            "unitCost": 0,
+            "standardCost": 0,
+            "lastDirectCost": 0,
+            "indirectCostPct": 0,
+            "costIsAdjusted": true,
+            "costIsPostedToGL": true,
+            "inventory": 0,
+            "locationFilter": "",
+            "variantFilter": ""
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {},
+        "lcid": 1033
+      },
+      "result": {
+        "status": "Error",
+        "code": "MissingParameter",
+        "error": "itemNo is required.",
+        "parameter": "itemNo",
+        "received": "<missing>",
+        "expected": "A non-empty item number in data.itemNo or subject.",
+        "nextStep": "Send data.itemNo or the item number as subject.",
+        "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Cost.Get\". Always read the help before calling a message type."
+      },
+      "isError": true
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Cost.Get",
+        "data": {},
+        "lcid": 1039
+      },
+      "result": {
+        "status": "Error",
+        "code": "MissingParameter",
+        "error": "itemNo er nau\u00f0synlegt.",
+        "parameter": "itemNo",
+        "received": "<missing>",
+        "expected": "\u00d3t\u00f3mt v\u00f6run\u00famer \u00ed data.itemNo e\u00f0a subject.",
+        "nextStep": "Sendu data.itemNo e\u00f0a v\u00f6run\u00fameri\u00f0 sem subject.",
+        "hint": "Til a\u00f0 sj\u00e1 notkunaruppl\u00fdsingar skaltu kalla \u00e1 skilabo\u00f0ategundina \"Help.Implementation.Get\" me\u00f0 subject \"Inventory.Cost.Get\". Lestu alltaf hj\u00e1lpina \u00e1\u00f0ur en \u00fe\u00fa kallar \u00e1 skilabo\u00f0ategund."
+      },
+      "isError": true
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(1510452))",
+        "fields": [
+          "No.",
+          "Description"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "78C4E112-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "No_": "1510452"
+            },
+            "fields": {
+              "Description": "Alviss issue151 numeric compatibility"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "bc_api_request",
+      "args": {
+        "entity": "items",
+        "method": "DELETE",
+        "id": "78C4E112-41DC-F111-B7A5-801F3D175C0D"
+      },
+      "result": {
+        "entity": "items",
+        "method": "DELETE",
+        "statusCode": 204,
+        "durationMs": 411,
+        "deleted": true
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(1510452))",
+        "fields": [
+          "No.",
+          "Description"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      },
+      "isError": false
+    }
+  ],
+  "createsOwnData": true,
+  "cleanup": {
+    "itemNo": "1510452",
+    "description": "Alviss issue151 numeric compatibility",
+    "created": true,
+    "deleted": true,
+    "verified": true,
+    "seedRequestedAt": "2026-11-09T13:25:58.020Z",
+    "systemId": "78C4E112-41DC-F111-B7A5-801F3D175C0D"
+  },
+  "verified": true,
+  "finishedAt": "2026-11-09T13:26:15.788Z",
+  "compileDependencyVersion": "28.0.10.632",
+  "foundationVersion": "28.0.12.679",
+  "dependencyProvenance": "runtime-provenance-correction.json"
+}

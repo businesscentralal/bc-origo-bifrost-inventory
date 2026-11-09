@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Tracking.Delete",
+    "data": {
+      "source": true
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Specify source with a supported type and systemId.",
+    "parameter": "source",
+    "received": "true",
+    "expected": "object",
+    "nextStep": "Correct the named tracking parameter and retry with an existing permitted source.",
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Tracking.Delete\". Always read the help before calling a message type."
+  }
+}

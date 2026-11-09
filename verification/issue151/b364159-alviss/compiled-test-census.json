@@ -1,0 +1,2825 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "codeunitsWithTests": 54,
+  "totalTestMethods": 561,
+  "methods": [
+    {
+      "codeunit": 96901,
+      "class": "Item AttrDef Tests ori",
+      "method": "DefinitionCreate_Option_CreatesValues"
+    },
+    {
+      "codeunit": 96901,
+      "class": "Item AttrDef Tests ori",
+      "method": "DefinitionCreate_DuplicateName_ReturnsError"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Get_ByItemNo_ReturnsAttributes"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Get_MissingItem_ReturnsError"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Create_Idempotent_SameValue_ChangedFalse"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Create_ConflictWithoutOverwrite_ReturnsError"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Create_ConflictWithOverwrite_Succeeds"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Update_Existing_ReturnsBeforeAfter"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Update_MissingMapping_ReturnsError"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Create_ServiceItem_Accepted"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Enum_ValuesResolveToImpl"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "DataRecords_WriteRestricted_AttributeTables"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Create_InvalidAttributes_MatchesHelpCode"
+    },
+    {
+      "codeunit": 96900,
+      "class": "Item Attribute Tests ori",
+      "method": "Update_InvalidAttributes_MatchesHelpCode"
+    },
+    {
+      "codeunit": 96953,
+      "class": "Avail. By Period Perm",
+      "method": "WithoutInvRead_ReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "PostedItem_ReturnsPeriodRows"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "TwoItems_ReturnOneResultEach"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "MissingItemNo_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "NumberItemNo_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "BothForms_ReturnConflictingIdentifiers"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "UnknownPeriodType_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "MissingItem_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "TooManyPeriods_ReturnsLimitExceeded"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "TooManyItems_ReturnsLimitExceeded"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "ServiceAndNonInventory_ReturnPreconditionFailed"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "BalanceAtDate_ReturnsCumulativeBalance"
+    },
+    {
+      "codeunit": 96952,
+      "class": "Avail. By Period Tests",
+      "method": "UnknownAmountType_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96971,
+      "class": "Inv. Catalogue Quality Tests",
+      "method": "EveryType_CatalogueTextsTranslatableAt1039"
+    },
+    {
+      "codeunit": 96971,
+      "class": "Inv. Catalogue Quality Tests",
+      "method": "EveryType_CatalogueTextsAreNotCopyPasted"
+    },
+    {
+      "codeunit": 96978,
+      "class": "Inv. Confirmation Tests ori",
+      "method": "Scenario_AC01_ConfirmationBoundary_In1033"
+    },
+    {
+      "codeunit": 96978,
+      "class": "Inv. Confirmation Tests ori",
+      "method": "Scenario_AC01_ConfirmationBoundary_In1039"
+    },
+    {
+      "codeunit": 96978,
+      "class": "Inv. Confirmation Tests ori",
+      "method": "Scenario_AC01_NativeSuccess_In1033"
+    },
+    {
+      "codeunit": 96978,
+      "class": "Inv. Confirmation Tests ori",
+      "method": "Scenario_AC01_NativeSuccess_In1039"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryType_DeclaresEveryRequiredChapter"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryEnvelope_StatesSubjectVersionAndContentType"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryChangingType_DeclaresAWorkflow"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryErrorEntry_CarriesCodeConditionAndFix"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryType_DirectionMatchesEffect"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryParameter_IsDescribed"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "ResponseAndExamples_AreComplete"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "RelatedAndWorkflow_NameExistingTypes"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "EveryType_DiscoveryTextsExistInBothLanguages"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "NotesAndOverview_NameNoAlObjects"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_HelpGuard_RejectsInternalNames"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_ReadHelp_PromisesNothingMissing"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_OptionExample_IncludesCreatedValues"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC03_DisabledDomain_NamesAdministratorAndPage"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_ExplicitMissingParameters_AreCoded"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_ReclassWrongTemplate_IsCoded"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_ReclassMissingTemplate_IsCoded"
+    },
+    {
+      "codeunit": 96970,
+      "class": "Inv. Contract Parity Tests ori",
+      "method": "Scenario_AC02_NativeValidation_IsCoded"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CurrentNotes_ReplacePreviousOutput"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "ScopedCatalogue_UsesIcelandicAt1039"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "RemainingCatalogue_UsesIcelandicAt1039"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "PublicHelp_ClearsDeveloperNotes"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AllInventoryTypes_HaveRequiredContractChapters"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AllInventoryTypes_HaveBilingualDiscovery"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AllInventoryTypes_RelatedNamesExist"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "PhysInventoryPost_EmptyBatch_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "InventoryEffects_MatchOperation"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AttributeGet_RegisteredContract_DeclaresReadChapters"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AttributeCreate_RegisteredContract_DeclaresWriteChapters"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AttributeUpdate_RegisteredContract_DeclaresWriteChapters"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "AttributeDefinition_RegisteredContract_HasNoTarget"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingContracts_DeclareTypedDefaults"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingContracts_DeclareFilterPrecondition"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingContracts_DeclareDispatcherFailure"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingContracts_DiscloseReportOptions"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingContracts_ClearReusedChapters"
+    },
+    {
+      "codeunit": 96921,
+      "class": "Inventory Contract Batch Tests",
+      "method": "CostingInterfaces_AllChapters_ReplaceReusedOutputs"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "CostGet_ReadOnlyCaller_ReturnsSnapshotWithoutWriteRights"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "CostGet_NoItemRead_RefusesBeforeLicense"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "CostUpdate_ReadOnlyCaller_RefusesBeforeLicense"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "CostUpdate_NativeWriteWithoutPostToken_Enabled"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "PriceUpdate_ReadOnlyCaller_RefusesBeforeLicense"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "PriceUpdate_NativeWriteWithoutPostToken_Enabled"
+    },
+    {
+      "codeunit": 96933,
+      "class": "Inventory Cost Perm. Tests",
+      "method": "CostFieldHints_ReadCaller_KeepWritePermissionsAbsent"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_ItemNo_ReturnsCurrentSnapshot"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_SystemIdAliases_ReturnSameItem"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_SubjectPrecedesData_SelectsSubject"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_TableView_ReturnsSelectedItems"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC02_MissingItem_ReturnsStructuredError"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "ReadCosts_MalformedLocation_ReturnsStructuredError"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "ReadCosts_DatedStock_CalculatesQuantityWithoutWrites"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "ReadCosts_VariantStock_SelectsOnlyRequestedVariant"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_FIFO_NativeSnapshotIsReadOnlyInBothLanguages"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_LIFO_NativeSnapshotIsReadOnlyInBothLanguages"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_Average_NativeSnapshotIsReadOnlyInBothLanguages"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_Standard_NativeSnapshotIsReadOnlyInBothLanguages"
+    },
+    {
+      "codeunit": 96936,
+      "class": "Inventory Cost Read Tests",
+      "method": "Scenario_AC01_Specific_NativeSnapshotIsReadOnlyInBothLanguages"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_OmitCommit_PropagatesAndRollsBack"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC07_FIFO_ValidatesCosts"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC07_LIFO_ValidatesCosts"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC07_Average_ValidatesCosts"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC07_Specific_ValidatesCosts"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC08_Standard_RefusesWithoutChangingItem"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC09_Blocked_RequiresExplicitOptIn"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_MethodMismatch_PreservesItem"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_RestrictedField_PreservesAllFields"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_NoSelection_Refuses"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_NullCost_ReturnsErrorWithoutWrite"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "Scenario_AC10_FieldHints_LeaveUnrelatedTablesAvailable"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_NativeSubscriberFailure_RollsBackProcess"
+    },
+    {
+      "codeunit": 96937,
+      "class": "Inventory Cost Write Tests",
+      "method": "UpdateCost_BlockedIcelandic_PreservesValue"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AttributesUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AttributesNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_TransferUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_TransferNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AssemblyUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AssemblyNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReservationsUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReservationsNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_TrackingUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_TrackingNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PhysicalUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PhysicalNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_CostingUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_CostingNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReclassUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReclassNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ApplicationUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ApplicationNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PeriodUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PeriodNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PriceUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_PriceNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReferenceUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ReferenceNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AvailabilityUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_AvailabilityNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ChargeUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ChargeNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_CategoryUsage_EnablesDomain"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_CategoryNoUsage_PreservesOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC03_AlreadyOnWithoutUsage_StaysOn"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC04_SecondEvaluation_DoesNotModifyRow"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC01_UpgradeExistingOffRow_EnablesUsageOnce"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC02_MissingSetup_StaysAbsentAndEnabled"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC02_SetupPage_CreatesUsageDefaults"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_NonTransitLocation_DoesNotEnableTransfer"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_SurplusTracking_DoesNotEnableReservation"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_ProductionBOM_EnablesAssembly"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC03_NewCompanyTags_PreserveLaterOptOut"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_LocationUsage_AvoidsLedgerScan"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_LedgerLocationsForSameItem_EnableReclass"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_LedgerLocationsForDifferentItems_StayOff"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_BlankLedgerLocations_AvoidsLedgerScan"
+    },
+    {
+      "codeunit": 96963,
+      "class": "Inventory Domain Usage Tests",
+      "method": "Scenario_AC05_BlankAndNamedLedgerLocations_EnableReclass"
+    },
+    {
+      "codeunit": 96932,
+      "class": "Inventory Item Quantity Tests",
+      "method": "CostGet_ItemNo_ReturnsCalculatedInventory"
+    },
+    {
+      "codeunit": 96932,
+      "class": "Inventory Item Quantity Tests",
+      "method": "RevaluationCalculate_UsesLedgerCost"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "CostGet_MissingItemNo_IsMissingParameterIn1033"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "CostGet_MissingItemNo_IsMissingParameterIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "TrackingGet_MissingItemNo_IsMissingParameterIn1033"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "TrackingGet_MissingItemNo_IsMissingParameterIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "TrackingGet_BlankItemNo_IsMissingParameter"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "RevaluationCalculate_MissingItemNo_IsMissingParameterIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1033"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "RevaluationCalculate_UnknownItem_IsRecordNotFoundIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "AssemblyOrderCreate_ZeroQuantity_IsIcelandicIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "PhysInventoryRecord_UnknownLine_IsIcelandicIn1039"
+    },
+    {
+      "codeunit": 96930,
+      "class": "Inventory Item Refusal Tests",
+      "method": "ReclassificationDomainOff_NextStepIsIcelandicIn1039"
+    },
+    {
+      "codeunit": 96931,
+      "class": "Inventory Item Subject Tests",
+      "method": "CostGet_SubjectAndDifferentItemNo_ReturnsConflict"
+    },
+    {
+      "codeunit": 96931,
+      "class": "Inventory Item Subject Tests",
+      "method": "CostGet_Subject_ReturnsThatItem"
+    },
+    {
+      "codeunit": 96931,
+      "class": "Inventory Item Subject Tests",
+      "method": "CostGet_MissingItemNoAndSubject_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96931,
+      "class": "Inventory Item Subject Tests",
+      "method": "ReservationGet_Subject_ExcludesOtherItems"
+    },
+    {
+      "codeunit": 96945,
+      "class": "Inventory Physical Perm Tests",
+      "method": "Scenario_AC07_JournalWriterWithoutItemPost_IsDenied"
+    },
+    {
+      "codeunit": 96945,
+      "class": "Inventory Physical Perm Tests",
+      "method": "Scenario_AC07_JournalWriterWithItemPost_IsEnabled"
+    },
+    {
+      "codeunit": 96945,
+      "class": "Inventory Physical Perm Tests",
+      "method": "Scenario_AC07_PreviewMirrorsFoundationItemPostGate"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "CostToGL_PostsSelectedItemOnly"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "CostToGL_AppliesDocumentAndItemFilters"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsItemTemplate_1033"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsItemTemplate_1039"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsPhysicalTemplate_1033"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsPhysicalTemplate_1039"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsRevaluationTemplate_1033"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "ReclassPost_RejectsRevaluationTemplate_1039"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC01_Calculate_SelectedStockCreatesNativeLines"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC01_Calculate_MissingPostingDate_Refuses"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC02_RecordCount_OmittedAndZeroDiffer"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC04_EqualCount_IsReady"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC05_Preview_RollsBackPhysicalEntries"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC06_Post_ReturnsBothNativeLedgerRanges"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "PhysicalPost_IgnoresOnlyEmptyLine_EN"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "PhysicalPost_IgnoresOnlyEmptyLine_IS"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "PhysicalPost_RejectsNonemptyMissingItem_EN"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "PhysicalPost_RejectsNonemptyMissingItem_IS"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC03_WrongTemplate_AllFiveRefuse"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "RecordCount_LaterInvalidCount_PreservesFirstLine"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "LegacyRecord_Quantity_UsesNativeCountValidation"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "RecordCount_MalformedQuantity_Refuses"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "RecordCount_AfterModifyError_RollsBackNativeWrite"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC01_HelpCalculateExample_CreatesOnlyOwnedLines"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC02_HelpRecordCountExample_WritesZeroWithoutPosting"
+    },
+    {
+      "codeunit": 96944,
+      "class": "Inventory Physical Tests",
+      "method": "Scenario_AC02_HelpLegacyRecordExample_RefusesCanonicalType"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_Subject_ValidatesAndReturnsStoredPrice"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_SystemId_SupportsZeroPrice"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_TableView_ResolvesOneItem"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_MultipleItems_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_NativeFailure_RollsBackSubscriberWrite"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_RestrictedField_PreservesPrice"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_Blocked_RequiresExplicitOptIn"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_MissingPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_NullPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_BooleanPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_ObjectPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_ArrayPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_MalformedPrice_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_NullOptIn_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_StringOptIn_ReturnsError"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_NoSelection_Refuses"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_BlankIdentifier_Refuses"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_UnknownField_Refuses"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_PriceList_Refuses"
+    },
+    {
+      "codeunit": 96939,
+      "class": "Inventory Price Write Tests",
+      "method": "UpdatePrice_BlockedIcelandic_PreservesValue"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Scenario_AC05_Preview_RollsBackNativeLedgerChanges"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Scenario_AC06_Post_ReturnsActualRegisterAndValue"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Scenario_AC06_PostFailure_PreservesJournalAndLedgers"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Post_WrongTemplate_Refuses"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Preview_WrongTemplate_Refuses"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Post_AfterNativeInsertFailure_RollsBackActualWrite"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Revaluation_LIFO_NativePreviewAndPost"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Revaluation_Average_NativePreviewAndPost"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Revaluation_Standard_NativePreviewAndPost"
+    },
+    {
+      "codeunit": 96941,
+      "class": "Inventory Revaluation Tests",
+      "method": "Revaluation_Specific_NativeSerialPreviewAndPost"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Registration_IsIncomplete_EN"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Registration_IsIncomplete_IS"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Wizard_FinishCompletes_EN"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Wizard_FinishCompletes_IS"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Wizard_CancelPreservesSetup_EN"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Wizard_CancelPreservesSetup_IS"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Finish_RejectsEarlyStep_EN"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Finish_RejectsEarlyStep_IS"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Domains_ReadExistingFlagsWithoutMutation"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Domains_MissingSetupDoesNotInsert"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Http_ReadsOwnModuleWithoutWriting"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Access_PreservesActualAssignableSet"
+    },
+    {
+      "codeunit": 96920,
+      "class": "Inventory Setup Wizard Tests",
+      "method": "Domains_OpenSetupAndRefresh"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_DocumentKeysReadOnlyOwnTracking"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_SystemIdMatchesDocumentKeys"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_SubjectLineGuidReadsTracking"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC2_PackageAndSerialAreNotLost"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC2_ItemSystemIdReadsPendingTracking"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC2_TrackingTableViewReadsOnlySelectedItem"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_AvailabilityTableViewReadsOnlySelectedItem"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_TrackingTableViewWrongTypeIsRefused"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_AvailabilityTableViewWrongTypeIsRefused"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_UnknownDocumentReturnsError"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_NoItemSelectionIsRefused"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_BlankItemNoIsRefused"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_UntrackedItemReturnsNotFoundWithoutWrites"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_UntrackedDocumentReturnsNotFoundWithoutWrites"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC3_InvalidFilterAndPagingReturnError"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC8_PagingPreservesTotalAndOrder"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC2_LocationCodeDoesNotOverrideFilter"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_AvailabilityGroupsPostedReceipts"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_AvailabilitySubtractsNativeReservation"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_TrackingEntryExpirationIsPreserved"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC2_PackageOnlyTrackingIsVisible"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_DisabledPolicyReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_GroupedDateDisagreementReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_GroupedEntryDateAndUndatedFallback"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_LotDatedThenUndatedReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_LotUndatedThenDatedReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_PackageDatedThenUndatedReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_PackageUndatedThenDatedReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_ReservationCarriesSerialAndPackage"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_PackageDisagreementAndDisabledPolicy"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC5_EnabledUndatedEntryReturnsBlank"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC4_PublicAvailabilityExample_ReadsOwnedStock"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC7_ReadTypes_DoNotAddTableWriteRestrictions"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_PurchaseAdapter_MatchesFullNativeRecord"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_SalesAdapter_MatchesFullNativeRecord"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_TransferOutbound_MatchesFullNativeRecord"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_TransferInbound_MatchesFullNativeRecord"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_TransferOutbound_ReadsNativeTracking"
+    },
+    {
+      "codeunit": 96927,
+      "class": "Inventory Tracking Read Tests",
+      "method": "Scenario_AC1_TransferInbound_ReadsShippedTracking"
+    },
+    {
+      "codeunit": 96922,
+      "class": "Inv. Lookup Contract Tests",
+      "method": "AllLookupTypes_ErrorsChapter_ListsDataAndKeys"
+    },
+    {
+      "codeunit": 96922,
+      "class": "Inv. Lookup Contract Tests",
+      "method": "AllLookupTypes_ErrorsChapter_ExactlyOneMultipleErrors"
+    },
+    {
+      "codeunit": 96922,
+      "class": "Inv. Lookup Contract Tests",
+      "method": "CreateTypes_DeclareCollectionAndAttributeReadsDoNot"
+    },
+    {
+      "codeunit": 96922,
+      "class": "Inv. Lookup Contract Tests",
+      "method": "AttributeBlocked_BothLanguages_PlaceholderAndKeyPreserved"
+    },
+    {
+      "codeunit": 96922,
+      "class": "Inv. Lookup Contract Tests",
+      "method": "AllLookupTypes_BothLanguages_KeepEnglishContract"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_ArrayData_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_InvalidJson_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_ObjectIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_NullIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_NumericIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_ArrayIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_BooleanIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_NullSystemId_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_TwoWrongKeys_OrderedErrors"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_EmptyIdentifier_MissingParameter"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_ArrayData_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_InvalidJson_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_ObjectIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_NullIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_NumericIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_ArrayIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_BooleanIdentifier_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_NullSystemId_TypedError"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_TwoWrongKeys_OrderedErrors"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_EmptyIdentifier_MissingParameter"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "TransferStatistics_ExistingSubjectWrongKey_NoTotals"
+    },
+    {
+      "codeunit": 96923,
+      "class": "Inv. Lookup Format Tests",
+      "method": "AssemblyStatistics_ExistingSubjectWrongKey_NoTotals"
+    },
+    {
+      "codeunit": 96979,
+      "class": "Inv. Period Close Tests",
+      "method": "Close_OpenPeriod_UsesPlatformClose"
+    },
+    {
+      "codeunit": 96979,
+      "class": "Inv. Period Close Tests",
+      "method": "Close_AlreadyClosed_DoesNotRunPlatformClose"
+    },
+    {
+      "codeunit": 96979,
+      "class": "Inv. Period Close Tests",
+      "method": "Reopen_ClosedPeriod_WritesReopenEntry"
+    },
+    {
+      "codeunit": 96979,
+      "class": "Inv. Period Close Tests",
+      "method": "Reopen_AlreadyOpen_DoesNotRunPlatformReopen"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "AssemblyUndo_WithInvPost_EnforcesGate"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "TransferUndoShipment_WithInvPost_EnforcesGate"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "TransferPost_WithInvPost_IsEnabled"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "AssemblyPost_WithInvPost_IsEnabled"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "HasPostingPermission_WithInvPost_IsTrue"
+    },
+    {
+      "codeunit": 96919,
+      "class": "Inv. Posting Gate Grant Tests",
+      "method": "AssertCanPost_WithInvPost_WritesNoError"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "FullRole_ExecutesPreviouslyMissingImplementations"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "AssemblyUndo_WithoutInvPost_EnforcesGate"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "TransferUndoShipment_WithoutInvPost_EnforcesGate"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "InventoryRead_PreservesAttributeReadOnlyPermissions"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "InventoryFull_PreservesAttributeWritePermissions"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "TransferPost_WithoutInvPost_IsDisabled"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "AssemblyPost_WithoutInvPost_IsDisabled"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "AssertCanPost_WithoutInvPost_NamesInvPostSet"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "TransferPreview_WithoutInvPost_StaysEnabled"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "AssemblyPreview_WithoutInvPost_StaysEnabled"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "AdjustCostRun_PassesDomainGate_ChecksLicenseBeforeWork"
+    },
+    {
+      "codeunit": 96918,
+      "class": "Inv. Posting Gate Tests",
+      "method": "CostToGLPost_PassesDomainGate_ChecksLicenseBeforeWork"
+    },
+    {
+      "codeunit": 96972,
+      "class": "Inv. Registration Tests ori",
+      "method": "AC02_LicAdm_OpensSetupWithInventoryInstalled"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "AssignLotUsesSourceReservationAndNoPersistentSpecification"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "SerialQuantityTwoIsRefusedWithoutWrites"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "InvalidSecondEntryLeavesSourceUnchanged"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "DeleteRejectsEntryFromDifferentSource"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "DeleteSelectedEntryPreservesOtherTracking"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "EmptyDeleteSelectionPreservesTracking"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "SalesTrackingRoundTrip"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "TransferTrackingRoundTrip"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "PartialReceiptDeletePreservesPostedLedger"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "BilingualLotAndSerialRoundTrip"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "ItemMismatchDoesNotWrite"
+    },
+    {
+      "codeunit": 96974,
+      "class": "Inv. Source Tracking Tests ori",
+      "method": "ReceiptUndoRemainsDisabledCompatibilityIdentifier"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodClose_InvalidDates_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodClose_InvalidDates_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodReopen_InvalidDates_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodReopen_InvalidDates_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AdjustCost_InvalidBoolean_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AdjustCost_InvalidBoolean_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AdjustCost_CollectsAllInvalidValues_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AdjustCost_CollectsAllInvalidValues_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodReopen_UsesIsoNotFoundDate_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PeriodReopen_UsesIsoNotFoundDate_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AssemblyCreate_CollectsBeforeInsert_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AssemblyCreate_CollectsBeforeInsert_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "TransferCreate_CollectsBeforeInsert_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "TransferCreate_CollectsBeforeInsert_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AttributeDefinitionEmpty_Collects_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AttributeDefinitionEmpty_Collects_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "ReservationEmpty_Collects_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "ReservationEmpty_Collects_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "CostEmpty_Collects_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "CostEmpty_Collects_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AttributeDuplicate_CodedAndUnchanged_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "CostUnknownItemAndValues_Collects_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AssemblyUndoMissing_Coded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "ReservationGet_UsesInvariantStatus_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AttributeDuplicate_CodedAndUnchanged_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "CostUnknownItemAndValues_Collects_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "AssemblyUndoMissing_Coded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "ReservationGet_UsesInvariantStatus_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Calculate_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RecordCount_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Check_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PhysicalPost_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RevaluationPost_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RevaluationPreview_UnknownParameterCoded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "TrackingMalformedSource_Coded_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Calculate_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RecordCount_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Check_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "PhysicalPost_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RevaluationPost_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "RevaluationPreview_UnknownParameterCoded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "TrackingMalformedSource_Coded_IS"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "NativeJournalFailure_Context_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "NativeJournalFailure_Context_IS"
+    },
+    {
+      "codeunit": 96957,
+      "class": "Item Category Perm",
+      "method": "WithoutInvRead_GetReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96957,
+      "class": "Item Category Perm",
+      "method": "WithoutInvWrite_SetReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_ByCode_ReturnsCategoryAndInheritedAttribute"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_WithoutAttributes_OmitsAttributeArray"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_NoIdentifier_ReturnsEveryCategory"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_BySystemId_ReturnsCategory"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_MissingCategory_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_IncludeAttributesAsText_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_EmptyCode_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Get_CodeAndSystemId_ReturnsConflict"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_CreatesCategoryAndLocalAttribute"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_ExistingCategory_UpdatesDescriptionAndValue"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_ValueEqualToParent_AnswersInherited"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_ParentLoop_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_NewCategoryOwnParent_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_Reparent_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_Delete_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_MissingAttribute_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_MissingValue_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_MissingCode_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_CodeAsNumber_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_AttributesNotArray_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_CodeAndSystemId_ReturnsConflict"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "Set_AttributeNameAndId_ReturnsConflict"
+    },
+    {
+      "codeunit": 96956,
+      "class": "Item Category Tests",
+      "method": "DataRecords_WriteRestricted_ItemCategory"
+    },
+    {
+      "codeunit": 96955,
+      "class": "Item Charge Perm",
+      "method": "WithoutInvWrite_AssignReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96955,
+      "class": "Item Charge Perm",
+      "method": "WithoutInvRead_GetReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "AssignEqually_SplitsAcrossItemLines"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "AssignByAmount_FollowsLineAmounts"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "AssignTargets_WritesOnlyNamedLines"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "AssignAgain_ReportsReplacedRows"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "SalesAssignEqually_SplitsAcrossItemLines"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "Get_ReturnsRowsAndUnassignedQuantity"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "Get_BeforeAssign_ReturnsWholeQuantityUnassigned"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "Get_NonChargeLine_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "Get_UnknownDocument_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "NonChargeLine_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "OtherVendorTarget_ReturnsInvalidLine"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "ChargeLineAsTarget_ReturnsInvalidLine"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "ByWeightWithoutWeight_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "MissingDocumentType_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "LineNoAsText_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "UnknownDocument_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "MethodAndTargets_ReturnConflict"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "DocumentNoAndSystemId_ReturnConflict"
+    },
+    {
+      "codeunit": 96954,
+      "class": "Item Charge Tests",
+      "method": "DataRecords_WriteRestricted_AssignmentTables"
+    },
+    {
+      "codeunit": 96951,
+      "class": "Item Ref. Resolve Perm",
+      "method": "WithoutInvRead_ReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "Barcode_ReturnsItemVariantAndUnit"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "CustomerReference_UsesTypeNo"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "ItemNo_IsUsedWhenNoReferenceExists"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "Gtin_IsUsedWhenNoReferenceExists"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "ReferencesArray_ReturnsOneResultEach"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "MissingReferenceNo_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "NumberReferenceNo_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "BothForms_ReturnConflictingIdentifiers"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "UnknownType_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "NothingMatches_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "TwoItems_ReturnAmbiguousRecord"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "BarcodeWithTypeNo_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "EndedReference_IsIgnored"
+    },
+    {
+      "codeunit": 96950,
+      "class": "Item Ref. Resolve Tests",
+      "method": "BlockedItem_ReturnsBlockedTrue"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_ReservedSalesLine_ReturnsChainAndWritesNothing"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_PurchaseLineSupplyingSalesLine_ReturnsChain"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_ItemLedgerEntry_ReturnsChain"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_ReservedTransferLine_ReturnsOutboundChain"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_ReservedAssemblyLine_ReturnsChain"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_UnreservedLine_ReturnsEmptyChain"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_MissingLine_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_MissingSourceKind_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_MissingLineNo_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_UnsupportedSourceKind_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_EntryNoForSales_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_BadEntryNo_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_SystemIdAndDocument_ReturnsConflictingIdentifiers"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96962,
+      "class": "Order Tracking Get Tests",
+      "method": "OrderTracking_Help_CoversRefusalsInBothLanguages"
+    },
+    {
+      "codeunit": 96976,
+      "class": "Reclass Check Perm Tests ori",
+      "method": "Scenario_AC03_ReadOnlyCaller_ChecksWithoutPostOrWrite"
+    },
+    {
+      "codeunit": 96977,
+      "class": "Reclass Preview Tests ori",
+      "method": "Scenario_AC03_ValidBatch1033_CapturesRollbackEntries"
+    },
+    {
+      "codeunit": 96977,
+      "class": "Reclass Preview Tests ori",
+      "method": "Scenario_AC03_ValidBatch1039_CapturesRollbackEntries"
+    },
+    {
+      "codeunit": 96977,
+      "class": "Reclass Preview Tests ori",
+      "method": "Scenario_AC03_InvalidSecondLine_PreservesJournalAndLedgers"
+    },
+    {
+      "codeunit": 96977,
+      "class": "Reclass Preview Tests ori",
+      "method": "Scenario_AC03_WrongTemplate_RefusesBeforePreview"
+    },
+    {
+      "codeunit": 96977,
+      "class": "Reclass Preview Tests ori",
+      "method": "Scenario_AC03_EmptyTransferBatch_RefusesWithoutSuccess"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Create_TransferLine_ReservesAndCancelRemovesPair"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Create_NoSupply_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Create_MissingSourceType_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Create_UnknownSourceLine_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Create_UnsupportedSourceTypeOrZeroQuantity_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Cancel_UnknownEntry_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_ItemReserveNever_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_LineReserveNever_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_DropShipment_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_SpecialOrder_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_NoShipmentDate_RefusesWithoutWrites"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_CreateSales_Eligible_ReservesAndCancelsPair"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_Cancel_MixedStatus_PreservesPair"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_Cancel_MissingSupply_PreservesPair"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_Cancel_UnequalBaseQuantity_PreservesPair"
+    },
+    {
+      "codeunit": 96946,
+      "class": "Reservation Create Tests",
+      "method": "Scenario_AC03_Cancel_DifferentItem_PreservesPair"
+    },
+    {
+      "codeunit": 96959,
+      "class": "Reserv. AutoReserve Perm",
+      "method": "WithoutInvWrite_AutoReserveReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96959,
+      "class": "Reserv. AutoReserve Perm",
+      "method": "WithoutInvRead_OrderTrackingReturnsPermissionDenied"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_SalesLineWithStock_ReservesFully"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_BySystemIdWithQuantity_ReservesPart"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_AlreadyFullyReserved_ReturnsZero"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_ReserveNever_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_SalesQuoteLine_ReturnsPreconditionFailed"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_PartialSupply_ReturnsLinesSkippedAndRollsBack"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_MissingLine_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_UnknownSystemId_ReturnsRecordNotFound"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_UnknownKey_ReturnsUnknownParameter"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_MissingKeys_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_MissingLineNo_ReturnsMissingParameter"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_BadLineNo_ReturnsInvalidParameterFormat"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_ZeroQuantity_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_QuoteDocumentType_ReturnsInvalidParameter"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_SystemIdAndDocument_ReturnsConflictingIdentifiers"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "AutoReserve_Help_CoversRefusalsInBothLanguages"
+    },
+    {
+      "codeunit": 96958,
+      "class": "Reserv. AutoReserve Tests",
+      "method": "ReservationEntry_RemainsWriteRestricted"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewSummary_IsIcelandic"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_OrderWithStock_ReturnsLedgerEntries"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_NothingToAssemble_ReturnsNothingToPreview"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_NoLines_ReturnsErrorAndPreservesOrder"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_NoComponentStock_ReturnsPostingError"
+    },
+    {
+      "codeunit": 96905,
+      "class": "Asm. Doc Prev. Post Tests",
+      "method": "PreviewPost_Adjustments_LeaveOrderUnchanged"
+    },
+    {
+      "codeunit": 96906,
+      "class": "Asm. Order RefreshLines Tests",
+      "method": "RefreshLines_ExistingOrder_ReturnsSuccess"
+    },
+    {
+      "codeunit": 96906,
+      "class": "Asm. Order RefreshLines Tests",
+      "method": "RefreshLines_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96907,
+      "class": "Asm. Order Statistics Tests",
+      "method": "Statistics_OpenOrder_ReturnsCosts"
+    },
+    {
+      "codeunit": 96907,
+      "class": "Asm. Order Statistics Tests",
+      "method": "Statistics_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96908,
+      "class": "Assembly Order Create Tests",
+      "method": "Create_AllRequiredFields_ReturnsSuccess"
+    },
+    {
+      "codeunit": 96908,
+      "class": "Assembly Order Create Tests",
+      "method": "Create_MissingItemNo_ReturnsError"
+    },
+    {
+      "codeunit": 96908,
+      "class": "Assembly Order Create Tests",
+      "method": "AssemblyCreate_BadPostingDate_IsAnError"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "Post_FailureKeepsRequestedQuantity_ENU"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "Post_FailureKeepsRequestedQuantity_ISL"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "UndoAssembly_NativeFailureRollsBackEntriesAndHeader"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "UndoAssembly_PostsReversingEntries"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "Post_OrderWithStock_ReturnsSuccess"
+    },
+    {
+      "codeunit": 96909,
+      "class": "Assembly Order Post Tests",
+      "method": "Post_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96910,
+      "class": "Assembly Order Release Tests",
+      "method": "Release_OpenOrder_StatusReleased"
+    },
+    {
+      "codeunit": 96910,
+      "class": "Assembly Order Release Tests",
+      "method": "Release_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96911,
+      "class": "Assembly Order Reopen Tests",
+      "method": "Reopen_ReleasedOrder_StatusOpen"
+    },
+    {
+      "codeunit": 96911,
+      "class": "Assembly Order Reopen Tests",
+      "method": "Reopen_MissingIdentifier_ReturnsError"
+    },
+    {
+      "codeunit": 96912,
+      "class": "Transfer Doc Prev. Post Tests",
+      "method": "PreviewSummary_IsIcelandic"
+    },
+    {
+      "codeunit": 96912,
+      "class": "Transfer Doc Prev. Post Tests",
+      "method": "PreviewPost_ShipReleased_ReturnsPreviewAndRollsBack"
+    },
+    {
+      "codeunit": 96912,
+      "class": "Transfer Doc Prev. Post Tests",
+      "method": "PreviewPost_NothingToShip_ReturnsNothingToPreview"
+    },
+    {
+      "codeunit": 96912,
+      "class": "Transfer Doc Prev. Post Tests",
+      "method": "PreviewPost_DirectTransfer_ReceiptAndShipment_PredictsShipment"
+    },
+    {
+      "codeunit": 96912,
+      "class": "Transfer Doc Prev. Post Tests",
+      "method": "PreviewPost_DirectTransfer_DirectTransferPosting_PredictsDirectTransfer"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_AllRequiredFields_ReturnsSuccess"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_MissingFromCode_ReturnsError"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_WithItemLine_ReturnsLineAndQuantityTotal"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_BadLines_ReturnsEveryProblemAndNoHeader"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_WithoutLines_OmitsLinesFromResponse"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "TransferOrderCreateHelp_DocumentsLinesContract"
+    },
+    {
+      "codeunit": 96913,
+      "class": "Transfer Order Create Tests",
+      "method": "Create_InvalidBoolean_ReturnsErrorWithoutHeader"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoShipment_SelectedDocumentOnly"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoShipment_SecondLineFailureRollsBackAll"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoShipment_ReceivedIsCodedAndPreserved_EN"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoShipment_ReceivedIsCodedAndPreserved_IS"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoReceipt_PostedReceipt_RefusesInEnglish"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "UndoReceipt_PostedReceipt_RefusesInIcelandic"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_Ship_ReturnsPostedShipmentNo"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_InvalidPostingType_ReturnsError"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_ShipReceive_RefusesCombinedPosting"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_DirectTransfer_ReceiptAndShipment_ReturnsBothDocuments"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted"
+    },
+    {
+      "codeunit": 96914,
+      "class": "Transfer Order Post Tests",
+      "method": "Post_Receive_Partial_KeepsOrderAndReturnsPostedReceiptNo"
+    },
+    {
+      "codeunit": 96915,
+      "class": "Transfer Order Release Tests",
+      "method": "Release_OpenOrder_StatusChangesToReleased"
+    },
+    {
+      "codeunit": 96915,
+      "class": "Transfer Order Release Tests",
+      "method": "Release_AlreadyReleased_NoOp"
+    },
+    {
+      "codeunit": 96916,
+      "class": "Transfer Order Reopen Tests",
+      "method": "Reopen_ReleasedOrder_StatusChangesToOpen"
+    },
+    {
+      "codeunit": 96916,
+      "class": "Transfer Order Reopen Tests",
+      "method": "Reopen_AlreadyOpen_NoOp"
+    },
+    {
+      "codeunit": 96917,
+      "class": "Transfer Order Stats. Tests",
+      "method": "Statistics_OrderWithTwoLines_ReturnsTotals"
+    },
+    {
+      "codeunit": 96917,
+      "class": "Transfer Order Stats. Tests",
+      "method": "Statistics_NumericDocumentNo_ReturnsTypedError"
+    },
+    {
+      "codeunit": 96917,
+      "class": "Transfer Order Stats. Tests",
+      "method": "Statistics_UnknownDocument_ReturnsNotFound"
+    }
+  ],
+  "testRange": "96900..96999",
+  "newRegressions": [
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_IS"
+    }
+  ]
+}

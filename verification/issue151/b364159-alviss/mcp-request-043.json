@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Revaluation.PreviewPost",
+    "data": {
+      "templateName": true
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Parameter templateName must be nonempty text of at most 10 characters.",
+    "parameter": "templateName",
+    "received": "true",
+    "expected": "Nonempty JSON text of at most 10 characters.",
+    "nextStep": "Correct the named parameter or selected journal line using the expected value, then retry.",
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Revaluation.PreviewPost\". Always read the help before calling a message type."
+  }
+}

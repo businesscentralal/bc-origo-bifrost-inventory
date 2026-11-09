@@ -1,0 +1,14 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "compileDependency": "28.0.10.632",
+  "runtimeDependency": "28.0.12.679",
+  "runtimeDependencySourceSha": "76efa12f04388c37463aac380eca8a64fbc045dc",
+  "firstAcceptedFullSuiteStart": "2026-11-09T13:20:06",
+  "proof": [
+    "foundation-native-provenance.json",
+    "runtime-foundation679-package.json",
+    "versions-final.json",
+    "final-language-identity.json"
+  ],
+  "explanation": "Initial preparation read632; accepted full suite raw app.info already records679. Final readback and downloaded679package manifest match official release source. Native561/MCP146/UI2 accepted current-candidate results are attributed to runtime679, not632. Initial12partial run was rejected. Initiator of dependency upgrade is not inferred."
+}

@@ -1,0 +1,14 @@
+{
+  "source": "Raw JUnit app.info at each suite",
+  "records": [
+    {
+      "suite": "96900 Item Attribute Tests ori",
+      "timestamp": "2026-11-09T13:20:06",
+      "app": {
+        "Name": "Bifrost Foundation",
+        "Publisher": "Origo",
+        "Version": "28.0.12.679"
+      }
+    }
+  ]
+}

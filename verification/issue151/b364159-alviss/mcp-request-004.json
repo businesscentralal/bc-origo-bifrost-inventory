@@ -1,0 +1,20 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AdjustCost.Run",
+    "data": {
+      "postToGL": "maybe"
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "ConfirmationRequired",
+    "error": "This call cannot be undone and was not run. It would affect 1 (record ). Nothing was changed.",
+    "parameter": "expectedCount",
+    "expected": "1",
+    "nextStep": "Send the same request again with expectedCount set to 1.",
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.AdjustCost.Run\". Always read the help before calling a message type."
+  }
+}

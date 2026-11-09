@@ -1,0 +1,32 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "appVersion": "28.3.2.452",
+  "tool": "Playwright MCP browser_run_code_unsafe",
+  "startedAt": "2026-11-09T13:32:31.483Z",
+  "scenarios": [
+    {
+      "lcid": 1033,
+      "page": 10076835,
+      "scenario": "Native Inventory Setup opens with translated title/domain controls; no permission refusal",
+      "passed": true,
+      "evidence": "ui-setup-1033-mcp.json",
+      "screenshot": "ui-setup-1033.png"
+    },
+    {
+      "lcid": 1039,
+      "page": 10076835,
+      "scenario": "Native Inventory Setup opens with translated title/domain controls; no permission refusal",
+      "passed": true,
+      "evidence": "ui-setup-1039-mcp.json",
+      "screenshot": "ui-setup-1039.png"
+    }
+  ],
+  "executed": 2,
+  "passed": 2,
+  "failed": 1,
+  "skipped": 0,
+  "languageRestored": false,
+  "error": "Playwright MCP ui-restore-1033 failed: {\"content\":[{\"type\":\"text\",\"text\":\"### Error\\nError: Expected native UI control not available\"}],\"isError\":true}",
+  "finishedAt": "2026-11-09T13:33:28.283Z"
+}

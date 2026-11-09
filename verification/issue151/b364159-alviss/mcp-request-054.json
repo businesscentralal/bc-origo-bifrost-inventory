@@ -1,0 +1,63 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.TransferOrder.Create",
+    "data": {
+      "transferFromCode": "W4NOFROM",
+      "transferToCode": "W4NOTO",
+      "inTransitCode": "W4NOVIA",
+      "postingDate": "bad-date",
+      "receiptDate": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.",
+    "errors": [
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Færibreyta \"postingDate\" hefur gildið \"bad-date\", sem er ekki í gildu sniði (dagsetning). Væntanlegt er YYYY-MM-DD.",
+        "parameter": "postingDate",
+        "received": "bad-date",
+        "expected": "YYYY-MM-DD",
+        "nextStep": "Sendu dagsetninguna á forminu YYYY-MM-DD."
+      },
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Færibreyta \"receiptDate\" hefur gildið \"true\", sem er ekki í gildu sniði (dagsetning). Væntanlegt er YYYY-MM-DD.",
+        "parameter": "receiptDate",
+        "received": "true",
+        "expected": "YYYY-MM-DD",
+        "nextStep": "Sendu dagsetninguna á forminu YYYY-MM-DD."
+      },
+      {
+        "code": "RecordNotFound",
+        "error": "transferFromCode W4NOFROM fannst ekki.",
+        "parameter": "transferFromCode",
+        "received": "W4NOFROM",
+        "expected": "Staðsetningarkóði sem er til og á við um þennan flutning.",
+        "nextStep": "Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar."
+      },
+      {
+        "code": "RecordNotFound",
+        "error": "transferToCode W4NOTO fannst ekki.",
+        "parameter": "transferToCode",
+        "received": "W4NOTO",
+        "expected": "Staðsetningarkóði sem er til og á við um þennan flutning.",
+        "nextStep": "Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar."
+      },
+      {
+        "code": "RecordNotFound",
+        "error": "inTransitCode W4NOVIA fannst ekki.",
+        "parameter": "inTransitCode",
+        "received": "W4NOVIA",
+        "expected": "Staðsetningarkóði sem er til og á við um þennan flutning.",
+        "nextStep": "Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar."
+      }
+    ],
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.TransferOrder.Create\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

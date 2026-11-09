@@ -1,0 +1,517 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "startedAt": "2026-11-09T13:35:15.417Z",
+  "executed": 10,
+  "passed": 10,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "requests": [
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-EN))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Create",
+        "data": {
+          "sourceType": 37,
+          "sourceSubtype": 1,
+          "sourceNo": "101021",
+          "sourceLineNo": 10000,
+          "quantity": 1
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Create",
+        "status": "Success",
+        "entryNo": 139,
+        "entryNos": [
+          139
+        ],
+        "itemNo": "W8PRV-EN",
+        "locationCode": "",
+        "quantity": 1,
+        "requestedQuantity": 1,
+        "fullAutoReservation": true,
+        "sourceType": 37,
+        "sourceSubtype": 1,
+        "sourceNo": "101021",
+        "sourceLineNo": 10000
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "W8PRV-EN"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": [
+          {
+            "entryNo": 139,
+            "itemNo": "W8PRV-EN",
+            "locationCode": "",
+            "quantity": -1,
+            "reservationStatus": "Reservation",
+            "sourceId": "101021"
+          },
+          {
+            "entryNo": 139,
+            "itemNo": "W8PRV-EN",
+            "locationCode": "",
+            "quantity": 1,
+            "reservationStatus": "Reservation",
+            "sourceId": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "W8PRV-EN"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": [
+          {
+            "entryNo": 139,
+            "itemNo": "W8PRV-EN",
+            "locationCode": "",
+            "quantity": -1,
+            "reservationStatus": "Reservation",
+            "sourceId": "101021"
+          },
+          {
+            "entryNo": 139,
+            "itemNo": "W8PRV-EN",
+            "locationCode": "",
+            "quantity": 1,
+            "reservationStatus": "Reservation",
+            "sourceId": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-EN))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 2,
+        "records": [
+          {
+            "id": "AA806267-42DC-F111-B7A5-FF0EFC50938A",
+            "primaryKey": {
+              "EntryNo_": "139",
+              "Positive": "false"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-EN",
+              "ReservationStatus": "Reservation",
+              "QuantityBase": "-1"
+            }
+          },
+          {
+            "id": "AB806267-42DC-F111-B7A5-FF0EFC50938A",
+            "primaryKey": {
+              "EntryNo_": "139",
+              "Positive": "true"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-EN",
+              "ReservationStatus": "Reservation",
+              "QuantityBase": "1"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Cancel",
+        "data": {
+          "entryNo": 139
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Cancel",
+        "status": "Success",
+        "entryNo": 139,
+        "itemNo": "W8PRV-EN",
+        "quantity": 1
+      }
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-EN))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      }
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-IS))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Create",
+        "data": {
+          "sourceType": 37,
+          "sourceSubtype": 1,
+          "sourceNo": "101022",
+          "sourceLineNo": 10000,
+          "quantity": 1
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Create",
+        "status": "Success",
+        "entryNo": 140,
+        "entryNos": [
+          140
+        ],
+        "itemNo": "W8PRV-IS",
+        "locationCode": "",
+        "quantity": 1,
+        "requestedQuantity": 1,
+        "fullAutoReservation": true,
+        "sourceType": 37,
+        "sourceSubtype": 1,
+        "sourceNo": "101022",
+        "sourceLineNo": 10000
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "W8PRV-IS"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": [
+          {
+            "entryNo": 140,
+            "itemNo": "W8PRV-IS",
+            "locationCode": "",
+            "quantity": -1,
+            "reservationStatus": "Reservation",
+            "sourceId": "101022"
+          },
+          {
+            "entryNo": 140,
+            "itemNo": "W8PRV-IS",
+            "locationCode": "",
+            "quantity": 1,
+            "reservationStatus": "Reservation",
+            "sourceId": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Get",
+        "data": {
+          "itemNo": "W8PRV-IS"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Get",
+        "status": "Success",
+        "entries": [
+          {
+            "entryNo": 140,
+            "itemNo": "W8PRV-IS",
+            "locationCode": "",
+            "quantity": -1,
+            "reservationStatus": "Reservation",
+            "sourceId": "101022"
+          },
+          {
+            "entryNo": 140,
+            "itemNo": "W8PRV-IS",
+            "locationCode": "",
+            "quantity": 1,
+            "reservationStatus": "Reservation",
+            "sourceId": ""
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-IS))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 2,
+        "records": [
+          {
+            "id": "B6806267-42DC-F111-B7A5-FF0EFC50938A",
+            "primaryKey": {
+              "EntryNo_": "140",
+              "Positive": "false"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-IS",
+              "ReservationStatus": "Reservation",
+              "QuantityBase": "-1"
+            }
+          },
+          {
+            "id": "B7806267-42DC-F111-B7A5-FF0EFC50938A",
+            "primaryKey": {
+              "EntryNo_": "140",
+              "Positive": "true"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-IS",
+              "ReservationStatus": "Reservation",
+              "QuantityBase": "1"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      }
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.Reservation.Cancel",
+        "data": {
+          "entryNo": 140
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.Reservation.Cancel",
+        "status": "Success",
+        "entryNo": 140,
+        "itemNo": "W8PRV-IS",
+        "quantity": 1
+      }
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Reservation Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-IS))",
+        "fields": [
+          "Entry No.",
+          "Item No.",
+          "Reservation Status",
+          "Quantity (Base)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Reservation Entry",
+        "skip": 0,
+        "take": 10,
+        "count": 0,
+        "records": [],
+        "noOfRecords": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "reserve-own-1033",
+      "passed": true
+    },
+    {
+      "key": "reservation-invariant-EN-1033",
+      "passed": true
+    },
+    {
+      "key": "reservation-invariant-EN-1039",
+      "passed": true
+    },
+    {
+      "key": "cancel-own-1033",
+      "passed": true
+    },
+    {
+      "key": "reservation-cleanup-1033",
+      "passed": true
+    },
+    {
+      "key": "reserve-own-1039",
+      "passed": true
+    },
+    {
+      "key": "reservation-invariant-IS-1033",
+      "passed": true
+    },
+    {
+      "key": "reservation-invariant-IS-1039",
+      "passed": true
+    },
+    {
+      "key": "cancel-own-1039",
+      "passed": true
+    },
+    {
+      "key": "reservation-cleanup-1039",
+      "passed": true
+    }
+  ],
+  "created": [
+    {
+      "item": "W8PRV-EN",
+      "entryNo": 139,
+      "source": {
+        "DocumentType": "Order",
+        "DocumentNo_": "101021",
+        "LineNo_": "10000"
+      },
+      "lcid": 1033
+    },
+    {
+      "item": "W8PRV-IS",
+      "entryNo": 140,
+      "source": {
+        "DocumentType": "Order",
+        "DocumentNo_": "101022",
+        "LineNo_": "10000"
+      },
+      "lcid": 1039
+    }
+  ],
+  "cleanup": [
+    {
+      "item": "W8PRV-EN",
+      "entryNo": 139,
+      "remaining": 0,
+      "verified": true
+    },
+    {
+      "item": "W8PRV-IS",
+      "entryNo": 140,
+      "remaining": 0,
+      "verified": true
+    }
+  ],
+  "pendingCreate": null,
+  "pendingCancel": null,
+  "verified": true,
+  "finishedAt": "2026-11-09T13:35:24.594Z",
+  "compileDependencyVersion": "28.0.10.632",
+  "foundationVersion": "28.0.12.679",
+  "dependencyProvenance": "runtime-provenance-correction.json"
+}

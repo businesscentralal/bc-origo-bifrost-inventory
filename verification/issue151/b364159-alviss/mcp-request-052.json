@@ -1,0 +1,54 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.AssemblyOrder.Create",
+    "data": {
+      "itemNo": "W4I151-MISSING",
+      "locationCode": "W4NOMISSING",
+      "quantity": -1,
+      "postingDate": "bad-date"
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.",
+    "errors": [
+      {
+        "code": "InvalidParameter",
+        "error": "locationCode verður að vera texti með að hámarki 10 stöfum.",
+        "parameter": "locationCode",
+        "received": "W4NOMISSING",
+        "expected": "JSON-strengur með að hámarki 10 stöfum.",
+        "nextStep": "Sendu locationCode sem texta á skjalfestu sniði."
+      },
+      {
+        "code": "InvalidParameter",
+        "error": "Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.",
+        "parameter": "quantity",
+        "received": "-1",
+        "expected": "Magn stærra en 0 í data.quantity.",
+        "nextStep": "Sendu magnið sem á að setja saman í data.quantity."
+      },
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Færibreyta \"postingDate\" hefur gildið \"bad-date\", sem er ekki í gildu sniði (dagsetning). Væntanlegt er YYYY-MM-DD.",
+        "parameter": "postingDate",
+        "received": "bad-date",
+        "expected": "YYYY-MM-DD",
+        "nextStep": "Sendu dagsetninguna á forminu YYYY-MM-DD."
+      },
+      {
+        "code": "RecordNotFound",
+        "error": "itemNo W4I151-MISSING fannst ekki.",
+        "parameter": "itemNo",
+        "received": "W4I151-MISSING",
+        "expected": "Vörunúmer sem er til.",
+        "nextStep": "Veldu vöru og staðsetningu sem eru til og leiðréttu öll tilgreind gildi."
+      }
+    ],
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.AssemblyOrder.Create\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

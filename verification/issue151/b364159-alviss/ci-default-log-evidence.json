@@ -1,0 +1,39 @@
+{
+  "kind": "default",
+  "job": 129183244651,
+  "url": "https://github.com/businesscentralal/bc-origo-bifrost-inventory/actions/runs/42623776319/job/129183244651",
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "diagnostics": [],
+  "extract": [
+    "2026-11-09T13:17:08.8510389Z HEAD is now at 0ad627c Merge b3641597520bf2496dbd87b84baa7acc527a424f into 25aa5a13ad415994ca6098747d5bbd9d04a453e9",
+    "2026-11-09T13:17:10.3848236Z Bifrost: republishing Test MainApp 28.0.2.0 on shared container shared-123, SHA256=88A3D312960CACAB64EA050D5FD7C45C5054A4BD59457A898C752F69DD6F59A5.",
+    "2026-11-09T13:17:10.4023650Z Bifrost: Test MainApp republish completed; the test app may now be deployed.",
+    "2026-11-09T13:18:56.0789032Z             $currentObsoleteTagVersion = if ($appSourceCopSettings.Contains('obsoleteTagVersion')) { [string]$appSourceCopSettings['obsoleteTagVersion'] } else { '' }",
+    "2026-11-09T13:18:56.0792193Z                 Write-AlpacaOutput \"Setting AppSourceCop obsoleteTagVersion.\"",
+    "2026-11-09T13:18:56.0793473Z                 $appSourceCopSettings.obsoleteTagVersion = $obsoleteTagVersion",
+    "2026-11-09T13:20:01.9706710Z {\"project\": \"app\", \"baseline\": {\"version\": \"28.3.1.81\", \"path\": \"D:\\\\a\\\\bc-origo-bifrost-inventory\\\\bc-origo-bifrost-inventory\\\\.buildartifacts\\\\AppSourceBaseline\\\\app\\\\28.3.1.81\", \"sha256\": \"5314470b377722f0bf77e0e10ccd56e16a86d66406841daf7b5b3283880c6759\", \"dependencyInputs\": 179, \"breakingChangeValidationRetained\": true}, \"removed\": [{\"file\": \"Origo_Bifrost Inventory_28.3.1.81.app\", \"identity\": {\"id\": \"02701c94-c962-4825-92c7-ef9f70311a2b\", \"publisher\": \"Origo\", \"name\": \"Bifrost Inventory\", \"version\": \"28.3.1.81\"}, \"sha256\": \"5314470b377722f0bf77e0e10ccd56e16a86d66406841daf7b5b3283880c6759\"}]}",
+    "2026-11-09T13:20:53.9177553Z AppSource gate: before passed",
+    "2026-11-09T13:22:12.2728048Z AppSource gate: post passed",
+    "2026-11-09T13:24:42.1364439Z AppSourceBaseline\\app\\28.3.1.81\\Baseline.app (508705 bytes)",
+    "2026-11-09T13:24:42.2802399Z AppSourceBaseline\\app\\28.3.1.81\\Origo_Bifrost Foundation_28.0.3.530.app (2405320 bytes)",
+    "2026-11-09T13:24:49.8208771Z AppSource gate: finalize passed",
+    "2026-11-09T13:24:56.2226680Z AppSource gate: pipeline passed"
+  ],
+  "sourceLines": [
+    "2026-11-09T13:16:59.4534511Z   checkoutRef: 0ad627cef88ed1d55220b0fa6c340d9c879587b5",
+    "2026-11-09T13:17:08.8510389Z HEAD is now at 0ad627c Merge b3641597520bf2496dbd87b84baa7acc527a424f into 25aa5a13ad415994ca6098747d5bbd9d04a453e9",
+    "2026-11-09T13:18:17.2773087Z Using head SHA b3641597520bf2496dbd87b84baa7acc527a424f from pull request",
+    "2026-11-09T13:18:18.6630335Z  * branch            b3641597520bf2496dbd87b84baa7acc527a424f -> FETCH_HEAD",
+    "2026-11-09T13:18:19.1286899Z git diff --name-only 25aa5a13ad415994ca6098747d5bbd9d04a453e9 b3641597520bf2496dbd87b84baa7acc527a424f",
+    "2026-11-09T13:18:22.9206287Z Bifrost: build mode 'Default' - removed internalsVisibleTo and the AS0081 suppression from app/app.json.",
+    "2026-11-09T13:18:56.0422155Z # Bifrost: never ship the test app's internalsVisibleTo grant.",
+    "2026-11-09T13:18:56.0431006Z         if ($appJson.PSObject.Properties.Name -contains 'internalsVisibleTo') {",
+    "2026-11-09T13:18:56.0432952Z             $appJson.PSObject.Properties.Remove('internalsVisibleTo')",
+    "2026-11-09T13:18:56.0439230Z         Write-Host \"Bifrost: build mode '$($env:BuildMode)' - removed internalsVisibleTo and the AS0081 suppression from app/app.json.\""
+  ],
+  "diagnosticCounts": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "logReadAt": "2026-11-09T13:45:56.966Z"
+}

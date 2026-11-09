@@ -1,0 +1,29 @@
+{
+  "containerId": "f02689468e6e",
+  "version": "28.0.12.679",
+  "readAt": "2026-11-09T13:44:43.743Z",
+  "bytes": 2814767,
+  "sha256": "22c102b851a53693b74e3e6415cf86ef4acc8471428f052604f42b28e86a13be",
+  "readOnly": true,
+  "appManifest": [
+    {
+      "Id": "7505e808-6e52-4b96-a328-82573391297a",
+      "Name": "Bifrost Foundation",
+      "Publisher": "Origo",
+      "Version": "28.0.12.679",
+      "Platform": "28.0.0.0",
+      "Application": "28.0.0.0",
+      "Runtime": "17.0"
+    }
+  ],
+  "source": [
+    {
+      "RepositoryUrl": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core",
+      "Commit": "76efa12f04388c37463aac380eca8a64fbc045dc"
+    }
+  ],
+  "officialRelease": {
+    "url": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/releases/tag/28.0.12",
+    "sourceSha": "76efa12f04388c37463aac380eca8a64fbc045dc"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Tracking.Delete",
+    "data": {
+      "source": true
+    },
+    "lcid": 1039
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "InvalidParameterFormat",
+    "error": "Tilgreindu source með studdri tegund og systemId.",
+    "parameter": "source",
+    "received": "true",
+    "expected": "object",
+    "nextStep": "Leiðréttu tilgreinda rakningarfæribreytu og reyndu aftur með fyrirliggjandi heimiluðum uppruna.",
+    "hint": "Til að sjá notkunarupplýsingar skaltu kalla á skilaboðategundina \"Help.Implementation.Get\" með subject \"Inventory.Tracking.Delete\". Lestu alltaf hjálpina áður en þú kallar á skilaboðategund."
+  }
+}

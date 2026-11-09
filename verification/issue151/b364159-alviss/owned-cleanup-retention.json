@@ -1,0 +1,32 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "displayName": "althjofr-w13-inventory151-20261109-w1",
+  "currentOwner": "worker-4",
+  "originalProvisioningOwner": "worker-13",
+  "startedAt": "2026-11-09T13:47:35.253Z",
+  "deleted": false,
+  "retentionRule": "1792155806.391819: retain until Tester postdeploy UAT passes AND issue closes; do not delete at merge.",
+  "fixtureCleanup": {
+    "numericItemDeletedAndAbsent": true,
+    "reservationPairsCancelledAndAbsent": true,
+    "postedStockAndOwnUATFixtures": "Retained only in isolated task container; final deletion pending postdeploy UAT and issue closure"
+  },
+  "localSelectionRestored": true,
+  "before": {
+    "state": "Running",
+    "statusMessage": "Running",
+    "imageBuilding": false,
+    "imageBuildError": false
+  },
+  "stopRequestedAt": "2026-11-09T13:47:37.793Z",
+  "stopStatusCode": 204,
+  "after": {
+    "state": "Stopped",
+    "imageBuilding": false,
+    "imageBuildError": false
+  },
+  "checkedAt": "2026-11-09T13:47:47.146Z",
+  "verifiedStopped": true,
+  "finishedAt": "2026-11-09T13:47:47.254Z"
+}

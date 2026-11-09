@@ -1,0 +1,44 @@
+{
+  "tool": "invoke_message_type",
+  "args": {
+    "type": "Inventory.Cost.Update",
+    "data": {
+      "itemNo": "W4I151-MISSING",
+      "unitCost": "bad-cost",
+      "lastDirectCost": {}
+    },
+    "lcid": 1033
+  },
+  "isError": true,
+  "result": {
+    "status": "Error",
+    "code": "MultipleErrors",
+    "error": "Correct the reported request values before retrying.",
+    "errors": [
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Parameter \"unitCost\" has value \"bad-cost\", which is not a valid decimal. Expected number.",
+        "parameter": "unitCost",
+        "received": "bad-cost",
+        "expected": "number",
+        "nextStep": "Send the amount as a JSON number, e.g. 1234.56."
+      },
+      {
+        "code": "InvalidParameterFormat",
+        "error": "Parameter \"lastDirectCost\" has value \"{}\", which is not a valid decimal. Expected number.",
+        "parameter": "lastDirectCost",
+        "received": "{}",
+        "expected": "number",
+        "nextStep": "Send the amount as a JSON number, e.g. 1234.56."
+      },
+      {
+        "code": "RecordNotFound",
+        "parameter": "itemNo",
+        "received": "W4I151-MISSING",
+        "expected": "the number of a record that exists in table Item",
+        "nextStep": "Check the number with Data.Records.Get on table Item."
+      }
+    ],
+    "hint": "For usage details, call the \"Help.Implementation.Get\" message type with subject \"Inventory.Cost.Update\". Always read the help before calling a message type."
+  }
+}

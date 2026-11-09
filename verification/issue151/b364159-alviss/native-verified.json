@@ -1,0 +1,26 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "fullSuite": true,
+  "executed": 561,
+  "passed": 561,
+  "failed": 0,
+  "skipped": 0,
+  "classes": 54,
+  "exactCompiledMethodSetMatched": true,
+  "newBilingualRegressionsPassed": [
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_EN"
+    },
+    {
+      "codeunit": 96975,
+      "class": "Inv. Typed Refusal Tests ori",
+      "method": "Scenario_AC01_ItemNoReadRefusals_IS"
+    }
+  ],
+  "compileDependencyVersion": "28.0.10.632",
+  "foundationVersion": "28.0.12.679",
+  "dependencyProvenance": "runtime-provenance-correction.json"
+}

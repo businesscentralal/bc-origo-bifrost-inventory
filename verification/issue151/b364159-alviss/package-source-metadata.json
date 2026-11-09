@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Inventory",
+    "sha256": "39e713c3e854b4d562f505f334e64ab86d1010e40c94ed8864e8cc371bff7f99",
+    "sourceMetadata": [
+      {
+        "element": "ResourceExposurePolicy",
+        "attributes": {
+          "AllowDebugging": "true",
+          "AllowDownloadingSource": "true",
+          "IncludeSourceInSymbolFile": "true",
+          "ApplyToDevExtension": "false"
+        }
+      },
+      {
+        "element": "Source",
+        "attributes": {
+          "RepositoryUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory",
+          "Commit": "b3641597520bf2496dbd87b84baa7acc527a424f"
+        }
+      }
+    ]
+  },
+  {
+    "name": "InventoryTests",
+    "sha256": "7478a9d1044293edc0058987594928527df9479cb91e4affd97e6c020d66a887",
+    "sourceMetadata": [
+      {
+        "element": "ResourceExposurePolicy",
+        "attributes": {
+          "AllowDebugging": "true",
+          "AllowDownloadingSource": "true",
+          "IncludeSourceInSymbolFile": "true",
+          "ApplyToDevExtension": "false"
+        }
+      },
+      {
+        "element": "Source",
+        "attributes": {
+          "RepositoryUrl": "https://github.com/businesscentralal/bc-origo-bifrost-inventory",
+          "Commit": "b3641597520bf2496dbd87b84baa7acc527a424f"
+        }
+      }
+    ]
+  }
+]

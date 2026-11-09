@@ -1,0 +1,3111 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "containerId": "f02689468e6e",
+  "startedAt": "2026-11-09T13:29:57.643Z",
+  "executed": 14,
+  "passed": 14,
+  "failed": 0,
+  "skipped": 0,
+  "createsOwnData": true,
+  "dataSetup": "Explicit test-app UI actions created own W8PRV/W8COUNT, W8ASM/W8CMP/W8TRF fixtures in this retained task container. Read back before writes; isolate EN/IS; no customer/shared fixture.",
+  "scenarios": [
+    {
+      "key": "Inventory.AssemblyOrder.PreviewPost-1033",
+      "passed": true
+    },
+    {
+      "key": "Inventory.TransferOrder.PreviewPost-1033",
+      "passed": true
+    },
+    {
+      "key": "physical-count-1033",
+      "passed": true
+    },
+    {
+      "key": "physical-check-1033",
+      "passed": true
+    },
+    {
+      "key": "physical-preview-1033",
+      "passed": true
+    },
+    {
+      "key": "physical-post-1033",
+      "passed": true
+    },
+    {
+      "key": "physical-blank-retained-stock-1033",
+      "passed": true
+    },
+    {
+      "key": "Inventory.AssemblyOrder.PreviewPost-1039",
+      "passed": true
+    },
+    {
+      "key": "Inventory.TransferOrder.PreviewPost-1039",
+      "passed": true
+    },
+    {
+      "key": "physical-count-1039",
+      "passed": true
+    },
+    {
+      "key": "physical-check-1039",
+      "passed": true
+    },
+    {
+      "key": "physical-preview-1039",
+      "passed": true
+    },
+    {
+      "key": "physical-post-1039",
+      "passed": true
+    },
+    {
+      "key": "physical-blank-retained-stock-1039",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Assembly Header",
+        "filter": "WHERE(Item No.=CONST(W8ASM-EN))",
+        "fields": [
+          "No.",
+          "Item No.",
+          "Quantity"
+        ],
+        "take": 5
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Assembly Header",
+        "skip": 0,
+        "take": 5,
+        "count": 1,
+        "records": [
+          {
+            "id": "4A497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "No_": "A00041"
+            },
+            "fields": {
+              "ItemNo_": "W8ASM-EN",
+              "Quantity": "2"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8CMP-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "44497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1267"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": "A00041"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 4,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Assembly Order A00041 (Item W8ASM-EN) preview produced 4 entries. No G/L entries would be posted.",
+        "documentNo": "A00041",
+        "itemNo": "W8ASM-EN",
+        "locationCode": "",
+        "quantityToAssemble": 2,
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedAssemblyNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "CE83F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999956"
+                },
+                "fields": {
+                  "Description": "GU00000050",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8CMP-EN",
+                  "EntryType": "Assembly Consumption",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "D383F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999955"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8ASM-EN",
+                  "EntryType": "Assembly Output",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "2",
+                  "InvoicedQuantity": "2",
+                  "RemainingQuantity": "2",
+                  "Open": "true",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "CF83F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999941"
+                },
+                "fields": {
+                  "Description": "GU00000050",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8CMP-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Consumption",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "D683F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999940"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-EN",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8ASM-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "2",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Output",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "2",
+                  "ValuedQuantity": "2",
+                  "CostperUnit": "0",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8CMP-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "44497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1267"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Transfer Line",
+        "filter": "WHERE(Item No.=CONST(W8TRF-EN))",
+        "fields": [
+          "Document No.",
+          "Item No.",
+          "Quantity",
+          "Quantity Shipped",
+          "Quantity Received"
+        ],
+        "take": 5
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Transfer Line",
+        "skip": 0,
+        "take": 5,
+        "count": 2,
+        "records": [
+          {
+            "id": "D9497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentNo_": "1004",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "ItemNo_": "W8TRF-EN",
+              "Quantity": "4",
+              "QuantityShipped": "0",
+              "QuantityReceived": "0"
+            }
+          },
+          {
+            "id": "DA497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentNo_": "1004",
+              "LineNo_": "20000"
+            },
+            "fields": {
+              "ItemNo_": "W8TRF-EN",
+              "Quantity": "2",
+              "QuantityShipped": "0",
+              "QuantityReceived": "0"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8TRF-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "D2497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1268"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.PreviewPost",
+        "data": {
+          "documentNo": "1004",
+          "postingType": "Ship"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.TransferOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 8,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Transfer Order 1004 (GU00000053 -> GU00000089) Ship preview produced 8 entries. No G/L entries would be posted.",
+        "documentNo": "1004",
+        "transferFromCode": "GU00000053",
+        "transferToCode": "GU00000089",
+        "directTransfer": false,
+        "postingType": "Ship",
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedShipmentNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 4,
+            "entries": [
+              {
+                "id": "E783F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999954"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000053",
+                  "Quantity": "-4",
+                  "InvoicedQuantity": "-4",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "E383F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999953"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000125",
+                  "Quantity": "4",
+                  "InvoicedQuantity": "4",
+                  "RemainingQuantity": "4",
+                  "Open": "true",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "F083F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999952"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000053",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "ED83F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999951"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000125",
+                  "Quantity": "2",
+                  "InvoicedQuantity": "2",
+                  "RemainingQuantity": "2",
+                  "Open": "true",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 4,
+            "entries": [
+              {
+                "id": "E883F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999939"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000053",
+                  "InvoicedQuantity": "-4",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-4",
+                  "ValuedQuantity": "-4",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "E583F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999938"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000125",
+                  "InvoicedQuantity": "4",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "4",
+                  "ValuedQuantity": "4",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "F183F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999937"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000053",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "EE83F8A9-41DC-F111-B7A5-801F3D175C0D",
+                "primaryKey": {
+                  "EntryNo_": "-1999999936"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000125",
+                  "InvoicedQuantity": "2",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "2",
+                  "ValuedQuantity": "2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8TRF-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "D2497557-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1268"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(W8PRV-EN))",
+        "fields": [
+          "No.",
+          "Inventory"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "D676AE2A-3EDC-F111-B7A5-947C3AA95E53",
+            "primaryKey": {
+              "No_": "W8PRV-EN"
+            },
+            "fields": {
+              "Inventory": "10"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Journal Line",
+        "filter": "WHERE(Journal Template Name=CONST(W8COUNT),Journal Batch Name=CONST(EN))",
+        "fields": [
+          "Line No.",
+          "Item No.",
+          "Qty. (Phys. Inventory)",
+          "Qty. (Calculated)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Journal Line",
+        "skip": 0,
+        "take": 10,
+        "count": 2,
+        "records": [
+          {
+            "id": "83D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "10000",
+              "JournalBatchName": "EN"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-EN",
+              "Qty_Phys_Inventory": "10",
+              "Qty_Calculated": "10"
+            }
+          },
+          {
+            "id": "84D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "20000",
+              "JournalBatchName": "EN"
+            },
+            "fields": {
+              "ItemNo_": "",
+              "Qty_Phys_Inventory": "0",
+              "Qty_Calculated": "0"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.RecordCount",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "EN",
+          "counts": [
+            {
+              "lineNo": 10000,
+              "qtyCounted": 8
+            }
+          ]
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.RecordCount",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "result": [
+          {
+            "systemId": "{83D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "counted": true,
+            "before": 10,
+            "after": 8,
+            "quantityCalculated": 10,
+            "adjustmentQuantity": 2
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Check",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "EN"
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Check",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "validationResult": "NotReady",
+        "lineCount": 2,
+        "errorCount": 1,
+        "warningCount": 0,
+        "errors": [
+          {
+            "code": "BusinessCentralError",
+            "error": "Item No. must have a value in Item Journal Line: Journal Template Name=W8COUNT, Journal Batch Name=EN, Line No.=20000. It cannot be zero or empty.",
+            "parameter": "line 20000",
+            "nextStep": "Correct the selected journal lines before posting."
+          }
+        ],
+        "warnings": []
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(W8PRV-EN))",
+        "fields": [
+          "No.",
+          "Inventory"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "D676AE2A-3EDC-F111-B7A5-947C3AA95E53",
+            "primaryKey": {
+              "No_": "W8PRV-EN"
+            },
+            "fields": {
+              "Inventory": "10"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Journal Line",
+        "filter": "WHERE(Journal Template Name=CONST(W8COUNT),Journal Batch Name=CONST(EN))",
+        "fields": [
+          "Line No.",
+          "Item No.",
+          "Qty. (Phys. Inventory)",
+          "Qty. (Calculated)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Journal Line",
+        "skip": 0,
+        "take": 10,
+        "count": 2,
+        "records": [
+          {
+            "id": "83D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "10000",
+              "JournalBatchName": "EN"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-EN",
+              "Qty_Phys_Inventory": "8",
+              "Qty_Calculated": "10"
+            }
+          },
+          {
+            "id": "84D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "20000",
+              "JournalBatchName": "EN"
+            },
+            "fields": {
+              "ItemNo_": "",
+              "Qty_Phys_Inventory": "0",
+              "Qty_Calculated": "0"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Check",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "EN",
+          "lineSystemIds": [
+            "83D9135A-3EDC-F111-B7A5-801F3D175C0D"
+          ]
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Check",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "validationResult": "Ready",
+        "lineCount": 1,
+        "errorCount": 0,
+        "warningCount": 0,
+        "errors": [],
+        "warnings": []
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "33C51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1029"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.PreviewPost",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "EN",
+          "lineSystemIds": [
+            "83D9135A-3EDC-F111-B7A5-801F3D175C0D"
+          ]
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.PreviewPost",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "linesToPost": 1,
+        "rollback": true,
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "BE2225DE-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999950"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": " ",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8PRV-EN",
+                  "EntryType": "Negative Adjmt.",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": " ",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 281,
+            "tableName": "Phys. Inventory Ledger Entry",
+            "tableCaption": "Phys. Inventory Ledger Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "C12225DE-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-2000000000"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Amount": "24",
+                  "DimensionSetID": [],
+                  "ItemNo_": "W8PRV-EN",
+                  "EntryType": "Negative Adjmt.",
+                  "LocationCode": "",
+                  "Quantity": "2",
+                  "VariantCode": "",
+                  "UnitCost": "12"
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "BF2225DE-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999935"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": " ",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "GU00000008",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8PRV-EN",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": " ",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Negative Adjmt.",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ],
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "result": [
+          {
+            "systemId": "{83D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-EN",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ],
+        "entryCount": 3,
+        "glEntryCount": 0
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-EN))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "33C51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1029"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "EN",
+          "expectedCount": 1
+        },
+        "lcid": 1033
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Post",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "postedLineCount": 1,
+        "itemRegisterNo": 913,
+        "fromEntryNo": 1271,
+        "toEntryNo": 1271,
+        "fromPhysInventoryEntryNo": 1,
+        "toPhysInventoryEntryNo": 1,
+        "result": [
+          {
+            "systemId": "{83D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-EN",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Journal Line",
+        "filter": "WHERE(Journal Template Name=CONST(W8COUNT),Journal Batch Name=CONST(EN))",
+        "fields": [
+          "Line No.",
+          "Item No."
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Journal Line",
+        "skip": 0,
+        "take": 10,
+        "count": 1,
+        "records": [
+          {
+            "id": "84D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "20000",
+              "JournalBatchName": "EN"
+            },
+            "fields": {
+              "ItemNo_": ""
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(W8PRV-EN))",
+        "fields": [
+          "No.",
+          "Inventory"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "D676AE2A-3EDC-F111-B7A5-947C3AA95E53",
+            "primaryKey": {
+              "No_": "W8PRV-EN"
+            },
+            "fields": {
+              "Inventory": "8"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Assembly Header",
+        "filter": "WHERE(Item No.=CONST(W8ASM-IS))",
+        "fields": [
+          "No.",
+          "Item No.",
+          "Quantity"
+        ],
+        "take": 5
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Assembly Header",
+        "skip": 0,
+        "take": 5,
+        "count": 1,
+        "records": [
+          {
+            "id": "1D30D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentType": "Order",
+              "No_": "A00042"
+            },
+            "fields": {
+              "ItemNo_": "W8ASM-IS",
+              "Quantity": "2"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8CMP-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "1730D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1269"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.AssemblyOrder.PreviewPost",
+        "data": {
+          "documentNo": "A00042"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.AssemblyOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 4,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Forsko\u00f0un samsetningarp\u00f6ntunar A00042 (vara W8ASM-IS) mynda\u00f0i 4 f\u00e6rslur. Engar fj\u00e1rhagsf\u00e6rslur yr\u00f0u b\u00f3ka\u00f0ar.",
+        "documentNo": "A00042",
+        "itemNo": "W8ASM-IS",
+        "locationCode": "",
+        "quantityToAssemble": 2,
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedAssemblyNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "903236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999949"
+                },
+                "fields": {
+                  "Description": "GU00000166",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8CMP-IS",
+                  "EntryType": "Assembly Consumption",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "953236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999948"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8ASM-IS",
+                  "EntryType": "Assembly Output",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "2",
+                  "InvoicedQuantity": "2",
+                  "RemainingQuantity": "2",
+                  "Open": "true",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 2,
+            "entries": [
+              {
+                "id": "913236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999934"
+                },
+                "fields": {
+                  "Description": "GU00000166",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8CMP-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Consumption",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "983236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999933"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Posted Assembly",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "DOMESTIC",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": "Item",
+                  "SourceNo_": "W8ASM-IS",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8ASM-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "2",
+                  "OrderType": "Assembly",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "0",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "0",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Assembly Output",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "2",
+                  "ValuedQuantity": "2",
+                  "CostperUnit": "0",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8CMP-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "1730D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1269"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Transfer Line",
+        "filter": "WHERE(Item No.=CONST(W8TRF-IS))",
+        "fields": [
+          "Document No.",
+          "Item No.",
+          "Quantity",
+          "Quantity Shipped",
+          "Quantity Received"
+        ],
+        "take": 5
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Transfer Line",
+        "skip": 0,
+        "take": 5,
+        "count": 2,
+        "records": [
+          {
+            "id": "AC30D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentNo_": "1005",
+              "LineNo_": "10000"
+            },
+            "fields": {
+              "ItemNo_": "W8TRF-IS",
+              "Quantity": "4",
+              "QuantityShipped": "0",
+              "QuantityReceived": "0"
+            }
+          },
+          {
+            "id": "AD30D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "DocumentNo_": "1005",
+              "LineNo_": "20000"
+            },
+            "fields": {
+              "ItemNo_": "W8TRF-IS",
+              "Quantity": "2",
+              "QuantityShipped": "0",
+              "QuantityReceived": "0"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8TRF-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "A530D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1270"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.TransferOrder.PreviewPost",
+        "data": {
+          "documentNo": "1005",
+          "postingType": "Ship"
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.TransferOrder.PreviewPost",
+        "status": "Success",
+        "entryCount": 8,
+        "glEntryCount": 0,
+        "rollback": true,
+        "summary": "Forsko\u00f0un flutningsp\u00f6ntunar 1005 (GU00000169 -> GU00000205), Ship, mynda\u00f0i 8 f\u00e6rslur. Engar fj\u00e1rhagsf\u00e6rslur yr\u00f0u b\u00f3ka\u00f0ar.",
+        "documentNo": "1005",
+        "transferFromCode": "GU00000169",
+        "transferToCode": "GU00000205",
+        "directTransfer": false,
+        "postingType": "Ship",
+        "lcyCode": "GBP",
+        "predictedNumbers": {
+          "postedShipmentNo": "***"
+        },
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 4,
+            "entries": [
+              {
+                "id": "A93236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999947"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000169",
+                  "Quantity": "-4",
+                  "InvoicedQuantity": "-4",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "A53236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999946"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000241",
+                  "Quantity": "4",
+                  "InvoicedQuantity": "4",
+                  "RemainingQuantity": "4",
+                  "Open": "true",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "B23236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999945"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000169",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              },
+              {
+                "id": "AF3236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999944"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Transfer",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "GU00000241",
+                  "Quantity": "2",
+                  "InvoicedQuantity": "2",
+                  "RemainingQuantity": "2",
+                  "Open": "true",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 4,
+            "entries": [
+              {
+                "id": "AA3236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999932"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000169",
+                  "InvoicedQuantity": "-4",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-4",
+                  "ValuedQuantity": "-4",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "A73236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999931"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000241",
+                  "InvoicedQuantity": "4",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "48",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "74.33",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "4",
+                  "ValuedQuantity": "4",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "B33236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999930"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000169",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              },
+              {
+                "id": "B03236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999929"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": "Transfer Shipment",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "MISC",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8TRF-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "GU00000241",
+                  "InvoicedQuantity": "2",
+                  "OrderType": "Transfer",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Transfer",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "2",
+                  "ValuedQuantity": "2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8TRF-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "A530D28E-41DC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1270"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(W8PRV-IS))",
+        "fields": [
+          "No.",
+          "Inventory"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "3CC51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "No_": "W8PRV-IS"
+            },
+            "fields": {
+              "Inventory": "10"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Journal Line",
+        "filter": "WHERE(Journal Template Name=CONST(W8COUNT),Journal Batch Name=CONST(IS))",
+        "fields": [
+          "Line No.",
+          "Item No.",
+          "Qty. (Phys. Inventory)",
+          "Qty. (Calculated)"
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Journal Line",
+        "skip": 0,
+        "take": 10,
+        "count": 2,
+        "records": [
+          {
+            "id": "87D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "10000",
+              "JournalBatchName": "IS"
+            },
+            "fields": {
+              "ItemNo_": "W8PRV-IS",
+              "Qty_Phys_Inventory": "10",
+              "Qty_Calculated": "10"
+            }
+          },
+          {
+            "id": "88D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "20000",
+              "JournalBatchName": "IS"
+            },
+            "fields": {
+              "ItemNo_": "",
+              "Qty_Phys_Inventory": "0",
+              "Qty_Calculated": "0"
+            }
+          }
+        ],
+        "noOfRecords": 2
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.RecordCount",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "IS",
+          "counts": [
+            {
+              "lineNo": 10000,
+              "qtyCounted": 8
+            }
+          ]
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.RecordCount",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "result": [
+          {
+            "systemId": "{87D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "counted": true,
+            "before": 10,
+            "after": 8,
+            "quantityCalculated": 10,
+            "adjustmentQuantity": 2
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Check",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "IS",
+          "lineSystemIds": [
+            "87D9135A-3EDC-F111-B7A5-801F3D175C0D"
+          ]
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Check",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "validationResult": "Ready",
+        "lineCount": 1,
+        "errorCount": 0,
+        "warningCount": 0,
+        "errors": [],
+        "warnings": []
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "47C51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1030"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.PreviewPost",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "IS",
+          "lineSystemIds": [
+            "87D9135A-3EDC-F111-B7A5-801F3D175C0D"
+          ]
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.PreviewPost",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "linesToPost": 1,
+        "rollback": true,
+        "preview": [
+          {
+            "tableId": 32,
+            "tableName": "Item Ledger Entry",
+            "tableCaption": "Item Ledger Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "C63236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999943"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": " ",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Country_RegionCode": "",
+                  "ItemNo_": "W8PRV-IS",
+                  "EntryType": "Negative Adjmt.",
+                  "SerialNo_": "",
+                  "LotNo_": "",
+                  "PackageNo_": "",
+                  "LocationCode": "",
+                  "Quantity": "-2",
+                  "InvoicedQuantity": "-2",
+                  "RemainingQuantity": "0",
+                  "Open": "false",
+                  "OrderType": " ",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryQuantity": "0",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": ""
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 281,
+            "tableName": "Phys. Inventory Ledger Entry",
+            "tableCaption": "Phys. Inventory Ledger Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "C93236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-2000000000"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Amount": "24",
+                  "DimensionSetID": [],
+                  "ItemNo_": "W8PRV-IS",
+                  "EntryType": "Negative Adjmt.",
+                  "LocationCode": "",
+                  "Quantity": "2",
+                  "VariantCode": "",
+                  "UnitCost": "12"
+                }
+              }
+            ]
+          },
+          {
+            "tableId": 5802,
+            "tableName": "Value Entry",
+            "tableCaption": "Value Entry",
+            "entryCount": 1,
+            "entries": [
+              {
+                "id": "C73236E4-41DC-F111-B7A5-CE94B8933B50",
+                "primaryKey": {
+                  "EntryNo_": "-1999999928"
+                },
+                "fields": {
+                  "Description": "",
+                  "PostingDate": "2026-10-01",
+                  "DocumentType": " ",
+                  "DocumentNo_": "***",
+                  "ExternalDocumentNo_": "",
+                  "Gen_Bus_PostingGroup": "",
+                  "Gen_Prod_PostingGroup": "GU00000015",
+                  "SourceType": " ",
+                  "SourceNo_": "",
+                  "DimensionSetID": [],
+                  "Type": " ",
+                  "ItemNo_": "W8PRV-IS",
+                  "EntryType": "Direct Cost",
+                  "LocationCode": "",
+                  "InvoicedQuantity": "-2",
+                  "OrderType": " ",
+                  "SalesAmountExpected": "0",
+                  "SalesAmountActual": "0",
+                  "CostAmountExpected": "0",
+                  "CostAmountActual": "-24",
+                  "CostAmountNonInvtbl_": "0",
+                  "CostAmountExpectedACY": "0",
+                  "CostAmountActualACY": "-37.16",
+                  "CostAmountNonInvtbl_ACY": "0",
+                  "ItemLedgerEntryType": "Negative Adjmt.",
+                  "Adjustment": "false",
+                  "ItemChargeNo_": "",
+                  "CostPostedtoG_L": "0",
+                  "ItemLedgerEntryQuantity": "-2",
+                  "ValuedQuantity": "-2",
+                  "CostperUnit": "12",
+                  "ValuedByAverageCost": "false",
+                  "JobNo_": "",
+                  "JobTaskNo_": "",
+                  "VariantCode": "",
+                  "No_": "",
+                  "DiscountAmount": "0"
+                }
+              }
+            ]
+          }
+        ],
+        "totals": {
+          "totalDebitLCY": 0,
+          "totalCreditLCY": 0
+        },
+        "result": [
+          {
+            "systemId": "{87D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-IS",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ],
+        "entryCount": 3,
+        "glEntryCount": 0
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Ledger Entry",
+        "filter": "WHERE(Item No.=CONST(W8PRV-IS))",
+        "fields": [
+          "Entry No."
+        ],
+        "take": 30
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Ledger Entry",
+        "skip": 0,
+        "take": 30,
+        "count": 1,
+        "records": [
+          {
+            "id": "47C51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "EntryNo_": "1030"
+            },
+            "fields": {}
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "invoke_message_type",
+      "args": {
+        "type": "Inventory.PhysInventory.Post",
+        "data": {
+          "templateName": "W8COUNT",
+          "batchName": "IS",
+          "expectedCount": 1
+        },
+        "lcid": 1039
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Post",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "postedLineCount": 1,
+        "itemRegisterNo": 914,
+        "fromEntryNo": 1272,
+        "toEntryNo": 1272,
+        "fromPhysInventoryEntryNo": 2,
+        "toPhysInventoryEntryNo": 2,
+        "result": [
+          {
+            "systemId": "{87D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-IS",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ]
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item Journal Line",
+        "filter": "WHERE(Journal Template Name=CONST(W8COUNT),Journal Batch Name=CONST(IS))",
+        "fields": [
+          "Line No.",
+          "Item No."
+        ],
+        "take": 10
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item Journal Line",
+        "skip": 0,
+        "take": 10,
+        "count": 1,
+        "records": [
+          {
+            "id": "88D9135A-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "JournalTemplateName": "W8COUNT",
+              "LineNo_": "20000",
+              "JournalBatchName": "IS"
+            },
+            "fields": {
+              "ItemNo_": ""
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    },
+    {
+      "name": "get_records",
+      "args": {
+        "table": "Item",
+        "filter": "WHERE(No.=CONST(W8PRV-IS))",
+        "fields": [
+          "No.",
+          "Inventory"
+        ],
+        "take": 2
+      },
+      "result": {
+        "company": "CRONUS International Ltd.",
+        "table": "Item",
+        "skip": 0,
+        "take": 2,
+        "count": 1,
+        "records": [
+          {
+            "id": "3CC51633-3EDC-F111-B7A5-801F3D175C0D",
+            "primaryKey": {
+              "No_": "W8PRV-IS"
+            },
+            "fields": {
+              "Inventory": "8"
+            }
+          }
+        ],
+        "noOfRecords": 1
+      },
+      "isError": false
+    }
+  ],
+  "physical": {
+    "EN": {
+      "itemNo": "W8PRV-EN",
+      "batch": "EN",
+      "before": {
+        "item": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item",
+          "skip": 0,
+          "take": 2,
+          "count": 1,
+          "records": [
+            {
+              "id": "D676AE2A-3EDC-F111-B7A5-947C3AA95E53",
+              "primaryKey": {
+                "No_": "W8PRV-EN"
+              },
+              "fields": {
+                "Inventory": "10"
+              }
+            }
+          ],
+          "noOfRecords": 1
+        },
+        "lines": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item Journal Line",
+          "skip": 0,
+          "take": 10,
+          "count": 2,
+          "records": [
+            {
+              "id": "83D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "10000",
+                "JournalBatchName": "EN"
+              },
+              "fields": {
+                "ItemNo_": "W8PRV-EN",
+                "Qty_Phys_Inventory": "10",
+                "Qty_Calculated": "10"
+              }
+            },
+            {
+              "id": "84D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "20000",
+                "JournalBatchName": "EN"
+              },
+              "fields": {
+                "ItemNo_": "",
+                "Qty_Phys_Inventory": "0",
+                "Qty_Calculated": "0"
+              }
+            }
+          ],
+          "noOfRecords": 2
+        }
+      },
+      "postRequested": true,
+      "request": {
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "expectedCount": 1
+      },
+      "requestedAt": "2026-11-09T13:31:30.414Z",
+      "postResponse": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Post",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "EN",
+        "postedLineCount": 1,
+        "itemRegisterNo": 913,
+        "fromEntryNo": 1271,
+        "toEntryNo": 1271,
+        "fromPhysInventoryEntryNo": 1,
+        "toPhysInventoryEntryNo": 1,
+        "result": [
+          {
+            "systemId": "{83D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-EN",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ]
+      },
+      "postSucceeded": true,
+      "after": {
+        "remain": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item Journal Line",
+          "skip": 0,
+          "take": 10,
+          "count": 1,
+          "records": [
+            {
+              "id": "84D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "20000",
+                "JournalBatchName": "EN"
+              },
+              "fields": {
+                "ItemNo_": ""
+              }
+            }
+          ],
+          "noOfRecords": 1
+        },
+        "stock": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item",
+          "skip": 0,
+          "take": 2,
+          "count": 1,
+          "records": [
+            {
+              "id": "D676AE2A-3EDC-F111-B7A5-947C3AA95E53",
+              "primaryKey": {
+                "No_": "W8PRV-EN"
+              },
+              "fields": {
+                "Inventory": "8"
+              }
+            }
+          ],
+          "noOfRecords": 1
+        }
+      }
+    },
+    "IS": {
+      "itemNo": "W8PRV-IS",
+      "batch": "IS",
+      "before": {
+        "item": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item",
+          "skip": 0,
+          "take": 2,
+          "count": 1,
+          "records": [
+            {
+              "id": "3CC51633-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "No_": "W8PRV-IS"
+              },
+              "fields": {
+                "Inventory": "10"
+              }
+            }
+          ],
+          "noOfRecords": 1
+        },
+        "lines": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item Journal Line",
+          "skip": 0,
+          "take": 10,
+          "count": 2,
+          "records": [
+            {
+              "id": "87D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "10000",
+                "JournalBatchName": "IS"
+              },
+              "fields": {
+                "ItemNo_": "W8PRV-IS",
+                "Qty_Phys_Inventory": "10",
+                "Qty_Calculated": "10"
+              }
+            },
+            {
+              "id": "88D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "20000",
+                "JournalBatchName": "IS"
+              },
+              "fields": {
+                "ItemNo_": "",
+                "Qty_Phys_Inventory": "0",
+                "Qty_Calculated": "0"
+              }
+            }
+          ],
+          "noOfRecords": 2
+        }
+      },
+      "postRequested": true,
+      "request": {
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "expectedCount": 1
+      },
+      "requestedAt": "2026-11-09T13:31:46.724Z",
+      "postResponse": {
+        "company": "CRONUS International Ltd.",
+        "messageType": "Inventory.PhysInventory.Post",
+        "status": "Success",
+        "templateName": "W8COUNT",
+        "batchName": "IS",
+        "postedLineCount": 1,
+        "itemRegisterNo": 914,
+        "fromEntryNo": 1272,
+        "toEntryNo": 1272,
+        "fromPhysInventoryEntryNo": 2,
+        "toPhysInventoryEntryNo": 2,
+        "result": [
+          {
+            "systemId": "{87D9135A-3EDC-F111-B7A5-801F3D175C0D}",
+            "lineNo": 10000,
+            "itemNo": "W8PRV-IS",
+            "quantity": 2,
+            "locationCode": "",
+            "newLocationCode": "",
+            "binCode": "",
+            "newBinCode": "",
+            "lotNo": "",
+            "newLotNo": "",
+            "serialNo": "",
+            "newSerialNo": "",
+            "packageNo": "",
+            "newPackageNo": "",
+            "tracking": []
+          }
+        ]
+      },
+      "postSucceeded": true,
+      "after": {
+        "remain": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item Journal Line",
+          "skip": 0,
+          "take": 10,
+          "count": 1,
+          "records": [
+            {
+              "id": "88D9135A-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "JournalTemplateName": "W8COUNT",
+                "LineNo_": "20000",
+                "JournalBatchName": "IS"
+              },
+              "fields": {
+                "ItemNo_": ""
+              }
+            }
+          ],
+          "noOfRecords": 1
+        },
+        "stock": {
+          "company": "CRONUS International Ltd.",
+          "table": "Item",
+          "skip": 0,
+          "take": 2,
+          "count": 1,
+          "records": [
+            {
+              "id": "3CC51633-3EDC-F111-B7A5-801F3D175C0D",
+              "primaryKey": {
+                "No_": "W8PRV-IS"
+              },
+              "fields": {
+                "Inventory": "8"
+              }
+            }
+          ],
+          "noOfRecords": 1
+        }
+      }
+    }
+  },
+  "finishedAt": "2026-11-09T13:31:48.510Z",
+  "attemptHistory": [
+    {
+      "executed": 4,
+      "passed": 3,
+      "failed": 1,
+      "error": "Expected values to be strictly equal:\n\n1 !== 0\n",
+      "evidence": "mcp-live-attempt1-summary.json",
+      "assessment": "Harness assumed Check ignores blank rows; its contract validates all selected rows and correctly reports native line20000. Keep Post testing the full batch, select the own item line explicitly for Check/Preview. RecordCount already succeeded and must not repeat."
+    }
+  ],
+  "verified": true,
+  "compileDependencyVersion": "28.0.10.632",
+  "foundationVersion": "28.0.12.679",
+  "dependencyProvenance": "runtime-provenance-correction.json"
+}

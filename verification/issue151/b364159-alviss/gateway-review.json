@@ -1,0 +1,117 @@
+{
+  "sha": "b3641597520bf2496dbd87b84baa7acc527a424f",
+  "layer1": {
+    "passed": 15,
+    "failed": 8,
+    "total": 23,
+    "filesScanned": 31,
+    "log": "pr-gateway-linux.log",
+    "harnessFailure": "Initial Linux USERPROFILE unset; rerun with explicit Linux home. Snapshot modernization config unavailable. No suppression introduced.",
+    "advisories": "Existing whole-file XML docs, reserved variable names, statement layout, global vars, Try convention, GUID formatting, read isolation. Version-heading advisory despite current Unreleased CHANGELOG entry. No new suppressions.",
+    "ready": false,
+    "findings": {
+      "one_statement_per_line": {
+        "pass": false,
+        "findings_count": 50
+      },
+      "xml_doc_comments": {
+        "pass": false,
+        "findings_count": 229
+      },
+      "commit_in_loop": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "global_variables": {
+        "pass": false,
+        "findings_count": 1
+      },
+      "namespace": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "reserved_var_names": {
+        "pass": false,
+        "findings_count": 6
+      },
+      "event_subscriber_placement": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "read_isolation": {
+        "pass": false,
+        "findings_count": 20
+      },
+      "data_classification": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "format_evaluate_enum": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "hardcoded_values": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "today_vs_workdate": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "caption_translation": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "format_guid": {
+        "pass": false,
+        "findings_count": 1
+      },
+      "set_load_fields": {
+        "pass": true,
+        "findings_count": 11
+      },
+      "with_statements": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "object_naming": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "try_prefix_convention": {
+        "pass": false,
+        "findings_count": 2
+      },
+      "app_json": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "modernization": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "confirm_in_page": {
+        "pass": true,
+        "findings_count": 0
+      },
+      "changelog": {
+        "pass": false,
+        "findings_count": 1
+      },
+      "page_code_minimal": {
+        "pass": true,
+        "findings_count": 0
+      }
+    }
+  },
+  "layer2": {
+    "compiler": "App/test0errors0warnings, all3analyzers",
+    "API": "No public API/field/signature, ID, permissions, manifest or dependency change",
+    "behavior": "Malformed boolean item numbers are rejected before reading; objects/arrays and required-missing selection preserve received. Existing numeric/string and optional-null behavior remains compatible.",
+    "test": "Two AC1/AC2 bilingual native tests cover both shared resolver readers,4malformed shapes,required-missing metadata and own numeric item compatibility. Compiled census561methods/54codeunits; complete runtime verification remains pending.",
+    "docs": "XLF regenerated for changed typed-format label; CHANGELOG records live-MCP finding and focused fix.",
+    "localization": "No label text changes; generated g.xlf vs committed is-IS guard passed",
+    "validation": "Full559/559native passed; runtime MCP/UI and current-tip paired CI pending",
+    "independentClaude": "Separate evidence, pending after real handoff"
+  }
+}

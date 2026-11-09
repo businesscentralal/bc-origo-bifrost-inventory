@@ -1,0 +1,281 @@
+{
+  "tool": "get_message_type_help",
+  "args": {
+    "messageType": "Inventory.Revaluation.Post",
+    "detail": "full",
+    "lcid": 1039
+  },
+  "isError": false,
+  "result": {
+    "company": "CRONUS International Ltd.",
+    "messageType": "Inventory.Revaluation.Post",
+    "status": "Success",
+    "contract": "json",
+    "format": "chapters",
+    "catalogue": {
+      "name": "Inventory.Revaluation.Post",
+      "isEnabled": true,
+      "filterTableNo": 233,
+      "description": "Bókar allar línur í endurmatsbókarkeyrslu vöru.",
+      "selectionDescription": "Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.",
+      "messageDirection": "Inbound",
+      "keywords": [
+        "birgðir",
+        "endurmat",
+        "birgðavirði",
+        "reikna",
+        "forskoða",
+        "bóka"
+      ],
+      "chargeable": true
+    },
+    "chapters": {
+      "envelope": {
+        "subject": {
+          "use": "optional",
+          "forms": [
+            "TEMPLATE|BATCH",
+            "systemId"
+          ]
+        },
+        "dataRequired": false,
+        "version": "1.0",
+        "contentType": "text/json"
+      },
+      "target": [
+        {
+          "source": "subject",
+          "form": "TEMPLATE|BATCH",
+          "description": "The template name and the batch name of the Revaluation journal batch, separated by a vertical bar; each part is at most 10 characters."
+        },
+        {
+          "source": "subject",
+          "form": "guid",
+          "description": "The SystemId of the Item Journal Batch."
+        },
+        {
+          "source": "data.batchId, data.id, data.systemId, data.recordSystemId",
+          "form": "guid",
+          "description": "The SystemId of the batch. Used only when subject is empty, and only one of the four keys may be sent."
+        },
+        {
+          "source": "data.templateName, data.batchName",
+          "form": "template name and batch name",
+          "description": "The Revaluation template and its batch, used when neither subject nor a SystemId key is sent."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "templateName",
+          "type": "string",
+          "required": false,
+          "description": "Existing Revaluation template, at most 10 characters; supply with batchName if no subject or SystemId alias."
+        },
+        {
+          "name": "batchName",
+          "type": "string",
+          "required": false,
+          "description": "Existing batch, at most 10 characters. Subject or SystemId selection takes precedence."
+        },
+        {
+          "name": "batchId",
+          "type": "string",
+          "required": false,
+          "description": "Batch SystemId; only one SystemId alias may be supplied when subject is absent."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Alias of batchId."
+        },
+        {
+          "name": "systemId",
+          "type": "string",
+          "required": false,
+          "description": "Alias of batchId."
+        },
+        {
+          "name": "recordSystemId",
+          "type": "string",
+          "required": false,
+          "description": "Alias of batchId."
+        },
+        {
+          "name": "expectedCount",
+          "type": "integer",
+          "required": false,
+          "description": "Always checked when sent. Required only when Require Confirmation for Irreversible Messages is enabled in Bifrost Setup (on by default; an administrator can turn it off per company). When enabled, call without expectedCount to preview the count."
+        }
+      ],
+      "response": {
+        "contentType": "text/json",
+        "fields": [
+          {
+            "name": "status",
+            "type": "string",
+            "description": "Success for a completed native operation."
+          },
+          {
+            "name": "templateName",
+            "type": "string",
+            "description": "The resolved native journal template."
+          },
+          {
+            "name": "batchName",
+            "type": "string",
+            "description": "The resolved native journal batch."
+          },
+          {
+            "name": "linesPosted",
+            "type": "integer",
+            "description": "Number of selected revaluation lines posted."
+          },
+          {
+            "name": "totalQuantity",
+            "type": "decimal",
+            "description": "Total native journal quantity."
+          },
+          {
+            "name": "totalAmount",
+            "type": "decimal",
+            "description": "Total selected revaluation amount."
+          },
+          {
+            "name": "itemRegisterNo",
+            "type": "integer",
+            "description": "Native item register created by posting."
+          },
+          {
+            "name": "fromEntryNo",
+            "type": "integer",
+            "description": "First item ledger entry number in the native register."
+          },
+          {
+            "name": "toEntryNo",
+            "type": "integer",
+            "description": "Last item ledger entry number in the native register."
+          },
+          {
+            "name": "fromValueEntryNo",
+            "type": "integer",
+            "description": "First value entry number in the native register."
+          },
+          {
+            "name": "toValueEntryNo",
+            "type": "integer",
+            "description": "Last value entry number in the native register."
+          }
+        ]
+      },
+      "errors": [
+        {
+          "code": "InvalidParameter",
+          "when": "The Costing domain is turned off in Inventory Setup.",
+          "fix": "Turn on the Costing domain in Inventory Setup."
+        },
+        {
+          "code": "PermissionDenied",
+          "when": "The caller does not hold the Inv. Posting Gate permission set.",
+          "fix": "Ask an administrator to assign Inv. Posting Gate."
+        },
+        {
+          "code": "InvalidParameter",
+          "when": "A batch selector is malformed or an unsupported parameter is supplied.",
+          "fix": "Use the named parameter and expected value to select one revaluation batch."
+        },
+        {
+          "code": "InvalidParameterFormat",
+          "when": "A batch name or identifier is not nonempty text in the required format.",
+          "fix": "Correct the named parameter."
+        },
+        {
+          "code": "RecordNotFound",
+          "when": "No revaluation batch matches templateName and batchName.",
+          "fix": "Select an existing owned batch."
+        },
+        {
+          "code": "PreconditionFailed",
+          "when": "The revaluation batch is empty.",
+          "fix": "Calculate the revaluation lines before posting or previewing."
+        },
+        {
+          "code": "BusinessCentralError",
+          "when": "Native validation or posting fails; known validation failures name lineNo and its document.",
+          "fix": "Correct the selected journal line; no failed posting is committed."
+        }
+      ],
+      "effect": {
+        "effect": "irreversible",
+        "writes": true,
+        "posts": true,
+        "rollback": false,
+        "idempotent": false,
+        "permissionSet": "BIFROST Full ori",
+        "preconditions": [
+          "The Costing domain is turned on in Inventory Setup.",
+          "The batch is an existing non-recurring batch of a Revaluation journal template with at least one Revaluation line.",
+          "The caller holds Inv. Posting Gate and can write item journal lines."
+        ],
+        "changes": "Posts every line of the identified Revaluation journal batch in one run: revaluation value entries and an item register are created and the posted lines leave the batch. Business Central commits the posting when the call finishes; under Omit Commit the commit is left to the caller. A refusal posts nothing. Needs expectedCount only when enabled in Bifrost Setup (on by default; an administrator can turn it off per company); always checked when sent. When enabled, call without it to see the preview."
+      },
+      "metering": {
+        "chargeable": true,
+        "chargedAs": "message"
+      },
+      "related": [
+        {
+          "name": "Inventory.Revaluation.PreviewPost",
+          "useInsteadWhen": "Use it first to see the entries the batch would create; it posts nothing."
+        },
+        {
+          "name": "Inventory.Revaluation.Calculate",
+          "useInsteadWhen": "Use it to read the remaining quantity and value of an item; it does not touch the journal."
+        }
+      ],
+      "workflow": {
+        "steps": [
+          {
+            "messageType": "Inventory.Revaluation.Calculate",
+            "purpose": "Read the remaining quantity and value of an item to decide the new value."
+          },
+          {
+            "messageType": "Inventory.Revaluation.PreviewPost",
+            "purpose": "Preview the entries the Revaluation batch would create."
+          },
+          {
+            "messageType": "Inventory.Revaluation.Post",
+            "purpose": "Post the batch once the preview is acceptable."
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Post the Revaluation batch DEFAULT of template REVAL",
+          "request": {
+            "type": "Inventory.Revaluation.Post",
+            "data": {
+              "expectedCount": 1,
+              "templateName": "REVAL",
+              "batchName": "DEFAULT"
+            }
+          },
+          "response": {
+            "status": "Success",
+            "templateName": "REVAL",
+            "batchName": "DEFAULT",
+            "linesPosted": 2,
+            "totalQuantity": 0,
+            "totalAmount": 120.5,
+            "itemRegisterNo": 58,
+            "fromValueEntryNo": 912,
+            "toValueEntryNo": 913
+          }
+        }
+      ],
+      "overview": "Posts every line of an existing non-recurring Revaluation item journal batch in one run, and Business Central commits the posting. Name the batch with the subject (TEMPLATE|BATCH or a SystemId), a SystemId key, or templateName and batchName.",
+      "notes": "The whole batch is posted in one run; no subset of lines can be chosen, and a refusal posts nothing. The batch must be an existing non-recurring batch of a Revaluation journal template with Revaluation lines that have an item number. Name it with the subject (TEMPLATE|BATCH or the SystemId of the batch), one SystemId key, or templateName and batchName; with a subject the data keys are not used, and any other data key is refused. Posting commits: Business Central commits the posting when the call finishes, or the caller does under Omit Commit. It is irreversible and not idempotent: posted lines leave the batch, so a second call is refused. The caller needs the Bifrost \"Full Access\" permission set and Inv. Posting Gate, and the Costing domain must be on in Inventory Setup. Use Inventory.Revaluation.PreviewPost first to see the entries."
+    },
+    "conventions": "## Errors and warnings\r\nAn error response has `status` = `Error`, a stable `code`, the `error` text and, when they apply, `parameter` (the request parameter concerned, e.g. `lines[2].no`), `received` (the value received), `expected` (what was expected) and `nextStep` (what to do now). `hint` says where to read more.\r\nWhen a request has several problems, all of them are listed in `errors[]` - each with the same fields - under a top-level `code` (`MultipleErrors`, or a shared code such as `InvalidLine` for the `lines` of a Create type) and a summary `error`. Fix them all before calling again. One problem is reported at the top level, with no `errors[]`.\r\nRequest values are checked first and every problem found is reported together. A Business Central validation error raised afterwards, while a record is being written, stops the call and is reported on its own: `code` = `BusinessCentralError`, Business Central's own `error` text, and `parameter` naming the request parameter being applied, e.g. `lines[1].accountNo`. Nothing is written.\r\nRequest values are read in one format, whatever the language: dates `YYYY-MM-DD`; date-times ISO 8601 with `Z` or an offset; amounts as JSON numbers (or a string such as `\"1234.56\"`, no thousands separator); integers as JSON integers; booleans `true` or `false`. Any other value is `InvalidParameterFormat` with `received` and `expected`; for an unambiguous local form such as `26.09.2026`, `nextStep` gives the value to resend. Every bad value of a request is reported together.\r\nAnswers are written in one format as well, whatever the language of the call: dates `YYYY-MM-DD`, date-times ISO 8601, numbers with a dot and no thousands separator, and the option and enum values of every answer except `Data.Records.Get` and `Data.Records.Set` as their English names, so a value read from an answer can be sent back. Those two answer the caption of the language of the call, for a person to read. The language of the call (`lcid`) changes captions and message texts, not these forms. Two things are outside Bifrost's control: Business Central writes its own texts (a ledger entry description such as `Direct Cost V00010 on 10/02/26`, the text of a `BusinessCentralError`) with the regional settings of the server session, which `lcid` does not change, so a date in such a text can be in month-day order; and a table view is read with those settings too, so write dates in a view as `YYYY-MM-DD` and decimals with a dot.\r\nBoth success and error responses can carry `warnings[]`, each with `code`, `message` and, when they apply, `parameter` and `nextStep`.\r\n`UnknownParameter` refuses undeclared data keys before execution for every type whose effect is not read, including a missing effect. The root envelope option `strict:false` cannot opt out. Read types keep warnings without changing status, validationResult or domain warningCount unless the caller sets `strict:true` (next to type and subject, never inside data). Refusals list the keys and localized nextStep corrections; no business changes or successful execution charges occur. Example: {\"type\":\"Memory.User.Set\",\"strict\":true,\"data\":{\"memory\":\"test\",\"memry\":\"typo\"}} is refused.\r\n`FieldChangedByBC` is a warning from Data.Records.Set: another field validation or the write changed a sent field after its own validation. `parameter` names data[n].fields.{jsonName}, counting from 0. Status stays Success. Compare the returned values with what you sent; follow `nextStep` to use validation order or send the field again in a separate call. Normalisation of the field itself, LCY, Dimension Set ID, BLOB, Media, MediaSet and skipped fields are excluded.\r\nWhen a Business Central operation fails, the error can identify the request parameter being applied, the expected input and what to do next. That guidance accompanies the original `BusinessCentralError` after rollback, including a failed queued task. It does not change which writes are rolled back or committed. Guidance is cleared between messages; a message without it keeps its existing response shape. Recognized lock errors follow the `Retryable` rules below.\r\nSome message types accept calls only through a particular path: a scheduled queue message, the Task API (`/tasks`), the in-product MCP tool server, another message type, or the Messages page Run Task action. Bifrost determines where the call came from; request values cannot override it. A call through an unsupported path is refused with `PreconditionFailed` and a `nextStep` naming the path to use.\r\n`Retryable` means a transient lock or deadlock caught while writing or posting. `error` keeps Business Central's original text. `expected` is \"no concurrent lock on the same records\"; `nextStep` is \"Retry the same call after a few seconds; nothing was changed.\" Bifrost does not retry automatically. Uncaught recognized lock errors are also `Retryable` for `write` types. Uncaught `read` and `irreversible` errors remain `BusinessCentralError`, because an irreversible operation may already have committed.\r\n`ConfirmationRequired` is the preview refusal for an irreversible type called without `expectedCount`. Nothing was changed; inspect `expected` and the description before sending the same request with that count. `ConfirmationMismatch` means the count has changed or the sent count was wrong; nothing was changed. Inspect the new preview before confirming again. Feature apps use the same preview and confirmation protocol for irreversible operations.\r\nCodes: `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `AmbiguousRecord`, `ConflictingIdentifiers`, `InvalidFilterField`, `InvalidLine`, `NothingToPreview`, `LinesSkipped`, `BlockedByWriteGuard`, `PreconditionFailed`, `PermissionDenied`, `LimitExceeded`, `BusinessCentralError`, `MultipleErrors`, `DeprecatedParameter`, `UnknownParameter`, `FieldChangedByBC`, `Retryable`, `EULA_REQUIRED`, `TRIAL_NOT_STARTED`, `ConfirmationRequired`, `ConfirmationMismatch`. The `error` text may be translated; the code never is.\r\n"
+  }
+}
