@@ -22,6 +22,73 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Assert: Codeunit "Library Assert";
         Library: Codeunit "Inventory Test Library ori";
 
+    /// <summary>AC1/AC2: rejects malformed item numbers with metadata and preserves numeric identifiers in English.</summary>
+    [Test]
+    procedure Scenario_AC01_ItemNoReadRefusals_EN()
+    begin
+        CheckItemNoReadRefusals(1033);
+    end;
+
+    /// <summary>AC1/AC2: rejects malformed item numbers with metadata and preserves numeric identifiers in Icelandic.</summary>
+    [Test]
+    procedure Scenario_AC01_ItemNoReadRefusals_IS()
+    begin
+        CheckItemNoReadRefusals(1039);
+    end;
+
+    local procedure CheckItemNoReadRefusals(LanguageId: Integer)
+    var
+        Item: Record Item;
+        LibraryInventory: Codeunit "Library - Inventory";
+        MessageTypes: List of [Enum "Message Type ori"];
+        MessageType: Enum "Message Type ori";
+        BadValues: JsonArray;
+        Value: JsonToken;
+        Request: JsonObject;
+        Response: JsonObject;
+        Serialized: Text;
+        NumericItemNo: Code[20];
+        NumericValue: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // [GIVEN] Both public readers share the item-number resolver and own request fixtures.
+        EnableDomains();
+        MessageTypes.Add("Message Type ori"::"Inventory.Reservation.Get");
+        MessageTypes.Add("Message Type ori"::"Inventory.Cost.Get");
+        BadValues.ReadFrom('[true,false,{},[]]');
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        foreach MessageType in MessageTypes do
+            foreach Value in BadValues do begin
+                Clear(Request);
+                Request.Add('itemNo', Value);
+                Value.WriteTo(Serialized);
+                // [WHEN] Dispatch rejects a boolean, object or array before reading item data.
+                Response := Library.ExecuteType(MessageType, '', Request, true);
+                // [THEN] Every refusal carries the exact received value and actionable typed metadata.
+                AssertRefusal(Response, 'InvalidParameterFormat', 'itemNo');
+                Assert.AreEqual(Serialized, TextValue(Response, 'received'), 'Received itemNo is preserved.');
+            end;
+        Clear(Request);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.Cost.Get", '', Request, true);
+        AssertRefusal(Response, 'MissingParameter', 'itemNo');
+        Assert.AreEqual('<missing>', TextValue(Response, 'received'), 'Missing selection is explicit.');
+        // [GIVEN] An owned numeric item number; legacy JSON numbers remain accepted by both readers.
+        repeat
+            NumericValue := 151000000 + Random(10000000);
+            NumericItemNo := CopyStr(Format(NumericValue, 0, 9), 1, MaxStrLen(NumericItemNo));
+        until not Item.Get(NumericItemNo);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename(NumericItemNo);
+        Clear(Request);
+        Request.Add('itemNo', NumericValue);
+        foreach MessageType in MessageTypes do begin
+            Response := Library.ExecuteType(MessageType, '', Request, true);
+            Assert.AreEqual('Success', TextValue(Response, 'status'), 'Owned numeric itemNo remains compatible.');
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
     [Test]
     procedure PeriodClose_InvalidDates_EN()
     begin

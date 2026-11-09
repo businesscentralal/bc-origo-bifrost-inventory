@@ -1203,10 +1203,11 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Token: JsonToken;
         DataItemNo: Code[20];
         SubjectItemNo: Code[20];
+        ReceivedItemNo: Text;
         ItemNoRequiredErr: Label 'itemNo is required.', Comment = 'is-IS=itemNo er nauðsynlegt.';
         ItemNoExpectedTxt: Label 'A non-empty item number in data.itemNo or subject.', Comment = 'is-IS=Ótómt vörunúmer í data.itemNo eða subject.';
         ItemNoNextStepTxt: Label 'Send data.itemNo or the item number as subject.', Comment = 'is-IS=Sendu data.itemNo eða vörunúmerið sem subject.';
-        ItemNoFormatErr: Label 'itemNo must be a JSON value.', Comment = 'is-IS=itemNo verður að vera JSON-gildi.';
+        ItemNoFormatErr: Label 'itemNo must be a JSON string or number.', Comment = 'is-IS=itemNo verður að vera JSON-strengur eða tala.';
         ItemNoFormatExpectedTxt: Label 'A JSON string or number.', Comment = 'is-IS=JSON-strengur eða tala.';
         ItemNoFormatNextStepTxt: Label 'Send the item number as text in data.itemNo.', Comment = 'is-IS=Sendu vörunúmerið sem texta í data.itemNo.';
         ConflictErr: Label 'subject %1 and itemNo %2 name different items.', Comment = '%1 = subject, %2 = item no.||is-IS=subject %1 og itemNo %2 nefna ólíkar vörur.';
@@ -1214,9 +1215,15 @@ codeunit 10076919 "Inventory Contract Parts ori"
         ConflictNextStepTxt: Label 'Send one item number, or make subject and data.itemNo the same.', Comment = 'is-IS=Sendu eitt vörunúmer, eða láttu subject og data.itemNo vera eins.';
     begin
         Clear(ItemNo);
+        ReceivedItemNo := '<missing>';
         if RequestJson.Get('itemNo', Token) then begin
+            Token.WriteTo(ReceivedItemNo);
             if not Token.IsValue() then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, 'itemNo', '', ItemNoFormatExpectedTxt, ItemNoFormatNextStepTxt);
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, 'itemNo', ReceivedItemNo, ItemNoFormatExpectedTxt, ItemNoFormatNextStepTxt);
+                exit(false);
+            end;
+            if ReceivedItemNo in ['true', 'false'] then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, ItemNoFormatErr, 'itemNo', ReceivedItemNo, ItemNoFormatExpectedTxt, ItemNoFormatNextStepTxt);
                 exit(false);
             end;
             if not Token.AsValue().IsNull() then
@@ -1235,7 +1242,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             exit(true);
         if not Required then
             exit(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, ItemNoRequiredErr, 'itemNo', '', ItemNoExpectedTxt, ItemNoNextStepTxt);
+        Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, ItemNoRequiredErr, 'itemNo', ReceivedItemNo, ItemNoExpectedTxt, ItemNoNextStepTxt);
         exit(false);
     end;
     /// <summary>Reads a bounded JSON string and collects every invalid value before the caller writes.</summary>
