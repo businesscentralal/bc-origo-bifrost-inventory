@@ -139,7 +139,7 @@ codeunit 96918 "Inv. Posting Gate Tests"
         Assert.AreEqual('permissionSet', Token.AsValue().AsText(), 'Actionable permission parameter.');
         Assert.IsTrue(Response.Get('nextStep', Token), 'Actionable remedy.');
         if LanguageId = 1039 then
-            Assert.AreEqual('Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Inv. Posting Gate fyrir bókunarforskoðun.', Token.AsValue().AsText(), 'Full Icelandic remedy.')
+            Assert.AreEqual('Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.', Token.AsValue().AsText(), 'Full Icelandic remedy.')
         else
             Assert.AreEqual('Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.', Token.AsValue().AsText(), 'Full English remedy.');
         Contract := MessageType;

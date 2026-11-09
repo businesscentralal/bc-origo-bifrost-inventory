@@ -1211,8 +1211,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 3880825549 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.</source>
-          <target>Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Inv. Posting Gate fyrir bókunarforskoðun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Inv. Posting Gate fyrir bókunarforskoðun.</note>
+          <target>Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CompleteOlderDomainRefusal - NamedType PermissionNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
@@ -5207,14 +5207,14 @@
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 726079965" size-unit="char" translate="yes" xml:space="preserve">
           <source>The caller lacks the posting permission set Inv. Posting Gate.</source>
-          <target>Kallandi hefur ekki bókunarheimildasafnið Inv. Posting Gate.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki bókunarheimildasafnið Inv. Posting Gate.</note>
+          <target>Kallandi hefur ekki bókunarheimildasafnið Bókunarhlið birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki bókunarheimildasafnið Bókunarhlið birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp11Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 2114698364" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator for Inv. Posting Gate.</source>
-          <target>Biddu stjórnanda um Inv. Posting Gate.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um Inv. Posting Gate.</note>
+          <target>Biddu stjórnanda um Bókunarhlið birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um Bókunarhlið birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp12Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 1158096087 - NamedType 3309638683" size-unit="char" translate="yes" xml:space="preserve">
@@ -5309,8 +5309,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1990599364" size-unit="char" translate="yes" xml:space="preserve">
           <source>The caller lacks Inv. Posting Gate. Native preview executes posting with rollback and retains the posting gate.</source>
-          <target>Kallandi hefur ekki Inv. Posting Gate. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki Inv. Posting Gate. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</note>
+          <target>Kallandi hefur ekki Bókunarhlið birgða. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi hefur ekki Bókunarhlið birgða. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp3Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1158096087 - NamedType 1958176545" size-unit="char" translate="yes" xml:space="preserve">

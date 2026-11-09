@@ -1277,7 +1277,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Response: JsonObject;
         Token: JsonToken;
         ParameterName: Text;
-        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Inv. Posting Gate fyrir bókunarforskoðun.';
+        PermissionNextLbl: Label 'Ask an administrator for the documented Inventory role and native table permissions, including Inv. Posting Gate for posting preview.', Comment = 'is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.';
     begin
         Response := Argument.GetResponseJson();
         if not Response.Get('code', Token) then

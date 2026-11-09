@@ -159,8 +159,8 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ErrorHelp8Lbl: Label 'Send journalBatchName.', Comment = 'is-IS=Sendu journalBatchName.';
         ErrorHelp9Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
         ErrorHelp10Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
-        ErrorHelp11Lbl: Label 'The caller lacks the posting permission set Inv. Posting Gate.', Comment = 'is-IS=Kallandi hefur ekki bókunarheimildasafnið Inv. Posting Gate.';
-        ErrorHelp12Lbl: Label 'Ask an administrator for Inv. Posting Gate.', Comment = 'is-IS=Biddu stjórnanda um Inv. Posting Gate.';
+        ErrorHelp11Lbl: Label 'The caller lacks the posting permission set Inv. Posting Gate.', Comment = 'is-IS=Kallandi hefur ekki bókunarheimildasafnið Bókunarhlið birgða.';
+        ErrorHelp12Lbl: Label 'Ask an administrator for Inv. Posting Gate.', Comment = 'is-IS=Biddu stjórnanda um Bókunarhlið birgða.';
         ErrorHelp13Lbl: Label 'The selected batch has no lines or native posting fails; native error text is preserved unchanged.', Comment = 'is-IS=Valin keyrsla hefur engar línur eða bókun mistekst; upprunaleg villuboð kerfisins haldast óbreytt.';
         ErrorHelp14Lbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
         ErrorHelp15Lbl: Label 'A journal selector is not JSON text.', Comment = 'is-IS=Bókarval er ekki JSON-texti.';

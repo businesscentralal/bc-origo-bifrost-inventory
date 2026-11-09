@@ -218,7 +218,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ErrorHelp1Lbl: Label 'The Reclassification domain is turned off for this company in Inventory Setup.', Comment = 'is-IS=Slökkt er á endurflokkun fyrir þetta fyrirtæki í birgðauppsetningu.';
         ErrorHelp2Lbl: Label 'Turn the domain on from the Inventory Setup page.', Comment = 'is-IS=Kveiktu á aðgerðasviðinu á birgðauppsetningarsíðunni.';
-        ErrorHelp3Lbl: Label 'The caller lacks Inv. Posting Gate. Native preview executes posting with rollback and retains the posting gate.', Comment = 'is-IS=Kallandi hefur ekki Inv. Posting Gate. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.';
+        ErrorHelp3Lbl: Label 'The caller lacks Inv. Posting Gate. Native preview executes posting with rollback and retains the posting gate.', Comment = 'is-IS=Kallandi hefur ekki Bókunarhlið birgða. Bókunarforskoðun bakfærir breytingar og heldur bókunarheimildarskoðun virkri.';
         ErrorHelp4Lbl: Label 'Ask an administrator for the posting permission and required native permissions.', Comment = 'is-IS=Biddu stjórnanda um bókunarheimild og nauðsynlegar kerfisheimildir.';
         ErrorHelp5Lbl: Label 'journalTemplateName or journalBatchName is absent.', Comment = 'is-IS=journalTemplateName eða journalBatchName vantar.';
         ErrorHelp6Lbl: Label 'Supply both journal selectors.', Comment = 'is-IS=Tilgreindu bæði bókarsniðmát og keyrslu.';

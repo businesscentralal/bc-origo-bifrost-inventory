@@ -4,6 +4,7 @@
 
 ### Fixed (2026-11-09) - compose current help with coded refusals (#148, #155)
 
+- Icelandic posting-permission guidance uses the existing localized caption Bókunarhlið birgða; English uses Inv. Posting Gate. Exact bilingual permission-denial tests remain.
 - Reconcile composed strict tests (96918, 96921, 96922): current permission captions, all five Attribute.Get help entries, and exactly one combined MissingParameter entry including postingType. No assertion is disabled or skipped.
 - Merge parent #166 at `006e991` into #168, retaining current help captions and permission-set identifiers alongside the bilingual coded refusals in codeunits 10076844, 10076887, 10076888, 10076889, 10076868 and 10076869. Keep the current attribute overwrite guidance and exact bilingual assertions in 96930, and retain the child malformed-array and atomic-write contracts. Parent hold and post-deployment UAT remain pending.
 
