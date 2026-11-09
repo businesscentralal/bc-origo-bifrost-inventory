@@ -22,14 +22,16 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         Assert: Codeunit "Library Assert";
         Library: Codeunit "Inventory Test Library ori";
 
+    /// <summary>AC1/AC2: rejects malformed item numbers with metadata and preserves numeric identifiers in English.</summary>
     [Test]
-    procedure ItemNo_ReadRefusalsAndNumericCompatibility_EN()
+    procedure Scenario_AC01_ItemNoReadRefusals_EN()
     begin
         CheckItemNoReadRefusals(1033);
     end;
 
+    /// <summary>AC1/AC2: rejects malformed item numbers with metadata and preserves numeric identifiers in Icelandic.</summary>
     [Test]
-    procedure ItemNo_ReadRefusalsAndNumericCompatibility_IS()
+    procedure Scenario_AC01_ItemNoReadRefusals_IS()
     begin
         CheckItemNoReadRefusals(1039);
     end;
