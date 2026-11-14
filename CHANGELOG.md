@@ -2,12 +2,16 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
+- `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
+- Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.
 ### Fixed (2026-11-09) - compose current help with coded refusals (#148, #155)
 
 - Icelandic posting-permission guidance uses the existing localized caption Bókunarhlið birgða; English uses Inv. Posting Gate. Exact bilingual permission-denial tests remain.
 - Keep one MissingParameter help entry for TransferOrder.Post/PreviewPost: the shared entry covers the identifier and postingType; remove the duplicate postingType-only declarations. The exact one-entry assertion remains.
 - Reconcile composed strict tests (96918, 96921, 96922): current permission captions, all five Attribute.Get help entries, and exactly one combined MissingParameter entry including postingType. No assertion is disabled or skipped.
 - Merge parent #166 through `b364159` into #168, retaining current help captions and permission-set identifiers alongside the bilingual coded refusals in codeunits 10076844, 10076887, 10076888, 10076889, 10076868 and 10076869. Keep the current attribute overwrite guidance and exact bilingual assertions in 96930, and retain the child malformed-array and atomic-write contracts. Parent hold and post-deployment UAT remain pending.
+
 ### Fixed (2026-11-09) - refusal help regressions after merging main (#151)
 
 - Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 counts every matching error code, preserving strict uniqueness of the combined identifier and `postingType` entry in both languages.

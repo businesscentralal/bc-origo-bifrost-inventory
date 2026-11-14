@@ -141,7 +141,6 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
         Parts: Codeunit "Inventory Contract Parts ori";
         Resolve: Codeunit "Item Attribute Resolve ori";
         Request: JsonObject;
-        OptionObject: JsonObject;
         Token: JsonToken;
         OptionToken: JsonToken;
         NameText: Text;
@@ -155,7 +154,7 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
         DuplicateErr: Label 'Attribute %1 already exists.', Comment = '%1 = attribute name; is-IS=Eiginleikinn %1 er þegar til.';
         NameExpectedTxt: Label 'A unique attribute name.', Comment = 'is-IS=Einkvæmt heiti eiginleika.';
         NameNextStepTxt: Label 'Read existing attributes and choose a new name or use the existing definition.', Comment = 'is-IS=Lestu eiginleika sem eru til og veldu nýtt heiti eða notaðu fyrirliggjandi skilgreiningu.';
-        OptionsErr: Label 'optionValues must be an array of distinct nonempty strings for an Option attribute.', Comment = 'is-IS=optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.';
+        OptionsErr: Label 'optionValues must be an array of distinct nonempty values of at most 250 characters for an Option attribute.', Comment = 'is-IS=optionValues verður að vera fylki aðgreindra gilda sem eru ekki tóm og að hámarki 250 stafir fyrir Option-eiginleika.';
         OptionsExpectedTxt: Label 'An array of distinct text option values.', Comment = 'is-IS=Fylki aðgreindra textagilda valkosta.';
         OptionsNextStepTxt: Label 'Correct every option value before creating the definition.', Comment = 'is-IS=Leiðréttu öll valkostsgildi áður en skilgreiningin er stofnuð.';
     begin
@@ -174,19 +173,22 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
             if not Attribute.IsEmpty() then
                 Argument.AddError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(DuplicateErr, NameText), 'name', NameText, NameExpectedTxt, NameNextStepTxt);
         end;
-        if Request.Get('optionValues', Token) then
-            if not Token.IsArray() then begin
-                Token.WriteTo(Serialized);
-                Argument.AddError("Bifrost Error Code ori"::InvalidParameterFormat, OptionsErr, 'optionValues', Serialized, OptionsExpectedTxt, OptionsNextStepTxt);
-            end else
-                foreach OptionToken in Token.AsArray() do begin
-                    Clear(OptionObject);
-                    OptionObject.Add('optionValues', OptionToken);
-                    OptionText := Parts.ReadRequestText(OptionObject, 'optionValues', Argument, true, 250);
-                    if OptionNames.Contains(UpperCase(OptionText)) then
-                        Argument.AddError("Bifrost Error Code ori"::InvalidParameter, OptionsErr, 'optionValues', OptionText, OptionsExpectedTxt, OptionsNextStepTxt);
-                    OptionNames.Add(UpperCase(OptionText));
-                end;
+        if (TypeText <> '') and Resolve.TryParseType(TypeText, Probe) then
+            if Probe.Type = Probe.Type::Option then
+                if Request.Get('optionValues', Token) then
+                    if not Token.IsArray() then begin
+                        Token.WriteTo(Serialized);
+                        Argument.AddError("Bifrost Error Code ori"::InvalidParameterFormat, OptionsErr, 'optionValues', Serialized, OptionsExpectedTxt, OptionsNextStepTxt);
+                    end else
+                        foreach OptionToken in Token.AsArray() do
+                            // Documented contract: entries that are not plain values (objects, arrays, null) are skipped; plain values are used as text.
+                            if OptionToken.IsValue() then
+                                if not OptionToken.AsValue().IsNull() then begin
+                                    OptionText := OptionToken.AsValue().AsText();
+                                    if (OptionText = '') or (StrLen(OptionText) > 250) or OptionNames.Contains(UpperCase(OptionText)) then
+                                        Argument.AddError("Bifrost Error Code ori"::InvalidParameter, OptionsErr, 'optionValues', OptionText, OptionsExpectedTxt, OptionsNextStepTxt);
+                                    OptionNames.Add(UpperCase(OptionText));
+                                end;
         if Parts.RespondToProblems(Argument) then
             exit;
         if not Codeunit.Run(Codeunit::"Item AttrDef Create Proc ori", Argument) then begin

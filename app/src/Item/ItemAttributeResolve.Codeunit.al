@@ -678,7 +678,7 @@ codeunit 10076844 "Item Attribute Resolve ori"
             OptionArray := OptionToken.AsArray();
             for i := 0 to OptionArray.Count() - 1 do begin
                 OptionArray.Get(i, OptionValueToken);
-                if OptionValueToken.IsValue() then begin
+                if OptionValueToken.IsValue() and not OptionValueToken.AsValue().IsNull() then begin
                     OptionValueText := OptionValueToken.AsValue().AsText();
                     Clear(ItemAttributeValue);
                     ItemAttributeValue.Init();
