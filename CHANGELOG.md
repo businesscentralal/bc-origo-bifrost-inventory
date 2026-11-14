@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
+- `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
+- Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.
+
 ### Fixed (2026-11-09) - refusal help regressions after merging main (#151)
 
 - Restore the duplicate-definition help code to `PreconditionFailed` in codeunit 10076919, matching the request preflight in codeunit 10076913; the native resolver remains unchanged. Test codeunit 96922 identifies the shared missing-document entry by its identifier guidance, preserving the combined transfer `postingType` guidance and exact code-count assertions in both languages.

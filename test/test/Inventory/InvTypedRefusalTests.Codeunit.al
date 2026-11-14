@@ -340,6 +340,134 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         GlobalLanguage(OldLanguage);
     end;
 
+    /// <summary>Review AMEND 6883785599: Option optionValues keep the documented contract; plain values are used as text and non-values are skipped.</summary>
+    [Test]
+    procedure AttributeDefinitionOptions_SkipsNonValues_EN()
+    begin
+        CheckOptionValuesSkipNonValues(1033);
+    end;
+
+    [Test]
+    procedure AttributeDefinitionOptions_SkipsNonValues_IS()
+    begin
+        CheckOptionValuesSkipNonValues(1039);
+    end;
+
+    /// <summary>Review AMEND 6883785599: optionValues is not used, so not checked, when type is not Option.</summary>
+    [Test]
+    procedure AttributeDefinitionText_IgnoresOptionValues_EN()
+    begin
+        CheckOptionValuesIgnoredForText(1033);
+    end;
+
+    [Test]
+    procedure AttributeDefinitionText_IgnoresOptionValues_IS()
+    begin
+        CheckOptionValuesIgnoredForText(1039);
+    end;
+
+    /// <summary>Duplicate option values are refused before the definition is inserted.</summary>
+    [Test]
+    procedure AttributeDefinitionOptions_DuplicateRefused_EN()
+    begin
+        CheckOptionValuesDuplicate(1033);
+    end;
+
+    [Test]
+    procedure AttributeDefinitionOptions_DuplicateRefused_IS()
+    begin
+        CheckOptionValuesDuplicate(1039);
+    end;
+
+    local procedure CheckOptionValuesSkipNonValues(LanguageId: Integer)
+    var
+        Attribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OptionValues: JsonArray;
+        OldLanguage: Integer;
+        AttributeId: Integer;
+    begin
+        EnableDomains();
+        Request.Add('name', CopyStr('W27-' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Attribute.Name)));
+        Request.Add('type', 'Option');
+        OptionValues.ReadFrom('["Red",3,{"v":1},null,["x"]]');
+        Request.Add('optionValues', OptionValues);
+        Commit();
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.AttributeDefinition.Create", '', Request, false);
+        GlobalLanguage(OldLanguage);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'Plain values are accepted and non-values are skipped, as documented.');
+        Assert.IsTrue(Response.Get('attributeId', Token), 'attributeId returned.');
+        AttributeId := Token.AsValue().AsInteger();
+        Assert.IsTrue(Response.Get('createdValues', Token), 'createdValues returned.');
+        Assert.AreEqual(2, Token.AsArray().Count(), 'Only the two plain values are created.');
+        AttributeValue.SetRange("Attribute ID", AttributeId);
+        Assert.AreEqual(2, AttributeValue.Count(), 'Red and 3 exist as option values.');
+        AttributeValue.SetRange(Value, '3');
+        Assert.IsFalse(AttributeValue.IsEmpty(), 'A JSON number is used as its text.');
+    end;
+
+    local procedure CheckOptionValuesIgnoredForText(LanguageId: Integer)
+    var
+        Attribute: Record "Item Attribute";
+        AttributeValue: Record "Item Attribute Value";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OptionValues: JsonArray;
+        NonValue: JsonObject;
+        OldLanguage: Integer;
+        AttributeId: Integer;
+    begin
+        EnableDomains();
+        Request.Add('name', CopyStr('W27-' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Attribute.Name)));
+        Request.Add('type', 'Text');
+        NonValue.Add('v', 1);
+        OptionValues.Add(NonValue);
+        OptionValues.Add('');
+        OptionValues.Add('');
+        Request.Add('optionValues', OptionValues);
+        Commit();
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.AttributeDefinition.Create", '', Request, false);
+        GlobalLanguage(OldLanguage);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'optionValues is ignored when type is not Option.');
+        Assert.IsTrue(Response.Get('attributeId', Token), 'attributeId returned.');
+        AttributeId := Token.AsValue().AsInteger();
+        AttributeValue.SetRange("Attribute ID", AttributeId);
+        Assert.IsTrue(AttributeValue.IsEmpty(), 'No option values are created for a Text attribute.');
+    end;
+
+    local procedure CheckOptionValuesDuplicate(LanguageId: Integer)
+    var
+        Attribute: Record "Item Attribute";
+        Request: JsonObject;
+        Response: JsonObject;
+        OptionValues: JsonArray;
+        OldLanguage: Integer;
+        BeforeCount: Integer;
+    begin
+        EnableDomains();
+        BeforeCount := Attribute.Count();
+        Request.Add('name', CopyStr('W27-' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Attribute.Name)));
+        Request.Add('type', 'Option');
+        OptionValues.Add('Red');
+        OptionValues.Add('red');
+        Request.Add('optionValues', OptionValues);
+        Commit();
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.AttributeDefinition.Create", '', Request, false);
+        AssertRefusal(Response, 'InvalidParameter', 'optionValues');
+        GlobalLanguage(OldLanguage);
+        Assert.AreEqual(BeforeCount, Attribute.Count(), 'A refused definition is never inserted.');
+    end;
+
     local procedure CheckCostUnknown(LanguageId: Integer)
     var
         Request: JsonObject;

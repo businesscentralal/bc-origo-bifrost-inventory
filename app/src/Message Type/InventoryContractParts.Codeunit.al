@@ -124,7 +124,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Parameters.Add(ContractMgt.Parameter('name', 'string', true, 'The new attribute definition name.'));
                     Parameters.Add(ContractMgt.Parameter('type', 'string', true, 'Option, Text, Integer, Decimal or Date (not case-sensitive).'));
                     Parameters.Add(ContractMgt.Parameter('unitOfMeasure', 'string', false, 'Optional unit of measure for the definition.'));
-                    Parameters.Add(ContractMgt.Parameter('optionValues', 'array', false, 'Array of text values created as the initial option values. Used only when type is Option; entries that are not plain values are skipped.'));
+                    Parameters.Add(ContractMgt.Parameter('optionValues', 'array', false, 'Array of text values created as the initial option values. Used only when type is Option; entries that are not plain values (objects, arrays, null) are skipped. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused before anything is created.'));
                 end;
             'Inventory.TransferOrder.Create':
                 begin

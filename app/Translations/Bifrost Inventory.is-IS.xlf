@@ -1840,9 +1840,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType NameNextStepTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 1607064031" size-unit="char" translate="yes" xml:space="preserve">
-          <source>optionValues must be an array of distinct nonempty strings for an Option attribute.</source>
-          <target>optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=optionValues verður að vera fylki aðgreindra strengja sem eru ekki tómir fyrir Option-eiginleika.</note>
+          <source>optionValues must be an array of distinct nonempty values of at most 250 characters for an Option attribute.</source>
+          <target>optionValues verður að vera fylki aðgreindra gilda sem eru ekki tóm og að hámarki 250 stafir fyrir Option-eiginleika.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=optionValues verður að vera fylki aðgreindra gilda sem eru ekki tóm og að hámarki 250 stafir fyrir Option-eiginleika.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item AttrDef Create Impl ori - Method ExecuteBifrostTask - NamedType OptionsErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2785800275 - Method 3571782927 - NamedType 4142116594" size-unit="char" translate="yes" xml:space="preserve">
