@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-14) - AppSource gate accepts a baseline-reused product (#190)
+
+- AppSource build gate (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/AppSourceBuildGate.md`): ported from attachments #219. When a PR does not touch `app/` and AL-Go incremental builds reuse the baseline product package, Finalize/Pipeline accept it instead of a current-run `app` compile receipt, only if `_baselineWorkflowRunId` is numeric, `_baselineWorkflowSHA` is a 40-hex SHA, and exactly one `.buildartifacts/Apps/*.app` has that NAVX `sourceCommit` and the identity in `app/app.json`. Test-mode BeforeCompile seeks reuse only for the test app. `app/` touches, missing evidence and Signed stay fail-closed. New `ProductReuse` tests in `tools/tests/test_appsource_gate.py` use this repo's own app and test-app IDs. Incremental builds stay enabled; no AL change.
+
 ### Fixed (2026-11-06) - Issue 152 review amendments
 
 - `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.
