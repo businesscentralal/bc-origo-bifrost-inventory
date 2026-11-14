@@ -9,6 +9,10 @@
 
 - `Inventory.Reservation.Cancel` (10076892, `Reservation Cancel Impl ori`) answers `RecordNotFound` for an absent `entryNo` with `expected` (a positive JSON integer) and an actionable `nextStep` that points to `Inventory.Reservation.Get`, as the #151 refusal contract requires. `Reservation Create Tests` (96946) `Cancel_UnknownEntry_ReturnsRecordNotFound` asserts `received`, `expected` and `nextStep`. No public procedure or field changed.
 
+### Fixed (2026-11-13) - cost and price tests pass for users with a Full Name (#188)
+
+- `Inventory Cost Write Tests` (96937) `UpdateCost_RestrictedField_PreservesAllFields` and `UpdatePrice_RestrictedField_PreservesPrice` in `Inventory Price Write Tests` (96939) typed `UserId()` into the Foundation field-access page, which looks the name up by Full Name and only matched users without one. The tests now type the name the User/App buffer shows for the current user (Full Name, else User Name), read from the User table because the buffer table is internal to Foundation. Test app only; no product change and no object IDs added.
+
 ### Fixed (2026-11-06) - Issue 152 review amendments
 
 - `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.
