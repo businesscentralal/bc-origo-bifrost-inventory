@@ -3,6 +3,7 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
+using System.Security.AccessControl;
 using System.TestLibraries.Utilities;
 
 /// <summary>Story #4 price acceptance: native writes, explicit selection, parameter/field refusals and rollback.</summary>
@@ -149,7 +150,7 @@ codeunit 96939 "Inventory Price Write Tests"
     begin
         CreateItem(Item);
         FieldAccess.OpenEdit();
-        FieldAccess.CurrentUserName.SetValue(UserId());
+        FieldAccess.CurrentUserName.SetValue(CurrentUserBufferName());
         FieldAccess.New();
         FieldAccess."Table No.".SetValue(Database::Item);
         FieldAccess."Field No.".SetValue(Item.FieldNo("Unit Price"));
@@ -163,7 +164,7 @@ codeunit 96939 "Inventory Price Write Tests"
         Item.Get(Item."No.");
         Assert.AreEqual(10, Item."Unit Price", 'Restricted field unchanged.');
         FieldAccess.OpenEdit();
-        FieldAccess.CurrentUserName.SetValue(UserId());
+        FieldAccess.CurrentUserName.SetValue(CurrentUserBufferName());
         FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
         FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Unit Price")));
         Assert.IsTrue(FieldAccess.First(), 'Owned restriction found.');
@@ -387,6 +388,17 @@ codeunit 96939 "Inventory Price Write Tests"
         Assert.IsTrue(Declared, 'Registered Help must declare the actual native input error: ' + ErrorCode);
         Item.Get(Item."No.");
         Assert.AreEqual(10, Item."Unit Price", 'Invalid input preserves the price.');
+    end;
+
+    /// <summary>Name the Foundation field-access user buffer shows for the current user: Full Name, else User Name.</summary>
+    local procedure CurrentUserBufferName(): Text[250]
+    var
+        User: Record User;
+    begin
+        User.Get(UserSecurityId());
+        if User."Full Name" <> '' then
+            exit(CopyStr(User."Full Name", 1, 250));
+        exit(CopyStr(User."User Name", 1, 250));
     end;
 
     local procedure CreateItem(var Item: Record Item)

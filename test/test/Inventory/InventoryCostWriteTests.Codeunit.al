@@ -5,6 +5,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
+using System.Security.AccessControl;
 using System.TestLibraries.Utilities;
 
 /// <summary>Intentional native cost validation, refusals and field restrictions with isolated Item fixtures.</summary>
@@ -175,7 +176,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         // can otherwise retain the default Both restriction at the all-tables key.
         FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
         FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Last Direct Cost")));
-        FieldAccess.CurrentUserName.SetValue(UserId());
+        FieldAccess.CurrentUserName.SetValue(CurrentUserBufferName());
         FieldAccess."Table No.".SetValue(Database::Item);
         FieldAccess."Field No.".SetValue(Item.FieldNo("Last Direct Cost"));
         FieldAccess."Restriction Type".SetValue('Write');
@@ -188,7 +189,7 @@ codeunit 96937 "Inventory Cost Write Tests"
         Commit(); // Preserve the owned fixture across the expected transaction rollback.
         CostWrite.UpdateCost(TempArgument);
         FieldAccess.OpenEdit();
-        FieldAccess.CurrentUserName.SetValue(UserId());
+        FieldAccess.CurrentUserName.SetValue(CurrentUserBufferName());
         FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
         FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Last Direct Cost")));
         Assert.IsTrue(FieldAccess.First(), 'Find the self-created field restriction for cleanup.');
@@ -347,6 +348,17 @@ codeunit 96937 "Inventory Cost Write Tests"
         After := Token.AsObject();
         After.Get('unitCost', Token);
         Assert.AreEqual(Item."Unit Cost", Token.AsValue().AsDecimal(), 'After matches native stored cost.');
+    end;
+
+    /// <summary>Name the Foundation field-access user buffer shows for the current user: Full Name, else User Name.</summary>
+    local procedure CurrentUserBufferName(): Text[250]
+    var
+        User: Record User;
+    begin
+        User.Get(UserSecurityId());
+        if User."Full Name" <> '' then
+            exit(CopyStr(User."Full Name", 1, 250));
+        exit(CopyStr(User."User Name", 1, 250));
     end;
 
     local procedure CreateItem(var Item: Record Item; Method: Enum "Costing Method")
