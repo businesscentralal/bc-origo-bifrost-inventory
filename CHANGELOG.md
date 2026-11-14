@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-14) - AppSource gate accepts a baseline-reused product (#190)
+
+- AppSource build gate (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/AppSourceBuildGate.md`): ported from attachments #219. When a PR does not touch `app/` and AL-Go incremental builds reuse the baseline product package, Finalize/Pipeline accept it instead of a current-run `app` compile receipt, only if `_baselineWorkflowRunId` is numeric, `_baselineWorkflowSHA` is a 40-hex SHA, and exactly one `.buildartifacts/Apps/*.app` has that NAVX `sourceCommit` and the identity in `app/app.json`. Test-mode BeforeCompile seeks reuse only for the test app. `app/` touches, missing evidence and Signed stay fail-closed. New `ProductReuse` tests in `tools/tests/test_appsource_gate.py` use this repo's own app and test-app IDs. Incremental builds stay enabled; no AL change.
 ### Fixed (2026-11-05) - Reservation.Cancel RecordNotFound refusal (#169)
 
 - `Inventory.Reservation.Cancel` (10076892, `Reservation Cancel Impl ori`) answers `RecordNotFound` for an absent `entryNo` with `expected` (a positive JSON integer) and an actionable `nextStep` that points to `Inventory.Reservation.Get`, as the #151 refusal contract requires. `Reservation Create Tests` (96946) `Cancel_UnknownEntry_ReturnsRecordNotFound` asserts `received`, `expected` and `nextStep`. No public procedure or field changed.
