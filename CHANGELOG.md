@@ -21,6 +21,14 @@
 
 - Merge main `25aa5a1` (#175 / #152) into the refusal contract. Main keeps field-write checks, help captions (`Inv. Posting Gate`, `Full Access`) and `effect.permissionSet` IDs. #151 keeps typed refusal codes and parameter, expected and nextStep on the refusal paths in codeunits 10076854, 10076858, 10076859, 10076863, 10076866, 10076881, 10076882, 10076883, 10076893, 10076901, 10076902, 10076903, 10076909 and 10076919, and in test codeunit 96921. Duplicate attribute names are refused by the typed preflight before the native resolver runs. `pr:on-hold` on PR #166 is unchanged.
 
+### Fixed (2026-11-14) - AppSource gate accepts a baseline-reused product (#190)
+
+- AppSource build gate (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/AppSourceBuildGate.md`): ported from attachments #219. When a PR does not touch `app/` and AL-Go incremental builds reuse the baseline product package, Finalize/Pipeline accept it instead of a current-run `app` compile receipt, only if `_baselineWorkflowRunId` is numeric, `_baselineWorkflowSHA` is a 40-hex SHA, and exactly one `.buildartifacts/Apps/*.app` has that NAVX `sourceCommit` and the identity in `app/app.json`. Test-mode BeforeCompile seeks reuse only for the test app. `app/` touches, missing evidence and Signed stay fail-closed. New `ProductReuse` tests in `tools/tests/test_appsource_gate.py` use this repo's own app and test-app IDs. Incremental builds stay enabled; no AL change.
+
+### Fixed (2026-11-13) - cost and price tests pass for users with a Full Name (#188)
+
+- `Inventory Cost Write Tests` (96937) `UpdateCost_RestrictedField_PreservesAllFields` and `UpdatePrice_RestrictedField_PreservesPrice` in `Inventory Price Write Tests` (96939) typed `UserId()` into the Foundation field-access page, which looks the name up by Full Name and only matched users without one. The tests now type the name the User/App buffer shows for the current user (Full Name, else User Name), read from the User table because the buffer table is internal to Foundation. Test app only; no product change and no object IDs added.
+
 ### Fixed (2026-11-06) - Issue 152 review amendments
 
 - `Inventory.Tracking.Get` (codeunit 10076900) and `Inventory.Tracking.Availability.Get` help no longer mention a `quantity` input, and `Inventory.TransferOrder.Statistics` (codeunit 10076905) no longer promises a reservation state that the response does not have; the `Transfer Order Stats Impl ori` description label and its is-IS translation are corrected.

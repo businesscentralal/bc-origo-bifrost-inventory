@@ -678,19 +678,20 @@ codeunit 10076844 "Item Attribute Resolve ori"
             OptionArray := OptionToken.AsArray();
             for i := 0 to OptionArray.Count() - 1 do begin
                 OptionArray.Get(i, OptionValueToken);
-                if OptionValueToken.IsValue() and not OptionValueToken.AsValue().IsNull() then begin
-                    OptionValueText := OptionValueToken.AsValue().AsText();
-                    Clear(ItemAttributeValue);
-                    ItemAttributeValue.Init();
-                    ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
-                    ItemAttributeValue.ID := 0;
-                    ItemAttributeValue.Validate(Value, CopyStr(OptionValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
-                    ItemAttributeValue.Insert(true);
-                    Clear(CreatedValueJson);
-                    CreatedValueJson.Add('valueId', ItemAttributeValue.ID);
-                    CreatedValueJson.Add('value', ItemAttributeValue.Value);
-                    CreatedValues.Add(CreatedValueJson);
-                end;
+                if OptionValueToken.IsValue() then // AL evaluates both operands of 'and'; keep AsValue() behind IsValue()
+                    if not OptionValueToken.AsValue().IsNull() then begin
+                        OptionValueText := OptionValueToken.AsValue().AsText();
+                        Clear(ItemAttributeValue);
+                        ItemAttributeValue.Init();
+                        ItemAttributeValue."Attribute ID" := ItemAttribute.ID;
+                        ItemAttributeValue.ID := 0;
+                        ItemAttributeValue.Validate(Value, CopyStr(OptionValueText, 1, MaxStrLen(ItemAttributeValue.Value)));
+                        ItemAttributeValue.Insert(true);
+                        Clear(CreatedValueJson);
+                        CreatedValueJson.Add('valueId', ItemAttributeValue.ID);
+                        CreatedValueJson.Add('value', ItemAttributeValue.Value);
+                        CreatedValues.Add(CreatedValueJson);
+                    end;
             end;
         end;
 
