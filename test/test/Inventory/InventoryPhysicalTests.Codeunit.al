@@ -365,6 +365,78 @@ codeunit 96944 "Inventory Physical Tests"
         Assert.AreEqual(-2, Entries.Quantity, 'Actual native shortage adjustment.');
     end;
 
+    [Test]
+    procedure PhysicalPost_IgnoresOnlyEmptyLine_EN()
+    begin
+        VerifyEmptyPhysicalLine(1033, false);
+    end;
+
+    [Test]
+    procedure PhysicalPost_IgnoresOnlyEmptyLine_IS()
+    begin
+        VerifyEmptyPhysicalLine(1039, false);
+    end;
+
+    [Test]
+    procedure PhysicalPost_RejectsNonemptyMissingItem_EN()
+    begin
+        VerifyEmptyPhysicalLine(1033, true);
+    end;
+
+    [Test]
+    procedure PhysicalPost_RejectsNonemptyMissingItem_IS()
+    begin
+        VerifyEmptyPhysicalLine(1039, true);
+    end;
+
+    local procedure VerifyEmptyPhysicalLine(LanguageId: Integer; InvalidNonempty: Boolean)
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        BlankLine: Record "Item Journal Line";
+        Entries: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+        OldLanguage: Integer;
+    begin
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        CreatePhysical(Item, Batch, Line);
+        AddCount(Request, Line.SystemId, 8);
+        InitArgument(TempArgument, Batch, Request);
+        Journal.RecordCount(TempArgument);
+        BlankLine.Init();
+        BlankLine."Journal Template Name" := Batch."Journal Template Name";
+        BlankLine."Journal Batch Name" := Batch.Name;
+        BlankLine."Line No." := Line."Line No." + 10000;
+        if InvalidNonempty then
+            BlankLine.Quantity := 1;
+        BlankLine.Insert(false);
+        Clear(Request);
+        InitArgument(TempArgument, Batch, Request);
+        Process.SetJournalType("Item Journal Template Type"::"Phys. Inventory");
+        BeforeCount := Entries.Count();
+        Commit();
+        if InvalidNonempty then begin
+            Assert.IsFalse(Process.Run(TempArgument), 'A malformed nonempty row must still fail native validation.');
+            Assert.AreEqual(BeforeCount, Entries.Count(), 'Failure does not leave partial posting.');
+        end else begin
+            Assert.IsTrue(Process.Run(TempArgument), GetLastErrorText());
+            Response := TempArgument.GetResponseJson();
+            Response.Get('postedLineCount', Token);
+            Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Only the meaningful physical inventory row posts.');
+            Entries.SetRange("Item No.", Item."No.");
+            Entries.SetRange(Quantity, -2);
+            Assert.AreEqual(1, Entries.Count(), 'Actual shortage posted despite the empty row.');
+        end;
+        GlobalLanguage(OldLanguage);
+    end;
+
     /// <summary>Every operation rejects an existing batch of another journal family.</summary>
     [Test]
     procedure Scenario_AC03_WrongTemplate_AllFiveRefuse()

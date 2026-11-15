@@ -199,7 +199,7 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
                 EntryJson.Add('itemNo', ReservationEntry."Item No.");
                 EntryJson.Add('locationCode', ReservationEntry."Location Code");
                 EntryJson.Add('quantity', ReservationEntry.Quantity);
-                EntryJson.Add('reservationStatus', Format(ReservationEntry."Reservation Status"));
+                EntryJson.Add('reservationStatus', ReservationEntry."Reservation Status".Names().Get(ReservationEntry."Reservation Status".Ordinals().IndexOf(ReservationEntry."Reservation Status".AsInteger())));
                 EntryJson.Add('sourceId', ReservationEntry."Source ID");
                 Entries.Add(EntryJson);
             until ReservationEntry.Next() = 0;

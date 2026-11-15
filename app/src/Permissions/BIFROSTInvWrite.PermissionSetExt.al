@@ -15,6 +15,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
+        codeunit "Inventory Read Process ori" = X,
         codeunit "Inventory Tracking Write ori" = X,
         tabledata "Inventory Setup ori" = R,
         codeunit "Adjust Cost Run Impl ori" = X,
