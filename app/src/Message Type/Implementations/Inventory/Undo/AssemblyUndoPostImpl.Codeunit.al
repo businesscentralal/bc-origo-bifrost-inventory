@@ -88,7 +88,8 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Assembly domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate or cannot write Posted Assembly Header records.', 'Assign Inv. Posting Gate, the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change the posted assembly tables.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo is required.', 'documentNo was not sent.', 'Send documentNo, the number of the posted assembly.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo is required.', 'documentNo was not sent or is empty.', 'Send documentNo, the number of the posted assembly.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'documentNo is not text.', 'Send a JSON string of at most 20 characters.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Posted assembly %1 was not found.', 'No Posted Assembly Header has that number.', 'Check the number. It is the posted assembly number, not the assembly order number.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The error text of Business Central', 'Business Central refuses the undo, for example when the posted assembly cannot be undone. The answer carries BusinessCentralError and Business Central''s own error text.', 'Read the text, correct the cause in Business Central and send the call again.'));
         exit(true);
@@ -168,11 +169,12 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         PostedAssemblyHeader: Record "Posted Assembly Header";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Process: Codeunit "Inventory Write Process ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         DocumentNo: Code[20];
-        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
+        DocumentExpectedTxt: Label 'An existing posted assembly document that can be undone.', Comment = 'is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.';
+        DocumentNextStepTxt: Label 'Send the posted assembly number in documentNo and resolve its native posting constraints.', Comment = 'is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.';
         NotFoundErr: Label 'Posted assembly %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
@@ -183,13 +185,11 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Argument.AssertVersion1();
 
         RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, '', '', '', '');
+        DocumentNo := CopyStr(Parts.ReadRequestText(RequestJson, 'documentNo', Argument, true, 20), 1, 20);
+        if Parts.RespondToProblems(Argument) then
             exit;
-        end;
-        DocumentNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(DocumentNo));
         if not PostedAssemblyHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), '', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
             exit;
         end;
 
@@ -199,7 +199,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
                 exit;
             end;
 
