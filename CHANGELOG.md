@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.SKU.Create and Inventory.SKU.Get (#114)
+- `Inventory.SKU.Create` runs the Create Stockkeeping Unit report (5706) from `itemFilter`, `locationFilter`, `variantFilter`, `createPer`, `itemInInventoryOnly` and `replaceExisting`, and answers `itemsMatched`, `created` and `skuCount`. Effect: write (replaceExisting overwrites units edited by hand).
+- `Inventory.SKU.Get` reads stockkeeping units with planning and cost fields (exact itemNo, locationCode, variantCode; at most 500 rows). Effect: read.
+- Data.Records.Set on table 5700 is refused and names the two types. Both types use the Availability domain switch.
+- Objects: codeunits 10076995 `SKU Create Impl ori`, 10076996 `SKU Get Impl ori`, 10076997 `SKU Create Proc ori`, 10076998 `SKU Request ori`, 10076999 `SKU Restrict ori`; enum extension 10076995; tests 96968 `SKU Tests`, 96999 `SKU Perm`. is-IS help and translations included.
+
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 

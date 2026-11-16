@@ -24,6 +24,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.ItemCategory.Get and Inventory.ItemCategory.Set
 - Inventory.Reclassification.Check, PreviewPost, and Post
 - Inventory.Period.Get, Close, and Reopen
+- Inventory.SKU.Get and Inventory.SKU.Create
 - Inventory.Price.Update
 - Inventory.Cost.Get, Cost.Update, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
 - Inventory.Revaluation.Calculate, PreviewPost, and Post
