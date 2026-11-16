@@ -374,6 +374,7 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
+    [HandlerFunctions('DirectTransferPostedMessageHandler')]
     procedure Post_DirectTransfer_SingleDocument_CreatesDirectTransfer()
     var
         OriginalSetup: Record "Inventory Setup";
@@ -495,6 +496,14 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.IsTrue(TransferHeader.Get(DocumentNo), 'A partial receive keeps the transfer order');
         Assert.IsTrue(ResponseJson.Get('orderDeleted', StatusToken), 'orderDeleted missing');
         Assert.IsFalse(StatusToken.AsValue().AsBoolean(), 'orderDeleted must be false after a partial receive');
+    end;
+
+    /// <summary>Handles the native confirmation message after a direct transfer is fully posted.</summary>
+    [MessageHandler]
+    procedure DirectTransferPostedMessageHandler(Message: Text[1024])
+    begin
+        // The test verifies the resulting posted document and order deletion independently of the localized message.
+        Assert.AreNotEqual('', Message, 'Native posting message should be populated');
     end;
 
     local procedure Confirm(MessageType: Enum "Message Type ori"; var Request: JsonObject)
