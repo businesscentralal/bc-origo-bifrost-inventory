@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-### Added (2026-11-16) - purchase invoice receipt lines (#133)
+### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 
 - `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
 - Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunits 10077030 `Purch Get Receipt Impl ori`, 10077031 `Purch Get Receipt Proc ori`, enum extension/value 10077030 `MsgType.PurchGetRcpt.Ext ori`, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.

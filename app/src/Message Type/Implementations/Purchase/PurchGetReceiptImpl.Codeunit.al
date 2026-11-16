@@ -285,7 +285,6 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        TouchDeclaredKeys(RequestJson);
         if not RejectUnknownKeys(Argument, RequestJson) then
             exit;
         if not ValidateShape(Argument, RequestJson) then
@@ -325,6 +324,7 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         if RequestJson.Contains(ReceiptNosKeyTok) then
             if not ResolveReceipts(Argument, RequestJson, PurchHeader, TempRcptHeader) then
                 exit;
+        PurchLine.ReadIsolation := IsolationLevel::ReadCommitted;
         PurchLine.SetRange("Document Type", PurchHeader."Document Type");
         PurchLine.SetRange("Document No.", PurchHeader."No.");
         if PurchLine.FindLast() then
@@ -351,9 +351,15 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    local procedure MarkCandidates(PurchHeader: Record "Purchase Header"; var TempRcptHeader: Record "Purch. Rcpt. Header" temporary; ByReceipt: Boolean; var PurchRcptLine: Record "Purch. Rcpt. Line"; var SkippedLines: JsonArray) CandidateCount: Integer
+    local procedure MarkCandidates(
+        PurchHeader: Record "Purchase Header";
+        var TempRcptHeader: Record "Purch. Rcpt. Header" temporary;
+        ByReceipt: Boolean;
+        var PurchRcptLine: Record "Purch. Rcpt. Line";
+        var SkippedLines: JsonArray) CandidateCount: Integer
     begin
         PurchRcptLine.Reset();
+        PurchRcptLine.ReadIsolation := IsolationLevel::ReadCommitted;
         if ByReceipt then begin
             if not TempRcptHeader.FindSet() then
                 exit(0);
@@ -383,7 +389,10 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         PurchRcptLine.SetRange("Qty. Rcd. Not Invoiced");
     end;
 
-    local procedure MarkOne(var PurchRcptLine: Record "Purch. Rcpt. Line"; var SkippedLines: JsonArray; ListInvoiced: Boolean): Integer
+    local procedure MarkOne(
+        var PurchRcptLine: Record "Purch. Rcpt. Line";
+        var SkippedLines: JsonArray;
+        ListInvoiced: Boolean): Integer
     var
         InvoiceNo: Code[20];
     begin
@@ -405,6 +414,7 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
     var
         PurchLine: Record "Purchase Line";
     begin
+        PurchLine.ReadIsolation := IsolationLevel::ReadCommitted;
         PurchLine.SetRange("Document Type", PurchLine."Document Type"::Invoice);
         PurchLine.SetRange("Receipt No.", PurchRcptLine."Document No.");
         PurchLine.SetRange("Receipt Line No.", PurchRcptLine."Line No.");
@@ -424,7 +434,10 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         Line.Add('receiptLineNo', PurchLine."Receipt Line No.");
     end;
 
-    local procedure SkippedLineJson(PurchRcptLine: Record "Purch. Rcpt. Line"; Reason: Text; InvoiceNo: Code[20]) Line: JsonObject
+    local procedure SkippedLineJson(
+        PurchRcptLine: Record "Purch. Rcpt. Line";
+        Reason: Text;
+        InvoiceNo: Code[20]) Line: JsonObject
     begin
         Line.Add('receiptNo', PurchRcptLine."Document No.");
         Line.Add('receiptLineNo', PurchRcptLine."Line No.");
@@ -443,16 +456,9 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(false);
     end;
 
-    local procedure TouchDeclaredKeys(RequestJson: JsonObject)
-    begin
-        // String literals are the keys the contract guard counts as reads.
-        if RequestJson.Contains('documentNo') then;
-        if RequestJson.Contains('systemId') then;
-        if RequestJson.Contains('receiptNos') then;
-        if RequestJson.Contains('allReceipts') then;
-    end;
-
-    local procedure RejectUnknownKeys(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    local procedure RejectUnknownKeys(
+        var Argument: Record "Message Argument ori";
+        RequestJson: JsonObject): Boolean
     var
         KeyName: Text;
         UnknownKeyErr: Label 'The request contains an unknown key.', Comment = 'is-IS=Beiðnin inniheldur óþekktan lykil.';
@@ -466,7 +472,9 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
-    local procedure ValidateShape(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    local procedure ValidateShape(
+        var Argument: Record "Message Argument ori";
+        RequestJson: JsonObject): Boolean
     var
         Token: JsonToken;
         ItemToken: JsonToken;
@@ -499,16 +507,16 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
             Argument.RespondWithError("Bifrost Error Code ori"::ConflictingIdentifiers, BothSourceErr, AllReceiptsKeyTok, '', ReceiptNosKeyTok, BothNextLbl);
             exit(false);
         end;
-        if RequestJson.Get(DocumentNoKeyTok, Token) then
+        if RequestJson.Get('documentNo', Token) then
             if not IsDocumentNoToken(Token) then
                 exit(RespondFormat(Argument, DocumentNoKeyTok, TextExpectedLbl, FormatErr, FormatNextLbl));
-        if RequestJson.Get(SystemIdKeyTok, Token) then begin
+        if RequestJson.Get('systemId', Token) then begin
             if not IsTextToken(Token) then
                 exit(RespondFormat(Argument, SystemIdKeyTok, GuidExpectedTok, FormatErr, FormatNextLbl));
             if not Evaluate(SystemId, Token.AsValue().AsText()) then
                 exit(RespondFormat(Argument, SystemIdKeyTok, GuidExpectedTok, FormatErr, FormatNextLbl));
         end;
-        if RequestJson.Get(ReceiptNosKeyTok, Token) then begin
+        if RequestJson.Get('receiptNos', Token) then begin
             if not Token.IsArray() then
                 exit(RespondFormat(Argument, ReceiptNosKeyTok, ArrayExpectedTok, FormatErr, FormatNextLbl));
             if Token.AsArray().Count() = 0 then
@@ -517,7 +525,7 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
                 if not IsDocumentNoToken(ItemToken) then
                     exit(RespondFormat(Argument, ReceiptNosKeyTok, TextExpectedLbl, FormatErr, FormatNextLbl));
         end;
-        if RequestJson.Get(AllReceiptsKeyTok, Token) then begin
+        if RequestJson.Get('allReceipts', Token) then begin
             if not Token.IsValue() then
                 exit(RespondFormat(Argument, AllReceiptsKeyTok, BooleanExpectedTok, FormatErr, FormatNextLbl));
             if Token.AsValue().IsNull() then
@@ -532,7 +540,12 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
-    local procedure RespondFormat(var Argument: Record "Message Argument ori"; KeyName: Text; Expected: Text; FormatErr: Text; FormatNextLbl: Text): Boolean
+    local procedure RespondFormat(
+        var Argument: Record "Message Argument ori";
+        KeyName: Text;
+        Expected: Text;
+        FormatErr: Text;
+        FormatNextLbl: Text): Boolean
     begin
         Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName), CopyStr(KeyName, 1, 250), '', CopyStr(Expected, 1, 250), StrSubstNo(FormatNextLbl, KeyName, Expected));
         exit(false);
@@ -565,7 +578,10 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(TextValue in ['true', 'false']);
     end;
 
-    local procedure ResolveInvoice(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; var PurchHeader: Record "Purchase Header"): Boolean
+    local procedure ResolveInvoice(
+        var Argument: Record "Message Argument ori";
+        RequestJson: JsonObject;
+        var PurchHeader: Record "Purchase Header"): Boolean
     var
         NotFoundErr: Label 'No purchase invoice %1 was found.', Comment = '%1 = document no. or system id, is-IS=Innkaupareikningur %1 fannst ekki.';
         NotFoundNextLbl: Label 'Check documentNo or systemId; this type takes an open purchase invoice, not an order or a posted invoice.', Comment = 'is-IS=Athugaðu documentNo eða systemId; þessi tegund tekur opinn innkaupareikning, ekki pöntun eða bókaðan reikning.';
@@ -589,7 +605,9 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
-    local procedure LocateInvoice(RequestJson: JsonObject; var PurchHeader: Record "Purchase Header"): Boolean
+    local procedure LocateInvoice(
+        RequestJson: JsonObject;
+        var PurchHeader: Record "Purchase Header"): Boolean
     var
         SystemId: Guid;
     begin
@@ -603,7 +621,11 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(PurchHeader.Get(PurchHeader."Document Type"::Invoice, CopyStr(ReadText(RequestJson, DocumentNoKeyTok), 1, MaxStrLen(PurchHeader."No."))));
     end;
 
-    local procedure ResolveReceipts(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; PurchHeader: Record "Purchase Header"; var TempRcptHeader: Record "Purch. Rcpt. Header" temporary): Boolean
+    local procedure ResolveReceipts(
+        var Argument: Record "Message Argument ori";
+        RequestJson: JsonObject;
+        PurchHeader: Record "Purchase Header";
+        var TempRcptHeader: Record "Purch. Rcpt. Header" temporary): Boolean
     var
         PurchRcptHeader: Record "Purch. Rcpt. Header";
         NotFoundErr: Label 'Posted purchase receipt %1 was not found.', Comment = '%1 = receipt no., is-IS=Bókuð innkaupamóttaka %1 fannst ekki.';
@@ -612,6 +634,7 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         OtherCurrencyErr: Label 'Receipt %1 is in currency "%2", not "%3" like invoice %4.', Comment = '%1 = receipt no., %2 = receipt currency, %3 = invoice currency, %4 = invoice no., is-IS=Móttaka %1 er í gjaldmiðlinum "%2", ekki "%3" eins og reikningur %4.';
         InvalidLineNextLbl: Label 'Send only receipts of the pay-to vendor and currency of the invoice, or create a separate invoice for the other receipts. Nothing was added.', Comment = 'is-IS=Sendu aðeins móttökur greiðslulánardrottins og gjaldmiðils reikningsins, eða stofnaðu sérstakan reikning fyrir hinar móttökurnar. Engu var bætt við.';
     begin
+        PurchRcptHeader.ReadIsolation := IsolationLevel::ReadCommitted;
         CollectReceipts(RequestJson, TempRcptHeader);
         if TempRcptHeader.FindSet() then
             repeat
@@ -631,7 +654,9 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
-    local procedure CollectReceipts(RequestJson: JsonObject; var TempRcptHeader: Record "Purch. Rcpt. Header" temporary)
+    local procedure CollectReceipts(
+        RequestJson: JsonObject;
+        var TempRcptHeader: Record "Purch. Rcpt. Header" temporary)
     var
         Token: JsonToken;
         ItemToken: JsonToken;
@@ -639,7 +664,7 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
     begin
         TempRcptHeader.Reset();
         TempRcptHeader.DeleteAll();
-        if not RequestJson.Get(ReceiptNosKeyTok, Token) then
+        if not RequestJson.Get('receiptNos', Token) then
             exit;
         foreach ItemToken in Token.AsArray() do begin
             ReceiptNo := CopyStr(ItemToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
@@ -651,7 +676,9 @@ codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
         end;
     end;
 
-    local procedure ReadText(RequestJson: JsonObject; KeyName: Text): Text
+    local procedure ReadText(
+        RequestJson: JsonObject;
+        KeyName: Text): Text
     var
         Token: JsonToken;
     begin

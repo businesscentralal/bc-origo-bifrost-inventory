@@ -353,8 +353,12 @@ codeunit 96996 "Purch Get Receipt Tests"
     begin
         // Story #133, AC04 | Time: None | Risk: None
         CreateVendor(Vendor);
-        CreateInvoice(Invoice, Vendor."No.");
-        Invoice.Rename(Invoice."Document Type", 'X1234567890123456789');
+        Invoice.Init();
+        Invoice."Document Type" := Invoice."Document Type"::Invoice;
+        Invoice."No." := 'X1234567890123456789';
+        Invoice.Insert(true);
+        Invoice.Validate("Buy-from Vendor No.", Vendor."No.");
+        Invoice.Modify(true);
         RequestJson.Add('documentNo', Invoice."No.");
         RequestJson.Add('allReceipts', true);
         Assert.AreEqual('Success', ReadText(Execute(RequestJson), 'status'), '20 characters accepted');
