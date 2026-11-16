@@ -71,7 +71,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters. When lineNos is omitted, every line that is not a correction line is selected.'));
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters; a longer value is cut to 20. When lineNos is omitted, every line that is not a correction line is selected.'));
         Parameters.Add(ContractMgt.Parameter('lineNos', 'array', false, 'Optional array of 1 to 100 distinct positive posted shipment line numbers. Every selected line must exist and not be a correction line. Omit to undo all non-correction lines.'));
         Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
@@ -83,7 +83,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Fields: JsonArray;
     begin
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
-        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted transfer shipment No. that was undone, as sent.'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted transfer shipment No. that was undone, as sent (cut to 20 characters).'));
         Response.Add('contentType', 'text/json');
         Response.Add('fields', Fields);
         exit(true);
@@ -96,7 +96,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Transfer Orders domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate or cannot write Transfer Shipment Header records.', 'Assign Inv. Posting Gate, the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change the posted transfer tables.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo was not sent.', 'Send documentNo, the number of the posted transfer shipment.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'documentNo or lineNos has the wrong JSON format.', 'Send a document number and, optionally, an array of positive integer line numbers.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'lineNos has the wrong JSON format.', 'Send a document number and, optionally, an array of positive integer line numbers.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineNos is empty, has duplicate or non-positive values, or has more than 100 values.', 'Send 1 to 100 distinct positive line numbers or omit lineNos.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No Transfer Shipment Header has that number.', 'Check the number of the posted transfer shipment.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'Posted transfer shipment %1 has no lines to undo.', 'The posted transfer shipment has no line that is not a correction line, so there is nothing to undo.', 'Check that the shipment is the original posted shipment and not one that only holds correction lines.'));
@@ -188,10 +188,11 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         TransferReceiptLine: Record "Transfer Receipt Line";
         Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
-        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        Token: JsonToken;
         DocumentNo: Code[20];
+        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
         NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.';
         ReceivedErr: Label 'Transfer shipment %1 has already been received and cannot be undone.', Comment = '%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.';
         ReceivedNextStepTxt: Label 'Create a new transfer order to return the received goods to the original location.', Comment = 'is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.';
@@ -205,9 +206,11 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        DocumentNo := CopyStr(Parts.ReadRequestText(RequestJson, 'documentNo', Argument, true, 20), 1, 20);
-        if Parts.RespondToProblems(Argument) then
+        if not RequestJson.Get('documentNo', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, 'documentNo', '', '', '');
             exit;
+        end;
+        DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
         if not TransferShipmentHeader.Get(DocumentNo) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
             exit;
