@@ -176,10 +176,7 @@ codeunit 96904 "Transfer Order Test Helper"
         InventorySetup := OriginalSetup;
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
-        if PostAsSingleDocument then
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Direct Transfer"
-        else
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Receipt and Shipment";
+        SetPostingMode(InventorySetup, PostAsSingleDocument);
         InventorySetup.Modify(true);
     end;
 
@@ -191,8 +188,51 @@ codeunit 96904 "Transfer Order Test Helper"
         InventorySetup: Record "Inventory Setup";
     begin
         InventorySetup.Get();
-        InventorySetup."Direct Transfer Posting" := OriginalSetup."Direct Transfer Posting";
+        RestorePostingMode(InventorySetup, OriginalSetup);
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
+    end;
+    local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; PostAsSingleDocument: Boolean)
+    var
+        SetupRef: RecordRef;
+        PostingField: FieldRef;
+        PostingMode: Integer;
+    begin
+        SetupRef.GetTable(InventorySetup);
+        if SetupRef.FieldExist(5857) then begin
+            PostingField := SetupRef.Field(5857);
+            if PostAsSingleDocument then
+                PostingMode := 20
+            else
+                PostingMode := 10;
+        end else begin
+            PostingField := SetupRef.Field(5855);
+            if PostAsSingleDocument then
+                PostingMode := 1
+            else
+                PostingMode := 0;
+        end;
+        PostingField.Value := PostingMode;
+        SetupRef.SetTable(InventorySetup);
+    end;
+
+    local procedure RestorePostingMode(var InventorySetup: Record "Inventory Setup"; OriginalSetup: Record "Inventory Setup")
+    var
+        SetupRef: RecordRef;
+        OriginalRef: RecordRef;
+        PostingField: FieldRef;
+        OriginalField: FieldRef;
+        FieldNo: Integer;
+    begin
+        SetupRef.GetTable(InventorySetup);
+        OriginalRef.GetTable(OriginalSetup);
+        if SetupRef.FieldExist(5857) then
+            FieldNo := 5857
+        else
+            FieldNo := 5855;
+        PostingField := SetupRef.Field(FieldNo);
+        OriginalField := OriginalRef.Field(FieldNo);
+        PostingField.Value := OriginalField.Value;
+        SetupRef.SetTable(InventorySetup);
     end;
 }

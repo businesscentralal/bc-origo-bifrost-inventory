@@ -405,6 +405,288 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1198502872" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central could not calculate the event timeline.</source>
+          <target>Business Central gat ekki reiknað tímalínu atburða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central gat ekki reiknað tímalínu atburða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType CalculationErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 3073341362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check this item in Item Availability by Event and resolve its source data or read permissions, then retry.</source>
+          <target>Athugaðu vöruna í Framboð vöru eftir atburði og leiðréttu upprunagögn eða lesheimildir og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vöruna í Framboð vöru eftir atburði og leiðréttu upprunagögn eða lesheimildir og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType CalculationNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 998505471" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Availability domain is disabled.</source>
+          <target>Slökkt er á framboðssviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á framboðssviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType DomainErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to enable Availability in Inventory Setup.</source>
+          <target>Biddu stjórnanda um að virkja framboð í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um að virkja framboð í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter has an invalid format.</source>
+          <target>Færibreytan er á ógildu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er á ógildu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1523932907" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo as text and from and to as YYYY-MM-DD dates. Optional variant and location must be exact codes.</source>
+          <target>Sendu itemNo sem texta og from og to sem dagsetningar á forminu YYYY-MM-DD. Valfrjálsu færibreyturnar variant og location verða að vera nákvæmir kóðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem texta og from og to sem dagsetningar á forminu YYYY-MM-DD. Valfrjálsu færibreyturnar variant og location verða að vera nákvæmir kóðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType InputNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required parameter is missing.</source>
+          <target>Nauðsynlega færibreytu vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlega færibreytu vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item, variant or location does not exist.</source>
+          <target>Varan, afbrigðið eða staðsetningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan, afbrigðið eða staðsetningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check itemNo and any variant or location code, then retry with an existing record.</source>
+          <target>Athugaðu itemNo og afbrigðis- eða staðsetningarkóða og reyndu aftur með færslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu itemNo og afbrigðis- eða staðsetningarkóða og reyndu aftur með færslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read permission is required.</source>
+          <target>Lesheimild er nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesheimild er nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for Bifrost Read-Only and Business Central inventory read permissions.</source>
+          <target>Biddu stjórnanda um lesaðgang í Bifröst og lesheimildir á birgðum í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um lesaðgang í Bifröst og lesheimildir á birgðum í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 2239992694" size-unit="char" translate="yes" xml:space="preserve">
+          <source>from must be on or before to.</source>
+          <target>from verður að vera á undan eða sama dag og to.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=from verður að vera á undan eða sama dag og to.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType RangeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 4260795724" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an inclusive date range with from on or before to.</source>
+          <target>Sendu dagsetningabil með báðum endadögum þar sem from er á undan eða sama dag og to.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu dagsetningabil með báðum endadögum þar sem from er á undan eða sama dag og to.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType RangeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 1122067359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Availability requires an inventory item.</source>
+          <target>Framboð krefst birgðavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboð krefst birgðavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType StockErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - NamedType 3583173545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an item whose type is Inventory.</source>
+          <target>Notaðu vöru af gerðinni Birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu vöru af gerðinni Birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType StockNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4077369804 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads dated supply and demand events and projected inventory for one item.</source>
+          <target>Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetDescription - NamedType HelpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>None. Reads item availability using temporary calculation buffers.</source>
+          <target>Engar. Les framboð vöru með tímabundnum reiknibiðminnum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engar. Les framboð vöru með tímabundnum reiknibiðminnum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1158096087 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An unsupported parameter was supplied.</source>
+          <target>Óstudd færibreyta var send.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óstudd færibreyta var send.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetErrors - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1158096087 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove unknown keys; use only itemNo, variant, location, from and to.</source>
+          <target>Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetErrors - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1158096087 - NamedType 1066607173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The date range is reversed or Availability is disabled.</source>
+          <target>Dagsetningabilið er öfugt eða slökkt er á framboði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetningabilið er öfugt eða slökkt er á framboði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetErrors - NamedType InvalidLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1158096087 - NamedType 1224751234" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use from on or before to and enable Availability in Inventory Setup.</source>
+          <target>Notaðu from á undan eða sama dag og to og virkjaðu framboð í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu from á undan eða sama dag og to og virkjaðu framboð í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetErrors - NamedType InvalidNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1158096087 - NamedType 1687577938" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item is not an inventory item or its standard calculation failed.</source>
+          <target>Varan er ekki birgðavara eða staðlaður reikningur hennar mistókst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er ekki birgðavara eða staðlaður reikningur hennar mistókst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetErrors - NamedType PreconditionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3255554567 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read one month of events</source>
+          <target>Lesa atburði eins mánaðar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa atburði eins mánaðar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetExamples - NamedType ExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1027590672 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>availability, event, supply, demand, projected inventory</source>
+          <target>framboð, atburður, aðföng, eftirspurn, áætlaðar birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=framboð, atburður, aðföng, eftirspurn, áætlaðar birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetKeywords - NamedType HelpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3650283039 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Dates are inclusive. Opening inventory includes current stock and events before from. Events are ordered by date, with supply before demand on the same date, as on the standard page. Quantities use the base unit; projected inventory follows the standard reservation calculation. Only sources accessible to the caller are included. Drop shipments, blanket orders, forecasts and planning suggestions are excluded. Omitted or empty variant and location include all codes. An empty range returns an empty events array and the opening inventory.</source>
+          <target>Báðir endadagar teljast með. Upphafsbirgðir innihalda núverandi birgðir og atburði fyrir from. Atburðir raðast eftir dagsetningu, með framboð á undan eftirspurn sama dag, eins og á stöðluðu síðunni. Magn er í grunneiningu; áætlaðar birgðir fylgja stöðluðum frátektarreikningi. Aðeins upprunagögn sem kallandi hefur aðgang að eru tekin með. Beinar sendingar, rammapantanir, spár og áætlunartillögur eru undanskildar. Ef variant eða location vantar eða er tómt eru allir kóðar teknir með. Tómt bil skilar tómu events fylki og upphafsbirgðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Báðir endadagar teljast með. Upphafsbirgðir innihalda núverandi birgðir og atburði fyrir from. Atburðir raðast eftir dagsetningu, með framboð á undan eftirspurn sama dag, eins og á stöðluðu síðunni. Magn er í grunneiningu; áætlaðar birgðir fylgja stöðluðum frátektarreikningi. Aðeins upprunagögn sem kallandi hefur aðgang að eru tekin með. Beinar sendingar, rammapantanir, spár og áætlunartillögur eru undanskildar. Ef variant eða location vantar eða er tómt eru allir kóðar teknir með. Tómt bil skilar tómu events fylki og upphafsbirgðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetNotes - NamedType HelpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 2340569551 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the same supply and demand calculation as Item Availability by Event, including the running projected inventory. It does not change business records.</source>
+          <target>Les sama framboðs- og eftirspurnarreikning og Framboð vöru eftir atburði, þar á meðal hlaupandi áætlaðar birgðir. Breytir ekki viðskiptafærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les sama framboðs- og eftirspurnarreikning og Framboð vöru eftir atburði, þar á meðal hlaupandi áætlaðar birgðir. Breytir ekki viðskiptafærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetOverview - NamedType HelpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3615801952 - NamedType 1612790781" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing inventory item number.</source>
+          <target>Númer birgðavöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer birgðavöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetParameters - NamedType Parameter0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3615801952 - NamedType 376273758" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact variant code; omit to include all variants.</source>
+          <target>Nákvæmur afbrigðiskóði; slepptu til að taka öll afbrigði með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur afbrigðiskóði; slepptu til að taka öll afbrigði með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetParameters - NamedType Parameter1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3615801952 - NamedType 3475192251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact location code; omit to include all locations.</source>
+          <target>Nákvæmur staðsetningarkóði; slepptu til að taka allar staðsetningar með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur staðsetningarkóði; slepptu til að taka allar staðsetningar með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetParameters - NamedType Parameter2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3615801952 - NamedType 2959832476" size-unit="char" translate="yes" xml:space="preserve">
+          <source>First event date, YYYY-MM-DD, inclusive.</source>
+          <target>Fyrsti atburðadagur, YYYY-MM-DD, meðtalinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsti atburðadagur, YYYY-MM-DD, meðtalinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetParameters - NamedType Parameter3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3615801952 - NamedType 479793593" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Last event date, YYYY-MM-DD, inclusive.</source>
+          <target>Síðasti atburðadagur, YYYY-MM-DD, meðtalinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasti atburðadagur, YYYY-MM-DD, meðtalinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetParameters - NamedType Parameter4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read aggregate availability by calendar period.</source>
+          <target>Lesa samanlagt framboð eftir dagatalstímabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa samanlagt framboð eftir dagatalstímabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 3356734079" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Supply and demand events in the requested date range.</source>
+          <target>Framboðs- og eftirspurnaratburðir á umbeðnu dagsetningabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboðs- og eftirspurnaratburðir á umbeðnu dagsetningabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType EventsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 2023404820" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success.</source>
+          <target>Tókst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tókst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 1433743987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number.</source>
+          <target>Vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 855393302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Projected inventory before the first returned event.</source>
+          <target>Áætlaðar birgðir fyrir fyrsta skilaða atburðinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlaðar birgðir fyrir fyrsta skilaða atburðinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 3123979189" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Event date, YYYY-MM-DD.</source>
+          <target>Dagsetning atburðar, YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning atburðar, YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 890407632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard event type name.</source>
+          <target>Heiti staðlaðrar atburðagerðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti staðlaðrar atburðagerðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 1021904047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source document number.</source>
+          <target>Númer upprunaskjals.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunaskjals.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 443553362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Signed remaining quantity in base units.</source>
+          <target>Eftirstöðvar með formerki í grunneiningum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eftirstöðvar með formerki í grunneiningum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 1990982001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Standard running projected inventory after this event.</source>
+          <target>Staðlaðar hlaupandi áætlaðar birgðir eftir þennan atburð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðlaðar hlaupandi áætlaðar birgðir eftir þennan atburð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 2463221340" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Event variant code.</source>
+          <target>Afbrigðiskóði atburðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði atburðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 4268477247 - NamedType 84351611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Event location code.</source>
+          <target>Staðsetningarkóði atburðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði atburðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetResponse - NamedType Field9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 79446908 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use this timeline to see which source documents change item availability in a date range.</source>
+          <target>Notaðu tímalínuna til að sjá hvaða upprunaskjöl breyta framboði vöru á dagsetningabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu tímalínuna til að sjá hvaða upprunaskjöl breyta framboði vöru á dagsetningabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetSelectionDescription - NamedType HelpLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 3897248833 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number.</source>
+          <target>Vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetTarget - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 463605494 - NamedType 1668614503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter is not supported.</source>
+          <target>Færibreytan er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method ValidateKeys - NamedType UnknownErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4269381906 - Method 463605494 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove unknown keys; use only itemNo, variant, location, from and to.</source>
+          <target>Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method ValidateKeys - NamedType NextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Availability domain is turned off for this company.</source>
           <target>Framboðssviðið er slökkt fyrir þetta fyrirtæki.</target>

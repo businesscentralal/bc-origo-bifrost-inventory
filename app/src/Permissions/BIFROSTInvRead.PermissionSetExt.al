@@ -43,6 +43,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Item Ref. Resolve Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Avail. By Event Impl ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
         codeunit "Item Charge Restrict ori" = X,
         codeunit "Item Category Get Impl ori" = X,
