@@ -4317,6 +4317,270 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Traces a lot or serial number to where it came from or where it went.</source>
+          <target>Rekur lotu- eða raðnúmer til uppruna þess eða þangað sem það fór.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rekur lotu- eða raðnúmer til uppruna þess eða þangað sem það fór.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Neither lotNo nor serialNo is sent.</source>
+          <target>Hvorki lotNo né serialNo er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hvorki lotNo né serialNo er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lotNo, serialNo or both.</source>
+          <target>Sendu lotNo, serialNo eða bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotNo, serialNo eða bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>direction has a value this type does not support, a value contains filter characters or is too long, or the Item Tracking domain is turned off.</source>
+          <target>direction hefur gildi sem þessi tegund styður ekki, gildi inniheldur síunarstafi eða er of langt, eða slökkt er á rakningarsviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=direction hefur gildi sem þessi tegund styður ekki, gildi inniheldur síunarstafi eða er of langt, eða slökkt er á rakningarsviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send direction usageToOrigin or originToUsage and plain values, or turn the domain on from the Inventory Setup page.</source>
+          <target>Sendu direction usageToOrigin eða originToUsage og venjuleg gildi, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu direction usageToOrigin eða originToUsage og venjuleg gildi, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key is an object or an array instead of a string.</source>
+          <target>Lykill er hlutur eða fylki í stað strengs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er hlutur eða fylki í stað strengs.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lotNo, serialNo, itemNo, variantCode and direction as strings.</source>
+          <target>Sendu lotNo, serialNo, itemNo, variantCode og direction sem strengi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotNo, serialNo, itemNo, variantCode og direction sem strengi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are lotNo, serialNo, itemNo, variantCode and direction.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru lotNo, serialNo, itemNo, variantCode og direction.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru lotNo, serialNo, itemNo, variantCode og direction.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item ledger entry has the lot or serial number.</source>
+          <target>Engin birgðafærsla hefur lotu- eða raðnúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin birgðafærsla hefur lotu- eða raðnúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the number, and itemNo and variantCode if you sent them.</source>
+          <target>Athugaðu númerið, og itemNo og variantCode ef þú sendir þau.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númerið, og itemNo og variantCode ef þú sendir þau.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 1041621829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The trace has more nodes than one call returns.</source>
+          <target>Rakningin hefur fleiri hnúta en eitt kall skilar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningin hefur fleiri hnúta en eitt kall skilar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType LimitWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 1813551948" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, variantCode or a single lotNo or serialNo to narrow the trace.</source>
+          <target>Sendu itemNo, variantCode eða eitt lotNo eða serialNo til að þrengja rakninguna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, variantCode eða eitt lotNo eða serialNo til að þrengja rakninguna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType LimitFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read item ledger entries.</source>
+          <target>Kallandinn getur ekki lesið birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read item ledger entries.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Trace a lot from where it came from to where it was used</source>
+          <target>Rekja lotu frá uppruna til notkunar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rekja lotu frá uppruna til notkunar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item tracing, recall, lot trace, serial trace, where used, origin</source>
+          <target>vörurakning, innköllun, lotuferill, raðnúmeraferill, notkun, uppruni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörurakning, innköllun, lotuferill, raðnúmeraferill, notkun, uppruni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lotNo, serialNo or both; itemNo and variantCode narrow the trace. The values are exact: filter characters such as * | &amp; &lt; &gt; = @ ( ) and .. are refused. direction originToUsage (default) follows the number from where it came into stock to where it was used; usageToOrigin follows it back from where it was used. nodes is the trace tree in tree order: level 0 is a ledger entry that carries your number, deeper levels are the entries it led to (or came from), and parentEntryNo names the parent. Item-tracked components of assembly and production are followed. A trace with more than 1000 nodes answers LimitExceeded; narrow it with itemNo or variantCode. A number that no entry carries answers RecordNotFound. The call only reads; the Item Tracking domain must be turned on in Inventory Setup.</source>
+          <target>Sendu lotNo, serialNo eða bæði; itemNo og variantCode þrengja rakninguna. Gildin eru nákvæm: síunarstafir eins og * | &amp; &lt; &gt; = @ ( ) og .. eru ekki leyfðir. direction originToUsage (sjálfgefið) rekur númerið frá því að það kom á lager þangað til það var notað; usageToOrigin rekur það aftur frá notkun. nodes er rakningartréð í trjáröð: level 0 er birgðafærsla sem ber númerið þitt, dýpri stig eru færslurnar sem það leiddi til (eða kom frá), og parentEntryNo nefnir foreldrið. Rakningarskyldir íhlutir samsetningar og framleiðslu eru raktir. Rakning með fleiri en 1000 hnúta svarar LimitExceeded; þrengdu hana með itemNo eða variantCode. Númer sem engin færsla ber svarar RecordNotFound. Kallið les aðeins; rakningarsviðið þarf að vera kveikt í birgðauppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotNo, serialNo eða bæði; itemNo og variantCode þrengja rakninguna. Gildin eru nákvæm: síunarstafir eins og * | &amp; &lt; &gt; = @ ( ) og .. eru ekki leyfðir. direction originToUsage (sjálfgefið) rekur númerið frá því að það kom á lager þangað til það var notað; usageToOrigin rekur það aftur frá notkun. nodes er rakningartréð í trjáröð: level 0 er birgðafærsla sem ber númerið þitt, dýpri stig eru færslurnar sem það leiddi til (eða kom frá), og parentEntryNo nefnir foreldrið. Rakningarskyldir íhlutir samsetningar og framleiðslu eru raktir. Rakning með fleiri en 1000 hnúta svarar LimitExceeded; þrengdu hana með itemNo eða variantCode. Númer sem engin færsla ber svarar RecordNotFound. Kallið les aðeins; rakningarsviðið þarf að vera kveikt í birgðauppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Traces a lot or serial number through the item ledger, as the Item Tracing page does: from where it came into stock to where it was used, or from where it was used back to where it came from. Each node names the document, entry type, quantity and location. This call does not change any data.</source>
+          <target>Rekur lotu- eða raðnúmer í gegnum birgðafærslur, eins og síðan Vörurakning gerir: frá því að það kom á lager þangað til það var notað, eða frá notkun aftur til uppruna. Hver hnútur tilgreinir fylgiskjal, færslutegund, magn og staðsetningu. Þetta kall breytir engum gögnum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rekur lotu- eða raðnúmer í gegnum birgðafærslur, eins og síðan Vörurakning gerir: frá því að það kom á lager þangað til það var notað, eða frá notkun aftur til uppruna. Hver hnútur tilgreinir fylgiskjal, færslutegund, magn og staðsetningu. Þetta kall breytir engum gögnum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3615801952 - NamedType 952773960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The lot number to trace. Send lotNo, serialNo or both. Exact value; filter characters are refused.</source>
+          <target>Lotunúmerið sem á að rekja. Sendu lotNo, serialNo eða bæði. Nákvæmt gildi; síunarstafir eru ekki leyfðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lotunúmerið sem á að rekja. Sendu lotNo, serialNo eða bæði. Nákvæmt gildi; síunarstafir eru ekki leyfðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetParameters - NamedType LotNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3615801952 - NamedType 3280915453" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The serial number to trace. Send lotNo, serialNo or both. Exact value; filter characters are refused.</source>
+          <target>Raðnúmerið sem á að rekja. Sendu lotNo, serialNo eða bæði. Nákvæmt gildi; síunarstafir eru ekki leyfðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Raðnúmerið sem á að rekja. Sendu lotNo, serialNo eða bæði. Nákvæmt gildi; síunarstafir eru ekki leyfðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetParameters - NamedType SerialNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional. Only trace entries of this item number.</source>
+          <target>Valfrjálst. Rekja aðeins færslur þessa vörunúmers.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst. Rekja aðeins færslur þessa vörunúmers.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3615801952 - NamedType 1572346900" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional. Only trace entries of this variant code.</source>
+          <target>Valfrjálst. Rekja aðeins færslur þessa afbrigðakóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst. Rekja aðeins færslur þessa afbrigðakóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetParameters - NamedType VariantCodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3615801952 - NamedType 4059303513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>originToUsage (default) follows the lot or serial from where it came into stock to where it was used. usageToOrigin follows it from where it was used back to where it came from.</source>
+          <target>originToUsage (sjálfgefið) rekur lotuna eða raðnúmerið frá því að það kom á lager þangað til það var notað. usageToOrigin rekur það frá notkun aftur til uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=originToUsage (sjálfgefið) rekur lotuna eða raðnúmerið frá því að það kom á lager þangað til það var notað. usageToOrigin rekur það frá notkun aftur til uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetParameters - NamedType DirectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1033708611 - NamedType 543629661" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the lot and serial tracking of one item or document line instead of a trace through the ledger.</source>
+          <target>Lestu lotu- og raðnúmerarakningu einnar vöru eða skjalalínu í stað rakningar í gegnum birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu lotu- og raðnúmerarakningu einnar vöru eða skjalalínu í stað rakningar í gegnum birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetRelated - NamedType TrackingGetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1033708611 - NamedType 1972954890" size-unit="char" translate="yes" xml:space="preserve">
+          <source>See how much of a lot or serial number is available.</source>
+          <target>Sjáðu hversu mikið er tiltækt af lotu eða raðnúmeri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sjáðu hversu mikið er tiltækt af lotu eða raðnúmeri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetRelated - NamedType TrackingAvailLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The lot or serial number is named in data; subject is not read.</source>
+          <target>Lotu- eða raðnúmerið er tilgreint í data; subject er ekki lesið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lotu- eða raðnúmerið er tilgreint í data; subject er ekki lesið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3897248833 - NamedType 3341315472" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A lot number, optionally narrowed by item number and variant code.</source>
+          <target>Lotunúmer, að vali þrengt með vörunúmeri og afbrigðakóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lotunúmer, að vali þrengt með vörunúmeri og afbrigðakóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetTarget - NamedType LotTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 3897248833 - NamedType 2676305701" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A serial number, optionally narrowed by item number and variant code.</source>
+          <target>Raðnúmer, að vali þrengt með vörunúmeri og afbrigðakóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Raðnúmer, að vali þrengt með vörunúmeri og afbrigðakóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method GetTarget - NamedType SerialTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1403578304 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The trace has more than %1 nodes.</source>
+          <target>Rakningin hefur fleiri en %1 hnúta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = node cap, is-IS=Rakningin hefur fleiri en %1 hnúta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method RespondLimit - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1403578304 - NamedType 3414125030" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, variantCode or a single lotNo or serialNo to narrow the trace.</source>
+          <target>Sendu itemNo, variantCode eða eitt lotNo eða serialNo til að þrengja rakninguna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, variantCode eða eitt lotNo eða serialNo til að þrengja rakninguna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method RespondLimit - NamedType LimitNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 918654654 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item ledger entry has this lot or serial number.</source>
+          <target>Engin birgðafærsla hefur þetta lotu- eða raðnúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin birgðafærsla hefur þetta lotu- eða raðnúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method RespondNotFound - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 918654654 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the number, and itemNo and variantCode if you sent them.</source>
+          <target>Athugaðu númerið, og itemNo og variantCode ef þú sendir þau.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númerið, og itemNo og variantCode ef þú sendir þau.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method RespondNotFound - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are lotNo, serialNo, itemNo, variantCode and direction.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru lotNo, serialNo, itemNo, variantCode og direction.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru lotNo, serialNo, itemNo, variantCode og direction.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a string value.</source>
+          <target>%1 verður að vera strengjagildi.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key name, is-IS=%1 verður að vera strengjagildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a JSON string.</source>
+          <target>Sendu %1 sem JSON-streng.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key name, is-IS=Sendu %1 sem JSON-streng.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lotNo or serialNo is required.</source>
+          <target>lotNo eða serialNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lotNo eða serialNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lotNo, serialNo or both.</source>
+          <target>Sendu lotNo, serialNo eða bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotNo, serialNo eða bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 3847712132" size-unit="char" translate="yes" xml:space="preserve">
+          <source>direction is not supported.</source>
+          <target>direction er ekki stutt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=direction er ekki stutt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType DirectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 1380282473 - NamedType 3760877310" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send direction usageToOrigin or originToUsage, or leave it out for originToUsage.</source>
+          <target>Sendu direction usageToOrigin eða originToUsage, eða slepptu því fyrir originToUsage.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu direction usageToOrigin eða originToUsage, eða slepptu því fyrir originToUsage.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateRequest - NamedType DirectionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 511928359 - NamedType 1889479259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key name, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateValue - NamedType LengthErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 511928359 - NamedType 199971095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 contains filter characters.</source>
+          <target>%1 inniheldur síunarstafi.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key name, is-IS=%1 inniheldur síunarstafi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateValue - NamedType FilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3465625341 - Method 511928359 - NamedType 3082154152" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the exact value, without * | &amp; &lt; &gt; = @ ( ) or ..</source>
+          <target>Sendu nákvæmt gildi, án * | &amp; &lt; &gt; = @ ( ) eða ..</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu nákvæmt gildi, án * | &amp; &lt; &gt; = @ ( ) eða ..</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Tracing Get Impl ori - Method ValidateValue - NamedType ValueNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>

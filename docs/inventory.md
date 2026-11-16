@@ -18,6 +18,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.Transfer.UndoReceipt is not an active type. The released identifier stays for compatibility and is excluded from discovery, because this platform has no native undo of a posted transfer receipt. Return the goods with a new transfer order.
 - Inventory.Assembly.UndoPost
 - Inventory.Tracking.Get, Assign, Delete, and TrackingAvailability.Get
+- Inventory.ItemTracing.Get
 - Inventory.Reservation.Get, Create, Cancel, and AutoReserve
 - Inventory.OrderTracking.Get
 - Inventory.ItemApplication.Get, Unapply, and Reapply
