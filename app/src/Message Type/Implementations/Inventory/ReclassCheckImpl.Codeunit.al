@@ -50,67 +50,39 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalLine: Record "Item Journal Line";
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        TemplateName: Code[10];
-        BatchName: Code[10];
-        LineCount: Integer;
-        NextLbl: Label 'Send templateName and batchName for an existing Transfer journal template.', Comment = 'is-IS=Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.';
-
-        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
-        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
+        Process: Codeunit "Inventory Read Process ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
             exit;
         end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
-        RequestJson := Argument.GetRequestJson();
-        if RequestJson.Contains('templateName') then
-            TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10)
+        Process.SetOperation('ReclassCheck');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
         else
-            if RequestJson.Contains('journalTemplateName') then
-                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10)
-            else
-                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10);
-        if Parts.RespondToProblems(Argument) then
-            exit;
-        if RequestJson.Contains('batchName') then
-            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10)
-        else
-            if RequestJson.Contains('journalBatchName') then
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
-            else
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10);
-        if Parts.RespondToProblems(Argument) then
-            exit;
+            if not Process.Run(Argument) then begin
+                FailureJournal.RespondWithFailure(Argument);
+                exit;
+            end;
+        AddCheckCompat(Argument);
+    end;
 
-        if not ItemJournalTemplate.Get(TemplateName) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(TemplateNotFoundErr, TemplateName), 'templateName', TemplateName, '', NextLbl);
+    local procedure AddCheckCompat(var Argument: Record "Message Argument ori")
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Response := Argument.GetResponseJson();
+        if not Response.Get('lineCount', Token) then
             exit;
-        end;
-        if ItemJournalTemplate.Type <> ItemJournalTemplate.Type::Transfer then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferErr, TemplateName), 'templateName', TemplateName, 'Transfer', NextLbl);
-            exit;
-        end;
-
-        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
-        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::Transfer);
-        LineCount := ItemJournalLine.Count();
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.Reclassification.Check');
-        ResponseJson.Add('templateName', TemplateName);
-        ResponseJson.Add('batchName', BatchName);
-        ResponseJson.Add('postedLineCount', LineCount);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        if not Response.Contains('postedLineCount') then
+            Response.Add('postedLineCount', Token.AsValue().AsInteger());
+        Argument.SetResponseJson(Response);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -138,6 +110,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName, read only when templateName is absent.'));
         Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Name of the journal batch, at most 10 characters; read as an upper-case code. Required unless journalBatchName is sent; batchName wins when both are sent.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName, read only when batchName is absent.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are checked. Without it every line of the batch is used.'));
         exit(true);
     end;
 
@@ -152,7 +125,13 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Fields.Add(ContractMgt.ResponseField('messageType', 'string', 'Always Inventory.Reclassification.Check.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The template that was checked.'));
         Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The batch that was checked.'));
-        Fields.Add(ContractMgt.ResponseField('postedLineCount', 'integer', 'Number of lines of the batch whose entry type is Transfer. Despite the name nothing is posted; 0 when the batch has no such lines or does not exist.'));
+        Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady. Every line is validated with the standard item journal line check for a Transfer entry (locations, bins, tracking, dimensions).'));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of lines checked.'));
+        Fields.Add(ContractMgt.ResponseField('errorCount', 'integer', 'Number of problems that block posting.'));
+        Fields.Add(ContractMgt.ResponseField('warningCount', 'integer', 'Number of warnings.'));
+        Fields.Add(ContractMgt.ResponseField('errors', 'array', 'Blocking problems with the line number.'));
+        Fields.Add(ContractMgt.ResponseField('warnings', 'array', 'Warnings with the line number.'));
+        Fields.Add(ContractMgt.ResponseField('postedLineCount', 'integer', 'Same as lineCount, kept for compatibility. Despite the name nothing is posted.'));
         Response.Add('fields', Fields);
         exit(true);
     end;

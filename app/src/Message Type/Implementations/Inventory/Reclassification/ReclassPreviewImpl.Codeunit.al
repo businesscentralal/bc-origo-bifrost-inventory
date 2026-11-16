@@ -50,112 +50,44 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        ItemJournalLine: Record "Item Journal Line";
-        JournalTemplate: Record "Item Journal Template";
-        JournalBatch: Record "Item Journal Batch";
+        FailureJournal: Codeunit "Inventory Native Journal ori";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        Lines: JsonArray;
-        LineJson: JsonObject;
-        TemplateName: Code[10];
-        BatchName: Code[10];
-        LineCount: Integer;
-        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
-        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
-        BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
-        NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
+        Process: Codeunit "Inventory Read Process ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
             exit;
         end;
+        if not NativeJournal.AssertItemPostingPermission(Argument) then
+            exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
-        if Parts.RespondToProblems(Argument) then
-            exit;
-        BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
-        if Parts.RespondToProblems(Argument) then
-            exit;
-
-        if not JournalTemplate.Get(TemplateName) or not JournalBatch.Get(TemplateName, BatchName) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, BatchMissingErr, 'journalBatchName', BatchName, '', NextStepLbl);
-            exit;
-        end;
-        if JournalTemplate.Type <> JournalTemplate.Type::Transfer then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(WrongTypeErr, TemplateName), 'journalTemplateName', TemplateName, 'Transfer', NextStepLbl);
-            exit;
-        end;
-        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
-        if ItemJournalLine.FindSet() then
-            repeat
-                Clear(LineJson);
-                LineJson.Add('lineNo', ItemJournalLine."Line No.");
-                LineJson.Add('itemNo', ItemJournalLine."Item No.");
-                LineJson.Add('quantity', ItemJournalLine.Quantity);
-                LineJson.Add('locationCode', ItemJournalLine."Location Code");
-                LineJson.Add('newLocationCode', ItemJournalLine."New Location Code");
-                Lines.Add(LineJson);
-                LineCount += 1;
-            until ItemJournalLine.Next() = 0;
-
-        if LineCount = 0 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(EmptyBatchErr, TemplateName, BatchName), 'journalBatchName', BatchName, '', NextStepLbl);
-            exit;
-        end;
-        ItemJournalLine.FindFirst();
-        if not PreviewEntries(Argument, ItemJournalLine, ResponseJson) then
-            exit;
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('rollback', true);
-        ResponseJson.Add('lineCount', LineCount);
-        ResponseJson.Add('lines', Lines);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        Process.SetOperation('ReclassPreview');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                FailureJournal.RespondWithFailure(Argument);
+                exit;
+            end;
+        AddPreviewCompat(Argument);
     end;
 
-    local procedure PreviewEntries(var Argument: Record "Message Argument ori"; var Line: Record "Item Journal Line"; var Response: JsonObject): Boolean
+    local procedure AddPreviewCompat(var Argument: Record "Message Argument ori")
     var
-        TempDocumentEntry: Record "Document Entry" temporary;
-        NativePreview: Codeunit "Gen. Jnl.-Post Preview";
-        ItemPost: Codeunit "Item Jnl.-Post";
-        Handler: Codeunit "Posting Preview Event Handler";
-        PreviewHelper: Codeunit "Posting Preview Helper ori";
-        Fields: List of [Text];
-        Entries: JsonArray;
-        Totals: JsonObject;
-        EntryCount: Integer;
-        GLEntryCount: Integer;
-        Balanced: Boolean;
-        NextStepLbl: Label 'Correct the reclassification journal posting errors and run the preview again.', Comment = 'is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.';
+        Response: JsonObject;
+        Token: JsonToken;
     begin
-        // Native preview owns the rollback boundary. Never commit the caller's transaction here.
-        ClearLastError();
-        BindSubscription(ItemPost);
-        NativePreview.SetContext(ItemPost, Line);
-        if NativePreview.Run() then;
-        UnbindSubscription(ItemPost);
-        if not NativePreview.IsSuccess() then begin
-            PreviewHelper.RespondWithPreviewError(Argument, GetLastErrorText(), NextStepLbl);
-            exit(false);
-        end;
-        NativePreview.GetPreviewHandler(Handler);
-        PreviewHelper.GetPreviewFieldNames(Fields);
-        Handler.FillDocumentEntry(TempDocumentEntry);
-        if TempDocumentEntry.FindSet() then
-            repeat
-                PreviewHelper.AddTableToPreview(Entries, Handler, TempDocumentEntry."Table ID", TempDocumentEntry."Table Name", Fields);
-            until TempDocumentEntry.Next() = 0;
-        if not PreviewHelper.EvaluatePreviewOutcome(Argument, Entries, Handler, NextStepLbl, Totals, Balanced, EntryCount, GLEntryCount) then
-            exit(false);
-        Response.Add('preview', Entries);
-        Response.Add('totals', Totals);
-        PreviewHelper.AddEntryCounts(Response, EntryCount, GLEntryCount);
-        exit(true);
+        Response := Argument.GetResponseJson();
+        if not Response.Contains('templateName') then
+            exit;
+        if Response.Get('linesToPost', Token) and not Response.Contains('lineCount') then
+            Response.Add('lineCount', Token.AsValue().AsInteger());
+        if Response.Get('result', Token) and not Response.Contains('lines') then
+            Response.Add('lines', Token);
+        Argument.SetResponseJson(Response);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -181,6 +113,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters. The template must exist and have type Transfer.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', true, 'Name of the journal batch whose posting is simulated, at most 10 characters.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are simulated. Without it every line of the batch is used.'));
         exit(true);
     end;
 
