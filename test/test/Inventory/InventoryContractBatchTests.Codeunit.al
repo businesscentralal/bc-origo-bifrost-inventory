@@ -797,7 +797,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertBooleanDefault(Contract, 'postToGL', false);
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         AssertStringDefault(Contract, 'itemNoFilter');
-        AssertStringDefault(Contract, 'documentNoFilter');
+        AssertStringDefault(Contract, 'postingDateFilter');
     end;
 
     /// <summary>Checks the report 795 filter constraint and array-shaped preconditions.</summary>
@@ -1106,7 +1106,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertJsonText(Response, 'contentType', 'text/json');
         Response.Get('fields', Token);
         if TypeName = 'Inventory.AdjustCost.Run' then
-            LibraryAssert.AreEqual(4, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
+            LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
         else
             LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Exact CostToGL response field count.');
         GetNamedMember(Response, 'fields', 'name', 'status', Field);
@@ -1119,7 +1119,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             GetNamedMember(Response, 'fields', 'name', 'postToGL', Field);
             AssertJsonText(Field, 'type', 'boolean');
         end else begin
-            GetNamedMember(Response, 'fields', 'name', 'documentNoFilter', Field);
+            GetNamedMember(Response, 'fields', 'name', 'postingDateFilter', Field);
             AssertJsonText(Field, 'type', 'string');
             GetNamedMember(Response, 'fields', 'name', 'postedValueEntryCount', Field);
             AssertJsonText(Field, 'type', 'integer');

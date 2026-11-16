@@ -850,9 +850,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
-          <target>itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
+          <source>itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is refused: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
+          <target>itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -7502,6 +7502,84 @@
           <target>Bókunarhlið birgða</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókunarhlið birgða</note>
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST InvPost ori - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 1689413328" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.</source>
+          <target>itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 865625153" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One of itemNoFilter or itemCategoryFilter, or neither.</source>
+          <target>Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 3018490224" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only one of the two filters. Nothing was adjusted.</source>
+          <target>Sendu aðeins aðra síuna. Engu var breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins aðra síuna. Engu var breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2854723982" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is not a valid Business Central filter: %2</source>
+          <target>%1 er ekki gild Business Central sía: %2</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = error text; is-IS=%1 er ekki gild Business Central sía: %2</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BadFilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2084836106" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A valid Business Central filter on the item number or item category code.</source>
+          <target>Gild Business Central sía á vörunúmer eða vöruflokkskóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild Business Central sía á vörunúmer eða vöruflokkskóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2888302359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the filter and send the request again. Nothing was adjusted.</source>
+          <target>Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 3788117626" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is not a request-page control of report 795 Adjust Cost - Item Entries and is not supported.</source>
+          <target>%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType NotAControlErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 3423203706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemByItem is not supported: this Business Central build exposes the Item-by-Item Adjustment option only on the request page, not to code, so the report cannot be started with it.</source>
+          <target>itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType ItemByItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only itemNoFilter, itemCategoryFilter and postToGL.</source>
+          <target>Aðeins itemNoFilter, itemCategoryFilter og postToGL.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins itemNoFilter, itemCategoryFilter og postToGL.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the parameter and send the request again. Nothing was adjusted.</source>
+          <target>Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType NextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 3905048205" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNoFilter is not supported: the document number of report 1002 Post Inventory Cost to G/L is an output option that names the posted document, not a selection filter.</source>
+          <target>documentNoFilter er ekki studd: fylgiskjalsnúmer skýrslu 1002 Bóka birgðakostnað á fjárhag er úttaksvalkostur sem nefnir bókaða fylgiskjalið, ekki valsía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNoFilter er ekki studd: fylgiskjalsnúmer skýrslu 1002 Bóka birgðakostnað á fjárhag er úttaksvalkostur sem nefnir bókaða fylgiskjalið, ekki valsía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 1277963324" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNoFilter, postingDateFilter, journalTemplateName and journalBatchName.</source>
+          <target>itemNoFilter, postingDateFilter, journalTemplateName og journalBatchName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter, postingDateFilter, journalTemplateName og journalBatchName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 1593533517" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove documentNoFilter and send the request again. Nothing was posted.</source>
+          <target>Fjarlægðu documentNoFilter og sendu beiðnina aftur. Engu var bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu documentNoFilter og sendu beiðnina aftur. Engu var bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoNextStepTxt</note>
         </trans-unit>
       </group>
     </body>

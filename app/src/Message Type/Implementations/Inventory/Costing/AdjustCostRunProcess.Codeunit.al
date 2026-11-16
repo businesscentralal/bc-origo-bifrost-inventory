@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Item;
 using Origo.Bifrost;
 
 /// <summary>
@@ -19,7 +20,9 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ItemCategoryFilter: Text;
         PostToGL: Boolean;
         ResponseJson: JsonObject;
+        ErrorsJson: JsonArray;
         ReadOk: Boolean;
+        ItemsProcessed: Integer;
         NativeExpectedTxt: Label 'Valid costing setup and one item or category filter.', Comment = 'is-IS=Gild kostnaðaruppsetning og ein vöru- eða flokkasía.';
         NativeNextStepTxt: Label 'Correct the reported costing or filter problem and inspect ledger state before retrying.', Comment = 'is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.';
     begin
@@ -31,6 +34,10 @@ codeunit 10076859 "Adjust Cost Run Process ori"
             ReadOk := false;
         if not ReadOk then
             exit;
+        if not RejectUnsupportedControls(Argument, RequestJson) then
+            exit;
+        if not CheckSelection(Argument, ItemNoFilter, ItemCategoryFilter, ItemsProcessed) then
+            exit;
         if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNoFilter', ItemNoFilter, NativeExpectedTxt, NativeNextStepTxt);
             exit;
@@ -39,8 +46,70 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ResponseJson.Add('itemNoFilter', ItemNoFilter);
         ResponseJson.Add('itemCategoryFilter', ItemCategoryFilter);
         ResponseJson.Add('postToGL', PostToGL);
+        ResponseJson.Add('itemsProcessed', ItemsProcessed);
+        ResponseJson.Add('errors', ErrorsJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure RejectUnsupportedControls(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    var
+        Token: JsonToken;
+        Name: Text;
+        Names: List of [Text];
+        NotAControlErr: Label '%1 is not a request-page control of report 795 Adjust Cost - Item Entries and is not supported.', Comment = '%1 = parameter name; is-IS=%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.';
+        ItemByItemErr: Label 'itemByItem is not supported: this Business Central build exposes the Item-by-Item Adjustment option only on the request page, not to code, so the report cannot be started with it.', Comment = 'is-IS=itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.';
+        ExpectedTxt: Label 'Only itemNoFilter, itemCategoryFilter and postToGL.', Comment = 'is-IS=Aðeins itemNoFilter, itemCategoryFilter og postToGL.';
+        NextStepTxt: Label 'Remove the parameter and send the request again. Nothing was adjusted.', Comment = 'is-IS=Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.';
+    begin
+        Names.Add('postingDate');
+        Names.Add('inventoryPostingGroup');
+        foreach Name in Names do
+            if RequestJson.Get(Name, Token) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(NotAControlErr, Name), Name, '', ExpectedTxt, NextStepTxt);
+                exit(false);
+            end;
+        if RequestJson.Get('itemByItem', Token) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, ItemByItemErr, 'itemByItem', '', ExpectedTxt, NextStepTxt);
+            exit(false);
+        end;
+        exit(true);
+    end;
+
+    local procedure CheckSelection(var Argument: Record "Message Argument ori"; ItemNoFilter: Text; ItemCategoryFilter: Text; var ItemsProcessed: Integer): Boolean
+    var
+        Item: Record Item;
+        BothErr: Label 'itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.', Comment = 'is-IS=itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.';
+        BothExpectedTxt: Label 'One of itemNoFilter or itemCategoryFilter, or neither.', Comment = 'is-IS=Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.';
+        BothNextStepTxt: Label 'Send only one of the two filters. Nothing was adjusted.', Comment = 'is-IS=Sendu aðeins aðra síuna. Engu var breytt.';
+        BadFilterErr: Label '%1 is not a valid Business Central filter: %2', Comment = '%1 = parameter name, %2 = error text; is-IS=%1 er ekki gild Business Central sía: %2';
+        FilterExpectedTxt: Label 'A valid Business Central filter on the item number or item category code.', Comment = 'is-IS=Gild Business Central sía á vörunúmer eða vöruflokkskóða.';
+        FilterNextStepTxt: Label 'Correct the filter and send the request again. Nothing was adjusted.', Comment = 'is-IS=Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.';
+    begin
+        if (CopyStr(ItemNoFilter, 1, 250) <> '') and (CopyStr(ItemCategoryFilter, 1, 250) <> '') then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, BothErr, 'itemCategoryFilter', ItemCategoryFilter, BothExpectedTxt, BothNextStepTxt);
+            exit(false);
+        end;
+        if not TrySetItemFilters(Item, CopyStr(ItemNoFilter, 1, 250), CopyStr(ItemCategoryFilter, 1, 250)) then begin
+            if ItemNoFilter <> '' then
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(BadFilterErr, 'itemNoFilter', GetLastErrorText()), 'itemNoFilter', ItemNoFilter, FilterExpectedTxt, FilterNextStepTxt)
+            else
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(BadFilterErr, 'itemCategoryFilter', GetLastErrorText()), 'itemCategoryFilter', ItemCategoryFilter, FilterExpectedTxt, FilterNextStepTxt);
+            exit(false);
+        end;
+        ItemsProcessed := Item.Count();
+        exit(true);
+    end;
+
+    [TryFunction]
+    local procedure TrySetItemFilters(var Item: Record Item; ItemNoFilter: Text; ItemCategoryFilter: Text)
+    begin
+        if ItemNoFilter <> '' then
+            Item.SetFilter("No.", ItemNoFilter);
+        if ItemCategoryFilter <> '' then
+            Item.SetFilter("Item Category Code", ItemCategoryFilter);
+        if Item.IsEmpty() then
+            exit;
     end;
 
     [TryFunction]

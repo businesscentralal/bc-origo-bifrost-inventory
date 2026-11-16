@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-16) - native filter contract for Adjust Cost and Cost to G/L (#35, partial)
+- `Inventory.AdjustCost.Run` (codeunit 10076858 / 10076859) refuses, before report 795 runs and without writes, `postingDate`, `inventoryPostingGroup` (not controls of report 795), `itemByItem` (the option is on the request page but code cannot set it on this build, so it stays a documented gap), both filters together, and filters that are not valid. The answer now carries `itemsProcessed` (items the filters select) and an `errors` array (empty on success).
+- `Inventory.CostToGL.Post` (codeunit 10076863, `Inventory Write Process ori`) no longer accepts `documentNoFilter`: the document number of report 1002 is an output option, not a selection filter, so it is refused with `InvalidParameter` before posting. A real `postingDateFilter` on the pending entries replaces it, in the request and the answer. The response field `documentNoFilter` is replaced by `postingDateFilter`.
+- Not done yet: `Inventory.CostToGL.Test` still counts items and does not run report 1003; `perPostingGroup` and the 1003 mandatory-template path stay pending. No object IDs added; tests added to codeunit 96960 range files (no new test objects). is-IS translations added.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

@@ -25,14 +25,21 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
+        DocumentNoErr: Label 'documentNoFilter is not supported: the document number of report 1002 Post Inventory Cost to G/L is an output option that names the posted document, not a selection filter.', Comment = 'is-IS=documentNoFilter er ekki studd: fylgiskjalsnúmer skýrslu 1002 Bóka birgðakostnað á fjárhag er úttaksvalkostur sem nefnir bókaða fylgiskjalið, ekki valsía.';
+        DocumentNoExpectedTxt: Label 'itemNoFilter, postingDateFilter, journalTemplateName and journalBatchName.', Comment = 'is-IS=itemNoFilter, postingDateFilter, journalTemplateName og journalBatchName.';
+        DocumentNoNextStepTxt: Label 'Remove documentNoFilter and send the request again. Nothing was posted.', Comment = 'is-IS=Fjarlægðu documentNoFilter og sendu beiðnina aftur. Engu var bókað.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
+        if RequestJson.Contains('documentNoFilter') then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DocumentNoErr, 'documentNoFilter', '', DocumentNoExpectedTxt, DocumentNoNextStepTxt);
+            exit;
+        end;
         Process.SetOperation('CostToGLPost');
-        Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'documentNoFilter'),
+        Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'postingDateFilter'),
             CopyStr(ReadText(RequestJson, 'journalTemplateName'), 1, 10), CopyStr(ReadText(RequestJson, 'journalBatchName'), 1, 10));
         // Posting is an independent transaction, including when the caller requests Omit Commit.
         Commit();
@@ -120,7 +127,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
         Clear(Parameter);
-        Parameter := ContractMgt.Parameter('documentNoFilter', 'string', false, 'Document number filter in Business Central filter syntax; combined with itemNoFilter before posting.');
+        Parameter := ContractMgt.Parameter('postingDateFilter', 'string', false, 'Posting date filter in Business Central filter syntax, for example 01-01-26..31-01-26; combined with itemNoFilter, only matching pending value entries are selected. documentNoFilter is not a filter and is refused before posting.');
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'G/L journal template name required when General Ledger Setup requires a journal template.'));
@@ -134,7 +141,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after native posting completes; inspect the counts for entries not posted."},{"name":"itemNoFilter","type":"string","description":"Applied item filter."},{"name":"documentNoFilter","type":"string","description":"Applied document filter."},{"name":"postedValueEntryCount","type":"integer","description":"Selected pending value entries removed by successful native posting."},{"name":"remainingValueEntryCount","type":"integer","description":"Selected pending value entries still not posted; review the native posting setup and entries."},{"name":"posted","type":"boolean","description":"True only when at least one selected pending value entry was posted."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after native posting completes; inspect the counts for entries not posted."},{"name":"itemNoFilter","type":"string","description":"Applied item filter."},{"name":"postingDateFilter","type":"string","description":"Applied posting date filter."},{"name":"postedValueEntryCount","type":"integer","description":"Selected pending value entries removed by successful native posting."},{"name":"remainingValueEntryCount","type":"integer","description":"Selected pending value entries still not posted; review the native posting setup and entries."},{"name":"posted","type":"boolean","description":"True only when at least one selected pending value entry was posted."}]}');
         exit(true);
     end;
 
@@ -144,7 +151,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign Inv. Posting Gate in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
+        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"InvalidParameter","when":"The request carries documentNoFilter, which is not a selection filter of report 1002.","fix":"Remove documentNoFilter; select by itemNoFilter and postingDateFilter. The request is refused before posting."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign Inv. Posting Gate in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
         exit(true);
     end;
 
@@ -198,8 +205,8 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post pending inventory cost for one item',
-            '{"type":"Inventory.CostToGL.Post","data":{"expectedCount":1,"itemNoFilter":"1000","documentNoFilter":""}}',
-            '{"status":"Success","itemNoFilter":"1000","documentNoFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
+            '{"type":"Inventory.CostToGL.Post","data":{"expectedCount":1,"itemNoFilter":"1000","postingDateFilter":""}}',
+            '{"status":"Success","itemNoFilter":"1000","postingDateFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
         exit(true);
     end;
 
@@ -216,7 +223,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
+        NotesLbl: Label 'itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is refused: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
     begin
         Notes := NotesLbl;
         exit(true);

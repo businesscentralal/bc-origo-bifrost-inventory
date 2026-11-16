@@ -36,7 +36,7 @@ codeunit 10076842 "Inventory Write Process ori"
         AvailabilityDate: Date;
         ReserveDescription: Text[100];
         CostItemFilter: Text;
-        CostDocumentFilter: Text;
+        CostDateFilter: Text;
         CostJournalTemplate: Code[10];
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
@@ -130,11 +130,11 @@ codeunit 10076842 "Inventory Write Process ori"
         exit(FullAutoReservation);
     end;
 
-    /// <summary>Sets native cost posting selection and the optional mandatory G/L journal batch.</summary>
-    procedure SetCostPostingSelection(ItemFilter: Text; DocumentFilter: Text; JournalTemplate: Code[10]; JournalBatch: Code[10])
+    /// <summary>Sets the pending-entry item and posting date selection and the optional mandatory G/L journal batch.</summary>
+    procedure SetCostPostingSelection(ItemFilter: Text; DateFilter: Text; JournalTemplate: Code[10]; JournalBatch: Code[10])
     begin
         CostItemFilter := ItemFilter;
-        CostDocumentFilter := DocumentFilter;
+        CostDateFilter := DateFilter;
         CostJournalTemplate := JournalTemplate;
         CostJournalBatch := JournalBatch;
     end;
@@ -169,31 +169,15 @@ codeunit 10076842 "Inventory Write Process ori"
     local procedure PostCostToGL(var Argument: Record "Message Argument ori")
     var
         Pending: Record "Post Value Entry to G/L";
-        ValueEntry: Record "Value Entry";
         PostInventoryCost: Report "Post Inventory Cost to G/L";
-        EntryFilter: Text;
         Response: JsonObject;
         BeforeCount: Integer;
         RemainingCount: Integer;
     begin
         if CostItemFilter <> '' then
             Pending.SetFilter("Item No.", CostItemFilter);
-        if CostDocumentFilter <> '' then begin
-            ValueEntry.SetFilter("Document No.", CostDocumentFilter);
-            if Pending.FindSet() then
-                repeat
-                    ValueEntry.SetRange("Entry No.", Pending."Value Entry No.");
-                    if not ValueEntry.IsEmpty() then begin
-                        if EntryFilter <> '' then
-                            EntryFilter += '|';
-                        EntryFilter += Format(Pending."Value Entry No.", 0, 9);
-                    end;
-                until Pending.Next() = 0;
-            if EntryFilter = '' then
-                Pending.SetRange("Value Entry No.", 0)
-            else
-                Pending.SetFilter("Value Entry No.", EntryFilter);
-        end;
+        if CostDateFilter <> '' then
+            Pending.SetFilter("Posting Date", CostDateFilter);
         BeforeCount := Pending.Count();
         // Native per-entry posting uses each value entry's document number, not a fabricated document number.
         PostInventoryCost.InitializeRequest(1, '', true);
@@ -205,7 +189,7 @@ codeunit 10076842 "Inventory Write Process ori"
         RemainingCount := Pending.Count();
         Response.Add('status', 'Success');
         Response.Add('itemNoFilter', CostItemFilter);
-        Response.Add('documentNoFilter', CostDocumentFilter);
+        Response.Add('postingDateFilter', CostDateFilter);
         Response.Add('postedValueEntryCount', BeforeCount - RemainingCount);
         Response.Add('remainingValueEntryCount', RemainingCount);
         Response.Add('posted', BeforeCount > RemainingCount);
