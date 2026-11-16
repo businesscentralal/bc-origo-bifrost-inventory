@@ -62,8 +62,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
-| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
-| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply applications linked to itemLedgerEntryNo through Item Jnl.-Post Line; legacy entryNo selects one application |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply outboundEntryNo to inboundEntryNo for an exact positive base quantity; legacy selectors remain supported |
 | `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
 | `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
 | `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
@@ -420,3 +420,5 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+Issue #40 adds codeunit 10077034 `Item Appl. Quantity ori` (scoped native quantity event) and test codeunit 96994. `Inventory.ItemApplication.Get` accepts `itemNo` or `itemLedgerEntryNo`, plus exact `locationCode` and `variantCode`, and returns each application once with `inboundEntry` and `outboundEntry` projections.

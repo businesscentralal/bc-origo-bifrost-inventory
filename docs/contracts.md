@@ -29,3 +29,11 @@ Adjust Cost Run Impl ori (10076858) and Cost To GL Post Impl ori (10076861) decl
 The error declarations distinguish the report Run=false response from raised report/conversion errors and Foundation's scheduled-task failure handler. Synchronous dispatch and direct invocation do not themselves establish that scheduled response mapping. Runtime conversion, posting and failure-handler evidence remains pending.
 
 Inventory Contract Batch Tests (96921) contains six costing metadata regressions for typed defaults, filter preconditions, error declarations, report options and reused interface outputs. They have not run: the app still fails compilation, so this draft supplies no runtime, permission or financial execution proof.
+
+## Item application selectors and quantities (#40)
+
+- Get accepts `itemNo` or `itemLedgerEntryNo`; when both are present they intersect. Optional `locationCode` and `variantCode` filter matching ledger entries exactly (empty strings mean blank codes). Applications linked to either side are deduplicated by application entry number and include `inboundEntry`/`outboundEntry` objects.
+- Unapply accepts `itemLedgerEntryNo` for all linked real applications in one transaction. Legacy `entryNo` still selects one application; do not send both forms. Inbound self-applications are not real applications and cannot be unapplied. Native refusal rolls back all changes.
+- Reapply accepts `outboundEntryNo`, `inboundEntryNo`, and positive `quantity` in base units. Both entries must have sufficient unreserved remaining quantity and matching item, location and variant. Native `Item Jnl.-Post Line.ReApply` runs with a scoped quantity event and validates both resulting ledger deltas before success. Legacy `itemLedgerEntryNo`/`applyToEntryNo` retains native remaining-quantity behavior without `quantity`.
+- The BC 28 Application Worksheet uses codeunit 22 (`Item Jnl.-Post Line`), confirmed on StefanMaron `w1-28` before implementation. Table 339 is changed only by native application logic. Cost adjustment is separate; effect remains `read` for Get and `write` for Unapply/Reapply.
+- Pending AC: Foundation's non-extensible error enum does not contain `DomainDisabled`; the shared gate still returns `InvalidParameter` for a disabled domain. This is not a completed #40 acceptance claim.

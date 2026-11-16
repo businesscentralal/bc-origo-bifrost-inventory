@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — issue #40
+
+- Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
+- Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
+- Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
+
 ## [Unreleased]
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)

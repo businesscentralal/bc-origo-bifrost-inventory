@@ -4,10 +4,12 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Origo.Bifrost;
 
+/// <summary>Unapplies selected item applications using the native worksheet path.</summary>
 codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Checks availability.</summary>
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -15,11 +17,13 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false));
     end;
 
+    /// <summary>Returns the filtertableno contract chapter.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Item Application Entry");
     end;
 
+    /// <summary>Returns the description contract chapter.</summary>
     procedure GetDescription(): Text[250]
     var
         DescriptionLbl: Label 'Unapplies an item application entry through standard item application posting.', Comment = 'is-IS=Afturkallar vörujöfnun með hefðbundinni vörujöfnun.';
@@ -27,6 +31,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(DescriptionLbl);
     end;
 
+    /// <summary>Returns the keywords contract chapter.</summary>
     procedure GetKeywords(): Text
     var
         KeywordsLbl: Label 'unapply item application, undo application', Comment = 'is-IS=afturkalla vörujöfnun, afturkalla jöfnun';
@@ -34,13 +39,15 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(KeywordsLbl);
     end;
 
+    /// <summary>Returns the selectiondescription contract chapter.</summary>
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Unapplies one item application entry by entry number.', Comment = 'is-IS=Afturkallar eina vörujöfnunarfærslu eftir færslunúmeri.';
+        SelectionDescriptionLbl: Label 'Unapplies linked item applications by ledger entry, or one application by entryNo.', Comment = 'is-IS=Afturkallar tengdar vörujafnanir eftir vörufærslu eða eina jöfnun eftir entryNo.';
     begin
         exit(SelectionDescriptionLbl);
     end;
 
+    /// <summary>Returns the envelope contract chapter.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
@@ -48,24 +55,30 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the target contract chapter.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Target);
+        Target.Add(ContractMgt.TargetEntry('data.itemLedgerEntryNo', 'entry no.', 'The ledger entry whose real applications are unapplied.'));
         Target.Add(ContractMgt.TargetEntry('data.entryNo', 'entry no.', 'The Entry No. of the item application entry to unapply.'));
         exit(true);
     end;
 
+    /// <summary>Returns the parameters contract chapter.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Help401Lbl: Label 'Unapply the real applications linked to this item ledger entry atomically. Send this or the legacy single-application entryNo, not both.', Comment = 'is-IS=Afturkallar allar raunverulegar jafnanir tengdar þessari vörufærslu í einni færslu. Sendu þetta eða eldra entryNo fyrir eina jöfnun, ekki bæði.';
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'The Entry No. of the item application entry to unapply, sent as a JSON integer. It is the entryNo that Inventory.ItemApplication.Get lists, not an item ledger entry number.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'The Entry No. of the item application entry to unapply, sent as a JSON integer. It is the entryNo that Inventory.ItemApplication.Get lists, not an item ledger entry number.'));
+        Parameters.Add(ContractMgt.Parameter('itemLedgerEntryNo', 'integer', false, Help401Lbl));
         exit(true);
     end;
 
+    /// <summary>Returns the response contract chapter.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -75,12 +88,14 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success.'));
         Fields.Add(ContractMgt.ResponseField('entryNo', 'integer', 'The Entry No. of the item application entry that was removed.'));
         Fields.Add(ContractMgt.ResponseField('itemLedgerEntryNo', 'integer', 'The item ledger entry the removed application entry was recorded under.'));
+        Fields.Add(ContractMgt.ResponseField('applicationCount', 'integer', 'Number of real applications removed by the native operation.'));
         Fields.Add(ContractMgt.ResponseField('inboundItemEntryNo', 'integer', 'The inbound item ledger entry of the removed application entry.'));
         Response.Add('contentType', 'text/json');
         Response.Add('fields', Fields);
         exit(true);
     end;
 
+    /// <summary>Returns the errors contract chapter.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -107,6 +122,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the effect contract chapter.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Preconditions: JsonArray;
@@ -115,7 +131,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
-        Effect.Add('changes', 'Removes one item application entry with the standard unapply logic: the application row is deleted and kept in the application history, and the remaining quantities of the two item ledger entries are corrected. Item costs can need a new adjustment run. No document is posted. Business Central commits the change when the call finishes.');
+        Effect.Add('changes', 'Removes the selected real item applications with the standard unapply logic: the application row is deleted and kept in the application history, and the remaining quantities of the two item ledger entries are corrected. Item costs can need a new adjustment run. No document is posted. Business Central commits the change when the call finishes.');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Preconditions.Add('The Item Application domain is turned on in Inventory Setup.');
@@ -125,11 +141,13 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the metering contract chapter.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Returns the related contract chapter.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -140,6 +158,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the workflow contract chapter.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -153,6 +172,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the examples contract chapter.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -165,6 +185,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the overview contract chapter.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
         Clear(Overview);
@@ -172,21 +193,22 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the notes contract chapter.</summary>
     procedure GetNotes(var Notes: Text): Boolean
+    var
+        NotesLbl: Label 'Send itemLedgerEntryNo to unapply every real application linked to that ledger entry in one transaction. Alternatively, legacy entryNo removes one application. Do not send both. Inbound self-applications cannot be unapplied. Native worksheet rules reject closed periods, transfers, drop shipments and other unsupported changes. A native refusal returns BusinessCentralError and rolls back the entire operation. The item and ledger entries remain marked for adjustment; run Inventory.AdjustCost.Run separately. No document is posted.', Comment = 'is-IS=Sendu itemLedgerEntryNo til að afturkalla allar raunverulegar jafnanir tengdar vörufærslunni í einni gagnagrunnsfærslu. Eldra entryNo afturkallar eina jöfnun. Ekki senda bæði. Ekki er hægt að afturkalla sjálfsjöfnun innleiðandi færslu. Staðlaðar reglur jöfnunarvinnublaðs hafna lokuðum tímabilum, flutningum, beinum afhendingum og öðrum óstuddum breytingum. Kerfishöfnun skilar BusinessCentralError og afturkallar alla aðgerðina. Vara og vörufærslur eru merktar til leiðréttingar; keyrðu Inventory.AdjustCost.Run sérstaklega. Ekkert skjal er bókað.';
     begin
-        Clear(Notes);
-        Notes := 'entryNo is the Entry No. of an item application entry, as listed by Inventory.ItemApplication.Get. The standard unapply logic decides what can be unapplied: it refuses, for example, an application to an outbound transfer, drop shipments, and entries whose posting date is in a closed inventory period. The refusal text is returned as BusinessCentralError. ' +
-            'Missing keys return MissingParameter, non-integer values return InvalidParameterFormat and missing entries return RecordNotFound, each with nextStep. ' +
-            'There is no preview. Business Central commits the change when the call finishes, and the change can make item costs need a new run of Inventory.AdjustCost.Run. Use Inventory.ItemApplication.Reapply afterwards to apply the item ledger entry to another entry. ' +
-            'The caller needs the Bifrost "Full Access" permission set and write permission on item application entries, and the Item Application domain must be on in Inventory Setup.';
+        Notes := NotesLbl;
         exit(true);
     end;
 
+    /// <summary>Returns the messagedirection contract chapter.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Executes the item application request.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemApplicationEntry: Record "Item Application Entry";
@@ -196,9 +218,12 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         EntryNo: Integer;
+        ItemLedgerEntryNo: Integer;
+        ApplicationCount: Integer;
         NotFoundErr: Label 'Item application entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörujöfnunarfærsla %1 fannst ekki.';
         ExpectedLbl: Label 'an existing item application or item ledger entry', Comment = 'is-IS=fyrirliggjandi vörujöfnunarfærsla eða vörufærsla';
         NextLbl: Label 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.';
+        SelectorErr: Label 'Send either itemLedgerEntryNo or entryNo, not both.', Comment = 'is-IS=Sendu annaðhvort itemLedgerEntryNo eða entryNo, ekki bæði.';
         NativeNextLbl: Label 'Correct the item application according to the Business Central refusal and retry.', Comment = 'is-IS=Leiðréttu vörujöfnunina samkvæmt höfnun Business Central og reyndu aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemApplication, Database::"Item Application Entry", true, false) then begin
@@ -208,8 +233,29 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not Parts.TryReadEntryNo(RequestJson, 'entryNo', Argument, EntryNo) then
-            exit;
+        if RequestJson.Contains('itemLedgerEntryNo') then begin
+            if RequestJson.Contains('entryNo') then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SelectorErr, 'itemLedgerEntryNo', '', ExpectedLbl, NextLbl);
+                exit;
+            end;
+            if not Parts.TryReadEntryNo(RequestJson, 'itemLedgerEntryNo', Argument, ItemLedgerEntryNo) then
+                exit;
+            if ItemLedgerEntryNo > 0 then begin
+                ItemApplicationEntry.FilterGroup(-1);
+                ItemApplicationEntry.SetRange("Inbound Item Entry No.", ItemLedgerEntryNo);
+                ItemApplicationEntry.SetRange("Outbound Item Entry No.", ItemLedgerEntryNo);
+                ItemApplicationEntry.FilterGroup(0);
+                ItemApplicationEntry.SetFilter("Outbound Item Entry No.", '<>0');
+                if ItemApplicationEntry.FindFirst() then begin
+                    EntryNo := ItemApplicationEntry."Entry No.";
+                    ApplicationCount := ItemApplicationEntry.Count();
+                end;
+            end;
+        end else begin
+            if not Parts.TryReadEntryNo(RequestJson, 'entryNo', Argument, EntryNo) then
+                exit;
+            ApplicationCount := 1;
+        end;
         if not ItemApplicationEntry.Get(EntryNo) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, Format(EntryNo, 0, 9)), 'entryNo', Format(EntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
@@ -218,6 +264,8 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.SetErrorContext('entryNo', ExpectedLbl, NativeNextLbl);
         Process.SetOperation('ItemApplicationUnapply');
         Process.SetApplicationEntries(EntryNo, 0);
+        if RequestJson.Contains('itemLedgerEntryNo') then
+            Process.SetApplicationLedger(ItemLedgerEntryNo);
         if Argument."Omit Commit" then
             Process.Run(Argument)
         else
@@ -228,8 +276,12 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.ClearErrorContext();
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('entryNo', EntryNo);
-        ResponseJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
+        if ItemLedgerEntryNo <> 0 then
+            ResponseJson.Add('itemLedgerEntryNo', ItemLedgerEntryNo)
+        else
+            ResponseJson.Add('itemLedgerEntryNo', ItemApplicationEntry."Item Ledger Entry No.");
         ResponseJson.Add('inboundItemEntryNo', ItemApplicationEntry."Inbound Item Entry No.");
+        ResponseJson.Add('applicationCount', ApplicationCount);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
