@@ -328,6 +328,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Parameter: JsonToken;
         Name: JsonToken;
         AdvertisesConfirmation: Boolean;
+        SupportsConfirmation: Boolean;
+        DeclaresConfirmation: Boolean;
+        DeclaredParameters: JsonArray;
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
@@ -342,6 +345,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup.Modify();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
+        SupportsConfirmation := Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired');
         foreach TypeName in MessageType.Names() do
             if TypeName.StartsWith('Inventory.') and not TypeName.StartsWith('Inventory.ItemJournal.') then begin
                 MessageType := Enum::"Message Type ori".FromInteger(MessageType.Ordinals().Get(MessageType.Names().IndexOf(TypeName)));
@@ -351,6 +355,18 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                     if Effect.Get('effect', Token) then
                         if Token.AsValue().AsText() = 'irreversible' then begin
                             Checked += 1;
+                            // An implementation can accept an optional count even before Foundation adds its gate.
+                            DeclaresConfirmation := false;
+                            Clear(DeclaredParameters);
+                            if Implementation.GetParameters(DeclaredParameters) then
+                                foreach Parameter in DeclaredParameters do
+                                    if Parameter.AsObject().Get('name', Name) then
+                                        if Name.AsValue().AsText() = 'expectedCount' then begin
+                                            DeclaresConfirmation := true;
+                                            AssertText(Parameter.AsObject(), 'type', 'integer');
+                                            Assert.IsTrue(Parameter.AsObject().Get('required', Token), 'Explicit count declares whether it is required.');
+                                            Assert.IsFalse(Token.AsValue().AsBoolean(), 'Handler count is optional; Foundation owns mandatory confirmation.');
+                                        end;
                             Clear(Contract);
                             ContractMgt.GetContract(MessageType, Contract);
                             AdvertisesConfirmation := false;
@@ -362,12 +378,12 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             AssertText(Parameter.AsObject(), 'type', 'integer');
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
-                            Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
+                            Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
                             // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
-                            if AdvertisesConfirmation then begin
+                            if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
                                 AssertText(Response, 'parameter', 'expectedCount');
                                 AssertText(Response, 'expected', '1');
@@ -398,7 +414,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(9, Checked, 'All nine app-owned irreversible types must be exercised.');
+        Assert.AreEqual(10, Checked, 'All ten app-owned irreversible types must be exercised.');
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject

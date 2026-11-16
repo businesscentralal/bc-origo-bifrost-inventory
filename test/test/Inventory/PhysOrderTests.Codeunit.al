@@ -526,16 +526,13 @@ codeunit 96986 "Phys Order Tests ori"
     local procedure AssertCodedError(Response: JsonObject; ExpectedCode: Text)
     var
         Token: JsonToken;
-        Error: JsonObject;
         Json: Text;
     begin
         AssertStatus(Response, 'Error');
         Response.WriteTo(Json);
-        Response.Get('error', Token);
-        Error := Token.AsObject();
-        Error.Get('code', Token);
+        Assert.IsTrue(Response.Get('code', Token), Json);
         Assert.AreEqual(ExpectedCode, Token.AsValue().AsText(), Json);
-        Assert.IsTrue(Error.Get('nextStep', Token), Json);
+        Assert.IsTrue(Response.Get('nextStep', Token), Json);
         Assert.AreNotEqual('', Token.AsValue().AsText(), 'Every refusal is actionable.');
     end;
 }
