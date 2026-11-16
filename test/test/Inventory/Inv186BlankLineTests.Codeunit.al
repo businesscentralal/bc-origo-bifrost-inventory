@@ -237,9 +237,15 @@ codeunit 96964 "Inv. 186 Blank Line Tests ori"
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Batch: Record "Item Journal Batch"; Request: JsonObject; var Response: JsonObject)
+    var
+        DispatchRequest: JsonObject;
+        RequestText: Text;
     begin
         Clear(Response);
-        Helper.ProcessMessage(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, Response);
+        // Confirmation may enrich the Post request; keep the next Check request unchanged.
+        Request.WriteTo(RequestText);
+        DispatchRequest.ReadFrom(RequestText);
+        Helper.ProcessMessage(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, DispatchRequest, Response);
     end;
 
     local procedure AssertText(Response: JsonObject; Name: Text; Expected: Text)
