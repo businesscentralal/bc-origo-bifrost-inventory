@@ -107,7 +107,6 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName. A value that differs from templateName, ignoring case, is refused.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName. A value that differs from batchName, ignoring case, is refused.'));
         Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Nonempty array of distinct SystemIds of journal lines in the selected batch. Only those lines are used. Omit it to use every line of the batch.'));
-        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountDefinitionLbl));
         exit(true);
     end;
 
