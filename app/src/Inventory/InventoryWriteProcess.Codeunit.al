@@ -283,6 +283,7 @@ codeunit 10076842 "Inventory Write Process ori"
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
         ReservationManagement: Codeunit "Reservation Management";
+        JournalContext: Codeunit "Reserv. Supply Filter ori";
     begin
         case SourceType of
             Database::"Service Line":
@@ -343,8 +344,14 @@ codeunit 10076842 "Inventory Write Process ori"
         ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
         if SupplyEntryNo <> 0 then
             ReserveSupplyEntry(ReservationManagement, DemandEntry)
-        else
+        else begin
+            // Item journals have native CreateReservation support but do not supply AutoReserve's remaining-quantity event.
+            if SourceType = Database::"Item Journal Line" then
+                BindSubscription(JournalContext);
             ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
+            if SourceType = Database::"Item Journal Line" then
+                UnbindSubscription(JournalContext);
+        end;
     end;
 
     local procedure ReserveSupplyEntry(var ReservationManagement: Codeunit "Reservation Management"; DemandEntry: Record "Reservation Entry")

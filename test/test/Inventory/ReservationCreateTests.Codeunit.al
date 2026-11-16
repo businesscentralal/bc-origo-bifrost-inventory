@@ -777,8 +777,10 @@ codeunit 96946 "Reservation Create Tests"
         Request.Add('sourceSubtype', SourceSubtype);
         Request.Add('sourceNo', SourceNo);
         Request.Add('sourceLineNo', SourceLineNo);
-        Request.Add('sourceBatchName', BatchName);
-        Request.Add('sourceProdOrderLine', ParentLineNo);
+        if BatchName <> '' then
+            Request.Add('sourceBatchName', BatchName);
+        if ParentLineNo <> 0 then
+            Request.Add('sourceProdOrderLine', ParentLineNo);
         CancelRequest := Request.Clone().AsObject();
         Request.Add('quantity', 2);
 
