@@ -756,6 +756,12 @@ codeunit 10076841 "Inventory Tracking Read ori"
                 exit(Database::"Purchase Line");
             'TransferLine':
                 exit(Database::"Transfer Line");
+            'AssemblyHeader':
+                exit(Database::"Assembly Header");
+            'AssemblyLine':
+                exit(Database::"Assembly Line");
+            'ItemJournalLine':
+                exit(Database::"Item Journal Line");
         end;
         exit(0);
     end;
@@ -763,9 +769,15 @@ codeunit 10076841 "Inventory Tracking Read ori"
     /// <summary>Uses each native source adapter, preserving quantities, UOM, source keys and posting progress.</summary>
     procedure InitializeSpecification(SourceRef: RecordRef; Direction: Enum "Transfer Direction"; var Specification: Record "Tracking Specification")
     var
+        AssemblyHeader: Record "Assembly Header";
+        AssemblyLine: Record "Assembly Line";
+        ItemJournalLine: Record "Item Journal Line";
         SalesLine: Record "Sales Line";
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
+        AssemblyHeaderReserve: Codeunit "Assembly Header-Reserve";
+        AssemblyLineReserve: Codeunit "Assembly Line-Reserve";
+        ItemJournalLineReserve: Codeunit "Item Jnl. Line-Reserve";
         SalesLineReserve: Codeunit "Sales Line-Reserve";
         PurchaseLineReserve: Codeunit "Purch. Line-Reserve";
         TransferLineReserve: Codeunit "Transfer Line-Reserve";
@@ -773,6 +785,21 @@ codeunit 10076841 "Inventory Tracking Read ori"
     begin
         Clear(Specification);
         case SourceRef.Number of
+            Database::"Assembly Header":
+                begin
+                    SourceRef.SetTable(AssemblyHeader);
+                    AssemblyHeaderReserve.InitFromAsmHeader(Specification, AssemblyHeader);
+                end;
+            Database::"Assembly Line":
+                begin
+                    SourceRef.SetTable(AssemblyLine);
+                    AssemblyLineReserve.InitFromAsmLine(Specification, AssemblyLine);
+                end;
+            Database::"Item Journal Line":
+                begin
+                    SourceRef.SetTable(ItemJournalLine);
+                    ItemJournalLineReserve.InitFromItemJnlLine(Specification, ItemJournalLine);
+                end;
             Database::"Sales Line":
                 begin
                     SourceRef.SetTable(SalesLine);
