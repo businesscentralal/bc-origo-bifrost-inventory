@@ -2,11 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed ([28.3.2.0] development)
+- #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 ### Added (2026-11-16) - Partial transfer shipment and receipt (#115)
 
 - `Inventory.TransferOrder.Ship` and `Inventory.TransferOrder.Receive` post the requested quantities on selected lines and return the posted shipment or receipt number. Invalid, duplicate and excessive quantities return `InvalidLine` with a next step before changes. Native failures roll back the quantity edits and posting. Both operations declare an irreversible effect and explain in English and Icelandic that `expectedCount` counts one transfer order.
 - New codeunits 10077020–10077024 implement the operations, atomic posting process and bilingual contracts; test codeunit 96969 covers partial and final posting, omitted lines, invalid input, rollback and help.
 - New codeunit 10077025 reads direct-transfer posting setup on BC 28 and BC 29. Existing Post and PreviewPost retain their behavior while using the replacement BC 29 setting without obsolete field references.
+
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
