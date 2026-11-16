@@ -261,15 +261,15 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
         RequestJson := Argument.GetRequestJson();
         if not ValidateKeys(Argument, RequestJson) then
             exit;
-        if not ReadText(Argument, RequestJson, 'itemNo', true, ItemNo) then
+        if not ReadText(RequestJson, 'itemNo', Argument, true, ItemNo) then
             exit;
-        if not ReadText(Argument, RequestJson, 'variant', false, VariantCode) then
+        if not ReadText(RequestJson, 'variant', Argument, false, VariantCode) then
             exit;
-        if not ReadText(Argument, RequestJson, 'location', false, LocationCode) then
+        if not ReadText(RequestJson, 'location', Argument, false, LocationCode) then
             exit;
-        if not ReadDate(Argument, RequestJson, 'from', FromDate) then
+        if not ReadDate(RequestJson, 'from', Argument, FromDate) then
             exit;
-        if not ReadDate(Argument, RequestJson, 'to', ToDate) then
+        if not ReadDate(RequestJson, 'to', Argument, ToDate) then
             exit;
         if FromDate > ToDate then begin
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, RangeErr, 'from', Format(FromDate, 0, 9), Format(ToDate, 0, 9), RangeNextStepLbl);
@@ -310,7 +310,7 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
-    local procedure ReadText(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; KeyName: Text; Required: Boolean; var Value: Text): Boolean
+    local procedure ReadText(RequestJson: JsonObject; KeyName: Text; var Argument: Record "Message Argument ori"; Required: Boolean; var Value: Text): Boolean
     var
         Token: JsonToken;
         Raw: Text;
@@ -334,11 +334,11 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
-    local procedure ReadDate(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; KeyName: Text; var Value: Date): Boolean
+    local procedure ReadDate(RequestJson: JsonObject; KeyName: Text; var Argument: Record "Message Argument ori"; var Value: Date): Boolean
     var
         DateText: Text;
     begin
-        if not ReadText(Argument, RequestJson, KeyName, true, DateText) then
+        if not ReadText(RequestJson, KeyName, Argument, true, DateText) then
             exit(false);
         if Evaluate(Value, DateText, 9) then
             if (Value <> 0D) and (StrLen(DateText) = 10) and (Format(Value, 0, 9) = DateText) then
