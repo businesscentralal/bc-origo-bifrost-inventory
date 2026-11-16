@@ -123,6 +123,8 @@ codeunit 96964 "Reclass Journal Tests ori"
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
         Location: Record Location;
+        Entries: Record "Item Ledger Entry";
+        Register: Record "Item Register";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -149,7 +151,13 @@ codeunit 96964 "Reclass Journal Tests ori"
         Response.WriteTo(ResponseText);
         Response.Get('status', Token);
         Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
-        Assert.IsFalse(Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No."), 'Post removes the line.');
+        Response.Get('postedLineCount', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'The aliased batch is posted.');
+        Response.Get('itemRegisterNo', Token);
+        Assert.IsTrue(Register.Get(Token.AsValue().AsInteger()), 'The item register exists.');
+        Entries.SetRange("Item No.", Item."No.");
+        Entries.SetRange("Entry Type", Entries."Entry Type"::Transfer);
+        Assert.IsFalse(Entries.IsEmpty(), 'Item ledger entries of type Transfer are written.');
     end;
 
     local procedure VerifyCheck(LanguageId: Integer; WithBlockedLine: Boolean; Subset: Boolean)
