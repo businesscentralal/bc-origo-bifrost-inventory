@@ -584,6 +584,8 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 ValueEntry.SetRange("Item No.", ItemNo);
                 ValueEntry.DeleteAll();
                 Ledger.DeleteAll();
+                // Native source/tracking cleanup can update the item; delete the current record version.
+                Item.Get(ItemNo);
                 Item.Delete(true);
                 if (TrackingCodeName <> '') and TrackingCode.Get(TrackingCodeName) then
                     TrackingCode.Delete(true);
