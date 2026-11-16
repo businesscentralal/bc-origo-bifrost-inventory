@@ -500,10 +500,15 @@ codeunit 96996 "Posted Line Undo Tests ori"
     local procedure CheckContracts(LanguageId: Integer)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Declaration: Interface "Msg Contract ori";
         MessageType: Enum "Message Type ori";
         Types: List of [Enum "Message Type ori"];
         Contract: JsonObject;
         Token: JsonToken;
+        Parameter: JsonToken;
+        Name: JsonToken;
+        Effect: JsonObject;
+        Parameters: JsonArray;
         ContractText: Text;
         TypeName: Text;
         PreviousLanguage: Integer;
@@ -524,8 +529,25 @@ codeunit 96996 "Posted Line Undo Tests ori"
             AssertText(Token.AsObject(), 'effect', 'irreversible');
             Contract.WriteTo(ContractText);
             Assert.IsTrue(ContractText.Contains('expectedCount'), 'Count help is present in both languages.');
-            if LanguageId = 1039 then
-                Assert.IsTrue(ContractText.Contains('bókað'), 'Icelandic help is compiled and synchronized.');
+            // Foundation #777/#1239 intentionally builds structured chapters in English for every LCID.
+            Assert.IsTrue(ContractText.Contains('one posted document'), 'Registered help defines the document count in both LCIDs.');
+            Assert.AreEqual(LanguageId, GlobalLanguage(), 'The contract reader restores the requested language.');
+            // Prove the app's actual bilingual declarations independently of that English reader policy.
+            Declaration := MessageType;
+            Clear(Effect);
+            Clear(Parameters);
+            Assert.IsTrue(Declaration.GetEffect(Effect), 'The type declares its actual effect.');
+            Assert.IsTrue(Declaration.GetParameters(Parameters), 'The type declares its count parameter.');
+            if LanguageId = 1039 then begin
+                Assert.IsTrue(Effect.Get('changes', Token), 'The declared effect names its changes.');
+                Assert.IsTrue(Token.AsValue().AsText().Contains('bókað'), 'The declared Icelandic effect names the posted document.');
+                foreach Parameter in Parameters do
+                    if Parameter.AsObject().Get('name', Name) then
+                        if Name.AsValue().AsText() = 'expectedCount' then begin
+                            Assert.IsTrue(Parameter.AsObject().Get('description', Token), 'The count parameter has a description.');
+                            Assert.IsTrue(Token.AsValue().AsText().Contains('bókað'), 'The Icelandic expectedCount parameter names the posted document.');
+                        end;
+            end;
         end;
         GlobalLanguage(PreviousLanguage);
     end;
