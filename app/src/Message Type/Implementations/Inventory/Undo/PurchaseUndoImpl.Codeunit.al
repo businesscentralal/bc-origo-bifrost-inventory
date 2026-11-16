@@ -88,8 +88,10 @@ codeunit 10077026 "Purchase Undo Impl ori" implements "Msg Interface ori", "Msg 
 
     /// <summary>Supplies the GetRelated contract for Purchase.Receipt.Undo.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
+    var
+        RelatedLbl: Label 'Use sales shipment undo when correcting goods shipped to a customer.', Comment = 'is-IS=Notaðu afturköllun söluafhendingar þegar leiðrétta á vörur afhentar viðskiptamanni.';
     begin
-        Related.Add(ContractMgt.RelatedEntry('Sales.Shipment.Undo', DescriptionLbl));
+        Related.Add(ContractMgt.RelatedEntry('Sales.Shipment.Undo', RelatedLbl));
         exit(true);
     end;
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — issue 134
+## [28.3.2.0] — issue 134 (unreleased)
 
 - Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
 - Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.

@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Setup;
@@ -58,6 +59,9 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         Item: Record Item;
         Entry: Record "Item Ledger Entry";
         ValueEntry: Record "Value Entry";
+        PostValueEntry: Record "Post Value Entry to G/L";
+        AverageCostEntry: Record "Avg. Cost Adjmt. Entry Point";
+        AdjustmentOrder: Record "Inventory Adjmt. Entry (Order)";
         Register: Record "Item Register";
         RangeEntry: Record "Item Ledger Entry";
         OwnedEntry: Record "Item Ledger Entry";
@@ -103,8 +107,15 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
                         Relation.DeleteAll();
                     until Entry.Next() = 0;
                 ValueEntry.SetRange("Item No.", Item."No.");
+                PostValueEntry.SetRange("Item No.", Item."No.");
+                PostValueEntry.DeleteAll();
+                AverageCostEntry.SetRange("Item No.", Item."No.");
+                AverageCostEntry.DeleteAll();
+                AdjustmentOrder.SetRange("Item No.", Item."No.");
+                AdjustmentOrder.DeleteAll();
                 ValueEntry.DeleteAll();
                 Entry.DeleteAll();
+                Item.UpdateCostIsAdjusted();
             until Item.Next() = 0;
         Shipment.SetFilter("Order No.", 'W4I134-*');
         if Shipment.FindSet() then

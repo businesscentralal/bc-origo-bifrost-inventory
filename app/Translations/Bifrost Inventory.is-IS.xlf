@@ -5055,6 +5055,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla bókaða innkaupamóttöku leiðrétta línur</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purchase Undo Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3227135473 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use sales shipment undo when correcting goods shipped to a customer.</source>
+          <target>Notaðu afturköllun söluafhendingar þegar leiðrétta á vörur afhentar viðskiptamanni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu afturköllun söluafhendingar þegar leiðrétta á vörur afhentar viðskiptamanni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purchase Undo Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 3571782927 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send templateName and batchName for an existing Transfer journal template.</source>
           <target>Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.</target>
@@ -6452,6 +6458,12 @@
           <target>afturkalla bókaða söluafhendingu leiðrétta línur</target>
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla bókaða söluafhendingu leiðrétta línur</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Undo Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 230986472 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use purchase receipt undo when correcting goods received from a vendor.</source>
+          <target>Notaðu afturköllun innkaupamóttöku þegar leiðrétta á vörur mótteknar frá lánardrottni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu afturköllun innkaupamóttöku þegar leiðrétta á vörur mótteknar frá lánardrottni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Undo Impl ori - Method GetRelated - NamedType RelatedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.</source>

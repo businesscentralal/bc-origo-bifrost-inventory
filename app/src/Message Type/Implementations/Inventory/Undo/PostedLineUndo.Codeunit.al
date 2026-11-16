@@ -141,7 +141,10 @@ codeunit 10077027 "Posted Line Undo ori"
             UndoPurchase(Argument, DocumentNo, LineNos);
     end;
 
-    local procedure ReadSelection(var Argument: Record "Message Argument ori"; var DocumentNo: Code[20]; var LineNos: List of [Integer]): Boolean
+    local procedure ReadSelection(
+        var Argument: Record "Message Argument ori";
+        var DocumentNo: Code[20];
+        var LineNos: List of [Integer]): Boolean
     var
         Request: JsonObject;
         Token: JsonToken;
@@ -212,7 +215,10 @@ codeunit 10077027 "Posted Line Undo ori"
         exit(true);
     end;
 
-    local procedure UndoSales(var Argument: Record "Message Argument ori"; DocumentNo: Code[20]; LineNos: List of [Integer])
+    local procedure UndoSales(
+        var Argument: Record "Message Argument ori";
+        DocumentNo: Code[20];
+        LineNos: List of [Integer])
     var
         Header: Record "Sales Shipment Header";
         Line: Record "Sales Shipment Line";
@@ -242,6 +248,8 @@ codeunit 10077027 "Posted Line Undo ori"
         end;
         Line.SetRange("Document No.", DocumentNo);
         Line.MarkedOnly(true);
+        // Preserve the native routine's default locking semantics.
+        Line.ReadIsolation := IsolationLevel::Default;
         Line.FindFirst();
         Undo.SetHideDialog(true);
         if Argument."Omit Commit" then
@@ -254,7 +262,10 @@ codeunit 10077027 "Posted Line Undo ori"
         Respond(Argument, DocumentNo, LineNos);
     end;
 
-    local procedure UndoPurchase(var Argument: Record "Message Argument ori"; DocumentNo: Code[20]; LineNos: List of [Integer])
+    local procedure UndoPurchase(
+        var Argument: Record "Message Argument ori";
+        DocumentNo: Code[20];
+        LineNos: List of [Integer])
     var
         Header: Record "Purch. Rcpt. Header";
         Line: Record "Purch. Rcpt. Line";
@@ -284,6 +295,8 @@ codeunit 10077027 "Posted Line Undo ori"
         end;
         Line.SetRange("Document No.", DocumentNo);
         Line.MarkedOnly(true);
+        // Preserve the native routine's default locking semantics.
+        Line.ReadIsolation := IsolationLevel::Default;
         Line.FindFirst();
         Undo.SetHideDialog(true);
         if Argument."Omit Commit" then
@@ -298,7 +311,12 @@ codeunit 10077027 "Posted Line Undo ori"
 
     // Only the temporary entry buffer is written; native posting still performs its own checks again.
     [TryFunction]
-    local procedure CheckEntries(SourceTableNo: Integer; DocumentNo: Code[20]; LineNo: Integer; QuantityBase: Decimal; EntryNo: Integer)
+    local procedure CheckEntries(
+        SourceTableNo: Integer;
+        DocumentNo: Code[20];
+        LineNo: Integer;
+        QuantityBase: Decimal;
+        EntryNo: Integer)
     var
         TempEntry: Record "Item Ledger Entry" temporary;
         UndoManagement: Codeunit "Undo Posting Management";
@@ -307,26 +325,40 @@ codeunit 10077027 "Posted Line Undo ori"
         UndoManagement.CheckItemLedgEntries(TempEntry, LineNo);
     end;
 
-    local procedure InvalidLine(var Argument: Record "Message Argument ori"; LineNo: Integer)
+    local procedure InvalidLine(
+        var Argument: Record "Message Argument ori";
+        LineNo: Integer)
     var
         InvalidLbl: Label 'Posted line %1 is invoiced, already corrected or has no quantity to undo.', Comment = '%1 = line number, is-IS=Bókuð lína %1 er reikningsfærð, þegar leiðrétt eða hefur ekkert magn til afturköllunar.';
     begin
         Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(InvalidLbl, LineNo), 'lineNos', Format(LineNo, 0, 9), CreditNextLbl);
     end;
 
-    local procedure NotFound(var Argument: Record "Message Argument ori"; ParameterName: Text; Received: Text)
+    local procedure NotFound(
+        var Argument: Record "Message Argument ori";
+        ParameterName: Text;
+        Received: Text)
     var
         NotFoundLbl: Label 'The posted document or selected line was not found.', Comment = 'is-IS=Bókaða skjalið eða valin lína fannst ekki.';
     begin
         Refuse(Argument, "Bifrost Error Code ori"::RecordNotFound, NotFoundLbl, ParameterName, Received, SelectNextLbl);
     end;
 
-    local procedure Refuse(var Argument: Record "Message Argument ori"; ErrorCode: Enum "Bifrost Error Code ori"; MessageText: Text; ParameterName: Text; Received: Text; NextStep: Text)
+    local procedure Refuse(
+        var Argument: Record "Message Argument ori";
+        ErrorCode: Enum "Bifrost Error Code ori";
+        MessageText: Text;
+        ParameterName: Text;
+        Received: Text;
+        NextStep: Text)
     begin
         Argument.RespondWithError(ErrorCode, MessageText, ParameterName, Received, '', NextStep);
     end;
 
-    local procedure Respond(var Argument: Record "Message Argument ori"; DocumentNo: Code[20]; LineNos: List of [Integer])
+    local procedure Respond(
+        var Argument: Record "Message Argument ori";
+        DocumentNo: Code[20];
+        LineNos: List of [Integer])
     var
         Response: JsonObject;
         Reversed: JsonArray;
