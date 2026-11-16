@@ -15,7 +15,7 @@
 README "Objects" lists every object with its ID. In short:
 
 - Tables 10076835 `Inv. Posting ori`, 10076836 `Inventory Setup ori`; page 10076835 `Inventory Setup ori`;
-  enum 10076835 `Inventory Domain ori`; enum extensions on `Message Type ori` 10076835-10076846;
+  enum 10076835 `Inventory Domain ori`; enum extensions on `Message Type ori` 10076835-10076847;
   permission sets 10076835-10076837 (InvAttrRead, InvAttrWrite, InvPost), extensions 10076835-10076836 (InvRead, InvWrite).
 - Codeunits 10076835-10076923, grouped by domain (alphabetical by folder): lifecycle 10076835-10076836 and 10076845,
   shared reads/writes 10076837-10076843, write restrictions 10076846-10076848, assembly 10076849-10076856,
@@ -23,13 +23,13 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
-  shared gates and contract parts 10076919-10076923.
+  shared gates and contract parts 10076919-10076923, item create 10076930-10076931 (`Inventory.Item.Create`, #130; 10076925-10076929 are already used by shared codeunits).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
-  the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
+- Next free codeunit: 10076932 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
+  the convention). Free: 10076932-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
   fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
@@ -38,4 +38,4 @@ README "Objects" lists every object with its ID. In short:
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
-- Free: 96960-96961, 96963-96979.
+- 96960 `Item Create Tests`, 96961 `Item Create Perm` (#130). Free: 96964-96969 (96963 and 96970-96979 are used).

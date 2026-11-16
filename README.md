@@ -34,6 +34,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
+| `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -262,6 +263,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076847 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -290,6 +292,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076930–10076931 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
 
 ### Permission sets
 

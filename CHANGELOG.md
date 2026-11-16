@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.Item.Create creates an item from an item template (#130)
+- New message type `Inventory.Item.Create` (enum value 10076930 in enum extension 10076847 `MsgType.ItemCreate.EnumExt ori`; codeunits 10076930 `Item Create Impl ori` and 10076931 `Item Create Proc ori`). It takes `templateCode` plus the optional `description`, `baseUnitOfMeasure`, `unitPrice` and `gtin`, creates the item through Microsoft's `Item Templ. Mgt.` (codeunit 1336) so the template's base unit of measure, posting groups, costing method and number series apply, and answers `itemNo` with the item's `unitsOfMeasure`.
+- Refusals: unknown template `RecordNotFound`; a base unit of measure that does not exist `InvalidParameter`; missing or empty `templateCode` `MissingParameter`; wrong JSON types `InvalidParameterFormat`; unknown keys `UnknownParameter`; texts longer than their field or a negative `unitPrice` `InvalidParameter`; no permission `PermissionDenied`. Each refusal carries a `nextStep`; help and refusals are in en-US and is-IS (XLF regenerated).
+- The contract declares its real effect (`write`, does not post, not idempotent; core#1365 D1). The type is not irreversible, so no `expectedCount`. It is gated by the existing Attributes domain on Inventory Setup (item and attribute management); no new setup field.
+- `BIFROST InvWrite ori` executes both new codeunits. Tests: `Item Create Tests` (96960) and `Item Create Perm` (96961); `Inventory Contract Batch Tests` counts 60 app types and checks the new contract's parameters and examples.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.
