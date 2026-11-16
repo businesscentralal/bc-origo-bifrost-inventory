@@ -3,29 +3,34 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
+/// <summary>Implements the released source-bound item tracking message contract.</summary>
 codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Reports the shared domain and native permission gate.</summary>
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false));
+        exit(TrackingWrite.IsEnabled());
     end;
 
+    /// <summary>Returns the native table used for message selection.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Reservation Entry");
     end;
 
+    /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.';
+        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
     begin
         exit(DescriptionLbl);
     end;
 
+    /// <summary>Returns localized discovery keywords.</summary>
     procedure GetKeywords(): Text
     var
         KeywordsLbl: Label 'assign lot, assign serial, assign package, item tracking', Comment = 'is-IS=úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki';
@@ -33,13 +38,15 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(KeywordsLbl);
     end;
 
+    /// <summary>Returns localized source selection guidance.</summary>
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.';
+        SelectionDescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
     begin
         exit(SelectionDescriptionLbl);
     end;
 
+    /// <summary>Describes the envelope chapter of the public tracking contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     var
         Subject: JsonObject;
@@ -55,21 +62,23 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the target chapter of the public tracking contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine or TransferLine by its SystemId. The source line determines the item and native tracking pointer.'));
+        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine by its SystemId. The source line determines the item and native tracking pointer.'));
         exit(true);
     end;
 
+    /// <summary>Describes the parameters chapter of the public tracking contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         EntryParameter: JsonObject;
         Children: JsonArray;
     begin
-        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', false, 'Positive base quantity for one tracking assignment. Required unless entries is supplied. A serial number requires exactly one base unit.'));
         Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Lot number, at most 50 characters; at least one tracking number is required.'));
@@ -87,6 +96,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the response chapter of the public tracking contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -105,13 +115,17 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the errors chapter of the public tracking contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        DisabledWhenLbl: Label 'Item Tracking is turned off in Inventory Setup for this company.', Comment = 'is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.';
+        DisabledFixLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.';
     begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, DisabledWhenLbl, DisabledFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A source selector, quantity or entryNo is absent.', 'Send the required source and tracking parameters.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A selector or tracking value has the wrong JSON type.', 'Use the declared JSON types, positive integer entry numbers and ISO dates.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid, or the domain is disabled.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected line or tracking entry does not exist on that source.', 'Read Inventory.Tracking.Get for the selected source and use its entryNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected tracking is reserved or cannot be removed.', 'Cancel the reservation using Inventory.Reservation.Cancel before removing its tracking.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native source or tracking permissions are missing.', 'Assign the Bifrost "Full Access" permission set and the required Business Central document and reservation permissions.'));
@@ -119,6 +133,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the effect chapter of the public tracking contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Preconditions: JsonArray;
@@ -134,11 +149,13 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the metering chapter of the public tracking contract.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Describes the related chapter of the public tracking contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -149,6 +166,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the workflow chapter of the public tracking contract.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -156,11 +174,12 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     begin
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Assign', 'Assign tracking to your own selected document line.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Get', 'Read the same source and keep its ReservationEntry entryNo.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove one unreserved entryNo from the same source when no longer needed.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove unreserved tracking from the same source when no longer needed.'));
         Workflow.Add('steps', Steps);
         exit(true);
     end;
 
+    /// <summary>Describes the examples chapter of the public tracking contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -169,30 +188,33 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the overview chapter of the public tracking contract.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.';
+        Overview := 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.';
         exit(true);
     end;
 
+    /// <summary>Describes the notes chapter of the public tracking contract.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Select an existing SalesLine, PurchaseLine or TransferLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete requires the source and one unreserved entryNo, so another document cannot be affected. ' +
+        Notes := 'Select an existing SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete accepts one entryNo, an entryNos array, or all unreserved tracking on the selected source when both are omitted. Every selected entry is validated before any removal; another source cannot be affected. ' +
             'No ledger entries are posted. No unlinked persistent Tracking Specification is inserted. Native failures roll back standalone calls; Omit Commit leaves transaction ownership with the caller and propagates native failures. Repeating an assignment may add quantity; read the source before retrying.';
         exit(true);
     end;
 
+    /// <summary>Returns the direction of this released message type.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Executes the versioned tracking operation after checking the company gate and licence.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
+        if not TrackingWrite.AssertEnabled(Argument) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
