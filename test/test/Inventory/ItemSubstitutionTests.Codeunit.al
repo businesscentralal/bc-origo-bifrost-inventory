@@ -312,6 +312,7 @@ codeunit 96993 "Item Substitution Tests ori"
         // [THEN] The switch governs discovery and the wizard shows it without editing it.
         Assert.IsFalse(Impl.IsEnabled(), 'Page toggle disables discovery');
         Wizard.OpenView();
+        Assert.IsFalse(Wizard.ItemSubstitution.Editable(), 'Wizard switch is read-only');
         Wizard.Close();
         Setup.Get();
         Assert.IsFalse(Setup."Item Substitution", 'Opening wizard does not enable domain');

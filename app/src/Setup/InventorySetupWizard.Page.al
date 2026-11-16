@@ -149,6 +149,7 @@ page 10076836 "Inventory Setup Wizard ori"
                     ApplicationArea = All;
                     Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
                     ToolTip = 'Shows whether reading item substitutions is enabled for this company.', Comment = 'is-IS=Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.';
+                    Editable = false;
                 }
                 field(ItemCategory; DomainEnabled[15])
                 {
