@@ -324,6 +324,8 @@ codeunit 10077010 "Tracking Info Get Impl ori" implements "Msg Interface ori", "
             RespondNoCard(Argument, LotInfo.TableCaption(), 'lotNo', ItemNo, VariantCode, LotNo);
             exit;
         end;
+        // Comment is a FlowField: true when item tracking comments exist for the card.
+        LotInfo.CalcFields(Comment);
         Ledger.SetRange("Lot No.", LotNo);
         StartResponse(Response, 'Lot', ItemNo, VariantCode, LotNo, '', '');
         AddCardFields(Response, LotInfo.Description, TestQualityName(LotInfo), LotInfo."Certificate Number", '', LotInfo.Blocked, LotInfo.Comment);
@@ -343,6 +345,8 @@ codeunit 10077010 "Tracking Info Get Impl ori" implements "Msg Interface ori", "
             RespondNoCard(Argument, SerialInfo.TableCaption(), 'serialNo', ItemNo, VariantCode, SerialNo);
             exit;
         end;
+        // Comment is a FlowField: true when item tracking comments exist for the card.
+        SerialInfo.CalcFields(Comment);
         Ledger.SetRange("Serial No.", SerialNo);
         StartResponse(Response, 'Serial', ItemNo, VariantCode, '', SerialNo, '');
         AddCardFields(Response, SerialInfo.Description, '', '', '', SerialInfo.Blocked, SerialInfo.Comment);
@@ -362,6 +366,8 @@ codeunit 10077010 "Tracking Info Get Impl ori" implements "Msg Interface ori", "
             RespondNoCard(Argument, PackageInfo.TableCaption(), 'packageNo', ItemNo, VariantCode, PackageNo);
             exit;
         end;
+        // Comment is a FlowField: true when item tracking comments exist for the card.
+        PackageInfo.CalcFields(Comment);
         Ledger.SetRange("Package No.", PackageNo);
         StartResponse(Response, 'Package', ItemNo, VariantCode, '', '', PackageNo);
         AddCardFields(Response, PackageInfo.Description, '', PackageInfo."Certificate Number", PackageInfo."Country/Region Code", PackageInfo.Blocked, PackageInfo.Comment);

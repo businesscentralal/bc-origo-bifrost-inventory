@@ -41,7 +41,6 @@ codeunit 96992 "Tracking Info Get Tests"
         LotInfo.Description := 'Supplier batch';
         LotInfo."Test Quality" := LotInfo."Test Quality"::Good;
         LotInfo."Certificate Number" := 'CERT-106';
-        LotInfo.Comment := true;
         LotInfo.Modify();
         AddComment("Item Tracking Comment Type"::"Lot No.", Item."No.", '', 'TI-LOT-1', 10000, WorkDate(), 'Checked on receipt');
         AddComment("Item Tracking Comment Type"::"Lot No.", Item."No.", '', 'TI-LOT-1', 20000, 0D, 'Second line');
@@ -143,7 +142,6 @@ codeunit 96992 "Tracking Info Get Tests"
         PackageInfo."Package No." := 'TI-PKG-1';
         PackageInfo."Country/Region Code" := CountryRegion.Code;
         PackageInfo."Certificate Number" := 'PKG-CERT';
-        PackageInfo.Comment := true;
         PackageInfo.Insert();
         AddComment("Item Tracking Comment Type"::"Package No.", Item."No.", '', 'TI-PKG-1', 10000, 0D, 'Pallet A');
         AddStock(Item."No.", '', '', '', 'TI-PKG-1', 4, 0D);
@@ -296,17 +294,14 @@ codeunit 96992 "Tracking Info Get Tests"
     procedure NoCard_RefusalIsIcelandicAt1039()
     var
         Item: Record Item;
+        Helper: Codeunit "Transfer Order Test Helper";
         Request: JsonObject;
         Response: JsonObject;
-        PreviousLanguage: Integer;
     begin
         Initialize(Item);
         Request.Add('itemNo', Item."No.");
         Request.Add('packageNo', 'TI-PKG-NONE');
-        PreviousLanguage := GlobalLanguage();
-        GlobalLanguage(1039);
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.TrackingInfo.Get", '', Request, false);
-        GlobalLanguage(PreviousLanguage);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TrackingInfo.Get", Request, 1039, Response);
         AssertRefusal(Response, 'RecordNotFound', 'packageNo', 'hefur ekkert upplýsingaspjald');
     end;
 
