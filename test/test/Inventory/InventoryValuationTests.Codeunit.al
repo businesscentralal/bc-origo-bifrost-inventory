@@ -221,6 +221,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         Request: JsonObject;
     begin
+        PrepareFixturePermissions();
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := false;
@@ -246,6 +247,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
     begin
         CreateItem(Item);
         SeedEntry(Item."No.", '', '', 20260101D, 2, 20, 0);
+        PrepareFixturePermissions();
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := true;
@@ -269,6 +271,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        PrepareFixturePermissions();
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := true;
@@ -319,6 +322,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
 
     local procedure CreateItem(var Item: Record Item)
     begin
+        PrepareFixturePermissions();
         Item.Init();
         Item."No." := CopyStr('XVAL' + DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, 20);
         Item.Type := Item.Type::Inventory;
@@ -359,6 +363,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         Setup: Record "Inventory Setup ori";
     begin
+        PrepareFixturePermissions();
         Setup.InsertIfNotExists();
         Setup.Get();
         Setup.Costing := true;
@@ -367,6 +372,14 @@ codeunit 96989 "Inventory Valuation Tests ori"
         TempArgument.SetRequestJson(Request);
         Valuation.ReadValuation(TempArgument);
         exit(TempArgument.GetResponseJson());
+    end;
+
+    local procedure PrepareFixturePermissions()
+    var
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+    begin
+        // Fixture writes run with setup rights; permission scenarios lower the caller explicitly afterward.
+        LowerPermissions.SetOutsideO365Scope();
     end;
 
     local procedure InitArgument(var TempArgument: Record "Message Argument ori" temporary)
