@@ -146,8 +146,8 @@ codeunit 10076998 "SKU Request ori"
         Result.Add('itemNo', StockkeepingUnit."Item No.");
         Result.Add('locationCode', StockkeepingUnit."Location Code");
         Result.Add('variantCode', StockkeepingUnit."Variant Code");
-        Result.Add('replenishmentSystem', Format(StockkeepingUnit."Replenishment System", 0, 9));
-        Result.Add('reorderingPolicy', Format(StockkeepingUnit."Reordering Policy", 0, 9));
+        Result.Add('replenishmentSystem', StockkeepingUnit."Replenishment System".Names().Get(StockkeepingUnit."Replenishment System".Ordinals().IndexOf(StockkeepingUnit."Replenishment System".AsInteger())));
+        Result.Add('reorderingPolicy', StockkeepingUnit."Reordering Policy".Names().Get(StockkeepingUnit."Reordering Policy".Ordinals().IndexOf(StockkeepingUnit."Reordering Policy".AsInteger())));
         Result.Add('includeInventory', StockkeepingUnit."Include Inventory");
         Result.Add('reorderPoint', StockkeepingUnit."Reorder Point");
         Result.Add('reorderQuantity', StockkeepingUnit."Reorder Quantity");
