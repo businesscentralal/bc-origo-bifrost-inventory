@@ -355,6 +355,7 @@ codeunit 96966 "Assembly Read Tests"
     [Test]
     procedure AsmToOrder_UnknownKey_IcelandicNextStep()
     var
+        AssemblyHelper: Codeunit "Assembly Order Test Helper";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PreviousLanguage: Integer;
@@ -364,7 +365,8 @@ codeunit 96966 "Assembly Read Tests"
         RequestJson.Add('salesOrder', 'ANY');
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        ResponseJson := ExecuteAto(RequestJson);
+        // Pass the language to the dispatcher; ExecuteType uses the company default.
+        AssemblyHelper.ProcessMessage("Message Type ori"::"Inventory.AssemblyToOrder.Get", 'ATO', RequestJson, ResponseJson);
         GlobalLanguage(PreviousLanguage);
         AssertText(ResponseJson, 'code', 'UnknownParameter');
         AssertText(ResponseJson, 'error', 'Lykillinn er ekki hluti af þessari skilaboðategund.');
