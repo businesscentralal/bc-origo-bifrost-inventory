@@ -1,10 +1,13 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Manufacturing.Document;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
+using Microsoft.Service.Document;
 using Origo.Bifrost;
 
 /// <summary>
@@ -58,7 +61,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>The selection description.</returns>
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer or assembly line).', Comment = 'is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).';
+        SelectionDescriptionLbl: Label 'Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production or item journal source).', Comment = 'is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -88,7 +91,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', 'The source line to reserve for: a Sales Line (sourceType 37), Purchase Line (39), Transfer Line (5741) or Assembly Line (901). sourceSubtype is the document type ordinal, or the transfer direction (0 outbound, 1 inbound), and defaults to 1 for sales, purchase and assembly lines and to 0 for a transfer line.'));
+        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', 'The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407) or Item Journal Line (83). Add sourceBatchName for journals and sourceProdOrderLine for production. For production lines and assembly headers, sourceLineNo is 0.'));
         exit(true);
     end;
 
@@ -98,15 +101,17 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        SourceTypeLbl: Label 'Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line.', Comment = 'is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína.';
-        SourceSubtypeLbl: Label 'Source subtype: the sales, purchase or assembly document type ordinal (1 = Order), or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly and 0 for transfer lines.', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar sölu, innkaupa eða samsetningar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu, innkaup og samsetningu og 0 fyrir millifærslulínur.';
+        SourceTypeLbl: Label 'Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line.', Comment = 'is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.';
+        SourceSubtypeLbl: Label 'Source subtype: document type ordinal (default 1 = Order for sales, purchase, assembly and service), or transfer direction (default 0 outbound, 1 inbound). Required for production (status ordinal) and item journals (entry type ordinal).', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (sjálfgefið 1 = pöntun fyrir sölu, innkaup, samsetningu og þjónustu), eða stefna millifærslu (sjálfgefið 0 út, 1 inn). Nauðsynlegt fyrir framleiðslu (stöðuröð) og vörubækur (færslutegund).';
         SourceNoLbl: Label 'Source document number.', Comment = 'is-IS=Númer upprunaskjals.';
-        SourceLineNoLbl: Label 'Source document line number.', Comment = 'is-IS=Línunúmer upprunaskjals.';
+        SourceLineNoLbl: Label 'Native Source Ref. No.; use 0 for a production order line or assembly header.', Comment = 'is-IS=Source Ref. No.; notaðu 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.';
         QuantityLbl: Label 'Quantity to reserve, in the source line unit of measure. Greater than 0.', Comment = 'is-IS=Magn til frátekningar, í mælieiningu upprunalínunnar. Stærra en 0.';
         ItemNoLbl: Label 'Optional item number; must match the source line when sent.', Comment = 'is-IS=Valfrjálst vörunúmer; verður að passa við upprunalínuna ef það er sent.';
         LotNoLbl: Label 'Optional lot number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst lotunúmer. Aðeins samsvarandi framboð er tekið frá.';
         SerialNoLbl: Label 'Optional serial number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst raðnúmer. Aðeins samsvarandi framboð er tekið frá.';
         PackageNoLbl: Label 'Optional package number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst pakkanúmer. Aðeins samsvarandi framboð er tekið frá.';
+        BatchNameLbl: Label 'Required for item journal sources: journal batch; sourceNo is the journal template.', Comment = 'is-IS=Nauðsynlegt fyrir vörubókaruppruna: bókarkeyrsla; sourceNo er bókarsniðmátið.';
+        ProdLineLbl: Label 'Required for production sources: parent production order line number. sourceLineNo is 0 for a production order line, or the component line number.', Comment = 'is-IS=Nauðsynlegt fyrir framleiðsluuppruna: línunúmer framleiðslupöntunar. sourceLineNo er 0 fyrir framleiðslupöntunarlínu eða línunúmer íhlutar.';
         SupplyEntryLbl: Label 'Optional positive, open Item Ledger Entry number. Reserves only this matching inventory entry; insufficient quantity refuses the whole request.', Comment = 'is-IS=Valfrjálst númer jákvæðrar opinnar vörufærslu. Tekur aðeins þessa samsvarandi birgðafærslu frá; ónógt magn hafnar allri beiðninni.';
         LocationCodeLbl: Label 'Optional location code; must match the source line location when sent.', Comment = 'is-IS=Valfrjáls staðsetningarkóði; verður að passa við staðsetningu upprunalínunnar ef hann er sendur.';
     begin
@@ -114,6 +119,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Parameters.Add(ContractMgt.Parameter('sourceSubtype', 'integer', false, SourceSubtypeLbl));
         Parameters.Add(ContractMgt.Parameter('sourceNo', 'string', true, SourceNoLbl));
         Parameters.Add(ContractMgt.Parameter('sourceLineNo', 'integer', true, SourceLineNoLbl));
+        Parameters.Add(ContractMgt.Parameter('sourceBatchName', 'string', false, BatchNameLbl));
+        Parameters.Add(ContractMgt.Parameter('sourceProdOrderLine', 'integer', false, ProdLineLbl));
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', true, QuantityLbl));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoLbl));
         Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, LocationCodeLbl));
@@ -149,7 +156,9 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Fields.Add(ContractMgt.ResponseField('sourceType', 'integer', 'The source table number, as sent.'));
         Fields.Add(ContractMgt.ResponseField('sourceSubtype', 'integer', 'The source subtype that was used, including the default.'));
         Fields.Add(ContractMgt.ResponseField('sourceNo', 'string', 'The source document number, in upper case.'));
-        Fields.Add(ContractMgt.ResponseField('sourceLineNo', 'integer', 'The source line number, as sent.'));
+        Fields.Add(ContractMgt.ResponseField('sourceLineNo', 'integer', 'The native Source Ref. No., as sent.'));
+        Fields.Add(ContractMgt.ResponseField('sourceBatchName', 'string', 'The journal batch, or blank.'));
+        Fields.Add(ContractMgt.ResponseField('sourceProdOrderLine', 'integer', 'The parent production order line, or zero.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
@@ -270,7 +279,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. lotNo, serialNo and packageNo restrict the supply. itemLedgerEntryNo selects one positive, open inventory entry matching the source item, variant, location and tracking; insufficient supply refuses the whole request. Without itemLedgerEntryNo, Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
+        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. lotNo, serialNo and packageNo restrict the supply. itemLedgerEntryNo selects one positive, open inventory entry matching the source item, variant, location and tracking; insufficient supply refuses the whole request. Without itemLedgerEntryNo, Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase, assembly and service and to 0 (outbound) for a transfer line. Production requires an explicit status and sourceProdOrderLine; use sourceLineNo 0 for a production order line and the component line number for a component. Item journals require an explicit entry type and sourceBatchName; sourceNo is the template. Assembly headers use sourceLineNo 0. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu, innkaup, samsetningu og þjónustu og 0 (út) fyrir millifærslulínu. Framleiðsla krefst skýrrar stöðu og sourceProdOrderLine; notaðu sourceLineNo 0 fyrir framleiðslupöntunarlínu og línunúmer íhlutar fyrir íhlut. Vörubækur krefjast skýrrar færslutegundar og sourceBatchName; sourceNo er sniðmátið. Samsetningarhausar nota sourceLineNo 0. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -299,6 +308,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ItemNo: Text;
         LocationCode: Text;
         SourceNoText: Text;
+        SourceBatchName: Text;
+        SourceProdOrderLine: Integer;
         LotNo: Text;
         SerialNo: Text;
         PackageNo: Text;
@@ -315,6 +326,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         AvailabilityDate: Date;
         QuantityPositiveErr: Label 'quantity must be greater than zero.', Comment = 'is-IS=quantity verður að vera stærra en núll.';
         QuantityExpectedTok: Label 'a quantity greater than 0', Comment = 'is-IS=magn stærra en 0';
+        SourcePointerErr: Label 'sourceLineNo must be 0 for a production order line or assembly header.', Comment = 'is-IS=sourceLineNo verður að vera 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.';
+        SerialQuantityErr: Label 'A serial number reservation must request exactly one base unit.', Comment = 'is-IS=Frátekning raðnúmers verður að biðja um nákvæmlega eina grunneiningu.';
         NothingReservedErr: Label 'No reservation entry was created for the source line. No supply is available to reserve.', Comment = 'is-IS=Engin frátekningarfærsla var búin til fyrir upprunalínuna. Ekkert framboð er tiltækt til frátekningar.';
         NothingReservedExpectedTok: Label 'available supply for the source line', Comment = 'is-IS=tiltækt framboð fyrir upprunalínuna';
         NothingReservedNextStepTok: Label 'Check inventory at the source location, then retry Inventory.Reservation.Create.', Comment = 'is-IS=Athugaðu birgðir á staðsetningu upprunalínunnar og reyndu svo Inventory.Reservation.Create aftur.';
@@ -326,7 +339,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         RequestJson := Argument.GetRequestJson();
         ReadOk := ReadInteger(Argument, RequestJson, 'sourceType', true, SourceType);
         SourceSubtype := DefaultSourceSubtype(SourceType);
-        if not ReadInteger(Argument, RequestJson, 'sourceSubtype', false, SourceSubtype) then
+        if not ReadInteger(Argument, RequestJson, 'sourceSubtype', SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component", Database::"Item Journal Line"], SourceSubtype) then
             ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'sourceNo', true, 20, SourceNoText) then
             ReadOk := false;
@@ -345,6 +358,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'locationCode', false, 10, LocationCode) then
             ReadOk := false;
+        if not ReadCode(Argument, RequestJson, 'sourceBatchName', SourceType = Database::"Item Journal Line", 10, SourceBatchName) then
+            ReadOk := false;
+        if not ReadInteger(Argument, RequestJson, 'sourceProdOrderLine', SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component"], SourceProdOrderLine) then
+            ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'lotNo', false, 50, LotNo) then
             ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'serialNo', false, 50, SerialNo) then
@@ -355,8 +372,16 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             ReadOk := false;
         if Parts.RespondToProblems(Argument) or not ReadOk then
             exit;
-        if not ReadSourceLine(Argument, SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, Description) then
+        if (SourceType in [Database::"Prod. Order Line", Database::"Assembly Header"]) and (SourceLineNo <> 0) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SourcePointerErr, 'sourceLineNo', Format(SourceLineNo, 0, 9), '0', SourceNextStepLbl);
             exit;
+        end;
+        if not ReadSourceLine(Argument, SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, CopyStr(SourceBatchName, 1, 10), SourceProdOrderLine, ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, Description) then
+            exit;
+        if (SerialNo <> '') and (Round(Quantity * QtyPerUOM, 0.00001) <> 1) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SerialQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTok, SourceNextStepLbl);
+            exit;
+        end;
         if AvailabilityDate = 0D then
             AvailabilityDate := WorkDate();
 
@@ -366,6 +391,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             LastEntryNo := ReservationEntry."Entry No.";
         Process.SetOperation('ReservationCreate');
         Process.SetReservation(SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, Quantity, Round(Quantity * QtyPerUOM, 0.00001), AvailabilityDate, Description);
+        Process.SetReservationSourceDetails(CopyStr(SourceBatchName, 1, 10), SourceProdOrderLine);
         Process.SetReservationSupply(SupplyEntryNo, CopyStr(LotNo, 1, 50), CopyStr(SerialNo, 1, 50), CopyStr(PackageNo, 1, 50));
         if Argument."Omit Commit" then
             Process.Run(Argument)
@@ -381,6 +407,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ReservationEntry.SetRange("Source Subtype", SourceSubtype);
         ReservationEntry.SetRange("Source ID", CopyStr(SourceNoText, 1, 20));
         ReservationEntry.SetRange("Source Ref. No.", SourceLineNo);
+        if SourceType = Database::"Item Journal Line" then
+            ReservationEntry.SetRange("Source Batch Name", CopyStr(SourceBatchName, 1, 10));
+        if SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component"] then
+            ReservationEntry.SetRange("Source Prod. Order Line", SourceProdOrderLine);
         ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
         ReservationEntry.SetLoadFields("Entry No.", Quantity);
         if ReservationEntry.FindSet() then
@@ -406,6 +436,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ResponseJson.Add('sourceSubtype', SourceSubtype);
         ResponseJson.Add('sourceNo', SourceNoText);
         ResponseJson.Add('sourceLineNo', SourceLineNo);
+        ResponseJson.Add('sourceBatchName', SourceBatchName);
+        ResponseJson.Add('sourceProdOrderLine', SourceProdOrderLine);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
@@ -413,14 +445,19 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     local procedure DefaultSourceSubtype(SourceType: Integer): Integer
     begin
         // Sales, purchase and assembly default to Order; a transfer line defaults to the outbound side.
-        if SourceType in [Database::"Sales Line", Database::"Purchase Line", Database::"Assembly Line"] then
+        if SourceType in [Database::"Sales Line", Database::"Purchase Line", Database::"Assembly Line", Database::"Assembly Header", Database::"Service Line"] then
             exit(1);
         exit(0);
     end;
 
-    local procedure ReadSourceLine(var Argument: Record "Message Argument ori"; SourceType: Integer; SourceSubtype: Integer; SourceNo: Code[20]; SourceLineNo: Integer; var ItemNo: Text; var LocationCode: Text; var AvailabilityDate: Date; var QtyPerUOM: Decimal; var Description: Text[100]): Boolean
+    local procedure ReadSourceLine(var Argument: Record "Message Argument ori"; SourceType: Integer; SourceSubtype: Integer; SourceNo: Code[20]; SourceLineNo: Integer; SourceBatchName: Code[10]; SourceProdOrderLine: Integer; var ItemNo: Text; var LocationCode: Text; var AvailabilityDate: Date; var QtyPerUOM: Decimal; var Description: Text[100]): Boolean
     var
         SalesLine: Record "Sales Line";
+        ServiceLine: Record "Service Line";
+        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrderComponent: Record "Prod. Order Component";
+        ItemJournalLine: Record "Item Journal Line";
+        AssemblyHeader: Record "Assembly Header";
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
@@ -428,8 +465,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceItemNo: Code[20];
         SourceLocationCode: Code[10];
         Found: Boolean;
-        UnsupportedSourceErr: Label 'sourceType %1 is not a supported reservation source. Use 37 (Sales Line), 39 (Purchase Line), 5741 (Transfer Line) or 901 (Assembly Line).', Comment = '%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37 (sölulína), 39 (innkaupalína), 5741 (millifærslulína) eða 901 (samsetningarlína).';
-        UnsupportedSourceExpectedTok: Label '37, 39, 5741 or 901', Locked = true;
+        UnsupportedSourceErr: Label 'sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83.', Comment = '%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.';
+        UnsupportedSourceExpectedTok: Label '37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83', Locked = true;
         SubtypeErr: Label 'sourceSubtype %1 is not valid for sourceType %2.', Comment = '%1 = subtype; %2 = source table number; is-IS=sourceSubtype %1 á ekki við sourceType %2.';
         SourceNotFoundErr: Label 'Source line %1 %2 %3 was not found.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 fannst ekki.';
         NotItemErr: Label 'Source line %1 %2 %3 is not an item line.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 er ekki vörulína.';
@@ -439,6 +476,73 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     begin
         QtyPerUOM := 1;
         case SourceType of
+            Database::"Service Line":
+                begin
+                    if not Enum::"Service Document Type".Ordinals().Contains(SourceSubtype) then
+                        exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
+                    Found := ServiceLine.Get(Enum::"Service Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    if Found then begin
+                        if ServiceLine.Type <> ServiceLine.Type::Item then
+                            exit(RespondNotItem(Argument, NotItemErr, SourceType, SourceNo, SourceLineNo));
+                        SourceItemNo := ServiceLine."No.";
+                        SourceLocationCode := ServiceLine."Location Code";
+                        QtyPerUOM := ServiceLine."Qty. per Unit of Measure";
+                        AvailabilityDate := ServiceLine."Needed by Date";
+                        Description := ServiceLine.Description;
+                    end;
+                end;
+            Database::"Prod. Order Line":
+                begin
+                    if not Enum::"Production Order Status".Ordinals().Contains(SourceSubtype) then
+                        exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
+                    Found := ProdOrderLine.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine);
+                    if Found then begin
+                        SourceItemNo := ProdOrderLine."Item No.";
+                        SourceLocationCode := ProdOrderLine."Location Code";
+                        QtyPerUOM := ProdOrderLine."Qty. per Unit of Measure";
+                        AvailabilityDate := ProdOrderLine."Due Date";
+                        Description := ProdOrderLine.Description;
+                    end;
+                end;
+            Database::"Prod. Order Component":
+                begin
+                    if not Enum::"Production Order Status".Ordinals().Contains(SourceSubtype) then
+                        exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
+                    Found := ProdOrderComponent.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine, SourceLineNo);
+                    if Found then begin
+                        SourceItemNo := ProdOrderComponent."Item No.";
+                        SourceLocationCode := ProdOrderComponent."Location Code";
+                        QtyPerUOM := ProdOrderComponent."Qty. per Unit of Measure";
+                        AvailabilityDate := ProdOrderComponent."Due Date";
+                        Description := ProdOrderComponent.Description;
+                    end;
+                end;
+            Database::"Assembly Header":
+                begin
+                    if not Enum::"Assembly Document Type".Ordinals().Contains(SourceSubtype) then
+                        exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
+                    Found := AssemblyHeader.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo);
+                    if Found then begin
+                        SourceItemNo := AssemblyHeader."Item No.";
+                        SourceLocationCode := AssemblyHeader."Location Code";
+                        QtyPerUOM := AssemblyHeader."Qty. per Unit of Measure";
+                        AvailabilityDate := AssemblyHeader."Due Date";
+                        Description := AssemblyHeader.Description;
+                    end;
+                end;
+            Database::"Item Journal Line":
+                begin
+                    Found := ItemJournalLine.Get(CopyStr(SourceNo, 1, 10), SourceBatchName, SourceLineNo);
+                    if Found then begin
+                        if ItemJournalLine."Entry Type".AsInteger() <> SourceSubtype then
+                            exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
+                        SourceItemNo := ItemJournalLine."Item No.";
+                        SourceLocationCode := ItemJournalLine."Location Code";
+                        QtyPerUOM := ItemJournalLine."Qty. per Unit of Measure";
+                        AvailabilityDate := ItemJournalLine."Posting Date";
+                        Description := ItemJournalLine.Description;
+                    end;
+                end;
             Database::"Sales Line":
                 begin
                     if not Enum::"Sales Document Type".Ordinals().Contains(SourceSubtype) then

@@ -1,11 +1,15 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Manufacturing.Document;
+using Microsoft.Service.Document;
+using Microsoft.Service.Test;
 using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
@@ -583,6 +587,222 @@ codeunit 96946 "Reservation Create Tests"
         Assert.AreEqual('lotNo', Token.AsValue().AsText(), 'Invalid tracking parameter.');
     end;
 
+    [Test]
+    procedure Scenario_AC04_ServiceLine_ReservesAndCancels()
+    begin
+        // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
+        VerifyAdditionalSource('service');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_ProductionLine_ReservesAndCancels()
+    begin
+        // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
+        VerifyAdditionalSource('production');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_ProductionComponent_ReservesAndCancels()
+    begin
+        // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
+        VerifyAdditionalSource('component');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_ItemJournalLine_ReservesAndCancels()
+    begin
+        // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
+        VerifyAdditionalSource('journal');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_AssemblyHeader_ReservesAndCancels()
+    begin
+        // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
+        VerifyAdditionalSource('assemblyHeader');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_SerialMultipleUnits_RefusesWithoutWrites()
+    begin
+        // Story #7, AC04 | Time: WorkDate for supply | Risk: None
+        VerifySupplySelection('serialOver');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_JournalWithoutBatch_ReturnsMissingParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Story #7, AC04 | Time: None | Risk: None
+        DomainSetup.EnableReservations();
+        // [GIVEN] An incomplete journal source pointer.
+        Request.Add('sourceType', Database::"Item Journal Line");
+        Request.Add('sourceSubtype', 3);
+        Request.Add('sourceNo', 'MISSING');
+        Request.Add('sourceLineNo', 10000);
+        Request.Add('quantity', 1);
+        // [WHEN] Create validates the native journal key.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        // [THEN] The batch is mandatory before any source is read or reserved.
+        AssertStatus(Response, 'Error');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('sourceBatchName', Token.AsValue().AsText(), 'Batch part of the source key.');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_ComponentWithoutParentLine_ReturnsMissingParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Story #7, AC04 | Time: None | Risk: None
+        DomainSetup.EnableReservations();
+        // [GIVEN] A component pointer without its parent production line.
+        Request.Add('sourceType', Database::"Prod. Order Component");
+        Request.Add('sourceSubtype', 3);
+        Request.Add('sourceNo', 'MISSING');
+        Request.Add('sourceLineNo', 10000);
+        Request.Add('quantity', 1);
+        // [WHEN] Create validates the native production key.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        // [THEN] The parent line is mandatory before any source is read or reserved.
+        AssertStatus(Response, 'Error');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('sourceProdOrderLine', Token.AsValue().AsText(), 'Parent part of the source key.');
+    end;
+
+    local procedure VerifyAdditionalSource(CaseName: Text)
+    var
+        Item: Record Item;
+        ParentItem: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        AssemblyHeader: Record "Assembly Header";
+        ServiceHeader: Record "Service Header";
+        ServiceLine: Record "Service Line";
+        ProductionOrder: Record "Production Order";
+        ProdOrderLine: Record "Prod. Order Line";
+        Component: Record "Prod. Order Component";
+        JournalLine: Record "Item Journal Line";
+        Entry: Record "Reservation Entry";
+        LibraryAssembly: Codeunit "Library - Assembly";
+        LibraryService: Codeunit "Library - Service";
+        LibraryManufacturing: Codeunit "Library - Manufacturing";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+        Response: JsonObject;
+        CancelRequest: JsonObject;
+        Token: JsonToken;
+        SourceType: Integer;
+        SourceSubtype: Integer;
+        SourceLineNo: Integer;
+        ParentLineNo: Integer;
+        SourceNo: Code[20];
+        BatchName: Code[10];
+    begin
+        // [GIVEN] Real stock and native source records, independently seeded by the test.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 5);
+        case CaseName of
+            'assemblyHeader':
+                begin
+                    LibraryAssembly.CreateAssemblyHeader(AssemblyHeader, WorkDate(), Item."No.", SalesLine."Location Code", 3, '');
+                    SourceType := Database::"Assembly Header";
+                    SourceSubtype := AssemblyHeader."Document Type".AsInteger();
+                    SourceNo := AssemblyHeader."No.";
+                end;
+            'service':
+                begin
+                    LibraryService.CreateServiceHeader(ServiceHeader, ServiceHeader."Document Type"::Order, '');
+                    LibraryService.CreateServiceLine(ServiceLine, ServiceHeader, ServiceLine.Type::Item, Item."No.");
+                    ServiceLine.Validate("Location Code", SalesLine."Location Code");
+                    ServiceLine.Validate(Quantity, 3);
+                    ServiceLine.Validate("Needed by Date", WorkDate());
+                    ServiceLine.Modify(true);
+                    SourceType := Database::"Service Line";
+                    SourceSubtype := ServiceLine."Document Type".AsInteger();
+                    SourceNo := ServiceLine."Document No.";
+                    SourceLineNo := ServiceLine."Line No.";
+                end;
+            'production', 'component':
+                begin
+                    if CaseName = 'component' then
+                        LibraryInventory.CreateItem(ParentItem)
+                    else
+                        ParentItem := Item;
+                    LibraryManufacturing.CreateProductionOrder(ProductionOrder, ProductionOrder.Status::Released,
+                        ProductionOrder."Source Type"::Item, ParentItem."No.", 3);
+                    LibraryManufacturing.CreateProdOrderLine(ProdOrderLine, ProductionOrder.Status, ProductionOrder."No.",
+                        ParentItem."No.", '', SalesLine."Location Code", 3);
+                    ProdOrderLine.Validate("Due Date", WorkDate());
+                    ProdOrderLine.Modify(true);
+                    SourceSubtype := ProdOrderLine.Status.AsInteger();
+                    SourceNo := ProductionOrder."No.";
+                    ParentLineNo := ProdOrderLine."Line No.";
+                    if CaseName = 'production' then
+                        SourceType := Database::"Prod. Order Line"
+                    else begin
+                        Component.Init();
+                        Component.Status := ProductionOrder.Status;
+                        Component."Prod. Order No." := ProductionOrder."No.";
+                        Component."Prod. Order Line No." := ParentLineNo;
+                        Component."Line No." := 10000;
+                        Component.Insert(true);
+                        Component.Validate("Item No.", Item."No.");
+                        Component.Validate("Location Code", SalesLine."Location Code");
+                        Component.Validate("Quantity per", 1);
+                        Component.Validate("Expected Quantity", 3);
+                        Component.Validate("Due Date", WorkDate());
+                        Component.Modify(true);
+                        SourceType := Database::"Prod. Order Component";
+                        SourceLineNo := Component."Line No.";
+                    end;
+                end;
+            'journal':
+                begin
+                    LibraryInventory.CreateItemJnlLine(JournalLine, JournalLine."Entry Type"::"Negative Adjmt.", WorkDate(),
+                        Item."No.", 3, SalesLine."Location Code");
+                    SourceType := Database::"Item Journal Line";
+                    SourceSubtype := JournalLine."Entry Type".AsInteger();
+                    SourceNo := JournalLine."Journal Template Name";
+                    BatchName := JournalLine."Journal Batch Name";
+                    SourceLineNo := JournalLine."Line No.";
+                end;
+        end;
+        Request.Add('sourceType', SourceType);
+        Request.Add('sourceSubtype', SourceSubtype);
+        Request.Add('sourceNo', SourceNo);
+        Request.Add('sourceLineNo', SourceLineNo);
+        Request.Add('sourceBatchName', BatchName);
+        Request.Add('sourceProdOrderLine', ParentLineNo);
+        CancelRequest := Request.Clone().AsObject();
+        Request.Add('quantity', 2);
+
+        // [WHEN] Create reserves through the native source-specific reservation subscriber.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+
+        // [THEN] The requested source has a pair for the requested quantity and by-source Cancel removes it.
+        AssertStatus(Response, 'Success');
+        Response.Get('quantity', Token);
+        Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Reserved for the native source.');
+        Entry.SetRange("Source Type", SourceType);
+        Entry.SetRange("Source Subtype", SourceSubtype);
+        Entry.SetRange("Source ID", SourceNo);
+        Entry.SetRange("Source Ref. No.", SourceLineNo);
+        Entry.SetRange("Source Prod. Order Line", ParentLineNo);
+        Entry.SetRange("Source Batch Name", BatchName);
+        Entry.SetRange("Reservation Status", Entry."Reservation Status"::Reservation);
+        Assert.IsFalse(Entry.IsEmpty(), 'A native source reservation exists.');
+        Clear(Response);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", CancelRequest, Response);
+        AssertStatus(Response, 'Success');
+        Assert.IsTrue(Entry.IsEmpty(), 'Cancel is scoped to this exact native source pointer.');
+    end;
+
     local procedure VerifySupplySelection(CaseName: Text)
     var
         Item: Record Item;
@@ -612,7 +832,7 @@ codeunit 96946 "Reservation Create Tests"
                     ItemTrackingCode."Lot Specific Tracking" := true;
                     LotNo := 'CHOSEN-LOT';
                 end;
-            'serial':
+            'serial', 'serialOver':
                 begin
                     ItemTrackingCode."SN Specific Tracking" := true;
                     SerialNo := 'CHOSEN-SERIAL';
@@ -630,7 +850,7 @@ codeunit 96946 "Reservation Create Tests"
         if CaseName in ['lot', 'conflict'] then
             PostTrackedSupply(Item, SalesLine."Location Code", 'OTHER-LOT', '', '', 3)
         else
-            if CaseName = 'serial' then
+            if CaseName in ['serial', 'serialOver'] then
                 PostTrackedSupply(Item, SalesLine."Location Code", '', 'OTHER-SERIAL', '', 1)
             else
                 if CaseName = 'package' then
@@ -641,7 +861,7 @@ codeunit 96946 "Reservation Create Tests"
         LedgerEntry.SetRange("Item No.", Item."No.");
         LedgerEntry.FindLast();
         SupplyEntryNo := LedgerEntry."Entry No.";
-        if CaseName = 'insufficient' then
+        if CaseName in ['insufficient', 'serialOver'] then
             RequestedQuantity += 1;
         if CaseName = 'conflict' then
             LotNo := 'OTHER-LOT';
@@ -665,7 +885,7 @@ codeunit 96946 "Reservation Create Tests"
         Entry.SetRange("Source Type", Database::"Sales Line");
         Entry.SetRange("Source ID", SalesHeader."No.");
         Entry.SetRange("Reservation Status", Entry."Reservation Status"::Reservation);
-        if CaseName in ['insufficient', 'conflict'] then begin
+        if CaseName in ['insufficient', 'conflict', 'serialOver'] then begin
             AssertStatus(Response, 'Error');
             Assert.IsTrue(Entry.IsEmpty(), 'Refused supply selection is atomic.');
             LedgerEntry.Get(SupplyEntryNo);

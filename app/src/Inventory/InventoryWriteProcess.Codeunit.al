@@ -10,8 +10,10 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Manufacturing.Document;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
+using Microsoft.Service.Document;
 using Origo.Bifrost;
 
 /// <summary>
@@ -32,6 +34,8 @@ codeunit 10076842 "Inventory Write Process ori"
         SourceSubtype: Integer;
         SourceNo: Code[20];
         SourceLineNo: Integer;
+        SourceBatchName: Code[10];
+        SourceProdOrderLine: Integer;
         SupplyEntryNo: Integer;
         ReserveQuantity: Decimal;
         ReserveQuantityBase: Decimal;
@@ -98,8 +102,8 @@ codeunit 10076842 "Inventory Write Process ori"
     end;
 
     /// <summary>Sets the source line and quantity for the ReservationCreate operation (select it with SetOperation).</summary>
-    /// <param name="NewSourceType">Source table number: Sales Line, Purchase Line, Transfer Line or Assembly Line.</param>
-    /// <param name="NewSourceSubtype">Document type, or transfer direction 0 outbound / 1 inbound.</param>
+    /// <param name="NewSourceType">The native reservation source table number.</param>
+    /// <param name="NewSourceSubtype">Document type, production status, journal entry type, or transfer direction 0 outbound / 1 inbound.</param>
     /// <param name="NewSourceNo">Source document number.</param>
     /// <param name="NewSourceLineNo">Source line number.</param>
     /// <param name="NewQuantity">Quantity to reserve in the line unit of measure.</param>
@@ -116,6 +120,15 @@ codeunit 10076842 "Inventory Write Process ori"
         ReserveQuantityBase := NewQuantityBase;
         AvailabilityDate := NewAvailabilityDate;
         ReserveDescription := NewDescription;
+    end;
+
+    /// <summary>Sets the additional native source key parts for journal and production reservations.</summary>
+    /// <param name="BatchName">Item journal batch name, otherwise blank.</param>
+    /// <param name="ProdOrderLine">Production order line number for a production line or component, otherwise zero.</param>
+    procedure SetReservationSourceDetails(BatchName: Code[10]; ProdOrderLine: Integer)
+    begin
+        SourceBatchName := BatchName;
+        SourceProdOrderLine := ProdOrderLine;
     end;
 
     /// <summary>Restricts ReservationCreate to tracking values and optionally one inventory supply entry.</summary>
@@ -261,12 +274,47 @@ codeunit 10076842 "Inventory Write Process ori"
     var
         DemandEntry: Record "Reservation Entry";
         SalesLine: Record "Sales Line";
+        ServiceLine: Record "Service Line";
+        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrderComponent: Record "Prod. Order Component";
+        ItemJournalLine: Record "Item Journal Line";
+        AssemblyHeader: Record "Assembly Header";
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
         ReservationManagement: Codeunit "Reservation Management";
     begin
         case SourceType of
+            Database::"Service Line":
+                begin
+                    ServiceLine.Get(Enum::"Service Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    ServiceLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ServiceLine);
+                end;
+            Database::"Prod. Order Line":
+                begin
+                    ProdOrderLine.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine);
+                    ProdOrderLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ProdOrderLine);
+                end;
+            Database::"Prod. Order Component":
+                begin
+                    ProdOrderComponent.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine, SourceLineNo);
+                    ProdOrderComponent.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ProdOrderComponent);
+                end;
+            Database::"Item Journal Line":
+                begin
+                    ItemJournalLine.Get(CopyStr(SourceNo, 1, 10), SourceBatchName, SourceLineNo);
+                    ItemJournalLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ItemJournalLine);
+                end;
+            Database::"Assembly Header":
+                begin
+                    AssemblyHeader.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo);
+                    AssemblyHeader.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(AssemblyHeader);
+                end;
             Database::"Sales Line":
                 begin
                     SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);

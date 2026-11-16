@@ -6093,6 +6093,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=magn stærra en 0</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType QuantityExpectedTok</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 3766961693" size-unit="char" translate="yes" xml:space="preserve">
+          <source>sourceLineNo must be 0 for a production order line or assembly header.</source>
+          <target>sourceLineNo verður að vera 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=sourceLineNo verður að vera 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType SourcePointerErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 2451442874" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A serial number reservation must request exactly one base unit.</source>
+          <target>Frátekning raðnúmers verður að biðja um nákvæmlega eina grunneiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Frátekning raðnúmers verður að biðja um nákvæmlega eina grunneiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ExecuteBifrostTask - NamedType SerialQuantityErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3571782927 - NamedType 1895704" size-unit="char" translate="yes" xml:space="preserve">
           <source>No reservation entry was created for the source line. No supply is available to reserve.</source>
           <target>Engin frátekningarfærsla var búin til fyrir upprunalínuna. Ekkert framboð er tiltækt til frátekningar.</target>
@@ -6172,9 +6184,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. lotNo, serialNo and packageNo restrict the supply. itemLedgerEntryNo selects one positive, open inventory entry matching the source item, variant, location and tracking; insufficient supply refuses the whole request. Without itemLedgerEntryNo, Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
-          <target>Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
+          <source>Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. lotNo, serialNo and packageNo restrict the supply. itemLedgerEntryNo selects one positive, open inventory entry matching the source item, variant, location and tracking; insufficient supply refuses the whole request. Without itemLedgerEntryNo, Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase, assembly and service and to 0 (outbound) for a transfer line. Production requires an explicit status and sourceProdOrderLine; use sourceLineNo 0 for a production order line and the component line number for a component. Item journals require an explicit entry type and sourceBatchName; sourceNo is the template. Assembly headers use sourceLineNo 0. Bifrost commits the reservation when the call finishes; under Omit Commit the caller's transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.</source>
+          <target>Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu, innkaup, samsetningu og þjónustu og 0 (út) fyrir millifærslulínu. Framleiðsla krefst skýrrar stöðu og sourceProdOrderLine; notaðu sourceLineNo 0 fyrir framleiðslupöntunarlínu og línunúmer íhlutar fyrir íhlut. Vörubækur krefjast skýrrar færslutegundar og sourceBatchName; sourceNo er sniðmátið. Samsetningarhausar nota sourceLineNo 0. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu, innkaup, samsetningu og þjónustu og 0 (út) fyrir millifærslulínu. Framleiðsla krefst skýrrar stöðu og sourceProdOrderLine; notaðu sourceLineNo 0 fyrir framleiðslupöntunarlínu og línunúmer íhlutar fyrir íhlut. Vörubækur krefjast skýrrar færslutegundar og sourceBatchName; sourceNo er sniðmátið. Samsetningarhausar nota sourceLineNo 0. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -6184,15 +6196,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line.</source>
-          <target>Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína.</note>
+          <source>Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line.</source>
+          <target>Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2182983805" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source subtype: the sales, purchase or assembly document type ordinal (1 = Order), or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly and 0 for transfer lines.</source>
-          <target>Undirtegund uppruna: raðtala skjalategundar sölu, innkaupa eða samsetningar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu, innkaup og samsetningu og 0 fyrir millifærslulínur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Undirtegund uppruna: raðtala skjalategundar sölu, innkaupa eða samsetningar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu, innkaup og samsetningu og 0 fyrir millifærslulínur.</note>
+          <source>Source subtype: document type ordinal (default 1 = Order for sales, purchase, assembly and service), or transfer direction (default 0 outbound, 1 inbound). Required for production (status ordinal) and item journals (entry type ordinal).</source>
+          <target>Undirtegund uppruna: raðtala skjalategundar (sjálfgefið 1 = pöntun fyrir sölu, innkaup, samsetningu og þjónustu), eða stefna millifærslu (sjálfgefið 0 út, 1 inn). Nauðsynlegt fyrir framleiðslu (stöðuröð) og vörubækur (færslutegund).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Undirtegund uppruna: raðtala skjalategundar (sjálfgefið 1 = pöntun fyrir sölu, innkaup, samsetningu og þjónustu), eða stefna millifærslu (sjálfgefið 0 út, 1 inn). Nauðsynlegt fyrir framleiðslu (stöðuröð) og vörubækur (færslutegund).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceSubtypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 1598139322" size-unit="char" translate="yes" xml:space="preserve">
@@ -6202,9 +6214,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2478746436" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source document line number.</source>
-          <target>Línunúmer upprunaskjals.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer upprunaskjals.</note>
+          <source>Native Source Ref. No.; use 0 for a production order line or assembly header.</source>
+          <target>Source Ref. No.; notaðu 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Source Ref. No.; notaðu 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceLineNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
@@ -6236,6 +6248,18 @@
           <target>Valfrjálst pakkanúmer. Aðeins samsvarandi framboð er tekið frá.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst pakkanúmer. Aðeins samsvarandi framboð er tekið frá.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType PackageNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 4279370835" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required for item journal sources: journal batch; sourceNo is the journal template.</source>
+          <target>Nauðsynlegt fyrir vörubókaruppruna: bókarkeyrsla; sourceNo er bókarsniðmátið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt fyrir vörubókaruppruna: bókarkeyrsla; sourceNo er bókarsniðmátið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType BatchNameLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 107734511" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required for production sources: parent production order line number. sourceLineNo is 0 for a production order line, or the component line number.</source>
+          <target>Nauðsynlegt fyrir framleiðsluuppruna: línunúmer framleiðslupöntunar. sourceLineNo er 0 fyrir framleiðslupöntunarlínu eða línunúmer íhlutar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt fyrir framleiðsluuppruna: línunúmer framleiðslupöntunar. sourceLineNo er 0 fyrir framleiðslupöntunarlínu eða línunúmer íhlutar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType ProdLineLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 3674076063" size-unit="char" translate="yes" xml:space="preserve">
           <source>Optional positive, open Item Ledger Entry number. Reserves only this matching inventory entry; insufficient quantity refuses the whole request.</source>
@@ -6280,9 +6304,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType FullLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer or assembly line).</source>
-          <target>Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu- eða samsetningarlína).</note>
+          <source>Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production or item journal source).</source>
+          <target>Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2546409665 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
@@ -6322,9 +6346,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadInteger - NamedType IntegerExpectedTok</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 1105599607" size-unit="char" translate="yes" xml:space="preserve">
-          <source>sourceType %1 is not a supported reservation source. Use 37 (Sales Line), 39 (Purchase Line), 5741 (Transfer Line) or 901 (Assembly Line).</source>
-          <target>sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37 (sölulína), 39 (innkaupalína), 5741 (millifærslulína) eða 901 (samsetningarlína).</target>
-          <note from="Developer" annotates="general" priority="2">%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37 (sölulína), 39 (innkaupalína), 5741 (millifærslulína) eða 901 (samsetningarlína).</note>
+          <source>sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83.</source>
+          <target>sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType UnsupportedSourceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 2524456475" size-unit="char" translate="yes" xml:space="preserve">
