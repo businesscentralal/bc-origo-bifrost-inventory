@@ -9,9 +9,9 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false));
+        exit(TrackingWrite.IsEnabled());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -21,7 +21,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.';
+        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
     begin
         exit(DescriptionLbl);
     end;
@@ -35,7 +35,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.';
+        SelectionDescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -59,7 +59,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine or TransferLine by its SystemId. The source line determines the item and native tracking pointer.'));
+        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine by its SystemId. The source line determines the item and native tracking pointer.'));
         exit(true);
     end;
 
@@ -69,7 +69,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         EntryParameter: JsonObject;
         Children: JsonArray;
     begin
-        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', false, 'Positive base quantity for one tracking assignment. Required unless entries is supplied. A serial number requires exactly one base unit.'));
         Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Lot number, at most 50 characters; at least one tracking number is required.'));
@@ -156,7 +156,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     begin
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Assign', 'Assign tracking to your own selected document line.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Get', 'Read the same source and keep its ReservationEntry entryNo.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove one unreserved entryNo from the same source when no longer needed.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove unreserved tracking from the same source when no longer needed.'));
         Workflow.Add('steps', Steps);
         exit(true);
     end;
@@ -171,13 +171,13 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.';
+        Overview := 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Select an existing SalesLine, PurchaseLine or TransferLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete requires the source and one unreserved entryNo, so another document cannot be affected. ' +
+        Notes := 'Select an existing SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete accepts one entryNo, an entryNos array, or all unreserved tracking on the selected source when both are omitted. Every selected entry is validated before any removal; another source cannot be affected. ' +
             'No ledger entries are posted. No unlinked persistent Tracking Specification is inserted. Native failures roll back standalone calls; Omit Commit leaves transaction ownership with the caller and propagates native failures. Repeating an assignment may add quantity; read the source before retrying.';
         exit(true);
     end;
@@ -189,10 +189,9 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
+        if not TrackingWrite.AssertEnabled(Argument) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

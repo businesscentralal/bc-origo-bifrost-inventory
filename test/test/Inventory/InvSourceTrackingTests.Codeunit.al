@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
@@ -147,9 +149,9 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Assert.AreEqual(3, ReservationEntry."Quantity (Base)", 'Other lot remains unchanged.');
     end;
 
-    /// <summary>A missing entryNo is refused rather than deleting every source entry.</summary>
+    /// <summary>Omitting entry numbers removes all unposted tracking belonging to the selected source.</summary>
     [Test]
-    procedure EmptyDeleteSelectionPreservesTracking()
+    procedure Scenario_AC03_OmittedEntryNumbersRemovesSourceTracking()
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
@@ -164,9 +166,9 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
 
         ExecuteTracking(Request, true, Response);
 
-        AssertStatus(Response, 'Error');
+        AssertStatus(Response, 'Success');
         FilterSourceEntries(PurchaseLine, ReservationEntry);
-        Assert.AreEqual(1, ReservationEntry.Count(), 'An empty selection does not remove tracking.');
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Omitting entry numbers removes the selected source tracking.');
     end;
 
     /// <summary>Sales tracking uses a self-posted lot and deletes only pending demand tracking.</summary>
@@ -399,6 +401,135 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
 
         AssertStatus(Response, 'Success');
         Assert.IsTrue(Entry.IsEmpty(), 'Pending tracking was removed on the selected source.');
+    end;
+
+    /// <summary>Native output tracking on an assembly header keeps the complete source pointer.</summary>
+    [Test]
+    procedure Scenario_AC01_AssemblyOutputTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Assembly Header";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native source date | Risk: None
+        // [GIVEN] An independently created tracked item and assembly order.
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), PurchaseLine."No.", '', 10, '');
+        // [WHEN] Tracking is assigned and removed through the native adapters.
+        // [THEN] Only tracking for this assembly source changes.
+        AssertTrackingRoundTrip(GenericSource('AssemblyHeader', Header.SystemId), Database::"Assembly Header", Header."No.", 0, true);
+    end;
+
+    /// <summary>Assembly consumption tracking uses its component line rather than the output header.</summary>
+    [Test]
+    procedure Scenario_AC01_AssemblyComponentTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        ParentItem: Record Item;
+        Header: Record "Assembly Header";
+        Line: Record "Assembly Line";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native source date | Risk: None
+        // [GIVEN] Self-posted lot stock and a separate assembly component source.
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateItem(ParentItem);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), ParentItem."No.", '', 10, '');
+        LibraryAssembly.CreateAssemblyLine(Header, Line, Line.Type::Item, PurchaseLine."No.", PurchaseLine."Unit of Measure Code", 10, 1, '');
+        // [WHEN] Component tracking is assigned and removed.
+        // [THEN] Only the selected native component source changes.
+        AssertTrackingRoundTrip(GenericSource('AssemblyLine', Line.SystemId), Database::"Assembly Line", Header."No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Native item journal tracking preserves template, batch and line identity.</summary>
+    [Test]
+    procedure Scenario_AC01_ItemJournalTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        ItemJournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native journal date | Risk: None
+        // [GIVEN] A self-created positive adjustment journal and tracked item.
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryInventory.CreateItemJournalTemplate(ItemJournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, ItemJournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::"Positive Adjmt.", PurchaseLine."No.", 10);
+        // [WHEN] Tracking is assigned and removed through the native adapters.
+        // [THEN] The selected journal source alone is affected.
+        AssertTrackingRoundTrip(GenericSource('ItemJournalLine', Line.SystemId), Database::"Item Journal Line", ItemJournalTemplate.Name, Line."Line No.", true);
+    end;
+
+    /// <summary>A bulk selection validates every source entry before any removal.</summary>
+    [Test]
+    procedure Scenario_AC03_ForeignSecondEntryLeavesBothSourcesUnchanged()
+    var
+        Line: Record "Purchase Line";
+        OtherLine: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryNumbers: JsonArray;
+    begin
+        // Story #37, AC03 | Time: WorkDate through fixture | Risk: None
+        // [GIVEN] Tracking on two independent source lines.
+        CreatePurchaseLine(Line, false);
+        CreatePurchaseLine(OtherLine, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-A', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        ExecuteTracking(AssignmentRequest(OtherLine, 'LOT-B', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(OtherLine, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+        // [WHEN] The second entry belongs to another source.
+        ExecuteTracking(Request, true, Response);
+        // [THEN] The whole request fails before removal.
+        AssertStatus(Response, 'Error');
+        Assert.AreEqual(1, Entry.Count(), 'Foreign tracking remains.');
+        FilterSourceEntries(Line, Entry);
+        Assert.AreEqual(1, Entry.Count(), 'Earlier valid selection remains.');
+    end;
+
+    /// <summary>A duplicate entry selection is removed once and an empty explicit array is refused.</summary>
+    [Test]
+    procedure Scenario_AC03_DuplicateSelectionCountsOnce()
+    var
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryNumbers: JsonArray;
+        Token: JsonToken;
+    begin
+        // Story #37, AC03 | Time: WorkDate through fixture | Risk: None
+        // [GIVEN] One tracked source and an explicitly empty selection.
+        CreatePurchaseLine(Line, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-A', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+        // [WHEN] An empty explicit array is sent.
+        ExecuteTracking(Request, true, Response);
+        // [THEN] It is refused and tracking remains.
+        AssertStatus(Response, 'Error');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        EntryNumbers.Add(Entry."Entry No.");
+        Request.Replace('entryNos', EntryNumbers);
+        ExecuteTracking(Request, true, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entriesDeleted', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Duplicates count once.');
+        Assert.IsTrue(Entry.IsEmpty(), 'Selected tracking removed.');
     end;
 
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)

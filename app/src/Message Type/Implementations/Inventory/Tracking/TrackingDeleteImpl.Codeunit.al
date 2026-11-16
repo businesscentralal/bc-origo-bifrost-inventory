@@ -9,9 +9,9 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
+        TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        exit(DomainGate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false));
+        exit(TrackingWrite.IsEnabled());
     end;
 
     procedure GetFilterTableNo(): Integer
@@ -59,7 +59,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine or TransferLine by its SystemId. The source line determines the item and native tracking pointer.'));
+        Target.Add(ContractMgt.TargetEntry('data.source', 'document line', 'Select SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine by its SystemId. The source line determines the item and native tracking pointer.'));
         exit(true);
     end;
 
@@ -67,9 +67,10 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine or TransferLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
-        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', true, 'Positive entryNo of an unreserved ReservationEntry tracking row returned by Inventory.Tracking.Get for this exact source. A missing, foreign or reserved entry is refused; no bulk delete.'));
+        Parameters.Add(ContractMgt.Parameter('entryNos', 'array', false, 'Optional 1..200 positive entry numbers from this source. Duplicate numbers are counted once. Omit entryNo and entryNos to remove all unreserved tracking on the source, at most 200 entries. Reserved tracking refuses the whole operation.'));
+        Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'Optional positive entryNo of an unreserved ReservationEntry tracking row returned by Inventory.Tracking.Get for this exact source. Cannot be combined with entryNos.'));
         exit(true);
     end;
 
@@ -141,7 +142,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     begin
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Assign', 'Assign tracking to your own selected document line.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Get', 'Read the same source and keep its ReservationEntry entryNo.'));
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove one unreserved entryNo from the same source when no longer needed.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Tracking.Delete', 'Remove unreserved tracking from the same source when no longer needed.'));
         Workflow.Add('steps', Steps);
         exit(true);
     end;
@@ -162,7 +163,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Select an existing SalesLine, PurchaseLine or TransferLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete requires the source and one unreserved entryNo, so another document cannot be affected. ' +
+        Notes := 'Select an existing SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete accepts one entryNo, an entryNos array, or all unreserved tracking on the selected source when both are omitted. Every selected entry is validated before any removal; another source cannot be affected. ' +
             'No ledger entries are posted. No unlinked persistent Tracking Specification is inserted. Native failures roll back standalone calls; Omit Commit leaves transaction ownership with the caller and propagates native failures. Repeating an assignment may add quantity; read the source before retrying.';
         exit(true);
     end;
@@ -174,10 +175,9 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
+        if not TrackingWrite.AssertEnabled(Argument) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

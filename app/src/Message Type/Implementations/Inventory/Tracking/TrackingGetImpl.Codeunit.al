@@ -106,7 +106,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         Parameters.Add(ContractMgt.Parameter('skip', 'integer', false, 'Number of rows to skip; default 0.'));
         Parameters.Add(ContractMgt.Parameter('take', 'integer', false, 'Page size 1..10000; default 100.'));
         SourceParameter := ContractMgt.Parameter('source', 'object', false, 'The source line to read tracking for. Source takes precedence over the legacy document fields.');
-        SourceChildren.Add(ContractMgt.Parameter('type', 'string', true, 'SalesLine, PurchaseLine or TransferLine.'));
+        SourceChildren.Add(ContractMgt.Parameter('type', 'string', true, 'SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine.'));
         SourceChildren.Add(ContractMgt.Parameter('systemId', 'string', true, 'The SystemId (GUID) of the source line.'));
         SourceChildren.Add(ContractMgt.Parameter('transferDirection', 'string', false, 'Outbound (default) or Inbound; selects the shipment or the receipt side of a TransferLine.'));
         SourceParameter.Add('children', SourceChildren);
@@ -131,7 +131,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success after the operation completes.'));
         Fields.Add(ContractMgt.ResponseField('itemNo', 'string', 'Item on the selected source or item.'));
         Fields.Add(ContractMgt.ResponseField('quantityBase', 'decimal', 'Sum of all matching signed tracking rows before paging; not available stock.'));
-        Fields.Add(ContractMgt.ResponseField('sourceType', 'string', 'Source mode only: the source kind, for example SalesLine, PurchaseLine or TransferLine.'));
+        Fields.Add(ContractMgt.ResponseField('sourceType', 'string', 'Source mode only: the source kind, for example SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine.'));
         Fields.Add(ContractMgt.ResponseField('sourceTableNo', 'integer', 'Source mode only: the table number of the source line.'));
         Fields.Add(ContractMgt.ResponseField('sourceSubtype', 'integer', 'Source mode only: the document type ordinal of the source line, or the transfer direction.'));
         Fields.Add(ContractMgt.ResponseField('documentType', 'string', 'Source mode only: the document type of the source line, for example Purchase.Order.'));
