@@ -2,9 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed ([28.3.2.0] development)
+- #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 ### Changed (2026-11-16) - Reclassification journal check, preview and post use the native journal path (#34)
 
 - `Inventory.Reclassification.Check` (10076887) validates every line of the Transfer batch with the standard Item Jnl.-Check Line and answers `validationResult` (Ready, ReadyWithWarnings, NotReady), `lineCount`, `errorCount`, `warningCount`, `errors` and `warnings`; `postedLineCount` is kept as an alias of `lineCount`. `Inventory.Reclassification.Post` (10076888) and `PreviewPost` (10076889) go through the same native journal helper (10076840 `Inventory Native Journal ori`), accept `templateName`/`batchName` as well as the journal aliases, and take an optional `lineSystemIds` array to work on a subset of the batch. Post returns `itemRegisterNo`, `postedLineCount` and a per-line `result` (from/to location, bin, lot, serial, package, tracking). Non-Transfer templates are refused with `PreconditionFailed`. The earlier response keys (`journalTemplateName`, `journalBatchName`, `lineCount`, `lines`) are kept. No object IDs added; tests in codeunit 96964.
+
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
