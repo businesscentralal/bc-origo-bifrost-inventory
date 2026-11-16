@@ -693,6 +693,297 @@ codeunit 96944 "Inventory Physical Tests"
         Data := Token.AsObject();
     end;
 
+    /// <summary>Issue154 AC1–AC3: templates have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Templates_EN()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalTemplates(1033);
+    end;
+
+    /// <summary>Issue154 AC1–AC3: templates have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Templates_IS()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalTemplates(1039);
+    end;
+
+    /// <summary>Issue154 AC1–AC3: selectors have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Selectors_EN()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalSelectors(1033);
+    end;
+
+    /// <summary>Issue154 AC1–AC3: selectors have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Selectors_IS()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalSelectors(1039);
+    end;
+
+    /// <summary>Issue154 AC1–AC3: counts have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Counts_EN()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalCounts(1033);
+    end;
+
+    /// <summary>Issue154 AC1–AC3: counts have coded, localized refusals and matching help.</summary>
+    [Test]
+    procedure Scenario_AC01_AC02_AC03_Counts_IS()
+    begin
+        // Story #154, AC01–AC03 | Time: WorkDate for owned stock only | Risk: None
+        CheckPhysicalCounts(1039);
+    end;
+
+    local procedure PhysicalTypes() Types: List of [Enum "Message Type ori"]
+    begin
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Calculate");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.RecordCount");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Record");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Check");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.PreviewPost");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Post");
+    end;
+
+    local procedure CheckPhysicalTemplates(LanguageId: Integer)
+    var
+        Batch: Record "Item Journal Batch";
+        JournalTemplate: Record "Item Journal Template";
+        Entries: Record "Item Ledger Entry";
+        MessageType: Enum "Message Type ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        PreviousLanguage: Integer;
+        BeforeEntries: Integer;
+    begin
+        ContractLibrary.EnablePhysicalInventory();
+        CreateBatch(Batch, "Item Journal Template Type"::Item);
+        BeforeEntries := Entries.Count();
+        Commit();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        // [GIVEN] An owned wrong-type template, then an owned recurring physical template.
+        foreach MessageType in PhysicalTypes() do begin
+            Clear(Request);
+            // [WHEN] Use public dispatch, including rollback handling of write types.
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            // [THEN] No platform captions leak into the error and help declares its code.
+            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'templateName', LanguageId);
+            if LanguageId = 1039 then
+                Assert.AreEqual('Valin keyrsla verður að nota sniðmát fyrir talningarbók.', JsonText(Response, 'error'), 'Fully Icelandic wrong-template error.')
+            else
+                Assert.AreEqual('The selected batch must use a physical inventory journal template.', JsonText(Response, 'error'), 'Fully English wrong-template error.');
+        end;
+        JournalTemplate.Get(Batch."Journal Template Name");
+        JournalTemplate.Type := JournalTemplate.Type::"Phys. Inventory";
+        JournalTemplate.Recurring := true;
+        JournalTemplate.Modify();
+        Commit();
+        foreach MessageType in PhysicalTypes() do begin
+            Clear(Request);
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            AssertPhysicalRefusal(MessageType, Response, 'PreconditionFailed', 'templateName', LanguageId);
+            if LanguageId = 1039 then
+                Assert.AreEqual('Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.', JsonText(Response, 'error'), 'Fully Icelandic recurring-template error.')
+            else
+                Assert.AreEqual('The selected physical inventory journal template must not be recurring.', JsonText(Response, 'error'), 'Fully English recurring-template error.');
+        end;
+        Assert.AreEqual(BeforeEntries, Entries.Count(), 'Refusals never post.');
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure CheckPhysicalSelectors(LanguageId: Integer)
+    var
+        Batch: Record "Item Journal Batch";
+        MessageType: Enum "Message Type ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        PreviousLanguage: Integer;
+    begin
+        ContractLibrary.EnablePhysicalInventory();
+        CreateBatch(Batch, "Item Journal Template Type"::"Phys. Inventory");
+        Commit();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        foreach MessageType in PhysicalTypes() do begin
+            // [GIVEN] Malformed subject, conflicting aliases and an absent batch.
+            Clear(Request);
+            // [WHEN] Resolve each through public dispatch before any operation.
+            Response := ContractLibrary.ExecuteType(MessageType, 'X|X|X', Request, false);
+            // [THEN] The coded selection error is actionable and documented.
+            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'batchName', LanguageId);
+            Clear(Request);
+            Request.Add('templateName', Batch."Journal Template Name");
+            Request.Add('journalTemplateName', 'X-CONFLICT');
+            Request.Add('batchName', Batch.Name);
+            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'batchName', LanguageId);
+            Clear(Request);
+            Request.Add('templateName', Batch."Journal Template Name");
+            Request.Add('batchName', 'X-MISSING');
+            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            AssertPhysicalRefusal(MessageType, Response, 'RecordNotFound', 'batchName', LanguageId);
+            Clear(Request);
+            Request.Add('templateName', true);
+            Request.Add('batchName', Batch.Name);
+            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            Assert.AreEqual('InvalidParameterFormat', JsonText(Response, 'code'), 'Malformed text is typed.');
+            Assert.AreEqual('templateName', JsonText(Response, 'parameter'), 'Malformed selector named.');
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure CheckPhysicalCounts(LanguageId: Integer)
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        MessageType: Enum "Message Type ori";
+        Types: List of [Enum "Message Type ori"];
+        BadCounts: JsonArray;
+        Value: JsonToken;
+        Request: JsonObject;
+        Response: JsonObject;
+        Count: JsonObject;
+        Counts: JsonArray;
+        PreviousLanguage: Integer;
+        BeforeQuantity: Decimal;
+    begin
+        ContractLibrary.EnablePhysicalInventory();
+        CreatePhysical(Item, Batch, Line);
+        BeforeQuantity := Line."Qty. (Phys. Inventory)";
+        Commit();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.RecordCount");
+        Types.Add("Message Type ori"::"Inventory.PhysInventory.Record");
+        BadCounts.ReadFrom('[null,{},[],[false],[{}]]');
+        foreach MessageType in Types do begin
+            // [GIVEN] An owned physical line and invalid count structures.
+            foreach Value in BadCounts do begin
+                Clear(Request);
+                Request.Add('counts', Value);
+                // [WHEN] Dispatch validates every count before writing.
+                Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+                // [THEN] Structure and scalar refusals are stable and no count changes.
+                if Value.IsArray() then begin
+                    if Value.AsArray().Count() = 1 then begin
+                        Value.AsArray().Get(0, Value);
+                        if Value.IsObject() then
+                            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameterFormat', 'lineNo', LanguageId)
+                        else
+                            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'counts', LanguageId);
+                    end else
+                        AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'counts', LanguageId);
+                end else
+                    AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'counts', LanguageId);
+            end;
+            Clear(Request);
+            Clear(Count);
+            Clear(Counts);
+            Count.Add('systemId', Line.SystemId);
+            Count.Add('qtyCounted', -1);
+            Counts.Add(Count);
+            Request.Add('counts', Counts);
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameterFormat', 'qtyCounted', LanguageId);
+            Clear(Request);
+            Clear(Count);
+            Clear(Counts);
+            Count.Add('systemId', Line.SystemId);
+            Count.Add('XUnknown', 'X-value');
+            Counts.Add(Count);
+            Request.Add('counts', Counts);
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'XUnknown', LanguageId);
+            Assert.AreEqual('"X-value"', JsonText(Response, 'received'), 'Nested unknown value preserved.');
+            Line.GetBySystemId(Line.SystemId);
+            Assert.AreEqual(BeforeQuantity, Line."Qty. (Phys. Inventory)", 'Invalid requests leave the owned count unchanged.');
+            // Valid edge: explicit zero writes zero; omitted qty leaves it unchanged.
+            Clear(Request);
+            AddCount(Request, Line.SystemId, 0);
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Assert.AreEqual('Success', JsonText(Response, 'status'), 'Explicit zero accepted.');
+            Line.GetBySystemId(Line.SystemId);
+            Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Explicit zero persisted.');
+            Clear(Request);
+            Clear(Count);
+            Clear(Counts);
+            Count.Add('systemId', Line.SystemId);
+            Counts.Add(Count);
+            Request.Add('counts', Counts);
+            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Assert.AreEqual('Success', JsonText(Response, 'status'), 'Omitted quantity accepted.');
+            Line.GetBySystemId(Line.SystemId);
+            Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Omitted quantity leaves zero unchanged.');
+            Line."Qty. (Phys. Inventory)" := BeforeQuantity;
+            Line.Modify();
+            Commit();
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure JsonText(Value: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if Value.Get(Name, Token) then
+            if Token.IsValue() then
+                exit(Token.AsValue().AsText());
+    end;
+
+    local procedure AssertPhysicalRefusal(MessageType: Enum "Message Type ori"; Response: JsonObject; ErrorCode: Text; Parameter: Text; LanguageId: Integer)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Token: JsonToken;
+        ErrorEntry: JsonToken;
+        Found: Boolean;
+    begin
+        Assert.AreEqual('Error', JsonText(Response, 'status'), 'Coded refusal status.');
+        Assert.AreEqual(ErrorCode, JsonText(Response, 'code'), 'Stable Foundation code.');
+        Assert.AreEqual(Parameter, JsonText(Response, 'parameter'), 'Named parameter.');
+        Assert.IsTrue(JsonText(Response, 'error') <> '', 'Localized error is present.');
+        Assert.IsTrue(JsonText(Response, 'expected') <> '', 'Expected value is present.');
+        if Parameter = 'XUnknown' then
+            if LanguageId = 1039 then
+                Assert.AreEqual('Bókafæribreytan XUnknown er ekki studd.', JsonText(Response, 'error'), 'Fully Icelandic parameter error.')
+            else
+                Assert.AreEqual('Unsupported journal parameter XUnknown.', JsonText(Response, 'error'), 'Fully English parameter error.');
+        if Parameter in ['counts', 'qtyCounted', 'lineNo'] then
+            if LanguageId = 1039 then
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('counts verður að innihalda'), 'Fully Icelandic count error.')
+            else
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('counts must contain'), 'Fully English count error.');
+        if Parameter = 'batchName' then
+            if LanguageId = 1039 then
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('Auðkenndu eina fyrirliggjandi bókarkeyrslu'), 'Fully Icelandic batch error.')
+            else
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('Identify one existing journal batch'), 'Fully English batch error.');
+        if Parameter = 'templateName' then begin
+            if LanguageId = 1039 then
+                Assert.AreEqual('Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.', JsonText(Response, 'nextStep'), 'Fully Icelandic template guidance.')
+            else
+                Assert.AreEqual('Select an existing batch of a nonrecurring physical inventory journal template, then retry.', JsonText(Response, 'nextStep'), 'Fully English template guidance.');
+        end else
+            if LanguageId = 1039 then
+                Assert.AreEqual('Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.', JsonText(Response, 'nextStep'), 'Fully Icelandic request guidance.')
+            else
+                Assert.AreEqual('Correct the named parameter or selected journal line using the expected value, then retry.', JsonText(Response, 'nextStep'), 'Fully English request guidance.');
+        Assert.IsTrue(ContractMgt.GetContract(MessageType, Contract), 'Public help contract.');
+        Contract.Get('errors', Token);
+        foreach ErrorEntry in Token.AsArray() do
+            if JsonText(ErrorEntry.AsObject(), 'code') = ErrorCode then
+                Found := true;
+        Assert.IsTrue(Found, 'Help names the actual runtime code.');
+    end;
+
     local procedure CreatePhysical(var Item: Record Item; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line")
     var
         TempArgument: Record "Message Argument ori" temporary;

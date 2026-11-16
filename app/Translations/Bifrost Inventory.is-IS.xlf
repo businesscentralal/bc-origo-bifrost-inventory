@@ -1395,6 +1395,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Útreikningur krefst tómrar talningarbókarkeyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NonemptyErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2667674565" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected physical inventory journal template must not be recurring.</source>
+          <target>Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NonrecurringTemplateErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 567304435" size-unit="char" translate="yes" xml:space="preserve">
           <source>No native item register was produced.</source>
           <target>Engin innbyggð vöruskrá var mynduð.</target>
@@ -1406,6 +1412,24 @@
           <target>Bókafæribreytan %1 er ekki studd.</target>
           <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType ParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 407957220" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected batch must use a physical inventory journal template.</source>
+          <target>Valin keyrsla verður að nota sniðmát fyrir talningarbók.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin keyrsla verður að nota sniðmát fyrir talningarbók.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType PhysicalTemplateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2106004971" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A nonrecurring physical inventory journal template.</source>
+          <target>Sniðmát fyrir talningarbók sem er ekki ítrekunarsniðmát.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmát fyrir talningarbók sem er ekki ítrekunarsniðmát.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType PhysicalTemplateExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 65247838" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an existing batch of a nonrecurring physical inventory journal template, then retry.</source>
+          <target>Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType PhysicalTemplateNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 590620199" size-unit="char" translate="yes" xml:space="preserve">
           <source>A native item register for the selected journal.</source>
@@ -4436,6 +4460,12 @@
           <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - NamedType 464307472" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one physical inventory journal batch this call posts, even when lineSystemIds selects only some lines. The value is 1.</source>
+          <target>expectedCount telur eina talningarbókarkeyrslu sem kallið bókar, jafnvel þótt lineSystemIds velji aðeins sumar línur. Gildið er 1.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina talningarbókarkeyrslu sem kallið bókar, jafnvel þótt lineSystemIds velji aðeins sumar línur. Gildið er 1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType CountDefinitionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posts the lines of a physical inventory journal and returns the item register and the entry number ranges.</source>

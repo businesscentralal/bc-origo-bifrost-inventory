@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-16) - physical inventory coded refusals (#154)
+
+- Wrong-template and recurring-template selections now return `InvalidParameter` and `PreconditionFailed` on `templateName` with fully localized errors and next steps, for Calculate, RecordCount, legacy Record, Check, PreviewPost and Post. Shared batch and count help entries name the runtime codes in both languages; nested unsupported count keys preserve their actual received value.
+- Existing codeunits 10076840, 10076880–10076885 and tests 96944/96975 are extended; no object IDs added. Bilingual native regressions cover malformed counts, selectors, templates, help and unchanged owned journal data.
+
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.
