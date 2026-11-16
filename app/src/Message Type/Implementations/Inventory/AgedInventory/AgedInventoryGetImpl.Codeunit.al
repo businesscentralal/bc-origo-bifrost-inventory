@@ -19,11 +19,12 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
         OverviewLbl: Label 'Reads the age of stock: remaining quantity and value per age bucket and item, paged and read only.', Comment = 'is-IS=Les aldur birgða: eftirstandandi magn og virði í aldursflokki og vöru, síðuskipt og aðeins til lestrar.';
         NotesLbl: Label 'Age is counted from the posting date of each open positive item ledger entry. Bucket 1 holds the newest stock, from endingDate minus periodLengthDays plus one up to endingDate; buckets 2 to 4 each go one period further back; bucket 5 holds everything older, with no start date. Entries posted after endingDate are not counted. Quantity is the remaining quantity of the entry now: the remaining quantity is not reconstructed for the ending date, as in the Item Age Composition reports. Value is the remaining quantity times the entry cost per unit (actual plus expected cost divided by quantity). Select items with itemNo, a SystemId key or tableView; with none of them every item is read. Only items with stock are listed. skip and take page the items; totalNoOfLines is the number of items with stock. Defaults: endingDate is the work date, periodLengthDays is 30, skip 0, take 100 (at most 1000). An empty variantCode is the blank variant; an empty locationFilter does not restrict the location. Nothing is changed.', Comment = 'is-IS=Aldur er talinn frá bókunardagsetningu hverrar opinnar jákvæðrar vörufærslu. Flokkur 1 geymir nýjustu birgðirnar, frá endingDate að frádregnum periodLengthDays plús einum og til endingDate; flokkar 2 til 4 ná hver einu tímabili lengra aftur; flokkur 5 geymir allt eldra, án upphafsdagsetningar. Færslur sem bókaðar eru eftir endingDate eru ekki taldar. Magn er eftirstandandi magn færslunnar núna: eftirstandandi magn er ekki endurreiknað miðað við lokadagsetningu, eins og í skýrslunum Aldurssamsetning vöru. Virði er eftirstandandi magn margfaldað með kostnaði færslunnar á einingu (raunkostnaður plús áætlaður kostnaður deilt með magni). Veldu vörur með itemNo, SystemId-lykli eða tableView; án þeirra eru allar vörur lesnar. Aðeins vörur með birgðir eru birtar. skip og take síðuskipta vörunum; totalNoOfLines er fjöldi vara með birgðir. Sjálfgildi: endingDate er vinnudagsetning, periodLengthDays er 30, skip 0, take 100 (mest 1000). Tómt variantCode er afbrigðislausa afbrigðið; tómt locationFilter takmarkar ekki staðsetningu. Engu er breytt.';
         PermissionSetTok: Label 'BIFROST Read ori', Locked = true;
+        FilterFixLbl: Label 'Correct the Business Central filter syntax.', Comment = 'is-IS=Leiðréttu málskipan Business Central síunnar.';
 
     procedure IsEnabled(): Boolean
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         Item: Record Item;
+        DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
         if not Item.ReadPermission() then
             exit(false);
@@ -120,7 +121,6 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
         PermissionErr: Label 'Native Item or Item Ledger Entry read permission is absent.', Comment = 'is-IS=Heimild til að lesa vörur eða vörufærslur vantar.';
         PermissionFixLbl: Label 'Assign a role that can read items and item ledger entries.', Comment = 'is-IS=Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur.';
         FilterErr: Label 'A location or item category filter cannot be applied.', Comment = 'is-IS=Ekki er hægt að beita staðsetningar- eða vöruflokkssíu.';
-        FilterFixLbl: Label 'Correct the Business Central filter syntax.', Comment = 'is-IS=Leiðréttu málskipan Business Central síunnar.';
     begin
         Clear(Errors);
         ContractParts.AddItemNoSubjectErrors(Errors, false);
@@ -321,7 +321,7 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
         Total: Integer;
     begin
         if not TryCollect(Item, LocationFilter, VariantCode, HasVariant, CategoryFilter, EndingDate, PeriodLength, Skip, Take, Rows, Total) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', FilterFixLbl);
             exit;
         end;
         Response.Add('status', 'Success');
