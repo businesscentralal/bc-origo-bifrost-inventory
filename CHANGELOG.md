@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.TrackingInfo.Get reads lot, serial and package information cards (#106)
+
+- New read-only message type `Inventory.TrackingInfo.Get` (effect `read`). Select an item (subject, `itemNo`, item SystemId or `tableView`), the `variantCode` of the card and exactly one of `lotNo`, `serialNo` or `packageNo`. It answers the Lot No. Information (6505), Serial No. Information (6504) or Package No. Information (6515) card: `description`, `testQuality` (lot only), `certificateNumber` (lot and package), `countryRegionCode` (package), `blocked`, `hasComments`, the item tracking `comments`, `inventory` and `expiredInventory` (expiration date before the work date), all in base units.
+- Refusals: `MissingParameter` on `itemNo` or on `lotNo|serialNo|packageNo`; `InvalidParameter` when more than one tracking number is sent; `InvalidParameterFormat` for a value that is too long or not a string; `RecordNotFound` with nextStep "The tracking number has no information card..." when the card does not exist (also when the number has stock); `PermissionDenied` per table. Help and refusals are in en-US and is-IS.
+- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 60 Inventory types.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

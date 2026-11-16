@@ -59,6 +59,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
+| `Inventory.TrackingInfo.Get` | Outbound | Read one lot, serial or package information card: description, test quality, certificate, blocked, comments, inventory and expired inventory |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
@@ -262,6 +263,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -287,7 +289,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076880–10076885 | Physical inventory | Calculate (journal and count), Post, Record/RecordCount, Check, Preview Post |
 | 10076887–10076889 | Reclassification | Check, Post, Preview |
 | 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
-| 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
+| 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 
