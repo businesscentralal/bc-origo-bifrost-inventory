@@ -22,10 +22,14 @@ codeunit 10076960 "Asm. To Order Get Impl ori" implements "Msg Interface ori", "
         DocumentTypeExpectedLbl: Label 'Quote, Order or Blanket Order', Comment = 'is-IS=Quote, Order eða Blanket Order';
         PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
 
+    /// <summary>Reports discovery availability without reading setup for an unauthorized caller.</summary>
     procedure IsEnabled(): Boolean
     var
+        InventorySetup: Record "Inventory Setup ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not InventorySetup.ReadPermission() then
+            exit(false);
         if not DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false) then
             exit(false);
         exit(CanReadSources());

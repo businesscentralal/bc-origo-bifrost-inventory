@@ -355,24 +355,17 @@ codeunit 96966 "Assembly Read Tests"
     [Test]
     procedure AsmToOrder_UnknownKey_IcelandicNextStep()
     var
-        TempArgument: Record "Message Argument ori" temporary;
-        AtoImpl: Codeunit "Asm. To Order Get Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PreviousLanguage: Integer;
     begin
         // [SCENARIO AC04] Refusals of this type answer in is-IS at 1039.
         Initialize();
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
         RequestJson.Add('salesOrder', 'ANY');
-        TempArgument.SetRequestJson(RequestJson);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        AtoImpl.ExecuteBifrostTask(TempArgument);
+        ResponseJson := ExecuteAto(RequestJson);
         GlobalLanguage(PreviousLanguage);
-        ResponseJson := TempArgument.GetResponseJson();
         AssertText(ResponseJson, 'code', 'UnknownParameter');
         AssertText(ResponseJson, 'error', 'Lykillinn er ekki hluti af þessari skilaboðategund.');
         AssertText(ResponseJson, 'nextStep', 'Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo og lineNo.');
@@ -434,7 +427,9 @@ codeunit 96966 "Assembly Read Tests"
         SalesHeader: Record "Sales Header";
     begin
         LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
-        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, ItemNo, Quantity);
+        // Leave room for the assembly safety lead time before validating the ATO quantity.
+        LibrarySales.CreateSalesLineWithShipmentDate(
+            SalesLine, SalesHeader, SalesLine.Type::Item, ItemNo, CalcDate('<1M>', WorkDate()), Quantity);
     end;
 
     local procedure CallAto(DocumentType: Text; DocumentNo: Text; LineNo: Integer): JsonObject

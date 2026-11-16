@@ -21,10 +21,14 @@ codeunit 10076961 "Assembly BOM Get Impl ori" implements "Msg Interface ori", "M
         PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
         MaxLevels: Integer;
 
+    /// <summary>Reports discovery availability without reading setup for an unauthorized caller.</summary>
     procedure IsEnabled(): Boolean
     var
+        InventorySetup: Record "Inventory Setup ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not InventorySetup.ReadPermission() then
+            exit(false);
         if not DomainGate.IsEnabled("Inventory Domain ori"::Assembly, Database::"Assembly Header", false, false) then
             exit(false);
         exit(CanReadSources());

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-16) - assembly read CI regressions (#225)
+- Assembly read discovery returns disabled when the caller cannot read Inventory Setup, matching execution's coded permission refusal.
+- Assembly tests use a future shipment date for ATO fixtures and the normal dispatcher for the Icelandic unknown-key refusal. Restrictive permission assertions remain unchanged.
+
 ### Added (2026-11-16) - Inventory.AssemblyToOrder.Get and Inventory.AssemblyBOM.Get read assemble-to-order links and assembly BOMs (#116)
 - New message type `Inventory.AssemblyToOrder.Get` (enum value 10076960; codeunit 10076960 `Asm. To Order Get Impl ori`). It takes a sales line (`documentType` Quote, Order or Blanket Order, default Order; `documentNo`; `lineNo`) and answers the assembly order linked through the Assemble-to-Order Link (table 904): `linked`, the assembly header in `assemblyOrder` and its `lines`. A sales line without a link answers `linked: false`.
 - New message type `Inventory.AssemblyBOM.Get` (enum value 10076961; codeunit 10076961 `Assembly BOM Get Impl ori`). It takes `itemNo` and the optional `explode` (off by default) and answers the BOM Component (table 90) lines with `level`, `parentItemNo`, `quantityPer` and `totalQuantityPer` (multiplied through the levels per base unit of the item). A component already on its own branch is not exploded again.
