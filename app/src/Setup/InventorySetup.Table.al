@@ -95,6 +95,10 @@ table 10076836 "Inventory Setup ori"
         {
             Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
         }
+        field(25; "Catalog Items"; Boolean)
+        {
+            Caption = 'Catalog Items', Comment = 'is-IS=Vörulistavörur';
+        }
     }
 
     keys
@@ -155,6 +159,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Charge");
             Domain::ItemCategory:
                 exit("Item Category");
+            Domain::CatalogItems:
+                exit("Catalog Items");
         end;
         exit(true);
     end;
@@ -241,7 +247,23 @@ table 10076836 "Inventory Setup ori"
                 "Item Category" := true;
                 Changed := true;
             end;
+        if EnableCatalogItemsInUse() then
+            Changed := true;
         exit(Changed);
+    end;
+
+    /// <summary>
+    /// Raises only the Catalog Items switch when the company has catalog items, without writing the row.
+    /// Used by the catalog items upgrade so other switches an administrator turned off stay off.
+    /// </summary>
+    internal procedure EnableCatalogItemsInUse(): Boolean
+    begin
+        if "Catalog Items" then
+            exit(false);
+        if not HasRecords(Database::"Nonstock Item") then
+            exit(false);
+        "Catalog Items" := true;
+        exit(true);
     end;
 
     local procedure HasRecords(TableNo: Integer): Boolean

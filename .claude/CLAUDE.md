@@ -30,12 +30,16 @@ README "Objects" lists every object with its ID. In short:
 - Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
   the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
   tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
-  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 CatalogItems; `Inventory Setup ori`
+  fields 21-25. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+  Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
+- Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
+  10077020 (process), enum extension 10077019; taken from the top of the free range to avoid clashes with parallel work.
 
 ## Test object IDs (unchanged by the renumbering)
 
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
-- Free: 96960-96961, 96963-96979.
+- 96998 `Nonstock Item Create Tests` (#119).
+- Free: 96960-96961, 96964-96969, 96980-96997, 96999.

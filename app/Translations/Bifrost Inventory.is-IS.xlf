@@ -39,6 +39,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Availability - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 4000831311 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog Items</source>
+          <target>Vörulistavörur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Catalog Items - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 415390853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Costing</source>
           <target>Kostnaður</target>
@@ -4317,6 +4323,288 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Catalog Items domain is turned off for this company.</source>
+          <target>Vörulistavörusviðið er óvirkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörusviðið er óvirkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3303473006 - NamedType 1892115284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Complete the vendor, vendor item number, unit of measure and an existing item template on the Catalog Item Card in Business Central, and send the call again.</source>
+          <target>Fylltu út lánardrottin, vörunúmer lánardrottins, mælieiningu og vörusniðmát sem er til á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylltu út lánardrottin, vörunúmer lánardrottins, mælieiningu og vörusniðmát sem er til á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CatalogCardNextStep - NamedType CatalogCardNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 272827917" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog item %1 has no %2.</source>
+          <target>Vörulistavöru %1 vantar %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry no., %2 = field caption, is-IS=Vörulistavöru %1 vantar %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType FieldMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 1296320867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item template %1 on catalog item %2 does not exist.</source>
+          <target>Vörusniðmát %1 á vörulistavöru %2 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template code, %2 = entry no., is-IS=Vörusniðmát %1 á vörulistavöru %2 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType TemplateMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 950344170" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog Item Setup does not exist in this company.</source>
+          <target>Uppsetning vörulistavara er ekki til í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppsetning vörulistavara er ekki til í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType SetupMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 2444855284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open the Catalog Item Setup page in Business Central, choose the item number format and send the call again.</source>
+          <target>Opnaðu síðuna Uppsetning vörulistavara í Business Central, veldu snið vörunúmers og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu síðuna Uppsetning vörulistavara í Business Central, veldu snið vörunúmers og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType SetupNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 2579212117" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item template %1 has no number series and Inventory Setup has no Item Nos.</source>
+          <target>Vörusniðmát %1 hefur enga númeraröð og birgðagrunnur hefur engin vörunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template code, is-IS=Vörusniðmát %1 hefur enga númeraröð og birgðagrunnur hefur engin vörunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType NoSeriesMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 3237620143" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Set a number series on the item template or Item Nos. in Inventory Setup, and send the call again.</source>
+          <target>Settu númeraröð á vörusniðmátið eða vörunúmer í birgðagrunni og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Settu númeraröð á vörusniðmátið eða vörunúmer í birgðagrunni og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType NoSeriesNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 1608064740" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog item %1 would get item number %2, and item %2 already exists.</source>
+          <target>Vörulistavara %1 fengi vörunúmerið %2 og vara %2 er þegar til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry no., %2 = item no., is-IS=Vörulistavara %1 fengi vörunúmerið %2 og vara %2 er þegar til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType ItemExistsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3870164452 - NamedType 1708640862" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Change the vendor item number or manufacturer of the catalog item, or the number format in Catalog Item Setup, so the number is free, and send the call again.</source>
+          <target>Breyttu vörunúmeri lánardrottins eða framleiðanda vörulistavörunnar, eða númerasniðinu í uppsetningu vörulistavara, svo númerið sé laust, og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breyttu vörunúmeri lánardrottins eða framleiðanda vörulistavörunnar, eða númerasniðinu í uppsetningu vörulistavara, svo númerið sé laust, og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckCatalogItem - NamedType ItemExistsNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3212736679 - NamedType 1433119117" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog item %1 has already been turned into item %2.</source>
+          <target>Vörulistavöru %1 hefur þegar verið breytt í vöru %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry no., %2 = item no., is-IS=Vörulistavöru %1 hefur þegar verið breytt í vöru %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckNotConverted - NamedType ConvertedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3212736679 - NamedType 300489321" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a catalog item without an item</source>
+          <target>vörulistavara án vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörulistavara án vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method CheckNotConverted - NamedType NotConvertedExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 2332345605 - NamedType 2897746355" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the item named in the error. To create it again, delete that item on the Item Card first; that clears the item number on the catalog item.</source>
+          <target>Notaðu vöruna sem villan nefnir. Til að stofna hana aftur skaltu fyrst eyða þeirri vöru á vöruspjaldinu; það hreinsar vörunúmerið á vörulistavörunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu vöruna sem villan nefnir. Til að stofna hana aftur skaltu fyrst eyða þeirri vöru á vöruspjaldinu; það hreinsar vörunúmerið á vörulistavörunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method ConvertedNextStep - NamedType ConvertedNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 2851421740 - NamedType 1143728486" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send entryNo with the Entry No. of an existing catalog item. Data.Records.Get on the Nonstock Item table lists them.</source>
+          <target>Sendu entryNo með færslunúmeri vörulistavöru sem er til. Data.Records.Get á töflunni Nonstock Item listar þær.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo með færslunúmeri vörulistavöru sem er til. Data.Records.Get á töflunni Nonstock Item listar þær.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method EntryNoNextStep - NamedType EntryNoNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is required.</source>
+          <target>entryNo er áskilið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo er áskilið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo must be text.</source>
+          <target>entryNo verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send entryNo as text, for example "NS0001".</source>
+          <target>Sendu entryNo sem texta, til dæmis "NS0001".</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo sem texta, til dæmis "NS0001".</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is longer than %1 characters.</source>
+          <target>entryNo er lengra en %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length, is-IS=entryNo er lengra en %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an entryNo of at most %1 characters.</source>
+          <target>Sendu entryNo sem er mest %1 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = maximum length, is-IS=Sendu entryNo sem er mest %1 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 136074857 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No catalog item has Entry No. %1.</source>
+          <target>Engin vörulistavara hefur færslunúmerið %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = entry no., is-IS=Engin vörulistavara hefur færslunúmerið %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method FindNonstockItem - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an item from a catalog item with the item template of the catalog item.</source>
+          <target>Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is missing or empty.</source>
+          <target>entryNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is not text.</source>
+          <target>entryNo er ekki texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo er ekki texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send entryNo as text.</source>
+          <target>Sendu entryNo sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. The only allowed key is entryNo.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 2370535284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>entryNo is longer than 20 characters, or the Catalog Items domain is turned off.</source>
+          <target>entryNo er lengra en 20 stafir, eða vörulistavörusviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=entryNo er lengra en 20 stafir, eða vörulistavörusviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType TooLongWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3448983717" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an entryNo of at most 20 characters, or turn the domain on from the Inventory Setup page.</source>
+          <target>Sendu entryNo sem er mest 20 stafir, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo sem er mest 20 stafir, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType TooLongFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No catalog item has this Entry No.</source>
+          <target>Engin vörulistavara hefur þetta færslunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vörulistavara hefur þetta færslunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 127340948" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The catalog item has already been turned into an item.</source>
+          <target>Vörulistavörunni hefur þegar verið breytt í vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörunni hefur þegar verið breytt í vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType ConvertedWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3153027091" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The catalog item has no vendor, vendor item number, unit of measure or item template, its item template does not exist, the Catalog Item Setup or the item number series is missing, or an item with the number the catalog item would get already exists.</source>
+          <target>Vörulistavöruna vantar lánardrottin, vörunúmer lánardrottins, mælieiningu eða vörusniðmát, vörusniðmát hennar er ekki til, uppsetningu vörulistavara eða númeraröð vöru vantar, eða vara með númerið sem vörulistavaran fengi er þegar til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavöruna vantar lánardrottin, vörunúmer lánardrottins, mælieiningu eða vörusniðmát, vörusniðmát hennar er ekki til, uppsetningu vörulistavara eða númeraröð vöru vantar, eða vara með númerið sem vörulistavaran fengi er þegar til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType SetupWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot create items from catalog items.</source>
+          <target>Kallandinn getur ekki stofnað vörur úr vörulistavörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki stofnað vörur úr vörulistavörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the item creation itself, after the request was checked. Nothing is saved.</source>
+          <target>Business Central hafnar sjálfri stofnun vörunnar eftir að beiðnin var yfirfarin. Ekkert er vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar sjálfri stofnun vörunnar eftir að beiðnin var yfirfarin. Ekkert er vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.</source>
+          <target>Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create an item from a catalog item</source>
+          <target>Stofna vöru úr vörulistavöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna vöru úr vörulistavöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>catalog item, nonstock item, create item, convert catalog item, item template</source>
+          <target>vörulistavara, vara utan birgða, stofna vöru, breyta vörulistavöru, vörusniðmát</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörulistavara, vara utan birgða, stofna vöru, breyta vörulistavöru, vörusniðmát</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A catalog item is turned into an item once. A second call for the same catalog item is refused with PreconditionFailed and names the item it already has. The call uses the item template of the catalog item; change the template on the Catalog Item Card first to use another one. A refusal leaves the catalog item and every item unchanged. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Vörulistavöru er breytt í vöru einu sinni. Öðru kalli fyrir sömu vörulistavöru er hafnað með PreconditionFailed og vörunni sem hún hefur þegar er lýst. Kallið notar vörusniðmát vörulistavörunnar; breyttu sniðmátinu fyrst á vörulistavöruspjaldinu til að nota annað. Höfnun skilur vörulistavöruna og allar vörur eftir óbreyttar. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavöru er breytt í vöru einu sinni. Öðru kalli fyrir sömu vörulistavöru er hafnað með PreconditionFailed og vörunni sem hún hefur þegar er lýst. Kallið notar vörusniðmát vörulistavörunnar; breyttu sniðmátinu fyrst á vörulistavöruspjaldinu til að nota annað. Höfnun skilur vörulistavöruna og allar vörur eftir óbreyttar. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turns one catalog item into an item, like the Create Item action on the Catalog Item Card. The new item gets its fields and dimensions from the item template of the catalog item, and its description, unit of measure, vendor, prices and weights from the catalog item. The item number follows the number format in Catalog Item Setup. The answer is the new item number.</source>
+          <target>Breytir einni vörulistavöru í vöru, eins og aðgerðin Stofna vöru á vörulistavöruspjaldinu. Nýja varan fær reiti sína og víddir úr vörusniðmáti vörulistavörunnar og lýsingu, mælieiningu, lánardrottin, verð og þyngd úr vörulistavörunni. Vörunúmerið fylgir númerasniðinu í uppsetningu vörulistavara. Svarið er nýja vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breytir einni vörulistavöru í vöru, eins og aðgerðin Stofna vöru á vörulistavöruspjaldinu. Nýja varan fær reiti sína og víddir úr vörusniðmáti vörulistavörunnar og lýsingu, mælieiningu, lánardrottin, verð og þyngd úr vörulistavörunni. Vörunúmerið fylgir númerasniðinu í uppsetningu vörulistavara. Svarið er nýja vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3615801952 - NamedType 3367215521" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entry No. of the catalog item, at most 20 characters, as text.</source>
+          <target>Færslunúmer vörulistavörunnar, mest 20 stafir, sem texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færslunúmer vörulistavörunnar, mest 20 stafir, sem texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetParameters - NamedType EntryNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 1033708611 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Find the Entry No. of the catalog item first, or check its Item No. before the call.</source>
+          <target>Finndu fyrst færslunúmer vörulistavörunnar, eða athugaðu vörunúmer hennar fyrir kallið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Finndu fyrst færslunúmer vörulistavörunnar, eða athugaðu vörunúmer hennar fyrir kallið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetRelated - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Turn one catalog item into an item and get the new item number back.</source>
+          <target>Breyttu einni vörulistavöru í vöru og fáðu nýja vörunúmerið til baka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breyttu einni vörulistavöru í vöru og fáðu nýja vörunúmerið til baka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Entry No. of the catalog item to turn into an item.</source>
+          <target>Færslunúmer vörulistavörunnar sem á að breyta í vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færslunúmer vörulistavörunnar sem á að breyta í vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can create items and change catalog items.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur og breytt vörulistavörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur og breytt vörulistavörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. The only allowed key is entryNo.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
@@ -6849,6 +7137,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort skilaboð framboðs eftir tímabilum séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control Availability - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 1150094847 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether catalog item message types, such as creating an item from a catalog item, are enabled for this company.</source>
+          <target>Tilgreinir hvort skilaboð vörulistavara, svo sem að stofna vöru úr vörulistavöru, séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort skilaboð vörulistavara, svo sem að stofna vöru úr vörulistavöru, séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control CatalogItems - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 415390853 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether costing message types are enabled for this company.</source>
           <target>Tilgreinir hvort kostnaðarskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -7034,6 +7328,18 @@
           <target>Framboð</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Availability - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1150094847 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control CatalogItems - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 1150094847 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog items</source>
+          <target>Vörulistavörur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control CatalogItems - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3550083798 - Control 415390853 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether this domain is enabled in this company.</source>
@@ -7424,6 +7730,12 @@
           <target>Framboð</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Framboð</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue Availability - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 1150094847 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Catalog Items</source>
+          <target>Vörulistavörur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue CatalogItems - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 415390853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Costing</source>
