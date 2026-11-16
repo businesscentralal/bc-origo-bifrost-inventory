@@ -102,6 +102,10 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
+                if Argument.HasCollectedErrors() then begin
+                    NativeJournal.RespondWithFailure(Argument);
+                    exit;
+                end;
                 Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, GetLastErrorText(), 'journalBatchName', BatchName, BatchExpectedLbl, BatchNextLbl);
                 exit;
             end;
