@@ -12,7 +12,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.ItemReference.Resolve
 - Inventory.AvailabilityByPeriod.Get
 - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
-- Inventory.TransferOrder.Create, Release, Reopen, Post, PreviewPost, Statistics
+- Inventory.TransferOrder.Create, Release, Reopen, Post, Ship, Receive, PreviewPost, Statistics
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics
 - Inventory.Transfer.UndoShipment
 - Inventory.Transfer.UndoReceipt is not an active type. The released identifier stays for compatibility and is excluded from discovery, because this platform has no native undo of a posted transfer receipt. Return the goods with a new transfer order.
@@ -59,3 +59,23 @@ Neither call posts the journal.
 Attribute creation accepts `overwrite` **inside an object in `attributes`**, not at the request
 root. Use that flag intentionally to replace an existing value, or use
 `Inventory.Attribute.Update`. Help examples use the registered `Inventory.Attribute.*` names.
+
+## Post part of a transfer order
+
+Send `Inventory.TransferOrder.Ship` with this data:
+
+```json
+{"documentNo":"XTRANSFER","expectedCount":1,"lines":[{"lineNo":10000,"qtyToShip":3}]}
+```
+
+The result includes `postedShipmentNo`. For receipt, use `Inventory.TransferOrder.Receive` with `qtyToReceive`; the result includes `postedReceiptNo`. Both also return `status`, `documentNo`, `postingDate`, `postedShipmentNo`, `postedReceiptNo` and `orderDeleted`; the unused posted number is empty. A final receipt can remove the completed order and still returns its posted number.
+
+`expectedCount` counts transfer orders, so send 1 regardless of line count or quantity. Send 1–200 distinct existing top-level lines with positive JSON numbers. Ship cannot exceed quantity minus quantity shipped; Receive cannot exceed quantity shipped minus quantity received. Omitted lines are not posted. Duplicate lines, invalid or excessive quantities return `InvalidLine` with `nextStep`. Direct transfers return `PreconditionFailed`: use `Inventory.TransferOrder.Post` for those. Native posting errors roll back the quantity changes and posting entries. Success commits and ignores Omit Commit; inspect posted state before retrying.
+
+Both operations require the Transfer Orders domain and the existing write and posting permissions. Runtime help and refusals are available in English and Icelandic.
+
+## Bóka hluta flutningspöntunar
+
+Sendu `Inventory.TransferOrder.Ship` með `documentNo`, `expectedCount: 1` og `lines` sem inniheldur `lineNo` og `qtyToShip`. Svarið skilar `postedShipmentNo`. Notaðu `Inventory.TransferOrder.Receive` með `qtyToReceive` fyrir móttöku; svarið skilar `postedReceiptNo`.
+
+`expectedCount` telur flutningspantanir, ekki línur eða magn. Sendu 1–200 aðskildar aðallínur með jákvæðu tölulegu magni innan eftirstöðva. Móttaka má ekki fara yfir afhent en ómóttekið magn. Línur sem er sleppt eru ekki bókaðar. Ógildar línur skila `InvalidLine` með `nextStep`. Beinir flutningar nota `Inventory.TransferOrder.Post`. Villur í innbyggðri bókun afturkalla breytingar; heppnuð bókun er vistuð og hunsar Omit Commit. Lokamóttaka getur eytt fullgerðri pöntun en skilar samt númeri bókaðrar móttöku.

@@ -178,4 +178,16 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
         Caption = 'Inventory.Revaluation.Calculate', Locked = true;
         Implementation = "Msg Interface ori" = "Revaluation Calc Impl ori", "Msg Discovery ori" = "Revaluation Calc Impl ori", "Msg Contract ori" = "Revaluation Calc Impl ori";
     }
+    /// <summary>Posts selected transfer ship quantities.</summary>
+    value(10077020; "Inventory.TransferOrder.Ship")
+    {
+        Caption = 'Inventory.TransferOrder.Ship', Locked = true;
+        Implementation = "Msg Interface ori" = "Transfer Ship Impl ori", "Msg Discovery ori" = "Transfer Ship Impl ori", "Msg Contract ori" = "Transfer Ship Impl ori";
+    }
+    /// <summary>Posts selected transfer receive quantities.</summary>
+    value(10077021; "Inventory.TransferOrder.Receive")
+    {
+        Caption = 'Inventory.TransferOrder.Receive', Locked = true;
+        Implementation = "Msg Interface ori" = "Transfer Receive Impl ori", "Msg Discovery ori" = "Transfer Receive Impl ori", "Msg Contract ori" = "Transfer Receive Impl ori";
+    }
 }
