@@ -152,9 +152,13 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <param name="Effect">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Changes: JsonToken;
     begin
         Clear(Effect);
         Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"BIFROST Full ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.Get('changes', Changes);
+        Effect.Replace('changes', Changes.AsValue().AsText() + ' ' + ConfirmationCountNote());
         exit(true);
     end;
 
@@ -219,7 +223,15 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         NotesLbl: Label 'itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is not a parameter and is refused as UnknownParameter: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
     begin
         Notes := NotesLbl;
+        Notes += ' ' + ConfirmationCountNote();
         exit(true);
     end;
 
+
+    local procedure ConfirmationCountNote(): Text
+    var
+        CountNoteLbl: Label 'For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.', Comment = 'is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.';
+    begin
+        exit(CountNoteLbl);
+    end;
 }

@@ -128,16 +128,21 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameterFormat","when":"A filter is not text, postToGL is not a JSON boolean, both filters are sent, or a filter is not valid.","fix":"Use the reported parameter, expected format and nextStep. No adjustment is run for invalid request values."},{"code":"MultipleErrors","when":"Several request values have invalid formats.","fix":"Correct every errors[] entry before retrying."},{"code":"InvalidParameter","when":"The Costing domain is turned off in Inventory Setup.","fix":"Turn on the Costing domain in Inventory Setup."},{"code":"PermissionDenied","when":"The caller does not hold the Inv. Posting Gate permission set.","fix":"Ask an administrator to assign Inv. Posting Gate."},{"code":"BusinessCentralError","error":"The error text of the Adjust Cost - Item Entries batch job.","when":"The batch job stops with an error, for example when itemNoFilter and itemCategoryFilter are both filled in or a filter is not valid. The error text is returned as it is, with code BusinessCentralError. Direct invocation may raise instead. Request scalar conversions are validated before the report.","fix":"Correct the filters or the cost data named in the error text and check the item entries before you retry; no rollback or safe retry is promised."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure handler. The cost adjustment batch job raises an error when both effective filters are nonempty. Direct invocation may raise instead. Request scalar conversions are validated before the report.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');        exit(true);
+        Errors.ReadFrom('[{"code":"InvalidParameterFormat","when":"A filter is not text or postToGL is not a JSON boolean.","fix":"Use the reported parameter, expected format and nextStep. No adjustment is run for invalid request values."},{"code":"MultipleErrors","when":"Several request values have invalid formats.","fix":"Correct every errors[] entry before retrying."},{"code":"InvalidParameter","when":"The Costing domain is turned off, both effective filters are nonempty, or a filter is invalid. Filter refusals happen before the report runs.","fix":"Enable Costing when disabled; otherwise send at most one valid item or category filter. No adjustment runs for an invalid selection."},{"code":"PermissionDenied","when":"The caller does not hold the Inv. Posting Gate permission set.","fix":"Ask an administrator to assign Inv. Posting Gate."},{"code":"BusinessCentralError","error":"The error text of the Adjust Cost - Item Entries batch job.","when":"The batch job stops with an error after request formats and filter selection have passed validation. The error text is returned with code BusinessCentralError.","fix":"Correct the filters or the cost data named in the error text and check the item entries before you retry; no rollback or safe retry is promised."},{"code":"BusinessCentralError","when":"Through the normal Foundation scheduled-task error-handler path, an uncollected task/report/conversion error is answered by Message Error as BusinessCentralError. Synchronous dispatcher execution does not itself invoke that scheduled failure handler. Both-filter and invalid-filter refusals are InvalidParameter before the report; scalar format refusals are InvalidParameterFormat.","fix":"Review the actual report or conversion error and current ledger state; no rollback or safe-retry guarantee is declared."}]');
+        exit(true);
     end;
 
     /// <summary>Returns the effect chapter for the existing costing operation.</summary>
     /// <param name="Effect">Receives this contract chapter.</param>
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Changes: JsonToken;
     begin
         Clear(Effect);
         Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Adjusts the cost of the matching item entries by running the Adjust Cost - Item Entries batch job. When postToGL is true the batch job also posts the adjustments to the general ledger in the same run. Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, and no rollback is promised if the job fails part way.","idempotent":false,"permissionSet":"BIFROST Full ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; the cost adjustment rejects both nonempty."]}');
+        Effect.Get('changes', Changes);
+        Effect.Replace('changes', Changes.AsValue().AsText() + ' ' + ConfirmationCountNote());
         exit(true);
     end;
 
@@ -207,6 +212,14 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
             'The batch job ends quietly when there are no item, application or value entries yet, and the answer is still Success: Success shows that the job finished, not that anything was adjusted or posted. ' +
             'Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, the call is not idempotent, and no rollback or safe retry is promised if the job fails part way. ' +
             'The caller needs the Inv. Posting Gate permission set, and the Costing domain must be on in Inventory Setup. postingDate, inventoryPostingGroup and itemByItem are not parameters and are refused as UnknownParameter before anything runs. itemsProcessed is the number of items the filters select, counted before the run. Read costIsAdjusted with Inventory.Cost.Get to see whether items still need an adjustment run.';
+        Notes += ' ' + ConfirmationCountNote();
         exit(true);
+    end;
+
+    local procedure ConfirmationCountNote(): Text
+    var
+        CountNoteLbl: Label 'For a named request subject, expectedCount counts the one cost adjustment run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.', Comment = 'is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.';
+    begin
+        exit(CountNoteLbl);
     end;
 }

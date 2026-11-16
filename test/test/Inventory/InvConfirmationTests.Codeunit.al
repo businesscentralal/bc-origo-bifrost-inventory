@@ -153,10 +153,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         CreateStock(Item, 2);
         Request.Add('itemNoFilter', Item."No.");
         Request.Add('postToGL', false);
-        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", 'XADJUST-RUN', Request, Response);
         Clear(Request);
         Request.Add('itemNoFilter', Item."No.");
-        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", 'XCOSTGL-RUN', Request, Response);
         Assert.IsTrue(Response.Get('postedValueEntryCount', Token), 'Native G/L posting reports actual entries.');
         Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'The owned pending value entry was posted.');
     end;
@@ -365,7 +365,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
-                            // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
+                            // An unnamed request is deliberately left to handler validation by Foundation #1278.
+                            Response := DispatchWithSubject(MessageType, '', Request);
+                            AssertText(Response, 'code', 'InvalidParameter');
+                            // [WHEN] A named subject is previewed before the handler or any record lookup.
                             Response := Dispatch(MessageType, Request);
                             if AdvertisesConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
@@ -403,7 +406,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        Response := DispatchWithSubject(MessageType, '', Request);
+        // A named subject exercises preview-before-lookup. Foundation deliberately bypasses
+        // its default counter when a request names no subject (#1278).
+        Response := DispatchWithSubject(MessageType, 'XCONFIRM-SUBJECT', Request);
         AssertText(Response, 'status', 'Error');
     end;
 

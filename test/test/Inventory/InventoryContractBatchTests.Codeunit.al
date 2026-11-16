@@ -711,7 +711,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        AssertComposedResponse(Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -720,6 +720,43 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedResponse(Contract: JsonObject; Expected: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Actual: JsonToken;
+        FieldsToken: JsonToken;
+        Entry: JsonToken;
+        NameToken: JsonToken;
+        AppFields: JsonArray;
+        SharedField: JsonObject;
+        FieldContract: JsonObject;
+        ActualContract: JsonObject;
+        Serialized: Text;
+        SharedCount: Integer;
+    begin
+        // Foundation enriches JSON responses with an optional error code descriptor.
+        // Preserve exact parity for every app-owned descriptor, including order and descriptions.
+        LibraryAssert.IsTrue(Contract.Get('response', Actual), 'Composed response is present.');
+        LibraryAssert.IsTrue(Actual.AsObject().Get('fields', FieldsToken), 'Composed response fields are present.');
+        foreach Entry in FieldsToken.AsArray() do begin
+            LibraryAssert.IsTrue(Entry.AsObject().Get('name', NameToken), 'Every descriptor has a name.');
+            if NameToken.AsValue().AsText() = 'code' then begin
+                SharedCount += 1;
+                SharedField := ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.');
+                FieldContract.Add('field', Entry);
+                AssertChapterJson(FieldContract, 'field', SharedField.AsToken());
+                Clear(FieldContract);
+            end else
+                AppFields.Add(Entry);
+        end;
+        LibraryAssert.IsTrue(SharedCount <= 1, 'At most one shared error code descriptor; older Foundation has none.');
+        Actual.WriteTo(Serialized);
+        FieldContract.ReadFrom(Serialized);
+        FieldContract.Replace('fields', AppFields);
+        ActualContract.Add('response', FieldContract);
+        AssertChapterJson(ActualContract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
@@ -781,6 +818,87 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Actual.WriteTo(ActualJson);
         Expected.WriteTo(ExpectedJson);
         LibraryAssert.AreEqual(ExpectedJson, ActualJson, 'Inventory and legacy Item helper chapter payloads match: ' + Chapter + '.');
+    end;
+
+    /// <summary>Checks the pre-report refusal codes advertised by AdjustCost help.</summary>
+    [Test]
+    procedure AdjustCostErrors_DescribePreReportValidation()
+    var
+        Implementation: Codeunit "Adjust Cost Run Impl ori";
+        Errors: JsonArray;
+        Entry: JsonToken;
+        CodeToken: JsonToken;
+        WhenToken: JsonToken;
+        WhenText: Text;
+        PreviousLanguage: Integer;
+        LanguageId: Integer;
+    begin
+        // PR #214 finding 4 | Time: none | Risk: metadata only.
+        PreviousLanguage := GlobalLanguage();
+        for LanguageId := 1033 to 1039 do
+            if LanguageId in [1033, 1039] then begin
+                GlobalLanguage(LanguageId);
+                Implementation.GetErrors(Errors);
+                foreach Entry in Errors do begin
+                    Entry.AsObject().Get('code', CodeToken);
+                    Entry.AsObject().Get('when', WhenToken);
+                    WhenText := WhenToken.AsValue().AsText();
+                    case CodeToken.AsValue().AsText() of
+                        'InvalidParameterFormat':
+                            LibraryAssert.AreEqual('A filter is not text or postToGL is not a JSON boolean.', WhenText, 'Only scalar format failures use InvalidParameterFormat.');
+                        'InvalidParameter':
+                            begin
+                                LibraryAssert.IsTrue(WhenText.Contains('both effective filters'), 'Both-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsTrue(WhenText.Contains('filter is invalid'), 'Invalid-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsTrue(WhenText.Contains('before the report runs'), 'Selection validation precedes report execution.');
+                            end;
+                        'BusinessCentralError':
+                            LibraryAssert.IsFalse(WhenText.Contains('for example when itemNoFilter'), 'Report errors must not claim the pre-report selection refusals.');
+                    end;
+                end;
+            end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    /// <summary>Both locales name the confirmation unit and disclose the unnamed-request boundary.</summary>
+    [Test]
+    procedure CostingContracts_NameConfirmationUnitsInBothLocales()
+    var
+        Implementation: Interface "Msg Contract ori";
+        MessageType: Enum "Message Type ori";
+        Effect: JsonObject;
+        Changes: JsonToken;
+        Notes: Text;
+        EnglishNotes: Text;
+        PreviousLanguage: Integer;
+        TypeName: Text;
+        Types: List of [Text];
+    begin
+        // PR #214 finding 5 | Time: none | Risk: metadata only.
+        Types.Add('Inventory.AdjustCost.Run');
+        Types.Add('Inventory.CostToGL.Post');
+        PreviousLanguage := GlobalLanguage();
+        foreach TypeName in Types do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+            Implementation := MessageType;
+            GlobalLanguage(1033);
+            Implementation.GetNotes(EnglishNotes);
+            LibraryAssert.IsTrue(EnglishNotes.Contains('expectedCount counts the one'), 'English help names a single run.');
+            LibraryAssert.IsTrue(EnglishNotes.Contains('It does not bound the number of entries changed.'), 'Confirmation is not an entry limit.');
+            LibraryAssert.IsTrue(EnglishNotes.Contains('unnamed run'), 'Help discloses the Foundation no-subject boundary.');
+            Implementation.GetEffect(Effect);
+            Effect.Get('changes', Changes);
+            LibraryAssert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount counts the one'), 'Effect names the count unit.');
+            GlobalLanguage(1039);
+            Implementation.GetNotes(Notes);
+            LibraryAssert.AreNotEqual(EnglishNotes, Notes, 'Icelandic count help is localized.');
+            LibraryAssert.IsTrue(Notes.Contains('expectedCount'), 'Icelandic help names the confirmation key.');
+            LibraryAssert.IsTrue(Notes.Contains('(1)'), 'Icelandic help gives the one-run count.');
+            Implementation.GetEffect(Effect);
+            Effect.Get('changes', Changes);
+            LibraryAssert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount'), 'Icelandic effect names the count unit.');
+        end;
+        GlobalLanguage(PreviousLanguage);
     end;
 
     /// <summary>Checks published costing parameter defaults through the contract reader.</summary>
