@@ -7,6 +7,7 @@ using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
+using System.Utilities;
 
 /// <summary>Issue 118: direct substitution reads, exact variant inventory, refusals and read-only behavior.</summary>
 codeunit 96993 "Item Substitution Tests ori"
@@ -318,6 +319,34 @@ codeunit 96993 "Item Substitution Tests ori"
         Assert.IsFalse(Setup."Item Substitution", 'Opening wizard does not enable domain');
     end;
 
+    /// <summary>Substitution usage enables its domain without overwriting a manual opt-out on an existing row.</summary>
+    [Test]
+    procedure Scenario_AC02_SubstitutionUsage_EnablesNewSetup()
+    var
+        Source: Record Item;
+        Substitute: Record Item;
+        Substitution: Record "Item Substitution";
+        Setup: Record "Inventory Setup ori";
+    begin
+        // Story #118, AC02 | Time: none; WorkDate ignored | Risk: None
+        Initialize();
+        // [GIVEN] Native substitution usage and an existing administrator opt-out.
+        CreateItem(Source);
+        CreateItem(Substitute);
+        CreateSubstitution(Substitution, Source."No.", '', Substitute."No.", '');
+        Setup.Get();
+        Setup."Item Substitution" := false;
+        Setup.Modify();
+        // [WHEN/THEN] Opening existing setup preserves the opt-out.
+        Setup.InsertIfNotExists();
+        Assert.IsFalse(Setup."Item Substitution", 'Existing opt-out is preserved');
+        // [WHEN] New company setup is initialized from native usage.
+        Setup.Delete();
+        Setup.InsertIfNotExists();
+        // [THEN] The native substitution is recognized as usage.
+        Assert.IsTrue(Setup."Item Substitution", 'Substitution usage enables new setup');
+    end;
+
     local procedure Initialize()
     var
         Setup: Record "Inventory Setup ori";
@@ -328,9 +357,24 @@ codeunit 96993 "Item Substitution Tests ori"
         Setup.Modify();
     end;
 
-    local procedure Execute(Request: JsonObject): JsonObject
+    local procedure Execute(Request: JsonObject) Response: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        ResponseBlob: Codeunit "Temp Blob";
+        RequestContent: BigText;
+        ResponseStream: InStream;
+        RequestText: Text;
+        ResponseContentType: Text[100];
+        TaskId: Guid;
+        MessageId: Guid;
+        ResponseTime: Duration;
     begin
-        exit(Library.ExecuteType("Message Type ori"::"Inventory.ItemSubstitution.Get", '', Request, true));
+        Request.WriteTo(RequestText);
+        RequestContent.AddText(RequestText);
+        // Use the public dispatcher with an explicit LCID; Execute uses the company default instead.
+        Dispatcher.EnqueueAndProcess("Message Type ori"::"Inventory.ItemSubstitution.Get", "Message Version ori"::"1.0", '', '', 'application/json', RequestContent, TaskId, GlobalLanguage(), MessageId, ResponseBlob, ResponseContentType, ResponseTime, true);
+        ResponseBlob.CreateInStream(ResponseStream, TextEncoding::UTF8);
+        Response.ReadFrom(ResponseStream);
     end;
 
     local procedure AssertRefusal(Response: JsonObject; Code: Text)
