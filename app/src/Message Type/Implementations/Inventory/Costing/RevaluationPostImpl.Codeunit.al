@@ -88,7 +88,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias of batchId.'));
         Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias of batchId.'));
         Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias of batchId.'));
-        Parameters.Add(Parts.ExpectedCountParameter('Inventory.Revaluation.Post'));
+        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitRevaluation()));
         exit(true);
     end;
 
@@ -149,7 +149,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Preconditions.Add('The batch is an existing non-recurring batch of a Revaluation journal template with at least one Revaluation line.');
         Preconditions.Add('The caller holds Inv. Posting Gate and can write item journal lines.');
         Effect.Add('preconditions', Preconditions);
-        Parts.AddCountUnit('Inventory.Revaluation.Post', Effect);
+        Parts.AddCountUnit(Parts.CountUnitRevaluation(), Effect);
         exit(true);
     end;
 

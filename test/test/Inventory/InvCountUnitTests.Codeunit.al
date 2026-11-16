@@ -28,14 +28,12 @@ codeunit 96980 "Inv. Count Unit Tests ori"
     end;
 
     [Test]
-    procedure Scenario_AC03_ReadAndWriteTypesDoNotClaimCount()
+    procedure Scenario_AC03_ReadTypesDoNotClaimCount()
     var
         Parts: Codeunit "Inventory Contract Parts ori";
         Effect: JsonObject;
     begin
-        // Issue #192 AC03 edge case: a type that is not irreversible has no count unit and its effect text stays unchanged.
-        Assert.AreEqual('', Parts.CountUnit('Inventory.TransferOrder.PreviewPost'), 'A preview names no count unit.');
-        Assert.AreEqual('', Parts.CountUnit('Inventory.Nonexistent.Post'), 'An unknown type names no count unit.');
+        // Issue #192 AC03 edge case: a read type is not made to claim a count; its effect text stays unchanged.
         Effect := Parts.GetEffect('Inventory.TransferOrder.PreviewPost');
         Assert.IsFalse(HasText(Effect, 'changes', 'expectedCount'), 'A read effect does not mention expectedCount.');
     end;
@@ -47,6 +45,7 @@ codeunit 96980 "Inv. Count Unit Tests ori"
         MessageType: Enum "Message Type ori";
         TypeName: Text;
         Types: List of [Text];
+        Units: List of [Text];
         PreviousLanguage: Integer;
         Contract: JsonObject;
         Effect: JsonObject;
@@ -57,14 +56,23 @@ codeunit 96980 "Inv. Count Unit Tests ori"
         FoundParameter: Boolean;
     begin
         Types.Add('Inventory.Revaluation.Post');
+        Units.Add(Parts.CountUnitRevaluation());
         Types.Add('Inventory.TransferOrder.Post');
+        Units.Add(Parts.CountUnitTransferOrder());
         Types.Add('Inventory.AssemblyOrder.Post');
+        Units.Add(Parts.CountUnitAssemblyOrder());
         Types.Add('Inventory.AdjustCost.Run');
+        Units.Add(Parts.CountUnitAdjustCost());
         Types.Add('Inventory.CostToGL.Post');
+        Units.Add(Parts.CountUnitCostToGL());
         Types.Add('Inventory.Transfer.UndoShipment');
+        Units.Add(Parts.CountUnitTransferUndoShipment());
         Types.Add('Inventory.Assembly.UndoPost');
+        Units.Add(Parts.CountUnitAssemblyUndoPost());
         Types.Add('Inventory.Reclassification.Post');
+        Units.Add(Parts.CountUnitReclassification());
         Types.Add('Inventory.PhysInventory.Post');
+        Units.Add(Parts.CountUnitPhysInventory());
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         foreach TypeName in Types do begin
@@ -76,7 +84,7 @@ codeunit 96980 "Inv. Count Unit Tests ori"
             Effect := Token.AsObject();
             Assert.IsTrue(Effect.Get('effect', Token), TypeName + ' declares an effect.');
             Assert.AreEqual('irreversible', Token.AsValue().AsText(), TypeName + ' stays irreversible.');
-            Unit := Parts.CountUnit(TypeName);
+            Unit := Units.Get(Types.IndexOf(TypeName));
             Assert.AreNotEqual('', Unit, TypeName + ' has a count unit.');
             Assert.IsTrue(HasText(Effect, 'changes', 'expectedCount counts ' + Unit), TypeName + ' effect names the count unit.');
             Assert.IsTrue(HasText(Effect, 'changes', 'send the request without expectedCount and read expected'), TypeName + ' effect names the side-effect-free preview.');

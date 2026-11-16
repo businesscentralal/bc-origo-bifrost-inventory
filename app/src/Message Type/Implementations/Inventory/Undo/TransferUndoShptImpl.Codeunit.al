@@ -73,7 +73,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     begin
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters; a longer value is cut to 20. Every line that is not a correction line is undone.'));
-        Parameters.Add(Parts.ExpectedCountParameter('Inventory.Transfer.UndoShipment'));
+        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitTransferUndoShipment()));
         exit(true);
     end;
 
@@ -115,7 +115,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
-        Parts.AddCountUnit('Inventory.Transfer.UndoShipment', Effect);
+        Parts.AddCountUnit(Parts.CountUnitTransferUndoShipment(), Effect);
         exit(true);
     end;
 
