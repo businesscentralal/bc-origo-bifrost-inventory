@@ -174,6 +174,63 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual(BeforeCount, Entries.Count(), 'Missing selection reverses no part of the valid first line.');
     end;
 
+    [Test]
+    procedure Scenario_AC06_CountUnits_LocalizedForChangedPostTypes()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        MessageType: Enum "Message Type ori";
+        Contract: JsonObject;
+        Effect: JsonToken;
+        Changes: JsonToken;
+        Parameter: JsonToken;
+        Name: JsonToken;
+        Description: JsonToken;
+        Parameters: JsonToken;
+        Types: List of [Enum "Message Type ori"];
+        PreviousLanguage: Integer;
+        LanguageId: Integer;
+        Languages: List of [Integer];
+        HasCount: Boolean;
+    begin
+        // Issue #39 AC06 | Time: no date dependency | Risk: None.
+        Initialize();
+        Types.Add("Message Type ori"::"Inventory.TransferOrder.Post");
+        Types.Add("Message Type ori"::"Inventory.Transfer.UndoShipment");
+        Types.Add("Message Type ori"::"Inventory.Assembly.UndoPost");
+        PreviousLanguage := GlobalLanguage();
+        // [GIVEN] All three irreversible types changed by this issue, in both supported languages.
+        Languages.Add(1033);
+        Languages.Add(1039);
+        foreach LanguageId in Languages do begin
+            GlobalLanguage(LanguageId);
+            foreach MessageType in Types do begin
+                Clear(Contract);
+                // [WHEN] The registered help contract is composed by Foundation.
+                ContractMgt.GetContract(MessageType, Contract);
+                // [THEN] Effect and count parameter name the unit, including in Icelandic.
+                Contract.Get('effect', Effect);
+                Effect.AsObject().Get('changes', Changes);
+                Assert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount'), 'Effect names the confirmation count.');
+                if LanguageId = 1039 then
+                    Assert.IsTrue(Changes.AsValue().AsText().Contains('telur'), 'Count unit is translated into Icelandic.');
+                Contract.Get('parameters', Parameters);
+                HasCount := false;
+                foreach Parameter in Parameters.AsArray() do begin
+                    Parameter.AsObject().Get('name', Name);
+                    if Name.AsValue().AsText() = 'expectedCount' then begin
+                        HasCount := true;
+                        Parameter.AsObject().Get('description', Description);
+                        Assert.IsTrue(Description.AsValue().AsText().Contains('1'), 'Count is one order or posted document.');
+                        if LanguageId = 1039 then
+                            Assert.IsTrue(Description.AsValue().AsText().Contains('telur'), 'Parameter count unit is translated.');
+                    end;
+                end;
+                Assert.IsTrue(HasCount, 'Count parameter is present.');
+            end;
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
     local procedure VerifyReceivedRefusal(LanguageId: Integer)
     var
         Shipment: Record "Transfer Shipment Header";

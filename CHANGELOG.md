@@ -6,7 +6,7 @@
 
 - `Inventory.Transfer.UndoShipment` accepts optional `lineNos` (1–100 distinct positive posted line numbers). It validates the complete selection before native undo, refuses missing or already-corrected lines, and preserves unselected lines. Omission retains all non-correction lines.
 - `Inventory.Assembly.UndoPost` accepts a JSON boolean `recreateOrder`, default false, and passes it to native `Assembly-Post.Undo` within the existing atomic transaction.
-- Both changed irreversible contracts explain in en-US and is-IS that `expectedCount` counts one posted document, not lines or entries. The receipt compatibility identifier remains disabled: neither the BC 28 source nor BC 29 symbols contain a native receipt undo.
+- All three changed irreversible contracts (shipment undo, assembly undo and transfer posting) explain in en-US and is-IS that `expectedCount` counts one posted document, not lines or entries. The receipt compatibility identifier remains disabled: neither the BC 28 source nor BC 29 symbols contain a native receipt undo.
 - BC 28/29 transfer posting and preview read the applicable setup field by ID; BC 29 uses enum field 5857 rather than the obsolete option field 5855. Existing direct-transfer tests cover both posting modes.
 - No object IDs added. Changed product codeunits: 10076842, 10076901, 10076903, 10076909, 10076910. Regression tests extend 96909 and 96914; explicit owned MCP setup and cleanup extend test codeunit/page 96973 and helper 96904.
 

@@ -63,8 +63,10 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Parameters := Parts.GetParameters('Inventory.TransferOrder.Post');
+        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 
@@ -87,9 +89,21 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
+        Changes: JsonToken;
     begin
         Effect := Parts.GetEffect('Inventory.TransferOrder.Post');
+        if Effect.Get('changes', Changes) then
+            Effect.Replace('changes', CountUnit() + ' ' + Changes.AsValue().AsText());
+        Effect.Add('writes', true);
+        Effect.Add('posts', true);
         exit(true);
+    end;
+
+    local procedure CountUnit(): Text
+    var
+        CountLbl: Label 'expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries.', Comment = 'is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.';
+    begin
+        exit(CountLbl);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean

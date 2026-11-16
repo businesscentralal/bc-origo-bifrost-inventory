@@ -7563,6 +7563,12 @@
           <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries.</source>
+          <target>expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method CountUnit - NamedType CountLbl</note>
+        </trans-unit>
       </group>
     </body>
   </file>
