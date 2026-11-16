@@ -10,7 +10,7 @@ using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
 /// <summary>Dispatcher regressions for Inventory.ItemReference.Set, issue 102.</summary>
-codeunit 96981 "Item Ref. Set Tests ori"
+codeunit 96989 "Item Ref. Set Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;

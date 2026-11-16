@@ -7,7 +7,7 @@ using Microsoft.Sales.Customer;
 using Origo.Bifrost;
 
 /// <summary>Creates or updates an item reference through validated, atomic writes.</summary>
-codeunit 10076930 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076950 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -202,10 +202,17 @@ codeunit 10076930 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
         exit(true);
     end;
 
-    /// <summary>No multi-step workflow.</summary>
+    /// <summary>Describes saving a reference and reading the result.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Steps: JsonArray;
+        SaveLbl: Label 'Create or update the item reference.', Comment = 'is-IS=Stofnaðu eða uppfærðu vörutilvísunina.';
+        ReadLbl: Label 'Resolve the reference to verify its saved item and metadata.', Comment = 'is-IS=Finndu tilvísunina til að staðfesta vistaða vöru og lýsigögn hennar.';
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemReference.Set', SaveLbl));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.ItemReference.Resolve', ReadLbl));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Provides a request example.</summary>

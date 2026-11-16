@@ -4539,6 +4539,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer sem er til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetTarget - NamedType TargetLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3502481479 - NamedType 2095925749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create or update the item reference.</source>
+          <target>Stofnaðu eða uppfærðu vörutilvísunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu eða uppfærðu vörutilvísunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetWorkflow - NamedType SaveLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3502481479 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolve the reference to verify its saved item and metadata.</source>
+          <target>Finndu tilvísunina til að staðfesta vistaða vöru og lýsigögn hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Finndu tilvísunina til að staðfesta vistaða vöru og lýsigögn hennar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetWorkflow - NamedType ReadLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3640557848 - Method 2962684526 - NamedType 3131523370" size-unit="char" translate="yes" xml:space="preserve">
           <source>The item reference request is invalid: %1.</source>
           <target>Beiðni um vörutilvísun er ógild: %1.</target>

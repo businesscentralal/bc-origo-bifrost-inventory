@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item.Catalog;
 using Origo.Bifrost;
 
 /// <summary>Directs generic item reference writes to the validated dedicated type.</summary>
-codeunit 10076932 "Item Ref. Restrict ori"
+codeunit 10076952 "Item Ref. Restrict ori"
 {
     Access = Internal;
 
