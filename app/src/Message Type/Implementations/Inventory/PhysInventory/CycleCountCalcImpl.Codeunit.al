@@ -159,7 +159,7 @@ codeunit 10076970 "Cycle Count Calc Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Effect);
         Effect.Add('effect', 'write');
-        Effect.Add('changes', 'Inserts lines for the items and stockkeeping units that are due for counting into the empty Phys. Inventory journal batch, with the calculated quantity, the posting date and the document number, and advances their Last Counting Period Update and next counting dates natively. Nothing is posted and no ledger entry is created. The lines are committed with the answer; under Omit Commit the caller''s transaction commits instead.');
+        Effect.Add('changes', 'Inserts lines for the items and stockkeeping units that are due for counting into the empty Phys. Inventory journal batch, with the calculated quantity, the posting date, the document number and the counting period code and type (Item or SKU, as native Calculate Counting Period does, so posting writes them to the physical inventory ledger), and advances their Last Counting Period Update and next counting dates natively. Nothing is posted and no ledger entry is created. The lines are committed with the answer; under Omit Commit the caller''s transaction commits instead.');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);

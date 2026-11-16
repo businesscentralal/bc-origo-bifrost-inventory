@@ -332,11 +332,9 @@ codeunit 10076840 "Inventory Native Journal ori"
         Item.SetFilter("Next Counting Start Date", '<>%1&<=%2', 0D, PostingDate);
         if Item.FindSet() then
             repeat
-                if not HasSkuPeriod(Item."No.") then begin
-                    CalculateCountedItem(Line, Batch, Item."No.", LocationFilter, VariantFilter, PostingDate, DocumentNo, IncludeZero);
-                    UpdateItemCountingDates(Item."No.");
-                    Counted += 1;
-                end;
+                CalculateCountedItem(Line, Batch, Item."No.", LocationFilter, VariantFilter, PostingDate, DocumentNo, IncludeZero, Item."Phys Invt Counting Period Code");
+                UpdateItemCountingDates(Item."No.");
+                Counted += 1;
             until Item.Next() = 0;
         if ItemFilter <> '' then
             Sku.SetFilter("Item No.", ItemFilter);
@@ -348,7 +346,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Sku.SetFilter("Next Counting Start Date", '<>%1&<=%2', 0D, PostingDate);
         if Sku.FindSet() then
             repeat
-                CalculateCountedItem(Line, Batch, Sku."Item No.", Sku."Location Code", Sku."Variant Code", PostingDate, DocumentNo, IncludeZero);
+                CalculateCountedSku(Line, Batch, Sku, PostingDate, DocumentNo, IncludeZero);
                 UpdateSkuCountingDates(Sku."Item No.", Sku."Location Code", Sku."Variant Code");
                 Counted += 1;
             until Sku.Next() = 0;
@@ -376,21 +374,42 @@ codeunit 10076840 "Inventory Native Journal ori"
         exit(not Sku.IsEmpty());
     end;
 
-    local procedure CalculateCountedItem(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; ItemNo: Code[20]; LocationFilter: Text; VariantFilter: Text; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean)
+    /// <summary>Item counting period: report 790 in item cycle mode skips every stock combination that has its own stockkeeping unit, as the native cycle count does.</summary>
+    local procedure CalculateCountedItem(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; ItemNo: Code[20]; LocationFilter: Text; VariantFilter: Text; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean; PeriodCode: Code[10])
     var
         Item: Record Item;
-        CalculateInventory: Report "Calculate Inventory";
+        CycleSourceType: Option " ",Item,SKU;
     begin
         Item.SetRange("No.", ItemNo);
         if LocationFilter <> '' then
             Item.SetFilter("Location Filter", LocationFilter);
         if VariantFilter <> '' then
             Item.SetFilter("Variant Filter", VariantFilter);
+        RunCalculateInventory(Line, Batch, Item, PostingDate, DocumentNo, IncludeZero, PeriodCode, CycleSourceType::Item);
+    end;
+
+    /// <summary>Stockkeeping unit counting period: exactly the unit's location and variant, blank values included.</summary>
+    local procedure CalculateCountedSku(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; Sku: Record "Stockkeeping Unit"; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean)
+    var
+        Item: Record Item;
+        CycleSourceType: Option " ",Item,SKU;
+    begin
+        Item.SetRange("No.", Sku."Item No.");
+        Item.SetRange("Location Filter", Sku."Location Code");
+        Item.SetRange("Variant Filter", Sku."Variant Code");
+        RunCalculateInventory(Line, Batch, Item, PostingDate, DocumentNo, IncludeZero, Sku."Phys Invt Counting Period Code", CycleSourceType::SKU);
+    end;
+
+    local procedure RunCalculateInventory(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; var Item: Record Item; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean; PeriodCode: Code[10]; CycleSourceType: Option " ",Item,SKU)
+    var
+        CalculateInventory: Report "Calculate Inventory";
+    begin
         Clear(Line);
         Line."Journal Template Name" := Batch."Journal Template Name";
         Line."Journal Batch Name" := Batch.Name;
         CalculateInventory.SetItemJnlLine(Line);
         CalculateInventory.InitializeRequest(PostingDate, DocumentNo, IncludeZero, false);
+        CalculateInventory.InitializePhysInvtCount(PeriodCode, CycleSourceType);
         CalculateInventory.SetHideValidationDialog(true);
         CalculateInventory.SetTableView(Item);
         CalculateInventory.UseRequestPage(false);
