@@ -63,7 +63,6 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         RequestJson: JsonObject;
         TemplateName: Code[10];
         BatchName: Code[10];
-        FailureJournal: Codeunit "Inventory Native Journal ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -103,7 +102,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
-                FailureJournal.RespondWithFailure(Argument);
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, GetLastErrorText(), 'journalBatchName', BatchName, BatchExpectedLbl, BatchNextLbl);
                 exit;
             end;
         AddPostCompat(Argument);
