@@ -75,6 +75,8 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         SourceTypeDescriptionTxt: Label 'Optional source table number, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line or 901 Assembly Line. Send it together with sourceNo.', Comment = 'is-IS=Valfrjálst númer upprunatöflu, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína eða 901 samsetningarlína. Sendu það ásamt sourceNo.';
         SourceSubtypeDescriptionTxt: Label 'Optional source subtype: the document type ordinal (1 = Order), or the transfer direction (0 outbound, 1 inbound). Every subtype is read when it is left out.', Comment = 'is-IS=Valfrjáls undirtegund uppruna: raðtala skjalategundar (1 = pöntun), eða stefna millifærslu (0 út, 1 inn). Allar undirtegundir eru lesnar ef hún er ekki send.';
         SourceNoDescriptionTxt: Label 'Optional source document number (Source ID). Send it together with sourceType.', Comment = 'is-IS=Valfrjálst númer upprunaskjals (Source ID). Sendu það ásamt sourceType.';
+        SourceBatchDescriptionTxt: Label 'Optional source journal batch. Send with sourceType and sourceNo to distinguish equal line numbers in different batches.', Comment = 'is-IS=Valfrjáls upprunabókarkeyrsla. Sendu með sourceType og sourceNo til að greina sömu línunúmer í mismunandi keyrslum.';
+        SourceProdLineDescriptionTxt: Label 'Optional parent production order line. Distinguishes components with the same sourceLineNo on different parent lines.', Comment = 'is-IS=Valfrjáls foreldralína framleiðslupöntunar. Greinir íhluti með sama sourceLineNo á mismunandi foreldralínum.';
         SourceLineNoDescriptionTxt: Label 'Optional source line number (Source Ref. No.). Every line of the document is read when it is left out.', Comment = 'is-IS=Valfrjálst línunúmer uppruna (Source Ref. No.). Allar línur skjalsins eru lesnar ef það er ekki sent.';
     begin
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoDescriptionTxt));
@@ -83,6 +85,8 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         Parameters.Add(ContractMgt.Parameter('sourceSubtype', 'integer', false, SourceSubtypeDescriptionTxt));
         Parameters.Add(ContractMgt.Parameter('sourceNo', 'string', false, SourceNoDescriptionTxt));
         Parameters.Add(ContractMgt.Parameter('sourceLineNo', 'integer', false, SourceLineNoDescriptionTxt));
+        Parameters.Add(ContractMgt.Parameter('sourceBatchName', 'string', false, SourceBatchDescriptionTxt));
+        Parameters.Add(ContractMgt.Parameter('sourceProdOrderLine', 'integer', false, SourceProdLineDescriptionTxt));
         exit(true);
     end;
 
@@ -217,6 +221,10 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         EntryJson: JsonObject;
         ItemNo: Code[20];
         SourceNo: Text;
+        SourceBatchName: Text;
+        SourceProdOrderLine: Integer;
+        HasSourceBatch: Boolean;
+        HasSourceProdLine: Boolean;
         EntryNo: Integer;
         SourceType: Integer;
         SourceSubtype: Integer;
@@ -248,9 +256,13 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
             exit;
         if not ReadInteger(Argument, RequestJson, 'sourceLineNo', 0, SourceLineNo, HasSourceLineNo) then
             exit;
-        if not ReadSourceNo(Argument, RequestJson, SourceNo, HasSourceNo) then
+        if not ReadInteger(Argument, RequestJson, 'sourceProdOrderLine', 0, SourceProdOrderLine, HasSourceProdLine) then
             exit;
-        if (HasSourceType <> HasSourceNo) or ((HasSourceSubtype or HasSourceLineNo) and not HasSourceType) then begin
+        if not ReadSourceText(Argument, RequestJson, 'sourceBatchName', 10, SourceBatchName, HasSourceBatch) then
+            exit;
+        if not ReadSourceText(Argument, RequestJson, 'sourceNo', 20, SourceNo, HasSourceNo) then
+            exit;
+        if (HasSourceType <> HasSourceNo) or ((HasSourceSubtype or HasSourceLineNo or HasSourceBatch or HasSourceProdLine) and not HasSourceType) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, SourcePairErr, 'sourceNo', '<missing>', SourcePairExpectedTok, SourcePairNextStepLbl);
             exit;
         end;
@@ -270,6 +282,10 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
                 ReservationEntry.SetRange("Source Subtype", SourceSubtype);
             if HasSourceLineNo then
                 ReservationEntry.SetRange("Source Ref. No.", SourceLineNo);
+            if HasSourceBatch then
+                ReservationEntry.SetRange("Source Batch Name", CopyStr(SourceBatchName, 1, 10));
+            if HasSourceProdLine then
+                ReservationEntry.SetRange("Source Prod. Order Line", SourceProdOrderLine);
         end;
         ReservationEntry.SetLoadFields("Entry No.", Positive, "Item No.", "Variant Code", "Location Code", Quantity, "Quantity (Base)", "Reservation Status", "Source Type", "Source Subtype", "Source ID", "Source Batch Name", "Source Prod. Order Line", "Source Ref. No.", "Lot No.", "Serial No.", "Package No.", "Expected Receipt Date", "Shipment Date", "Creation Date");
         if ReservationEntry.FindSet() then
@@ -333,22 +349,22 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
-    local procedure ReadSourceNo(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; var Value: Text; var Sent: Boolean): Boolean
+    local procedure ReadSourceText(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; KeyName: Text; MaxLength: Integer; var Value: Text; var Sent: Boolean): Boolean
     var
         Token: JsonToken;
         Serialized: Text;
-        FormatErr: Label 'sourceNo must be text of 1 to 20 characters.', Comment = 'is-IS=sourceNo verður að vera texti, 1 til 20 stafir.';
+        FormatErr: Label '%1 must be text of 1 to %2 characters.', Comment = '%1 = key; %2 = maximum length; is-IS=%1 verður að vera texti, 1 til %2 stafir.';
         StringExpectedTok: Label 'a JSON string', Comment = 'is-IS=JSON-strengur';
-        StringNextStepLbl: Label 'Send sourceNo as the document number in quotes.', Comment = 'is-IS=Sendu sourceNo sem skjalanúmerið innan gæsalappa.';
+        StringNextStepLbl: Label 'Send the source key as text in quotes.', Comment = 'is-IS=Sendu upprunalykilinn sem texta innan gæsalappa.';
     begin
-        Sent := RequestJson.Get('sourceNo', Token);
+        Sent := RequestJson.Get(KeyName, Token);
         if not Sent then
             exit(true);
         Token.WriteTo(Serialized);
         if Token.IsValue() and Serialized.StartsWith('"') then
             Value := Token.AsValue().AsText();
-        if not Token.IsValue() or not Serialized.StartsWith('"') or (Value = '') or (StrLen(Value) > 20) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, FormatErr, 'sourceNo', Serialized, StringExpectedTok, StringNextStepLbl);
+        if not Token.IsValue() or not Serialized.StartsWith('"') or (Value = '') or (StrLen(Value) > MaxLength) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(FormatErr, KeyName, MaxLength), KeyName, Serialized, StringExpectedTok, StringNextStepLbl);
             exit(false);
         end;
         Value := UpperCase(Value);

@@ -732,6 +732,10 @@ codeunit 96946 "Reservation Create Tests"
         ProdOrderLine: Record "Prod. Order Line";
         Component: Record "Prod. Order Component";
         JournalLine: Record "Item Journal Line";
+        OtherBatch: Record "Item Journal Batch";
+        OtherJournal: Record "Item Journal Line";
+        OtherProdLine: Record "Prod. Order Line";
+        OtherComponent: Record "Prod. Order Component";
         Entry: Record "Reservation Entry";
         LibraryAssembly: Codeunit "Library - Assembly";
         LibraryService: Codeunit "Library - Service";
@@ -740,6 +744,8 @@ codeunit 96946 "Reservation Create Tests"
         Request: JsonObject;
         Response: JsonObject;
         CancelRequest: JsonObject;
+        OtherRequest: JsonObject;
+        ReadResponse: JsonObject;
         Token: JsonToken;
         SourceType: Integer;
         SourceSubtype: Integer;
@@ -849,6 +855,37 @@ codeunit 96946 "Reservation Create Tests"
         AssertStatus(Response, 'Success');
         Response.Get('quantity', Token);
         Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Reserved for the native source.');
+        // [GIVEN] A second native source with the same template/order and line number but a different batch/parent.
+        if CaseName in ['journal', 'component'] then begin
+            OtherRequest := CancelRequest.Clone().AsObject();
+            if CaseName = 'journal' then begin
+                LibraryInventory.CreateItemJournalBatch(OtherBatch, JournalLine."Journal Template Name");
+                LibraryInventory.CreateItemJournalLine(OtherJournal, JournalLine."Journal Template Name", OtherBatch.Name,
+                    JournalLine."Entry Type", Item."No.", 3);
+                OtherJournal.Validate("Location Code", JournalLine."Location Code");
+                OtherJournal.Modify(true);
+                OtherRequest.Replace('sourceBatchName', OtherBatch.Name);
+                OtherRequest.Replace('sourceLineNo', OtherJournal."Line No.");
+                Assert.AreEqual(SourceLineNo, OtherJournal."Line No.", 'Equal line numbers exercise batch isolation.');
+            end else begin
+                LibraryManufacturing.CreateProdOrderLine(OtherProdLine, ProductionOrder.Status, ProductionOrder."No.",
+                    ParentItem."No.", '', SalesLine."Location Code", 3);
+                OtherComponent := Component;
+                OtherComponent."Prod. Order Line No." := OtherProdLine."Line No.";
+                OtherComponent.Insert(true);
+                OtherRequest.Replace('sourceProdOrderLine', OtherProdLine."Line No.");
+            end;
+            OtherRequest.Add('quantity', 1);
+            Clear(ReadResponse);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", OtherRequest, ReadResponse);
+            AssertStatus(ReadResponse, 'Success');
+            OtherRequest.Remove('quantity');
+        end;
+        // [WHEN] Get uses the complete source pointer.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", CancelRequest, ReadResponse);
+        AssertStatus(ReadResponse, 'Success');
+        ReadResponse.Get('entries', Token);
+        Assert.AreEqual(1, Token.AsArray().Count(), 'Get selects only the requested batch or production parent.');
         Entry.SetRange("Source Type", SourceType);
         Entry.SetRange("Source Subtype", SourceSubtype);
         Entry.SetRange("Source ID", SourceNo);
@@ -861,6 +898,16 @@ codeunit 96946 "Reservation Create Tests"
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", CancelRequest, Response);
         AssertStatus(Response, 'Success');
         Assert.IsTrue(Entry.IsEmpty(), 'Cancel is scoped to this exact native source pointer.');
+        if OtherRequest.Contains('sourceType') then begin
+            Clear(ReadResponse);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", OtherRequest, ReadResponse);
+            AssertStatus(ReadResponse, 'Success');
+            ReadResponse.Get('entries', Token);
+            Assert.AreEqual(1, Token.AsArray().Count(), 'The other batch or parent keeps its reservation.');
+            Clear(ReadResponse);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", OtherRequest, ReadResponse);
+            AssertStatus(ReadResponse, 'Success');
+        end;
     end;
 
     local procedure VerifySupplySelection(CaseName: Text)

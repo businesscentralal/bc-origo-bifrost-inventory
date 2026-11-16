@@ -6477,6 +6477,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst númer upprunaskjals (Source ID). Sendu það ásamt sourceType.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetParameters - NamedType SourceNoDescriptionTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 870418814 - Method 3615801952 - NamedType 675548073" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional source journal batch. Send with sourceType and sourceNo to distinguish equal line numbers in different batches.</source>
+          <target>Valfrjáls upprunabókarkeyrsla. Sendu með sourceType og sourceNo til að greina sömu línunúmer í mismunandi keyrslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls upprunabókarkeyrsla. Sendu með sourceType og sourceNo til að greina sömu línunúmer í mismunandi keyrslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetParameters - NamedType SourceBatchDescriptionTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 870418814 - Method 3615801952 - NamedType 2256098896" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional parent production order line. Distinguishes components with the same sourceLineNo on different parent lines.</source>
+          <target>Valfrjáls foreldralína framleiðslupöntunar. Greinir íhluti með sama sourceLineNo á mismunandi foreldralínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls foreldralína framleiðslupöntunar. Greinir íhluti með sama sourceLineNo á mismunandi foreldralínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method GetParameters - NamedType SourceProdLineDescriptionTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 870418814 - Method 3615801952 - NamedType 2404706480" size-unit="char" translate="yes" xml:space="preserve">
           <source>Optional source line number (Source Ref. No.). Every line of the document is read when it is left out.</source>
           <target>Valfrjálst línunúmer uppruna (Source Ref. No.). Allar línur skjalsins eru lesnar ef það er ekki sent.</target>
@@ -6507,23 +6519,23 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu gildið sem JSON-tölu án gæsalappa.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadInteger - NamedType IntegerNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 870418814 - Method 1036886650 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
-          <source>sourceNo must be text of 1 to 20 characters.</source>
-          <target>sourceNo verður að vera texti, 1 til 20 stafir.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=sourceNo verður að vera texti, 1 til 20 stafir.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceNo - NamedType FormatErr</note>
+        <trans-unit id="Codeunit 870418814 - Method 2063647302 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text of 1 to %2 characters.</source>
+          <target>%1 verður að vera texti, 1 til %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key; %2 = maximum length; is-IS=%1 verður að vera texti, 1 til %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceText - NamedType FormatErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 870418814 - Method 1036886650 - NamedType 3142817981" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Codeunit 870418814 - Method 2063647302 - NamedType 3142817981" size-unit="char" translate="yes" xml:space="preserve">
           <source>a JSON string</source>
           <target>JSON-strengur</target>
           <note from="Developer" annotates="general" priority="2">is-IS=JSON-strengur</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceNo - NamedType StringExpectedTok</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceText - NamedType StringExpectedTok</note>
         </trans-unit>
-        <trans-unit id="Codeunit 870418814 - Method 1036886650 - NamedType 1700896390" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send sourceNo as the document number in quotes.</source>
-          <target>Sendu sourceNo sem skjalanúmerið innan gæsalappa.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu sourceNo sem skjalanúmerið innan gæsalappa.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceNo - NamedType StringNextStepLbl</note>
+        <trans-unit id="Codeunit 870418814 - Method 2063647302 - NamedType 1700896390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the source key as text in quotes.</source>
+          <target>Sendu upprunalykilinn sem texta innan gæsalappa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu upprunalykilinn sem texta innan gæsalappa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Get Impl ori - Method ReadSourceText - NamedType StringNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4169907518 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Runs native revaluation posting preview and returns captured entries without committing.</source>
