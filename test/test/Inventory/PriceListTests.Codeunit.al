@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Foundation.UOM;
 using Microsoft.Inventory.Item;
 using Microsoft.Pricing.PriceList;
 using Origo.Bifrost;
@@ -82,6 +83,8 @@ codeunit 96987 "Price List Tests ori"
     var
         Item: Record Item;
         Line: Record "Price List Line";
+        UnitOfMeasure: Record "Unit of Measure";
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
         LineJson: JsonObject;
         Lines: JsonArray;
         ListCode: Code[20];
@@ -89,17 +92,30 @@ codeunit 96987 "Price List Tests ori"
         // Story #135 AC01 | Time: independent | Risk: None.
         Initialize();
         Inventory.CreateItem(Item);
+        UnitOfMeasure.Init();
+        UnitOfMeasure.Code := CopyStr(NewCode(), 1, MaxStrLen(UnitOfMeasure.Code));
+        UnitOfMeasure.Insert(true);
+        ItemUnitOfMeasure.Init();
+        ItemUnitOfMeasure.Validate("Item No.", Item."No.");
+        ItemUnitOfMeasure.Validate(Code, UnitOfMeasure.Code);
+        ItemUnitOfMeasure.Validate("Qty. per Unit of Measure", 10);
+        ItemUnitOfMeasure.Insert(true);
         ListCode := NewCode();
-        Lines.Add(LineRequest(Item."No.", 10000, 20));
+        LineJson := LineRequest(Item."No.", 10000, 20);
+        LineJson.Add('unitOfMeasureCode', UnitOfMeasure.Code);
+        Lines.Add(LineJson);
+        Clear(LineJson);
         Lines.Add(LineRequest(Item."No.", 20000, 30));
         AssertSuccess(CallSet(SetRequest(ListCode, 'Sales', Lines)), "Message Type ori"::"Price.List.Set");
         Clear(Lines);
         LineJson.Add('lineNo', 10000);
+        LineJson.Add('assetType', 'Item');
         LineJson.Add('productNo', Item."No.");
         LineJson.Add('lineDiscountPercent', 5);
         Lines.Add(LineJson);
         AssertSuccess(CallSet(SetRequest(ListCode, 'Sales', Lines)), "Message Type ori"::"Price.List.Set");
         Line.Get(ListCode, 10000);
+        Assert.AreEqual(UnitOfMeasure.Code, Line."Unit of Measure Code", 'Repeating the unchanged asset type preserves an omitted non-base unit.');
         Assert.AreEqual(20, Line."Unit Price", 'Omitted price preserved.');
         Assert.AreEqual(5, Line."Line Discount %", 'Discount updated.');
         Line.Get(ListCode, 20000);

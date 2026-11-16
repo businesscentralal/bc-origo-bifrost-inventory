@@ -200,6 +200,7 @@ codeunit 10076982 "Price List Process ori"
         Line: Record "Price List Line";
         Created: Boolean;
         LineNo: Integer;
+        AssetType: Enum "Price Asset Type";
     begin
         LineNo := NumberValue(Request, 'lineNo');
         Created := not Line.Get(Header.Code, LineNo);
@@ -209,19 +210,22 @@ codeunit 10076982 "Price List Process ori"
             Line."Line No." := LineNo;
             Line.CopyFrom(Header, true);
         end;
+        AssetType := Line."Asset Type";
         if Request.Contains('assetType') then
             case TextValue(Request, 'assetType') of
                 'Item':
-                    Line.Validate("Asset Type", "Price Asset Type"::Item);
+                    AssetType := "Price Asset Type"::Item;
                 'Resource':
-                    Line.Validate("Asset Type", "Price Asset Type"::Resource);
+                    AssetType := "Price Asset Type"::Resource;
                 'Resource Group':
-                    Line.Validate("Asset Type", "Price Asset Type"::"Resource Group");
+                    AssetType := "Price Asset Type"::"Resource Group";
                 'Item Discount Group':
-                    Line.Validate("Asset Type", "Price Asset Type"::"Item Discount Group");
+                    AssetType := "Price Asset Type"::"Item Discount Group";
                 'G/L Account':
-                    Line.Validate("Asset Type", "Price Asset Type"::"G/L Account");
+                    AssetType := "Price Asset Type"::"G/L Account";
             end;
+        if AssetType <> Line."Asset Type" then
+            Line.Validate("Asset Type", AssetType);
         if Created or (Line."Product No." <> UpperCase(TextValue(Request, 'productNo'))) then
             Line.Validate("Product No.", CopyStr(TextValue(Request, 'productNo'), 1, MaxStrLen(Line."Product No.")));
         if Request.Contains('unitOfMeasureCode') then
