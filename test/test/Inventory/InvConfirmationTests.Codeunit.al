@@ -403,7 +403,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        Response := DispatchWithSubject(MessageType, '', Request);
+        // The current Foundation preview counts a named subject; an empty request names no record.
+        Response := DispatchWithSubject(MessageType, 'X-INV-CONFIRM-TEST', Request);
         AssertText(Response, 'status', 'Error');
     end;
 

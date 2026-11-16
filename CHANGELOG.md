@@ -7,7 +7,7 @@
 - `Inventory.Valuation.Get` returns quantity, actual cost, expected cost and total cost in LCY by item, location and variant, with posting-date cutoff, native filters and deterministic take/skip paging. Reads Value Entry amounts as report 1001 does; does not adjust costs or persist valuation rows.
 - Adds codeunit and temporary table 10077020, the message enum value 10077020, read/full role execution grants, localized help/refusals and test codeunit 96989. No product UI changes.
 - Transfer posting/preview and their tests select the native direct-transfer setting at runtime: option field 5855 on BC 28 or enum field 5857 on BC 29. Both builds remain supported without referencing the deprecated field at compile time.
-- Full-suite fixtures explicitly enable the attribute domain, and contract assertions include Foundation's common error-code response field while preserving exact application payload comparisons.
+- Full-suite fixtures explicitly enable the attribute domain, and contract assertions include Foundation's common error-code response field while preserving exact application payload comparisons. Confirmation-boundary fixtures name a subject, as required by Foundation's current preview contract.
 
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
