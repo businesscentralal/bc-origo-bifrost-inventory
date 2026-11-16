@@ -233,6 +233,8 @@ codeunit 10076925 "Inventory Tracking Write ori"
         HasSelection: Boolean;
         SourceTrackingTxt: Label 'Tracking on the selected source.', Comment = 'is-IS=Rakning á völdum uppruna.';
         ReadTrackingTxt: Label 'Read Inventory.Tracking.Get for this source and send its unreserved ReservationEntry entryNo.', Comment = 'is-IS=Lestu Inventory.Tracking.Get fyrir þennan uppruna og sendu entryNo úr ReservationEntry sem er ekki frátekið.';
+        EntryArrayExpectedLbl: Label 'An array of positive integers.', Comment = 'is-IS=Fylki jákvæðra heiltalna.';
+        EntrySelectionExpectedLbl: Label '1..200 entry numbers; omit entryNo.', Comment = 'is-IS=1..200 færslunúmer; slepptu entryNo.';
         InvalidEntryErr: Label 'Every entry number must identify tracking on the specified source.', Comment = 'is-IS=Hvert færslunúmer verður að vísa í rakningu á tilgreindum uppruna.';
     begin
         ReservationEntry.TransferFields(SourceSpecification);
@@ -245,12 +247,12 @@ codeunit 10076925 "Inventory Tracking Write ori"
         HasSelection := Request.Get('entryNos', Token);
         if HasSelection then begin
             if not Token.IsArray() then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', Format(Token), 'array of positive integers', ReadTrackingTxt);
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, InvalidEntryErr, 'entryNos', Format(Token), EntryArrayExpectedLbl, ReadTrackingTxt);
                 exit(false);
             end;
             EntryNumbers := Token.AsArray();
             if (EntryNumbers.Count() = 0) or (EntryNumbers.Count() > 200) or Request.Contains('entryNo') then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidEntryErr, 'entryNos', Format(Token), '1..200 entry numbers; omit entryNo', ReadTrackingTxt);
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, InvalidEntryErr, 'entryNos', Format(Token), EntrySelectionExpectedLbl, ReadTrackingTxt);
                 exit(false);
             end;
         end else
@@ -299,17 +301,19 @@ codeunit 10076925 "Inventory Tracking Write ori"
 
     local procedure SelectEntry(var Argument: Record "Message Argument ori"; Entry: Record "Reservation Entry"; var Selected: Record "Reservation Entry" temporary): Boolean
     var
+        SelectionLimitExpectedLbl: Label 'At most 200 tracking entries.', Comment = 'is-IS=Að hámarki 200 rakningarfærslur.';
+        UnreservedTrackingExpectedLbl: Label 'Unreserved tracking.', Comment = 'is-IS=Ófrátekin rakning.';
         InvalidEntryErr: Label 'Only unreserved tracking on the selected source can be removed.', Comment = 'is-IS=Aðeins er hægt að fjarlægja ófrátekna rakningu á völdum uppruna.';
         ReadTrackingTxt: Label 'Read Inventory.Tracking.Get for this source and select its unreserved tracking entries.', Comment = 'is-IS=Lestu Inventory.Tracking.Get fyrir þennan uppruna og veldu ófráteknar rakningarfærslur hans.';
     begin
         if not Entry.TrackingExists() or (Entry."Reservation Status" = Entry."Reservation Status"::Reservation) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, InvalidEntryErr, 'entryNo', Format(Entry."Entry No.", 0, 9), 'unreserved tracking', ReadTrackingTxt);
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, InvalidEntryErr, 'entryNo', Format(Entry."Entry No.", 0, 9), UnreservedTrackingExpectedLbl, ReadTrackingTxt);
             exit(false);
         end;
         if Selected.Get(Entry."Entry No.", Entry.Positive) then
             exit(true);
         if Selected.Count() >= 200 then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::LimitExceeded, InvalidEntryErr, 'entryNos', '', 'at most 200 tracking entries', ReadTrackingTxt);
+            Argument.RespondWithError("Bifrost Error Code ori"::LimitExceeded, InvalidEntryErr, 'entryNos', '', SelectionLimitExpectedLbl, ReadTrackingTxt);
             exit(false);
         end;
         ResponseEntry := Entry;

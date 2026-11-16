@@ -1689,6 +1689,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir þennan uppruna og sendu entryNo úr ReservationEntry sem er ekki frátekið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType ReadTrackingTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2192696731" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An array of positive integers.</source>
+          <target>Fylki jákvæðra heiltalna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylki jákvæðra heiltalna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType EntryArrayExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 1050741508" size-unit="char" translate="yes" xml:space="preserve">
+          <source>1..200 entry numbers; omit entryNo.</source>
+          <target>1..200 færslunúmer; slepptu entryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=1..200 færslunúmer; slepptu entryNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType EntrySelectionExpectedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 3921788780" size-unit="char" translate="yes" xml:space="preserve">
           <source>Every entry number must identify tracking on the specified source.</source>
           <target>Hvert færslunúmer verður að vísa í rakningu á tilgreindum uppruna.</target>
@@ -1724,6 +1736,18 @@
           <target>Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method ReadTrackingEntry - NamedType InvalidTrackingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 1895760259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>At most 200 tracking entries.</source>
+          <target>Að hámarki 200 rakningarfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Að hámarki 200 rakningarfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType SelectionLimitExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 872200912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unreserved tracking.</source>
+          <target>Ófrátekin rakning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ófrátekin rakning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType UnreservedTrackingExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 3921788780" size-unit="char" translate="yes" xml:space="preserve">
           <source>Only unreserved tracking on the selected source can be removed.</source>
