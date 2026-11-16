@@ -153,13 +153,127 @@ codeunit 96980 "Purch. Return Create Tests"
     end;
 
     [Test]
+    procedure Scenario_AC01_ExistingReturnOrder_AppendsAppliedLine()
+    var
+        Vendor: Record Vendor;
+        PurchRcptLine: Record "Purch. Rcpt. Line";
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        Lines: JsonArray;
+        Response: JsonObject;
+        BeforeCount: Integer;
+    begin
+        // Issue #137 AC01 | Time: WorkDate for receipt posting | Risk: isolated purchase fixture.
+        // [GIVEN] A posted receipt and an existing open return order.
+        PostReceipt(Vendor, PurchRcptLine, 4);
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::"Return Order", Vendor."No.");
+        BeforeCount := CountReturnDocuments(Vendor."No.");
+        Lines.Add(SourceLine('Receipt', PurchRcptLine."Document No.", PurchRcptLine."Line No.", 2));
+        // [WHEN] The target is selected by number without repeating vendorNo.
+        Response := CallCreate('ReturnOrder', PurchaseHeader."No.", '', Lines);
+        // [THEN] The existing header receives the applied line and no header is created.
+        Assert.AreEqual('Success', ReadText(Response, 'status'), 'status');
+        Assert.AreEqual(PurchaseHeader."No.", ReadText(Response, 'documentNo'), 'existing target');
+        Assert.AreEqual(BeforeCount, CountReturnDocuments(Vendor."No."), 'header count');
+        PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
+        PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+        PurchaseLine.SetRange(Type, PurchaseLine.Type::Item);
+        Assert.AreEqual(1, PurchaseLine.Count(), 'one item line appended');
+        PurchaseLine.FindFirst();
+        Assert.AreEqual(2, PurchaseLine.Quantity, 'partial quantity');
+        Assert.AreEqual(PurchRcptLine."Item Rcpt. Entry No.", PurchaseLine."Appl.-to Item Entry", 'original entry retained');
+        PurchaseHeader.Delete(true);
+    end;
+
+    [Test]
+    procedure Scenario_AC02_ZeroAndDuplicateLines_CreateNothing()
+    var
+        Vendor: Record Vendor;
+        PurchRcptLine: Record "Purch. Rcpt. Line";
+        Lines: JsonArray;
+        BeforeCount: Integer;
+    begin
+        // Issue #137 AC02/AC04 | Time: WorkDate for receipt posting | Risk: isolated purchase fixture.
+        // [GIVEN] A receipt with four units available to reverse.
+        PostReceipt(Vendor, PurchRcptLine, 4);
+        BeforeCount := CountReturnDocuments(Vendor."No.");
+        // [WHEN] Zero quantity or the same line twice is requested.
+        Lines.Add(SourceLine('Receipt', PurchRcptLine."Document No.", PurchRcptLine."Line No.", 0));
+        AssertRefusal(CallCreate('ReturnOrder', '', Vendor."No.", Lines), 'InvalidLine');
+        Clear(Lines);
+        Lines.Add(SourceLine('Receipt', PurchRcptLine."Document No.", PurchRcptLine."Line No.", 3));
+        Lines.Add(SourceLine('Receipt', PurchRcptLine."Document No.", PurchRcptLine."Line No.", 3));
+        AssertRefusal(CallCreate('ReturnOrder', '', Vendor."No.", Lines), 'InvalidLine');
+        // [THEN] Both refusals leave all return documents unchanged.
+        Assert.AreEqual(BeforeCount, CountReturnDocuments(Vendor."No."), 'no return created');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_InvalidInput_ReturnsCodedNextSteps()
+    var
+        Library: Codeunit "Inventory Test Library ori";
+        Request: JsonObject;
+    begin
+        // Issue #137 AC04 | Time: none | Risk: validation only, no business writes.
+        // [GIVEN] The domain is enabled.
+        EnablePurchaseReturns();
+        // [WHEN/THEN] Missing, invalid and badly typed parameters have actionable codes.
+        AssertRefusal(Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false), 'MissingParameter');
+        Request.Add('documentType', 'Order');
+        AssertRefusal(Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false), 'InvalidParameter');
+        Request.Replace('documentType', 42);
+        AssertRefusal(Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false), 'InvalidParameterFormat');
+        Request.Replace('documentType', 'ReturnOrder');
+        Request.Add('unexpected', true);
+        AssertRefusal(Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false), 'UnknownParameter');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_HelpAndRefusal_FollowLanguage()
+    var
+        Implementation: Codeunit "Purch. Return Create Impl ori";
+        Library: Codeunit "Inventory Test Library ori";
+        Request: JsonObject;
+        EnglishResponse: JsonObject;
+        IcelandicResponse: JsonObject;
+        EnglishDescription: Text;
+        IcelandicDescription: Text;
+        PreviousLanguage: Integer;
+    begin
+        // Issue #137 AC04 | Time: none | Risk: session language restored before assertions.
+        // [GIVEN] An enabled type and a request missing its required document type.
+        EnablePurchaseReturns();
+        PreviousLanguage := GlobalLanguage();
+        // [WHEN] The same help and refusal are requested in each supported language.
+        GlobalLanguage(1033);
+        EnglishDescription := Implementation.GetDescription();
+        EnglishResponse := Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false);
+        GlobalLanguage(1039);
+        IcelandicDescription := Implementation.GetDescription();
+        IcelandicResponse := Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false);
+        GlobalLanguage(PreviousLanguage);
+        // [THEN] Codes are stable while help and actionable next steps are translated.
+        AssertRefusal(EnglishResponse, 'MissingParameter');
+        AssertRefusal(IcelandicResponse, 'MissingParameter');
+        Assert.AreNotEqual(EnglishDescription, IcelandicDescription, 'translated help');
+        Assert.AreNotEqual(ReadText(EnglishResponse, 'nextStep'), ReadText(IcelandicResponse, 'nextStep'), 'translated next step');
+    end;
+
+    local procedure AssertRefusal(Response: JsonObject; ExpectedCode: Text)
+    begin
+        Assert.AreEqual('Error', ReadText(Response, 'status'), 'refusal status');
+        Assert.AreEqual(ExpectedCode, ReadText(Response, 'code'), 'refusal code');
+        Assert.AreNotEqual('', ReadText(Response, 'nextStep'), 'actionable next step');
+    end;
+
+    [Test]
     procedure TypeName_HasThreeParts()
     var
         TypeName: Text;
         Part: Text;
     begin
         // [SCENARIO] Issue137 AC05 | Time: none | Risk: metadata only.
-        TypeName := Format("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted");
+        TypeName := Enum::"Message Type ori".Names().Get(Enum::"Message Type ori".Ordinals().IndexOf("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted".AsInteger()));
         Assert.AreEqual('Purchase.ReturnOrder.CreateFromPosted', TypeName, 'type name');
         Assert.AreEqual(3, TypeName.Split('.').Count(), 'three dot-separated parts');
         foreach Part in TypeName.Split('.') do
