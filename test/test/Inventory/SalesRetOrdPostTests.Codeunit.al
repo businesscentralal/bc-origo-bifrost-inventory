@@ -279,7 +279,6 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
         Contract: Interface "Msg Contract ori";
         Effect: JsonObject;
         Token: JsonToken;
-        ResponseJson: JsonObject;
         EnglishOverview: Text;
         IcelandicOverview: Text;
         EnglishSelection: Text;
@@ -299,13 +298,11 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
         GlobalLanguage(1033);
         Contract.GetOverview(EnglishOverview);
         EnglishSelection := Discovery.GetSelectionDescription();
-        ResponseJson := Execute(MissingTypeRequest());
-        EnglishError := ReadText(ResponseJson, 'error');
+        EnglishError := RefusalText();
         GlobalLanguage(1039);
         Contract.GetOverview(IcelandicOverview);
         IcelandicSelection := Discovery.GetSelectionDescription();
-        ResponseJson := Execute(MissingTypeRequest());
-        IcelandicError := ReadText(ResponseJson, 'error');
+        IcelandicError := RefusalText();
         GlobalLanguage(PreviousLanguage);
 
         // [THEN] The texts differ by language and the effect is a non-posting write
@@ -331,9 +328,23 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
         Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep for ' + RequestText);
     end;
 
-    local procedure MissingTypeRequest() RequestJson: JsonObject
+    /// <summary>The refusal text of a request without documentType, built in the current language.</summary>
+    local procedure RefusalText(): Text
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        Impl: Interface "Msg Interface ori";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
     begin
         RequestJson.Add('customerNo', '10000');
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(RequestJson);
+        Impl := "Message Type ori"::"Sales.ReturnOrder.CreateFromPosted";
+        Impl.ExecuteBifrostTask(TempArgument);
+        ResponseJson := TempArgument.GetResponseJson();
+        exit(ReadText(ResponseJson, 'error'));
     end;
 
     local procedure ShipAndInvoice(CustomerNo: Code[20]; Qty: Decimal): Code[20]
