@@ -177,9 +177,9 @@ codeunit 96904 "Transfer Order Test Helper"
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
         if PostAsSingleDocument then
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Direct Transfer"
+            InventorySetup."Direct Transfer Posting Type" := InventorySetup."Direct Transfer Posting Type"::"Direct Transfer"
         else
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Receipt and Shipment";
+            InventorySetup."Direct Transfer Posting Type" := InventorySetup."Direct Transfer Posting Type"::"Shipment and Receipt";
         InventorySetup.Modify(true);
     end;
 
@@ -191,7 +191,7 @@ codeunit 96904 "Transfer Order Test Helper"
         InventorySetup: Record "Inventory Setup";
     begin
         InventorySetup.Get();
-        InventorySetup."Direct Transfer Posting" := OriginalSetup."Direct Transfer Posting";
+        InventorySetup."Direct Transfer Posting Type" := OriginalSetup."Direct Transfer Posting Type";
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;

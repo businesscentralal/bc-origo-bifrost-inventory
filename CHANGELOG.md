@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory valuation at a date (#109)
+
+- `Inventory.Valuation.Get` returns quantity, actual cost, expected cost and total cost in LCY by item, location and variant, with posting-date cutoff, native filters and deterministic take/skip paging. Reads Value Entry amounts as report 1001 does; does not adjust costs or persist valuation rows.
+- Adds codeunit and temporary table 10077020, the message enum value 10077020, read/full role execution grants, localized help/refusals and test codeunit 96989. No product UI changes.
+- Transfer posting/preview and their tests use the supported `Direct Transfer Posting Type` setting (available in BC 28 and 29), replacing the deprecated option field so BC 29 builds are warning-free.
+
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

@@ -51,6 +51,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
 | `Inventory.AssemblyOrder.Statistics` | Inbound | Read assembly order statistics |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
+| `Inventory.Valuation.Get` | Outbound | Read quantity and actual/expected LCY value at a date, grouped by item/location/variant with take/skip paging |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
@@ -420,3 +421,26 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Inventory valuation at a date
+
+```json
+{"type":"Inventory.Valuation.Get","data":{"asOfDate":"2026-10-31","itemFilter":"1000","take":100,"skip":0}}
+```
+
+`Inventory.Valuation.Get` takes required `asOfDate` (`YYYY-MM-DD`) and optional BC filters
+`itemFilter`, `locationFilter`, `variantFilter`, and `inventoryPostingGroupFilter`.
+It selects inventory items using their current posting group and sums Value Entry quantity,
+actual cost and expected cost through the posting date, matching report 1001's ending totals.
+Costs are in LCY; quantities use the base unit. Adjustments and expected-cost reversals are
+included, but no adjustment batch is run. An item's current card cost is not used.
+
+`rows` are ordered by item number, location code and variant code. `take` defaults to 100
+(1–1000), `skip` defaults to 0 (0–2147483647), and `totalCount`/`hasMore` describe the page.
+Blank location/variant codes and zero-balance groups with entries are retained; items without
+matching entries produce no row. Paging reflects current entries, so postings between calls
+can change results. Costing must be enabled and the caller must have Item and Value Entry
+read permission. The message declares `effect: read` and only uses a temporary buffer.
+
+Objects: codeunit 10077020 `Valuation Get Impl ori`, temporary table 10077020
+`Inventory Valuation Buffer ori`, test codeunit 96989 `Inventory Valuation Tests ori`.
