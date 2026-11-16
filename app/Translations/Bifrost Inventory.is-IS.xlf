@@ -7503,6 +7503,66 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókunarhlið birgða</note>
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST InvPost ori - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation.</source>
+          <target>expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method CountUnit - NamedType CountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 2266268523" size-unit="char" translate="yes" xml:space="preserve">
+          <source>recreateOrder must be a JSON boolean.</source>
+          <target>recreateOrder verður að vera JSON-rökgildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=recreateOrder verður að vera JSON-rökgildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3480846878" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true or false</source>
+          <target>true eða false</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true eða false</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 139679517" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send recreateOrder as true or false, or omit it.</source>
+          <target>Sendu recreateOrder sem true eða false eða slepptu því.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu recreateOrder sem true eða false eða slepptu því.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanNextTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one posted transfer shipment document, always 1, not the selected lines or corrective entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation.</source>
+          <target>expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method CountUnit - NamedType CountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos must contain 1 to 100 distinct positive JSON integers.</source>
+          <target>lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing non-correction line numbers from this posted transfer shipment.</source>
+          <target>Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 3268343153" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the posted shipment lines and send their line numbers in lineNos, or omit lineNos to select all non-correction lines.</source>
+          <target>Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType NextTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment line %1 was not found on document %2.</source>
+          <target>Afhendingarlína %1 fannst ekki á skjali %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number, %2 = document number; is-IS=Afhendingarlína %1 fannst ekki á skjali %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2984501490" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment line %1 is already undone or is a correction line.</source>
+          <target>Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
+        </trans-unit>
       </group>
     </body>
   </file>

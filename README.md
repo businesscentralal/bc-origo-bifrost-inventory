@@ -59,8 +59,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
-| `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
-| `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
+| `Inventory.Transfer.UndoShipment` | Inbound | Undo all or selected posted shipment lines (`lineNos`) |
+| `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly, optionally recreating its order (`recreateOrder`) |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
 | `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
 | `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
@@ -420,3 +420,19 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Undo selected shipment lines or recreate an assembly order
+
+```json
+{"type":"Inventory.Transfer.UndoShipment","data":{"documentNo":"108001","lineNos":[10000],"expectedCount":1}}
+```
+
+`lineNos` contains 1–100 distinct positive line numbers from that posted shipment. All requested lines are validated before undo. Missing lines and correction lines are refused; unselected lines are preserved. Omit `lineNos` to select all non-correction lines.
+
+```json
+{"type":"Inventory.Assembly.UndoPost","data":{"documentNo":"132001","recreateOrder":true,"expectedCount":1}}
+```
+
+`recreateOrder` is a JSON boolean, default false. Native undo recreates a missing original order when true, and updates an existing order regardless of the flag. Native reservation, consumption and output-bin checks still apply. Both types post corrective item ledger entries and retain the posted document. `expectedCount` counts one posted document, always 1, including when only selected shipment lines are undone. When Bifrost Setup requires irreversible confirmation, omit `expectedCount` to read the count without changing data. When that setting is off, omission executes the operation.
+
+The native APIs were checked against [StefanMaron w1-28 transfer source](https://github.com/StefanMaron/MSDyn365BC.Code.History/tree/w1-28/BaseApp/Source/Base%20Application/Inventory/Transfer) and assembly posting source, and the owned BC 29 symbols. Shipment undo is codeunit 9030, and assembly undo is `Assembly-Post.Undo(PostedAssemblyHeader, RecreateAsmOrder)`. Neither version has an `Undo Transfer Receipt` codeunit. Issue #39 remains partial until that receipt requirement and the requested `DomainDisabled` code (absent from the current Foundation enum) receive a disposition.

@@ -4,6 +4,8 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
 using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
+using Microsoft.Assembly.History;
+using Origo.Bifrost;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Counting.Journal;
@@ -22,6 +24,221 @@ using Origo.Bifrost.Inventory;
 /// <summary>Explicit test-only seed for self-owned issue 159 MCP scenarios. It never runs on install or from product dispatch.</summary>
 codeunit 96973 "Inv. MCP Fixture ori"
 {
+    /// <summary>Seeds only the explicit worker-6 issue39 undo scenarios and returns their exact document numbers.</summary>
+    procedure SeedUndo39(): Text
+    var
+        Item: Record Item;
+        Setup: Record "Inventory Setup ori";
+        InventorySetup: Record "Inventory Setup";
+        GLSetup: Record "General Ledger Setup";
+        Scenarios: JsonArray;
+        Result: JsonObject;
+        Output: Text;
+    begin
+        AssertUndo39Company();
+        Item.SetFilter("No.", 'W6U39-*');
+        if not Item.IsEmpty() then
+            Error('Issue39 fixtures exist. Inspect before retrying.');
+        Setup.InsertIfNotExists();
+        Setup."Transfer Orders" := true;
+        Setup.Assembly := true;
+        Setup.Modify();
+        GLSetup.Get();
+        GLSetup."Allow Posting From" := 0D;
+        GLSetup."Allow Posting To" := 0D;
+        GLSetup."Journal Templ. Name Mandatory" := false;
+        GLSetup.Modify();
+        InventorySetup.Get();
+        InventorySetup."Automatic Cost Posting" := false;
+        InventorySetup."Automatic Cost Adjustment" := InventorySetup."Automatic Cost Adjustment"::Never;
+        InventorySetup.Modify();
+        SeedUndo39Scenario('EN', 1033, Scenarios);
+        SeedUndo39Scenario('IS', 1039, Scenarios);
+        Result.Add('scenarios', Scenarios);
+        Result.WriteTo(Output);
+        exit(Output);
+    end;
+
+    local procedure SeedUndo39Scenario(Suffix: Code[2]; LanguageId: Integer; var Scenarios: JsonArray)
+    var
+        Item: Record Item;
+        Parent: Record Item;
+        Component: Record Item;
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransit: Record Location;
+        Transfer: Record "Transfer Header";
+        Assembly: Record "Assembly Header";
+        Shipment: Record "Transfer Shipment Header";
+        PostedAssembly: Record "Posted Assembly Header";
+        TransferHelper: Codeunit "Transfer Order Test Helper";
+        AssemblyHelper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Scenario: JsonObject;
+        Token: JsonToken;
+    begin
+        TransferHelper.SetupLocationsAndItem(FromLocation, ToLocation, InTransit, Item, 0);
+        Item.Rename('W6U39-S' + Suffix);
+        FromLocation.Rename('W6U39F' + Suffix);
+        ToLocation.Rename('W6U39T' + Suffix);
+        InTransit.Rename('W6U39I' + Suffix);
+        TransferHelper.CreatePositiveAdjustment(Item."No.", FromLocation.Code, 10);
+        TransferHelper.CreateTransferHeader(Transfer, FromLocation.Code, ToLocation.Code, InTransit.Code);
+        TransferHelper.CreateTransferLine(Transfer, Item."No.", 2);
+        TransferHelper.CreateTransferLine(Transfer, Item."No.", 3);
+        Commit();
+        Codeunit.Run(Codeunit::"Release Transfer Document", Transfer);
+        Request.Add('documentNo', Transfer."No.");
+        Request.Add('postingType', 'Ship');
+        TransferHelper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", Request, Response);
+        Response.Get('status', Token);
+        if Token.AsValue().AsText() <> 'Success' then
+            Error('Owned shipment fixture could not post: %1', Response);
+        Response.Get('postedShipmentNo', Token);
+        Shipment.Get(Token.AsValue().AsText());
+        Scenario.Add('lcid', LanguageId);
+        Scenario.Add('shipmentNo', Shipment."No.");
+        Scenario.Add('transferOrderNo', Transfer."No.");
+        Scenario.Add('shipmentItemNo', Item."No.");
+        AssemblyHelper.CreateAssemblyItemWithBOM(Parent, Component);
+        // Rename the parent first, so its BOM remains linked. Replace the component through the BOM validation.
+        Parent.Rename('W6U39-A' + Suffix);
+        RenameUndo39Component(Parent."No.", Component, 'W6U39-C' + Suffix);
+        AssemblyHelper.CreatePositiveAdjustment(Component."No.", 10);
+        AssemblyHelper.CreateAssemblyOrder(Assembly, Parent."No.", 1);
+        Clear(Request);
+        Clear(Response);
+        Request.Add('documentNo', Assembly."No.");
+        AssemblyHelper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.Post", Request, Response);
+        Response.Get('status', Token);
+        if Token.AsValue().AsText() <> 'Success' then
+            Error('Owned assembly fixture could not post: %1', Response);
+        PostedAssembly.SetRange("Order No.", Assembly."No.");
+        PostedAssembly.FindFirst();
+        Scenario.Add('assemblyNo', PostedAssembly."No.");
+        Scenario.Add('assemblyOrderNo', Assembly."No.");
+        Scenario.Add('assemblyItemNo', Parent."No.");
+        Scenarios.Add(Scenario);
+    end;
+
+    local procedure RenameUndo39Component(ParentNo: Code[20]; var Component: Record Item; NewNo: Code[20])
+    var
+        BOM: Record "BOM Component";
+    begin
+        Component.Rename(NewNo);
+        BOM.SetRange("Parent Item No.", ParentNo);
+        BOM.SetRange(Type, BOM.Type::Item);
+        BOM.FindFirst();
+        BOM.Validate("No.", Component."No.");
+        BOM.Modify(true);
+    end;
+
+    /// <summary>Deletes only test records linked to W6U39 items and their explicitly named test locations.</summary>
+    procedure CleanupUndo39()
+    var
+        Item: Record Item;
+        Entry: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
+        PostValueEntry: Record "Post Value Entry to G/L";
+        AverageCostEntry: Record "Avg. Cost Adjmt. Entry Point";
+        AdjustmentOrder: Record "Inventory Adjmt. Entry (Order)";
+        Register: Record "Item Register";
+        RangeEntry: Record "Item Ledger Entry";
+        OwnedEntry: Record "Item Ledger Entry";
+        Application: Record "Item Application Entry";
+        Relation: Record "Item Entry Relation";
+        Transfer: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        Shipment: Record "Transfer Shipment Header";
+        ShipmentLine: Record "Transfer Shipment Line";
+        Assembly: Record "Assembly Header";
+        AssemblyLine: Record "Assembly Line";
+        PostedAssembly: Record "Posted Assembly Header";
+        PostedAssemblyLine: Record "Posted Assembly Line";
+        BOM: Record "BOM Component";
+        Location: Record Location;
+    begin
+        AssertUndo39Company();
+        if Register.FindSet() then
+            repeat
+                RangeEntry.SetRange("Entry No.", Register."From Entry No.", Register."To Entry No.");
+                OwnedEntry.CopyFilters(RangeEntry);
+                OwnedEntry.SetFilter("Item No.", 'W6U39-*');
+                if (not RangeEntry.IsEmpty()) and (RangeEntry.Count() = OwnedEntry.Count()) then
+                    Register.Delete();
+            until Register.Next() = 0;
+        Item.SetFilter("No.", 'W6U39-*');
+        if Item.FindSet() then
+            repeat
+                Entry.SetRange("Item No.", Item."No.");
+                if Entry.FindSet() then
+                    repeat
+                        Application.SetRange("Inbound Item Entry No.", Entry."Entry No.");
+                        Application.DeleteAll();
+                        Application.SetRange("Inbound Item Entry No.");
+                        Application.SetRange("Outbound Item Entry No.", Entry."Entry No.");
+                        Application.DeleteAll();
+                        Application.SetRange("Outbound Item Entry No.");
+                        Application.SetRange("Item Ledger Entry No.", Entry."Entry No.");
+                        Application.DeleteAll();
+                        Application.Reset();
+                        Relation.SetRange("Item Entry No.", Entry."Entry No.");
+                        Relation.DeleteAll();
+                    until Entry.Next() = 0;
+                PostValueEntry.SetRange("Item No.", Item."No.");
+                PostValueEntry.DeleteAll();
+                AverageCostEntry.SetRange("Item No.", Item."No.");
+                AverageCostEntry.DeleteAll();
+                AdjustmentOrder.SetRange("Item No.", Item."No.");
+                AdjustmentOrder.DeleteAll();
+                ValueEntry.SetRange("Item No.", Item."No.");
+                ValueEntry.DeleteAll();
+                Entry.DeleteAll();
+                Item.UpdateCostIsAdjusted();
+            until Item.Next() = 0;
+        Transfer.SetFilter("Transfer-from Code", 'W6U39F*');
+        if Transfer.FindSet() then
+            repeat
+                TransferLine.SetRange("Document No.", Transfer."No.");
+                TransferLine.DeleteAll();
+            until Transfer.Next() = 0;
+        Transfer.DeleteAll();
+        Shipment.SetFilter("Transfer-from Code", 'W6U39F*');
+        if Shipment.FindSet() then
+            repeat
+                ShipmentLine.SetRange("Document No.", Shipment."No.");
+                ShipmentLine.DeleteAll();
+            until Shipment.Next() = 0;
+        Shipment.DeleteAll();
+        Assembly.SetFilter("Item No.", 'W6U39-*');
+        if Assembly.FindSet() then
+            repeat
+                AssemblyLine.SetRange("Document Type", Assembly."Document Type");
+                AssemblyLine.SetRange("Document No.", Assembly."No.");
+                AssemblyLine.DeleteAll();
+            until Assembly.Next() = 0;
+        Assembly.DeleteAll();
+        PostedAssembly.SetFilter("Item No.", 'W6U39-*');
+        if PostedAssembly.FindSet() then
+            repeat
+                PostedAssemblyLine.SetRange("Document No.", PostedAssembly."No.");
+                PostedAssemblyLine.DeleteAll();
+            until PostedAssembly.Next() = 0;
+        PostedAssembly.DeleteAll();
+        BOM.SetFilter("Parent Item No.", 'W6U39-*');
+        BOM.DeleteAll();
+        Item.DeleteAll(true);
+        Location.SetFilter(Code, 'W6U39*');
+        Location.DeleteAll(true);
+    end;
+
+    local procedure AssertUndo39Company()
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Only the owned issue39 verification company is supported.');
+    end;
+
     trigger OnRun()
     var
         Item: Record Item;

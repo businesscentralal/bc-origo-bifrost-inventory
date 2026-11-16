@@ -17,7 +17,7 @@ This applies to the eleven TransferOrder and AssemblyOrder types that look up a 
 - #36 domain flags and the domain gate are implemented. Inventory Setup is blocked from `Data.Records.Set`.
 - #37 tracking assign and delete go through Item Tracking Management and include package.
 - #38 attribute types use `Inventory.Attribute.*`.
-- #39 undo shipment, receipt, and assembly call the standard undo codeunits.
+- #39 is partial: shipment selection and assembly recreation call the native undo paths. Receipt undo remains disabled because the BC 28 source and BC 29 symbols have no native receipt-undo codeunit; see merged PR #185.
 - #40 item application unapply and reapply call `Item Jnl.-Post Line`.
 - #30-#33 stay unwired in SourceGuards.yaml until the guards pass and infrastructure review approves them.
 - #27 contract tests are 96922 (errors chapters) and 96923 (runtime answers).

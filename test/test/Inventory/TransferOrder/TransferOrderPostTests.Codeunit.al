@@ -66,6 +66,114 @@ codeunit 96914 "Transfer Order Post Tests"
         VerifyReceiptUndoRefusal(1039);
     end;
 
+    [Test]
+    procedure Scenario_AC01_SelectedLine_OtherLinePreserved_EN()
+    begin
+        // Issue #39 AC01 | Time: WorkDate for posting | Risk: None.
+        VerifySelectedLine(1033);
+    end;
+
+    [Test]
+    procedure Scenario_AC01_SelectedLine_OtherLinePreserved_IS()
+    begin
+        // Issue #39 AC01 | Time: WorkDate for posting | Risk: None.
+        VerifySelectedLine(1039);
+    end;
+
+    local procedure VerifySelectedLine(LanguageId: Integer)
+    var
+        Line: Record "Transfer Shipment Line";
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        LineNos: JsonArray;
+        Token: JsonToken;
+        ShipmentNo: Code[20];
+        SelectedLineNo: Integer;
+        OtherLineNo: Integer;
+        BeforeCount: Integer;
+    begin
+        // [GIVEN] A real two-line shipment created by this test.
+        Initialize();
+        ShipmentNo := CreateUndoShipment();
+        Line.SetRange("Document No.", ShipmentNo);
+        Line.FindSet();
+        SelectedLineNo := Line."Line No.";
+        Line.Next();
+        OtherLineNo := Line."Line No.";
+        LineNos.Add(SelectedLineNo);
+        Request.Add('documentNo', ShipmentNo);
+        Request.Add('lineNos', LineNos);
+        // [WHEN] Undo only the first posted line through the public dispatcher.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, LanguageId, Response);
+        // [THEN] Native correction entries exist and the other line remains untouched.
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Selected line undone. ' + JsonText(Response));
+        Line.Get(ShipmentNo, SelectedLineNo);
+        Assert.IsTrue(Line."Correction Line", 'Selected original line marked corrected.');
+        Line.Get(ShipmentNo, OtherLineNo);
+        Assert.IsFalse(Line."Correction Line", 'Unselected line remains available.');
+        Assert.AreEqual(5, Line.Quantity, 'Unselected line quantity is preserved.');
+        BeforeCount := Entries.Count();
+        Clear(Response);
+        // [WHEN] The same explicit line is requested again.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, LanguageId, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Already-undone line refused.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Repeated undo posts nothing.');
+    end;
+
+    [Test]
+    procedure Scenario_AC02_InvalidSelection_NoEntriesWritten()
+    var
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        LineNos: JsonArray;
+        Token: JsonToken;
+        ShipmentNo: Code[20];
+        BeforeCount: Integer;
+    begin
+        // Issue #39 AC02 | Time: WorkDate for fixture posting | Risk: None.
+        Initialize();
+        // [GIVEN] A real shipment and an invalid string instead of an integer.
+        ShipmentNo := CreateUndoShipment();
+        BeforeCount := Entries.Count();
+        LineNos.Add('10000');
+        Request.Add('documentNo', ShipmentNo);
+        Request.Add('lineNos', LineNos);
+        // [WHEN] The public message validates the selection before native undo.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        // [THEN] The format error is coded and no corrective entry is posted.
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameterFormat', Token.AsValue().AsText(), 'String line numbers refused.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Invalid request changes no entries.');
+        Clear(LineNos);
+        Request.Replace('lineNos', LineNos);
+        Clear(Response);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Empty selection must not undo every line.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Empty selection changes no entries.');
+        LineNos.Add(10000);
+        LineNos.Add(10000);
+        Request.Replace('lineNos', LineNos);
+        Clear(Response);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Duplicate selection refused.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Duplicate selection changes no entries.');
+        Clear(LineNos);
+        LineNos.Add(10000);
+        LineNos.Add(999999);
+        Request.Replace('lineNos', LineNos);
+        Clear(Response);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Transfer.UndoShipment", Request, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'Missing selected line refused after checking the valid first line.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Missing selection reverses no part of the valid first line.');
+    end;
+
     local procedure VerifyReceivedRefusal(LanguageId: Integer)
     var
         Shipment: Record "Transfer Shipment Header";

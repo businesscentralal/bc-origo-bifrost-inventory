@@ -40,6 +40,7 @@ codeunit 10076842 "Inventory Write Process ori"
         CostJournalTemplate: Code[10];
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
+        RecreateAssemblyOrder: Boolean;
         CancelEntryNo: Integer;
         ApplicationEntryNo: Integer;
         ApplyToEntryNo: Integer;
@@ -220,6 +221,13 @@ codeunit 10076842 "Inventory Write Process ori"
         PostedAssemblyNo := DocumentNo;
     end;
 
+    /// <summary>Controls native recreation when the original assembly order no longer exists.</summary>
+    /// <param name="RecreateOrder">True to recreate the original order after undo.</param>
+    procedure SetRecreateAssemblyOrder(RecreateOrder: Boolean)
+    begin
+        RecreateAssemblyOrder := RecreateOrder;
+    end;
+
     local procedure UndoAssembly()
     var
         PostedAssembly: Record "Posted Assembly Header";
@@ -227,7 +235,7 @@ codeunit 10076842 "Inventory Write Process ori"
     begin
         PostedAssembly.Get(PostedAssemblyNo);
         AssemblyPost.SetSuppressCommit(true);
-        AssemblyPost.Undo(PostedAssembly, false);
+        AssemblyPost.Undo(PostedAssembly, RecreateAssemblyOrder);
     end;
 
     local procedure Reserve()
