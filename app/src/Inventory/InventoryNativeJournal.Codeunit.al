@@ -497,7 +497,7 @@ codeunit 10076840 "Inventory Native Journal ori"
                 exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
         JournalTemplate.Get(Batch."Journal Template Name");
         if (JournalType = JournalType::Transfer) and (JournalTemplate.Type <> JournalType) then
-            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferTemplateErr, JournalTemplate.Name), 'templateName', JournalTemplate.Name, 'Transfer');
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferTemplateErr, JournalTemplate.Name), TemplateParameterName(Request), JournalTemplate.Name, 'Transfer');
         JournalTemplate.TestField(Type, JournalType);
         JournalTemplate.TestField(Recurring, false);
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
@@ -548,6 +548,13 @@ codeunit 10076840 "Inventory Native Journal ori"
             exit(false);
         SelectLines(Argument, Argument.GetRequestJson(), Batch, Line);
         exit(true);
+    end;
+
+    local procedure TemplateParameterName(Request: JsonObject): Text
+    begin
+        if Request.Contains('journalTemplateName') then
+            exit('journalTemplateName');
+        exit('templateName');
     end;
 
     local procedure NormalizeAlias(var Argument: Record "Message Argument ori"; var Request: JsonObject; AliasName: Text; Name: Text)

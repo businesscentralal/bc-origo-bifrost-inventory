@@ -50,6 +50,16 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
+        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
+        BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
+        NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
+        JournalTemplate: Record "Item Journal Template";
+        JournalBatch: Record "Item Journal Batch";
+        ItemJournalLine: Record "Item Journal Line";
+        RequestJson: JsonObject;
+        TemplateName: Code[10];
+        BatchName: Code[10];
         FailureJournal: Codeunit "Inventory Native Journal ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -64,6 +74,28 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+        BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+
+        if not JournalTemplate.Get(TemplateName) or not JournalBatch.Get(TemplateName, BatchName) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, BatchMissingErr, 'journalBatchName', BatchName, '', NextStepLbl);
+            exit;
+        end;
+        if JournalTemplate.Type <> JournalTemplate.Type::Transfer then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(WrongTypeErr, TemplateName), 'journalTemplateName', TemplateName, 'Transfer', NextStepLbl);
+            exit;
+        end;
+        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
+        if ItemJournalLine.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(EmptyBatchErr, TemplateName, BatchName), 'journalBatchName', BatchName, '', NextStepLbl);
+            exit;
+        end;
         Process.SetOperation('ReclassPreview');
         if Argument."Omit Commit" then
             Process.Run(Argument)

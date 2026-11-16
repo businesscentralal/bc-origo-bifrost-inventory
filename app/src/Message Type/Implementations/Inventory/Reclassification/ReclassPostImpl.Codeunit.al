@@ -51,6 +51,18 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        MissingJournalErr: Label 'Journal template %1 was not found.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.';
+        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
+        TransferExpectedLbl: Label 'an existing Transfer journal template', Comment = 'is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer';
+        TransferNextLbl: Label 'Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.', Comment = 'is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.';
+        BatchExpectedLbl: Label 'a nonempty Transfer journal batch that passes native posting', Comment = 'is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun';
+        BatchNextLbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
+        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
+        JournalTemplate: Record "Item Journal Template";
+        ItemJournalLine: Record "Item Journal Line";
+        RequestJson: JsonObject;
+        TemplateName: Code[10];
+        BatchName: Code[10];
         FailureJournal: Codeunit "Inventory Native Journal ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -65,6 +77,27 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+        BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+        if not JournalTemplate.Get(TemplateName) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingJournalErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
+            exit;
+        end;
+        if JournalTemplate.Type <> JournalTemplate.Type::Transfer then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(WrongTypeErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
+            exit;
+        end;
+        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
+        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
+        if ItemJournalLine.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(EmptyBatchErr, TemplateName, BatchName), 'journalBatchName', BatchName, BatchExpectedLbl, BatchNextLbl);
+            exit;
+        end;
         Process.SetJournalType("Item Journal Template Type"::Transfer);
         if Argument."Omit Commit" then
             Process.Run(Argument)

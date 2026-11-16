@@ -50,6 +50,13 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        NextLbl: Label 'Send templateName and batchName for an existing Transfer journal template.', Comment = 'is-IS=Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.';
+        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
+        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
+        ItemJournalTemplate: Record "Item Journal Template";
+        RequestJson: JsonObject;
+        TemplateName: Code[10];
+        BatchName: Code[10];
         FailureJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
@@ -61,6 +68,35 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        if RequestJson.Contains('templateName') then
+            TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10)
+        else
+            if RequestJson.Contains('journalTemplateName') then
+                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10)
+            else
+                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+        if RequestJson.Contains('batchName') then
+            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10)
+        else
+            if RequestJson.Contains('journalBatchName') then
+                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
+            else
+                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10);
+        if Parts.RespondToProblems(Argument) then
+            exit;
+
+        if not ItemJournalTemplate.Get(TemplateName) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(TemplateNotFoundErr, TemplateName), 'templateName', TemplateName, '', NextLbl);
+            exit;
+        end;
+        if ItemJournalTemplate.Type <> ItemJournalTemplate.Type::Transfer then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferErr, TemplateName), 'templateName', TemplateName, 'Transfer', NextLbl);
+            exit;
+        end;
+
         Process.SetOperation('ReclassCheck');
         if Argument."Omit Commit" then
             Process.Run(Argument)
