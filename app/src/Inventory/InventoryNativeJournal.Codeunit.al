@@ -97,6 +97,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
+        if JournalType = JournalType::"Phys. Inventory" then
+            ExcludeEmptyPhysicalLines(Line);
         LineCount := Line.Count();
         ErrorManagement.Activate(ErrorHandler);
         ErrorManagement.PushContext(ErrorContext, Database::"Item Journal Batch", 0, '');
@@ -191,6 +193,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
+        if JournalType = JournalType::"Phys. Inventory" then
+            ExcludeEmptyPhysicalLines(Line);
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
             exit;
