@@ -2,11 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed ([28.3.2.0] development)
+- #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 ### Added (2026-11-16) - Inventory.NonstockItem.Create (#119)
 - New message type `Inventory.NonstockItem.Create` (codeunit 10077019 `Nonstock Item Create Impl ori`, process codeunit 10077020 `Nonstock Item Create Proc ori`, enum extension 10077019 `MsgType.Nonstock.EnumExt ori`). It takes `data.entryNo` of a catalog item (table 5718 `Nonstock Item`), creates the item through codeunit 5703 `Catalog Item Management` with the catalog item's own item template, and answers the new `itemNo` and `itemId`. Effect `write` (not idempotent, nothing posted).
 - Refusals answered before anything is written: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `InvalidParameter` (too long, domain off), `RecordNotFound` (no catalog item), `PreconditionFailed` (already turned into an item; no vendor, vendor item number, unit of measure or existing item template; no Catalog Item Setup; no item number series; the number it would get already belongs to an item), `PermissionDenied`. Each has a `nextStep`, help and refusal texts are in en-US and is-IS (`Bifrost Inventory.is-IS.xlf` regenerated).
 - New domain `Catalog Items` (`Inventory Domain ori` value 15, `Inventory Setup ori` field 25, Inventory Setup page and setup guide). New rows enable it when the company has catalog items; existing rows get it once through the new per-company upgrade tag `Origo.Bifrost.Inventory-CatalogItemsUsage-20261116`, which raises only this switch.
 - Tests: `Nonstock Item Create Tests` (96998) and three Catalog Items cases in `Inventory Domain Usage Tests` (96963).
+
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
