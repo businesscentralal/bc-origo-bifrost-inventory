@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-### Fixed
+### Fixed (28.3.2.0)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974. No new object IDs. The requested DomainDisabled code remains dependent on Foundation support.
 
 

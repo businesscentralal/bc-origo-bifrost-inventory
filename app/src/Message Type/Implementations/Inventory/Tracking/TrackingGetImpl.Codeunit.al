@@ -6,6 +6,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
 /// <summary>Reads lot, serial and package tracking for an item or document line.</summary>
+/// <summary>Implements the released source-bound item tracking message contract.</summary>
 codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -18,6 +19,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
         NotesLbl: Label 'Read only. Source selection takes precedence over item selection. Item mode returns tracked remaining ledger entries and nonzero reservation entries; source mode returns reservation and tracking specification rows. quantityBase totals all matching rows before paging, not available stock. Expiration is the native entry date only when Use Expiration Dates is enabled; otherwise blank, never 0D. No matching tracking returns RecordNotFound; paging past existing rows returns an empty page.', Comment = 'is-IS=Aðeins lestur. Val uppruna hefur forgang yfir vöruval. Vöruval skilar röknum eftirstöðvum vörufærslna og frátektarfærslum með magni; upprunaval skilar frátektar- og rakningarlínum. quantityBase er summa allra samsvarandi lína fyrir síðuskiptingu, ekki tiltækar birgðir. Fyrning er innbyggð dagsetning færslunnar aðeins þegar Use Expiration Dates er virkt; annars tómt, aldrei 0D. Ef engin rakning finnst er skilað RecordNotFound; síðuskipting fram yfir fyrirliggjandi línur skilar tómri síðu.';
 
     /// <summary>Provides IsEnabled for Inventory.Tracking.Get.</summary>
+    /// <summary>Reports the shared domain and native permission gate.</summary>
     procedure IsEnabled(): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
@@ -26,30 +28,35 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetFilterTableNo for Inventory.Tracking.Get.</summary>
+    /// <summary>Returns the native table used for message selection.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::Item);
     end;
 
     /// <summary>Provides GetDescription for Inventory.Tracking.Get.</summary>
+    /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     begin
         exit(DescriptionLbl);
     end;
 
     /// <summary>Provides GetKeywords for Inventory.Tracking.Get.</summary>
+    /// <summary>Returns localized discovery keywords.</summary>
     procedure GetKeywords(): Text
     begin
         exit(KeywordsLbl);
     end;
 
     /// <summary>Provides GetSelectionDescription for Inventory.Tracking.Get.</summary>
+    /// <summary>Returns localized source selection guidance.</summary>
     procedure GetSelectionDescription(): Text
     begin
         exit(SelectionLbl);
     end;
 
     /// <summary>Provides GetEnvelope for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the envelope chapter of the public tracking contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     var
         Subject: JsonObject;
@@ -68,6 +75,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetTarget for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the target chapter of the public tracking contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -84,6 +92,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetParameters for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the parameters chapter of the public tracking contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -119,6 +128,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetResponse for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the response chapter of the public tracking contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -175,6 +185,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetErrors for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the errors chapter of the public tracking contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -190,6 +201,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetEffect for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the effect chapter of the public tracking contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     begin
         Effect.Add('effect', 'read');
@@ -201,12 +213,14 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetMetering for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the metering chapter of the public tracking contract.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
     /// <summary>Provides GetRelated for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the related chapter of the public tracking contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -219,12 +233,14 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetWorkflow for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the workflow chapter of the public tracking contract.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     begin
         exit(false);
     end;
 
     /// <summary>Provides GetExamples for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the examples chapter of the public tracking contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -245,6 +261,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetOverview for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the overview chapter of the public tracking contract.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
         Overview := OverviewLbl;
@@ -252,6 +269,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetNotes for Inventory.Tracking.Get.</summary>
+    /// <summary>Describes the notes chapter of the public tracking contract.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := NotesLbl;
@@ -259,12 +277,14 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     end;
 
     /// <summary>Provides GetMessageDirection for Inventory.Tracking.Get.</summary>
+    /// <summary>Returns the direction of this released message type.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Outbound);
     end;
 
     /// <summary>Provides ExecuteBifrostTask for Inventory.Tracking.Get.</summary>
+    /// <summary>Executes the versioned tracking operation after checking the company gate and licence.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";

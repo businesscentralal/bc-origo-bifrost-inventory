@@ -3,10 +3,12 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 
+/// <summary>Implements the released source-bound item tracking message contract.</summary>
 codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
+    /// <summary>Reports the shared domain and native permission gate.</summary>
     procedure IsEnabled(): Boolean
     var
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
@@ -14,11 +16,13 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(TrackingWrite.IsEnabled());
     end;
 
+    /// <summary>Returns the native table used for message selection.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Reservation Entry");
     end;
 
+    /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     var
         DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
@@ -26,6 +30,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(DescriptionLbl);
     end;
 
+    /// <summary>Returns localized discovery keywords.</summary>
     procedure GetKeywords(): Text
     var
         KeywordsLbl: Label 'assign lot, assign serial, assign package, item tracking', Comment = 'is-IS=úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki';
@@ -33,6 +38,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(KeywordsLbl);
     end;
 
+    /// <summary>Returns localized source selection guidance.</summary>
     procedure GetSelectionDescription(): Text
     var
         SelectionDescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
@@ -40,6 +46,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(SelectionDescriptionLbl);
     end;
 
+    /// <summary>Describes the envelope chapter of the public tracking contract.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     var
         Subject: JsonObject;
@@ -55,6 +62,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the target chapter of the public tracking contract.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -63,6 +71,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the parameters chapter of the public tracking contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -87,6 +96,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the response chapter of the public tracking contract.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -105,6 +115,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the errors chapter of the public tracking contract.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -119,6 +130,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the effect chapter of the public tracking contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Preconditions: JsonArray;
@@ -134,11 +146,13 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the metering chapter of the public tracking contract.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Describes the related chapter of the public tracking contract.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -149,6 +163,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the workflow chapter of the public tracking contract.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -161,6 +176,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the examples chapter of the public tracking contract.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -169,12 +185,14 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Describes the overview chapter of the public tracking contract.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     begin
         Overview := 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.';
         exit(true);
     end;
 
+    /// <summary>Describes the notes chapter of the public tracking contract.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := 'Select an existing SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine using data.source.type and data.source.systemId. Native source permissions and item tracking rules apply. Quantity is in base units; serial tracking requires one unit. Read Inventory.Tracking.Get with the same source to see the resulting ReservationEntry rows. Delete accepts one entryNo, an entryNos array, or all unreserved tracking on the selected source when both are omitted. Every selected entry is validated before any removal; another source cannot be affected. ' +
@@ -182,11 +200,13 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
+    /// <summary>Returns the direction of this released message type.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Executes the versioned tracking operation after checking the company gate and licence.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TrackingWrite: Codeunit "Inventory Tracking Write ori";

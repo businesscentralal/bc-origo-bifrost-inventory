@@ -370,6 +370,8 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
     var
         Entry: Record "Reservation Entry";
         Specification: Record "Tracking Specification";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
         Request: JsonObject;
         DeleteRequest: JsonObject;
         Tracking: JsonObject;
@@ -394,6 +396,12 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Entry.FindFirst();
         Assert.AreEqual(2, Abs(Entry."Quantity (Base)"), 'Tracking has the requested base quantity.');
         Assert.AreEqual(BeforeSpecifications, Specification.Count(), 'Assignment did not create persistent tracking specification rows.');
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        TrackingRead.ReadTracking(TempArgument);
+        AssertStatus(TempArgument.GetResponseJson(), 'Success');
         DeleteRequest.Add('source', Source);
         DeleteRequest.Add('entryNo', Entry."Entry No.");
 

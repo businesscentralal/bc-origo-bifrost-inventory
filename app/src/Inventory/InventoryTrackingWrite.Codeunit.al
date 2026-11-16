@@ -155,6 +155,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
                 AssignedEntry.SetRange("Lot No.", TempTrackingSpecification."Lot No.");
                 AssignedEntry.SetRange("Serial No.", TempTrackingSpecification."Serial No.");
                 AssignedEntry.SetRange("Package No.", TempTrackingSpecification."Package No.");
+                AssignedEntry.ReadIsolation(IsolationLevel::ReadCommitted);
                 if AssignedEntry.FindFirst() then
                     Response.Add('entryNo', AssignedEntry."Entry No.");
                 Response.Add('itemNo', SourceSpecification."Item No.");
