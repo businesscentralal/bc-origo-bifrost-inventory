@@ -374,6 +374,7 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
+    [HandlerFunctions('DirectTransferPostedMessage')]
     procedure Post_DirectTransfer_SingleDocument_PostsNativeDocument()
     var
         TransferHeader: Record "Transfer Header";
@@ -400,6 +401,14 @@ codeunit 96914 "Transfer Order Post Tests"
         DirectTransferHeader.SetRange("Transfer Order No.", DocumentNo);
         Assert.AreEqual(1, DirectTransferHeader.Count(), 'Exactly one native direct-transfer document is posted.');
         Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Fully posted direct transfer is removed by native posting.');
+    end;
+
+    /// <summary>Accepts the native success notice produced in an interactive AL test session.</summary>
+    [MessageHandler]
+    procedure DirectTransferPostedMessage(MessageText: Text[1024])
+    begin
+        Assert.IsTrue(MessageText.Contains('successfully posted'), 'The native message confirms successful posting.');
+        Assert.IsTrue(MessageText.Contains('deleted'), 'The native message confirms the completed order was removed.');
     end;
 
     [Test]
