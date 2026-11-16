@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.ItemVariant.Create and Inventory.ItemVariant.Get (#99)
+
+- `Inventory.ItemVariant.Create` (enum value and codeunit 10076991 `Item Variant Create Impl ori`, isolated write 10076992 `Item Variant Create Proc ori`) creates one new variant on an existing item from `itemNo`, `code`, `description`, `description2` and `blocked`, and answers the saved variant. Effect `write` (not irreversible, not idempotent): a second call with the same code is refused with `PreconditionFailed`, an unknown item with `RecordNotFound`; every refusal carries a `nextStep` and saves nothing.
+- `Inventory.ItemVariant.Get` (enum value and codeunit 10076990 `Item Variant Get Impl ori`) answers every variant of an item in code order, or one variant with `code`. Effect `read`. An item without variants answers an empty `variants` array.
+- `Item Variant Restrict ori` (10076993) refuses generic `Data.Records.Set` writes to table 5401 `Item Variant` and names the dedicated types; reads stay allowed.
+- Enum extension 10076890 `MsgType.ItemVar.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch was added: the types follow the caller's item and item variant permissions.
+- Tests: `Item Variant Tests` (96988). `Inventory Contract Batch Tests` (96921) now counts 61 Inventory types.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

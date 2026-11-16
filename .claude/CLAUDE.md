@@ -23,7 +23,7 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
-  shared gates and contract parts 10076919-10076923.
+  shared gates and contract parts 10076919-10076923, item variants 10076990-10076993 (#99; enum extension 10076890).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
