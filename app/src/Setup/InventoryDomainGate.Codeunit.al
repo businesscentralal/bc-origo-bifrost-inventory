@@ -10,6 +10,7 @@ codeunit 10076922 "Inventory Domain Gate ori"
 {
     Access = Internal;
 
+    /// <summary>Reports whether the company switch and required native permissions allow this operation.</summary>
     procedure IsEnabled(Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -26,6 +27,7 @@ codeunit 10076922 "Inventory Domain Gate ori"
         exit(RecRef.ReadPermission());
     end;
 
+    /// <summary>Returns the setup or permission refusal; disabled tracking writes use PreconditionFailed.</summary>
     procedure AssertEnabled(var Argument: Record "Message Argument ori"; Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
