@@ -262,7 +262,7 @@ codeunit 10076950 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
         if Request.Contains('description') then;
         if Request.Contains('startingDate') then;
         if Request.Contains('endingDate') then;
-        if not ValidateRequest(Argument, Request, TempReference) then
+        if not ValidateRequest(Argument, Request, TempReference, false) then
             exit;
         if Argument."Omit Commit" then
             Codeunit.Run(Codeunit::"Item Ref. Set Proc ori", Argument)
@@ -272,7 +272,7 @@ codeunit 10076950 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
     end;
 
     /// <summary>Validates and normalizes an entire request without writing data.</summary>
-    procedure ValidateRequest(var Argument: Record "Message Argument ori"; Request: JsonObject; var TempReference: Record "Item Reference" temporary): Boolean
+    procedure ValidateRequest(var Argument: Record "Message Argument ori"; Request: JsonObject; var TempReference: Record "Item Reference" temporary; ForUpdate: Boolean): Boolean
     var
         Item: Record Item;
         Variant: Record "Item Variant";
@@ -368,7 +368,10 @@ codeunit 10076950 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
             if TempReference."Reference Type No." <> '' then
                 exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, 'referenceTypeNo'));
         TempReference."Reference No." := CopyStr(ReadText(Request, 'referenceNo'), 1, 50);
-        Conflict.ReadIsolation := IsolationLevel::UpdLock;
+        if ForUpdate then
+            Conflict.ReadIsolation := IsolationLevel::UpdLock
+        else
+            Conflict.ReadIsolation := IsolationLevel::ReadCommitted;
         Conflict.SetRange("Reference Type", TempReference."Reference Type");
         Conflict.SetRange("Reference Type No.", TempReference."Reference Type No.");
         Conflict.SetRange("Reference No.", TempReference."Reference No.");

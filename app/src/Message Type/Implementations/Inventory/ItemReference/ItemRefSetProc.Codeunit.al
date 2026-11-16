@@ -21,7 +21,7 @@ codeunit 10076951 "Item Ref. Set Proc ori"
         Request := Rec.GetRequestJson();
         // Recheck conflicts in the save transaction.
         Reference.LockTable();
-        if not Impl.ValidateRequest(Rec, Request, TempValidated) then
+        if not Impl.ValidateRequest(Rec, Request, TempValidated, true) then
             exit;
         Created := not Reference.Get(TempValidated."Item No.", TempValidated."Variant Code", TempValidated."Unit of Measure", TempValidated."Reference Type", TempValidated."Reference Type No.", TempValidated."Reference No.");
         if Created then begin
