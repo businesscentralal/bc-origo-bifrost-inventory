@@ -232,7 +232,6 @@ codeunit 96980 "Purch. Return Create Tests"
     procedure Scenario_AC04_HelpAndRefusal_FollowLanguage()
     var
         Implementation: Codeunit "Purch. Return Create Impl ori";
-        Library: Codeunit "Inventory Test Library ori";
         Request: JsonObject;
         EnglishResponse: JsonObject;
         IcelandicResponse: JsonObject;
@@ -247,16 +246,35 @@ codeunit 96980 "Purch. Return Create Tests"
         // [WHEN] The same help and refusal are requested in each supported language.
         GlobalLanguage(1033);
         EnglishDescription := Implementation.GetDescription();
-        EnglishResponse := Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false);
+        EnglishResponse := ExecuteInLanguage(Request, 1033);
         GlobalLanguage(1039);
         IcelandicDescription := Implementation.GetDescription();
-        IcelandicResponse := Library.ExecuteType("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", '', Request, false);
+        IcelandicResponse := ExecuteInLanguage(Request, 1039);
         GlobalLanguage(PreviousLanguage);
         // [THEN] Codes are stable while help and actionable next steps are translated.
         AssertRefusal(EnglishResponse, 'MissingParameter');
         AssertRefusal(IcelandicResponse, 'MissingParameter');
         Assert.AreNotEqual(EnglishDescription, IcelandicDescription, 'translated help');
         Assert.AreNotEqual(ReadText(EnglishResponse, 'nextStep'), ReadText(IcelandicResponse, 'nextStep'), 'translated next step');
+    end;
+
+    local procedure ExecuteInLanguage(Request: JsonObject; LanguageId: Integer) Response: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        ContentType: Text[100];
+        Payload: Text;
+        MessageId: Guid;
+        EmptyTaskId: Guid;
+        ResponseTime: Duration;
+    begin
+        Request.WriteTo(Payload);
+        RequestContent.AddText(Payload);
+        Dispatcher.EnqueueAndProcess("Message Type ori"::"Purchase.ReturnOrder.CreateFromPosted", "Message Version ori"::"1.0",
+            '', '', 'application/json', RequestContent, EmptyTaskId, LanguageId, MessageId, ResponseContent, ContentType, ResponseTime);
+        ResponseContent.GetSubText(Payload, 1);
+        Assert.IsTrue(Response.ReadFrom(Payload), 'Localized dispatcher returns a JSON response.');
     end;
 
     local procedure AssertRefusal(Response: JsonObject; ExpectedCode: Text)
