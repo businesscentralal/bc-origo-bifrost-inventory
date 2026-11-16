@@ -12,6 +12,11 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     IncludedPermissionSets = "BIFROST InvAttrWrite ori";
 
     Permissions =
+        codeunit "Price List Set Impl ori" = X,
+        codeunit "Price List Activate Impl ori" = X,
+        codeunit "Price List Contract ori" = X,
+        codeunit "Price List Process ori" = X,
+        codeunit "Price List Restrict ori" = X,
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,

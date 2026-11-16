@@ -71,6 +71,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Price.List.Set` | Inbound | Create or update a Draft sales/purchase price list and numbered lines |
+| `Price.List.Activate` | Inbound | Verify native price lines, refuse duplicate prices and activate the list |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
@@ -420,3 +422,13 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Price-list objects (#135)
+
+| IDs | Objects |
+|---|---|
+| 10076980–10076984 | Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori |
+| 10076980 | MsgType.PriceList.Ext ori, values 10076980 and 10076981 |
+| 96987 | Price List Tests ori (test app) |
+
+See [price-list maintenance](docs/price-lists.md) for native sales/purchase field mapping and activation refusals.

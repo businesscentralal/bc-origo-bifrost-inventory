@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+- #135: `Price.List.Set` maintains Draft sales and purchase price-list headers and numbered lines using native validation. `Price.List.Activate` verifies all lines and refuses native duplicate prices with conflicting list/line identifiers before native activation. Generic writes to tables 7000/7001 are blocked. Both types declare `write`, include en-US/is-IS help and coded recovery guidance. Codeunits **10076980–10076984**, enum extension **10076980** (values **10076980/10076981**); tests **96987**.
+
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

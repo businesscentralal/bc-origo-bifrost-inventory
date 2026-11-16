@@ -39,3 +39,9 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+
+## Issue 135 object claims (2026-11-16)
+
+- Codeunits 10076980–10076984: Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori.
+- Enum extension 10076980 MsgType.PriceList.Ext ori; values 10076980 Price.List.Set and 10076981 Price.List.Activate.
+- Test codeunit 96987 Price List Tests ori. Checked against main and open Inventory PR claims.
