@@ -14,10 +14,8 @@ codeunit 10076930 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     var
-        PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
         AllowedKeysTok: Label 'lotNo, serialNo, itemNo, variantCode, direction', Locked = true;
         DirectionsTok: Label 'usageToOrigin, originToUsage', Locked = true;
-        NodeCap: Integer;
 
     procedure IsEnabled(): Boolean
     var
@@ -353,9 +351,9 @@ codeunit 10076930 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
     [TryFunction]
     local procedure TryTrace(RequestJson: JsonObject; Backward: Boolean; var Nodes: JsonArray; var TooMany: Boolean)
     var
-        ItemTracingMgt: Codeunit "Item Tracing Mgt.";
         TempTrack: Record "Item Tracing Buffer" temporary;
         TempTrack2: Record "Item Tracing Buffer" temporary;
+        ItemTracingMgt: Codeunit "Item Tracing Mgt.";
         ShowComponents: Option "No","Item-tracked only","All";
         TraceDirection: Option Forward,Backward;
         Count: Integer;
