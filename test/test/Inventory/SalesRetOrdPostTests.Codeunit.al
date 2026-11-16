@@ -272,7 +272,7 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
     end;
 
     [Test]
-    procedure Help_IsBilingual_AndRefusalsAreTranslated()
+    procedure Help_IsBilingual()
     var
         MessageType: Enum "Message Type ori";
         Discovery: Interface "Msg Discovery ori";
@@ -298,18 +298,18 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
         GlobalLanguage(1033);
         Contract.GetOverview(EnglishOverview);
         EnglishSelection := Discovery.GetSelectionDescription();
-        EnglishError := RefusalText();
+        EnglishError := ErrorHelpText();
         GlobalLanguage(1039);
         Contract.GetOverview(IcelandicOverview);
         IcelandicSelection := Discovery.GetSelectionDescription();
-        IcelandicError := RefusalText();
+        IcelandicError := ErrorHelpText();
         GlobalLanguage(PreviousLanguage);
 
         // [THEN] The texts differ by language and the effect is a non-posting write
         Assert.AreNotEqual(EnglishOverview, IcelandicOverview, 'overview is translated');
         Assert.AreNotEqual(EnglishSelection, IcelandicSelection, 'selection is translated');
-        Assert.AreNotEqual('', EnglishError, 'English refusal text');
-        Assert.AreNotEqual(EnglishError, IcelandicError, 'refusal is translated');
+        Assert.AreNotEqual('', EnglishError, 'English error help');
+        Assert.AreNotEqual(EnglishError, IcelandicError, 'error help is translated');
         Contract.GetEffect(Effect);
         Effect.Get('effect', Token);
         Assert.AreEqual('write', Token.AsValue().AsText(), 'effect');
@@ -328,23 +328,17 @@ codeunit 96990 "Sales Ret. Ord. Post. Tests"
         Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep for ' + RequestText);
     end;
 
-    /// <summary>The refusal text of a request without documentType, built in the current language.</summary>
-    local procedure RefusalText(): Text
+    /// <summary>The text of the first documented error (MissingParameter) in the current language.</summary>
+    local procedure ErrorHelpText(): Text
     var
-        TempArgument: Record "Message Argument ori" temporary;
-        Impl: Interface "Msg Interface ori";
-        RequestJson: JsonObject;
-        ResponseJson: JsonObject;
+        Contract: Interface "Msg Contract ori";
+        Errors: JsonArray;
+        Token: JsonToken;
     begin
-        RequestJson.Add('customerNo', '10000');
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
-        TempArgument.SetRequestJson(RequestJson);
-        Impl := "Message Type ori"::"Sales.ReturnOrder.CreateFromPosted";
-        Impl.ExecuteBifrostTask(TempArgument);
-        ResponseJson := TempArgument.GetResponseJson();
-        exit(ReadText(ResponseJson, 'error'));
+        Contract := "Message Type ori"::"Sales.ReturnOrder.CreateFromPosted";
+        Contract.GetErrors(Errors);
+        Errors.Get(0, Token);
+        exit(ReadText(Token.AsObject(), 'fix'));
     end;
 
     local procedure ShipAndInvoice(CustomerNo: Code[20]; Qty: Decimal): Code[20]
