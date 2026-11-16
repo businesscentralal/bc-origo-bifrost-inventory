@@ -116,6 +116,42 @@ codeunit 96964 "Reclass Journal Tests ori"
         Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Only Transfer templates post.');
     end;
 
+    [Test]
+    procedure Scenario_AC34_PreviewAndPost_TemplateNameAndBatchNameAliases_AreAccepted()
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Location: Record Location;
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ResponseText: Text;
+    begin
+        // [GIVEN] A reclassification batch addressed with templateName and batchName, the aliases the contract declares.
+        EnableDomain();
+        CreateStock(Item);
+        CreateBatch(Batch);
+        LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
+        CreateLine(Line, Batch, Item, Location, 1);
+        Request.Add('templateName', Batch."Journal Template Name");
+        Request.Add('batchName', Batch.Name);
+        Commit();
+        // [WHEN] Previewing and then posting.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.PreviewPost", Request, Response);
+        Response.WriteTo(ResponseText);
+        // [THEN] The preview does not refuse and the line is still in the journal.
+        Assert.IsFalse(Response.Contains('code'), ResponseText);
+        Assert.IsTrue(Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No."), 'Preview leaves the line.');
+        Clear(Response);
+        Request.Add('expectedCount', 1);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Post", Request, Response);
+        Response.WriteTo(ResponseText);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
+        Assert.IsFalse(Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No."), 'Post removes the line.');
+    end;
+
     local procedure VerifyCheck(LanguageId: Integer; WithBlockedLine: Boolean; Subset: Boolean)
     var
         Item: Record Item;

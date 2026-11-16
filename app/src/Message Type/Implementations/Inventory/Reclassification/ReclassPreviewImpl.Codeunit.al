@@ -75,10 +75,22 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
+        if RequestJson.Contains('journalTemplateName') then
+            TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10)
+        else
+            if RequestJson.Contains('templateName') then
+                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10)
+            else
+                TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
         if Parts.RespondToProblems(Argument) then
             exit;
-        BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
+        if RequestJson.Contains('journalBatchName') then
+            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
+        else
+            if RequestJson.Contains('batchName') then
+                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10)
+            else
+                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
         if Parts.RespondToProblems(Argument) then
             exit;
 
@@ -148,8 +160,10 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
-        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters. The template must exist and have type Transfer.'));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', true, 'Name of the journal batch whose posting is simulated, at most 10 characters.'));
+        Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Item journal template name, at most 10 characters. The template must exist and have type Transfer. Required unless templateName is sent; journalTemplateName wins when both are sent.'));
+        Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Alias of journalTemplateName, read only when journalTemplateName is absent.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Name of the journal batch whose posting is simulated, at most 10 characters. Required unless batchName is sent; journalBatchName wins when both are sent.'));
+        Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Alias of journalBatchName, read only when journalBatchName is absent.'));
         Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are simulated. Without it every line of the batch is used.'));
         exit(true);
     end;
