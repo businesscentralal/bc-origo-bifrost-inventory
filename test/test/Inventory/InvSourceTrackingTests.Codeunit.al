@@ -540,6 +540,40 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Assert.IsTrue(Entry.IsEmpty(), 'Selected tracking removed.');
     end;
 
+    /// <summary>A fractional number cannot round to an existing entry and remove it.</summary>
+    [Test]
+    procedure Scenario_AC03_FractionalEntryNumber_PreservesTracking()
+    var
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNumbers: JsonArray;
+        FractionalEntryNo: Decimal;
+    begin
+        // Story #37, AC03 | Time: no date dependency | Risk: independently created purchase source only.
+        // [GIVEN] An existing source entry that an integer conversion could round to.
+        CreatePurchaseLine(Line, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-FRACTION', '', 1), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        FractionalEntryNo := Entry."Entry No." + 0.1;
+        EntryNumbers.Add(FractionalEntryNo);
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+
+        // [WHEN] The API helper validates the selected entries before deleting any tracking.
+        ExecuteTracking(Request, true, Response);
+
+        // [THEN] The fractional selection is refused rather than rounded to the owned entry.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameterFormat', Token.AsValue().AsText(), 'Entry numbers must be positive whole numbers.');
+        Assert.AreEqual(1, Entry.Count(), 'Fractional input must preserve the existing tracking row.');
+    end;
+
     /// <summary>Disabled tracking writes return the corrected setup precondition in English.</summary>
     [Test]
     procedure Scenario_AC01_DisabledTracking_In1033()

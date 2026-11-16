@@ -326,7 +326,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
     local procedure ReadEntryNo(Token: JsonToken; var EntryNo: Integer)
     begin
         EntryNo := Token.AsValue().AsInteger();
-        if EntryNo <= 0 then
+        if (EntryNo <= 0) or (Token.AsValue().AsDecimal() <> EntryNo) then
             Error(Format(EntryNo, 0, 9));
     end;
 }
