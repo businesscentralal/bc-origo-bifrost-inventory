@@ -159,7 +159,6 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
 
     /// <summary>AC01 SKU edge: a due stockkeeping unit with a blank variant calculates only that unit, not other stocked variants at the location; line and posted physical ledger carry the SKU counting period.</summary>
     [Test]
-    [HandlerFunctions('ConfirmCountingPeriodUpdate')]
     procedure CycleCount_BlankVariantSku_CalculatesOnlyThatSku()
     var
         Item: Record Item;
@@ -196,7 +195,6 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
 
     /// <summary>AC01 SKU edge: a due item keeps its non-SKU stock when another location has a stockkeeping unit with its own, not yet due, counting period; that SKU combination is left to its own period.</summary>
     [Test]
-    [HandlerFunctions('ConfirmCountingPeriodUpdate')]
     procedure CycleCount_DueItemWithFutureSku_KeepsNonSkuStock()
     var
         Item: Record Item;
@@ -263,12 +261,6 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
         Assert.AreEqual(1, Line.Count(), 'The non-SKU location is counted.');
         Line.SetRange("Location Code", '');
         Assert.AreEqual(1, Line.Count(), 'The blank-location stock is counted.');
-    end;
-
-    [ConfirmHandler]
-    procedure ConfirmCountingPeriodUpdate(Question: Text[1024]; var Reply: Boolean)
-    begin
-        Reply := true;
     end;
 
     local procedure VerifyCycleLine(Line: Record "Item Journal Line"; PeriodCode: Code[10]; PeriodType: Option)
