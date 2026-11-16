@@ -18,6 +18,7 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
     var
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
+        InventoryTestLibrary: Codeunit "Inventory Test Library ori";
 
     /// <summary>AC01 and AC03: a due item is calculated into the empty batch, nothing is posted and the next counting date moves.</summary>
     [Test]
@@ -228,6 +229,7 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
     var
         JournalTemplate: Record "Item Journal Template";
     begin
+        InventoryTestLibrary.EnablePhysicalInventory();
         LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, "Item Journal Template Type"::"Phys. Inventory");
         LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);
     end;
