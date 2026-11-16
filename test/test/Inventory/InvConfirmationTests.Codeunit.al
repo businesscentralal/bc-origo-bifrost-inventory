@@ -329,7 +329,6 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Name: JsonToken;
         AdvertisesConfirmation: Boolean;
         SupportsConfirmation: Boolean;
-        HasAppCountHelp: Boolean;
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
@@ -365,10 +364,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             AssertText(Parameter.AsObject(), 'type', 'integer');
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
-                            // Issue #39 adds count-unit help independently of the deployed Foundation confirmation protocol.
-                            HasAppCountHelp := TypeName in ['Inventory.TransferOrder.Post', 'Inventory.Transfer.UndoShipment', 'Inventory.Assembly.UndoPost'];
-                            Assert.AreEqual(SupportsConfirmation or HasAppCountHelp, AdvertisesConfirmation,
-                                TypeName + ' exposes framework confirmation or its app-owned count-unit help.');
+                            Assert.AreEqual(SupportsConfirmation, AdvertisesConfirmation,
+                                TypeName + ' exposes confirmation parameters only through Foundation.');
                             Clear(Request);
                             // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);

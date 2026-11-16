@@ -70,7 +70,7 @@ codeunit 10076842 "Inventory Write Process ori"
             'ReservationCancel':
                 CancelReservation();
             'AssemblyUndo':
-                UndoAssembly();
+                UndoAssembly(Rec);
             'ItemApplicationUnapply':
                 UnapplyItemEntry();
             'ItemApplicationReapply':
@@ -228,14 +228,21 @@ codeunit 10076842 "Inventory Write Process ori"
         RecreateAssemblyOrder := RecreateOrder;
     end;
 
-    local procedure UndoAssembly()
+    local procedure UndoAssembly(var Argument: Record "Message Argument ori")
     var
         PostedAssembly: Record "Posted Assembly Header";
         AssemblyPost: Codeunit "Assembly-Post";
+        Request: JsonObject;
+        Token: JsonToken;
+        RecreateOrder: Boolean;
     begin
+        RecreateOrder := RecreateAssemblyOrder;
+        Request := Argument.GetRequestJson();
+        if Request.Get('recreateOrder', Token) then
+            RecreateOrder := Token.AsValue().AsBoolean();
         PostedAssembly.Get(PostedAssemblyNo);
         AssemblyPost.SetSuppressCommit(true);
-        AssemblyPost.Undo(PostedAssembly, RecreateAssemblyOrder);
+        AssemblyPost.Undo(PostedAssembly, RecreateOrder);
     end;
 
     local procedure Reserve()

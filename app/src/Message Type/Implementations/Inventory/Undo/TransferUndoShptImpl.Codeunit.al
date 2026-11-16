@@ -73,7 +73,6 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters; a longer value is cut to 20. When lineNos is omitted, every line that is not a correction line is selected.'));
         Parameters.Add(ContractMgt.Parameter('lineNos', 'array', false, 'Optional array of 1 to 100 distinct positive posted shipment line numbers. Every selected line must exist and not be a correction line. Omit to undo all non-correction lines.'));
-        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 

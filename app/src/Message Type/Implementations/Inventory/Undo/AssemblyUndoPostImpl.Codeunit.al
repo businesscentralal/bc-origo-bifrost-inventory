@@ -69,7 +69,6 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     begin
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters.'));
         Parameters.Add(ContractMgt.Parameter('recreateOrder', 'boolean', false, 'Defaults to false. Recreates the original assembly order when it no longer exists, using the standard undo. An existing order is updated by native undo.'));
-        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 
@@ -178,11 +177,13 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         PostedAssemblyHeader: Record "Posted Assembly Header";
+        TempProcessArgument: Record "Message Argument ori" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Process: Codeunit "Inventory Write Process ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        ProcessRequest: JsonObject;
         DocumentNo: Code[20];
         RecreateOrder: Boolean;
         Token: JsonToken;
@@ -218,13 +219,18 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
             exit;
         end;
 
+        // The isolated writer receives only native undo input, never the caller's request.
+        ProcessRequest.Add('recreateOrder', RecreateOrder);
+        TempProcessArgument.Init();
+        TempProcessArgument.ID := CreateGuid();
+        TempProcessArgument.Insert();
+        TempProcessArgument.SetRequestJson(ProcessRequest);
         Process.SetOperation('AssemblyUndo');
         Process.SetPostedAssemblyNo(DocumentNo);
-        Process.SetRecreateAssemblyOrder(RecreateOrder);
         if Argument."Omit Commit" then
-            Process.Run(Argument)
+            Process.Run(TempProcessArgument)
         else
-            if not Process.Run(Argument) then begin
+            if not Process.Run(TempProcessArgument) then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
                 exit;
             end;

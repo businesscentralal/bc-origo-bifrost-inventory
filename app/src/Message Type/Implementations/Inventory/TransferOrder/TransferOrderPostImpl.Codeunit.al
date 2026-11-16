@@ -63,10 +63,8 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Parameters := Parts.GetParameters('Inventory.TransferOrder.Post');
-        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 

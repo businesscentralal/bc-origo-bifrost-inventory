@@ -4,10 +4,11 @@
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
-### Fixed (2026-11-16) - selected transfer shipment undo and assembly recreation (#39, partial)
+### Fixed (2026-11-16) - selected transfer shipment undo and assembly recreation (#39)
 
 - `Inventory.Transfer.UndoShipment` accepts optional `lineNos` (1–100 distinct positive posted line numbers). It validates the complete selection before native undo, refuses missing or already-corrected lines, and preserves unselected lines. Omission retains all non-correction lines.
 - `Inventory.Assembly.UndoPost` accepts a JSON boolean `recreateOrder`, default false, and passes it to native `Assembly-Post.Undo` within the existing atomic transaction.
+- Confirmation parameters stay owned by Foundation; bilingual count units remain in effect help. Assembly undo builds a separate request containing only the validated recreation flag for its isolated writer, retaining public setter compatibility. No object IDs added.
 - Foundation currently builds contract chapters in English even at LCID 1039. Count definitions therefore include both en-US and is-IS wording in the source text; translated XLF targets remain synchronized.
 - All three changed irreversible contracts (shipment undo, assembly undo and transfer posting) explain in en-US and is-IS that `expectedCount` counts one posted document, not lines or entries. The receipt compatibility identifier remains disabled: neither the BC 28 source nor BC 29 symbols contain a native receipt undo.
 - BC 28/29 transfer posting and preview read the applicable setup field by ID; BC 29 uses enum field 5857 rather than the obsolete option field 5855. Existing direct-transfer tests cover both posting modes.
