@@ -18,6 +18,10 @@ codeunit 10077022 "Partial Transfer Mgt ori"
         Process: Codeunit "Partial Transfer Process ori";
         Quantities: Dictionary of [Integer, Decimal];
         Request: JsonObject;
+        CountToken: JsonToken;
+        CountText: Text;
+        CountExpectedLbl: Label 'expectedCount must be the integer 1 for the selected transfer order.', Comment = 'is-IS=expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.';
+        CountNextLbl: Label 'Send expectedCount 1 for one transfer order, regardless of line quantities.', Comment = 'is-IS=Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.';
         NativeExpectedLbl: Label 'A transfer order that passes native posting validation.', Comment = 'is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.';
         NativeNextLbl: Label 'Correct the order or setup and retry. The failed posting and quantity changes were rolled back.', Comment = 'is-IS=Leiðréttu pöntunina eða uppsetningu og reyndu aftur. Misheppnuð bókun og magnbreytingar voru afturkallaðar.';
     begin
@@ -33,9 +37,13 @@ codeunit 10077022 "Partial Transfer Mgt ori"
             exit;
         // The dispatcher checks confirmation first. Also validate a supplied count for direct interface callers.
         Request := Argument.GetRequestJson();
-        if Request.Contains('expectedCount') then
-            if not Argument.ConfirmExpectedCount(Request, 1) then
+        if Request.Get('expectedCount', CountToken) then begin
+            CountToken.WriteTo(CountText);
+            if CountText <> '1' then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, CountExpectedLbl, 'expectedCount', CountText, '1', CountNextLbl);
                 exit;
+            end;
+        end;
         Process.Configure(Header."No.", Ship);
         Commit();
         if not Process.Run(Argument) then

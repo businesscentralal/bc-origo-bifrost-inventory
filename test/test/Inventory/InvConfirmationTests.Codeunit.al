@@ -362,12 +362,15 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             AssertText(Parameter.AsObject(), 'type', 'integer');
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
-                            Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
-                                TypeName + ' exposes the deployed Foundation protocol.');
+                            if TypeName in ['Inventory.TransferOrder.Ship', 'Inventory.TransferOrder.Receive'] then
+                                Assert.IsTrue(AdvertisesConfirmation, TypeName + ' always documents its own optional count validation.')
+                            else
+                                Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
+                                    TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
                             // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
-                            if AdvertisesConfirmation then begin
+                            if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
                                 AssertText(Response, 'parameter', 'expectedCount');
                                 AssertText(Response, 'expected', '1');

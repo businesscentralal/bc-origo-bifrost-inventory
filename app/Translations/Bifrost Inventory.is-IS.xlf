@@ -4684,15 +4684,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType DeletedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2953885794 - NamedType 3205493865" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The selected order is a direct transfer.</source>
-          <target>Valda pöntunin er beinn flutningur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Valda pöntunin er beinn flutningur.</note>
+          <source>The selected order is a direct transfer, or a supplied expectedCount is not the integer 1.</source>
+          <target>Valda pöntunin er beinn flutningur eða tilgreint expectedCount er ekki heiltalan 1.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valda pöntunin er beinn flutningur eða tilgreint expectedCount er ekki heiltalan 1.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType DirectLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2953885794 - NamedType 2014399772" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Use Inventory.TransferOrder.Post for a direct transfer.</source>
-          <target>Notaðu Inventory.TransferOrder.Post fyrir beinan flutning.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu Inventory.TransferOrder.Post fyrir beinan flutning.</note>
+          <source>Use Inventory.TransferOrder.Post for a direct transfer; otherwise send expectedCount 1 for one order.</source>
+          <target>Notaðu Inventory.TransferOrder.Post fyrir beinan flutning; annars skaltu senda expectedCount 1 fyrir eina pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu Inventory.TransferOrder.Post fyrir beinan flutning; annars skaltu senda expectedCount 1 fyrir eina pöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType DirectNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2953885794 - NamedType 1113862135" size-unit="char" translate="yes" xml:space="preserve">
@@ -4832,6 +4832,18 @@
           <target>Ein flutningspöntun sem er ekki bein, auðkennd með skjalanúmeri eða SystemId.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Ein flutningspöntun sem er ekki bein, auðkennd með skjalanúmeri eða SystemId.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 390865673" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount must be the integer 1 for the selected transfer order.</source>
+          <target>expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method Execute - NamedType CountExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 364205578" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send expectedCount 1 for one transfer order, regardless of line quantities.</source>
+          <target>Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method Execute - NamedType CountNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 1954137527" size-unit="char" translate="yes" xml:space="preserve">
           <source>A transfer order that passes native posting validation.</source>

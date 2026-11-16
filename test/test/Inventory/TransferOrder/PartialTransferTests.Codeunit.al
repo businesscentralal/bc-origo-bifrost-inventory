@@ -208,6 +208,46 @@ codeunit 96969 "Partial Transfer Tests ori"
         Assert.AreEqual(3, 'Inventory.TransferOrder.Receive'.Split('.').Count(), 'Receive has three name parts.');
     end;
 
+    /// <summary>Direct callers cannot bypass validation of a supplied order count on older Foundation versions.</summary>
+    [Test]
+    procedure DirectCallerRejectsIncorrectCount()
+    begin
+        VerifyDirectCount('2');
+    end;
+
+    /// <summary>The documented integer count does not accept a JSON string.</summary>
+    [Test]
+    procedure DirectCallerRejectsStringCount()
+    begin
+        VerifyDirectCount('"1"');
+    end;
+
+    local procedure VerifyDirectCount(CountJson: Text)
+    var
+        Header: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        TempArgument: Record "Message Argument ori" temporary;
+        Implementation: Codeunit "Transfer Ship Impl ori";
+        Request: JsonObject;
+        CountToken: JsonToken;
+        Response: JsonObject;
+    begin
+        CreateOrder(Header);
+        Request := MakeRequest(Header."No.", '[{"lineNo":10000,"qtyToShip":3}]');
+        CountToken.ReadFrom(CountJson);
+        Request.Add('expectedCount', CountToken);
+        TempArgument.Init();
+        TempArgument.Type := "Message Type ori"::"Inventory.TransferOrder.Ship";
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.SetRequestJson(Request);
+        Implementation.ExecuteBifrostTask(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        VerifyError(Response, 'PreconditionFailed');
+        TransferLine.Get(Header."No.", 10000);
+        Assert.AreEqual(0, TransferLine."Quantity Shipped", 'Invalid count never posts.');
+        Assert.AreEqual(10, TransferLine."Qty. to Ship", 'Invalid count preserves requested quantities.');
+    end;
+
     local procedure VerifyPartialFlow(LanguageId: Integer)
     var
         Header: Record "Transfer Header";
