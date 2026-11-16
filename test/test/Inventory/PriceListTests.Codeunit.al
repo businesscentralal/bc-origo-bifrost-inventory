@@ -19,6 +19,7 @@ codeunit 96987 "Price List Tests ori"
         Library: Codeunit "Inventory Test Library ori";
         Inventory: Codeunit "Library - Inventory";
 
+    /// <summary>AC01: Sales Price And Dates Are Stored Natively.</summary>
     [Test]
     procedure Scenario_AC01_SalesPriceAndDates_AreStoredNatively()
     var
@@ -59,6 +60,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.AreEqual(20261231D, Line."Ending Date", 'Native end date.');
     end;
 
+    /// <summary>AC01: Purchase Price Maps To Direct Unit Cost.</summary>
     [Test]
     procedure Scenario_AC01_PurchasePrice_MapsToDirectUnitCost()
     var
@@ -78,6 +80,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.AreEqual(19.25, Line."Direct Unit Cost", 'Purchase uses Direct Unit Cost.');
     end;
 
+    /// <summary>AC01: Upsert Preserves Other Lines And Omitted Price.</summary>
     [Test]
     procedure Scenario_AC01_Upsert_PreservesOtherLinesAndOmittedPrice()
     var
@@ -122,6 +125,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.AreEqual(30, Line."Unit Price", 'Omitted line preserved.');
     end;
 
+    /// <summary>AC02: Valid Sales List Activates Header And Lines.</summary>
     [Test]
     [HandlerFunctions('ConfirmActivation')]
     procedure Scenario_AC02_ValidSalesList_ActivatesHeaderAndLines()
@@ -130,6 +134,7 @@ codeunit 96987 "Price List Tests ori"
         VerifyActivation('Sales');
     end;
 
+    /// <summary>AC02: Valid Purchase List Activates Header And Lines.</summary>
     [Test]
     [HandlerFunctions('ConfirmActivation')]
     procedure Scenario_AC02_ValidPurchaseList_ActivatesHeaderAndLines()
@@ -138,6 +143,7 @@ codeunit 96987 "Price List Tests ori"
         VerifyActivation('Purchase');
     end;
 
+    /// <summary>AC02: Duplicate Lines Refuses And Names Both Lines.</summary>
     [Test]
     procedure Scenario_AC02_DuplicateLines_RefusesAndNamesBothLines()
     var
@@ -166,6 +172,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.AreEqual(Line.Status::Draft, Line.Status, 'Refusal leaves lines Draft.');
     end;
 
+    /// <summary>AC02: Conflict With Active List Names Foreign List.</summary>
     [Test]
     [HandlerFunctions('ConfirmActivation')]
     procedure Scenario_AC02_ConflictWithActiveList_NamesForeignList()
@@ -198,6 +205,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.IsTrue(FoundFirst, 'Response names the foreign active price list.');
     end;
 
+    /// <summary>AC02: Active List Refuses Set And Repeated Activation.</summary>
     [Test]
     [HandlerFunctions('ConfirmActivation')]
     procedure Scenario_AC02_ActiveList_RefusesSetAndRepeatedActivation()
@@ -219,6 +227,7 @@ codeunit 96987 "Price List Tests ori"
         AssertRefusal(CallActivate(ListCode), 'PreconditionFailed');
     end;
 
+    /// <summary>AC02: Missing Or Empty List Refuses With Next Step.</summary>
     [Test]
     procedure Scenario_AC02_MissingOrEmptyList_RefusesWithNextStep()
     var
@@ -233,6 +242,7 @@ codeunit 96987 "Price List Tests ori"
         AssertRefusal(CallActivate(Header.Code), 'PreconditionFailed');
     end;
 
+    /// <summary>AC03: Generic Writes Blocked Reads Remain Allowed.</summary>
     [Test]
     procedure Scenario_AC03_GenericWritesBlocked_ReadsRemainAllowed()
     var
@@ -249,6 +259,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.IsFalse(TempArgument.IsTableReadRestrictedForDataRecords(Database::"Price List Line"), 'Line reads allowed.');
     end;
 
+    /// <summary>AC04: Malformed And Unknown Keys Refuse Without Writes.</summary>
     [Test]
     procedure Scenario_AC04_MalformedAndUnknownKeys_RefuseWithoutWrites()
     var
@@ -278,6 +289,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.IsFalse(Header.Get(ListCode), 'Malformed scalar changes nothing.');
     end;
 
+    /// <summary>AC04: Duplicate Line Numbers And Invalid Numbers Refuse.</summary>
     [Test]
     procedure Scenario_AC04_DuplicateLineNumbersAndInvalidNumbers_Refuse()
     var
@@ -311,6 +323,7 @@ codeunit 96987 "Price List Tests ori"
         AssertRefusal(CallSet(Request), 'InvalidParameter');
     end;
 
+    /// <summary>AC04: English And Icelandic Help And Errors Localize.</summary>
     [Test]
     procedure Scenario_AC04_EnglishAndIcelandic_HelpAndErrorsLocalize()
     var
@@ -344,6 +357,7 @@ codeunit 96987 "Price List Tests ori"
         Assert.AreNotEqual(TextField(ResponseEn, 'nextStep'), TextField(ResponseIs, 'nextStep'), 'Recovery translated.');
     end;
 
+    /// <summary>AC05: Contracts Declare Three Part Names And Write Effect.</summary>
     [Test]
     procedure Scenario_AC05_Contracts_DeclareThreePartNamesAndWriteEffect()
     var
@@ -374,6 +388,7 @@ codeunit 96987 "Price List Tests ori"
         end;
     end;
 
+    /// <summary>AC04: Later Native Failure Rolls Back Header And Earlier Line.</summary>
     [Test]
     [TransactionModel(TransactionModel::AutoCommit)]
     procedure Scenario_AC04_LaterNativeFailure_RollsBackHeaderAndEarlierLine()
