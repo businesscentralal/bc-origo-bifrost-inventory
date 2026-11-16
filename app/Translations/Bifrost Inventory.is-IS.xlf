@@ -171,6 +171,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðamagn og birgðavirði í aldursflokkum fyrir hverja vöru, eins og skýrslurnar Aldurssamsetning vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 4035534591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the Business Central filter syntax.</source>
+          <target>Leiðréttu málskipan Business Central síunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu málskipan Business Central síunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType FilterFixLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3896330417 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>aged inventory, stock age, item age composition</source>
           <target>aldursgreining birgða,aldur birgða,aldurssamsetning vöru</target>
@@ -302,12 +308,6 @@
           <target>Ekki er hægt að beita staðsetningar- eða vöruflokkssíu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að beita staðsetningar- eða vöruflokkssíu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FilterErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 4035534591" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Correct the Business Central filter syntax.</source>
-          <target>Leiðréttu málskipan Business Central síunnar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu málskipan Business Central síunnar.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FilterFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3896330417 - Method 3255554567 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
           <source>Read the stock age of item 1000 in 30 day buckets</source>
