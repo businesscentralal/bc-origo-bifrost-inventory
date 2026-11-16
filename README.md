@@ -420,3 +420,5 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+Selected reservation supply: codeunit `10077030 Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound.

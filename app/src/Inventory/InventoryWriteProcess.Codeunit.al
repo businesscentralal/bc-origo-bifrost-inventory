@@ -302,31 +302,33 @@ codeunit 10076842 "Inventory Write Process ori"
     local procedure ReserveSupplyEntry(var ReservationManagement: Codeunit "Reservation Management"; DemandEntry: Record "Reservation Entry")
     var
         LedgerEntry: Record "Item Ledger Entry";
-        TrackingSpecification: Record "Tracking Specification";
-        ReservationEntry: Record "Reservation Entry";
+        SupplyFilter: Codeunit "Reserv. Supply Filter ori";
+        RemainingQuantity: Decimal;
+        RemainingQuantityBase: Decimal;
         SupplyUnavailableErr: Label 'The selected item ledger entry does not have enough matching, unreserved inventory for this source line.', Comment = 'is-IS=Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.';
     begin
-        // Serialize availability and native creation in the same isolated write transaction.
-        ReservationEntry.LockTable();
-        LedgerEntry.LockTable();
         LedgerEntry.Get(SupplyEntryNo);
-        LedgerEntry.CalcFields("Reserved Quantity");
-        if not LedgerEntry.Positive or not LedgerEntry.Open or
+        if not ReservationManagement.IsPositive() or not LedgerEntry.Positive or not LedgerEntry.Open or
            (LedgerEntry."Item No." <> DemandEntry."Item No.") or
            (LedgerEntry."Variant Code" <> DemandEntry."Variant Code") or
            (LedgerEntry."Location Code" <> DemandEntry."Location Code") or
-           (LedgerEntry."Remaining Quantity" - LedgerEntry."Reserved Quantity" < ReserveQuantityBase) or
            ((TempReserveTracking."Lot No." <> '') and (LedgerEntry."Lot No." <> TempReserveTracking."Lot No.")) or
            ((TempReserveTracking."Serial No." <> '') and (LedgerEntry."Serial No." <> TempReserveTracking."Serial No.")) or
            ((TempReserveTracking."Package No." <> '') and (LedgerEntry."Package No." <> TempReserveTracking."Package No."))
         then
             Error(SupplyUnavailableErr);
-        TrackingSpecification.InitTrackingSpecification(Database::"Item Ledger Entry", 0, '', '', 0, SupplyEntryNo,
-            LedgerEntry."Variant Code", LedgerEntry."Location Code", LedgerEntry."Qty. per Unit of Measure");
-        TrackingSpecification.CopyTrackingFromItemLedgEntry(LedgerEntry);
         TempReserveTracking.CopyTrackingFromItemLedgEntry(LedgerEntry);
         ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
-        ReservationManagement.CreateReservation(ReserveDescription, 0D, ReserveQuantity, ReserveQuantityBase, TrackingSpecification);
+        RemainingQuantity := ReserveQuantity;
+        RemainingQuantityBase := ReserveQuantityBase;
+        SupplyFilter.SetSupplyEntry(SupplyEntryNo);
+        BindSubscription(SupplyFilter);
+        // Retain the native warehouse availability, tracking, source-quantity and reservation checks.
+        ReservationManagement.AutoReserveOneLine(Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger(),
+            RemainingQuantity, RemainingQuantityBase, ReserveDescription, AvailabilityDate);
+        UnbindSubscription(SupplyFilter);
+        if RemainingQuantityBase <> 0 then
+            Error(SupplyUnavailableErr);
         FullAutoReservation := true;
     end;
 
