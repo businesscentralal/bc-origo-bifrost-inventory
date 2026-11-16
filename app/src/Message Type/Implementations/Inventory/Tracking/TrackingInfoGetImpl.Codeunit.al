@@ -93,9 +93,9 @@ codeunit 10077010 "Tracking Info Get Impl ori" implements "Msg Interface ori", "
         Target.Add(ContractMgt.TargetEntry('data.itemNo', 'item no.', 'The No. of the Item, used when subject is blank.'));
         Target.Add(ContractMgt.TargetEntry('data.itemId, data.id, data.systemId, data.recordSystemId', 'guid', 'The SystemId of the Item, tried in this order after itemNo.'));
         Target.Add(ContractMgt.TargetEntry('data.tableView', 'table view', 'An Item table view; the first matching item is read, so filter to one item for an exact selection.'));
-        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.lotNo', 'lot no.', 'The Lot No. Information card (table 6505) of the item, variant and lot.'));
-        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.serialNo', 'serial no.', 'The Serial No. Information card (table 6504) of the item, variant and serial number.'));
-        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.packageNo', 'package no.', 'The Package No. Information card (table 6515) of the item, variant and package.'));
+        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.lotNo', 'lot no.', 'The Lot No. Information card of the item, variant and lot.'));
+        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.serialNo', 'serial no.', 'The Serial No. Information card of the item, variant and serial number.'));
+        Target.Add(ContractMgt.TargetEntry('data.variantCode + data.packageNo', 'package no.', 'The Package No. Information card of the item, variant and package.'));
         exit(true);
     end;
 
