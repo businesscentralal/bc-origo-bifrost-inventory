@@ -282,7 +282,8 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
 | 10076870–10076872 | Item categories | Get, Set (+ process) |
 | 10076873–10076875 | Item charges | Assign (+ process), Get |
-| 10076876 | Item references | `Item Ref. Resolve Impl ori` |
+| 10076876, 10076930–10076932 | Item references | `Item Ref. Resolve Impl ori`, `Item Ref. Set Impl ori`, `Item Ref. Set Proc ori`, `Item Ref. Restrict ori` |
+| 10076933 | Transfer setup compatibility | `Direct Transfer Setup ori` |
 | 10076877–10076879, 10076886 | Periods and price | Period Close/Get/Reopen, Price Update |
 | 10076880–10076885 | Physical inventory | Calculate (journal and count), Post, Record/RecordCount, Check, Preview Post |
 | 10076887–10076889 | Reclassification | Check, Post, Preview |

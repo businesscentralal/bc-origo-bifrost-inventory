@@ -7,6 +7,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 
 /// <summary>
 /// Shared test helper for Transfer Order tests.
@@ -171,15 +172,16 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure SetDirectTransferPosting(PostAsSingleDocument: Boolean; var OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
     begin
         OriginalSetup.Get();
         InventorySetup := OriginalSetup;
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
         if PostAsSingleDocument then
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Direct Transfer"
+            DirectTransferSetup.SetPostingChoice(InventorySetup, 1)
         else
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Receipt and Shipment";
+            DirectTransferSetup.SetPostingChoice(InventorySetup, 0);
         InventorySetup.Modify(true);
     end;
 
@@ -189,9 +191,10 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
     begin
         InventorySetup.Get();
-        InventorySetup."Direct Transfer Posting" := OriginalSetup."Direct Transfer Posting";
+        DirectTransferSetup.SetPostingChoice(InventorySetup, DirectTransferSetup.GetPostingChoice(OriginalSetup));
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;

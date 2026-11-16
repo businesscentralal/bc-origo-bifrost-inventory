@@ -230,17 +230,13 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
-        InventorySetup: Record "Inventory Setup";
+        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
     begin
-        InventorySetup.Get();
-        case InventorySetup."Direct Transfer Posting" of
-            InventorySetup."Direct Transfer Posting"::"Receipt and Shipment":
-                begin
-                    PostShipment := true;
-                    PostReceipt := true;
-                end;
-            InventorySetup."Direct Transfer Posting"::"Direct Transfer":
-                PostTransfer := true;
+        if DirectTransferSetup.PostsSingleDocument() then
+            PostTransfer := true
+        else begin
+            PostShipment := true;
+            PostReceipt := true;
         end;
     end;
 
