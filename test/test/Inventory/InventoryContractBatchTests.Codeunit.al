@@ -719,11 +719,28 @@ codeunit 96921 "Inventory Contract Batch Tests"
     var
         Parts: Codeunit "Inventory Contract Parts ori";
         Legacy: Text;
+        ExpectedResponse: JsonObject;
+        ExpectedFields: JsonArray;
+        Field: JsonObject;
+        Token: JsonToken;
+        Info: ModuleInfo;
     begin
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        ExpectedResponse := Parts.GetResponse(Legacy);
+        // Foundation #1368 appends the shared JSON error code descriptor; the app-owned fields remain exact.
+        if NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            if Info.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+                ExpectedResponse.Get('fields', Token);
+                ExpectedFields := Token.AsArray();
+                Field.Add('name', 'code');
+                Field.Add('type', 'string');
+                Field.Add('description', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.');
+                ExpectedFields.Add(Field);
+                ExpectedResponse.Replace('fields', ExpectedFields);
+            end;
+        AssertChapterJson(Contract, 'response', ExpectedResponse.AsToken());
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());

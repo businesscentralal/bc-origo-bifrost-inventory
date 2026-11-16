@@ -66,6 +66,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         PreviousLanguage: Integer;
     begin
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
+        EnableConfirmation();
         Setup.InsertIfNotExists();
         Setup."Transfer Orders" := true;
         Setup.Assembly := true;
@@ -331,6 +332,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
+        EnableConfirmation();
         // No business document or ledger entry is created, posted or undone by this boundary test.
         HadSetup := PreviousSetup.Get();
         Setup.InsertIfNotExists();
@@ -425,6 +427,23 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             EmptyTaskId, GlobalLanguage(), MessageId, ResponseContent, ContentType, ResponseTime);
         ResponseContent.GetSubText(Payload, 1);
         Assert.IsTrue(Response.ReadFrom(Payload), 'Dispatcher returns a JSON response.');
+    end;
+
+    local procedure EnableConfirmation()
+    var
+        SetupRef: RecordRef;
+        ConfirmationField: FieldRef;
+    begin
+        // The field is internal in Foundation; runtime metadata keeps this test compatible with its older floor.
+        // Test isolation restores this owned-company configuration after the codeunit.
+        SetupRef.Open(10077901);
+        if SetupRef.FindFirst() then
+            if SetupRef.FieldExist(36) then begin
+                ConfirmationField := SetupRef.Field(36);
+                ConfirmationField.Validate(true);
+                SetupRef.Modify(true);
+            end;
+        SetupRef.Close();
     end;
 
     local procedure AssertText(Value: JsonObject; KeyName: Text; Expected: Text)

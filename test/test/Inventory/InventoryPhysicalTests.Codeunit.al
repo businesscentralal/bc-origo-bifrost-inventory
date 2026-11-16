@@ -449,19 +449,19 @@ codeunit 96944 "Inventory Physical Tests"
         InitArgument(TempArgument, Batch, Request);
         Commit();
         asserterror Journal.Calculate(TempArgument);
-        Assert.ExpectedError('Type');
+        Assert.ExpectedError('physical inventory journal template');
         Commit();
         asserterror Journal.RecordCount(TempArgument);
-        Assert.ExpectedError('Type');
+        Assert.ExpectedError('physical inventory journal template');
         Commit();
         asserterror Journal.Check(TempArgument, "Item Journal Template Type"::"Phys. Inventory");
-        Assert.ExpectedError('Type');
+        Assert.ExpectedError('physical inventory journal template');
         Commit();
         asserterror Journal.Preview(TempArgument, "Item Journal Template Type"::"Phys. Inventory");
-        Assert.ExpectedError('Type');
+        Assert.ExpectedError('physical inventory journal template');
         Commit();
         asserterror Journal.Post(TempArgument, "Item Journal Template Type"::"Phys. Inventory");
-        Assert.ExpectedError('Type');
+        Assert.ExpectedError('physical inventory journal template');
     end;
 
     /// <summary>An invalid second count rolls back rather than preserving the first requested change.</summary>
@@ -772,7 +772,7 @@ codeunit 96944 "Inventory Physical Tests"
         foreach MessageType in PhysicalTypes() do begin
             Clear(Request);
             // [WHEN] Use public dispatch, including rollback handling of write types.
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
             // [THEN] No platform captions leak into the error and help declares its code.
             AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'templateName', LanguageId);
             if LanguageId = 1039 then
@@ -787,7 +787,7 @@ codeunit 96944 "Inventory Physical Tests"
         Commit();
         foreach MessageType in PhysicalTypes() do begin
             Clear(Request);
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
             AssertPhysicalRefusal(MessageType, Response, 'PreconditionFailed', 'templateName', LanguageId);
             if LanguageId = 1039 then
                 Assert.AreEqual('Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.', JsonText(Response, 'error'), 'Fully Icelandic recurring-template error.')
@@ -815,24 +815,24 @@ codeunit 96944 "Inventory Physical Tests"
             // [GIVEN] Malformed subject, conflicting aliases and an absent batch.
             Clear(Request);
             // [WHEN] Resolve each through public dispatch before any operation.
-            Response := ContractLibrary.ExecuteType(MessageType, 'X|X|X', Request, false);
+            Response := ExecutePhysicalType(MessageType, 'X|X|X', Request, LanguageId);
             // [THEN] The coded selection error is actionable and documented.
             AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'batchName', LanguageId);
             Clear(Request);
             Request.Add('templateName', Batch."Journal Template Name");
             Request.Add('journalTemplateName', 'X-CONFLICT');
             Request.Add('batchName', Batch.Name);
-            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            Response := ExecutePhysicalType(MessageType, '', Request, LanguageId);
             AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'batchName', LanguageId);
             Clear(Request);
             Request.Add('templateName', Batch."Journal Template Name");
             Request.Add('batchName', 'X-MISSING');
-            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            Response := ExecutePhysicalType(MessageType, '', Request, LanguageId);
             AssertPhysicalRefusal(MessageType, Response, 'RecordNotFound', 'batchName', LanguageId);
             Clear(Request);
             Request.Add('templateName', true);
             Request.Add('batchName', Batch.Name);
-            Response := ContractLibrary.ExecuteType(MessageType, '', Request, false);
+            Response := ExecutePhysicalType(MessageType, '', Request, LanguageId);
             Assert.AreEqual('InvalidParameterFormat', JsonText(Response, 'code'), 'Malformed text is typed.');
             Assert.AreEqual('templateName', JsonText(Response, 'parameter'), 'Malformed selector named.');
         end;
@@ -844,6 +844,7 @@ codeunit 96944 "Inventory Physical Tests"
         Item: Record Item;
         Batch: Record "Item Journal Batch";
         Line: Record "Item Journal Line";
+        TempArgument: Record "Message Argument ori" temporary;
         MessageType: Enum "Message Type ori";
         Types: List of [Enum "Message Type ori"];
         BadCounts: JsonArray;
@@ -854,6 +855,7 @@ codeunit 96944 "Inventory Physical Tests"
         Counts: JsonArray;
         PreviousLanguage: Integer;
         BeforeQuantity: Decimal;
+        Errors: JsonArray;
     begin
         ContractLibrary.EnablePhysicalInventory();
         CreatePhysical(Item, Batch, Line);
@@ -870,7 +872,7 @@ codeunit 96944 "Inventory Physical Tests"
                 Clear(Request);
                 Request.Add('counts', Value);
                 // [WHEN] Dispatch validates every count before writing.
-                Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+                Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
                 // [THEN] Structure and scalar refusals are stable and no count changes.
                 if Value.IsArray() then begin
                     if Value.AsArray().Count() = 1 then begin
@@ -891,7 +893,7 @@ codeunit 96944 "Inventory Physical Tests"
             Count.Add('qtyCounted', -1);
             Counts.Add(Count);
             Request.Add('counts', Counts);
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
             AssertPhysicalRefusal(MessageType, Response, 'InvalidParameterFormat', 'qtyCounted', LanguageId);
             Clear(Request);
             Clear(Count);
@@ -900,15 +902,29 @@ codeunit 96944 "Inventory Physical Tests"
             Count.Add('XUnknown', 'X-value');
             Counts.Add(Count);
             Request.Add('counts', Counts);
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
-            AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'XUnknown', LanguageId);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
+            if JsonText(Response, 'code') = 'UnknownParameter' then begin
+                // Foundation 28.0.10+ refuses unknown write keys before Inventory executes.
+                Assert.AreEqual('counts[0].XUnknown', JsonText(Response, 'parameter'), 'Strict dispatch names the nested key.');
+                Assert.IsTrue(JsonText(Response, 'nextStep') <> '', 'Strict dispatch supplies recovery.');
+            end else
+                AssertPhysicalRefusal(MessageType, Response, 'InvalidParameter', 'XUnknown', LanguageId);
+            // Direct invocation proves Inventory's own nested-key refusal and received value too.
+            InitArgument(TempArgument, Batch, Request);
+            TempArgument.Type := MessageType;
+            asserterror Journal.RecordCount(TempArgument);
+            Errors := TempArgument.GetCollectedErrorsJson();
+            Errors.Get(0, Value);
+            Response := Value.AsObject();
+            Assert.AreEqual('InvalidParameter', JsonText(Response, 'code'), 'Native nested-key code.');
+            Assert.AreEqual('XUnknown', JsonText(Response, 'parameter'), 'Native nested-key parameter.');
             Assert.AreEqual('"X-value"', JsonText(Response, 'received'), 'Nested unknown value preserved.');
             Line.GetBySystemId(Line.SystemId);
             Assert.AreEqual(BeforeQuantity, Line."Qty. (Phys. Inventory)", 'Invalid requests leave the owned count unchanged.');
             // Valid edge: explicit zero writes zero; omitted qty leaves it unchanged.
             Clear(Request);
             AddCount(Request, Line.SystemId, 0);
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
             Assert.AreEqual('Success', JsonText(Response, 'status'), 'Explicit zero accepted.');
             Line.GetBySystemId(Line.SystemId);
             Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Explicit zero persisted.');
@@ -918,7 +934,7 @@ codeunit 96944 "Inventory Physical Tests"
             Count.Add('systemId', Line.SystemId);
             Counts.Add(Count);
             Request.Add('counts', Counts);
-            Response := ContractLibrary.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
+            Response := ExecutePhysicalType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, LanguageId);
             Assert.AreEqual('Success', JsonText(Response, 'status'), 'Omitted quantity accepted.');
             Line.GetBySystemId(Line.SystemId);
             Assert.AreEqual(0, Line."Qty. (Phys. Inventory)", 'Omitted quantity leaves zero unchanged.');
@@ -927,6 +943,27 @@ codeunit 96944 "Inventory Physical Tests"
             Commit();
         end;
         GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure ExecutePhysicalType(MessageType: Enum "Message Type ori"; Subject: Text[250]; Request: JsonObject; LanguageId: Integer) Response: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        ContentType: Text[100];
+        Payload: Text;
+        MessageId: Guid;
+        EmptyTaskId: Guid;
+        ResponseTime: Duration;
+    begin
+        // Execute() uses the company default LCID; this overload exercises the caller's actual LCID.
+        ContractLibrary.ConfirmRequest(MessageType, Request);
+        Request.WriteTo(Payload);
+        RequestContent.AddText(Payload);
+        Dispatcher.EnqueueAndProcess(MessageType, "Message Version ori"::"1.0", Subject, '', 'application/json', RequestContent,
+            EmptyTaskId, LanguageId, MessageId, ResponseContent, ContentType, ResponseTime);
+        ResponseContent.GetSubText(Payload, 1);
+        Assert.IsTrue(Response.ReadFrom(Payload), 'Dispatcher returns a JSON response.');
     end;
 
     local procedure JsonText(Value: JsonObject; Name: Text): Text
