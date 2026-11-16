@@ -342,7 +342,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     begin
         InventorySetup.Get();
         SetupRef.GetTable(InventorySetup);
-        // BC 29 replaces option field 5855 with enum field 5857; both use ordinal 1 for a direct document.
+        // BC 29 enum field 5857 uses 10/20; BC 28 option field 5855 uses 0/1.
         // Resolve the field at runtime so the same package still supports the BC 28 application floor.
         if SetupRef.FieldExist(5857) then
             PostingField := SetupRef.Field(5857)
@@ -350,12 +350,12 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
             PostingField := SetupRef.Field(5855);
         PostingOrdinal := PostingField.Value;
         case PostingOrdinal of
-            0:
+            0, 10:
                 begin
                     PostShipment := true;
                     PostReceipt := true;
                 end;
-            1:
+            1, 20:
                 PostTransfer := true;
         end;
     end;

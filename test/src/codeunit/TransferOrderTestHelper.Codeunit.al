@@ -199,14 +199,19 @@ codeunit 96904 "Transfer Order Test Helper"
         PostingField: FieldRef;
     begin
         SetupRef.GetTable(InventorySetup);
-        if SetupRef.FieldExist(5857) then
-            PostingField := SetupRef.Field(5857)
-        else
+        if SetupRef.FieldExist(5857) then begin
+            PostingField := SetupRef.Field(5857);
+            if PostAsSingleDocument then
+                PostingField.Value := 20
+            else
+                PostingField.Value := 10;
+        end else begin
             PostingField := SetupRef.Field(5855);
-        if PostAsSingleDocument then
-            PostingField.Value := 1
-        else
-            PostingField.Value := 0;
+            if PostAsSingleDocument then
+                PostingField.Value := 1
+            else
+                PostingField.Value := 0;
+        end;
         SetupRef.SetTable(InventorySetup);
     end;
 

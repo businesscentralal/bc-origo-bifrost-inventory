@@ -374,6 +374,35 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
+    procedure Post_DirectTransfer_SingleDocument_PostsNativeDocument()
+    var
+        TransferHeader: Record "Transfer Header";
+        DirectTransferHeader: Record "Direct Trans. Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        StatusToken: JsonToken;
+        DocumentNo: Code[20];
+    begin
+        // [SCENARIO] The native single-document setting selects direct posting on BC 28 and BC 29.
+        Initialize();
+        // [GIVEN] An owned direct transfer with stock and the native single-document mode.
+        Helper.SetDirectTransferPosting(true, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 2);
+        DocumentNo := TransferHeader."No.";
+        // [WHEN] The caller confirms and posts that transfer.
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        // [THEN] A native direct-transfer document exists and the fully posted order is gone.
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), JsonText(ResponseJson));
+        DirectTransferHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.AreEqual(1, DirectTransferHeader.Count(), 'Exactly one native direct-transfer document is posted.');
+        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Fully posted direct transfer is removed by native posting.');
+    end;
+
+    [Test]
     procedure Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted()
     var
         FromLocation, ToLocation, InTransitLocation : Record Location;
