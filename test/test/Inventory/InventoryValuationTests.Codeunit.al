@@ -157,7 +157,7 @@ codeunit 96989 "Inventory Valuation Tests ori"
         AssertNumber(RowAt(Response, 0), 'totalCost', 0);
         Request.Replace('asOfDate', '9999-12-31');
         AssertNumber(Read(Request), 'totalCount', 1);
-        Request.Replace('asOfDate', '0001-01-01');
+        Request.Replace('asOfDate', '1753-01-01');
         AssertNumber(Read(Request), 'totalCount', 0);
     end;
 

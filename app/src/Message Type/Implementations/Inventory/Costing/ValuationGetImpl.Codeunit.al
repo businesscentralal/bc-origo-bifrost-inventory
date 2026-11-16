@@ -13,7 +13,7 @@ codeunit 10077020 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
         DescriptionLbl: Label 'Reads inventory quantity and expected and actual value at a date.', Comment = 'is-IS=Les birgðamagn og áætlað og raunverulegt virði á tilteknum degi.';
         SelectionLbl: Label 'Returns valuation by item, location and variant with filters and paging.', Comment = 'is-IS=Skilar birgðavirði eftir vöru, birgðageymslu og afbrigði með síum og síðuskiptingu.';
         KeywordsLbl: Label 'inventory valuation, expected cost, actual cost', Comment = 'is-IS=birgðamat, áætlaður kostnaður, raunverulegur kostnaður';
-        NotesLbl: Label 'Read only. Like Inventory Valuation (report 1001), sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.', Comment = 'is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat (1001) er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.';
+        NotesLbl: Label 'Read only. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.', Comment = 'is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.';
         InvalidValueErr: Label 'Invalid value for %1.', Comment = '%1 = parameter; is-IS=Ógilt gildi fyrir %1.';
         TextNextStepLbl: Label 'Send the filter as JSON text using valid Business Central filter syntax.', Comment = 'is-IS=Sendu síuna sem JSON-texta með gildri Business Central-síusetningu.';
         PagingNextStepLbl: Label 'Send take as a JSON integer from 1 to 1000 and skip as a JSON integer from 0 to 2147483647.', Comment = 'is-IS=Sendu take sem JSON-heiltölu frá 1 til 1000 og skip sem JSON-heiltölu frá 0 til 2147483647.';
@@ -153,6 +153,8 @@ codeunit 10077020 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
         Item: Record Item;
         ValueEntry: Record "Value Entry";
     begin
+        Item.ReadIsolation := IsolationLevel::ReadCommitted;
+        ValueEntry.ReadIsolation := IsolationLevel::ReadCommitted;
         Item.SetRange(Type, Item.Type::Inventory);
         Item.SetFilter("No.", ItemFilter);
         Item.SetFilter("Inventory Posting Group", PostingGroupFilter);
@@ -262,7 +264,7 @@ codeunit 10077020 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        Field: JsonObject;
+        ResponseField: JsonObject;
         Fields: JsonArray;
         Children: JsonArray;
         Field0Lbl: Label 'Success when the valuation is read.', Comment = 'is-IS=Success þegar birgðamat hefur verið lesið.';
@@ -295,9 +297,9 @@ codeunit 10077020 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
         Children.Add(ContractMgt.ResponseField('actualCost', 'decimal', Child4Lbl));
         Children.Add(ContractMgt.ResponseField('expectedCost', 'decimal', Child5Lbl));
         Children.Add(ContractMgt.ResponseField('totalCost', 'decimal', Child6Lbl));
-        Field := ContractMgt.ResponseField('rows', 'array', Field6Lbl);
-        Field.Add('children', Children);
-        Fields.Add(Field);
+        ResponseField := ContractMgt.ResponseField('rows', 'array', Field6Lbl);
+        ResponseField.Add('children', Children);
+        Fields.Add(ResponseField);
         Response.Add('fields', Fields);
         exit(true);
     end;
