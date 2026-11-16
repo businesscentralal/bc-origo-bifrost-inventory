@@ -6424,15 +6424,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A key has the wrong JSON type, systemId is not a GUID, or shipmentNos is empty or holds a value that is not text.</source>
-          <target>Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða shipmentNos er tómt eða inniheldur gildi sem er ekki texti.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða shipmentNos er tómt eða inniheldur gildi sem er ekki texti.</note>
+          <source>A key has the wrong JSON type, systemId is not a GUID, or a document/shipment number is blank, longer than 20 characters or not text.</source>
+          <target>Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða skjals- eða afhendingarnúmer er tómt, lengra en 20 stafir eða ekki texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða skjals- eða afhendingarnúmer er tómt, lengra en 20 stafir eða ekki texti.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send documentNo and systemId as text, shipmentNos as a non-empty array of text and allShipments as true.</source>
-          <target>Sendu documentNo og systemId sem texta, shipmentNos sem fylki af texta sem er ekki tómt og allShipments sem true.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og systemId sem texta, shipmentNos sem fylki af texta sem er ekki tómt og allShipments sem true.</note>
+          <source>Send documentNo and each shipmentNos entry as non-blank text of at most 20 characters, systemId as a GUID and allShipments as true.</source>
+          <target>Sendu documentNo og hvert gildi í shipmentNos sem texta sem er ekki tómur og er að hámarki 20 stafir, systemId sem GUID og allShipments sem true.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og hvert gildi í shipmentNos sem texta sem er ekki tómur og er að hámarki 20 stafir, systemId sem GUID og allShipments sem true.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">

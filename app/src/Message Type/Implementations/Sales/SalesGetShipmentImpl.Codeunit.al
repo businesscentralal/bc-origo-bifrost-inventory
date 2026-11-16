@@ -22,7 +22,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         WritePermissionSetTok: Label 'BIFROST Full ori', Locked = true;
         InvoicedReasonTok: Label 'invoiced', Locked = true;
         OnOpenInvoiceReasonTok: Label 'onOpenInvoice', Locked = true;
-        TextExpectedTok: Label 'text', Locked = true;
+        DocumentNoExpectedTok: Label 'text (1..20)', Locked = true;
         GuidExpectedTok: Label 'guid', Locked = true;
         BooleanExpectedTok: Label 'boolean', Locked = true;
         ArrayExpectedTok: Label 'array', Locked = true;
@@ -146,8 +146,8 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         MissingWhenLbl: Label 'Neither documentNo nor systemId was sent, or neither shipmentNos nor allShipments was sent.', Comment = 'is-IS=Hvorki documentNo né systemId var sent, eða hvorki shipmentNos né allShipments var sent.';
         MissingFixLbl: Label 'Send documentNo or systemId, and shipmentNos or allShipments.', Comment = 'is-IS=Sendu documentNo eða systemId, og shipmentNos eða allShipments.';
-        FormatWhenLbl: Label 'A key has the wrong JSON type, systemId is not a GUID, or shipmentNos is empty or holds a value that is not text.', Comment = 'is-IS=Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða shipmentNos er tómt eða inniheldur gildi sem er ekki texti.';
-        FormatFixLbl: Label 'Send documentNo and systemId as text, shipmentNos as a non-empty array of text and allShipments as true.', Comment = 'is-IS=Sendu documentNo og systemId sem texta, shipmentNos sem fylki af texta sem er ekki tómt og allShipments sem true.';
+        FormatWhenLbl: Label 'A key has the wrong JSON type, systemId is not a GUID, or a document/shipment number is blank, longer than 20 characters or not text.', Comment = 'is-IS=Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða skjals- eða afhendingarnúmer er tómt, lengra en 20 stafir eða ekki texti.';
+        FormatFixLbl: Label 'Send documentNo and each shipmentNos entry as non-blank text of at most 20 characters, systemId as a GUID and allShipments as true.', Comment = 'is-IS=Sendu documentNo og hvert gildi í shipmentNos sem texta sem er ekki tómur og er að hámarki 20 stafir, systemId sem GUID og allShipments sem true.';
         UnknownWhenLbl: Label 'The request contains a key this type does not read.', Comment = 'is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.';
         UnknownFixLbl: Label 'Remove the unknown key. Allowed keys are documentNo, systemId, shipmentNos and allShipments.', Comment = 'is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentNo, systemId, shipmentNos og allShipments.';
         NotFoundWhenLbl: Label 'No sales invoice has this No. or systemId, or a shipment in shipmentNos does not exist.', Comment = 'is-IS=Enginn sölureikningur hefur þetta númer eða systemId, eða afhending í shipmentNos er ekki til.';
@@ -481,8 +481,8 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
             exit(false);
         end;
         if RequestJson.Get(DocumentNoKeyTok, Token) then
-            if not IsTextToken(Token) then
-                exit(RespondFormat(Argument, DocumentNoKeyTok, TextExpectedTok, FormatErr, FormatNextLbl));
+            if not IsDocumentNoToken(Token) then
+                exit(RespondFormat(Argument, DocumentNoKeyTok, DocumentNoExpectedTok, FormatErr, FormatNextLbl));
         if RequestJson.Get(SystemIdKeyTok, Token) then begin
             if not IsTextToken(Token) then
                 exit(RespondFormat(Argument, SystemIdKeyTok, GuidExpectedTok, FormatErr, FormatNextLbl));
@@ -495,8 +495,8 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
             if Token.AsArray().Count() = 0 then
                 exit(RespondFormat(Argument, ShipmentNosKeyTok, ArrayExpectedTok, FormatErr, FormatNextLbl));
             foreach ItemToken in Token.AsArray() do
-                if not IsTextToken(ItemToken) then
-                    exit(RespondFormat(Argument, ShipmentNosKeyTok, ArrayExpectedTok, FormatErr, FormatNextLbl));
+                if not IsDocumentNoToken(ItemToken) then
+                    exit(RespondFormat(Argument, ShipmentNosKeyTok, DocumentNoExpectedTok, FormatErr, FormatNextLbl));
         end;
         if RequestJson.Get(AllShipmentsKeyTok, Token) then begin
             if not Token.IsValue() then
@@ -529,6 +529,17 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
             exit(false);
         Token.WriteTo(TextValue);
         exit(TextValue.StartsWith('"'));
+    end;
+
+    local procedure IsDocumentNoToken(Token: JsonToken): Boolean
+    var
+        DocumentNo: Code[20];
+        Value: Text;
+    begin
+        if not IsTextToken(Token) then
+            exit(false);
+        Value := Token.AsValue().AsText();
+        exit((StrLen(Value) <= MaxStrLen(DocumentNo)) and (DelChr(Value, '<>', ' ') <> ''));
     end;
 
     local procedure IsBooleanToken(Token: JsonToken): Boolean

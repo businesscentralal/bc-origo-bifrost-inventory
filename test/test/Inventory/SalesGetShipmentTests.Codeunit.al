@@ -300,6 +300,71 @@ codeunit 96995 "Sales Get Shipment Tests"
         Assert.IsFalse(Token.AsValue().AsBoolean(), 'posts');
     end;
 
+    [Test]
+    procedure Scenario_AC04_InvalidDocumentNumbers_NeverUseTruncatedPrefix()
+    var
+        Customer: Record Customer;
+        Invoice: Record "Sales Header";
+        Shipment: Record "Sales Shipment Header";
+        RequestJson: JsonObject;
+        ShipmentNos: JsonArray;
+    begin
+        // Story #132, AC04 | Time: WorkDate only for fixture creation | Risk: None
+        // [GIVEN] Existing invoice and shipment numbers exactly 20 characters long
+        LibrarySales.CreateCustomer(Customer);
+        CreateInvoice(Invoice, Customer."No.");
+        Invoice.Rename(Invoice."Document Type", 'B2I132-INVOICE-12345');
+        Shipment.Init();
+        Shipment."No." := 'B2I132-SHIPMENT-1234';
+        Shipment."Bill-to Customer No." := Customer."No.";
+        Shipment.Insert(false);
+
+        // [WHEN] An identifier contains a real document's prefix plus extra text
+        // [THEN] It is refused before lookup rather than silently truncated
+        RequestJson.Add('documentNo', Invoice."No." + 'X');
+        RequestJson.Add('allShipments', true);
+        AssertRefusal(RequestJson, 'InvalidParameterFormat');
+        ShipmentNos.Add(Shipment."No." + 'X');
+        AssertRefusal(ShipmentRequest(Invoice."No.", ShipmentNos), 'InvalidParameterFormat');
+
+        // [WHEN] Blank identifiers are sent
+        // [THEN] They also receive a coded format refusal, and the invoice stays empty
+        Clear(RequestJson);
+        RequestJson.Add('documentNo', '   ');
+        RequestJson.Add('allShipments', true);
+        AssertRefusal(RequestJson, 'InvalidParameterFormat');
+        Clear(ShipmentNos);
+        ShipmentNos.Add('   ');
+        AssertRefusal(ShipmentRequest(Invoice."No.", ShipmentNos), 'InvalidParameterFormat');
+        Assert.AreEqual(0, CountInvoiceLines(Invoice), 'invalid numbers add nothing');
+    end;
+
+    [Test]
+    procedure Scenario_AC01_SystemIdAndMaximumLengthNo_AddsShipmentLines()
+    var
+        Customer: Record Customer;
+        Invoice: Record "Sales Header";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // Story #132, AC01 | Time: WorkDate only for fixture posting | Risk: None
+        // [GIVEN] An open invoice with a 20-character number and an uninvoiced shipment
+        LibrarySales.CreateCustomer(Customer);
+        ShipOrder(Customer."No.", 2);
+        CreateInvoice(Invoice, Customer."No.");
+        Invoice.Rename(Invoice."Document Type", 'B2I132-INVOICE-12345');
+
+        // [WHEN] The invoice is selected by systemId
+        RequestJson.Add('systemId', Format(Invoice.SystemId, 0, 4));
+        RequestJson.Add('allShipments', true);
+        ResponseJson := Execute(RequestJson);
+
+        // [THEN] The exact invoice receives the shipment lines
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'status');
+        Assert.AreEqual(Invoice."No.", ReadText(ResponseJson, 'documentNo'), 'exact invoice');
+        Assert.IsTrue(ReadInteger(ResponseJson, 'addedCount') > 0, 'shipment added');
+    end;
+
     local procedure AssertRefusal(RequestJson: JsonObject; ExpectedCode: Text)
     var
         ResponseJson: JsonObject;
