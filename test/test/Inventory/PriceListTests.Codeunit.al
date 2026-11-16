@@ -289,6 +289,45 @@ codeunit 96987 "Price List Tests ori"
         Assert.IsFalse(Header.Get(ListCode), 'Malformed scalar changes nothing.');
     end;
 
+    /// <summary>AC04: Own validation preserves unknown-key errors across Foundation versions.</summary>
+    [Test]
+    procedure Scenario_AC04_OwnValidator_RejectsUnknownKeys()
+    var
+        Lines: JsonArray;
+        Line: JsonObject;
+        Request: JsonObject;
+    begin
+        // Story #135 AC04 | Time: independent | Risk: None.
+        // Direct validation proves the fallback even when Foundation rejects top-level keys first.
+        Lines.Add(LineRequest('XUNKNOWNKEY', 10000, 20));
+        Request := SetRequest('XUNKNOWNKEY', 'Sales', Lines);
+        Request.Add('deleteLines', true);
+        AssertUnknownKey(Request, false);
+        Request.Remove('deleteLines');
+        Clear(Lines);
+        Line := LineRequest('XUNKNOWNKEY', 10000, 20);
+        Line.Add('deleteLine', true);
+        Lines.Add(Line);
+        Request.Replace('lines', Lines);
+        AssertUnknownKey(Request, false);
+        Clear(Request);
+        Request.Add('code', 'XUNKNOWNKEY');
+        Request.Add('deleteLines', true);
+        AssertUnknownKey(Request, true);
+    end;
+
+    local procedure AssertUnknownKey(Request: JsonObject; Activating: Boolean)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Price List Process ori";
+    begin
+        TempArgument.ID := CreateGuid();
+        TempArgument.Insert();
+        TempArgument.SetRequestJson(Request);
+        Assert.IsFalse(Process.ValidateRequest(TempArgument, Activating), 'Unknown keys must be refused before writes.');
+        AssertRefusal(TempArgument.GetResponseJson(), 'UnknownParameter');
+    end;
+
     /// <summary>AC04: Duplicate Line Numbers And Invalid Numbers Refuse.</summary>
     [Test]
     procedure Scenario_AC04_DuplicateLineNumbersAndInvalidNumbers_Refuse()

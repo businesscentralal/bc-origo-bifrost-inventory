@@ -320,8 +320,10 @@ codeunit 10076982 "Price List Process ori"
         ParameterName: Text;
     begin
         foreach ParameterName in Request.Keys() do
-            if not (',' + Allowed + ',').Contains(',' + ParameterName + ',') then
-                exit(Refuse(Argument, ParameterName));
+            if not (',' + Allowed + ',').Contains(',' + ParameterName + ',') then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, StrSubstNo(InvalidRequestLbl, ParameterName), CopyStr(ParameterName, 1, 250), '', '', StrSubstNo(CorrectRequestLbl, ParameterName));
+                exit(false);
+            end;
         exit(true);
     end;
 
