@@ -630,6 +630,13 @@ codeunit 96946 "Reservation Create Tests"
     end;
 
     [Test]
+    procedure Scenario_AC04_NonReservableJournal_RefusesWithoutWrites()
+    begin
+        // Story #7, AC04 | Time: WorkDate for supply | Risk: Native journal eligibility is retained
+        VerifyAdditionalSource('journalInvalid');
+    end;
+
+    [Test]
     procedure Scenario_AC04_JournalWithoutBatch_ReturnsMissingParameter()
     var
         Request: JsonObject;
@@ -762,10 +769,14 @@ codeunit 96946 "Reservation Create Tests"
                         SourceLineNo := Component."Line No.";
                     end;
                 end;
-            'journal':
+            'journal', 'journalInvalid':
                 begin
-                    LibraryInventory.CreateItemJnlLine(JournalLine, JournalLine."Entry Type"::"Negative Adjmt.", WorkDate(),
+                    LibraryInventory.CreateItemJnlLine(JournalLine, JournalLine."Entry Type"::Transfer, WorkDate(),
                         Item."No.", 3, SalesLine."Location Code");
+                    if CaseName = 'journalInvalid' then begin
+                        JournalLine.Validate("Entry Type", JournalLine."Entry Type"::"Negative Adjmt.");
+                        JournalLine.Modify(true);
+                    end;
                     SourceType := Database::"Item Journal Line";
                     SourceSubtype := JournalLine."Entry Type".AsInteger();
                     SourceNo := JournalLine."Journal Template Name";
@@ -787,7 +798,17 @@ codeunit 96946 "Reservation Create Tests"
         // [WHEN] Create reserves through the native source-specific reservation subscriber.
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
 
-        // [THEN] The requested source has a pair for the requested quantity and by-source Cancel removes it.
+        // [THEN] Native eligibility is retained; valid sources have an actual reservation pair.
+        if CaseName = 'journalInvalid' then begin
+            AssertStatus(Response, 'Error');
+            Response.Get('code', Token);
+            Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Native journal eligibility refusal.');
+            Entry.SetRange("Source Type", SourceType);
+            Entry.SetRange("Source ID", SourceNo);
+            Entry.SetRange("Source Batch Name", BatchName);
+            Assert.IsTrue(Entry.IsEmpty(), 'BC refuses journal entries that are not true demand or supply without writes.');
+            exit;
+        end;
         AssertStatus(Response, 'Success');
         Response.Get('quantity', Token);
         Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Reserved for the native source.');

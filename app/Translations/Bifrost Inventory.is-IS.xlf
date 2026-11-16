@@ -6208,9 +6208,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceSubtypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 1598139322" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source document number.</source>
-          <target>Númer upprunaskjals.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunaskjals.</note>
+          <source>Source document number, or journal template name (at most 10 characters) for an item journal source.</source>
+          <target>Númer upprunaskjals eða bókarsniðmát (að hámarki 10 stafir) fyrir vörubókaruppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunaskjals eða bókarsniðmát (að hámarki 10 stafir) fyrir vörubókaruppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2478746436" size-unit="char" translate="yes" xml:space="preserve">

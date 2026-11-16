@@ -44,7 +44,7 @@ Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. So
 {"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceNo":"SO-1001","sourceLineNo":10000,"quantity":2,"itemLedgerEntryNo":8842,"lotNo":"LOT-A"}}
 ```
 
-Create supports Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), and Item Journal Line (83). For journals, send `sourceNo` as the template and `sourceBatchName` as the batch, with the entry type in `sourceSubtype`. For production, send the status ordinal in `sourceSubtype` and the parent line in `sourceProdOrderLine`; `sourceLineNo` is 0 for an output line and the component line number for a component. Assembly headers also use `sourceLineNo:0`. Use the same source pointer for Get or Cancel.
+Create supports Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), and Item Journal Line (83). For journals, send `sourceNo` as the template and `sourceBatchName` as the batch, with the entry type in `sourceSubtype`. For production, send the status ordinal in `sourceSubtype` and the parent line in `sourceProdOrderLine`; `sourceLineNo` is 0 for an output line and the component line number for a component. Assembly headers also use `sourceLineNo:0`. Use the same source pointer for Get or Cancel, omitting blank optional parts. BC permits reservation pairs for transfer journal entries; other journal entry types still receive BC's native refusal.
 
 A `serialNo` request must represent exactly one base unit, including conversion from the source unit of measure.
 

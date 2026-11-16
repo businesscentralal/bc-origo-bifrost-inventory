@@ -103,7 +103,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         SourceTypeLbl: Label 'Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line.', Comment = 'is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.';
         SourceSubtypeLbl: Label 'Source subtype: document type ordinal (default 1 = Order for sales, purchase, assembly and service), or transfer direction (default 0 outbound, 1 inbound). Required for production (status ordinal) and item journals (entry type ordinal).', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (sjálfgefið 1 = pöntun fyrir sölu, innkaup, samsetningu og þjónustu), eða stefna millifærslu (sjálfgefið 0 út, 1 inn). Nauðsynlegt fyrir framleiðslu (stöðuröð) og vörubækur (færslutegund).';
-        SourceNoLbl: Label 'Source document number.', Comment = 'is-IS=Númer upprunaskjals.';
+        SourceNoLbl: Label 'Source document number, or journal template name (at most 10 characters) for an item journal source.', Comment = 'is-IS=Númer upprunaskjals eða bókarsniðmát (að hámarki 10 stafir) fyrir vörubókaruppruna.';
         SourceLineNoLbl: Label 'Native Source Ref. No.; use 0 for a production order line or assembly header.', Comment = 'is-IS=Source Ref. No.; notaðu 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.';
         QuantityLbl: Label 'Quantity to reserve, in the source line unit of measure. Greater than 0.', Comment = 'is-IS=Magn til frátekningar, í mælieiningu upprunalínunnar. Stærra en 0.';
         ItemNoLbl: Label 'Optional item number; must match the source line when sent.', Comment = 'is-IS=Valfrjálst vörunúmer; verður að passa við upprunalínuna ef það er sent.';
@@ -322,6 +322,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceType: Integer;
         SourceSubtype: Integer;
         SourceLineNo: Integer;
+        SourceNoMaxLength: Integer;
         LastEntryNo: Integer;
         AvailabilityDate: Date;
         QuantityPositiveErr: Label 'quantity must be greater than zero.', Comment = 'is-IS=quantity verður að vera stærra en núll.';
@@ -341,7 +342,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceSubtype := DefaultSourceSubtype(SourceType);
         if not ReadInteger(Argument, RequestJson, 'sourceSubtype', SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component", Database::"Item Journal Line"], SourceSubtype) then
             ReadOk := false;
-        if not ReadCode(Argument, RequestJson, 'sourceNo', true, 20, SourceNoText) then
+        SourceNoMaxLength := 20;
+        if SourceType = Database::"Item Journal Line" then
+            SourceNoMaxLength := 10;
+        if not ReadCode(Argument, RequestJson, 'sourceNo', true, SourceNoMaxLength, SourceNoText) then
             ReadOk := false;
         if not ReadInteger(Argument, RequestJson, 'sourceLineNo', true, SourceLineNo) then
             ReadOk := false;
