@@ -1,5 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.CRM.BusinessRelation;
+using Microsoft.CRM.Contact;
 using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
@@ -77,8 +79,20 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         ReceiptLine: Record "Purch. Rcpt. Line";
         Customer: Record Customer;
         Vendor: Record Vendor;
+        ContactBusinessRelation: Record "Contact Business Relation";
+        Contact: Record Contact;
+        ContactNos: List of [Code[20]];
+        ContactNo: Code[20];
     begin
         AssertCompany();
+        // Native party creation also creates CRM contacts; retain their exact keys before removing the parties.
+        ContactBusinessRelation.SetRange("No.", 'W4I134');
+        ContactBusinessRelation.SetFilter("Link to Table", '%1|%2', ContactBusinessRelation."Link to Table"::Customer, ContactBusinessRelation."Link to Table"::Vendor);
+        if ContactBusinessRelation.FindSet() then
+            repeat
+                if not ContactNos.Contains(ContactBusinessRelation."Contact No.") then
+                    ContactNos.Add(ContactBusinessRelation."Contact No.");
+            until ContactBusinessRelation.Next() = 0;
         // Delete a register only when every entry in its full range belongs to this explicit fixture.
         if Register.FindSet() then
             repeat
@@ -152,6 +166,9 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         Customer.DeleteAll(true);
         Vendor.SetRange("No.", 'W4I134');
         Vendor.DeleteAll(true);
+        foreach ContactNo in ContactNos do
+            if Contact.Get(ContactNo) then
+                Contact.Delete(true);
     end;
 
     local procedure AssertCompany()
