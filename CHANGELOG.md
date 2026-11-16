@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.ItemUnitOfMeasure.Create and Inventory.ItemUnitOfMeasure.Get (#100)
+
+- `Inventory.ItemUnitOfMeasure.Create` (enum value and codeunit 10077012 `Item UoM Create Impl ori`, isolated write 10077013 `Item UoM Create Proc ori`) creates one new unit of measure on an existing item from `itemNo`, `code` (a unit of measure defined in Business Central), `qtyPerUnitOfMeasure` (greater than 0), and optional `length`, `width`, `height` and `weight`, and answers the saved unit. Effect `write` (not irreversible, not idempotent): a code the item already has is refused with `PreconditionFailed` and never changes its quantity per unit, and the refusal says so when item ledger entries use the unit; an unknown item or unit of measure code gives `RecordNotFound`. Every refusal carries a `nextStep` and saves nothing.
+- `Inventory.ItemUnitOfMeasure.Get` (enum value and codeunit 10077011 `Item UoM Get Impl ori`) answers every unit of an item in code order, or one unit with `code`, with `isBaseUnit`, dimensions, cubage, weight and `hasLedgerEntries`, plus the item's `baseUnitOfMeasure`. Effect `read`.
+- Enum extension 10077015 `MsgType.ItemUoM.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch and no Data.Records write restriction were added, so existing generic writes keep working.
+- Tests: `Item UoM Tests` (96984). `Inventory Contract Batch Tests` (96921) now counts 61 Inventory types.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.
