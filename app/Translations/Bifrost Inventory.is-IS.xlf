@@ -6345,6 +6345,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - NamedType 1188720524" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a positive JSON integer</source>
+          <target>jákvæð JSON-heiltala</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-heiltala</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - NamedType IntegerExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - NamedType 1792354943" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a positive JSON number</source>
+          <target>jákvæð JSON-tala</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-tala</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - NamedType NumberExpectedTok</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3326579340 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for Sales.ReturnOrder.CreateFromPosted.</source>
           <target>Heimild hafnað fyrir Sales.ReturnOrder.CreateFromPosted.</target>
