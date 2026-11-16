@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Standard cost worksheet (#121)
+
+- Add `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement` with native worksheet suggestion and implementation, explicit unposted write effects, selected worksheet/journal responses, bilingual help and coded refusals with next steps. Implementation updates item/SKU costs; posting remains a separate revaluation operation.
+- Add codeunits 10076932–10076937, enum extension 10076848 and test codeunits 96982–96983. Tests cover suggestions, revaluation creation without ledger posting, zero stock, replay, invalid input and bilingual contracts.
+
 ## [Unreleased]
 
 ### Fixed ([28.3.2.0] development)

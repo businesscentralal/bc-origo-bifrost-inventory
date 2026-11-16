@@ -420,3 +420,14 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+
+### Standard cost worksheet
+
+`Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.
+
+`Inventory.StandardCost.Implement` takes `worksheetName`, `journalTemplateName`, `journalBatchName`, `postingDate` (`yyyy-mm-dd`) and `documentNo`. The batch must exist under a Revaluation template and be empty. Every worksheet row must be an unimplemented, unblocked Standard-cost Inventory item. Native implementation updates item and SKU costs/cost shares according to Business Central setup, marks worksheet rows implemented and creates revaluation journal lines. Zero-stock items may produce no journal lines. Both types return `status`, `worksheetName`, `lineCount`, `lines` and `posted: false`.
+
+Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
+
+Objects: codeunits 10076932 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076848 `MsgType.StdCost.EnumExt ori`; test codeunits 96982–96983 `Standard Cost Tests ori`.
