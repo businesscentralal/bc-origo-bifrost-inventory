@@ -34,6 +34,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
+| `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -167,7 +168,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge and Item Category.
+   Item Reference, Availability, Item Charge, Item Category and Purchase Returns.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
@@ -194,6 +195,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
    | Item Category | Item Category or an Item with a category code |
+   | Purchase Returns | Purchase Header whose document type is Return Order or Credit Memo |
 
    Usage checks only read company data. A source the caller cannot read supplies no signal; no
    extra business-data permission is granted. Administrators can still enable any domain manually.
@@ -206,6 +208,8 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
      need the caller's own Business Central permissions on the tables they touch (Item, Item
      Variant, Item Reference, Location, Item Category, Item Charge Assignment, Reservation Entry and
      the documents involved); they answer `PermissionDenied` when one is missing.
+     `Purchase.ReturnOrder.CreateFromPosted` needs the caller's own permission to create purchase
+     documents and to read posted purchase receipts, invoices and item entries.
    - Assign **`BIFROST InvPost ori`** (*Inv. Posting Gate*) to users or service principals that may
      post, run cost adjustment or post to G/L. It also grants the Inventory Setup page and table.
 5. The underlying Business Central setup still applies: locations and transfer routes, assembly
@@ -249,7 +253,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 10076835 | `Inventory Domain ori` | The fifteen domains |
+| 10076835 | `Inventory Domain ori` | The sixteen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
@@ -262,6 +266,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -290,6 +295,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 
 ### Permission sets
 

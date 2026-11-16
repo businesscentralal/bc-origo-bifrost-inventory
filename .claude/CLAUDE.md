@@ -26,16 +26,18 @@ README "Objects" lists every object with its ID. In short:
   shared gates and contract parts 10076919-10076923.
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
-  (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
-  the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
-  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+  (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared
+  number is a different object type.
+- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`). Next free codeunit: 10076931.
+  Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847).
+  Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory,
+  15 PurchaseReturns; `Inventory Setup ori` fields 21-25 (`Purchase Returns` is field 25). New setup rows and the
+  tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
 ## Test object IDs (unchanged by the renumbering)
 
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
-- Free: 96960-96961, 96963-96979.
+- 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.

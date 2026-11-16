@@ -15,6 +15,7 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Pricing.PriceList;
+using Microsoft.Purchases.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 
@@ -513,6 +514,38 @@ codeunit 96963 "Inventory Domain Usage Tests"
     end;
 
     [Test]
+    procedure Scenario_AC05_PurchaseReturnUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] No usage signals, then one purchase return order header.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Purchase Header");
+        SetField(UsageRecord, 'Document Type', "Purchase Document Type"::"Return Order");
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row; the table trigger must run.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] A return order is enough to turn Purchase Returns on.
+        AssertDomain(InventorySetup, 25, true);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PurchaseReturnNoUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] Purchase documents, including ordinary orders, are cleared in this transaction.
+        ClearUsage();
+        // [WHEN] A setup row is created without a return order or credit memo.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Purchase Returns stays off. A purchase order is not a signal.
+        AssertDomain(InventorySetup, 25, false);
+    end;
+
+    [Test]
     procedure Scenario_AC03_AlreadyOnWithoutUsage_StaysOn()
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -888,6 +921,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Item Reference");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
+        ClearTable(Database::"Purchase Header");
     end;
 
     local procedure ClearTable(TableNo: Integer)
