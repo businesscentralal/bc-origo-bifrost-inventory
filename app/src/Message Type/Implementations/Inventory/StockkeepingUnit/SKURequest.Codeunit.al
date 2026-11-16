@@ -16,6 +16,26 @@ codeunit 10076998 "SKU Request ori"
         TextExpectedTok: Label 'text', Locked = true;
         BooleanExpectedTok: Label 'boolean', Locked = true;
 
+    /// <summary>Answers PermissionDenied (with a nextStep) or the disabled-domain refusal; true when the type may run.</summary>
+    procedure AssertCanRun(var Argument: Record "Message Argument ori"; NeedWrite: Boolean): Boolean
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        StockkeepingUnit: Record "Stockkeeping Unit";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
+        ReadNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions, and read permission on stockkeeping units.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Aðeins lestur“ í Bifröst með birgðalestrarheimildum, og lestrarheimild á birgðageymsluvörum.';
+        WriteNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions, and write permission on stockkeeping units.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst með birgðaskriftarheimildum, og skriftarheimild á birgðageymsluvörum.';
+    begin
+        if (not InventorySetup.ReadPermission()) or (NeedWrite and (not StockkeepingUnit.WritePermission())) or (not NeedWrite and (not StockkeepingUnit.ReadPermission())) then begin
+            if NeedWrite then
+                Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', WriteNextStepLbl)
+            else
+                Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', ReadNextStepLbl);
+            exit(false);
+        end;
+        exit(DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Availability, Database::"Stockkeeping Unit", NeedWrite, false));
+    end;
+
     /// <summary>Refuses a request key that the type does not read.</summary>
     procedure RejectUnknownKeys(var Argument: Record "Message Argument ori"; RequestJson: JsonObject; AllowedKeys: Text): Boolean
     var

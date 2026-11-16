@@ -48,13 +48,13 @@ codeunit 96968 "SKU Tests"
         // [SCENARIO AC01] Without replaceExisting a unit edited by hand keeps its values and is not counted as created.
         Seed();
         AssertStatus(CallCreate(CreateRequest(false, '')), 'Success');
-        StockkeepingUnit.Get(ItemNoTok, LocationATok, '');
+        StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         StockkeepingUnit."Reorder Point" := 7;
         StockkeepingUnit.Modify();
         ResponseJson := CallCreate(CreateRequest(false, ''));
         AssertStatus(ResponseJson, 'Success');
         Assert.AreEqual(0, ReadInteger(ResponseJson, 'created'), 'created');
-        StockkeepingUnit.Get(ItemNoTok, LocationATok, '');
+        StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         Assert.AreEqual(7, StockkeepingUnit."Reorder Point", 'reorder point kept');
         Cleanup();
     end;
@@ -68,13 +68,13 @@ codeunit 96968 "SKU Tests"
         // [SCENARIO AC01] replaceExisting true rebuilds the unit from the item card.
         Seed();
         AssertStatus(CallCreate(CreateRequest(false, '')), 'Success');
-        StockkeepingUnit.Get(ItemNoTok, LocationATok, '');
+        StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         StockkeepingUnit."Reorder Point" := 7;
         StockkeepingUnit.Modify();
         ResponseJson := CallCreate(CreateRequest(true, ''));
         AssertStatus(ResponseJson, 'Success');
         Assert.AreEqual(2, ReadInteger(ResponseJson, 'skuCount'), 'skuCount');
-        StockkeepingUnit.Get(ItemNoTok, LocationATok, '');
+        StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         Assert.AreEqual(0, StockkeepingUnit."Reorder Point", 'reorder point reset');
         Cleanup();
     end;
@@ -165,7 +165,7 @@ codeunit 96968 "SKU Tests"
         // [SCENARIO AC02] Get answers a unit with its planning and cost fields.
         Seed();
         AssertStatus(CallCreate(CreateRequest(false, '')), 'Success');
-        StockkeepingUnit.Get(ItemNoTok, LocationATok, '');
+        StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         StockkeepingUnit."Reorder Point" := 12;
         StockkeepingUnit."Reorder Quantity" := 30;
         StockkeepingUnit."Unit Cost" := 4.5;
@@ -335,7 +335,7 @@ codeunit 96968 "SKU Tests"
     var
         StockkeepingUnit: Record "Stockkeeping Unit";
     begin
-        exit(StockkeepingUnit.Get(ItemNoTok, LocationCode, ''));
+        exit(StockkeepingUnit.Get(LocationCode, ItemNoTok, ''));
     end;
 
     local procedure AssertStatus(ResponseJson: JsonObject; Expected: Text)

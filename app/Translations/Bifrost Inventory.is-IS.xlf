@@ -6658,9 +6658,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3588635097 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>locationCode and variantCode are exact codes: an empty text selects units without that code, an omitted key does not restrict. At most 500 units are listed, in item, variant, location order; truncated is true when more matched. Use Inventory.SKU.Create to make missing units.</source>
-          <target>locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í röð vöru, afbrigðis og staðsetningar; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í röð vöru, afbrigðis og staðsetningar; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</note>
+          <source>locationCode and variantCode are exact codes: an empty text selects units without that code, an omitted key does not restrict. At most 500 units are listed, in key order; truncated is true when more matched. Use Inventory.SKU.Create to make missing units.</source>
+          <target>locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í lyklaröð; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í lyklaröð; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3588635097 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -6698,6 +6698,24 @@
           <target>Lestu birgðageymsluvörur vöru, að vali fyrir eina staðsetningu eða eitt afbrigði.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu birgðageymsluvörur vöru, að vali fyrir eina staðsetningu eða eitt afbrigði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 225315183" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions, and read permission on stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafninu „Aðeins lestur“ í Bifröst með birgðalestrarheimildum, og lestrarheimild á birgðageymsluvörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðeins lestur“ í Bifröst með birgðalestrarheimildum, og lestrarheimild á birgðageymsluvörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType ReadNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 3562499966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions, and write permission on stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst með birgðaskriftarheimildum, og skriftarheimild á birgðageymsluvörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst með birgðaskriftarheimildum, og skriftarheimild á birgðageymsluvörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType WriteNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 680993908 - Method 2230683630 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 must be true or false.</source>

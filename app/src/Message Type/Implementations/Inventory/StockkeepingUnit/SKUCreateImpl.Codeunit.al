@@ -27,8 +27,11 @@ codeunit 10076995 "SKU Create Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure IsEnabled(): Boolean
     var
+        InventorySetup: Record "Inventory Setup ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not InventorySetup.ReadPermission() then
+            exit(false);
         exit(DomainGate.IsEnabled("Inventory Domain ori"::Availability, Database::"Stockkeeping Unit", true, false));
     end;
 
@@ -201,10 +204,9 @@ codeunit 10076995 "SKU Create Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Availability, Database::"Stockkeeping Unit", true, false) then
+        if not SKURequest.AssertCanRun(Argument, true) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();

@@ -21,8 +21,11 @@ codeunit 10076996 "SKU Get Impl ori" implements "Msg Interface ori", "Msg Discov
 
     procedure IsEnabled(): Boolean
     var
+        InventorySetup: Record "Inventory Setup ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
     begin
+        if not InventorySetup.ReadPermission() then
+            exit(false);
         exit(DomainGate.IsEnabled("Inventory Domain ori"::Availability, Database::"Stockkeeping Unit", false, false));
     end;
 
@@ -195,7 +198,7 @@ codeunit 10076996 "SKU Get Impl ori" implements "Msg Interface ori", "Msg Discov
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'locationCode and variantCode are exact codes: an empty text selects units without that code, an omitted key does not restrict. At most 500 units are listed, in item, variant, location order; truncated is true when more matched. Use Inventory.SKU.Create to make missing units.', Comment = 'is-IS=locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í röð vöru, afbrigðis og staðsetningar; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.';
+        NotesLbl: Label 'locationCode and variantCode are exact codes: an empty text selects units without that code, an omitted key does not restrict. At most 500 units are listed, in key order; truncated is true when more matched. Use Inventory.SKU.Create to make missing units.', Comment = 'is-IS=locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í lyklaröð; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -209,13 +212,12 @@ codeunit 10076996 "SKU Get Impl ori" implements "Msg Interface ori", "Msg Discov
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         StockkeepingUnit: Record "Stockkeeping Unit";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Skus: JsonArray;
         Truncated: Boolean;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Availability, Database::"Stockkeeping Unit", false, false) then
+        if not SKURequest.AssertCanRun(Argument, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
