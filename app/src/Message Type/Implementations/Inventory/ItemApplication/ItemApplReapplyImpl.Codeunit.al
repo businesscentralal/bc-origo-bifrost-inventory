@@ -230,6 +230,8 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         ApplyToEntryNo: Integer;
         Quantity: Decimal;
         HasQuantity: Boolean;
+        OutboundParameter: Text;
+        InboundParameter: Text;
         EntryNotFoundErr: Label 'Item ledger entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörufærsla %1 fannst ekki.';
         ExpectedLbl: Label 'an existing item application or item ledger entry', Comment = 'is-IS=fyrirliggjandi vörujöfnunarfærsla eða vörufærsla';
         NextLbl: Label 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.';
@@ -244,16 +246,22 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
         RequestJson := Argument.GetRequestJson();
         if not ReadSelection(RequestJson, Argument, ItemLedgerEntryNo, ApplyToEntryNo, Quantity, HasQuantity) then
             exit;
+        OutboundParameter := 'itemLedgerEntryNo';
+        InboundParameter := 'applyToEntryNo';
+        if RequestJson.Contains('outboundEntryNo') then begin
+            OutboundParameter := 'outboundEntryNo';
+            InboundParameter := 'inboundEntryNo';
+        end;
         if not ItemLedgerEntry.Get(ItemLedgerEntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ItemLedgerEntryNo, 0, 9)), 'itemLedgerEntryNo', Format(ItemLedgerEntryNo, 0, 9), ExpectedLbl, NextLbl);
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ItemLedgerEntryNo, 0, 9)), OutboundParameter, Format(ItemLedgerEntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
         if not ApplyToItemLedgerEntry.Get(ApplyToEntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ApplyToEntryNo, 0, 9)), 'applyToEntryNo', Format(ApplyToEntryNo, 0, 9), ExpectedLbl, NextLbl);
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(EntryNotFoundErr, Format(ApplyToEntryNo, 0, 9)), InboundParameter, Format(ApplyToEntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
 
-        Argument.SetErrorContext('itemLedgerEntryNo', ExpectedLbl, NativeNextLbl);
+        Argument.SetErrorContext(OutboundParameter, ExpectedLbl, NativeNextLbl);
         Process.SetOperation('ItemApplicationReapply');
         Process.SetApplicationEntries(ItemLedgerEntryNo, ApplyToEntryNo);
         if HasQuantity then

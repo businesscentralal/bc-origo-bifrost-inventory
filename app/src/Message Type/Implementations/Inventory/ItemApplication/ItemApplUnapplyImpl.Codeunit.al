@@ -220,6 +220,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         EntryNo: Integer;
         ItemLedgerEntryNo: Integer;
         ApplicationCount: Integer;
+        LedgerApplicationErr: Label 'No real application was found for item ledger entry %1.', Comment = '%1 = item ledger entry no.; is-IS=Engin raunveruleg jöfnun fannst fyrir vörufærslu %1.';
         NotFoundErr: Label 'Item application entry %1 was not found.', Comment = '%1 = entry no., is-IS=Vörujöfnunarfærsla %1 fannst ekki.';
         ExpectedLbl: Label 'an existing item application or item ledger entry', Comment = 'is-IS=fyrirliggjandi vörujöfnunarfærsla eða vörufærsla';
         NextLbl: Label 'Read Inventory.ItemApplication.Get and send the entry number of an existing record.', Comment = 'is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.';
@@ -233,6 +234,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
+        ItemApplicationEntry.ReadIsolation := IsolationLevel::ReadCommitted;
         if RequestJson.Contains('itemLedgerEntryNo') then begin
             if RequestJson.Contains('entryNo') then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SelectorErr, 'itemLedgerEntryNo', '', ExpectedLbl, NextLbl);
@@ -257,11 +259,17 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
             ApplicationCount := 1;
         end;
         if not ItemApplicationEntry.Get(EntryNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, Format(EntryNo, 0, 9)), 'entryNo', Format(EntryNo, 0, 9), ExpectedLbl, NextLbl);
+            if RequestJson.Contains('itemLedgerEntryNo') then
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(LedgerApplicationErr, Format(ItemLedgerEntryNo, 0, 9)), 'itemLedgerEntryNo', Format(ItemLedgerEntryNo, 0, 9), ExpectedLbl, NextLbl)
+            else
+                Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, Format(EntryNo, 0, 9)), 'entryNo', Format(EntryNo, 0, 9), ExpectedLbl, NextLbl);
             exit;
         end;
 
-        Argument.SetErrorContext('entryNo', ExpectedLbl, NativeNextLbl);
+        if RequestJson.Contains('itemLedgerEntryNo') then
+            Argument.SetErrorContext('itemLedgerEntryNo', ExpectedLbl, NativeNextLbl)
+        else
+            Argument.SetErrorContext('entryNo', ExpectedLbl, NativeNextLbl);
         Process.SetOperation('ItemApplicationUnapply');
         Process.SetApplicationEntries(EntryNo, 0);
         if RequestJson.Contains('itemLedgerEntryNo') then

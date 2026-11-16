@@ -2049,6 +2049,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.ItemApplication.Get og veldu samsvarandi jákvæða og neikvæða færslu með nægu eftirstandandi magni.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method ReadSelection - NamedType NextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 4119187822" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No real application was found for item ledger entry %1.</source>
+          <target>Engin raunveruleg jöfnun fannst fyrir vörufærslu %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item ledger entry no.; is-IS=Engin raunveruleg jöfnun fannst fyrir vörufærslu %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method ExecuteBifrostTask - NamedType LedgerApplicationErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item application entry %1 was not found.</source>
           <target>Vörujöfnunarfærsla %1 fannst ekki.</target>

@@ -119,6 +119,7 @@ codeunit 96994 "Item Application 40 Tests ori"
         Request.Replace('itemLedgerEntryNo', Inbound."Entry No.");
         Dispatch("Message Type ori"::"Inventory.ItemApplication.Unapply", Request, 1033, Response);
         AssertRefusal(Response, 'RecordNotFound');
+        AssertResponseParameter(Response, 'itemLedgerEntryNo');
         Inbound.Get(Inbound."Entry No.");
         Assert.AreEqual(10, Inbound."Remaining Quantity", 'The inbound self-application cannot be removed.');
     end;
@@ -197,6 +198,7 @@ codeunit 96994 "Item Application 40 Tests ori"
                 Assert.AreEqual(-6, ValueToken.AsValue().AsDecimal(), 'Outbound joined quantity.');
             end;
         end;
+        Item.Get(Item."No.");
         Item."Cost is Adjusted" := true;
         Item.Modify();
         Clear(Request);
@@ -258,6 +260,7 @@ codeunit 96994 "Item Application 40 Tests ori"
         Request.Add('quantity', 1);
         Dispatch("Message Type ori"::"Inventory.ItemApplication.Reapply", Request, LanguageId, Response);
         AssertRefusal(Response, 'BusinessCentralError');
+        AssertResponseParameter(Response, 'outboundEntryNo');
         Inbound.Get(Inbound."Entry No.");
         Outbound.Get(Outbound."Entry No.");
         Assert.AreEqual(4, Inbound."Remaining Quantity", 'Sign refusal preserves receipt.');
@@ -375,6 +378,14 @@ codeunit 96994 "Item Application 40 Tests ori"
         Assert.AreEqual(ErrorCode, Token.AsValue().AsText(), Format(Response));
         Assert.IsTrue(Response.Get('nextStep', Token), 'Refusal has recovery guidance.');
         Assert.AreNotEqual('', Token.AsValue().AsText(), 'Recovery guidance is not blank.');
+    end;
+
+    local procedure AssertResponseParameter(Response: JsonObject; Expected: Text)
+    var
+        Token: JsonToken;
+    begin
+        Assert.IsTrue(Response.Get('parameter', Token), 'Refusal identifies the request field.');
+        Assert.AreEqual(Expected, Token.AsValue().AsText(), 'Refusal uses the selector actually sent.');
     end;
 
     local procedure EntryCount(Response: JsonObject): Integer
