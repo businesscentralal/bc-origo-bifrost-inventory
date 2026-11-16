@@ -682,6 +682,43 @@ codeunit 96946 "Reservation Create Tests"
         Assert.AreEqual('sourceProdOrderLine', Token.AsValue().AsText(), 'Parent part of the source key.');
     end;
 
+    [Test]
+    procedure Scenario_AC08_GenericWrite_NamesDedicatedTypesInBothLanguages()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Row: JsonObject;
+        Keys: JsonObject;
+        Fields: JsonObject;
+        Rows: JsonArray;
+        ResponseText: Text;
+        LanguageId: Integer;
+        Languages: List of [Integer];
+    begin
+        // Story #7, write guard DoD | Time: None | Risk: None
+        DomainSetup.EnableReservations();
+        // [GIVEN] A valid generic write envelope targeting the guarded reservation table.
+        Keys.Add('EntryNo_', 2147483000);
+        Keys.Add('Positive', false);
+        Fields.Add('Quantity', 1);
+        Row.Add('primaryKey', Keys);
+        Row.Add('fields', Fields);
+        Rows.Add(Row);
+        Request.Add('data', Rows);
+        Languages.Add(1033);
+        Languages.Add(1039);
+        foreach LanguageId in Languages do begin
+            // [WHEN] The request reaches Foundation's normal table write restriction.
+            Clear(Response);
+            Helper.ProcessMessage("Message Type ori"::"Data.Records.Set", 'Reservation Entry', Request, LanguageId, Response);
+            // [THEN] Both dedicated native write types are named in the refusal in either language.
+            AssertStatus(Response, 'Error');
+            Response.WriteTo(ResponseText);
+            Assert.IsTrue(ResponseText.Contains('Inventory.Reservation.Create'), 'Create is named in the restriction hint.');
+            Assert.IsTrue(ResponseText.Contains('Inventory.Reservation.Cancel'), 'Cancel is named in the restriction hint.');
+        end;
+    end;
+
     local procedure VerifyAdditionalSource(CaseName: Text)
     var
         Item: Record Item;
