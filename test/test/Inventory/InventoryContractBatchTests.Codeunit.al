@@ -60,6 +60,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.AssemblyOrder.Reopen');
         TypeNames.Add('Inventory.AssemblyOrder.Statistics');
         TypeNames.Add('Inventory.AvailabilityByPeriod.Get');
+        TypeNames.Add('Inventory.AvailabilityByEvent.Get');
         TypeNames.Add('Inventory.Attribute.Create');
         TypeNames.Add('Inventory.Attribute.Get');
         TypeNames.Add('Inventory.Attribute.Update');
@@ -413,6 +414,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Attribute.Update');
         Types.Add('Inventory.AttributeDefinition.Create');
         Types.Add('Inventory.AvailabilityByPeriod.Get');
+        Types.Add('Inventory.AvailabilityByEvent.Get');
         Types.Add('Inventory.TransferOrder.Create');
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');
