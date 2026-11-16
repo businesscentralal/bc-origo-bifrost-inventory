@@ -68,7 +68,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters; a longer value is cut to 20.'));
-        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitAssemblyUndoPost()));
+        Parts.AddExpectedCountParameter(Parts.CountUnitAssemblyUndoPost(), Parameters);
         exit(true);
     end;
 

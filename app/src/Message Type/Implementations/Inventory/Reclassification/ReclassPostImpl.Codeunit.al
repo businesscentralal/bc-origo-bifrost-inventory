@@ -130,7 +130,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', true, 'Item journal template name, at most 10 characters; read as an upper-case code. Use a reclassification template (type Transfer); other template types are refused before posting.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', true, 'Name of the journal batch to post, at most 10 characters; read as an upper-case code. Every line of the batch is posted.'));
-        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitReclassification()));
+        Parts.AddExpectedCountParameter(Parts.CountUnitReclassification(), Parameters);
         exit(true);
     end;
 

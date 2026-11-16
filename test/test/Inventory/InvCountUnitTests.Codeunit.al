@@ -46,6 +46,7 @@ codeunit 96980 "Inv. Count Unit Tests ori"
         TypeName: Text;
         Types: List of [Text];
         Units: List of [Text];
+        Supported: Boolean;
         PreviousLanguage: Integer;
         Contract: JsonObject;
         Effect: JsonObject;
@@ -73,6 +74,7 @@ codeunit 96980 "Inv. Count Unit Tests ori"
         Units.Add(Parts.CountUnitReclassification());
         Types.Add('Inventory.PhysInventory.Post');
         Units.Add(Parts.CountUnitPhysInventory());
+        Supported := Parts.SupportsConfirmation();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
         foreach TypeName in Types do begin
@@ -86,8 +88,9 @@ codeunit 96980 "Inv. Count Unit Tests ori"
             Assert.AreEqual('irreversible', Token.AsValue().AsText(), TypeName + ' stays irreversible.');
             Unit := Units.Get(Types.IndexOf(TypeName));
             Assert.AreNotEqual('', Unit, TypeName + ' has a count unit.');
-            Assert.IsTrue(HasText(Effect, 'changes', 'expectedCount counts ' + Unit), TypeName + ' effect names the count unit.');
-            Assert.IsTrue(HasText(Effect, 'changes', 'send the request without expectedCount and read expected'), TypeName + ' effect names the side-effect-free preview.');
+            // [THEN] Older Foundation has no confirmation protocol: the app adds no count sentence there.
+            Assert.AreEqual(Supported, HasText(Effect, 'changes', 'expectedCount counts ' + Unit), TypeName + ' effect names the count unit exactly when Foundation has the protocol.');
+            Assert.AreEqual(Supported, HasText(Effect, 'changes', 'send the request without expectedCount and read expected'), TypeName + ' effect names the side-effect-free preview exactly when Foundation has the protocol.');
             // [THEN] The expectedCount parameter carries the same unit and the preview way.
             FoundParameter := false;
             Contract.Get('parameters', Token);
@@ -95,10 +98,12 @@ codeunit 96980 "Inv. Count Unit Tests ori"
                 if Parameter.AsObject().Get('name', Name) then
                     if Name.AsValue().AsText() = 'expectedCount' then begin
                         FoundParameter := true;
-                        Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'It counts ' + Unit), TypeName + ' parameter names the count unit.');
-                        Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'without expectedCount'), TypeName + ' parameter names the preview.');
+                        if Supported then begin
+                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'It counts ' + Unit), TypeName + ' parameter names the count unit.');
+                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'without expectedCount'), TypeName + ' parameter names the preview.');
+                        end;
                     end;
-            Assert.IsTrue(FoundParameter, TypeName + ' declares expectedCount.');
+            Assert.AreEqual(Supported, FoundParameter, TypeName + ' declares expectedCount exactly when Foundation has the protocol.');
         end;
         GlobalLanguage(PreviousLanguage);
     end;

@@ -143,7 +143,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Post':
                 begin
                     Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer. ShipReceive is refused.'));
-                    Parameters.Add(ExpectedCountParameter(CountUnitTransferOrder()));
+                    AddExpectedCountParameter(CountUnitTransferOrder(), Parameters);
                 end;
             'Inventory.TransferOrder.PreviewPost':
                 Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer.'));
@@ -167,7 +167,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format; the date on the order is used when omitted.'));
                     Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble before posting; written to the order and committed before posting, used only when greater than zero.'));
-                    Parameters.Add(ExpectedCountParameter(CountUnitAssemblyOrder()));
+                    AddExpectedCountParameter(CountUnitAssemblyOrder(), Parameters);
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
@@ -861,15 +861,24 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Effect.Add('preconditions', Preconditions);
     end;
 
-    /// <summary>Builds the expectedCount parameter that names the count unit and the side-effect-free way to read it (#192).</summary>
+    /// <summary>Tests whether the deployed Foundation has the confirmation protocol (#192).</summary>
+    /// <returns>True when Foundation defines the ConfirmationRequired error code. Older Foundation versions neither read nor document expectedCount.</returns>
+    procedure SupportsConfirmation(): Boolean
+    begin
+        exit(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'));
+    end;
+
+    /// <summary>Adds the expectedCount parameter that names the count unit and the side-effect-free way to read it (#192).</summary>
     /// <param name="CountUnitText">What the count counts, from one of the CountUnit procedures.</param>
-    /// <returns>The parameter entry for the parameters chapter.</returns>
-    procedure ExpectedCountParameter(CountUnitText: Text): JsonObject
+    /// <param name="Parameters">The parameters chapter to complete.</param>
+    procedure AddExpectedCountParameter(CountUnitText: Text; var Parameters: JsonArray)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         ExpectedCountKeyTok: Label 'expectedCount', Locked = true;
     begin
-        exit(ContractMgt.Parameter(ExpectedCountKeyTok, 'integer', false,
+        if not SupportsConfirmation() then
+            exit;
+        Parameters.Add(ContractMgt.Parameter(ExpectedCountKeyTok, 'integer', false,
             'Confirmation count. It counts ' + CountUnitText + ', so the value is 1. Always checked when sent; required only when Require Confirmation for Irreversible Messages is on in Bifrost Setup. To read the count without a side effect, send the same request without expectedCount: the call is refused with ConfirmationRequired and returns expected, and nothing is changed.'));
     end;
 
@@ -881,6 +890,8 @@ codeunit 10076919 "Inventory Contract Parts ori"
         Changes: JsonToken;
         ChangesText: Text;
     begin
+        if not SupportsConfirmation() then
+            exit;
         if Effect.Get('changes', Changes) then begin
             ChangesText := Changes.AsValue().AsText();
             Effect.Remove('changes');

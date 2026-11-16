@@ -110,7 +110,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
         Parameter := ContractMgt.Parameter('postToGL', 'boolean', false, 'true makes the batch job post the cost adjustments to the general ledger in the same run. false leaves the general ledger alone. A missing key defaults to false. A supplied value must be the JSON boolean true or false; other values are refused before the report runs.');
         Parameter.Add('default', false);
         Parameters.Add(Parameter);
-        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitAdjustCost()));
+        Parts.AddExpectedCountParameter(Parts.CountUnitAdjustCost(), Parameters);
         exit(true);
     end;
 

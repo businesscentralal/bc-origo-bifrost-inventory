@@ -126,7 +126,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Parameters.Add(Parameter);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'G/L journal template name required when General Ledger Setup requires a journal template.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'G/L journal batch with a number series, required with journalTemplateName.'));
-        Parameters.Add(Parts.ExpectedCountParameter(Parts.CountUnitCostToGL()));
+        Parts.AddExpectedCountParameter(Parts.CountUnitCostToGL(), Parameters);
         exit(true);
     end;
 
