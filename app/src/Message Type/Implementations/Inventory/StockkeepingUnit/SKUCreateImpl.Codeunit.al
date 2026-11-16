@@ -169,8 +169,14 @@ codeunit 10076995 "SKU Create Impl ori" implements "Msg Interface ori", "Msg Dis
     end;
 
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Steps: JsonArray;
     begin
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.SKU.Get', 'Read the units the item has now, to see which locations or variants are missing.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.SKU.Create', 'Make the missing units, or rebuild existing ones with replaceExisting.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.SKU.Get', 'Read the units again to confirm the planning and cost fields they copied from the item card.'));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
