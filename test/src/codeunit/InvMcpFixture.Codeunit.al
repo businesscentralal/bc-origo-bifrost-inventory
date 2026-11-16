@@ -18,6 +18,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Setup;
 using Origo.Bifrost.Inventory;
 
@@ -158,6 +159,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         PostedAssemblyLine: Record "Posted Assembly Line";
         BOM: Record "BOM Component";
         Location: Record Location;
+        InventoryPostingSetup: Record "Inventory Posting Setup";
     begin
         AssertUndo39Company();
         if Register.FindSet() then
@@ -229,6 +231,8 @@ codeunit 96973 "Inv. MCP Fixture ori"
         BOM.SetFilter("Parent Item No.", 'W6U39-*');
         BOM.DeleteAll();
         Item.DeleteAll(true);
+        InventoryPostingSetup.SetFilter("Location Code", 'W6U39*');
+        InventoryPostingSetup.DeleteAll();
         Location.SetFilter(Code, 'W6U39*');
         Location.DeleteAll(true);
     end;
