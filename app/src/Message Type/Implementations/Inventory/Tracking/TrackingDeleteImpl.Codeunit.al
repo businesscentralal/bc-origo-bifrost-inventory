@@ -105,10 +105,13 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        DisabledWhenLbl: Label 'Item Tracking is turned off in Inventory Setup for this company.', Comment = 'is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.';
+        DisabledFixLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.';
     begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, DisabledWhenLbl, DisabledFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'A source selector, quantity or entryNo is absent.', 'Send the required source and tracking parameters.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'A selector or tracking value has the wrong JSON type.', 'Use the declared JSON types, positive integer entry numbers and ISO dates.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid, or the domain is disabled.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The source, quantity, tracking numbers or item consistency check is invalid.', 'Use an enabled source with valid native item tracking and a positive base quantity.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected line or tracking entry does not exist on that source.', 'Read Inventory.Tracking.Get for the selected source and use its entryNo.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected tracking is reserved or cannot be removed.', 'Cancel the reservation using Inventory.Reservation.Cancel before removing its tracking.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'Native source or tracking permissions are missing.', 'Assign the Bifrost "Full Access" permission set and the required Business Central document and reservation permissions.'));

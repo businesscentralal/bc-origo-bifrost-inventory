@@ -540,6 +540,89 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Assert.IsTrue(Entry.IsEmpty(), 'Selected tracking removed.');
     end;
 
+    /// <summary>Disabled tracking writes return the corrected setup precondition in English.</summary>
+    [Test]
+    procedure Scenario_AC01_DisabledTracking_In1033()
+    begin
+        // Story #37, AC01 | Time: no date dependency | Risk: own test-company setup only.
+        AssertDisabledTracking(1033);
+    end;
+
+    /// <summary>Disabled tracking writes return the corrected setup precondition in Icelandic.</summary>
+    [Test]
+    procedure Scenario_AC01_DisabledTracking_In1039()
+    begin
+        // Story #37, AC01 | Time: no date dependency | Risk: own test-company setup only.
+        AssertDisabledTracking(1039);
+    end;
+
+    local procedure AssertDisabledTracking(LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        ReservationEntry: Record "Reservation Entry";
+        TrackingSpecification: Record "Tracking Specification";
+        AssignImpl: Codeunit "Tracking Assign Impl ori";
+        DeleteImpl: Codeunit "Tracking Delete Impl ori";
+        PreviousLanguage: Integer;
+        ReservationCount: Integer;
+        SpecificationCount: Integer;
+    begin
+        // [GIVEN] The company switch is off, independently of source permissions and request validity.
+        Setup.InsertIfNotExists();
+        Setup."Item Tracking" := false;
+        Setup.Modify();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        ReservationCount := ReservationEntry.Count();
+        SpecificationCount := TrackingSpecification.Count();
+        Assert.IsFalse(AssignImpl.IsEnabled(), 'Assignment discovery must honor the company switch.');
+        Assert.IsFalse(DeleteImpl.IsEnabled(), 'Deletion discovery must honor the company switch.');
+
+        // [WHEN] Each message implementation is called directly: this API has no page action.
+        // [THEN] Setup refusal precedes parsing, licensing and every tracking write.
+        AssertDisabledResponse(false, LanguageId);
+        AssertDisabledResponse(true, LanguageId);
+        Assert.AreEqual(ReservationCount, ReservationEntry.Count(), 'Disabled calls create or remove no reservation rows.');
+        Assert.AreEqual(SpecificationCount, TrackingSpecification.Count(), 'Disabled calls change no specifications.');
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure AssertDisabledResponse(DeleteMode: Boolean; LanguageId: Integer)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        AssignImpl: Codeunit "Tracking Assign Impl ori";
+        DeleteImpl: Codeunit "Tracking Delete Impl ori";
+        Response: JsonObject;
+        Request: JsonObject;
+        Token: JsonToken;
+        SetupName: Text;
+    begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        if DeleteMode then
+            DeleteImpl.ExecuteBifrostTask(TempArgument)
+        else
+            AssignImpl.ExecuteBifrostTask(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Error');
+        Assert.IsTrue(Response.Get('code', Token), 'Coded setup refusal is required.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Well-formed operations cannot run while company setup is off.');
+        if LanguageId = 1039 then
+            SetupName := 'uppsetning'
+        else
+            SetupName := 'inventory setup';
+        Assert.IsTrue(Response.Get('error', Token), 'Setup refusal must explain the error.');
+        Assert.IsTrue(StrPos(LowerCase(Token.AsValue().AsText()), SetupName) > 0, 'Error names the company setup in the requested language.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Setup refusal must explain recovery.');
+        Assert.IsTrue(StrPos(LowerCase(Token.AsValue().AsText()), SetupName) > 0, 'Recovery names the setup in the requested language.');
+        if LanguageId = 1039 then
+            Assert.IsTrue(StrPos(Token.AsValue().AsText(), 'kveikja') > 0, 'Icelandic recovery explains how to enable the domain.')
+        else
+            Assert.IsTrue(StrPos(Token.AsValue().AsText(), 'turn the domain on') > 0, 'English recovery explains how to enable the domain.');
+    end;
+
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
     var
         Item: Record Item;

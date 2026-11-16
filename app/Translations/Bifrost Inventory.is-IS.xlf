@@ -6393,6 +6393,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 887019790 - Method 1158096087 - NamedType 1999847962" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking is turned off in Inventory Setup for this company.</source>
+          <target>Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetErrors - NamedType DisabledWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - Method 1158096087 - NamedType 1273813655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assign lot, assign serial, assign package, item tracking</source>
           <target>úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki</target>
@@ -6476,6 +6488,18 @@
           <target>Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - Method 1158096087 - NamedType 1999847962" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking is turned off in Inventory Setup for this company.</source>
+          <target>Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetErrors - NamedType DisabledWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - Method 1158096087 - NamedType 1273813655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2461511710 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>delete tracking, delete lot, delete serial, delete package</source>
