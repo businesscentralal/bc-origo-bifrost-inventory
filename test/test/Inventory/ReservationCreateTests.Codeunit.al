@@ -862,6 +862,8 @@ codeunit 96946 "Reservation Create Tests"
                 LibraryInventory.CreateItemJournalBatch(OtherBatch, JournalLine."Journal Template Name");
                 LibraryInventory.CreateItemJournalLine(OtherJournal, JournalLine."Journal Template Name", OtherBatch.Name,
                     JournalLine."Entry Type", Item."No.", 3);
+                if OtherJournal."Line No." <> SourceLineNo then
+                    OtherJournal.Rename(OtherJournal."Journal Template Name", OtherJournal."Journal Batch Name", SourceLineNo);
                 OtherJournal.Validate("Location Code", JournalLine."Location Code");
                 OtherJournal.Modify(true);
                 OtherRequest.Replace('sourceBatchName', OtherBatch.Name);
