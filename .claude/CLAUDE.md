@@ -39,3 +39,10 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+
+## Issue 134 allocation (Alvíss, 16.11.2026)
+
+- Codeunits / message values 10077025 Sales Undo Impl ori, 10077026 Purchase Undo Impl ori.
+- Shared codeunit 10077027 Posted Line Undo ori; enum extension 10077025 MsgType.PostedUndo.Ext ori.
+- Tests 96996 Posted Line Undo Tests ori; test fixture codeunit and page 96997 Posted Undo MCP Fixture ori.
+- These IDs are within the declared ranges and avoid the allocations visible in open Inventory PRs at implementation time.

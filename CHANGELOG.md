@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — issue 134
+
+- Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
+- Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.
+- App objects: codeunits / enum values 10077025–10077026, shared codeunit 10077027, enum extension 10077025. Test objects: codeunit 96996; explicit owned fixture codeunit / page 96997.
+
 ## [Unreleased]
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)

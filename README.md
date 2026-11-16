@@ -420,3 +420,11 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Posted sales and purchase undo (#134)
+
+`Sales.Shipment.Undo` and `Purchase.Receipt.Undo` accept `data.documentNo` and `data.lineNos` (1–200 unique positive posted line numbers). They return `reversedLineNos` and `reversedCount`. Only the selected lines are passed together to the corresponding native Undo Sales Shipment Line / Undo Purchase Receipt Line routine. All native invoicing, application and warehouse restrictions remain; invoiced or applied entries require a credit memo instead.
+
+Both operations declare `irreversible`: corrective entries are posted and a standalone call commits. `expectedCount: 1` confirms the one posted document, not its line count. Missing confirmation previews without posting when Foundation confirmation is enabled. Omit Commit retains the caller transaction. Native posted document permissions, Bifrost Full Access and Inv. Posting Gate are required. No Inventory domain switch is added for these Sales/Purchase types.
+
+Objects: implementations 10077025 / 10077026; shared validator/help 10077027; enum extension 10077025.
