@@ -24,6 +24,13 @@ codeunit 10076983 "Price List Contract ori"
         DescriptionParameterLbl: Label 'Price-list description, at most 250 characters.', Comment = 'is-IS=Lýsing verðlista, að hámarki 250 stafir.';
         CurrencyParameterLbl: Label 'Native currency code, at most 10 characters; empty means local currency.', Comment = 'is-IS=Hefðbundinn gjaldmiðilskóði, að hámarki 10 stafir; tómt merkir staðbundinn gjaldmiðil.';
         DateParameterLbl: Label 'Default validity date in yyyy-mm-dd format.', Comment = 'is-IS=Sjálfgefin gildisdagsetning á sniðinu yyyy-mm-dd.';
+        LineNumberLbl: Label 'Unique positive integer line number within the list. Existing line numbers are updated.', Comment = 'is-IS=Einkvætt jákvætt heiltölulínunúmer innan listans. Línunúmer sem eru til eru uppfærð.';
+        ProductNumberLbl: Label 'Native product number, non-empty text of at most 20 characters.', Comment = 'is-IS=Hefðbundið vörunúmer sem er ekki tómt og er að hámarki 20 stafir.';
+        AssetTypeLbl: Label 'Item (default for new lines), Resource, Resource Group, Item Discount Group or G/L Account.', Comment = 'is-IS=Item (sjálfgefið fyrir nýjar línur), Resource, Resource Group, Item Discount Group eða G/L Account.';
+        UnitLbl: Label 'Native unit of measure code, at most 10 characters.', Comment = 'is-IS=Hefðbundinn mælieiningarkóði, að hámarki 10 stafir.';
+        NonnegativeNumberLbl: Label 'Nonnegative JSON number. Omitted values are preserved on an unchanged product.', Comment = 'is-IS=JSON-tala sem er ekki neikvæð. Gildi sem er sleppt haldast ef varan er óbreytt.';
+        UnitPriceLbl: Label 'Nonnegative JSON number; Unit Price for Sales, Direct Unit Cost for Purchase.', Comment = 'is-IS=JSON-tala sem er ekki neikvæð; einingarverð fyrir Sales, beinn einingarkostnaður fyrir Purchase.';
+        DiscountLbl: Label 'JSON number from 0 through 100 for the line discount percentage.', Comment = 'is-IS=JSON-tala frá 0 til 100 fyrir línuafsláttarprósentu.';
         LinesParameterLbl: Label '1..200 objects: required lineNo (unique positive integer) and productNo (text up to 20 characters); optional assetType, unitOfMeasureCode, minimumQuantity, unitPrice, lineDiscountPercent (0..100), startingDate and endingDate. See notes for native field mapping and defaults.', Comment = 'is-IS=1..200 hlutir: lineNo (einkvætt jákvætt heiltölugildi) og productNo (texti að 20 stöfum) eru nauðsynleg; valfrjálst assetType, unitOfMeasureCode, minimumQuantity, unitPrice, lineDiscountPercent (0..100), startingDate og endingDate. Sjá athugasemdir um vörpun hefðbundinna reita og sjálfgefin gildi.';
         SetChangesLbl: Label 'Creates or updates Draft price-list headers and numbered lines using native validation; does not activate, delete or post.', Comment = 'is-IS=Stofnar eða uppfærir verðlistahausa í Drögum og númeraðar línur með hefðbundinni sannprófun; virkjar ekki, eyðir ekki eða bókar.';
         ActivateChangesLbl: Label 'Activates one verified Draft price list and its lines using native status validation; changes subsequent price calculations without posting or deleting.', Comment = 'is-IS=Virkjar einn yfirfarinn verðlista í Drögum og línur hans með hefðbundinni stöðusannprófun; breytir síðari verðútreikningum án bókunar eða eyðingar.';
@@ -31,7 +38,7 @@ codeunit 10076983 "Price List Contract ori"
         ErrorWhenLbl: Label 'The request is malformed, the list is missing or not Draft, lines conflict, permissions or the domain prevent the operation, or native validation fails.', Comment = 'is-IS=Beiðnin er ógild, listann vantar eða hann er ekki í Drögum, línur stangast á, heimildir eða sviðið hindra aðgerðina eða hefðbundin sannprófun bregst.';
         ErrorFixLbl: Label 'Use the returned parameter and nextStep to correct the request or review the list on the Price Lists page before retrying.', Comment = 'is-IS=Notaðu færibreytuna og nextStep í svarinu til að leiðrétta beiðnina eða yfirfarðu listann á síðunni Verðlistar áður en reynt er aftur.';
         PermissionErrLbl: Label 'Write permission is required on Price List Header and Price List Line.', Comment = 'is-IS=Skrifheimild þarf á verðlistahausa og verðlistalínur.';
-        PermissionNextLbl: Label 'Ask an administrator for BIFROST Full ori and native permission to maintain price lists.', Comment = 'is-IS=Biddu kerfisstjóra um BIFROST Full ori og hefðbundna heimild til að viðhalda verðlistum.';
+        PermissionNextLbl: Label 'Ask an administrator for the Bifrost Full Access permission set and native permission to maintain price lists.', Comment = 'is-IS=Biddu kerfisstjóra um fullan aðgang Bifröst og hefðbundna heimild til að viðhalda verðlistum.';
         NativeNextLbl: Label 'Correct the native validation error on the Price Lists page or in the request, then retry. A normal failed call rolls back; an Omit Commit caller must roll back its transaction.', Comment = 'is-IS=Leiðréttu hefðbundna sannprófunarvilluna á síðunni Verðlistar eða í beiðninni og reyndu aftur. Venjulegt misheppnað kall bakfærir; kallandi með Omit Commit verður að bakfæra sína færslu.';
         SubjectErrLbl: Label 'Price-list messages select only by data.code.', Comment = 'is-IS=Verðlistaskilaboð velja aðeins með data.code.';
         SubjectNextLbl: Label 'Remove the subject and use data.code for one price list.', Comment = 'is-IS=Fjarlægðu subject og notaðu data.code fyrir einn verðlista.';
@@ -78,7 +85,7 @@ codeunit 10076983 "Price List Contract ori"
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     begin
         Clear(Envelope);
-        Envelope.ReadFrom('{"subject":{"use":"notSupported"},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
+        Envelope.ReadFrom('{"subject":{"use":"notUsed"},"dataRequired":true,"version":"1.0","contentType":"text/json"}');
         exit(true);
     end;
 
@@ -96,6 +103,8 @@ codeunit 10076983 "Price List Contract ori"
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         Contract: Codeunit "Msg Contract Mgt ori";
+        LineParameter: JsonObject;
+        Children: JsonArray;
     begin
         Clear(Parameters);
         Parameters.Add(Contract.Parameter('code', 'string', true, CodeParameterLbl));
@@ -107,7 +116,18 @@ codeunit 10076983 "Price List Contract ori"
             Parameters.Add(Contract.Parameter('currencyCode', 'string', false, CurrencyParameterLbl));
             Parameters.Add(Contract.Parameter('startingDate', 'string', false, DateParameterLbl));
             Parameters.Add(Contract.Parameter('endingDate', 'string', false, DateParameterLbl));
-            Parameters.Add(Contract.Parameter('lines', 'array', true, LinesParameterLbl));
+            Children.Add(Contract.Parameter('lineNo', 'integer', true, LineNumberLbl));
+            Children.Add(Contract.Parameter('productNo', 'string', true, ProductNumberLbl));
+            Children.Add(Contract.Parameter('assetType', 'string', false, AssetTypeLbl));
+            Children.Add(Contract.Parameter('unitOfMeasureCode', 'string', false, UnitLbl));
+            Children.Add(Contract.Parameter('minimumQuantity', 'number', false, NonnegativeNumberLbl));
+            Children.Add(Contract.Parameter('unitPrice', 'number', false, UnitPriceLbl));
+            Children.Add(Contract.Parameter('lineDiscountPercent', 'number', false, DiscountLbl));
+            Children.Add(Contract.Parameter('startingDate', 'string', false, DateParameterLbl));
+            Children.Add(Contract.Parameter('endingDate', 'string', false, DateParameterLbl));
+            LineParameter := Contract.Parameter('lines', 'array', true, LinesParameterLbl);
+            LineParameter.Add('children', Children);
+            Parameters.Add(LineParameter);
         end;
         exit(true);
     end;

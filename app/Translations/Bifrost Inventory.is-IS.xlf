@@ -4953,6 +4953,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins code. Listinn verður að vera í Drögum og hafa að minnsta kosti eina línu. Hefðbundin verðlistastjórnun yfirfer allar línur og leitar að tvíteknum verðum innan listans og gagnvart öðrum listum áður en hefðbundin stöðusannprófun virkjar haus og línur. Árekstur svarar PreconditionFailed með conflicts[] sem inniheldur verðlistakóða og lineNo hverrar línu sem stangast á. Engin tvítekning er fjarlægð eða leyst sjálfkrafa. Virkjun breytir verðum sem síðari verðútreikningar nota; hún bókar ekki eða endurskrifar skjöl sem eru til. Með Omit Commit ber kallandi ábyrgð á færslunni og verður að bakfæra hana við villu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType ActivateNotesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 592470014" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item (default for new lines), Resource, Resource Group, Item Discount Group or G/L Account.</source>
+          <target>Item (sjálfgefið fyrir nýjar línur), Resource, Resource Group, Item Discount Group eða G/L Account.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Item (sjálfgefið fyrir nýjar línur), Resource, Resource Group, Item Discount Group eða G/L Account.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType AssetTypeLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 962854914" size-unit="char" translate="yes" xml:space="preserve">
           <source>The price-list code, non-empty text of at most 20 characters.</source>
           <target>Verðlistakóði sem er ekki tómur og er að hámarki 20 stafir.</target>
@@ -4977,6 +4983,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lýsing verðlista, að hámarki 250 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType DescriptionParameterLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 1856822529" size-unit="char" translate="yes" xml:space="preserve">
+          <source>JSON number from 0 through 100 for the line discount percentage.</source>
+          <target>JSON-tala frá 0 til 100 fyrir línuafsláttarprósentu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-tala frá 0 til 100 fyrir línuafsláttarprósentu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType DiscountLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 149864479" size-unit="char" translate="yes" xml:space="preserve">
           <source>Use the returned parameter and nextStep to correct the request or review the list on the Price Lists page before retrying.</source>
           <target>Notaðu færibreytuna og nextStep í svarinu til að leiðrétta beiðnina eða yfirfarðu listann á síðunni Verðlistar áður en reynt er aftur.</target>
@@ -4988,6 +5000,12 @@
           <target>Beiðnin er ógild, listann vantar eða hann er ekki í Drögum, línur stangast á, heimildir eða sviðið hindra aðgerðina eða hefðbundin sannprófun bregst.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin er ógild, listann vantar eða hann er ekki í Drögum, línur stangast á, heimildir eða sviðið hindra aðgerðina eða hefðbundin sannprófun bregst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType ErrorWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 1402948097" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unique positive integer line number within the list. Existing line numbers are updated.</source>
+          <target>Einkvætt jákvætt heiltölulínunúmer innan listans. Línunúmer sem eru til eru uppfærð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Einkvætt jákvætt heiltölulínunúmer innan listans. Línunúmer sem eru til eru uppfærð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType LineNumberLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 4178900354" size-unit="char" translate="yes" xml:space="preserve">
           <source>1..200 objects: required lineNo (unique positive integer) and productNo (text up to 20 characters); optional assetType, unitOfMeasureCode, minimumQuantity, unitPrice, lineDiscountPercent (0..100), startingDate and endingDate. See notes for native field mapping and defaults.</source>
@@ -5001,6 +5019,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu hefðbundna sannprófunarvilluna á síðunni Verðlistar eða í beiðninni og reyndu aftur. Venjulegt misheppnað kall bakfærir; kallandi með Omit Commit verður að bakfæra sína færslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType NativeNextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 1163987639" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Nonnegative JSON number. Omitted values are preserved on an unchanged product.</source>
+          <target>JSON-tala sem er ekki neikvæð. Gildi sem er sleppt haldast ef varan er óbreytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-tala sem er ekki neikvæð. Gildi sem er sleppt haldast ef varan er óbreytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType NonnegativeNumberLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 1179989640" size-unit="char" translate="yes" xml:space="preserve">
           <source>Write permission is required on Price List Header and Price List Line.</source>
           <target>Skrifheimild þarf á verðlistahausa og verðlistalínur.</target>
@@ -5008,9 +5032,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType PermissionErrLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator for BIFROST Full ori and native permission to maintain price lists.</source>
-          <target>Biddu kerfisstjóra um BIFROST Full ori og hefðbundna heimild til að viðhalda verðlistum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um BIFROST Full ori og hefðbundna heimild til að viðhalda verðlistum.</note>
+          <source>Ask an administrator for the Bifrost Full Access permission set and native permission to maintain price lists.</source>
+          <target>Biddu kerfisstjóra um fullan aðgang Bifröst og hefðbundna heimild til að viðhalda verðlistum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um fullan aðgang Bifröst og hefðbundna heimild til að viðhalda verðlistum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType PermissionNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 4278021287" size-unit="char" translate="yes" xml:space="preserve">
@@ -5024,6 +5048,12 @@
           <target>Sales eða Purchase. Verður að samsvara lista sem er til.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sales eða Purchase. Verður að samsvara lista sem er til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType PriceTypeParameterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 2877242390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native product number, non-empty text of at most 20 characters.</source>
+          <target>Hefðbundið vörunúmer sem er ekki tómt og er að hámarki 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hefðbundið vörunúmer sem er ekki tómt og er að hámarki 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType ProductNumberLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
           <source>Selects one price list by data.code. Subjects and table views are not supported.</source>
@@ -5078,6 +5108,18 @@
           <target>Fjarlægðu subject og notaðu data.code fyrir einn verðlista.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu subject og notaðu data.code fyrir einn verðlista.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType SubjectNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native unit of measure code, at most 10 characters.</source>
+          <target>Hefðbundinn mælieiningarkóði, að hámarki 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hefðbundinn mælieiningarkóði, að hámarki 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType UnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4073803195 - NamedType 2786556803" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Nonnegative JSON number; Unit Price for Sales, Direct Unit Cost for Purchase.</source>
+          <target>JSON-tala sem er ekki neikvæð; einingarverð fyrir Sales, beinn einingarkostnaður fyrir Purchase.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=JSON-tala sem er ekki neikvæð; einingarverð fyrir Sales, beinn einingarkostnaður fyrir Purchase.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price List Contract ori - NamedType UnitPriceLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - Method 3586141587 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
           <source>Create the list with Price.List.Set first.</source>
