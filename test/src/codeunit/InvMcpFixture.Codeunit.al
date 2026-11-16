@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
+using Microsoft.CRM.Contact;
+using Microsoft.CRM.BusinessRelation;
 using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
@@ -197,6 +199,72 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateTrackingLine('W8I150-S-EN', true);
         CreateTrackingLine('W8I150-L-IS', false);
         CreateTrackingLine('W8I150-S-IS', true);
+    end;
+
+    /// <summary>Creates four explicitly owned issue 37 tracking fixtures through the existing native library adapters.</summary>
+    procedure CreateTracking37Fixtures()
+    var
+        Item: Record Item;
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned evaluation company required.');
+        Item.SetFilter("No.", 'XW4I37-*');
+        if not Item.IsEmpty() then
+            Error('Owned issue 37 fixtures already exist; inspect them before retrying.');
+        CreateTrackingLine('XW4I37-L-EN', false);
+        CreateTrackingLine('XW4I37-S-EN', true);
+        CreateTrackingLine('XW4I37-L-IS', false);
+        CreateTrackingLine('XW4I37-S-IS', true);
+    end;
+
+    /// <summary>Deletes only owned issue 37 fixtures after the message API has removed their unposted tracking.</summary>
+    procedure CleanupTracking37Fixtures()
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Vendor: Record Vendor;
+        Contact: Record Contact;
+        ContactRelation: Record "Contact Business Relation";
+        ContactNumbers: List of [Code[20]];
+        ContactNo: Code[20];
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned evaluation company required.');
+        Item.SetFilter("No.", 'XW4I37-*');
+        if Item.FindSet() then
+            repeat
+                Entry.SetRange("Item No.", Item."No.");
+                if not Entry.IsEmpty() then
+                    Error('Remove owned item tracking through Inventory.Tracking.Delete before cleanup.');
+                Line.SetRange(Type, Line.Type::Item);
+                Line.SetRange("No.", Item."No.");
+                while Line.FindFirst() do begin
+                    Header.Get(Line."Document Type", Line."Document No.");
+                    Vendor.Get(Header."Buy-from Vendor No.");
+                    ContactRelation.SetRange("Link to Table", ContactRelation."Link to Table"::Vendor);
+                    ContactRelation.SetRange("No.", Vendor."No.");
+                    Clear(ContactNumbers);
+                    if ContactRelation.FindSet() then
+                        repeat
+                            ContactNumbers.Add(ContactRelation."Contact No.");
+                        until ContactRelation.Next() = 0;
+                    Header.Delete(true);
+                    Vendor.Delete(true);
+                    foreach ContactNo in ContactNumbers do
+                        if Contact.Get(ContactNo) then
+                            Contact.Delete(true);
+                end;
+                if Item."Item Tracking Code" <> '' then
+                    TrackingCode.Get(Item."Item Tracking Code");
+                Item.Delete(true);
+                if TrackingCode.Code <> '' then begin
+                    TrackingCode.Delete(true);
+                    Clear(TrackingCode);
+                end;
+            until Item.Next() = 0;
     end;
 
     local procedure CreateTrackingLine(ItemNo: Code[20]; Serial: Boolean)

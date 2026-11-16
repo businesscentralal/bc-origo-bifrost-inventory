@@ -1678,9 +1678,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType EntryExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - NamedType 99387355" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A SalesLine, PurchaseLine or TransferLine source.</source>
-          <target>Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni af gerðinni SalesLine, PurchaseLine eða TransferLine.</note>
+          <source>A SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine source.</source>
+          <target>Uppruni af gerðinni SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine eða ItemJournalLine.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppruni af gerðinni SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine eða ItemJournalLine.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType SourceExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - NamedType 3085145172" size-unit="char" translate="yes" xml:space="preserve">
@@ -1689,23 +1689,41 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir upprunann og sendu gildar rakningarfærslur fyrir þann uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - NamedType TrackingNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 1513833081 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for the supported item tracking source lines.</source>
+          <target>Heimild hafnað fyrir studdar upprunalínur vörurakningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir studdar upprunalínur vörurakningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method AssertEnabled - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 1513833081 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for native read and write permission on the selected source line and reservation entries.</source>
+          <target>Biddu kerfisstjóra um innbyggðar les- og ritheimildir á valdri upprunalínu og frátektarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um innbyggðar les- og ritheimildir á valdri upprunalínu og frátektarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method AssertEnabled - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2677511102" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking on the selected source.</source>
           <target>Rakning á völdum uppruna.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Rakning á völdum uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType SourceTrackingTxt</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 804631740" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unreserved tracking on the selected source.</source>
-          <target>Ófrátekin rakning á völdum uppruna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Ófrátekin rakning á völdum uppruna.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType UnreservedTrackingTxt</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 529613951" size-unit="char" translate="yes" xml:space="preserve">
           <source>Read Inventory.Tracking.Get for this source and send its unreserved ReservationEntry entryNo.</source>
           <target>Lestu Inventory.Tracking.Get fyrir þennan uppruna og sendu entryNo úr ReservationEntry sem er ekki frátekið.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir þennan uppruna og sendu entryNo úr ReservationEntry sem er ekki frátekið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType ReadTrackingTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 2192696731" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An array of positive integers.</source>
+          <target>Fylki jákvæðra heiltalna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylki jákvæðra heiltalna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType EntryArrayExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 1050741508" size-unit="char" translate="yes" xml:space="preserve">
+          <source>1..200 entry numbers; omit entryNo.</source>
+          <target>1..200 færslunúmer; slepptu entryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=1..200 færslunúmer; slepptu entryNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method DeleteEntries - NamedType EntrySelectionExpectedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 3713480317 - NamedType 3921788780" size-unit="char" translate="yes" xml:space="preserve">
           <source>Every entry number must identify tracking on the specified source.</source>
@@ -1726,9 +1744,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method Execute - NamedType SelectSourceTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 1561766673 - NamedType 1465600059" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Tracking requires a sales, purchase or transfer line source.</source>
-          <target>Vörurakning krefst sölu-, innkaupa- eða flutningslínu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörurakning krefst sölu-, innkaupa- eða flutningslínu.</note>
+          <source>Tracking requires a sales, purchase, transfer, assembly or item journal source.</source>
+          <target>Vörurakning krefst sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókarlínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörurakning krefst sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókarlínu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method Execute - NamedType InvalidSourceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1433149776 - Method 1561766673 - NamedType 4106565970" size-unit="char" translate="yes" xml:space="preserve">
@@ -1742,6 +1760,30 @@
           <target>Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu rakningarnúmer og jákvætt magn; raðnúmer krefst einnar grunneiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method ReadTrackingEntry - NamedType InvalidTrackingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 1895760259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>At most 200 tracking entries.</source>
+          <target>Að hámarki 200 rakningarfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Að hámarki 200 rakningarfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType SelectionLimitExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 872200912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unreserved tracking.</source>
+          <target>Ófrátekin rakning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ófrátekin rakning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType UnreservedTrackingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 3921788780" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only unreserved tracking on the selected source can be removed.</source>
+          <target>Aðeins er hægt að fjarlægja ófrátekna rakningu á völdum uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins er hægt að fjarlægja ófrátekna rakningu á völdum uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType InvalidEntryErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1433149776 - Method 3159801328 - NamedType 529613951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.Tracking.Get for this source and select its unreserved tracking entries.</source>
+          <target>Lestu Inventory.Tracking.Get fyrir þennan uppruna og veldu ófráteknar rakningarfærslur hans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Tracking.Get fyrir þennan uppruna og veldu ófráteknar rakningarfærslur hans.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Tracking Write ori - Method SelectEntry - NamedType ReadTrackingTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 436860357 - Method 2667510389 - NamedType 2088238337" size-unit="char" translate="yes" xml:space="preserve">
           <source>Complete the five setup steps before finishing. Return to the guide and choose Next.</source>
@@ -6376,10 +6418,22 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.</source>
-          <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.</note>
+          <source>Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.</source>
+          <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - Method 1158096087 - NamedType 1999847962" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking is turned off in Inventory Setup for this company.</source>
+          <target>Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetErrors - NamedType DisabledWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 887019790 - Method 1158096087 - NamedType 1273813655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assign lot, assign serial, assign package, item tracking</source>
@@ -6388,9 +6442,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assigns lot, serial or package tracking to an existing sales, purchase or transfer line through native item tracking.</source>
-          <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa- eða flutningslínu með innbyggðri vörurakningu.</note>
+          <source>Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.</source>
+          <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 174414020 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -6464,6 +6518,18 @@
           <target>Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - Method 1158096087 - NamedType 1999847962" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking is turned off in Inventory Setup for this company.</source>
+          <target>Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörurakningu í uppsetningu birgða fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetErrors - NamedType DisabledWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - Method 1158096087 - NamedType 1273813655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn on Item Tracking in Inventory Setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2461511710 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>delete tracking, delete lot, delete serial, delete package</source>
