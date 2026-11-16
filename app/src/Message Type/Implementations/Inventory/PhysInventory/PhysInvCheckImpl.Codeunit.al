@@ -151,7 +151,7 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the selected batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
         Journal.AddPhysicalBatchErrors(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no read permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Read-Only" permission set.'));

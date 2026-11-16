@@ -197,6 +197,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         Journal: Codeunit "Inventory Native Journal ori";
     begin
         Clear(Errors);
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidLine, 'A counts entry names a missing line or a line outside the selected batch.', 'Use a lineNo or systemId from the selected physical inventory batch; nothing is changed.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Inventory.PhysInventory.Record only: journalTemplateName (or templateName), journalBatchName (or batchName) and lineNo are sent in data and name a journal line that does not exist.', 'Check the batch and lineNo, or run Inventory.PhysInventory.Calculate first.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller has no write permission on the Item Journal Line table.', 'Ask an administrator for a permission set that grants it, for example the Bifrost "Full Access" permission set.'));

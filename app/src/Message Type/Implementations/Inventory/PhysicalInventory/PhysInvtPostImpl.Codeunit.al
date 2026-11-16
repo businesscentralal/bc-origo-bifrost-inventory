@@ -166,7 +166,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central posting error text', 'The posting fails, for example because a line fails the item journal checks, or a selected line is not a valid physical inventory line. Nothing is posted.', 'Run Inventory.PhysInventory.Check, correct the lines named in its answer and retry.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
         Journal.AddPhysicalBatchErrors(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the selected batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
         exit(true);
     end;
 

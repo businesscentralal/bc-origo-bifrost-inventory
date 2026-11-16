@@ -491,9 +491,106 @@ codeunit 96944 "Inventory Physical Tests"
         InitArgument(TempArgument, Batch, Request);
         Process.SetOperation('RecordCount');
         Commit();
-        Assert.IsFalse(Process.Run(TempArgument), 'Missing second line refuses the whole batch.');
+        Assert.IsTrue(Process.Run(TempArgument), 'Missing second line is a coded refusal.');
+        AssertCountRefusal(TempArgument, 'counts[2].lineNo', '999999', 1033);
         Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
         Assert.AreEqual(BeforeQuantity, Line."Qty. (Phys. Inventory)", 'First line untouched.');
+    end;
+
+    [Test]
+    procedure RecordCount_MissingLine_1033()
+    begin
+        MissingCountLine(1033, false);
+    end;
+
+    [Test]
+    procedure RecordCount_MissingLine_1039()
+    begin
+        MissingCountLine(1039, false);
+    end;
+
+    [Test]
+    procedure RecordCount_ForeignBatchLine_1033()
+    begin
+        MissingCountLine(1033, true);
+    end;
+
+    [Test]
+    procedure RecordCount_ForeignBatchLine_1039()
+    begin
+        MissingCountLine(1039, true);
+    end;
+
+    local procedure MissingCountLine(LanguageId: Integer; ForeignLine: Boolean)
+    var
+        Item: Record Item;
+        Batch: Record "Item Journal Batch";
+        OtherBatch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        TempArgument: Record "Message Argument ori" temporary;
+        Request: JsonObject;
+        Count: JsonObject;
+        Counts: JsonArray;
+        OldLanguage: Integer;
+        ParameterName: Text;
+        Received: Text;
+        BeforeQuantity: Decimal;
+    begin
+        CreatePhysical(Item, Batch, Line);
+        BeforeQuantity := Line."Qty. (Phys. Inventory)";
+        if ForeignLine then begin
+            CreateBatch(OtherBatch, "Item Journal Template Type"::"Phys. Inventory");
+            Count.Add('systemId', Format(Line.SystemId));
+            ParameterName := 'counts[1].systemId';
+            Received := Format(Line.SystemId);
+            Batch := OtherBatch;
+        end else begin
+            Count.Add('lineNo', 999999);
+            ParameterName := 'counts[1].lineNo';
+            Received := '999999';
+        end;
+        Count.Add('qtyCounted', 1);
+        Counts.Add(Count);
+        Request.Add('counts', Counts);
+        InitArgument(TempArgument, Batch, Request);
+        OldLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Journal.RecordCount(TempArgument);
+        GlobalLanguage(OldLanguage);
+        AssertCountRefusal(TempArgument, ParameterName, Received, LanguageId);
+        Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.");
+        Assert.AreEqual(BeforeQuantity, Line."Qty. (Phys. Inventory)", 'Refusal changes no quantity.');
+    end;
+
+    local procedure AssertCountRefusal(var Argument: Record "Message Argument ori"; ParameterName: Text; Received: Text; LanguageId: Integer)
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Response := Argument.GetResponseJson();
+        Response.Get('status', Token);
+        Assert.AreEqual('Error', Token.AsValue().AsText(), 'Refusal status.');
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidLine', Token.AsValue().AsText(), 'Stable code.');
+        Response.Get('parameter', Token);
+        Assert.AreEqual(ParameterName, Token.AsValue().AsText(), 'Exact entry path.');
+        Response.Get('received', Token);
+        Assert.AreEqual(Received, Token.AsValue().AsText(), 'Exact rejected identifier.');
+        Response.Get('error', Token);
+        if LanguageId = 1039 then
+            Assert.AreEqual('Talningarlínan fannst ekki í valinni bókarkeyrslu.', Token.AsValue().AsText(), 'Full translated error.')
+        else
+            Assert.AreEqual('The count line was not found in the selected journal batch.', Token.AsValue().AsText(), 'Full error.');
+        Response.Get('expected', Token);
+        if LanguageId = 1039 then
+            Assert.AreEqual('lína sem tilheyrir valinni keyrslu', Token.AsValue().AsText(), 'Full translated expectation.')
+        else
+            Assert.AreEqual('a line belonging to the selected batch', Token.AsValue().AsText(), 'Full expectation.');
+        Response.Get('nextStep', Token);
+        if LanguageId = 1039 then
+            Assert.AreEqual('Notaðu lineNo eða systemId úr valinni birgðatalningarkeyrslu.', Token.AsValue().AsText(), 'Full translated remedy.')
+        else
+            Assert.AreEqual('Use a lineNo or systemId from the selected physical inventory batch.', Token.AsValue().AsText(), 'Full remedy.');
     end;
 
     /// <summary>The published legacy Record wire format retains native single-line behavior.</summary>
@@ -998,11 +1095,20 @@ codeunit 96944 "Inventory Physical Tests"
                 Assert.IsTrue(JsonText(Response, 'error').StartsWith('counts verður að innihalda'), 'Fully Icelandic count error.')
             else
                 Assert.IsTrue(JsonText(Response, 'error').StartsWith('counts must contain'), 'Fully English count error.');
-        if Parameter = 'batchName' then
+        if (Parameter = 'batchName') and (ErrorCode <> 'RecordNotFound') then
             if LanguageId = 1039 then
                 Assert.IsTrue(JsonText(Response, 'error').StartsWith('Auðkenndu eina fyrirliggjandi bókarkeyrslu'), 'Fully Icelandic batch error.')
             else
                 Assert.IsTrue(JsonText(Response, 'error').StartsWith('Identify one existing journal batch'), 'Fully English batch error.');
+        if (Parameter = 'batchName') and (ErrorCode = 'RecordNotFound') then begin
+            if LanguageId = 1039 then begin
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('Bókarkeyrslan '), 'Existing Icelandic missing-batch contract.');
+                Assert.AreEqual('Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.', JsonText(Response, 'nextStep'), 'Existing Icelandic missing-batch recovery.');
+            end else begin
+                Assert.IsTrue(JsonText(Response, 'error').StartsWith('Journal batch '), 'Existing English missing-batch contract.');
+                Assert.AreEqual('Check the template and batch names or send the SystemId of an existing physical inventory batch.', JsonText(Response, 'nextStep'), 'Existing English missing-batch recovery.');
+            end;
+        end else
         if Parameter = 'templateName' then begin
             if LanguageId = 1039 then
                 Assert.AreEqual('Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.', JsonText(Response, 'nextStep'), 'Fully Icelandic template guidance.')

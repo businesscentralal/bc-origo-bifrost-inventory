@@ -23,6 +23,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         EmptyBatchLbl: Label 'An empty physical inventory journal batch.', Comment = 'is-IS=Tóm talningarbókarkeyrsla.';
         RegisterExpectedLbl: Label 'A native item register for the selected journal.', Comment = 'is-IS=Innbyggð vöruskrá fyrir valda bók.';
         RequestNextStepLbl: Label 'Correct the named parameter or selected journal line using the expected value, then retry.', Comment = 'is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.';
+        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
+        MissingBatchNextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
         PhysicalTemplateErr: Label 'The selected batch must use a physical inventory journal template.', Comment = 'is-IS=Valin keyrsla verður að nota sniðmát fyrir talningarbók.';
         NonrecurringTemplateErr: Label 'The selected physical inventory journal template must not be recurring.', Comment = 'is-IS=Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.';
         PhysicalTemplateExpectedLbl: Label 'A nonrecurring physical inventory journal template.', Comment = 'is-IS=Sniðmát fyrir talningarbók sem er ekki ítrekunarsniðmát.';
@@ -296,6 +298,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         BeforeQuantity: Decimal;
         CountedQuantity: Decimal;
         ParameterName: Text;
+        CountIndex: Integer;
     begin
         Request := Argument.GetRequestJson();
         NormalizeLegacyCount(Argument, Request);
@@ -310,6 +313,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
         // Validate every entry before any Modify; later native errors still roll back through the process codeunit.
         foreach Entry in Counts do begin
+            CountIndex += 1;
             if not Entry.IsObject() then
                 RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
             Count := Entry.AsObject();
@@ -320,16 +324,22 @@ codeunit 10076840 "Inventory Native Journal ori"
             if Count.Contains('systemId') then begin
                 if not Evaluate(LineId, ReadText(Count, 'systemId', Argument, 50)) or IsNullGuid(LineId) then
                     RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
-                if not Line.GetBySystemId(LineId) then
-                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
+                if not Line.GetBySystemId(LineId) then begin
+                    RefuseMissingCount(Argument, Count, CountIndex);
+                    exit;
+                end;
             end else begin
                 LineNo := ReadLineNo(Argument, Count);
-                if not Line.Get(Batch."Journal Template Name", Batch.Name, LineNo) then
-                    RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, CountsErr, 'lineNo', Format(LineNo, 0, 9), CountsErr);
+                if not Line.Get(Batch."Journal Template Name", Batch.Name, LineNo) then begin
+                    RefuseMissingCount(Argument, Count, CountIndex);
+                    exit;
+                end;
                 LineId := Line.SystemId;
             end;
-            if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, CountsErr, 'counts', RequestValue(Argument.GetRequestJson(), 'counts'), CountsErr);
+            if (Line."Journal Template Name" <> Batch."Journal Template Name") or (Line."Journal Batch Name" <> Batch.Name) then begin
+                RefuseMissingCount(Argument, Count, CountIndex);
+                exit;
+            end;
             if Count.Contains('lineNo') then begin
                 LineNo := ReadLineNo(Argument, Count);
                 if LineNo <> Line."Line No." then
@@ -484,12 +494,12 @@ codeunit 10076840 "Inventory Native Journal ori"
             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         if not IsNullGuid(BatchId) then begin
             if not Batch.GetBySystemId(BatchId) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
+                exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
             if (TemplateName <> '') and ((TemplateName <> Batch."Journal Template Name") or (BatchName <> Batch.Name)) then
                 RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         end else
             if not Batch.Get(TemplateName, BatchName) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'batchName', TemplateName + '|' + BatchName, BatchErr);
+                exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
         if not JournalTemplate.Get(Batch."Journal Template Name") then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'templateName', Batch."Journal Template Name", PhysicalTemplateExpectedLbl);
         if JournalTemplate.Type <> JournalType then
@@ -499,6 +509,40 @@ codeunit 10076840 "Inventory Native Journal ori"
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
         Line.SetRange("Journal Batch Name", Batch.Name);
         exit(true);
+    end;
+
+    local procedure RefuseMissingBatch(var Argument: Record "Message Argument ori"; TemplateName: Text; BatchName: Text): Boolean
+    var
+        ParameterName: Text;
+        Identifier: Text;
+        ExpectedLbl: Label 'an existing physical inventory journal batch', Comment = 'is-IS=fyrirliggjandi birgðatalningarbókarkeyrsla';
+    begin
+        ParameterName := 'batchName';
+        Identifier := TemplateName + '|' + BatchName;
+        if Argument.Subject <> '' then begin
+            ParameterName := 'subject';
+            Identifier := Argument.Subject;
+        end;
+        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, MissingBatchNextLbl);
+        exit(false);
+    end;
+
+    local procedure RefuseMissingCount(var Argument: Record "Message Argument ori"; Count: JsonObject; CountIndex: Integer)
+    var
+        ParameterName: Text;
+        Received: Text;
+        MissingLineErr: Label 'The count line was not found in the selected journal batch.', Comment = 'is-IS=Talningarlínan fannst ekki í valinni bókarkeyrslu.';
+        ExpectedLbl: Label 'a line belonging to the selected batch', Comment = 'is-IS=lína sem tilheyrir valinni keyrslu';
+        NextLbl: Label 'Use a lineNo or systemId from the selected physical inventory batch.', Comment = 'is-IS=Notaðu lineNo eða systemId úr valinni birgðatalningarkeyrslu.';
+    begin
+        ParameterName := 'lineNo';
+        if Count.Contains('systemId') then begin
+            ParameterName := 'systemId';
+            Received := ReadText(Count, 'systemId', Argument, 50);
+        end else
+            Received := Format(ReadLineNo(Argument, Count), 0, 9);
+        ParameterName := 'counts[' + Format(CountIndex, 0, 9) + '].' + ParameterName;
+        Argument.RespondWithError("Bifrost Error Code ori"::InvalidLine, MissingLineErr, ParameterName, Received, ExpectedLbl, NextLbl);
     end;
 
     local procedure ResolveSelection(var Argument: Record "Message Argument ori"; JournalType: Enum "Item Journal Template Type"; var Batch: Record "Item Journal Batch"; var Line: Record "Item Journal Line"): Boolean
@@ -890,7 +934,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextExpectedLbl, 10), RequestNextStepLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, AllowedParameterLbl, RequestNextStepLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, BatchErr, RequestNextStepLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, BatchErr, PhysicalTemplateNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, MissingBatchErr, MissingBatchNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, PhysicalTemplateNextStepLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NonrecurringTemplateErr, PhysicalTemplateNextStepLbl));
     end;
@@ -902,7 +946,6 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, CountsErr, RequestNextStepLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, RequestNextStepLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, CountsErr, RequestNextStepLbl));
     end;
 
     local procedure RaiseRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; Parameter: Text; Received: Text; Expected: Text)
