@@ -59,7 +59,7 @@ codeunit 10076839 "Inventory Cost Read ori"
             end;
         end;
         if not TryCollectCosts(Item, Request, LocationFilter, VariantCode, AsOfDate, Items) then begin
-            Argument.RespondWithError(GetLastErrorText());
+            Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
             exit;
         end;
         Response.Add('status', 'Success');

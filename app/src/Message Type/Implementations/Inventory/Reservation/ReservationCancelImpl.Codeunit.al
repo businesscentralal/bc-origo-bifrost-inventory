@@ -93,7 +93,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'entryNo is not a positive whole number up to 2147483647.', 'Send entryNo as a JSON number such as 120.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'No reservation entry has that entry number.', 'Read the entry numbers with Inventory.Reservation.Get, or use the entryNo that Inventory.Reservation.Create returned.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The entry is item tracking or surplus, not a reservation (its status is not Reservation), or the Reservations domain is turned off for the company.', 'Send the number of an entry with status Reservation, or turn the domain on from the Inventory Setup page.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign BIFROST Full ori (extended by BIFROST InvWrite ori) and a Business Central permission set that can change reservation entries.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native cancellation error text.', 'Business Central refuses the cancellation while it runs; the answer carries its text.', 'Read the error text and correct the reservation it names.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The reservation pair is incomplete or has inconsistent status, identity or base quantity.', 'Inspect both entries and correct their native reservation state.'));
         exit(true);
@@ -190,6 +190,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         NotReservationErr: Label 'Entry %1 is item tracking or surplus, not a reservation. Only entries with status Reservation can be cancelled.', Comment = '%1 = entry number; is-IS=Færsla %1 er vörurakning eða afgangur, ekki frátekning. Aðeins er hægt að afturkalla færslur með stöðuna Reservation.';
         IntegerExpectedTok: Label 'a positive JSON integer', Comment = 'is-IS=jákvæð JSON-heiltala';
         InconsistentPairErr: Label 'Reservation %1 does not contain a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.';
+        ListReservationsLbl: Label 'Read the current reservations with Inventory.Reservation.Get and send the entryNo of an entry that exists.', Comment = 'is-IS=Lestu núverandi frátekningar með Inventory.Reservation.Get og sendu entryNo færslu sem er til.';
         InspectPairLbl: Label 'Inspect both reservation entries and correct their native reservation state before retrying.', Comment = 'is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reservations, Database::"Reservation Entry", true, false) then
@@ -211,7 +212,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         EntryNo := Number;
         ReservationEntry.SetRange("Entry No.", EntryNo);
         if not ReservationEntry.FindFirst() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), '', '');
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, EntryNo), 'entryNo', Format(EntryNo, 0, 9), IntegerExpectedTok, ListReservationsLbl);
             exit;
         end;
         if ReservationEntry."Reservation Status" <> ReservationEntry."Reservation Status"::Reservation then begin
@@ -229,7 +230,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             Process.Run(Argument)
         else
             if not Process.Run(Argument) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
                 exit;
             end;
         ResponseJson.Add('status', 'Success');

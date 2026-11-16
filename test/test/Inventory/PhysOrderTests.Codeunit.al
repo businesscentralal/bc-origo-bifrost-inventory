@@ -377,6 +377,8 @@ codeunit 96986 "Phys Order Tests ori"
         Setup.Modify();
         GLSetup.Get();
         GLSetup."Journal Templ. Name Mandatory" := false;
+        GLSetup."Allow Posting From" := 0D;
+        GLSetup."Allow Posting To" := 0D;
         GLSetup.Modify();
     end;
 
@@ -390,8 +392,8 @@ codeunit 96986 "Phys Order Tests ori"
         Series.Insert(true);
         Line."Series Code" := Series.Code;
         Line."Line No." := 10000;
-        Line."Starting No." := 'W4PI000001';
-        Line."Ending No." := 'W4PI999999';
+        Line."Starting No." := CopyStr('W4' + CopyStr(Series.Code, 1, 8) + '000001', 1, MaxStrLen(Line."Starting No."));
+        Line."Ending No." := CopyStr('W4' + CopyStr(Series.Code, 1, 8) + '999999', 1, MaxStrLen(Line."Ending No."));
         Line."Increment-by No." := 1;
         Line.Insert(true);
         exit(Series.Code);

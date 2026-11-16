@@ -61,13 +61,14 @@ MEASURED_PACKAGE_PROFILES = {
 }
 FOUNDATION_CANDIDATE = {
     "identity": {"id": "7505e808-6e52-4b96-a328-82573391297a", "publisher": "Origo",
-                 "name": "Bifrost Foundation", "version": "28.0.3.530"},
-    "sha256": "b95e0eccf7a4038531cea08f0441e757ac176c7c4ff06b1b8eb9d25ac0dd3a88",
-    "sourceCommit": "8ec074f4ac69ac9bde15807cf16d21bee045332f",
-    "buildUrl": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/runs/37679390622",
-    "compilerVersion": "18.1.43.7601",
-    "artifactId": 11508979803,
-    "archiveSha256": "21c6331c47d3134d1f3c8c77f240d021fa47710f6fbdebc974b733e0b708bad8",
+                 "name": "Bifrost Foundation", "version": "28.0.8.617"},
+    "sha256": "f20806e61c62af9ca80af0d0dd7273835947841b5bcc4b9d389dd2a7907146bc",
+    "sourceCommit": "398b62521c043b2b4ba2ee1d626813f3ccb85711",
+    "buildUrl": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/runs/39680460724",
+    "compilerVersion": "18.1.43.63721",
+    "releaseTag": "28.0.8",
+    "releaseAssetId": 663995787,
+    "archiveSha256": "55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1",
 }
 SYMBOL_POLICIES = {
     "appCache": {"packages": 128, "bytes": 512 * 1024 * 1024},
@@ -400,12 +401,13 @@ def check_package(info, expected, mode, app_type, friend, source_commit=None):
 
 
 def check_foundation_candidate(info):
-    """Exact development candidate content, not Windows signature acceptance."""
+    """Exact published release content, not Windows signature acceptance."""
     for key in ("identity", "sha256", "sourceCommit", "buildUrl", "compilerVersion"):
         require(info[key] == FOUNDATION_CANDIDATE[key], "Unapproved Foundation candidate " + key)
     require(info["friends"] == [] and info["signatureTailBytes"] > 0,
             "Foundation candidate friend/signature-content mismatch")
-    return {"candidate": "candidate530", "artifactId": FOUNDATION_CANDIDATE["artifactId"],
+    return {"candidate": "release617", "releaseTag": FOUNDATION_CANDIDATE["releaseTag"],
+            "releaseAssetId": FOUNDATION_CANDIDATE["releaseAssetId"],
             "archiveSha256": FOUNDATION_CANDIDATE["archiveSha256"], "signatureTrustVerified": False,
             "runnerInputEqualityVerified": False}
 
@@ -751,15 +753,26 @@ def _before_compile(root, request):
     require(len(foundation) == 1, "Missing/ambiguous/unapproved Foundation input bytes")
     foundation_candidate = check_foundation_candidate(foundation[0])
     if app_type == "testApp":
-        require("app" in state["receipts"], "Test compile before product receipt")
         products = [s for s in symbols if s["identity"]["id"] == product["id"]]
-        require(len(products) == 1 and products[0]["sha256"] == state["receipts"]["app"]["package"]["sha256"],
-                "Test does not consume exact just-built product")
+        if "app" in state["receipts"]:
+            require(len(products) == 1 and products[0]["sha256"] == state["receipts"]["app"]["package"]["sha256"],
+                    "Test does not consume exact just-built product")
+        else:
+            reuse = request.get("productReuse")
+            require(_product_reuse_allowed(reuse), "Test compile before product receipt")
+            require(len(products) == 1 and products[0]["sha256"] == reuse["packageSha256"],
+                    "Test does not consume exact baseline-reused product")
     for symbol in compiler_symbols:
         if symbol["identity"]["id"].lower() == foundation[0]["identity"]["id"].lower():
             require(symbol["sha256"] == foundation[0]["sha256"], "Unapproved compiler-folder Foundation bytes")
         if app_type == "testApp" and symbol["identity"]["id"].lower() == product["id"].lower():
-            require(symbol["sha256"] == state["receipts"]["app"]["package"]["sha256"], "Wrong compiler-folder Test product")
+            if "app" in state["receipts"]:
+                expected_sha = state["receipts"]["app"]["package"]["sha256"]
+            else:
+                reuse = request.get("productReuse")
+                require(_product_reuse_allowed(reuse), "Test compile before product receipt")
+                expected_sha = reuse["packageSha256"]
+            require(symbol["sha256"] == expected_sha, "Wrong compiler-folder Test product")
     snapshot = {"context": context, "kind": request["kind"], "appType": app_type, "symbols": symbols,
                 "symbolsFolder": str(Path(request["symbolsFolder"]).resolve()),
                 "compilerSymbolsFolder": str(Path(request["compilerSymbolsFolder"]).resolve()),
@@ -913,27 +926,74 @@ def post_compile(root, request):
     return receipt
 
 
-def reconcile(root, context, stage, signature=None):
+def _product_reuse_allowed(product_reuse):
+    """True when Finalize may accept a baseline-reused product package (no app/ diff)."""
+    if not isinstance(product_reuse, dict) or not product_reuse.get("allowed"):
+        return False
+    require(product_reuse.get("appFolderUntouched") is True,
+            "Product reuse requires an untouched app/ tree in the PR diff")
+    run_id = str(product_reuse.get("baselineWorkflowRunId") or "")
+    require(run_id.isdigit(),
+            "Product reuse missing numeric baseline workflow run id")
+    sha = str(product_reuse.get("baselineWorkflowSHA") or "").lower()
+    require(re.fullmatch(r"[a-f0-9]{40}", sha) is not None,
+            "Product reuse missing baseline workflow SHA")
+    require(product_reuse.get("packageFile") and product_reuse.get("packageSha256"),
+            "Product reuse missing package path/hash")
+    return True
+
+
+def reconcile(root, context, stage, signature=None, product_reuse=None):
     """Check expected hooks and actual published artifact paths, also after Sign."""
     root = Path(root)
     directory = root / ".buildartifacts" / "AppSourceGate" / context["mode"]
     state = json.loads((directory / "state.json").read_text(encoding="utf-8-sig"))
     require(state["context"] == context, "Stale finalize context")
     expected = {"app", "testApp"} if context["mode"] == "Test" else {"app"}
-    require(set(state["receipts"]) == expected, "Skipped/missing/unexpected compile hook")
+    receipts = set(state["receipts"])
+    reuse_app = False
+    if "app" not in receipts:
+        if _product_reuse_allowed(product_reuse):
+            package_path = (root / str(product_reuse["packageFile"])).resolve()
+            require(package_path.is_file(), "Baseline-reused product package missing")
+            require(file_hash(package_path) == product_reuse["packageSha256"],
+                    "Baseline-reused product package hash mismatch")
+            apps_folder = root / ".buildartifacts" / "Apps"
+            files = list(apps_folder.glob("*.app"))
+            require(len(files) == 1 and files[0].resolve() == package_path,
+                    "Baseline-reused product package is missing/ambiguous under Apps")
+            product = json.loads((root / "app/app.json").read_text(encoding="utf-8-sig"))
+            info = package_info(package_path)
+            require(info["identity"]["id"] == product["id"],
+                    "Baseline-reused package is not the product app")
+            require(info["sourceCommit"] == str(product_reuse["baselineWorkflowSHA"]).lower(),
+                    "Baseline-reused package sourceCommit does not match baseline workflow SHA")
+            reuse_app = True
+            receipts = receipts | {"app"}
+        else:
+            require(False, "Skipped/missing/unexpected compile hook")
+    require(receipts == expected, "Skipped/missing/unexpected compile hook")
     require(file_hash(root / "BuildOutput.txt") == state["logPrefixSha256"], "Unreceipted later compiler output")
     for relative, sha in state["hookHashes"].items():
         require(file_hash(root / relative) == sha, "Hook/tool displaced during pipeline")
     outputs = []
     for app_type in sorted(expected):
+        folder = root / ".buildartifacts" / ("Apps" if app_type == "app" else "TestApps")
+        files = list(folder.glob("*.app"))
+        require(len(files) == 1, "Missing/ambiguous final package output")
+        if app_type == "app" and reuse_app:
+            info = package_info(files[0])
+            require(info["sha256"] == product_reuse["packageSha256"],
+                    "Baseline-reused product package bytes changed")
+            require(stage != "signed",
+                    "Signed stage still requires a current-run product compile receipt")
+            outputs.append({"file": str(files[0].relative_to(root)), **info, "productReuse": True})
+            continue
         receipt = state["receipts"][app_type]
         require(receipt["context"] == context, "Wrong receipt mode/run/SHA")
         validate_parameters(receipt["parameters"])
         for item in receipt["sourceFiles"]:
             require(file_hash(root / item["file"]) == item["sha256"], "Compiled AL source changed after receipt")
-        folder = root / ".buildartifacts" / ("Apps" if app_type == "app" else "TestApps")
-        files = list(folder.glob("*.app"))
-        require(len(files) == 1, "Missing/ambiguous final package output")
         info = package_info(files[0])
         require(info["contentSha256"] == receipt["package"]["contentSha256"], "Final package content changed")
         require(stage == "signed" or info["sha256"] == receipt["package"]["sha256"], "Unsigned package bytes changed")
@@ -970,7 +1030,8 @@ def main():
             elif args.action == "post":
                 result = post_compile(args.root, request)
             else:
-                result = reconcile(args.root, request["context"], args.action, request.get("signature"))
+                result = reconcile(args.root, request["context"], args.action, request.get("signature"),
+                                   request.get("productReuse"))
         # Receipts are files, not console dumps of pipeline settings or paths.
         print(json.dumps(result) if args.action == "package" else "AppSource gate: " + args.action + " passed")
         return 0

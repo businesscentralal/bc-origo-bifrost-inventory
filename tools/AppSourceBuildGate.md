@@ -1,3 +1,28 @@
+## Current Foundation release profile (24 October 2026)
+
+Production compilation and collision restoration use **release617**, the published
+Foundation release `28.0.8` (app `28.0.8.617`). Both app manifests and the source
+input floor agree. The exact package/source/build/compiler pins are in
+`appsource_gate.FOUNDATION_CANDIDATE`; staging shares those production pins.
+Apps release asset `663995787` has archive SHA256
+`55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1`;
+TestApps asset `663995606` has SHA256
+`6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be`.
+Source is `398b62521c043b2b4ba2ee1d626813f3ccb85711`, build `39680460724`.
+Only the exact known TestApps collision can be replaced, using the immutable
+release asset endpoint and verified archive/package hashes. Unknown inputs fail
+before download or mutation. The compiler still requires zero friend grants and
+signature content; this is not a Windows trust verdict.
+
+`controlled523` and `candidate530` remain explicit historical regression profiles;
+neither can satisfy the current compiler gate. Historical notes below describe
+their original evidence, not the current production default. Set
+`APPSOURCE_GATE_FOUNDATION_CANDIDATE` to the exact released617 Apps package when
+running the compiler-gate regressions. New release-profile tests require
+`FOUNDATION_RELEASE617_ARTIFACTS` with `Apps.zip` and `TestApps.zip`.
+
+---
+
 # AppSource build gate
 
 Ported on 2026-10-19 from Bifrost Attachments (`bc-origo-bifrost-attachments`, issue #78,
@@ -38,7 +63,7 @@ The separate controlled523 Foundation fixture is main
 `Origo_Bifrost Foundation_28.0.2.523.app`, SHA256
 `5901bebe66b44e91ed6110620e62ee45d122ba9e0378dcfda4aeef4d00d3ae0f`.
 The controlled fixture retains these exact bytes. Current actual precompile inventory
-requires the internally approved exact candidate530 below, with zero product self-app inputs. Test must use the exact just-built product. Changing the approved
+requires the internally approved exact candidate530 below, with zero product self-app inputs. Test must use the exact just-built product, except when a PR does not touch `app/` and AL-Go incremental builds place a baseline-reused product under `.buildartifacts/Apps` (see Baseline product reuse below). Changing the approved
 input requires a reviewed tooling change; the app dependency floor is
 **28.0.3.530** (`tools/check_build_inputs.py` refuses a lower floor). Symbol inventories are independent of the donated manifest guard.
 
@@ -46,9 +71,28 @@ Run/attempt/job, checkout SHA, compiled-source SHA, build mode, script hashes,
 package/content digests and source hashes are retained in sanitized JSON under
 `.buildartifacts/AppSourceGate/<mode>`. The checkout can be a synthetic PR merge;
 the manifest's compiled-source commit is checked independently. Existing receipts
-cannot be reused. Missing/displaced hooks, truncated later logs, disabled cops,
+from a prior job cannot be reused; Initialize requires a clean AppSourceGate directory. Missing/displaced hooks, truncated later logs, disabled cops,
 fallbacks, workspace compilation and unsupported compiler collection fail closed.
 Container-only compilation needs a supported identity collector before acceptance.
+
+## Baseline product reuse (incremental builds)
+
+When a pull request does **not** touch `app/` and AL-Go incremental builds reuse the
+product package from the baseline workflow run (copied into `.buildartifacts/Apps`
+without a current-run product compile), Finalize/Pipeline may accept that package
+instead of an `app` compile receipt. Evidence collected at Finalize (not from
+`BuildOutput.txt`) is:
+
+- `_baselineWorkflowRunId` / `baselineWorkflowRunId`: non-empty numeric baseline run id
+- `_baselineWorkflowSHA` / `baselineWorkflowSHA`: 40-hex baseline workflow SHA
+- exactly one `.buildartifacts/Apps/*.app` whose NAVX `sourceCommit` equals that SHA
+  and whose identity matches `app/app.json`
+
+In Test mode, BeforeCompile only seeks this reuse when compiling the test app (so a
+`tools/**` full rebuild can still compile the product normally). The test compile must
+consume the exact reused product bytes (`packageSha256`). **Signed** builds still require
+a current-run product compile receipt; baseline reuse is refused there. Diffs that touch
+`app/`, or missing/invalid baseline env or package binding, fail closed.
 
 ## Infrastructure and acceptance holds
 

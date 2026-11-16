@@ -164,7 +164,7 @@ codeunit 10076856 "Assembly Order Reopen Impl ori" implements "Msg Interface ori
             Codeunit.Run(Codeunit::"Asm. Order Reopen Process ori", AssemblyHeader)
         else
             if not Codeunit.Run(Codeunit::"Asm. Order Reopen Process ori", AssemblyHeader) then begin
-                Argument.RespondWithError(GetLastErrorText());
+                Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), '', '', '', '');
                 exit;
             end;
         AssemblyHeader.Find();

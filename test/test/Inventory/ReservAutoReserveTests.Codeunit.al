@@ -321,7 +321,7 @@ codeunit 96958 "Reserv. AutoReserve Tests"
         Assert.IsTrue(ContractText.Contains('Read Inventory.Reservation.Get for what was reserved.'), 'LinesSkipped nextStep');
         Assert.IsTrue(Contract.Contains('examples'), 'examples');
         Assert.IsFalse(ContractText.Contains('Reservation Management'), 'no codeunit names');
-        Assert.IsFalse(ContractText.Contains(' ori"'), 'no object names');
+        Assert.IsFalse(ContractText.Replace('"permissionSet":"BIFROST Full ori"', '').Replace('"permissionSet":"BIFROST Read ori"', '').Contains(' ori"'), 'no object names outside the structured effect.permissionSet field');
         // [THEN] The notes follow the language of the call.
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1033);

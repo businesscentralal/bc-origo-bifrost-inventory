@@ -70,15 +70,15 @@ codeunit 96922 "Inv. Lookup Contract Tests"
 
     /// <summary>Create and Item range lookups retain their distinct non-strict contracts.</summary>
     [Test]
-    procedure NonLookupTypes_ErrorsChapter_NoMultipleErrors()
+    procedure CreateTypes_DeclareCollectionAndAttributeReadsDoNot()
     begin
-        // [GIVEN] Non-document lookups; [WHEN] read errors; [THEN] no accidental aggregation declaration.
-        AssertCodeCount('Inventory.TransferOrder.Create', 'MultipleErrors', 0);
-        AssertCodeCount('Inventory.AssemblyOrder.Create', 'MultipleErrors', 0);
+        // [GIVEN] Create preflight collects independent errors; attribute reads retain their existing contract.
+        AssertCodeCount('Inventory.TransferOrder.Create', 'MultipleErrors', 1);
+        AssertCodeCount('Inventory.AssemblyOrder.Create', 'MultipleErrors', 1);
         AssertCodeCount('Inventory.Attribute.Get', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.Attribute.Create', 'MultipleErrors', 0);
         AssertCodeCount('Inventory.Attribute.Update', 'MultipleErrors', 0);
-        AssertCodeCount('Inventory.AttributeDefinition.Create', 'MultipleErrors', 0);
+        AssertCodeCount('Inventory.AttributeDefinition.Create', 'MultipleErrors', 1);
     end;
 
     /// <summary>Blocked attribute refusal translates its sentence while retaining the item and protocol key.</summary>
@@ -146,6 +146,11 @@ codeunit 96922 "Inv. Lookup Contract Tests"
                 Assert.AreEqual(EntryText(EnglishEntry, 'when'), EntryText(IcelandicEntry, 'when'), Name + ': stable English explanation ' + Code);
                 Assert.AreEqual(EntryText(EnglishEntry, 'fix'), EntryText(IcelandicEntry, 'fix'), Name + ': stable English next step ' + Code);
             end;
+            if Name in ['Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost'] then begin
+                EnglishEntry := ErrorByCode(EnglishErrors, 'MissingParameter');
+                Assert.IsTrue(EntryText(EnglishEntry, 'when').Contains('postingType'), Name + ': missing postingType uses the same documented code.');
+                Assert.IsTrue(EntryText(EnglishEntry, 'fix').Contains('Ship or Receive'), Name + ': actionable postingType guidance is retained.');
+            end;
             IcelandicEntry := ErrorByCode(IcelandicErrors, 'InvalidParameterFormat');
             Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('data is not a JSON object'), Name + ': English contract explanation');
             Assert.IsTrue(EntryText(IcelandicEntry, 'when').Contains('no, systemId, recordSystemId, id'), Name + ': invariant identifier keys');
@@ -167,6 +172,7 @@ codeunit 96922 "Inv. Lookup Contract Tests"
         foreach Entry in Errors do
             if Entry.AsObject().Get('code', Value) then
                 if Value.AsValue().AsText() = Code then begin
+                    // The shared entry includes postingType; count it too so duplicate codes still fail.
                     Result := Entry.AsObject();
                     Count += 1;
                 end;

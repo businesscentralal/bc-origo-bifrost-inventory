@@ -88,7 +88,7 @@ codeunit 96904 "Transfer Order Test Helper"
     /// </summary>
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; RequestJson: JsonObject; var ResponseJson: JsonObject)
     begin
-        ProcessMessage(MessageType, '', RequestJson, 0, ResponseJson);
+        ProcessMessage(MessageType, '', RequestJson, GlobalLanguage(), ResponseJson);
     end;
 
     /// <summary>
@@ -105,7 +105,7 @@ codeunit 96904 "Transfer Order Test Helper"
     /// </summary>
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; var ResponseJson: JsonObject)
     begin
-        ProcessMessage(MessageType, Subject, RequestJson, 0, ResponseJson);
+        ProcessMessage(MessageType, Subject, RequestJson, GlobalLanguage(), ResponseJson);
     end;
 
     /// <summary>

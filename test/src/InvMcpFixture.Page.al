@@ -23,6 +23,48 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreateRefusals)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned151 fixtures';
+                ToolTip = 'Creates new owned physical-count batches and periods once; refuses existing fixtures.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateRefusalFixtures();
+                    SeedState := 'Create owned151 fixtures completed.';
+                end;
+            }
+            action(CreateTracking37)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned37 tracking';
+                ToolTip = 'Creates four new XW4I37 source lines for explicit bilingual MCP verification.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateTracking37Fixtures();
+                    SeedState := 'Create owned37 tracking completed.';
+                end;
+            }
+            action(CleanupTracking37)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned37 tracking';
+                ToolTip = 'Removes only XW4I37 fixture documents, items and tracking codes after native tracking removal.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupTracking37Fixtures();
+                    SeedState := 'Clean owned37 tracking completed.';
+                end;
+            }
             action(CreateTracking)
             {
                 ApplicationArea = All;

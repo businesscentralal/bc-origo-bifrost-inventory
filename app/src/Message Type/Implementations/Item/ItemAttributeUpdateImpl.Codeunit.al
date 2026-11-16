@@ -111,8 +111,11 @@ codeunit 10076917 "Item Attribute Update Impl ori" implements "Msg Interface ori
     end;
 
     procedure GetExamples(var Examples: JsonArray): Boolean
+    var
+        ContractParts: Codeunit "Inventory Contract Parts ori";
     begin
-        exit(false);
+        Examples := ContractParts.GetExamples('Inventory.Attribute.Update');
+        exit(Examples.Count() > 0);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
@@ -139,11 +142,14 @@ codeunit 10076917 "Item Attribute Update Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
+        Resolve: Codeunit "Item Attribute Resolve ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Attributes, Database::"Item Attribute Value Mapping", true, false) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
+        if not Resolve.ValidateMappings(Argument, true) then
+            exit;
 
         if not Codeunit.Run(Codeunit::"Item Attr. Update Process ori", Argument) then begin
             Argument.RespondWithLastError();

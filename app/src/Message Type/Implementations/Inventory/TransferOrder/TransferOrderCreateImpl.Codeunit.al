@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Transfer;
+using Microsoft.Inventory.Location;
 using Origo.Bifrost;
 
 /// <summary>
@@ -144,12 +145,13 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         TransferHeader: Record "Transfer Header";
+        Location: Record Location;
         DomainGate: Codeunit "Inventory Domain Gate ori";
         RequestValueReader: Codeunit "Request Value Reader ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         Lines: JsonArray;
-        Token: JsonToken;
         TransferFromCode: Code[10];
         TransferToCode: Code[10];
         InTransitCode: Code[10];
@@ -159,11 +161,12 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
         ReceiptDate: Date;
         DirectTransfer: Boolean;
         HasLines: Boolean;
-        MissingFromErr: Label 'transferFromCode must be specified in the request JSON.', Comment = 'is-IS=transferFromCode verður að vera tilgreint í JSON-beiðninni.';
-        MissingToErr: Label 'transferToCode must be specified in the request JSON.', Comment = 'is-IS=transferToCode verður að vera tilgreint í JSON-beiðninni.';
         MissingInTransitErr: Label 'inTransitCode must be specified when directTransfer is false.', Comment = 'is-IS=inTransitCode verður að vera tilgreint þegar directTransfer er false.';
         FieldWriteRestrictedErr: Label 'Field %1 is restricted for write. Cannot use value ''%2''.', Comment = '%1 = field caption, %2 = field value, is-IS=Ritun í reitinn %1 er takmörkuð. Ekki má nota gildið ''%2''.';
         ReadOk: Boolean;
+        MissingLocationErr: Label '%1 %2 was not found.', Comment = '%1 = parameter name, %2 = location code; is-IS=%1 %2 fannst ekki.';
+        LocationExpectedTxt: Label 'An existing location code appropriate for this transfer.', Comment = 'is-IS=Staðsetningarkóði sem er til og á við um þennan flutning.';
+        LocationNextStepTxt: Label 'Correct the from, to and in-transit locations and every reported request value.', Comment = 'is-IS=Leiðréttu uppruna-, áfangastaðar- og millifærslustaðsetningar og öll tilgreind gildi beiðninnar.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", true, false) then
             exit;
@@ -171,59 +174,42 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
 
-        if RequestJson.Get('transferFromCode', Token) then
-            TransferFromCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TransferFromCode))
-        else begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingFromErr, 'transferFromCode', '', '', '');
-            exit;
-        end;
-
-        if RequestJson.Get('transferToCode', Token) then
-            TransferToCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(TransferToCode))
-        else begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingToErr, 'transferToCode', '', '', '');
-            exit;
-        end;
-
-        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode));
-            exit;
-        end;
-        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
-            Argument.RespondWithError(StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode));
-            exit;
-        end;
-
-        if not RequestValueReader.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer) then
-            exit;
-
-        if RequestJson.Get('inTransitCode', Token) then
-            InTransitCode := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(InTransitCode));
-        if (not DirectTransfer) and (InTransitCode = '') then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingInTransitErr, 'inTransitCode', '', '', '');
-            exit;
-        end;
-
-        ReadOk := true;
+        TransferFromCode := CopyStr(Parts.ReadRequestText(RequestJson, 'transferFromCode', Argument, true, 10), 1, 10);
+        TransferToCode := CopyStr(Parts.ReadRequestText(RequestJson, 'transferToCode', Argument, true, 10), 1, 10);
+        InTransitCode := CopyStr(Parts.ReadRequestText(RequestJson, 'inTransitCode', Argument, false, 10), 1, 10);
+        ExternalDocNo := CopyStr(Parts.ReadRequestText(RequestJson, 'externalDocumentNo', Argument, false, 35), 1, 35);
+        ReadOk := RequestValueReader.TryReadBoolean(Argument, RequestJson, 'directTransfer', false, DirectTransfer);
+        if ReadOk and (not DirectTransfer) and (InTransitCode = '') then
+            Argument.AddError("Bifrost Error Code ori"::MissingParameter, MissingInTransitErr, 'inTransitCode', '<missing>', LocationExpectedTxt, LocationNextStepTxt);
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
             ReadOk := false;
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'shipmentDate', false, ShipmentDate) then
             ReadOk := false;
         if not RequestValueReader.TryReadDate(Argument, RequestJson, 'receiptDate', false, ReceiptDate) then
             ReadOk := false;
-        if not ReadOk then
-            exit;
-        if PostingDate = 0D then
-            PostingDate := WorkDate();
-
-        if RequestJson.Get('externalDocumentNo', Token) then
-            ExternalDocNo := CopyStr(Token.AsValue().AsText(), 1, MaxStrLen(ExternalDocNo));
-
+        if (TransferFromCode <> '') and not Location.Get(TransferFromCode) then
+            Argument.AddError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingLocationErr, 'transferFromCode', TransferFromCode), 'transferFromCode', TransferFromCode, LocationExpectedTxt, LocationNextStepTxt);
+        if (TransferToCode <> '') and not Location.Get(TransferToCode) then
+            Argument.AddError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingLocationErr, 'transferToCode', TransferToCode), 'transferToCode', TransferToCode, LocationExpectedTxt, LocationNextStepTxt);
+        if (InTransitCode <> '') and not Location.Get(InTransitCode) then
+            Argument.AddError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingLocationErr, 'inTransitCode', InTransitCode), 'inTransitCode', InTransitCode, LocationExpectedTxt, LocationNextStepTxt);
         if not RequestValueReader.TryReadLines(RequestJson, Lines, HasLines, Argument) then
-            exit;
+            ReadOk := false;
         if HasLines then
             if not RequestValueReader.PrecheckTransferLines(Lines, Argument) then
-                exit;
+                ReadOk := false;
+        if Parts.RespondToProblems(Argument) or not ReadOk then
+            exit;
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-from Code")) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-from Code"), TransferFromCode), 'transferFromCode', TransferFromCode, LocationExpectedTxt, LocationNextStepTxt);
+            exit;
+        end;
+        if RequestValueReader.IsFieldWriteRestricted(Database::"Transfer Header", TransferHeader.FieldNo("Transfer-to Code")) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, StrSubstNo(FieldWriteRestrictedErr, TransferHeader.FieldCaption("Transfer-to Code"), TransferToCode), 'transferToCode', TransferToCode, LocationExpectedTxt, LocationNextStepTxt);
+            exit;
+        end;
+        if PostingDate = 0D then
+            PostingDate := WorkDate();
 
         TransferHeader.Init();
         TransferHeader."No." := '';
