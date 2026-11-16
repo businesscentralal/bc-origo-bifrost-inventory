@@ -9,7 +9,7 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Inventory.Reservation.Create: reserves supply for one source document line through Reservation Management
-/// AutoReserve, bound to that line, and returns the created reservation entry numbers.
+/// bound to that line, optionally restricted by tracking or a named inventory supply entry.
 /// </summary>
 codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
@@ -104,6 +104,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceLineNoLbl: Label 'Source document line number.', Comment = 'is-IS=Línunúmer upprunaskjals.';
         QuantityLbl: Label 'Quantity to reserve, in the source line unit of measure. Greater than 0.', Comment = 'is-IS=Magn til frátekningar, í mælieiningu upprunalínunnar. Stærra en 0.';
         ItemNoLbl: Label 'Optional item number; must match the source line when sent.', Comment = 'is-IS=Valfrjálst vörunúmer; verður að passa við upprunalínuna ef það er sent.';
+        LotNoLbl: Label 'Optional lot number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst lotunúmer. Aðeins samsvarandi framboð er tekið frá.';
+        SerialNoLbl: Label 'Optional serial number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst raðnúmer. Aðeins samsvarandi framboð er tekið frá.';
+        PackageNoLbl: Label 'Optional package number. Only matching supply is reserved.', Comment = 'is-IS=Valfrjálst pakkanúmer. Aðeins samsvarandi framboð er tekið frá.';
+        SupplyEntryLbl: Label 'Optional positive, open Item Ledger Entry number. Reserves only this matching inventory entry; insufficient quantity refuses the whole request.', Comment = 'is-IS=Valfrjálst númer jákvæðrar opinnar vörufærslu. Tekur aðeins þessa samsvarandi birgðafærslu frá; ónógt magn hafnar allri beiðninni.';
         LocationCodeLbl: Label 'Optional location code; must match the source line location when sent.', Comment = 'is-IS=Valfrjáls staðsetningarkóði; verður að passa við staðsetningu upprunalínunnar ef hann er sendur.';
     begin
         Parameters.Add(ContractMgt.Parameter('sourceType', 'integer', true, SourceTypeLbl));
@@ -113,6 +117,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', true, QuantityLbl));
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, ItemNoLbl));
         Parameters.Add(ContractMgt.Parameter('locationCode', 'string', false, LocationCodeLbl));
+        Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, LotNoLbl));
+        Parameters.Add(ContractMgt.Parameter('serialNo', 'string', false, SerialNoLbl));
+        Parameters.Add(ContractMgt.Parameter('packageNo', 'string', false, PackageNoLbl));
+        Parameters.Add(ContractMgt.Parameter('itemLedgerEntryNo', 'integer', false, SupplyEntryLbl));
         exit(true);
     end;
 
@@ -262,7 +270,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. Sjálfvirk frátekning velur framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
+        NotesLbl: Label 'Sales source lines use the same item/line eligibility as AutoReserve: inventory items only, neither item nor line Reserve set to Never, no drop shipment or special order, and a shipment date is required. lotNo, serialNo and packageNo restrict the supply. itemLedgerEntryNo selects one positive, open inventory entry matching the source item, variant, location and tracking; insufficient supply refuses the whole request. Without itemLedgerEntryNo, Auto Reserve picks the supply, as the Auto Reserve action does, and reserves at most the requested quantity. A partial reservation still answers Success with fullAutoReservation false; when nothing is available the answer is PreconditionFailed and nothing is written. quantity is in the unit of measure of the source line. sourceNo, itemNo and locationCode are converted to upper case; itemNo and locationCode only check the source line. sourceSubtype defaults to 1 (Order) for sales, purchase and assembly lines and to 0 (outbound) for a transfer line. Bifrost commits the reservation when the call finishes; under Omit Commit the caller''s transaction commits instead. Read reservations with Inventory.Reservation.Get and cancel an entry with Inventory.Reservation.Cancel.', Comment = 'is-IS=Söluupprunalínur fylgja sömu reglum um frátekningu og AutoReserve: aðeins birgðavörur, hvorki vara né lína með frátekningu Aldrei, engin bein afhending eða sérpöntun og afhendingardagur er nauðsynlegur. lotNo, serialNo og packageNo takmarka framboðið. itemLedgerEntryNo velur eina jákvæða opna birgðafærslu sem samsvarar vöru, afbrigði, staðsetningu og rakningu uppruna; ónógt framboð hafnar allri beiðninni. Án itemLedgerEntryNo velur sjálfvirk frátekning framboðið, eins og aðgerðin Taka sjálfvirkt frá, og tekur að hámarki frá umbeðið magn. Hlutafrátekning svarar samt Success með fullAutoReservation false; þegar ekkert framboð er tiltækt er svarið PreconditionFailed og ekkert er skrifað. quantity er í mælieiningu upprunalínunnar. sourceNo, itemNo og locationCode eru umbreytt í hástafi; itemNo og locationCode athuga aðeins upprunalínuna. sourceSubtype er sjálfgefið 1 (pöntun) fyrir sölu-, innkaupa- og samsetningarlínur og 0 (út) fyrir millifærslulínu. Bifrost vistar frátekninguna þegar kallinu lýkur; með Omit Commit vistar kallandinn færsluna í staðinn. Lestu frátekningar með Inventory.Reservation.Get og afturkallaðu færslu með Inventory.Reservation.Cancel.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -291,6 +299,10 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ItemNo: Text;
         LocationCode: Text;
         SourceNoText: Text;
+        LotNo: Text;
+        SerialNo: Text;
+        PackageNo: Text;
+        SupplyEntryNo: Integer;
         Description: Text[100];
         ReadOk: Boolean;
         Quantity: Decimal;
@@ -333,6 +345,14 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'locationCode', false, 10, LocationCode) then
             ReadOk := false;
+        if not ReadCode(Argument, RequestJson, 'lotNo', false, 50, LotNo) then
+            ReadOk := false;
+        if not ReadCode(Argument, RequestJson, 'serialNo', false, 50, SerialNo) then
+            ReadOk := false;
+        if not ReadCode(Argument, RequestJson, 'packageNo', false, 50, PackageNo) then
+            ReadOk := false;
+        if not ReadInteger(Argument, RequestJson, 'itemLedgerEntryNo', false, SupplyEntryNo) then
+            ReadOk := false;
         if Parts.RespondToProblems(Argument) or not ReadOk then
             exit;
         if not ReadSourceLine(Argument, SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, Description) then
@@ -346,6 +366,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             LastEntryNo := ReservationEntry."Entry No.";
         Process.SetOperation('ReservationCreate');
         Process.SetReservation(SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, Quantity, Round(Quantity * QtyPerUOM, 0.00001), AvailabilityDate, Description);
+        Process.SetReservationSupply(SupplyEntryNo, CopyStr(LotNo, 1, 50), CopyStr(SerialNo, 1, 50), CopyStr(PackageNo, 1, 50));
         if Argument."Omit Commit" then
             Process.Run(Argument)
         else

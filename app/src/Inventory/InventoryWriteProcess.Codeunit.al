@@ -25,12 +25,14 @@ codeunit 10076842 "Inventory Write Process ori"
     TableNo = "Message Argument ori";
 
     var
+        TempReserveTracking: Record "Reservation Entry" temporary;
         JournalType: Enum "Item Journal Template Type";
         Operation: Text;
         SourceType: Integer;
         SourceSubtype: Integer;
         SourceNo: Code[20];
         SourceLineNo: Integer;
+        SupplyEntryNo: Integer;
         ReserveQuantity: Decimal;
         ReserveQuantityBase: Decimal;
         AvailabilityDate: Date;
@@ -114,6 +116,19 @@ codeunit 10076842 "Inventory Write Process ori"
         ReserveQuantityBase := NewQuantityBase;
         AvailabilityDate := NewAvailabilityDate;
         ReserveDescription := NewDescription;
+    end;
+
+    /// <summary>Restricts ReservationCreate to tracking values and optionally one inventory supply entry.</summary>
+    /// <param name="ItemLedgerEntryNo">Supply entry number, or zero for general matching supply.</param>
+    /// <param name="LotNo">Lot number filter, or blank.</param>
+    /// <param name="SerialNo">Serial number filter, or blank.</param>
+    /// <param name="PackageNo">Package number filter, or blank.</param>
+    procedure SetReservationSupply(ItemLedgerEntryNo: Integer; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50])
+    begin
+        SupplyEntryNo := ItemLedgerEntryNo;
+        TempReserveTracking."Lot No." := LotNo;
+        TempReserveTracking."Serial No." := SerialNo;
+        TempReserveTracking."Package No." := PackageNo;
     end;
 
     /// <summary>Sets the reservation entry pair for the ReservationCancel operation (select it with SetOperation).</summary>
@@ -244,6 +259,7 @@ codeunit 10076842 "Inventory Write Process ori"
 
     local procedure Reserve()
     var
+        DemandEntry: Record "Reservation Entry";
         SalesLine: Record "Sales Line";
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
@@ -254,25 +270,64 @@ codeunit 10076842 "Inventory Write Process ori"
             Database::"Sales Line":
                 begin
                     SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    SalesLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(SalesLine);
                 end;
             Database::"Purchase Line":
                 begin
                     PurchaseLine.Get(Enum::"Purchase Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    PurchaseLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(PurchaseLine);
                 end;
             Database::"Transfer Line":
                 begin
                     TransferLine.Get(SourceNo, SourceLineNo);
+                    TransferLine.SetReservationEntry(DemandEntry, Enum::"Transfer Direction".FromInteger(SourceSubtype));
                     ReservationManagement.SetReservSource(TransferLine, Enum::"Transfer Direction".FromInteger(SourceSubtype));
                 end;
             Database::"Assembly Line":
                 begin
                     AssemblyLine.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    AssemblyLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(AssemblyLine);
                 end;
         end;
-        ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
+        ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
+        if SupplyEntryNo <> 0 then
+            ReserveSupplyEntry(ReservationManagement, DemandEntry)
+        else
+            ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
+    end;
+
+    local procedure ReserveSupplyEntry(var ReservationManagement: Codeunit "Reservation Management"; DemandEntry: Record "Reservation Entry")
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        TrackingSpecification: Record "Tracking Specification";
+        ReservationEntry: Record "Reservation Entry";
+        SupplyUnavailableErr: Label 'The selected item ledger entry does not have enough matching, unreserved inventory for this source line.', Comment = 'is-IS=Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.';
+    begin
+        // Serialize availability and native creation in the same isolated write transaction.
+        ReservationEntry.LockTable();
+        LedgerEntry.LockTable();
+        LedgerEntry.Get(SupplyEntryNo);
+        LedgerEntry.CalcFields("Reserved Quantity");
+        if not LedgerEntry.Positive or not LedgerEntry.Open or
+           (LedgerEntry."Item No." <> DemandEntry."Item No.") or
+           (LedgerEntry."Variant Code" <> DemandEntry."Variant Code") or
+           (LedgerEntry."Location Code" <> DemandEntry."Location Code") or
+           (LedgerEntry."Remaining Quantity" - LedgerEntry."Reserved Quantity" < ReserveQuantityBase) or
+           ((TempReserveTracking."Lot No." <> '') and (LedgerEntry."Lot No." <> TempReserveTracking."Lot No.")) or
+           ((TempReserveTracking."Serial No." <> '') and (LedgerEntry."Serial No." <> TempReserveTracking."Serial No.")) or
+           ((TempReserveTracking."Package No." <> '') and (LedgerEntry."Package No." <> TempReserveTracking."Package No."))
+        then
+            Error(SupplyUnavailableErr);
+        TrackingSpecification.InitTrackingSpecification(Database::"Item Ledger Entry", 0, '', '', 0, SupplyEntryNo,
+            LedgerEntry."Variant Code", LedgerEntry."Location Code", LedgerEntry."Qty. per Unit of Measure");
+        TrackingSpecification.CopyTrackingFromItemLedgEntry(LedgerEntry);
+        TempReserveTracking.CopyTrackingFromItemLedgEntry(LedgerEntry);
+        ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
+        ReservationManagement.CreateReservation(ReserveDescription, 0D, ReserveQuantity, ReserveQuantityBase, TrackingSpecification);
+        FullAutoReservation := true;
     end;
 
     /// <summary>Reads both sides and refuses incomplete or inconsistent native reservation pairs.</summary>

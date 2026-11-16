@@ -38,7 +38,13 @@ Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. So
 ## Reservations
 
 - `Inventory.Reservation.Get` reads by item (`subject` or `itemNo`), by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`. Filters sent together all apply. Quantities keep the sign Business Central stores. An unknown `entryNo` is `RecordNotFound`.
-- `Inventory.Reservation.Create` reserves for one source line through Reservation Management. A closed sales line (outstanding quantity 0) is `PreconditionFailed`.
+- `Inventory.Reservation.Create` reserves for one source line through Reservation Management. A closed sales line (outstanding quantity 0) is `PreconditionFailed`. Optional `lotNo`, `serialNo` and `packageNo` select matching supply. To pin one positive, open inventory entry, send `itemLedgerEntryNo`; conflicting tracking or insufficient unreserved quantity refuses the whole selected-entry request.
+
+```json
+{"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceNo":"SO-1001","sourceLineNo":10000,"quantity":2,"itemLedgerEntryNo":8842,"lotNo":"LOT-A"}}
+```
+
+Without `itemLedgerEntryNo`, the existing general-supply path may return a partial quantity as `Success` with `fullAutoReservation:false`. Read `quantity` and `requestedQuantity` before treating a reservation as complete.
 - `Inventory.Reservation.Cancel` cancels one reservation pair by `entryNo`, or every reservation of a source line in one transaction. A line without reservations answers Success with `entriesCancelled` 0.
 
 ## Enabling a domain

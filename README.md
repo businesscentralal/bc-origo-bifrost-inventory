@@ -77,7 +77,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
 | `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
 | `Inventory.Reservation.Get` | Outbound | Read reservation entries |
-| `Inventory.Reservation.Create` | Inbound | Reserve supply for a sales, purchase, transfer or assembly line (`sourceType`, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) through Reservation Management AutoReserve; returns `entryNo` |
+| `Inventory.Reservation.Create` | Inbound | Reserve supply for a sales, purchase, transfer or assembly line (`sourceType`, `sourceSubtype`, `sourceNo`, `sourceLineNo`, `quantity`) through Reservation Management; optional lot/serial/package filters or `itemLedgerEntryNo` select supply; returns `entryNo` |
 | `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
 | `Inventory.Reservation.AutoReserve` | Inbound | Reserve a sales line from available supply |
 | `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |

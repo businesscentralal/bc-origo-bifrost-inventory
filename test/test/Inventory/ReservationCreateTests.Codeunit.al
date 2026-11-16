@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
@@ -514,6 +516,186 @@ codeunit 96946 "Reservation Create Tests"
         AssertStatus(Response, 'Error');
         Response.Get('code', Token);
         Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Cancel refuses a closed line.');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_LotFilter_ReservesMatchingInventory()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('lot');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_SerialFilter_ReservesMatchingInventory()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('serial');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_PackageFilter_ReservesMatchingInventory()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('package');
+    end;
+
+    [Test]
+    procedure Scenario_AC05_SelectedEntry_ReservesOnlyNamedSupply()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('selected');
+    end;
+
+    [Test]
+    procedure Scenario_AC05_InsufficientSelectedSupply_LeavesNoReservation()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('insufficient');
+    end;
+
+    [Test]
+    procedure Scenario_AC05_ConflictingTracking_LeavesNoReservation()
+    begin
+        // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
+        VerifySupplySelection('conflict');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_InvalidTrackingValue_RefusesBeforeWrites()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Story #7, AC04 | Time: None | Risk: None
+        DomainSetup.EnableReservations();
+        // [GIVEN] A lot number sent as a JSON number instead of a string.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', 'NO-SUCH-LINE');
+        Request.Add('sourceLineNo', 10000);
+        Request.Add('quantity', 1);
+        Request.Add('lotNo', 123);
+        // [WHEN] Create validates the request before source resolution.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        // [THEN] InvalidParameterFormat identifies the malformed tracking key.
+        AssertStatus(Response, 'Error');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('lotNo', Token.AsValue().AsText(), 'Invalid tracking parameter.');
+    end;
+
+    local procedure VerifySupplySelection(CaseName: Text)
+    var
+        Item: Record Item;
+        ItemTrackingCode: Record "Item Tracking Code";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        LedgerEntry: Record "Item Ledger Entry";
+        Entry: Record "Reservation Entry";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        LotNo: Code[50];
+        SerialNo: Code[50];
+        PackageNo: Code[50];
+        SupplyEntryNo: Integer;
+        RequestedQuantity: Decimal;
+    begin
+        // [GIVEN] Independently posted stock, including an earlier nonmatching supply entry.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 0, 5);
+        RequestedQuantity := 2;
+        LibraryInventory.CreateItemTrackingCode(ItemTrackingCode);
+        case CaseName of
+            'lot', 'conflict':
+                begin
+                    ItemTrackingCode."Lot Specific Tracking" := true;
+                    LotNo := 'CHOSEN-LOT';
+                end;
+            'serial':
+                begin
+                    ItemTrackingCode."SN Specific Tracking" := true;
+                    SerialNo := 'CHOSEN-SERIAL';
+                    RequestedQuantity := 1;
+                end;
+            'package':
+                begin
+                    ItemTrackingCode."Package Specific Tracking" := true;
+                    PackageNo := 'CHOSEN-PACKAGE';
+                end;
+        end;
+        ItemTrackingCode.Modify(true);
+        Item.Validate("Item Tracking Code", ItemTrackingCode.Code);
+        Item.Modify(true);
+        if CaseName in ['lot', 'conflict'] then
+            PostTrackedSupply(Item, SalesLine."Location Code", 'OTHER-LOT', '', '', 3)
+        else
+            if CaseName = 'serial' then
+                PostTrackedSupply(Item, SalesLine."Location Code", '', 'OTHER-SERIAL', '', 1)
+            else
+                if CaseName = 'package' then
+                    PostTrackedSupply(Item, SalesLine."Location Code", '', '', 'OTHER-PACKAGE', 3)
+                else
+                    PostTrackedSupply(Item, SalesLine."Location Code", '', '', '', 3);
+        PostTrackedSupply(Item, SalesLine."Location Code", LotNo, SerialNo, PackageNo, RequestedQuantity);
+        LedgerEntry.SetRange("Item No.", Item."No.");
+        LedgerEntry.FindLast();
+        SupplyEntryNo := LedgerEntry."Entry No.";
+        if CaseName = 'insufficient' then
+            RequestedQuantity += 1;
+        if CaseName = 'conflict' then
+            LotNo := 'OTHER-LOT';
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Request.Add('quantity', RequestedQuantity);
+        if LotNo <> '' then
+            Request.Add('lotNo', LotNo);
+        if SerialNo <> '' then
+            Request.Add('serialNo', SerialNo);
+        if PackageNo <> '' then
+            Request.Add('packageNo', PackageNo);
+        if CaseName in ['selected', 'insufficient', 'conflict'] then
+            Request.Add('itemLedgerEntryNo', SupplyEntryNo);
+
+        // [WHEN] Create selects the tracking dimensions or the explicitly named supply entry.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+
+        // [THEN] A refusal leaves no reservation, or both native sides name exactly the requested supply.
+        Entry.SetRange("Source Type", Database::"Sales Line");
+        Entry.SetRange("Source ID", SalesHeader."No.");
+        Entry.SetRange("Reservation Status", Entry."Reservation Status"::Reservation);
+        if CaseName in ['insufficient', 'conflict'] then begin
+            AssertStatus(Response, 'Error');
+            Assert.IsTrue(Entry.IsEmpty(), 'Refused supply selection is atomic.');
+            LedgerEntry.Get(SupplyEntryNo);
+            LedgerEntry.CalcFields("Reserved Quantity");
+            Assert.AreEqual(0, LedgerEntry."Reserved Quantity", 'Supply remains unreserved.');
+            exit;
+        end;
+        AssertStatus(Response, 'Success');
+        Response.Get('quantity', Token);
+        Assert.AreEqual(RequestedQuantity, Token.AsValue().AsDecimal(), 'Requested quantity reserved.');
+        Entry.FindFirst();
+        Assert.AreEqual(LotNo, Entry."Lot No.", 'Demand lot.');
+        Assert.AreEqual(SerialNo, Entry."Serial No.", 'Demand serial.');
+        Assert.AreEqual(PackageNo, Entry."Package No.", 'Demand package.');
+        Entry.Get(Entry."Entry No.", true);
+        Assert.AreEqual(Database::"Item Ledger Entry", Entry."Source Type", 'Inventory supply.');
+        Assert.AreEqual(SupplyEntryNo, Entry."Source Ref. No.", 'Only the chosen supply entry.');
+    end;
+
+    local procedure PostTrackedSupply(Item: Record Item; LocationCode: Code[10]; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50]; Quantity: Decimal)
+    var
+        JournalLine: Record "Item Journal Line";
+        Entry: Record "Reservation Entry";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryTracking: Codeunit "Library - Item Tracking";
+    begin
+        LibraryInventory.CreateItemJnlLine(JournalLine, JournalLine."Entry Type"::"Positive Adjmt.", WorkDate(), Item."No.", Quantity, LocationCode);
+        if (LotNo <> '') or (SerialNo <> '') or (PackageNo <> '') then
+            LibraryTracking.CreateItemJournalLineItemTracking(Entry, JournalLine, SerialNo, LotNo, PackageNo, Quantity);
+        LibraryInventory.PostItemJournalLine(JournalLine."Journal Template Name", JournalLine."Journal Batch Name");
     end;
 
     local procedure CreateOpenSalesLine(var Item: Record Item; var SalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; OnHand: Decimal; LineQuantity: Decimal)

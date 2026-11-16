@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - reserve tracked or selected inventory supply (#7)
+- `Inventory.Reservation.Create` accepts optional `lotNo`, `serialNo` and `packageNo` filters. `itemLedgerEntryNo` reserves only the named open, positive supply entry after checking item, variant, location, tracking and unreserved quantity inside the native write transaction. An unavailable or conflicting selected supply leaves no reservation.
+- Existing general-supply partial-success responses remain compatible while the AC-6 contract decision is pending.
+- BC 28/29 transfer posting reads the appropriate setup field without obsolete field references; test setup restores the same field.
+- No new objects. Changed codeunits 10076842, 10076893, 10076901, 10076903 and test codeunits 96904, 96946 (seven additional tests).
+
 ### Added (2026-11-16) - read and cancel reservations by source line or entry (#7)
 - `Inventory.Reservation.Get` reads by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`, besides the item. Every source the Reserve action supports can be read. An unknown `entryNo` is refused as `RecordNotFound`. Each entry now also answers `variantCode`, `quantityBase`, `positive`, `sourceType`, `sourceSubtype`, `sourceBatchName`, `sourceProdOrderLine`, `sourceRefNo`, `lotNo`, `serialNo`, `packageNo`, `expectedReceiptDate`, `shipmentDate` and `creationDate`. The existing keys are unchanged.
 - `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
