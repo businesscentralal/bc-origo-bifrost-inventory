@@ -15,7 +15,7 @@ This applies to the eleven TransferOrder and AssemblyOrder types that look up a 
 - #34 reclassification check refuses a non-Transfer template and accepts `templateName` and `batchName`. Preview and post are implemented.
 - #35 adjust cost runs report 795. Cost to G/L post and test are implemented.
 - #36 domain flags and the domain gate are implemented. Inventory Setup is blocked from `Data.Records.Set`.
-- #37 tracking assign and delete go through Item Tracking Management and include package.
+- #37 tracking assign and delete use native item tracking and include package, assembly and item journal sources. Delete accepts one entryNo, an entryNos array, or omitted entry numbers for all unreserved source tracking (maximum 200). Disabled tracking writes return PreconditionFailed, per Claude Code's acceptance correction of 16.11.2026, with localized Inventory Setup recovery guidance. Other domain error contracts are unchanged.
 - #38 attribute types use `Inventory.Attribute.*`.
 - #39 is partial: shipment selection and assembly recreation call the native undo paths. Receipt undo remains disabled because the BC 28 source and BC 29 symbols have no native receipt-undo codeunit; see merged PR #185.
 - #40 item application unapply and reapply call `Item Jnl.-Post Line`.
