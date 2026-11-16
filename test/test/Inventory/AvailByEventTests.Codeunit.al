@@ -34,19 +34,19 @@ codeunit 96990 "Avail. By Event Tests ori"
         Response: JsonObject;
         Events: JsonArray;
     begin
-        // Story #104, AC01 | Time: fixed dates, WorkDate ignored | Risk: None
+        // Story #104, AC01 | Time: relative to WorkDate | Risk: None
         // [GIVEN] An isolated item with supply of 10 and demand of 4.
         Initialize();
         LibraryInventory.CreateItem(Item);
-        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', 20261110D);
-        LibrarySales.CreateSalesDocumentWithItem(SalesHeader, SalesLine, SalesHeader."Document Type"::Order, '', Item."No.", 4, '', 20261111D);
+        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', CalcDate('<+10D>', WorkDate()));
+        LibrarySales.CreateSalesDocumentWithItem(SalesHeader, SalesLine, SalesHeader."Document Type"::Order, '', Item."No.", 4, '', CalcDate('<+11D>', WorkDate()));
         // [WHEN] The public dispatcher reads both dates inclusively.
-        Response := Execute(Request(Item."No.", 20261110D, 20261111D));
+        Response := Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+11D>', WorkDate())));
         // [THEN] Each source document and its signed quantity are returned.
         Events := EventArray(Response);
         Assert.AreEqual(2, Events.Count(), 'One supply and one demand event.');
-        AssertEvent(Events, 0, 20261110D, PurchaseHeader."No.", 10, 10);
-        AssertEvent(Events, 1, 20261111D, SalesHeader."No.", -4, 6);
+        AssertEvent(Events, 0, CalcDate('<+10D>', WorkDate()), PurchaseHeader."No.", 10, 10);
+        AssertEvent(Events, 1, CalcDate('<+11D>', WorkDate()), SalesHeader."No.", -4, 6);
         AssertStandardProjection(Item, Events);
     end;
 
@@ -62,19 +62,19 @@ codeunit 96990 "Avail. By Event Tests ori"
         Response: JsonObject;
         Events: JsonArray;
     begin
-        // Story #104, AC01 | Time: fixed dates, WorkDate ignored | Risk: None
+        // Story #104, AC01 | Time: relative to WorkDate | Risk: None
         Initialize();
         // [GIVEN] Supply outside the output range precedes demand inside it.
         LibraryInventory.CreateItem(Item);
-        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', 20261109D);
-        LibrarySales.CreateSalesDocumentWithItem(SalesHeader, SalesLine, SalesHeader."Document Type"::Order, '', Item."No.", 4, '', 20261110D);
+        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', CalcDate('<+9D>', WorkDate()));
+        LibrarySales.CreateSalesDocumentWithItem(SalesHeader, SalesLine, SalesHeader."Document Type"::Order, '', Item."No.", 4, '', CalcDate('<+10D>', WorkDate()));
         // [WHEN] Reading a single date.
-        Response := Execute(Request(Item."No.", 20261110D, 20261110D));
+        Response := Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
         // [THEN] Earlier supply affects the balance but is not emitted.
         AssertDecimal(Response, 'openingInventory', 10);
         Events := EventArray(Response);
         Assert.AreEqual(1, Events.Count(), 'Only the demand is in range.');
-        AssertEvent(Events, 0, 20261110D, SalesHeader."No.", -4, 6);
+        AssertEvent(Events, 0, CalcDate('<+10D>', WorkDate()), SalesHeader."No.", -4, 6);
     end;
 
     /// <summary>AC01 ExactVariantAndLocation ExcludeOtherEvents.</summary>
@@ -92,33 +92,34 @@ codeunit 96990 "Avail. By Event Tests ori"
         Payload: JsonObject;
         Events: JsonArray;
     begin
-        // Story #104, AC01 | Time: fixed dates, WorkDate ignored | Risk: None
+        // Story #104, AC01 | Time: relative to WorkDate | Risk: None
         Initialize();
         // [GIVEN] One selected variant/location and one unselected supply line.
         LibraryInventory.CreateItem(Item);
         LibraryInventory.CreateItemVariant(Variant, Item."No.");
         LibraryWarehouse.CreateLocation(Location);
-        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 8, Location.Code, 20261110D);
+        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 8, Location.Code, CalcDate('<+10D>', WorkDate()));
         PurchaseLine.Validate("Variant Code", Variant.Code);
+        PurchaseLine.Validate("Expected Receipt Date", CalcDate('<+10D>', WorkDate()));
         PurchaseLine.Modify(true);
-        LibraryPurchase.CreatePurchaseDocumentWithItem(OtherHeader, OtherLine, OtherHeader."Document Type"::Order, '', Item."No.", 5, '', 20261110D);
-        Payload := Request(Item."No.", 20261110D, 20261110D);
+        LibraryPurchase.CreatePurchaseDocumentWithItem(OtherHeader, OtherLine, OtherHeader."Document Type"::Order, '', Item."No.", 5, '', CalcDate('<+10D>', WorkDate()));
+        Payload := Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()));
         Payload.Add('variant', Variant.Code);
         Payload.Add('location', Location.Code);
         // [WHEN] Both exact codes are sent.
         Events := EventArray(Execute(Payload));
         // [THEN] Only the selected source is included.
         Assert.AreEqual(1, Events.Count(), 'Filters exclude the other source.');
-        AssertEvent(Events, 0, 20261110D, PurchaseHeader."No.", 8, 8);
+        AssertEvent(Events, 0, CalcDate('<+10D>', WorkDate()), PurchaseHeader."No.", 8, 8);
     end;
 
     /// <summary>AC02 UnknownItem ReturnsRecordNotFound.</summary>
     [Test]
     procedure Scenario_AC02_UnknownItem_ReturnsRecordNotFound()
     begin
-        // Story #104, AC02 | Time: fixed dates | Risk: None
+        // Story #104, AC02 | Time: relative to WorkDate | Risk: None
         Initialize();
-        AssertRefusal(Execute(Request(CopyStr(Format(CreateGuid(), 0, 4), 1, 20), 20261110D, 20261110D)), 'RecordNotFound');
+        AssertRefusal(Execute(Request(CopyStr(Format(CreateGuid(), 0, 4), 1, 20), CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()))), 'RecordNotFound');
     end;
 
     /// <summary>AC03 RepeatedReads PreserveSupplyAndDemand.</summary>
@@ -134,15 +135,15 @@ codeunit 96990 "Avail. By Event Tests ori"
         FirstText: Text;
         SecondText: Text;
     begin
-        // Story #104, AC03 | Time: fixed dates | Risk: None
+        // Story #104, AC03 | Time: relative to WorkDate | Risk: None
         Initialize();
         // [GIVEN] A source line and its exact persisted state.
         LibraryInventory.CreateItem(Item);
-        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', 20261110D);
+        LibraryPurchase.CreatePurchaseDocumentWithItem(PurchaseHeader, PurchaseLine, PurchaseHeader."Document Type"::Order, '', Item."No.", 10, '', CalcDate('<+10D>', WorkDate()));
         BeforeLine := PurchaseLine;
         // [WHEN] Reading twice.
-        FirstResponse := Execute(Request(Item."No.", 20261110D, 20261110D));
-        SecondResponse := Execute(Request(Item."No.", 20261110D, 20261110D));
+        FirstResponse := Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
+        SecondResponse := Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
         // [THEN] Output and source values are unchanged.
         FirstResponse.WriteTo(FirstText);
         SecondResponse.WriteTo(SecondText);
@@ -160,10 +161,10 @@ codeunit 96990 "Avail. By Event Tests ori"
         Response: JsonObject;
         Events: JsonArray;
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
         LibraryInventory.CreateItem(Item);
-        Response := Execute(Request(Item."No.", 20261110D, 20261110D));
+        Response := Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
         Events := EventArray(Response);
         Assert.AreEqual(0, Events.Count(), 'No invented events.');
         AssertDecimal(Response, 'openingInventory', 0);
@@ -173,9 +174,9 @@ codeunit 96990 "Avail. By Event Tests ori"
     [Test]
     procedure Scenario_AC04_ReversedDates_ReturnsInvalidParameter()
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
-        AssertRefusal(Execute(Request('ANY', 20261111D, 20261110D)), 'InvalidParameter');
+        AssertRefusal(Execute(Request('ANY', CalcDate('<+11D>', WorkDate()), CalcDate('<+10D>', WorkDate()))), 'InvalidParameter');
     end;
 
     /// <summary>AC04 MissingItem ReturnsMissingParameter.</summary>
@@ -184,9 +185,9 @@ codeunit 96990 "Avail. By Event Tests ori"
     var
         Payload: JsonObject;
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
-        Payload := Request('ANY', 20261110D, 20261110D);
+        Payload := Request('ANY', CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()));
         Payload.Remove('itemNo');
         AssertRefusal(Execute(Payload), 'MissingParameter');
     end;
@@ -199,7 +200,7 @@ codeunit 96990 "Avail. By Event Tests ori"
     begin
         // Story #104, AC04 | Time: strict ISO dates | Risk: None
         Initialize();
-        Payload := Request('ANY', 20261110D, 20261110D);
+        Payload := Request('ANY', CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()));
         Payload.Replace('itemNo', 123);
         AssertRefusal(Execute(Payload), 'InvalidParameterFormat');
         Payload.Replace('itemNo', 'ANY');
@@ -217,9 +218,9 @@ codeunit 96990 "Avail. By Event Tests ori"
     var
         Payload: JsonObject;
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
-        Payload := Request('ANY', 20261110D, 20261110D);
+        Payload := Request('ANY', CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()));
         Payload.Add('warehouse', 'BLUE');
         AssertRefusal(Execute(Payload), 'UnknownParameter');
     end;
@@ -231,10 +232,10 @@ codeunit 96990 "Avail. By Event Tests ori"
         Item: Record Item;
         Payload: JsonObject;
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
         LibraryInventory.CreateItem(Item);
-        Payload := Request(Item."No.", 20261110D, 20261110D);
+        Payload := Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()));
         Payload.Add('variant', 'NO-SUCH-VARIANT');
         AssertRefusal(Execute(Payload), 'RecordNotFound');
         Payload.Remove('variant');
@@ -248,12 +249,12 @@ codeunit 96990 "Avail. By Event Tests ori"
     var
         Item: Record Item;
     begin
-        // Story #104, AC04 | Time: fixed dates | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
         LibraryInventory.CreateItem(Item);
         Item.Validate(Type, Item.Type::Service);
         Item.Modify(true);
-        AssertRefusal(Execute(Request(Item."No.", 20261110D, 20261110D)), 'PreconditionFailed');
+        AssertRefusal(Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()))), 'PreconditionFailed');
     end;
 
     /// <summary>AC04 BilingualHelpAndRefusals AreLocalized.</summary>
@@ -268,18 +269,18 @@ codeunit 96990 "Avail. By Event Tests ori"
         IsResponse: JsonObject;
         OriginalLanguage: Integer;
     begin
-        // Story #104, AC04 | Time: fixed dates; explicit LCIDs | Risk: None
+        // Story #104, AC04 | Time: relative to WorkDate; explicit LCIDs | Risk: None
         Initialize();
         OriginalLanguage := GlobalLanguage();
         GlobalLanguage(1033);
         EnDescription := Impl.GetDescription();
         Impl.GetOverview(EnOverview);
-        EnResponse := ExecuteDirect(Request('MISSING-104', 20261110D, 20261110D));
+        EnResponse := ExecuteDirect(Request('MISSING-104', CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
         GlobalLanguage(1039);
         Assert.AreNotEqual(EnDescription, Impl.GetDescription(), 'Catalogue text is translated.');
         Impl.GetOverview(IsOverview);
         Assert.AreNotEqual(EnOverview, IsOverview, 'Overview is translated.');
-        IsResponse := ExecuteDirect(Request('MISSING-104', 20261110D, 20261110D));
+        IsResponse := ExecuteDirect(Request('MISSING-104', CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate())));
         AssertRefusal(EnResponse, 'RecordNotFound');
         AssertRefusal(IsResponse, 'RecordNotFound');
         Assert.AreNotEqual(TextValue(EnResponse, 'nextStep'), TextValue(IsResponse, 'nextStep'), 'Recovery text is translated.');
@@ -294,10 +295,12 @@ codeunit 96990 "Avail. By Event Tests ori"
         Effect: JsonObject;
         Parts: List of [Text];
         TypeName: Text;
+        MessageType: Enum "Message Type ori";
     begin
         // Story #104, AC05 and AC03 | Time: none | Risk: None
         Initialize();
-        TypeName := 'Inventory.AvailabilityByEvent.Get';
+        MessageType := "Message Type ori"::"Inventory.AvailabilityByEvent.Get";
+        TypeName := MessageType.Names().Get(MessageType.Ordinals().IndexOf(MessageType.AsInteger()));
         Parts := TypeName.Split('.');
         Assert.AreEqual(3, Parts.Count(), 'Three-part message name.');
         Assert.IsTrue(Impl.GetEffect(Effect), 'Effect is explicitly declared.');
@@ -332,6 +335,9 @@ codeunit 96990 "Avail. By Event Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         Impl: Codeunit "Avail. By Event Impl ori";
     begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         TempArgument.SetRequestJson(Payload);
         Impl.ExecuteBifrostTask(TempArgument);
         Response := TempArgument.GetResponseJson();

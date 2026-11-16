@@ -153,10 +153,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         CreateStock(Item, 2);
         Request.Add('itemNoFilter', Item."No.");
         Request.Add('postToGL', false);
-        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", Item."No.", Request, Response);
         Clear(Request);
         Request.Add('itemNoFilter', Item."No.");
-        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", Item."No.", Request, Response);
         Assert.IsTrue(Response.Get('postedValueEntryCount', Token), 'Native G/L posting reports actual entries.');
         Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'The owned pending value entry was posted.');
     end;
@@ -403,7 +403,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        Response := DispatchWithSubject(MessageType, '', Request);
+        // Foundation previews only a named subject; domain refusal still prevents any write.
+        Response := DispatchWithSubject(MessageType, 'CONFIRM-BOUNDARY', Request);
         AssertText(Response, 'status', 'Error');
     end;
 
