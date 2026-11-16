@@ -51,6 +51,12 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        JournalTemplate: Record "Item Journal Template";
+        ItemJournalLine: Record "Item Journal Line";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Process: Codeunit "Inventory Write Process ori";
         MissingJournalErr: Label 'Journal template %1 was not found.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.';
         WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
         TransferExpectedLbl: Label 'an existing Transfer journal template', Comment = 'is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer';
@@ -58,15 +64,9 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         BatchExpectedLbl: Label 'a nonempty Transfer journal batch that passes native posting', Comment = 'is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun';
         BatchNextLbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
         EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
-        JournalTemplate: Record "Item Journal Template";
-        ItemJournalLine: Record "Item Journal Line";
-        RequestJson: JsonObject;
         TemplateName: Code[10];
         BatchName: Code[10];
-        NativeJournal: Codeunit "Inventory Native Journal ori";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        Parts: Codeunit "Inventory Contract Parts ori";
-        Process: Codeunit "Inventory Write Process ori";
+        RequestJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
             Parts.CompleteOlderDomainRefusal(Argument);

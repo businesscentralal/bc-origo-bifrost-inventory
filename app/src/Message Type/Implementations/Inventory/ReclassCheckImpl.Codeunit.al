@@ -50,17 +50,16 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        NextLbl: Label 'Send templateName and batchName for an existing Transfer journal template.', Comment = 'is-IS=Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.';
-        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
-        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
         ItemJournalTemplate: Record "Item Journal Template";
-        RequestJson: JsonObject;
-        TemplateName: Code[10];
-        BatchName: Code[10];
         FailureJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         Process: Codeunit "Inventory Read Process ori";
+        NextLbl: Label 'Send templateName and batchName for an existing Transfer journal template.', Comment = 'is-IS=Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.';
+        TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
+        NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
+        TemplateName: Code[10];
+        RequestJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
@@ -79,12 +78,12 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         if Parts.RespondToProblems(Argument) then
             exit;
         if RequestJson.Contains('batchName') then
-            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10)
+            Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10)
         else
             if RequestJson.Contains('journalBatchName') then
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
+                Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10)
             else
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10);
+                Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10);
         if Parts.RespondToProblems(Argument) then
             exit;
 
