@@ -18,20 +18,25 @@ codeunit 10076935 "Std. Cost Process ori"
         Item: Record Item;
         SKU: Record "Stockkeeping Unit";
         Line: Record "Item Journal Line";
+        Batch: Record "Item Journal Batch";
         Management: Codeunit "Std. Cost Management ori";
         Request: JsonObject;
         Response: JsonObject;
         Lines: JsonArray;
         WorksheetCode: Code[10];
     begin
-        // Lock in the native implementation order and repeat all validation to close the check/write gap.
+        Request := Rec.GetRequestJson();
+        // The existing batch row serializes competing calls even while its journal is empty.
         Line.LockTable();
+        Batch.LockTable();
+        Batch.Get(
+            CopyStr(Management.ReadText(Request, 'journalTemplateName'), 1, 10),
+            CopyStr(Management.ReadText(Request, 'journalBatchName'), 1, 10));
         Worksheet.LockTable();
         Item.LockTable();
         SKU.LockTable();
         if not Management.ValidateImplement(Rec) then
             exit;
-        Request := Rec.GetRequestJson();
         WorksheetCode := CopyStr(Management.ReadText(Request, 'worksheetName'), 1, 10);
         ImplementCosts(Request, WorksheetCode, Lines);
         Response.Add('status', 'Success');
