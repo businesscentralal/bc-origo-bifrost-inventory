@@ -726,14 +726,20 @@ codeunit 96921 "Inventory Contract Batch Tests"
     local procedure AssertComposedResponse(Contract: JsonObject; Expected: JsonObject)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        FoundationInfo: ModuleInfo;
         Fields: JsonArray;
         Token: JsonToken;
     begin
-        // Foundation adds the common error-code field to the registered JSON response contract.
-        Expected.Get('fields', Token);
-        Fields := Token.AsArray();
-        Fields.Add(ContractMgt.ResponseField('code', 'string',
-            'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+        // Foundation 28.0.13 adds the common error-code field; earlier releases preserve app fields.
+        // Assert the complete version-specific response instead of accepting either shape.
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', FoundationInfo) then
+            Error('Bifrost Foundation is not installed.');
+        if FoundationInfo.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+            Expected.Get('fields', Token);
+            Fields := Token.AsArray();
+            Fields.Add(ContractMgt.ResponseField('code', 'string',
+                'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+        end;
         AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
 
