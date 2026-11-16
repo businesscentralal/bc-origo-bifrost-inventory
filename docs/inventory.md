@@ -35,6 +35,12 @@ the Inventory Setup page).
 
 Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. SourceGuards.yaml is not enabled for HelpLinks, IcelandicXlfInSync, or MixedLanguageLabels in this change. Those jobs stay unwired until the guards pass and infrastructure review approves them.
 
+## Reservations
+
+- `Inventory.Reservation.Get` reads by item (`subject` or `itemNo`), by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`. Filters sent together all apply. Quantities keep the sign Business Central stores. An unknown `entryNo` is `RecordNotFound`.
+- `Inventory.Reservation.Create` reserves for one source line through Reservation Management. A closed sales line (outstanding quantity 0) is `PreconditionFailed`.
+- `Inventory.Reservation.Cancel` cancels one reservation pair by `entryNo`, or every reservation of a source line in one transaction. A line without reservations answers Success with `entriesCancelled` 0.
+
 ## Enabling a domain
 
 An administrator uses **Inventory Setup** in the Business Central Web Client to enable a domain

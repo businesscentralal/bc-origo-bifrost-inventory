@@ -171,6 +171,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller cannot change reservation entries.', 'Assign the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change reservation entries.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native reservation error text.', 'Business Central refuses the reservation while it runs; the answer carries its text.', 'Read the error text and correct the source line or the supply it names.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The sales source item or line cannot be reserved: non-inventory item, Reserve Never, drop shipment, special order or missing shipment date.', 'Correct the source line reservation settings and retry.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The sales source line is closed: its outstanding quantity is 0.', 'Reserve for a line that still has an outstanding quantity.'));
         exit(true);
     end;
 
@@ -412,6 +413,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceNotFoundErr: Label 'Source line %1 %2 %3 was not found.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 fannst ekki.';
         NotItemErr: Label 'Source line %1 %2 %3 is not an item line.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 er ekki vörulína.';
         ItemMismatchErr: Label 'itemNo %1 does not match the source line item %2.', Comment = '%1 = requested item; %2 = source item; is-IS=itemNo %1 passar ekki við vöru upprunalínunnar %2.';
+        ClosedLineErr: Label 'Sales line %1 %2 is closed: its outstanding quantity is 0, so nothing can be reserved for it.', Comment = '%1 = document number; %2 = line number; is-IS=Sölulína %1 %2 er lokuð: útistandandi magn hennar er 0 svo ekkert er hægt að taka frá fyrir hana.';
         LocationMismatchErr: Label 'locationCode %1 does not match the source line location %2.', Comment = '%1 = requested location; %2 = source location; is-IS=locationCode %1 passar ekki við staðsetningu upprunalínunnar %2.';
     begin
         QtyPerUOM := 1;
@@ -420,11 +422,15 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                 begin
                     if not Enum::"Sales Document Type".Ordinals().Contains(SourceSubtype) then
                         exit(RespondSubtype(Argument, SubtypeErr, SourceSubtype, SourceType));
-                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description, Reserve, "Drop Shipment", "Special Order");
+                    SalesLine.SetLoadFields(Type, "No.", "Location Code", "Qty. per Unit of Measure", "Shipment Date", Description, Reserve, "Drop Shipment", "Special Order", "Outstanding Quantity");
                     Found := SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
                     if Found then begin
                         if SalesLine.Type <> SalesLine.Type::Item then
                             exit(RespondNotItem(Argument, NotItemErr, SourceType, SourceNo, SourceLineNo));
+                        if SalesLine."Outstanding Quantity" = 0 then begin
+                            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ClosedLineErr, SourceNo, SourceLineNo), 'sourceLineNo', Format(SourceLineNo, 0, 9), SourceExpectedLbl, SourceNextStepLbl);
+                            exit(false);
+                        end;
                         if not ReservationPolicy.CheckSalesLinePolicy(Argument, SalesLine) then
                             exit(false);
                         SourceItemNo := SalesLine."No.";

@@ -8,7 +8,7 @@ using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
-/// <summary>Native tests for Inventory.Reservation.Create and Inventory.Reservation.Cancel against a real source line (#122, #125).</summary>
+/// <summary>Native tests for Inventory.Reservation.Create, .Get and .Cancel against a real source line (#7, #122, #125).</summary>
 codeunit 96946 "Reservation Create Tests"
 {
     Subtype = Test;
@@ -273,6 +273,292 @@ codeunit 96946 "Reservation Create Tests"
     procedure Scenario_AC03_Cancel_DifferentItem_PreservesPair()
     begin
         VerifyCancelConsistency('item');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC2_GetBySourceLine_ReturnsOnlyThatLine()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        OtherLine: Record "Sales Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        Entries: JsonArray;
+        EntryToken: JsonToken;
+        Token: JsonToken;
+        EntryObject: JsonObject;
+    begin
+        // [GIVEN] Two reserved lines of one sales order.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 3);
+        AddSalesLine(SalesHeader, SalesLine, OtherLine, 2);
+        ReserveSalesLine(SalesHeader, SalesLine, 2);
+        ReserveSalesLine(SalesHeader, OtherLine, 1);
+
+        // [WHEN] Reservation.Get reads the first line.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceSubtype', 1);
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", Request, Response);
+
+        // [THEN] Only the demand entries of that line come back, with source, tracking and sign fields.
+        AssertStatus(Response, 'Success');
+        Response.Get('entries', Token);
+        Entries := Token.AsArray();
+        Assert.AreNotEqual(0, Entries.Count(), 'The line has reservation entries.');
+        foreach EntryToken in Entries do begin
+            EntryObject := EntryToken.AsObject();
+            EntryObject.Get('sourceRefNo', Token);
+            Assert.AreEqual(SalesLine."Line No.", Token.AsValue().AsInteger(), 'Only the requested line.');
+            EntryObject.Get('sourceType', Token);
+            Assert.AreEqual(Database::"Sales Line", Token.AsValue().AsInteger(), 'sourceType of the demand side.');
+            EntryObject.Get('positive', Token);
+            Assert.IsFalse(Token.AsValue().AsBoolean(), 'A sales line is the demand side.');
+            EntryObject.Get('quantityBase', Token);
+            Assert.IsTrue(Token.AsValue().AsDecimal() < 0, 'The stored sign is kept.');
+            Assert.IsTrue(EntryObject.Contains('lotNo') and EntryObject.Contains('serialNo') and EntryObject.Contains('packageNo'), 'Tracking keys are answered.');
+            EntryObject.Get('reservationStatus', Token);
+            Assert.AreEqual('Reservation', Token.AsValue().AsText(), 'Status by name.');
+        end;
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC3_GetByEntryNo_ReturnsPairAndUnknownIsRecordNotFound()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNo: Integer;
+    begin
+        // [GIVEN] One reservation on a sales line.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 3);
+        EntryNo := ReserveSalesLine(SalesHeader, SalesLine, 2);
+
+        // [WHEN] Reservation.Get reads that entry number.
+        Request.Add('entryNo', EntryNo);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", Request, Response);
+
+        // [THEN] Both sides of the pair are answered.
+        AssertStatus(Response, 'Success');
+        Response.Get('entries', Token);
+        Assert.AreEqual(2, Token.AsArray().Count(), 'Supply and demand side share the entry number.');
+
+        // [WHEN] An entry number that does not exist is read.
+        ReservationEntry.FindLast();
+        Clear(Request);
+        Clear(Response);
+        Request.Add('entryNo', ReservationEntry."Entry No." + 1000);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", Request, Response);
+
+        // [THEN] A coded RecordNotFound, not an exception.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('RecordNotFound', Token.AsValue().AsText(), 'Unknown entry.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_GetSourceTypeWithoutSourceNo_ReturnsMissingParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] The Reservations domain is on.
+        DomainSetup.EnableReservations();
+        // [WHEN] Reservation.Get names a source type without the document.
+        Request.Add('sourceType', Database::"Sales Line");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Get", Request, Response);
+        // [THEN] MissingParameter: a source line needs sourceType and sourceNo together.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('MissingParameter', Token.AsValue().AsText(), 'sourceNo is required with sourceType.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC8_CancelBySourceLine_CancelsEveryPairOfTheLine()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        OtherLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        FirstEntryNo: Integer;
+        SecondEntryNo: Integer;
+        Expected: Integer;
+    begin
+        // [GIVEN] Two reservations on one sales line and one on another line.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 3);
+        AddSalesLine(SalesHeader, SalesLine, OtherLine, 2);
+        FirstEntryNo := ReserveSalesLine(SalesHeader, SalesLine, 1);
+        SecondEntryNo := ReserveSalesLine(SalesHeader, SalesLine, 1);
+        ReserveSalesLine(SalesHeader, OtherLine, 1);
+        Expected := 2;
+        if FirstEntryNo = SecondEntryNo then
+            Expected := 1;
+
+        // [WHEN] Reservation.Cancel names the first source line.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+
+        // [THEN] Every pair of that line is cancelled, the other line keeps its reservation.
+        AssertStatus(Response, 'Success');
+        Response.Get('entriesCancelled', Token);
+        Assert.AreEqual(Expected, Token.AsValue().AsInteger(), 'entriesCancelled counts the pairs of the line.');
+        Response.Get('quantity', Token);
+        Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Cancelled quantity of the line.');
+        ReservationEntry.SetRange("Source Type", Database::"Sales Line");
+        ReservationEntry.SetRange("Source ID", SalesHeader."No.");
+        ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
+        ReservationEntry.SetRange("Source Ref. No.", SalesLine."Line No.");
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'No reservation is left on the line.');
+        ReservationEntry.SetRange("Source Ref. No.", OtherLine."Line No.");
+        Assert.IsFalse(ReservationEntry.IsEmpty(), 'The other line is untouched.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC8_CancelBySourceLine_NoReservations_SucceedsWithZero()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] An open sales line without reservations.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 3);
+        // [WHEN] Reservation.Cancel names the line.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        // [THEN] Idempotent Success with entriesCancelled 0.
+        AssertStatus(Response, 'Success');
+        Response.Get('entriesCancelled', Token);
+        Assert.AreEqual(0, Token.AsValue().AsInteger(), 'Nothing to cancel.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC8_CancelBySourceLine_MissingLineNo_ReturnsMissingParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] The Reservations domain is on.
+        DomainSetup.EnableReservations();
+        // [WHEN] Reservation.Cancel names a document without a line.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', 'NOSUCHDOC');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        // [THEN] MissingParameter for sourceLineNo.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('MissingParameter', Token.AsValue().AsText(), 'sourceLineNo is required.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue7_AC7_ClosedSalesLine_CreateAndCancelArePreconditionFailed()
+    var
+        Item: Record Item;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        ReservationEntry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // [GIVEN] A sales line whose outstanding quantity is 0.
+        DomainSetup.EnableReservations();
+        CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 3);
+        SalesLine.Validate(Quantity, 0);
+        SalesLine.Modify(true);
+        Assert.AreEqual(0, SalesLine."Outstanding Quantity", 'Fixture: the line is closed.');
+
+        // [WHEN] Reservation.Create is called for the closed line.
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Request.Add('quantity', 1);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        // [THEN] PreconditionFailed and nothing is written.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Create refuses a closed line.');
+        ReservationEntry.SetRange("Item No.", Item."No.");
+        ReservationEntry.SetRange("Reservation Status", ReservationEntry."Reservation Status"::Reservation);
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'No reservation was written.');
+
+        // [WHEN] Reservation.Cancel names the closed line.
+        Clear(Request);
+        Clear(Response);
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", Request, Response);
+        // [THEN] PreconditionFailed as well.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Cancel refuses a closed line.');
+    end;
+
+    local procedure CreateOpenSalesLine(var Item: Record Item; var SalesHeader: Record "Sales Header"; var SalesLine: Record "Sales Line"; OnHand: Decimal; LineQuantity: Decimal)
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        CreateTransferLine(Item, TransferHeader, TransferLine, OnHand, 1);
+        Item.Get(Item."No.");
+        Item.Validate(Reserve, Item.Reserve::Optional);
+        Item.Modify(true);
+        LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", LineQuantity);
+        SalesLine.Validate("Location Code", TransferLine."Transfer-from Code");
+        SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
+        SalesLine.Validate("Shipment Date", WorkDate());
+        SalesLine.Modify(true);
+    end;
+
+    local procedure AddSalesLine(SalesHeader: Record "Sales Header"; TemplateLine: Record "Sales Line"; var SalesLine: Record "Sales Line"; LineQuantity: Decimal)
+    var
+        LibrarySales: Codeunit "Library - Sales";
+    begin
+        LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, TemplateLine."No.", LineQuantity);
+        SalesLine.Validate("Location Code", TemplateLine."Location Code");
+        SalesLine.Validate(Reserve, SalesLine.Reserve::Optional);
+        SalesLine.Validate("Shipment Date", WorkDate());
+        SalesLine.Modify(true);
+    end;
+
+    local procedure ReserveSalesLine(SalesHeader: Record "Sales Header"; SalesLine: Record "Sales Line"; Quantity: Decimal): Integer
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Request.Add('sourceType', Database::"Sales Line");
+        Request.Add('sourceNo', SalesHeader."No.");
+        Request.Add('sourceLineNo', SalesLine."Line No.");
+        Request.Add('quantity', Quantity);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entryNo', Token);
+        exit(Token.AsValue().AsInteger());
     end;
 
     local procedure VerifySalesEligibility(CaseName: Text)

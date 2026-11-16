@@ -40,7 +40,7 @@ codeunit 10076842 "Inventory Write Process ori"
         CostJournalTemplate: Code[10];
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
-        CancelEntryNo: Integer;
+        CancelEntryNos: List of [Integer];
         ApplicationEntryNo: Integer;
         ApplyToEntryNo: Integer;
         FullAutoReservation: Boolean;
@@ -120,7 +120,19 @@ codeunit 10076842 "Inventory Write Process ori"
     /// <param name="EntryNo">The reservation entry number (both sides of the pair share it).</param>
     procedure SetCancelReservation(EntryNo: Integer)
     begin
-        CancelEntryNo := EntryNo;
+        Clear(CancelEntryNos);
+        CancelEntryNos.Add(EntryNo);
+    end;
+
+    /// <summary>Sets several reservation entry pairs for the ReservationCancel operation; all are cancelled in one transaction.</summary>
+    /// <param name="EntryNos">The reservation entry numbers (both sides of each pair share the number).</param>
+    procedure SetCancelReservations(EntryNos: List of [Integer])
+    var
+        EntryNo: Integer;
+    begin
+        Clear(CancelEntryNos);
+        foreach EntryNo in EntryNos do
+            CancelEntryNos.Add(EntryNo);
     end;
 
     /// <summary>Returns whether the last ReservationCreate reserved the full requested quantity.</summary>
@@ -283,11 +295,14 @@ codeunit 10076842 "Inventory Write Process ori"
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEngineMgt: Codeunit "Reservation Engine Mgt.";
+        CancelEntryNo: Integer;
         InconsistentPairErr: Label 'Reservation %1 no longer contains a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.';
     begin
         ReservationEntry.LockTable();
-        if not HasConsistentReservationPair(CancelEntryNo, ReservationEntry) then
-            Error(InconsistentPairErr, CancelEntryNo);
-        ReservationEngineMgt.CancelReservation(ReservationEntry);
+        foreach CancelEntryNo in CancelEntryNos do begin
+            if not HasConsistentReservationPair(CancelEntryNo, ReservationEntry) then
+                Error(InconsistentPairErr, CancelEntryNo);
+            ReservationEngineMgt.CancelReservation(ReservationEntry);
+        end;
     end;
 }
