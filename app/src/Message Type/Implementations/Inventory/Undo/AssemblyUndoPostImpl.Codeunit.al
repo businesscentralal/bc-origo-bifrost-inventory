@@ -117,7 +117,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     local procedure CountUnit(): Text
     var
-        CountLbl: Label 'expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation.', Comment = 'is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.';
+        CountLbl: Label 'expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.', Comment = 'is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.';
     begin
         exit(CountLbl);
     end;

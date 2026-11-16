@@ -101,7 +101,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     local procedure CountUnit(): Text
     var
-        CountLbl: Label 'expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries.', Comment = 'is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.';
+        CountLbl: Label 'expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries. is-IS: expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.', Comment = 'is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.';
     begin
         exit(CountLbl);
     end;

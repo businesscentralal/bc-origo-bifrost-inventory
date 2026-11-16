@@ -7504,7 +7504,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST InvPost ori - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation.</source>
+          <source>expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</source>
           <target>expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method CountUnit - NamedType CountLbl</note>
@@ -7528,7 +7528,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanNextTxt</note>
         </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one posted transfer shipment document, always 1, not the selected lines or corrective entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation.</source>
+          <source>expectedCount counts the one posted transfer shipment document, always 1, not the selected lines or corrective entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</source>
           <target>expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method CountUnit - NamedType CountLbl</note>
@@ -7564,7 +7564,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries.</source>
+          <source>expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries. is-IS: expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</source>
           <target>expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method CountUnit - NamedType CountLbl</note>
