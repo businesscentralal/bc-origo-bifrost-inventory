@@ -27,10 +27,12 @@ README "Objects" lists every object with its ID. In short:
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
-- Codeunits 10076924-10076929 are taken on main; 10076930-10076931 are `Sales Get Shipment Impl/Proc ori`
-  (`Sales.SalesInvoice.GetShipmentLines`, enum extension 10076847). Next free codeunit: 10076932.
-  Free: 10076932-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
+- Codeunits 10076924-10076929 are taken on main; 10077020-10077021 are `Sales Get Shipment Impl/Proc ori`
+  (`Sales.SalesInvoice.GetShipmentLines`, enum extension 10076900). Several workers build Inventory types in
+  parallel (16.11.2026: open PRs claim 10076930 and enum extension 10076847 (#195), 10076990-10076993 and enum
+  extension 10076890 (#197)), so check main and every open PR before picking an ID.
+  Otherwise free: 10076930-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
   fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
@@ -39,5 +41,5 @@ README "Objects" lists every object with its ID. In short:
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
-- 96981 `Sales Get Shipment Tests`. (96980 is claimed by open PR #193.)
-- Free (16.11.2026, any test object type): 96924-96926, 96928-96929, 96947-96949, 96960-96961, 96964-96969, 96982-96999. Check main and open PRs first.
+- 96995 `Sales Get Shipment Tests`. (Open PRs claim 96980 (#193), 96981 (#195), 96988 (#197).)
+- Free (16.11.2026, any test object type): 96924-96926, 96928-96929, 96947-96949, 96960-96961, 96964-96969, 96982-96987, 96989-96994, 96996-96999. Check main and open PRs first.

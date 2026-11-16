@@ -11,7 +11,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Sales.SalesInvoice.GetShipmentLines (inventory#132).
 /// </summary>
-codeunit 96981 "Sales Get Shipment Tests"
+codeunit 96995 "Sales Get Shipment Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;
