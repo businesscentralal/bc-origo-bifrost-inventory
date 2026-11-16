@@ -889,7 +889,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         RawChanges: JsonToken;
         Expected: Text;
     begin
-        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.';
+        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome. expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those) (the value is 1). To read it without a side effect, send the request without expectedCount and read expected.';
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
@@ -973,9 +973,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetParameters(ArrayChapter), 'Parameters are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Three supported request keys.')
+                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Three supported request keys and expectedCount (#192).')
                 else
-                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Two applied filters and optional native journal template/batch.');
+                    LibraryAssert.AreEqual(5, ArrayChapter.Count(), 'Two applied filters, optional native journal template/batch and expectedCount (#192).');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then

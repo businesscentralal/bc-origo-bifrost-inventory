@@ -68,10 +68,12 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted transfer shipment to undo, at most 20 characters; a longer value is cut to 20. Every line that is not a correction line is undone.'));
+        Parameters.Add(Parts.ExpectedCountParameter('Inventory.Transfer.UndoShipment'));
         exit(true);
     end;
 
@@ -103,6 +105,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Preconditions: JsonArray;
     begin
         Preconditions.Add('The posted transfer shipment exists and has at least one line that is not a correction line.');
@@ -112,6 +115,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
+        Parts.AddCountUnit('Inventory.Transfer.UndoShipment', Effect);
         exit(true);
     end;
 

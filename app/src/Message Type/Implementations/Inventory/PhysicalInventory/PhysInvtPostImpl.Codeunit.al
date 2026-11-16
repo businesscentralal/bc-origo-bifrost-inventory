@@ -98,6 +98,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Returns the parameters chapter of the contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
@@ -106,6 +107,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName. A value that differs from templateName, ignoring case, is refused.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName. A value that differs from batchName, ignoring case, is refused.'));
         Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Nonempty array of distinct SystemIds of journal lines in the selected batch. Only those lines are used. Omit it to use every line of the batch.'));
+        Parameters.Add(Parts.ExpectedCountParameter('Inventory.PhysInventory.Post'));
         exit(true);
     end;
 
@@ -170,6 +172,8 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
 
     /// <summary>Returns the effect chapter of the contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
     begin
         Clear(Effect);
         Effect.Add('effect', 'irreversible');
@@ -179,6 +183,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         Effect.Add('rollback', false);
+        Parts.AddCountUnit('Inventory.PhysInventory.Post', Effect);
         exit(true);
     end;
 

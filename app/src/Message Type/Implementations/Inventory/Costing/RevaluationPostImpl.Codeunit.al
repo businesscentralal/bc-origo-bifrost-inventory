@@ -78,6 +78,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Returns the native revaluation parameters contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Parameters);
@@ -87,6 +88,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Parameters.Add(ContractMgt.Parameter('id', 'string', false, 'Alias of batchId.'));
         Parameters.Add(ContractMgt.Parameter('systemId', 'string', false, 'Alias of batchId.'));
         Parameters.Add(ContractMgt.Parameter('recordSystemId', 'string', false, 'Alias of batchId.'));
+        Parameters.Add(Parts.ExpectedCountParameter('Inventory.Revaluation.Post'));
         exit(true);
     end;
 
@@ -132,6 +134,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
     /// <summary>Returns the native revaluation effect contract.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Preconditions: JsonArray;
     begin
         Clear(Effect);
@@ -146,6 +149,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
         Preconditions.Add('The batch is an existing non-recurring batch of a Revaluation journal template with at least one Revaluation line.');
         Preconditions.Add('The caller holds Inv. Posting Gate and can write item journal lines.');
         Effect.Add('preconditions', Preconditions);
+        Parts.AddCountUnit('Inventory.Revaluation.Post', Effect);
         exit(true);
     end;
 

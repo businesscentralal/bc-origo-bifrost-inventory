@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-16) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
+- The nine irreversible types (`Inventory.Revaluation.Post`, `.TransferOrder.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run`, `.CostToGL.Post`, `.Transfer.UndoShipment`, `.Assembly.UndoPost`, `.Reclassification.Post`, `.PhysInventory.Post`) keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter. The count is always 1: the one order, batch, run or posted document, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
+- Help text stays English at 1033 and 1039, as the other contract chapters. New test codeunit 96980 `Inv. Count Unit Tests ori`. No new app object, page or message type.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

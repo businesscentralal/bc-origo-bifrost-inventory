@@ -64,9 +64,11 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters; a longer value is cut to 20.'));
+        Parameters.Add(Parts.ExpectedCountParameter('Inventory.Assembly.UndoPost'));
         exit(true);
     end;
 
@@ -97,6 +99,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Preconditions: JsonArray;
     begin
         Preconditions.Add('The posted assembly exists.');
@@ -108,6 +111,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
+        Parts.AddCountUnit('Inventory.Assembly.UndoPost', Effect);
         exit(true);
     end;
 

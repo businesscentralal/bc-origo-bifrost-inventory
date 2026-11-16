@@ -141,7 +141,10 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Parameters.Add(Parameter);
                 end;
             'Inventory.TransferOrder.Post':
-                Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer. ShipReceive is refused.'));
+                begin
+                    Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer. ShipReceive is refused.'));
+                    Parameters.Add(ExpectedCountParameter(MessageType));
+                end;
             'Inventory.TransferOrder.PreviewPost':
                 Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer.'));
             'Inventory.AssemblyOrder.Create':
@@ -164,6 +167,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format; the date on the order is used when omitted.'));
                     Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble before posting; written to the order and committed before posting, used only when greater than zero.'));
+                    Parameters.Add(ExpectedCountParameter(MessageType));
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
@@ -792,6 +796,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Post':
                 begin
                     SetEffect(Effect, 'irreversible', 'Posts the Transfer Order as a shipment, a receipt or a direct transfer: creates the posted transfer shipment, receipt or direct transfer document with its item ledger and value entries, and updates or deletes the order. The call commits and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori');
+                    AddCountUnit(MessageType, Effect);
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The order has lines and is ready to be shipped or received.');
@@ -835,6 +840,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.Post':
                 begin
                     SetEffect(Effect, 'irreversible', 'Posts the Assembly Order: creates the posted assembly order with the item ledger and value entries for consumption and output. When quantityToAssemble is sent it is first written to the order. The call commits before posting starts and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori');
+                    AddCountUnit(MessageType, Effect);
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The components are available and the order has a quantity to assemble.');
@@ -853,6 +859,60 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
         end;
         Effect.Add('preconditions', Preconditions);
+    end;
+
+    /// <summary>Names what expectedCount counts for an irreversible Inventory type (#192).</summary>
+    /// <param name="MessageType">The Inventory message type name.</param>
+    /// <returns>The count unit sentence part, or an empty text for a type that is not confirmed.</returns>
+    procedure CountUnit(MessageType: Text): Text
+    begin
+        case MessageType of
+            'Inventory.Revaluation.Post':
+                exit('the one revaluation journal batch this call posts, not its lines or the value entries it creates');
+            'Inventory.TransferOrder.Post':
+                exit('the one Transfer Order this call posts, not its lines or the shipment, receipt and ledger entries it creates');
+            'Inventory.AssemblyOrder.Post':
+                exit('the one Assembly Order this call posts, not its component lines or the ledger entries it creates');
+            'Inventory.AdjustCost.Run':
+                exit('the one cost adjustment run this call performs, not the items or entries the filters select');
+            'Inventory.CostToGL.Post':
+                exit('the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those)');
+            'Inventory.Transfer.UndoShipment':
+                exit('the one posted transfer shipment named by documentNo, not its lines');
+            'Inventory.Assembly.UndoPost':
+                exit('the one posted assembly named by documentNo, not its lines or entries');
+            'Inventory.Reclassification.Post':
+                exit('the one item journal batch this call posts, not its lines');
+            'Inventory.PhysInventory.Post':
+                exit('the one physical inventory journal batch this call posts, even when lineSystemIds limits it to some lines');
+        end;
+        exit('');
+    end;
+
+    /// <summary>Builds the expectedCount parameter that names the count unit and the side-effect-free way to read it (#192).</summary>
+    /// <param name="MessageType">The irreversible Inventory message type name.</param>
+    /// <returns>The parameter entry for the parameters chapter.</returns>
+    procedure ExpectedCountParameter(MessageType: Text): JsonObject
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        exit(ContractMgt.Parameter('expectedCount', 'integer', false,
+            'Confirmation count. It counts ' + CountUnit(MessageType) + ', so the value is 1. Always checked when sent; required only when Require Confirmation for Irreversible Messages is on in Bifrost Setup. To read the count without a side effect, send the same request without expectedCount: the call is refused with ConfirmationRequired and returns expected, and nothing is changed.'));
+    end;
+
+    /// <summary>Appends the count unit sentence to the changes text of an irreversible effect chapter (#192).</summary>
+    /// <param name="MessageType">The irreversible Inventory message type name.</param>
+    /// <param name="Effect">The effect chapter to complete.</param>
+    procedure AddCountUnit(MessageType: Text; var Effect: JsonObject)
+    var
+        Changes: JsonToken;
+        ChangesText: Text;
+    begin
+        if Effect.Get('changes', Changes) then begin
+            ChangesText := Changes.AsValue().AsText();
+            Effect.Remove('changes');
+        end;
+        Effect.Add('changes', (ChangesText + ' expectedCount counts ' + CountUnit(MessageType) + ' (the value is 1). To read it without a side effect, send the request without expectedCount and read expected.').Trim());
     end;
 
     local procedure SetEffect(var Effect: JsonObject; EffectKind: Text; Changes: Text; Idempotent: Boolean; PermissionSetName: Text)
