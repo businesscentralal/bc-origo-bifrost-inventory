@@ -374,6 +374,38 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
+    procedure Post_DirectTransfer_SingleDocument_CreatesDirectTransfer()
+    var
+        OriginalSetup: Record "Inventory Setup";
+        DirectTransHeader: Record "Direct Trans. Header";
+        TransferHeader: Record "Transfer Header";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
+    begin
+        // [SCENARIO] #228 The selected single-document mode posts a direct transfer, not a shipment and receipt.
+        Initialize();
+        Helper.SetDirectTransferPosting(true, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        DocumentNo := TransferHeader."No.";
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
+
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Direct transfer should succeed. ' + JsonText(ResponseJson));
+        DirectTransHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.AreEqual(1, DirectTransHeader.Count(), 'Exactly one posted direct transfer exists for the order');
+        Assert.IsTrue(ResponseJson.Get('postedShipmentNo', Token), 'postedShipmentNo missing');
+        Assert.AreEqual('', Token.AsValue().AsText(), 'Single-document posting creates no shipment');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', Token), 'postedReceiptNo missing');
+        Assert.AreEqual('', Token.AsValue().AsText(), 'Single-document posting creates no receipt');
+        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Full direct transfer removes the order');
+    end;
+
+    [Test]
     procedure Post_Receive_Full_ReturnsPostedReceiptNoAfterHeaderDeleted()
     var
         FromLocation, ToLocation, InTransitLocation : Record Location;
