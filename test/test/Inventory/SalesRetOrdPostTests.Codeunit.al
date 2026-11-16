@@ -11,7 +11,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Sales.ReturnOrder.CreateFromPosted (inventory#136).
 /// </summary>
-codeunit 96990 "Sales Ret. Ord. Post. Tests"
+codeunit 96991 "Sales Ret. Ord. Post. Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

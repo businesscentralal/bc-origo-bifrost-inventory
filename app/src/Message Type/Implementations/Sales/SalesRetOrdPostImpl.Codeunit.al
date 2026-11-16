@@ -12,7 +12,7 @@ using Origo.Bifrost;
 /// (codeunit 6620 Copy Document Mgt. with exact cost reversal), so Appl.-from Item Entry is set on the new lines.
 /// The write runs in Sales Ret. Ord. Post. Proc ori so a failure rolls back and answers a clean error.
 /// </summary>
-codeunit 10077030 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077032 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -43,6 +43,12 @@ codeunit 10077030 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori
         NumberExpectedTok: Label 'a positive JSON number', Comment = 'is-IS=jákvæð JSON-tala';
         OpenDocumentExpectedTok: Label 'openReturnOrderOrCreditMemo', Locked = true;
         CustomerExpectedTok: Label 'customer', Locked = true;
+        LineIndexPathTok: Label 'lines[%1]', Locked = true;
+        LineKeyPathTok: Label 'lines[%1].%2', Locked = true;
+        LineSourcePathTok: Label 'lines[%1].source', Locked = true;
+        LineDocumentNoPathTok: Label 'lines[%1].documentNo', Locked = true;
+        LineNoPathTok: Label 'lines[%1].lineNo', Locked = true;
+        LineQuantityPathTok: Label 'lines[%1].quantity', Locked = true;
 
     procedure IsEnabled(): Boolean
     var
@@ -336,15 +342,20 @@ codeunit 10077030 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori
         CostLinkErr: Label 'A posted item line has no exact cost reversing link, so it cannot be reversed with Appl.-from Item Entry.', Comment = 'is-IS=Bókuð vörulína hefur enga nákvæma kostnaðarbakfærslutengingu og því er ekki hægt að bakfæra hana með Jafna við vörufærslu.';
     begin
         RequestJson := Argument.GetRequestJson();
-        if RequestJson.Contains(DocumentNoKeyTok) or RequestJson.Contains(SystemIdKeyTok) then
-            LocateDocument(RequestJson, SalesHeader)
-        else begin
-            ResolveNewCustomer(Argument, RequestJson, CustomerNo);
+        // Re-check the lines before any write. A refusal here already answered the caller; creating the
+        // header first would keep that document and the copy below would still answer Success.
+        if RequestJson.Contains(DocumentNoKeyTok) or RequestJson.Contains(SystemIdKeyTok) then begin
+            LocateDocument(RequestJson, SalesHeader);
+            CustomerNo := SalesHeader."Sell-to Customer No.";
+        end else
+            if not ResolveNewCustomer(Argument, RequestJson, CustomerNo) then
+                exit;
+        if not CollectLines(Argument, RequestJson, CustomerNo, TempInvLine, TempShptLine) then
+            exit;
+        if not (RequestJson.Contains(DocumentNoKeyTok) or RequestJson.Contains(SystemIdKeyTok)) then begin
             CreateHeader(RequestJson, CustomerNo, SalesHeader);
             Created := true;
         end;
-        CustomerNo := SalesHeader."Sell-to Customer No.";
-        CollectLines(Argument, RequestJson, CustomerNo, TempInvLine, TempShptLine);
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         if SalesLine.FindLast() then
@@ -630,7 +641,7 @@ codeunit 10077030 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori
         foreach LineToken in Token.AsArray() do begin
             Index += 1;
             if not LineToken.IsObject() then
-                exit(RespondLineFormat(Argument, StrSubstNo('lines[%1]', Index), ObjectExpectedTok));
+                exit(RespondLineFormat(Argument, StrSubstNo(LineIndexPathTok, Index), ObjectExpectedTok));
             LineJson := LineToken.AsObject();
             if not CollectLine(Argument, LineJson, Index, CustomerNo, TempInvLine, TempShptLine) then
                 exit(false);
@@ -670,34 +681,34 @@ codeunit 10077030 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori
         TouchLineKeys(LineJson);
         foreach KeyName in LineJson.Keys() do
             if not (KeyName in [SourceKeyTok, DocumentNoKeyTok, LineNoKeyTok, QuantityKeyTok]) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownLineKeyErr, CopyStr(StrSubstNo('lines[%1].%2', Index, KeyName), 1, 250), CopyStr(KeyName, 1, 250), AllowedLineKeysTok, UnknownLineKeyNextLbl);
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownLineKeyErr, CopyStr(StrSubstNo(LineKeyPathTok, Index, KeyName), 1, 250), CopyStr(KeyName, 1, 250), AllowedLineKeysTok, UnknownLineKeyNextLbl);
                 exit(false);
             end;
         foreach KeyName in AllowedLineKeysTok.Split(', ') do
             if not LineJson.Contains(KeyName) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingLineKeyErr, KeyName), CopyStr(StrSubstNo('lines[%1].%2', Index, KeyName), 1, 250), '', CopyStr(KeyName, 1, 250), MissingLineKeyNextLbl);
+                Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, StrSubstNo(MissingLineKeyErr, KeyName), CopyStr(StrSubstNo(LineKeyPathTok, Index, KeyName), 1, 250), '', CopyStr(KeyName, 1, 250), MissingLineKeyNextLbl);
                 exit(false);
             end;
         LineJson.Get(SourceKeyTok, Token);
         if not IsTextToken(Token) then
-            exit(RespondLineFormat(Argument, StrSubstNo('lines[%1].source', Index), TextExpectedTok));
+            exit(RespondLineFormat(Argument, StrSubstNo(LineSourcePathTok, Index), TextExpectedTok));
         Source := Token.AsValue().AsText();
         LineJson.Get(DocumentNoKeyTok, Token);
         if not IsTextToken(Token) then
-            exit(RespondLineFormat(Argument, StrSubstNo('lines[%1].documentNo', Index), TextExpectedTok));
+            exit(RespondLineFormat(Argument, StrSubstNo(LineDocumentNoPathTok, Index), TextExpectedTok));
         DocumentNo := Token.AsValue().AsText();
         LineJson.Get(LineNoKeyTok, Token);
         if not TryReadNumber(Token, LineNoValue) or (LineNoValue < 1) or (LineNoValue > 2147483647) or (LineNoValue <> Round(LineNoValue, 1)) then
-            exit(RespondLineFormat(Argument, StrSubstNo('lines[%1].lineNo', Index), IntegerExpectedTok));
+            exit(RespondLineFormat(Argument, StrSubstNo(LineNoPathTok, Index), IntegerExpectedTok));
         LineNo := LineNoValue;
         LineJson.Get(QuantityKeyTok, Token);
         if not TryReadNumber(Token, Quantity) or (Quantity <= 0) then
-            exit(RespondLineFormat(Argument, StrSubstNo('lines[%1].quantity', Index), NumberExpectedTok));
+            exit(RespondLineFormat(Argument, StrSubstNo(LineQuantityPathTok, Index), NumberExpectedTok));
         if not (LowerCase(Source) in [LowerCase(InvoiceTok), LowerCase(ShipmentTok)]) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SourceValueErr, CopyStr(StrSubstNo('lines[%1].source', Index), 1, 250), CopyStr(Source, 1, 250), SourceValuesTok, SourceValueNextLbl);
+            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SourceValueErr, CopyStr(StrSubstNo(LineSourcePathTok, Index), 1, 250), CopyStr(Source, 1, 250), SourceValuesTok, SourceValueNextLbl);
             exit(false);
         end;
-        Where := StrSubstNo('lines[%1]', Index);
+        Where := StrSubstNo(LineIndexPathTok, Index);
 
         if LowerCase(Source) = LowerCase(InvoiceTok) then begin
             if not SalesInvLine.Get(CopyStr(DocumentNo, 1, MaxStrLen(SalesInvLine."Document No.")), LineNo) then begin
