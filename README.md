@@ -420,3 +420,22 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+
+## Add posted receipt lines to a purchase invoice
+
+```json
+{"type":"Purchase.PurchaseInvoice.GetReceiptLines","data":{"documentNo":"108001","receiptNos":["107001","107002"]}}
+```
+
+Adds the remaining uninvoiced receipt quantities through the native Get Receipt Lines routine. The invoice must be open. Use `systemId` instead of `documentNo`, or `allReceipts: true` instead of `receiptNos` to select receipts for the invoice's pay-to vendor and currency.
+
+| Response field | Meaning |
+|---|---|
+| `documentNo`, `systemId` | The target purchase invoice |
+| `addedCount`, `addedLines` | Added invoice lines, including native heading text lines; each carries `lineNo`, `type`, `no`, `description`, `quantity`, `receiptNo`, `receiptLineNo` |
+| `skippedCount`, `skippedLines` | Receipt lines already `invoiced` or `onOpenInvoice`; the latter includes `invoiceNo` |
+
+An explicitly selected receipt of another pay-to vendor or currency returns `InvalidLine` with `nextStep`, without adding lines. Native validation failures roll back the call. The effect is `write`; this operation does not post. Review the invoice, then use `Purchase.Document.Post`.
+
+Objects: implementation/enum value 10077030, process 10077031, enum extension 10077030, tests 96996. Execution extends Foundation's Full role; standard purchase document permissions still apply. No Inventory domain switch is added for this purchase-document operation.

@@ -39,3 +39,10 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+
+
+## Issue 133 object claims (2026-11-16)
+
+- Codeunits 10077030 `Purch Get Receipt Impl ori` and 10077031 `Purch Get Receipt Proc ori`; enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077030.
+- Test codeunit 96996 `Purch Get Receipt Tests`.
+- These IDs were checked against main and the open Inventory PR claims, including #203 (10077020/10077021, test 96995). Do not reuse them.
