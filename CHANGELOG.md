@@ -4,7 +4,7 @@
 
 ### Added (2026-11-16) - Item substitutions (#118)
 
-- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
 - Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
 
 

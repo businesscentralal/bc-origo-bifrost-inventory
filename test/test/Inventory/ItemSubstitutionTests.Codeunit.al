@@ -268,12 +268,15 @@ codeunit 96993 "Item Substitution Tests ori"
     procedure Scenario_AC04_HelpAndErrors_AreBilingual()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Impl: Codeunit "Item Subst. Get Impl ori";
         ContractEn: JsonObject;
         ContractIs: JsonObject;
         Request: JsonObject;
         English: JsonObject;
         Icelandic: JsonObject;
         OldLanguage: Integer;
+        OverviewEn: Text;
+        OverviewIs: Text;
     begin
         // Story #118, AC04/AC05 | Time: none; WorkDate ignored | Risk: None
         Initialize();
@@ -281,16 +284,20 @@ codeunit 96993 "Item Substitution Tests ori"
         OldLanguage := GlobalLanguage();
         GlobalLanguage(1033);
         ContractMgt.GetContract("Message Type ori"::"Inventory.ItemSubstitution.Get", ContractEn);
+        Impl.GetOverview(OverviewEn);
         English := Execute(Request);
         GlobalLanguage(1039);
         ContractMgt.GetContract("Message Type ori"::"Inventory.ItemSubstitution.Get", ContractIs);
+        Impl.GetOverview(OverviewIs);
         Icelandic := Execute(Request);
         GlobalLanguage(OldLanguage);
         // [THEN] Stable codes and translated guidance are present, with an explicit read effect.
         AssertRefusal(English, 'MissingParameter');
         AssertRefusal(Icelandic, 'MissingParameter');
         Assert.AreNotEqual(English.GetText('nextStep'), Icelandic.GetText('nextStep'), 'Translated next step');
-        Assert.AreNotEqual(ContractEn.GetText('overview'), ContractIs.GetText('overview'), 'Translated overview');
+        Assert.AreNotEqual(OverviewEn, OverviewIs, 'The app supplies translated overview labels');
+        // Foundation #1239 intentionally builds public contracts in English, regardless of caller LCID.
+        Assert.AreEqual(ContractEn.GetText('overview'), ContractIs.GetText('overview'), 'Foundation public help policy');
         Assert.AreEqual('read', ContractEn.GetObject('effect').GetText('effect'), 'Read effect');
 
     end;
