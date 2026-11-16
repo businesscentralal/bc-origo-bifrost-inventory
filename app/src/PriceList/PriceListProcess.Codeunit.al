@@ -249,7 +249,7 @@ codeunit 10076982 "Price List Process ori"
     var
         Header: Record "Price List Header";
         Line: Record "Price List Line";
-        TempDuplicate: Record "Duplicate Price Line";
+        TempDuplicate: Record "Duplicate Price Line" temporary;
         Management: Codeunit "Price List Management";
         Response: JsonObject;
         ListCode: Code[20];
@@ -292,7 +292,7 @@ codeunit 10076982 "Price List Process ori"
         Argument.SetResponseJson(Response);
     end;
 
-    local procedure RespondDuplicates(var Argument: Record "Message Argument ori"; ListCode: Code[20]; var TempDuplicate: Record "Duplicate Price Line")
+    local procedure RespondDuplicates(var Argument: Record "Message Argument ori"; ListCode: Code[20]; var TempDuplicate: Record "Duplicate Price Line" temporary)
     var
         Response: JsonObject;
         Conflict: JsonObject;
