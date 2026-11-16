@@ -312,8 +312,7 @@ codeunit 96995 "Sales Get Shipment Tests"
         // Story #132, AC04 | Time: WorkDate only for fixture creation | Risk: None
         // [GIVEN] Existing invoice and shipment numbers exactly 20 characters long
         LibrarySales.CreateCustomer(Customer);
-        CreateInvoice(Invoice, Customer."No.");
-        Invoice.Rename(Invoice."Document Type", 'B2I132-INVOICE-12345');
+        CreateInvoiceWithNo(Invoice, Customer."No.", 'B2I132-INVOICE-12345');
         Shipment.Init();
         Shipment."No." := 'B2I132-SHIPMENT-1234';
         Shipment."Bill-to Customer No." := Customer."No.";
@@ -346,23 +345,37 @@ codeunit 96995 "Sales Get Shipment Tests"
         Invoice: Record "Sales Header";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        AddedLines: JsonArray;
+        OriginalLanguage: Integer;
     begin
         // Story #132, AC01 | Time: WorkDate only for fixture posting | Risk: None
         // [GIVEN] An open invoice with a 20-character number and an uninvoiced shipment
         LibrarySales.CreateCustomer(Customer);
         ShipOrder(Customer."No.", 2);
-        CreateInvoice(Invoice, Customer."No.");
-        Invoice.Rename(Invoice."Document Type", 'B2I132-INVOICE-12345');
+        CreateInvoiceWithNo(Invoice, Customer."No.", 'B2I132-INVOICE-67890');
 
         // [WHEN] The invoice is selected by systemId
         RequestJson.Add('systemId', Format(Invoice.SystemId, 0, 4));
         RequestJson.Add('allShipments', true);
+        OriginalLanguage := GlobalLanguage();
+        GlobalLanguage(1039);
         ResponseJson := Execute(RequestJson);
+        GlobalLanguage(OriginalLanguage);
 
         // [THEN] The exact invoice receives the shipment lines
         Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), 'status');
         Assert.AreEqual(Invoice."No.", ReadText(ResponseJson, 'documentNo'), 'exact invoice');
         Assert.IsTrue(ReadInteger(ResponseJson, 'addedCount') > 0, 'shipment added');
+        AddedLines := ReadArray(ResponseJson, 'addedLines');
+        Assert.AreEqual('Item', ReadText(RowAt(AddedLines, 1), 'type'), 'line type stays English at 1039');
+
+        // [WHEN] The same invoice is addressed by its maximum-length number
+        Clear(RequestJson);
+        RequestJson.Add('documentNo', Invoice."No.");
+        RequestJson.Add('allShipments', true);
+        ResponseJson := Execute(RequestJson);
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), '20-character number accepted');
+        Assert.AreEqual(0, ReadInteger(ResponseJson, 'addedCount'), 'repeat adds nothing');
     end;
 
     local procedure AssertRefusal(RequestJson: JsonObject; ExpectedCode: Text)
@@ -413,6 +426,16 @@ codeunit 96995 "Sales Get Shipment Tests"
     local procedure CreateInvoice(var SalesHeader: Record "Sales Header"; CustomerNo: Code[20])
     begin
         LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Invoice, CustomerNo);
+    end;
+
+    local procedure CreateInvoiceWithNo(var Invoice: Record "Sales Header"; CustomerNo: Code[20]; InvoiceNo: Code[20])
+    begin
+        Invoice.Init();
+        Invoice."Document Type" := Invoice."Document Type"::Invoice;
+        Invoice."No." := InvoiceNo;
+        Invoice.Insert(true);
+        Invoice.Validate("Sell-to Customer No.", CustomerNo);
+        Invoice.Modify(true);
     end;
 
     local procedure CountInvoiceLines(SalesHeader: Record "Sales Header"): Integer

@@ -32,6 +32,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         StatusKeyTok: Label 'status', Locked = true;
         PostedShipmentExpectedTok: Label 'postedSalesShipment', Locked = true;
 
+    /// <summary>Checks sales line write and posted shipment read permissions.</summary>
     procedure IsEnabled(): Boolean
     var
         SalesLine: Record "Sales Line";
@@ -40,11 +41,13 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(SalesLine.WritePermission() and SalesShptLine.ReadPermission());
     end;
 
+    /// <summary>Returns the posted sales shipment line table for discovery.</summary>
     procedure GetFilterTableNo(): Integer
     begin
         exit(Database::"Sales Shipment Line");
     end;
 
+    /// <summary>Returns the localized catalogue description.</summary>
     procedure GetDescription(): Text[250]
     var
         DescriptionLbl: Label 'Pulls posted, not invoiced sales shipment lines into an open sales invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning.';
@@ -52,6 +55,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(DescriptionLbl);
     end;
 
+    /// <summary>Returns localized discovery keywords.</summary>
     procedure GetKeywords(): Text
     var
         KeywordsLbl: Label 'get shipment lines, combined invoice, shipment, sales invoice, not invoiced', Comment = 'is-IS=sækja afhendingarlínur, samsettur reikningur, afhending, sölureikningur, óreikningsfært';
@@ -59,6 +63,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(KeywordsLbl);
     end;
 
+    /// <summary>Returns localized guidance for choosing this operation.</summary>
     procedure GetSelectionDescription(): Text
     var
         SelectionLbl: Label 'Invoices several posted shipments of one customer on one sales invoice, as the Get Shipment Lines action does, and lists the lines it added and the lines it skipped.', Comment = 'is-IS=Reikningsfærir nokkrar bókaðar afhendingar eins viðskiptamanns á einum sölureikningi, eins og aðgerðin Sækja afhendingarlínur gerir, og telur upp línurnar sem bættust við og línurnar sem var sleppt.';
@@ -66,6 +71,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(SelectionLbl);
     end;
 
+    /// <summary>Describes the request envelope and invoice identifier location.</summary>
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
     var
         Subject: JsonObject;
@@ -79,6 +85,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Describes the supported invoice identifiers.</summary>
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -90,6 +97,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Declares invoice selection and shipment filter parameters.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -105,6 +113,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Describes added invoice lines and skipped shipment lines.</summary>
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -141,6 +150,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Declares coded refusals and localized recovery guidance.</summary>
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -178,6 +188,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Declares the reversible invoice write and repeat-call behavior.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Preconditions: JsonArray;
@@ -195,11 +206,13 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Uses Foundation metering defaults.</summary>
     procedure GetMetering(var Metering: JsonObject): Boolean
     begin
         exit(false);
     end;
 
+    /// <summary>Lists related sales document operations.</summary>
     procedure GetRelated(var Related: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -211,6 +224,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Describes the create, import and invoice workflow.</summary>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -223,6 +237,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns sample requests for named or all customer shipments.</summary>
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -234,6 +249,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns the localized operation overview.</summary>
     procedure GetOverview(var Overview: Text): Boolean
     var
         OverviewLbl: Label 'Pulls posted, not invoiced sales shipment lines into an open sales invoice, as the Get Shipment Lines action on the sales invoice does, so several shipments of one customer are invoiced together. Send shipmentNos to name the shipments, or allShipments to take every not invoiced shipment line of the bill-to customer of the invoice in its currency. The answer lists the invoice lines added and the shipment lines skipped because they are already invoiced or already on an open sales invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning, eins og aðgerðin Sækja afhendingarlínur á sölureikningnum gerir, svo nokkrar afhendingar eins viðskiptamanns séu reikningsfærðar saman. Sendu shipmentNos til að tilgreina afhendingarnar, eða allShipments til að taka allar óreikningsfærðar afhendingarlínur reikningsviðskiptamanns reikningsins í gjaldmiðli hans. Svarið telur upp reikningslínurnar sem bættust við og afhendingarlínurnar sem var sleppt af því að þær eru þegar reikningsfærðar eða þegar á opnum sölureikningi.';
@@ -242,6 +258,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Returns operation-specific usage notes.</summary>
     procedure GetNotes(var Notes: Text): Boolean
     var
         NotesLbl: Label 'A shipment of another bill-to customer or another currency is refused with InvalidLine and nothing is added. With allShipments, only shipment lines of the bill-to customer and currency of the invoice are read, and skippedLines lists only lines that are already on an open sales invoice. Business Central adds a heading text line for each shipment and copies item charge assignments, prices and discounts from the order, exactly as the native action does. A native refusal, such as a VAT business posting group that differs from the invoice, rolls the whole call back. The invoice is not posted; post it with Sales.Document.Post.', Comment = 'is-IS=Afhendingu annars reikningsviðskiptamanns eða annars gjaldmiðils er hafnað með InvalidLine og engu er bætt við. Með allShipments eru aðeins lesnar afhendingarlínur reikningsviðskiptamanns og gjaldmiðils reikningsins, og skippedLines telur aðeins upp línur sem eru þegar á opnum sölureikningi. Business Central bætir við fyrirsagnarlínu fyrir hverja afhendingu og afritar úthlutanir kostnaðarauka, verð og afslætti úr pöntuninni, nákvæmlega eins og innbyggða aðgerðin gerir. Innbyggð höfnun, til dæmis VSK-viðskiptabókunarflokkur sem er annar en reikningsins, afturkallar allt kallið. Reikningurinn er ekki bókaður; bókaðu hann með Sales.Document.Post.';
@@ -250,11 +267,13 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
         exit(true);
     end;
 
+    /// <summary>Classifies shipment import as an inbound write.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Validates the request before importing shipment lines in the write transaction.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         SalesHeader: Record "Sales Header";
@@ -397,7 +416,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
     local procedure AddedLineJson(SalesLine: Record "Sales Line") Line: JsonObject
     begin
         Line.Add('lineNo', SalesLine."Line No.");
-        Line.Add('type', Format(SalesLine.Type));
+        Line.Add('type', SalesLine.Type.Names().Get(SalesLine.Type.Ordinals().IndexOf(SalesLine.Type.AsInteger())));
         Line.Add('no', SalesLine."No.");
         Line.Add('description', SalesLine.Description);
         Line.Add('quantity', SalesLine.Quantity);
@@ -568,7 +587,7 @@ codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
             exit(false);
         end;
         if SalesHeader.Status <> SalesHeader.Status::Open then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotOpenErr, SalesHeader."No.", SalesHeader.Status), StatusKeyTok, CopyStr(Format(SalesHeader.Status), 1, 250), Format(SalesHeader.Status::Open), NotOpenNextLbl);
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotOpenErr, SalesHeader."No.", SalesHeader.Status), StatusKeyTok, CopyStr(SalesHeader.Status.Names().Get(SalesHeader.Status.Ordinals().IndexOf(SalesHeader.Status.AsInteger())), 1, 250), 'Open', NotOpenNextLbl);
             exit(false);
         end;
         exit(true);
