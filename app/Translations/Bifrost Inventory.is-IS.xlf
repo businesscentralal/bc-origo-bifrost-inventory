@@ -207,6 +207,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur og sendu kallið aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CanRead - NamedType ReadDeniedNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 967234576 - NamedType 107480891" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a whole number from %2 to %3.</source>
+          <target>%1 verður að vera heil tala frá %2 til %3.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = minimum, %3 = maximum; is-IS=%1 verður að vera heil tala frá %2 til %3.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CheckWholeNumber - NamedType RangeFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 967234576 - NamedType 198866909" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a whole number in range</source>
+          <target>heil tala innan marka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=heil tala innan marka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CheckWholeNumber - NamedType RangeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 967234576 - NamedType 4260795724" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the value as a JSON whole number within the documented range.</source>
+          <target>Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CheckWholeNumber - NamedType RangeNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3896330417 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
           <source>None. Reads open item ledger entries and their cost.</source>
           <target>Engin. Les opnar vörufærslur og kostnað þeirra.</target>
@@ -356,24 +374,6 @@
           <target>Notaðu hana til að lesa eftirstandandi magn og virði einnar vöru án aldursflokka.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu hana til að lesa eftirstandandi magn og virði einnar vöru án aldursflokka.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetRelated - NamedType RevaluationLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 107480891" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 must be a whole number from %2 to %3.</source>
-          <target>%1 verður að vera heil tala frá %2 til %3.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = minimum, %3 = maximum; is-IS=%1 verður að vera heil tala frá %2 til %3.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeFormatErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 198866909" size-unit="char" translate="yes" xml:space="preserve">
-          <source>a whole number in range</source>
-          <target>heil tala innan marka</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=heil tala innan marka</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeExpectedLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 4260795724" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send the value as a JSON whole number within the documented range.</source>
-          <target>Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3896330417 - Method 2373246346 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item %1 was not found.</source>

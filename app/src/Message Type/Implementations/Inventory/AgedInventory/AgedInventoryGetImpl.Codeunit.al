@@ -249,6 +249,7 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
     local procedure ReadParameters(var Argument: Record "Message Argument ori"; Request: JsonObject; var LocationFilter: Text; var VariantCode: Text; var CategoryFilter: Text; var EndingDate: Date; var PeriodLength: Integer; var Skip: Integer; var Take: Integer): Boolean
     var
         Reader: Codeunit "Request Value Reader ori";
+        Number: Decimal;
     begin
         PeriodLength := 30;
         Skip := 0;
@@ -263,13 +264,19 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
         if EndingDate = 0D then
             EndingDate := WorkDate();
         if Request.Contains('periodLengthDays') then
-            if not ReadInteger(Argument, Request, 'periodLengthDays', 1, 3660, PeriodLength) then
+            if not Reader.TryReadDecimal(Argument, Request, 'periodLengthDays', true, Number) or
+               not CheckWholeNumber(Argument, 'periodLengthDays', Number, 1, 3660, PeriodLength)
+            then
                 exit(false);
         if Request.Contains('skip') then
-            if not ReadInteger(Argument, Request, 'skip', 0, 2147483647, Skip) then
+            if not Reader.TryReadDecimal(Argument, Request, 'skip', true, Number) or
+               not CheckWholeNumber(Argument, 'skip', Number, 0, 2147483647, Skip)
+            then
                 exit(false);
         if Request.Contains('take') then
-            if not ReadInteger(Argument, Request, 'take', 1, 1000, Take) then
+            if not Reader.TryReadDecimal(Argument, Request, 'take', true, Number) or
+               not CheckWholeNumber(Argument, 'take', Number, 1, 1000, Take)
+            then
                 exit(false);
         exit(true);
     end;
@@ -430,16 +437,12 @@ codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
         exit(Ledger."Remaining Quantity" * (Ledger."Cost Amount (Actual)" + Ledger."Cost Amount (Expected)") / Ledger.Quantity);
     end;
 
-    local procedure ReadInteger(var Argument: Record "Message Argument ori"; Request: JsonObject; KeyName: Text; Minimum: Integer; Maximum: Integer; var Value: Integer): Boolean
+    local procedure CheckWholeNumber(var Argument: Record "Message Argument ori"; KeyName: Text; Number: Decimal; Minimum: Integer; Maximum: Integer; var Value: Integer): Boolean
     var
-        Reader: Codeunit "Request Value Reader ori";
-        Number: Decimal;
         RangeFormatErr: Label '%1 must be a whole number from %2 to %3.', Comment = '%1 = parameter, %2 = minimum, %3 = maximum; is-IS=%1 verður að vera heil tala frá %2 til %3.';
         RangeExpectedLbl: Label 'a whole number in range', Comment = 'is-IS=heil tala innan marka';
         RangeNextStepLbl: Label 'Send the value as a JSON whole number within the documented range.', Comment = 'is-IS=Sendu gildið sem JSON-heiltölu innan skjalfestra marka.';
     begin
-        if not Reader.TryReadDecimal(Argument, Request, KeyName, true, Number) then
-            exit(false);
         if (Number < Minimum) or (Number > Maximum) or (Number <> Round(Number, 1)) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(RangeFormatErr, KeyName, Minimum, Maximum), KeyName, Format(Number, 0, 9), RangeExpectedLbl, RangeNextStepLbl);
             exit(false);
