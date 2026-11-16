@@ -197,11 +197,11 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     var
         TrackingWrite: Codeunit "Inventory Tracking Write ori";
     begin
+        TrackingWrite.SetDeleteMode();
         if not TrackingWrite.AssertEnabled(Argument) then
             exit;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        TrackingWrite.SetDeleteMode();
         if Argument."Omit Commit" then
             TrackingWrite.Run(Argument)
         else
