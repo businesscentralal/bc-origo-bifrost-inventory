@@ -4833,18 +4833,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Ein flutningspöntun sem er ekki bein, auðkennd með skjalanúmeri eða SystemId.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType TargetLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 390865673" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount must be the integer 1 for the selected transfer order.</source>
-          <target>expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method Execute - NamedType CountExpectedLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 364205578" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send expectedCount 1 for one transfer order, regardless of line quantities.</source>
-          <target>Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method Execute - NamedType CountNextLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1797566734 - Method 1561766673 - NamedType 1954137527" size-unit="char" translate="yes" xml:space="preserve">
           <source>A transfer order that passes native posting validation.</source>
           <target>Flutningspöntun sem stenst innbyggða bókunarprófun.</target>
@@ -4874,6 +4862,18 @@
           <target>Lestu flutningslínurnar, fjarlægðu tvítekningar og sendu lineNo með qtyToShip eða qtyToReceive innan eftirstöðva.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu flutningslínurnar, fjarlægðu tvítekningar og sendu lineNo með qtyToShip eða qtyToReceive innan eftirstöðva.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method InvalidLine - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 1380282473 - NamedType 390865673" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount must be the integer 1 for the selected transfer order.</source>
+          <target>expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount verður að vera heiltalan 1 fyrir völdu flutningspöntunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method ValidateRequest - NamedType CountExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 1380282473 - NamedType 364205578" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send expectedCount 1 for one transfer order, regardless of line quantities.</source>
+          <target>Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu expectedCount 1 fyrir eina flutningspöntun, óháð magni á línum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method ValidateRequest - NamedType CountNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1797566734 - Method 1380282473 - NamedType 1255030100" size-unit="char" translate="yes" xml:space="preserve">
           <source>Separate shipment and receipt are not available for a direct transfer.</source>

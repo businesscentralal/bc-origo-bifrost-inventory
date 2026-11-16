@@ -208,26 +208,27 @@ codeunit 96969 "Partial Transfer Tests ori"
         Assert.AreEqual(3, 'Inventory.TransferOrder.Receive'.Split('.').Count(), 'Receive has three name parts.');
     end;
 
-    /// <summary>Direct callers cannot bypass validation of a supplied order count on older Foundation versions.</summary>
+    /// <summary>Validates a supplied order count independently of the Foundation confirmation protocol.</summary>
     [Test]
-    procedure DirectCallerRejectsIncorrectCount()
+    procedure ValidatorRejectsIncorrectCount()
     begin
-        VerifyDirectCount('2');
+        VerifyCountValidation('2');
     end;
 
     /// <summary>The documented integer count does not accept a JSON string.</summary>
     [Test]
-    procedure DirectCallerRejectsStringCount()
+    procedure ValidatorRejectsStringCount()
     begin
-        VerifyDirectCount('"1"');
+        VerifyCountValidation('"1"');
     end;
 
-    local procedure VerifyDirectCount(CountJson: Text)
+    local procedure VerifyCountValidation(CountJson: Text)
     var
         Header: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
         TempArgument: Record "Message Argument ori" temporary;
-        Implementation: Codeunit "Transfer Ship Impl ori";
+        PartialTransfer: Codeunit "Partial Transfer Mgt ori";
+        Quantities: Dictionary of [Integer, Decimal];
         Request: JsonObject;
         CountToken: JsonToken;
         Response: JsonObject;
@@ -239,8 +240,9 @@ codeunit 96969 "Partial Transfer Tests ori"
         TempArgument.Init();
         TempArgument.Type := "Message Type ori"::"Inventory.TransferOrder.Ship";
         TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         TempArgument.SetRequestJson(Request);
-        Implementation.ExecuteBifrostTask(TempArgument);
+        Assert.IsFalse(PartialTransfer.ValidateRequest(TempArgument, Header, true, Quantities), 'Invalid count is refused before posting.');
         Response := TempArgument.GetResponseJson();
         VerifyError(Response, 'PreconditionFailed');
         TransferLine.Get(Header."No.", 10000);
