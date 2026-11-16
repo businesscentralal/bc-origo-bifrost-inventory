@@ -4444,9 +4444,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType ExistsWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The caller cannot read items or create item units of measure.</source>
-          <target>Kallandinn getur ekki lesið vörur eða stofnað vörumælieiningar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða stofnað vörumælieiningar.</note>
+          <source>The caller cannot read items or item ledger entries, or create item units of measure.</source>
+          <target>Kallandinn getur ekki lesið vörur eða birgðafærslur, eða stofnað vörumælieiningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða birgðafærslur, eða stofnað vörumælieiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
@@ -4474,9 +4474,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A successful call saves one new unit of measure. A refusal saves nothing. The call never changes the quantity per unit of an existing unit: when the code already exists, it is refused with PreconditionFailed, and the refusal says so when item ledger entries use the unit. The call does not change the base unit of the item, does not delete anything and does not post. Generic data writes to item units of measure are refused, so use this call. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
-          <target>Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almennum gagnaskrifum í vörumælieiningar er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almennum gagnaskrifum í vörumælieiningar er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
+          <source>A successful call saves one new unit of measure. A refusal saves nothing. The call never changes the quantity per unit of an existing unit: when the code already exists, it is refused with PreconditionFailed, and the refusal says so when item ledger entries use the unit. The call does not change the base unit of the item, does not delete anything and does not post. Existing generic data writes to item units of measure keep working; this call adds a checked way to create one unit. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almenn gagnaskrif í vörumælieiningar virka áfram eins og áður; þetta kall bætir við athuguðum möguleika til að stofna eina einingu. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almenn gagnaskrif í vörumælieiningar virka áfram eins og áður; þetta kall bætir við athuguðum möguleika til að stofna eina einingu. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -4588,9 +4588,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method OptionalText - NamedType FormatNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and create item units of measure.</source>
-          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og stofnað vörumælieiningar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og stofnað vörumælieiningar.</note>
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and item ledger entries and create item units of measure.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og birgðafærslur og stofnað vörumælieiningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og birgðafærslur og stofnað vörumælieiningar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4274923246 - Method 3764667411 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
@@ -4774,9 +4774,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The caller cannot read items or item units of measure.</source>
-          <target>Kallandinn getur ekki lesið vörur eða vörumælieiningar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða vörumælieiningar.</note>
+          <source>The caller cannot read items, item units of measure or item ledger entries.</source>
+          <target>Kallandinn getur ekki lesið vörur, vörumælieiningar eða birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur, vörumælieiningar eða birgðafærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 200652028 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
@@ -4846,9 +4846,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method NotFoundNextStep - NamedType NotFoundNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 200652028 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items and item units of measure.</source>
-          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur og vörumælieiningar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur og vörumælieiningar.</note>
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items, item units of measure and item ledger entries.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur, vörumælieiningar og birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur, vörumælieiningar og birgðafærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 200652028 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">

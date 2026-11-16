@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
 using Microsoft.Foundation.UOM;
 using Origo.Bifrost;
 
@@ -159,7 +160,7 @@ codeunit 10077012 "Item UoM Create Impl ori" implements "Msg Interface ori", "Ms
         InvalidWhenLbl: Label 'A text is longer than its field, qtyPerUnitOfMeasure is not greater than 0, or a dimension or the weight is negative.', Comment = 'is-IS=Texti er lengri en reiturinn hans, qtyPerUnitOfMeasure er ekki stærra en 0, eða mál eða þyngd er neikvætt.';
         InvalidFixLbl: Label 'Send an itemNo of at most 20 characters, a code of at most 10, a quantity per unit of measure greater than 0 and dimensions and weight of 0 or more.', Comment = 'is-IS=Sendu itemNo sem er mest 20 stafir, code sem er mest 10, magn í mælieiningu stærra en 0 og mál og þyngd 0 eða hærra.';
         ExistsWhenLbl: Label 'The item already has a unit of measure with that code. When item ledger entries use it, its quantity per unit of measure cannot change.', Comment = 'is-IS=Varan hefur þegar mælieiningu með þeim kóða. Þegar birgðafærslur nota hana má ekki breyta magni í mælieiningu.';
-        PermissionWhenLbl: Label 'The caller cannot read items or create item units of measure.', Comment = 'is-IS=Kallandinn getur ekki lesið vörur eða stofnað vörumælieiningar.';
+        PermissionWhenLbl: Label 'The caller cannot read items or item ledger entries, or create item units of measure.', Comment = 'is-IS=Kallandinn getur ekki lesið vörur eða birgðafærslur, eða stofnað vörumælieiningar.';
         NativeWhenLbl: Label 'Business Central refuses the save itself, after the request was checked. Nothing is saved.', Comment = 'is-IS=Business Central hafnar sjálfri vistuninni eftir að beiðnin var yfirfarin. Ekkert er vistað.';
         NativeFixLbl: Label 'Read the error text, correct the cause in Business Central and send the call again.', Comment = 'is-IS=Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.';
     begin
@@ -254,7 +255,7 @@ codeunit 10077012 "Item UoM Create Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True.</returns>
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'A successful call saves one new unit of measure. A refusal saves nothing. The call never changes the quantity per unit of an existing unit: when the code already exists, it is refused with PreconditionFailed, and the refusal says so when item ledger entries use the unit. The call does not change the base unit of the item, does not delete anything and does not post. Generic data writes to item units of measure are refused, so use this call. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almennum gagnaskrifum í vörumælieiningar er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
+        NotesLbl: Label 'A successful call saves one new unit of measure. A refusal saves nothing. The call never changes the quantity per unit of an existing unit: when the code already exists, it is refused with PreconditionFailed, and the refusal says so when item ledger entries use the unit. The call does not change the base unit of the item, does not delete anything and does not post. Existing generic data writes to item units of measure keep working; this call adds a checked way to create one unit. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.', Comment = 'is-IS=Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almenn gagnaskrif í vörumælieiningar virka áfram eins og áður; þetta kall bætir við athuguðum möguleika til að stofna eina einingu. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -301,8 +302,9 @@ codeunit 10077012 "Item UoM Create Impl ori" implements "Msg Interface ori", "Ms
     var
         Item: Record Item;
         ItemUnitOfMeasure: Record "Item Unit of Measure";
+        ItemLedgerEntry: Record "Item Ledger Entry";
     begin
-        exit(Item.ReadPermission() and ItemUnitOfMeasure.ReadPermission() and ItemUnitOfMeasure.WritePermission());
+        exit(Item.ReadPermission() and ItemUnitOfMeasure.ReadPermission() and ItemUnitOfMeasure.WritePermission() and ItemLedgerEntry.ReadPermission());
     end;
 
     local procedure AssertCanRun(var Argument: Record "Message Argument ori"): Boolean
@@ -528,7 +530,7 @@ codeunit 10077012 "Item UoM Create Impl ori" implements "Msg Interface ori", "Ms
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and create item units of measure.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og stofnað vörumælieiningar.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and item ledger entries and create item units of measure.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og birgðafærslur og stofnað vörumælieiningar.';
     begin
         exit(PermissionNextStepLbl);
     end;

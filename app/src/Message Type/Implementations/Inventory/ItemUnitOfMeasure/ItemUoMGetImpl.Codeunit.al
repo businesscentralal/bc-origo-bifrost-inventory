@@ -20,7 +20,7 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
         TextExpectedTok: Label 'text', Locked = true;
         PermissionSetTok: Label 'BIFROST InvRead ori', Locked = true;
 
-    /// <summary>True when the caller can read items and item units of measure.</summary>
+    /// <summary>True when the caller can read items, item units of measure and item ledger entries.</summary>
     /// <returns>True when the type may run for the current user.</returns>
     procedure IsEnabled(): Boolean
     var
@@ -139,7 +139,7 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
         NotFoundWhenLbl: Label 'No item matched itemNo, or the item has no unit of measure with that code.', Comment = 'is-IS=Engin vara passaði við itemNo, eða varan hefur enga mælieiningu með þeim kóða.';
         InvalidWhenLbl: Label 'itemNo is longer than 20 characters or code is longer than 10 characters.', Comment = 'is-IS=itemNo er lengra en 20 stafir eða code er lengra en 10 stafir.';
         InvalidFixLbl: Label 'Send an itemNo of at most 20 characters and a code of at most 10 characters.', Comment = 'is-IS=Sendu itemNo sem er mest 20 stafir og code sem er mest 10 stafir.';
-        PermissionWhenLbl: Label 'The caller cannot read items or item units of measure.', Comment = 'is-IS=Kallandinn getur ekki lesið vörur eða vörumælieiningar.';
+        PermissionWhenLbl: Label 'The caller cannot read items, item units of measure or item ledger entries.', Comment = 'is-IS=Kallandinn getur ekki lesið vörur, vörumælieiningar eða birgðafærslur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -275,13 +275,12 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
     /// <summary>True when item ledger entries of the item use the unit of measure.</summary>
     /// <param name="ItemNo">The item number.</param>
     /// <param name="UnitCode">The unit of measure code.</param>
-    /// <returns>True when at least one item ledger entry uses the unit.</returns>
+    /// <returns>True when at least one item ledger entry uses the unit. The caller must already hold Item Ledger Entry read access.</returns>
     procedure HasLedgerEntries(ItemNo: Code[20]; UnitCode: Code[10]): Boolean
     var
         ItemLedgerEntry: Record "Item Ledger Entry";
     begin
-        if not ItemLedgerEntry.ReadPermission() then
-            exit(false);
+        // Callers gate on Item Ledger Entry read access first, so a missing permission is never reported as an absence.
         ItemLedgerEntry.SetCurrentKey("Item No.");
         ItemLedgerEntry.SetRange("Item No.", ItemNo);
         ItemLedgerEntry.SetRange("Unit of Measure Code", UnitCode);
@@ -308,8 +307,9 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
     var
         Item: Record Item;
         ItemUnitOfMeasure: Record "Item Unit of Measure";
+        ItemLedgerEntry: Record "Item Ledger Entry";
     begin
-        exit(Item.ReadPermission() and ItemUnitOfMeasure.ReadPermission());
+        exit(Item.ReadPermission() and ItemUnitOfMeasure.ReadPermission() and ItemLedgerEntry.ReadPermission());
     end;
 
     local procedure AssertCanRun(var Argument: Record "Message Argument ori"): Boolean
@@ -486,7 +486,7 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
 
     local procedure PermissionNextStep(): Text
     var
-        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items and item units of measure.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur og vörumælieiningar.';
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items, item units of measure and item ledger entries.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur, vörumælieiningar og birgðafærslur.';
     begin
         exit(PermissionNextStepLbl);
     end;

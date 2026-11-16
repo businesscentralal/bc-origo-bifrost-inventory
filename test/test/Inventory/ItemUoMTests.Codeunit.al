@@ -318,6 +318,44 @@ codeunit 96984 "Item UoM Tests"
     end;
 
     [Test]
+    procedure Get_WithoutLedgerEntryRead_ReturnsPermissionDeniedNotFalseAbsence()
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        Impl: Interface "Msg Interface ori";
+        ItemNo: Code[20];
+        Response: JsonObject;
+        RequestJson: JsonObject;
+        Token: JsonToken;
+    begin
+        // [SCENARIO] A caller who reads items and units but not item ledger entries must not receive hasLedgerEntries false for a used unit.
+        ItemNo := CreateItem();
+        EnsureUnit('UOMPRM');
+        AddBaseUnit(ItemNo, 'UOMPRM');
+        InsertLedgerEntry(ItemNo, 'UOMPRM');
+        RequestJson.Add('itemNo', ItemNo);
+        LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+        LowerPermissions.AddPermissionSet('Item UoM No ILE Test');
+        Assert.IsFalse(ItemLedgerEntry.ReadPermission(), 'Caller lacks item ledger entry read.');
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(RequestJson);
+        Impl := "Message Type ori"::"Inventory.ItemUnitOfMeasure.Get";
+        Impl.ExecuteBifrostTask(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        // Restore the full caller before the fixture cleanup.
+        LowerPermissions.SetOutsideO365Scope();
+        Assert.IsTrue(Response.Get('code', Token), 'Stable error code.');
+        Assert.AreEqual('PermissionDenied', Token.AsValue().AsText(), 'code');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'nextStep');
+        Assert.AreNotEqual('', Token.AsValue().AsText(), 'nextStep is not empty');
+        Assert.IsFalse(Response.Contains('units'), 'No units are answered without ledger read access.');
+        DeleteItem(ItemNo);
+    end;
+
+    [Test]
     procedure Create_Help_IsIcelandicAt1039()
     var
         Contract: Interface "Msg Contract ori";
