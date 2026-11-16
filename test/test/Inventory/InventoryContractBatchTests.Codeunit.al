@@ -712,7 +712,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        AssertComposedResponse(Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -721,6 +721,20 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedResponse(Contract: JsonObject; Expected: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Fields: JsonArray;
+        Token: JsonToken;
+    begin
+        // Foundation adds the common error-code field to the registered JSON response contract.
+        Expected.Get('fields', Token);
+        Fields := Token.AsArray();
+        Fields.Add(ContractMgt.ResponseField('code', 'string',
+            'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+        AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
