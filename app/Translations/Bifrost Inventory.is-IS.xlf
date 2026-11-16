@@ -7539,48 +7539,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterNextStepTxt</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 3788117626" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 is not a request-page control of report 795 Adjust Cost - Item Entries and is not supported.</source>
-          <target>%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType NotAControlErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 3423203706" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemByItem is not supported: this Business Central build exposes the Item-by-Item Adjustment option only on the request page, not to code, so the report cannot be started with it.</source>
-          <target>itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType ItemByItemErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Only itemNoFilter, itemCategoryFilter and postToGL.</source>
-          <target>Aðeins itemNoFilter, itemCategoryFilter og postToGL.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins itemNoFilter, itemCategoryFilter og postToGL.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType ExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2089623868 - Method 3470443098 - NamedType 761809759" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Remove the parameter and send the request again. Nothing was adjusted.</source>
-          <target>Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method RejectUnsupportedControls - NamedType NextStepTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 3905048205" size-unit="char" translate="yes" xml:space="preserve">
-          <source>documentNoFilter is not supported: the document number of report 1002 Post Inventory Cost to G/L is an output option that names the posted document, not a selection filter.</source>
-          <target>documentNoFilter er ekki studd: fylgiskjalsnúmer skýrslu 1002 Bóka birgðakostnað á fjárhag er úttaksvalkostur sem nefnir bókaða fylgiskjalið, ekki valsía.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=documentNoFilter er ekki studd: fylgiskjalsnúmer skýrslu 1002 Bóka birgðakostnað á fjárhag er úttaksvalkostur sem nefnir bókaða fylgiskjalið, ekki valsía.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 1277963324" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNoFilter, postingDateFilter, journalTemplateName and journalBatchName.</source>
-          <target>itemNoFilter, postingDateFilter, journalTemplateName og journalBatchName.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter, postingDateFilter, journalTemplateName og journalBatchName.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1727056033 - Method 3571782927 - NamedType 1593533517" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Remove documentNoFilter and send the request again. Nothing was posted.</source>
-          <target>Fjarlægðu documentNoFilter og sendu beiðnina aftur. Engu var bókað.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu documentNoFilter og sendu beiðnina aftur. Engu var bókað.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNoNextStepTxt</note>
-        </trans-unit>
       </group>
     </body>
   </file>

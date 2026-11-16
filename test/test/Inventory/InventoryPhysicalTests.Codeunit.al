@@ -75,7 +75,7 @@ codeunit 96944 "Inventory Physical Tests"
         Request.Add('documentNoFilter', 'X');
         Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
         Response.Get('code', Token);
-        Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'documentNoFilter is not a selection filter.');
+        Assert.AreEqual('UnknownParameter', Token.AsValue().AsText(), 'documentNoFilter is not a selection filter.');
         Response.Get('parameter', Token);
         Assert.AreEqual('documentNoFilter', Token.AsValue().AsText(), 'The refused parameter is named.');
         ValueEntry.SetRange("Item No.", Item."No.");
@@ -108,7 +108,7 @@ codeunit 96944 "Inventory Physical Tests"
             Request.Add(Name, 'x');
             Helper.ProcessMessage("Message Type ori"::"Inventory.AdjustCost.Run", Request, Response);
             Response.Get('code', Token);
-            Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), Name + ' is refused.');
+            Assert.AreEqual('UnknownParameter', Token.AsValue().AsText(), Name + ' is refused.');
             Response.Get('parameter', Token);
             Assert.AreEqual(Name, Token.AsValue().AsText(), Name + ' is named.');
         end;

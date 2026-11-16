@@ -34,8 +34,6 @@ codeunit 10076859 "Adjust Cost Run Process ori"
             ReadOk := false;
         if not ReadOk then
             exit;
-        if not RejectUnsupportedControls(Argument, RequestJson) then
-            exit;
         if not CheckSelection(Argument, ItemNoFilter, ItemCategoryFilter, ItemsProcessed) then
             exit;
         if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
@@ -50,30 +48,6 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ResponseJson.Add('errors', ErrorsJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
-    end;
-
-    local procedure RejectUnsupportedControls(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
-    var
-        Token: JsonToken;
-        Name: Text;
-        Names: List of [Text];
-        NotAControlErr: Label '%1 is not a request-page control of report 795 Adjust Cost - Item Entries and is not supported.', Comment = '%1 = parameter name; is-IS=%1 er ekki stjórnhlutur á beiðnisíðu skýrslu 795 Leiðrétta kostnað - vörufærslur og er ekki studd.';
-        ItemByItemErr: Label 'itemByItem is not supported: this Business Central build exposes the Item-by-Item Adjustment option only on the request page, not to code, so the report cannot be started with it.', Comment = 'is-IS=itemByItem er ekki studd: þessi Business Central útgáfa sýnir valkostinn Leiðrétting vara fyrir vöru aðeins á beiðnisíðunni, ekki fyrir kóða, svo ekki er hægt að ræsa skýrsluna með honum.';
-        ExpectedTxt: Label 'Only itemNoFilter, itemCategoryFilter and postToGL.', Comment = 'is-IS=Aðeins itemNoFilter, itemCategoryFilter og postToGL.';
-        NextStepTxt: Label 'Remove the parameter and send the request again. Nothing was adjusted.', Comment = 'is-IS=Fjarlægðu færibreytuna og sendu beiðnina aftur. Engu var breytt.';
-    begin
-        Names.Add('postingDate');
-        Names.Add('inventoryPostingGroup');
-        foreach Name in Names do
-            if RequestJson.Get(Name, Token) then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(NotAControlErr, Name), Name, '', ExpectedTxt, NextStepTxt);
-                exit(false);
-            end;
-        if RequestJson.Get('itemByItem', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, ItemByItemErr, 'itemByItem', '', ExpectedTxt, NextStepTxt);
-            exit(false);
-        end;
-        exit(true);
     end;
 
     local procedure CheckSelection(var Argument: Record "Message Argument ori"; ItemNoFilter: Text; ItemCategoryFilter: Text; var ItemsProcessed: Integer): Boolean
