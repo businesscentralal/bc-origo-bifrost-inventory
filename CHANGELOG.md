@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Inventory.AgedInventory.Get (#110)
+- New read-only message type `Inventory.AgedInventory.Get` (codeunit 10076930 `Aged Inventory Get Impl ori`, enum extension 10076847 `MsgType.AgedInv.EnumExt ori`, enum value 10076930). It mirrors the Item Age Composition - Qty. and - Value reports: remaining quantity and value of open positive item ledger entries in five age buckets counted back from `endingDate` (default work date) in steps of `periodLengthDays` (default 30), per item. Items are selected with `itemNo`/subject, a SystemId key or `tableView` (none = every item) and filtered with `locationFilter`, `variantCode` and `itemCategoryFilter`. Paged with `skip` and `take` (`noOfLines`, `totalNoOfLines`). Declares `effect: read`; Costing domain; granted through `BIFROST InvRead ori`.
+- Refusals carry a Bifröst error code with `nextStep` (`InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `PermissionDenied`, `ConflictingIdentifiers`). Help in en-US and is-IS, `Bifrost Inventory.is-IS.xlf` regenerated.
+- Tests: codeunit 96981 `Aged Inventory Get Tests` (buckets and value, paging, edge: entries after the ending date, invalid input); census counts in 96921 raised to 44 scoped / 60 registered.
+
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
 - Callers that sent JSON numbers or booleans for the string keys of `Inventory.AssemblyOrder.Create`, `Inventory.TransferOrder.Create`, `Inventory.Assembly.UndoPost` and the Transfer `postingType` now get `InvalidParameterFormat` on that key (earlier releases coerced them to text). Send those keys as JSON strings, as the help declares.

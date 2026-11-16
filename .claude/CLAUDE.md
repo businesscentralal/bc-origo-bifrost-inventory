@@ -27,9 +27,9 @@ README "Objects" lists every object with its ID. In short:
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
-  the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
+- Next free codeunit: 10076931 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
+  the convention). Free: 10076931-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
   fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 

@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 44 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 45 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -32,6 +32,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AgedInventory.Get` | Outbound | Read stock quantity and value per age bucket and item, paged |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
@@ -251,6 +252,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | --- | --- | --- |
 | 10076835 | `Inventory Domain ori` | The fifteen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
+| 10076847 | `MsgType.AgedInv.EnumExt ori` | `Inventory.AgedInventory.Get` (impl codeunit 10076930 `Aged Inventory Get Impl ori`) |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |

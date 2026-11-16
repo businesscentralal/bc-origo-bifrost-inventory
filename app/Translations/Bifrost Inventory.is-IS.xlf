@@ -165,6 +165,246 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu síuna sem texta; slepptu færibreytunni til að hafa síuna tóma.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method TryReadText - NamedType NextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads stock quantity and value per age bucket for each item, like the Item Age Composition reports.</source>
+          <target>Les birgðamagn og birgðavirði í aldursflokkum fyrir hverja vöru, eins og skýrslurnar Aldurssamsetning vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðamagn og birgðavirði í aldursflokkum fyrir hverja vöru, eins og skýrslurnar Aldurssamsetning vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>aged inventory, stock age, item age composition</source>
+          <target>aldursgreining birgða,aldur birgða,aldurssamsetning vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=aldursgreining birgða,aldur birgða,aldurssamsetning vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Age is counted from the posting date of each open positive item ledger entry. Bucket 1 holds the newest stock, from endingDate minus periodLengthDays plus one up to endingDate; buckets 2 to 4 each go one period further back; bucket 5 holds everything older, with no start date. Entries posted after endingDate are not counted. Quantity is the remaining quantity of the entry now: the remaining quantity is not reconstructed for the ending date, as in the Item Age Composition reports. Value is the remaining quantity times the entry cost per unit (actual plus expected cost divided by quantity). Select items with itemNo, a SystemId key or tableView; with none of them every item is read. Only items with stock are listed. skip and take page the items; totalNoOfLines is the number of items with stock. Defaults: endingDate is the work date, periodLengthDays is 30, skip 0, take 100 (at most 1000). An empty variantCode is the blank variant; an empty locationFilter does not restrict the location. Nothing is changed.</source>
+          <target>Aldur er talinn frá bókunardagsetningu hverrar opinnar jákvæðrar vörufærslu. Flokkur 1 geymir nýjustu birgðirnar, frá endingDate að frádregnum periodLengthDays plús einum og til endingDate; flokkar 2 til 4 ná hver einu tímabili lengra aftur; flokkur 5 geymir allt eldra, án upphafsdagsetningar. Færslur sem bókaðar eru eftir endingDate eru ekki taldar. Magn er eftirstandandi magn færslunnar núna: eftirstandandi magn er ekki endurreiknað miðað við lokadagsetningu, eins og í skýrslunum Aldurssamsetning vöru. Virði er eftirstandandi magn margfaldað með kostnaði færslunnar á einingu (raunkostnaður plús áætlaður kostnaður deilt með magni). Veldu vörur með itemNo, SystemId-lykli eða tableView; án þeirra eru allar vörur lesnar. Aðeins vörur með birgðir eru birtar. skip og take síðuskipta vörunum; totalNoOfLines er fjöldi vara með birgðir. Sjálfgildi: endingDate er vinnudagsetning, periodLengthDays er 30, skip 0, take 100 (mest 1000). Tómt variantCode er afbrigðislausa afbrigðið; tómt locationFilter takmarkar ekki staðsetningu. Engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aldur er talinn frá bókunardagsetningu hverrar opinnar jákvæðrar vörufærslu. Flokkur 1 geymir nýjustu birgðirnar, frá endingDate að frádregnum periodLengthDays plús einum og til endingDate; flokkar 2 til 4 ná hver einu tímabili lengra aftur; flokkur 5 geymir allt eldra, án upphafsdagsetningar. Færslur sem bókaðar eru eftir endingDate eru ekki taldar. Magn er eftirstandandi magn færslunnar núna: eftirstandandi magn er ekki endurreiknað miðað við lokadagsetningu, eins og í skýrslunum Aldurssamsetning vöru. Virði er eftirstandandi magn margfaldað með kostnaði færslunnar á einingu (raunkostnaður plús áætlaður kostnaður deilt með magni). Veldu vörur með itemNo, SystemId-lykli eða tableView; án þeirra eru allar vörur lesnar. Aðeins vörur með birgðir eru birtar. skip og take síðuskipta vörunum; totalNoOfLines er fjöldi vara með birgðir. Sjálfgildi: endingDate er vinnudagsetning, periodLengthDays er 30, skip 0, take 100 (mest 1000). Tómt variantCode er afbrigðislausa afbrigðið; tómt locationFilter takmarkar ekki staðsetningu. Engu er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the age of stock: remaining quantity and value per age bucket and item, paged and read only.</source>
+          <target>Les aldur birgða: eftirstandandi magn og virði í aldursflokki og vöru, síðuskipt og aðeins til lestrar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les aldur birgða: eftirstandandi magn og virði í aldursflokki og vöru, síðuskipt og aðeins til lestrar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns one row per item with stock: remaining quantity and value in five age buckets, counted back from the ending date.</source>
+          <target>Skilar einni línu fyrir hverja vöru með birgðir: eftirstandandi magn og virði í fimm aldursflokkum, talið aftur frá lokadagsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar einni línu fyrir hverja vöru með birgðir: eftirstandandi magn og virði í fimm aldursflokkum, talið aftur frá lokadagsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 256995346 - NamedType 2685541316" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for item or item ledger entry data.</source>
+          <target>Heimild hafnað fyrir vöru- eða vörufærslugögn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir vöru- eða vörufærslugögn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CanRead - NamedType ReadDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 256995346 - NamedType 841236030" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a role that can read items and item ledger entries, then send the call again.</source>
+          <target>Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method CanRead - NamedType ReadDeniedNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>None. Reads open item ledger entries and their cost.</source>
+          <target>Engin. Les opnar vörufærslur og kostnað þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin. Les opnar vörufærslur og kostnað þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1479631707 - NamedType 1762661655" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Costing domain is turned on in Inventory Setup.</source>
+          <target>Kveikt er á kostnaðarsviðinu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kveikt er á kostnaðarsviðinu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetEffect - NamedType CostingPreconditionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1479631707 - NamedType 386507464" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller can read items and item ledger entries.</source>
+          <target>Notandinn getur lesið vörur og vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notandinn getur lesið vörur og vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetEffect - NamedType ReadPreconditionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item {itemNo} was not found.</source>
+          <target>Vara {itemNo} fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vara {itemNo} fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number, SystemId or tableView matches no item.</source>
+          <target>Vörunúmerið, SystemId eða tableView passar ekki við neina vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið, SystemId eða tableView passar ekki við neina vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number or the selection.</source>
+          <target>Athugaðu vörunúmerið eða valið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið eða valið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 991639743" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A text parameter is not text, or the Costing domain is turned off in Inventory Setup.</source>
+          <target>Textafæribreyta er ekki texti, eða kostnaðarsviðið er slökkt í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Textafæribreyta er ekki texti, eða kostnaðarsviðið er slökkt í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType InvalidParameterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 3582376167" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send locationFilter, variantCode and itemCategoryFilter as JSON text, or turn on the Costing domain in Inventory Setup.</source>
+          <target>Sendu locationFilter, variantCode og itemCategoryFilter sem JSON-texta, eða kveiktu á kostnaðarsviðinu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu locationFilter, variantCode og itemCategoryFilter sem JSON-texta, eða kveiktu á kostnaðarsviðinu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType InvalidParameterFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>endingDate is not YYYY-MM-DD, or periodLengthDays, skip or take is outside its range.</source>
+          <target>endingDate er ekki YYYY-MM-DD, eða periodLengthDays, skip eða take er utan marka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=endingDate er ekki YYYY-MM-DD, eða periodLengthDays, skip eða take er utan marka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send endingDate as YYYY-MM-DD, periodLengthDays as a whole number from 1 to 3660, skip as 0 or more and take from 1 to 1000.</source>
+          <target>Sendu endingDate á forminu YYYY-MM-DD, periodLengthDays sem heila tölu frá 1 til 3660, skip sem 0 eða hærra og take frá 1 til 1000.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu endingDate á forminu YYYY-MM-DD, periodLengthDays sem heila tölu frá 1 til 3660, skip sem 0 eða hærra og take frá 1 til 1000.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native Item or Item Ledger Entry read permission is absent.</source>
+          <target>Heimild til að lesa vörur eða vörufærslur vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild til að lesa vörur eða vörufærslur vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a role that can read items and item ledger entries.</source>
+          <target>Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu hlutverki sem getur lesið vörur og vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 199971095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A location or item category filter cannot be applied.</source>
+          <target>Ekki er hægt að beita staðsetningar- eða vöruflokkssíu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að beita staðsetningar- eða vöruflokkssíu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1158096087 - NamedType 4035534591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the Business Central filter syntax.</source>
+          <target>Leiðréttu málskipan Business Central síunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu málskipan Business Central síunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetErrors - NamedType FilterFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3255554567 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the stock age of item 1000 in 30 day buckets</source>
+          <target>Lesa aldur birgða vöru 1000 í 30 daga flokkum</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa aldur birgða vöru 1000 í 30 daga flokkum</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetExamples - NamedType ExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 1370287028" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number; the message subject is the same number when this key is omitted. Optional: with no item selection every item is read.</source>
+          <target>Vörunúmer; subject er sama númer þegar lykillinn er ekki sendur. Valfrjálst: án vöruvals eru allar vörur lesnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer; subject er sama númer þegar lykillinn er ekki sendur. Valfrjálst: án vöruvals eru allar vörur lesnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 2869536027" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Last posting date counted, as YYYY-MM-DD. The newest bucket ends on this date. Default: the work date.</source>
+          <target>Síðasta bókunardagsetning sem er talin, á forminu YYYY-MM-DD. Nýjasti flokkurinn endar á þessari dagsetningu. Sjálfgefið: vinnudagsetning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasta bókunardagsetning sem er talin, á forminu YYYY-MM-DD. Nýjasti flokkurinn endar á þessari dagsetningu. Sjálfgefið: vinnudagsetning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType EndingDateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 401512845" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Length of each age bucket in days, a whole number from 1 to 3660. Default 30.</source>
+          <target>Lengd hvers aldursflokks í dögum, heil tala frá 1 til 3660. Sjálfgefið 30.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lengd hvers aldursflokks í dögum, heil tala frá 1 til 3660. Sjálfgefið 30.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType PeriodLengthLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 2210791033" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on the location code of the item ledger entries.</source>
+          <target>Business Central sía á staðsetningarkóða vörufærslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central sía á staðsetningarkóða vörufærslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType LocationFilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 1572346900" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact variant code; an empty value selects the blank variant.</source>
+          <target>Nákvæmur afbrigðiskóði; tómt gildi velur afbrigðislausa afbrigðið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur afbrigðiskóði; tómt gildi velur afbrigðislausa afbrigðið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType VariantCodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 1607471646" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on the item category code of the items.</source>
+          <target>Business Central sía á vöruflokkskóða vara.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central sía á vöruflokkskóða vara.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType CategoryLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 1096104557" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of items to skip, a whole number of 0 or more. Default 0.</source>
+          <target>Fjöldi vara sem sleppt er, heil tala 0 eða hærri. Sjálfgefið 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi vara sem sleppt er, heil tala 0 eða hærri. Sjálfgefið 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType SkipLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 3615801952 - NamedType 26742315" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of items to return, a whole number from 1 to 1000. Default 100.</source>
+          <target>Fjöldi vara sem skilað er, heil tala frá 1 til 1000. Sjálfgefið 100.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi vara sem skilað er, heil tala frá 1 til 1000. Sjálfgefið 100.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetParameters - NamedType TakeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1033708611 - NamedType 1769726809" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use it to read the current card costs and the inventory of an item; this type reads stock by age.</source>
+          <target>Notaðu hana til að lesa núverandi spjaldkostnað og birgðir vöru; þessi tegund les birgðir eftir aldri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu hana til að lesa núverandi spjaldkostnað og birgðir vöru; þessi tegund les birgðir eftir aldri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetRelated - NamedType CostGetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1033708611 - NamedType 3198115170" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use it to read the remaining quantity and value of one item without age buckets.</source>
+          <target>Notaðu hana til að lesa eftirstandandi magn og virði einnar vöru án aldursflokka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu hana til að lesa eftirstandandi magn og virði einnar vöru án aldursflokka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method GetRelated - NamedType RevaluationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 107480891" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a whole number from %2 to %3.</source>
+          <target>%1 verður að vera heil tala frá %2 til %3.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = minimum, %3 = maximum; is-IS=%1 verður að vera heil tala frá %2 til %3.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 198866909" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a whole number in range</source>
+          <target>heil tala innan marka</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=heil tala innan marka</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 1481450256 - NamedType 4260795724" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the value as a JSON whole number within the documented range.</source>
+          <target>Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu gildið sem JSON-heiltölu innan skjalfestra marka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method ReadInteger - NamedType RangeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 2373246346 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 was not found.</source>
+          <target>Vara %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no.; is-IS=Vara %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method SelectItems - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 2373246346 - NamedType 3451997121" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The number of an existing item.</source>
+          <target>Númer vöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer vöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method SelectItems - NamedType NotFoundExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 2373246346 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number, then send it as data.itemNo or subject, or leave it out to read every item.</source>
+          <target>Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject, eða slepptu því til að lesa allar vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið og sendu það sem data.itemNo eða subject, eða slepptu því til að lesa allar vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method SelectItems - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 2406953796 - NamedType 45121459" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Parameter %1 must be text.</source>
+          <target>Færibreytan %1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter; is-IS=Færibreytan %1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method TryReadText - NamedType InvalidTextErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3896330417 - Method 2406953796 - NamedType 2431576598" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the value as JSON text.</source>
+          <target>Sendu gildið sem JSON-texta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu gildið sem JSON-texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Aged Inventory Get Impl ori - Method TryReadText - NamedType TextNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 998221038 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assembly Order %1 (Item %2) preview produced %3 entries. %4</source>
           <target>Forskoðun samsetningarpöntunar %1 (vara %2) myndaði %3 færslur. %4</target>
