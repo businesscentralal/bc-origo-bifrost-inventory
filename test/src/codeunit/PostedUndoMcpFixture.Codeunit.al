@@ -53,7 +53,7 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         exit(Output);
     end;
 
-    /// <summary>Removes only the explicitly prefixed owned fixture documents and ledger rows after MCP verification.</summary>
+    /// <summary>Removes only documents and ledger rows tied to the explicit owned fixture parties and items after MCP verification.</summary>
     procedure Cleanup()
     var
         Item: Record Item;
@@ -117,27 +117,35 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
                 Entry.DeleteAll();
                 Item.UpdateCostIsAdjusted();
             until Item.Next() = 0;
-        Shipment.SetFilter("Order No.", 'W4I134-*');
+        Shipment.SetRange("Sell-to Customer No.", 'W4I134');
         if Shipment.FindSet() then
             repeat
                 ShipmentLine.SetRange("Document No.", Shipment."No.");
                 ShipmentLine.DeleteAll();
             until Shipment.Next() = 0;
         Shipment.DeleteAll();
-        Receipt.SetFilter("Order No.", 'W4I134-*');
+        Receipt.SetRange("Buy-from Vendor No.", 'W4I134');
         if Receipt.FindSet() then
             repeat
                 ReceiptLine.SetRange("Document No.", Receipt."No.");
                 ReceiptLine.DeleteAll();
             until Receipt.Next() = 0;
         Receipt.DeleteAll();
-        SalesLine.SetFilter("Document No.", 'W4I134-*');
-        SalesLine.DeleteAll();
-        SalesHeader.SetFilter("No.", 'W4I134-*');
+        SalesHeader.SetRange("Sell-to Customer No.", 'W4I134');
+        if SalesHeader.FindSet() then
+            repeat
+                SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                SalesLine.SetRange("Document No.", SalesHeader."No.");
+                SalesLine.DeleteAll();
+            until SalesHeader.Next() = 0;
         SalesHeader.DeleteAll();
-        PurchaseLine.SetFilter("Document No.", 'W4I134-*');
-        PurchaseLine.DeleteAll();
-        PurchaseHeader.SetFilter("No.", 'W4I134-*');
+        PurchaseHeader.SetRange("Buy-from Vendor No.", 'W4I134');
+        if PurchaseHeader.FindSet() then
+            repeat
+                PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type");
+                PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+                PurchaseLine.DeleteAll();
+            until PurchaseHeader.Next() = 0;
         PurchaseHeader.DeleteAll();
         Item.DeleteAll(true);
         Customer.SetRange("No.", 'W4I134');
@@ -167,6 +175,7 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         LibraryPurchase: Codeunit "Library - Purchase";
         LibrarySales: Codeunit "Library - Sales";
         KeyCode: Code[20];
+        OrderNo: Code[20];
     begin
         KeyCode := 'W4I134-P-' + Format(LanguageId, 0, 9);
         if Sales then
@@ -178,7 +187,7 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
             Vendor.Rename('W4I134');
         end;
         LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, Vendor."No.");
-        PurchaseHeader.Rename(PurchaseHeader."Document Type", KeyCode);
+        OrderNo := PurchaseHeader."No.";
         if Sales then
             LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 10)
         else begin
@@ -187,7 +196,7 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
         end;
         LibraryPurchase.PostPurchaseDocument(PurchaseHeader, true, false);
         if not Sales then begin
-            Receipt.SetRange("Order No.", KeyCode);
+            Receipt.SetRange("Order No.", OrderNo);
             Receipt.FindFirst();
             exit(Receipt."No.");
         end;
@@ -196,11 +205,11 @@ codeunit 96997 "Posted Undo MCP Fixture ori"
             Customer.Rename('W4I134');
         end;
         LibrarySales.CreateSalesHeader(SalesHeader, SalesHeader."Document Type"::Order, Customer."No.");
-        SalesHeader.Rename(SalesHeader."Document Type", KeyCode);
+        OrderNo := SalesHeader."No.";
         LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 2);
         LibrarySales.CreateSalesLine(SalesLine, SalesHeader, SalesLine.Type::Item, Item."No.", 2);
         LibrarySales.PostSalesDocument(SalesHeader, true, false);
-        Shipment.SetRange("Order No.", KeyCode);
+        Shipment.SetRange("Order No.", OrderNo);
         Shipment.FindFirst();
         exit(Shipment."No.");
     end;
