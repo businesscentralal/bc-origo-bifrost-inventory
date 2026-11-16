@@ -119,6 +119,11 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
             Response.Add('lineCount', Token.AsValue().AsInteger());
         if Response.Get('result', Token) and not Response.Contains('lines') then
             Response.Add('lines', Token);
+        // Keep the published response schema: native-only keys are folded into lineCount and lines.
+        Response.Remove('templateName');
+        Response.Remove('batchName');
+        Response.Remove('linesToPost');
+        Response.Remove('result');
         Argument.SetResponseJson(Response);
     end;
 

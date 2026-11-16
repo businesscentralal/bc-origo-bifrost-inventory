@@ -10,7 +10,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Issue 34: Reclassification Check validates lines natively; Post and Preview accept lineSystemIds and Post returns the item register.</summary>
-codeunit 96980 "Reclass Journal Tests ori"
+codeunit 96964 "Reclass Journal Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;

@@ -645,8 +645,10 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not Line.FindSet() then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            if not TryCheckLine(Line, JournalType) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
+            // Transfer (reclassification) lines are validated by native Item Jnl.-Post Batch so its error text is returned unchanged.
+            if JournalType <> JournalType::Transfer then
+                if not TryCheckLine(Line, JournalType) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             Clear(Result);
             Result.Add('systemId', Line.SystemId);
             Result.Add('lineNo', Line."Line No.");
