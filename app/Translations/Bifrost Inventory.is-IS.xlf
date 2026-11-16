@@ -4587,6 +4587,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Færslunúmer vörulistavörunnar sem á að breyta í vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetTarget - NamedType TargetLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3502481479 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the catalog item from Nonstock Item and check its template and that Item No. is empty.</source>
+          <target>Lestu vörulistavöruna úr Nonstock Item og athugaðu sniðmát hennar og að vörunúmer sé tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu vörulistavöruna úr Nonstock Item og athugaðu sniðmát hennar og að vörunúmer sé tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetWorkflow - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3502481479 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the item using the catalog item entryNo and its own item template.</source>
+          <target>Stofnaðu vöruna með entryNo vörulistavörunnar og hennar eigin vörusniðmáti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu vöruna með entryNo vörulistavörunnar og hennar eigin vörusniðmáti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetWorkflow - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 3502481479 - NamedType 4160635735" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the catalog item again and verify that Item No. matches the returned itemNo.</source>
+          <target>Lestu vörulistavöruna aftur og staðfestu að vörunúmer passi við itemNo í svarinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu vörulistavöruna aftur og staðfestu að vörunúmer passi við itemNo í svarinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetWorkflow - NamedType VerifyLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3401488166 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can create items and change catalog items.</source>
           <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur og breytt vörulistavörum.</target>

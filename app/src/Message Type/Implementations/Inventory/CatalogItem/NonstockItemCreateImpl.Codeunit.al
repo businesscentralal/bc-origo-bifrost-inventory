@@ -198,12 +198,22 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
         exit(true);
     end;
 
-    /// <summary>Workflow chapter: none.</summary>
-    /// <param name="Workflow">Unused.</param>
-    /// <returns>False.</returns>
+    /// <summary>Reads the catalog item, creates its item and verifies the saved link.</summary>
+    /// <param name="Workflow">Receives the workflow steps.</param>
+    /// <returns>True.</returns>
     procedure GetWorkflow(var Workflow: JsonObject): Boolean
+    var
+        Steps: JsonArray;
+        ReadLbl: Label 'Read the catalog item from Nonstock Item and check its template and that Item No. is empty.', Comment = 'is-IS=Lestu vörulistavöruna úr Nonstock Item og athugaðu sniðmát hennar og að vörunúmer sé tómt.';
+        CreateLbl: Label 'Create the item using the catalog item entryNo and its own item template.', Comment = 'is-IS=Stofnaðu vöruna með entryNo vörulistavörunnar og hennar eigin vörusniðmáti.';
+        VerifyLbl: Label 'Read the catalog item again and verify that Item No. matches the returned itemNo.', Comment = 'is-IS=Lestu vörulistavöruna aftur og staðfestu að vörunúmer passi við itemNo í svarinu.';
     begin
-        exit(false);
+        Clear(Workflow);
+        Steps.Add(ContractMgt.WorkflowStep('Data.Records.Get', ReadLbl));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.NonstockItem.Create', CreateLbl));
+        Steps.Add(ContractMgt.WorkflowStep('Data.Records.Get', VerifyLbl));
+        Workflow.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Examples chapter.</summary>
