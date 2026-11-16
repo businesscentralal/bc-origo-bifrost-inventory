@@ -328,6 +328,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Parameter: JsonToken;
         Name: JsonToken;
         AdvertisesConfirmation: Boolean;
+        SupportsConfirmation: Boolean;
+        HasAppCountHelp: Boolean;
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
@@ -342,6 +344,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup.Modify();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
+        SupportsConfirmation := Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired');
         foreach TypeName in MessageType.Names() do
             if TypeName.StartsWith('Inventory.') and not TypeName.StartsWith('Inventory.ItemJournal.') then begin
                 MessageType := Enum::"Message Type ori".FromInteger(MessageType.Ordinals().Get(MessageType.Names().IndexOf(TypeName)));
@@ -362,12 +365,14 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             AssertText(Parameter.AsObject(), 'type', 'integer');
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
-                            Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
-                                TypeName + ' exposes the deployed Foundation protocol.');
+                            // Issue #39 adds count-unit help independently of the deployed Foundation confirmation protocol.
+                            HasAppCountHelp := TypeName in ['Inventory.TransferOrder.Post', 'Inventory.Transfer.UndoShipment', 'Inventory.Assembly.UndoPost'];
+                            Assert.AreEqual(SupportsConfirmation or HasAppCountHelp, AdvertisesConfirmation,
+                                TypeName + ' exposes framework confirmation or its app-owned count-unit help.');
                             Clear(Request);
                             // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
-                            if AdvertisesConfirmation then begin
+                            if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
                                 AssertText(Response, 'parameter', 'expectedCount');
                                 AssertText(Response, 'expected', '1');
