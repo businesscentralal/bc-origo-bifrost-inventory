@@ -23,6 +23,20 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(Create154Fixtures)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned154 fixtures', Comment = 'is-IS=Stofna eigin prófunargögn 154';
+                ToolTip = 'Creates only the owned issue154 journals and unposted count item; refuses existing fixtures.', Comment = 'is-IS=Stofnar eingöngu eigin prófunarbækur fyrir mál 154 og óbókaða talningarvöru; hafnar fyrirliggjandi prófunargögnum.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.Create154Fixtures();
+                    SeedState := 'Create owned154 fixtures completed.';
+                end;
+            }
             action(CreateRefusals)
             {
                 ApplicationArea = All;
