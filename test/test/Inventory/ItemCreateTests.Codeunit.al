@@ -154,20 +154,30 @@ codeunit 96960 "Item Create Tests"
     end;
 
     [Test]
-    procedure Create_UnknownTemplate_IcelandicNextStep()
+    procedure Create_DomainOff_IcelandicRefusal()
     var
+        TempArgument: Record "Message Argument ori" temporary;
+        CreateImpl: Codeunit "Item Create Impl ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PreviousLanguage: Integer;
     begin
-        // [SCENARIO AC04] The refusal answers its nextStep in is-IS at 1039.
+        // [SCENARIO AC04] An Inventory-owned refusal answers its error and nextStep in is-IS at 1039. The type is called
+        // directly, as the other Inventory is-IS tests do; with the Attributes domain off it refuses before the licence check.
+        DisableAttributes();
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
         RequestJson.Add('templateCode', 'T130-MISSING');
+        TempArgument.SetRequestJson(RequestJson);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        ResponseJson := CallCreate(RequestJson);
+        CreateImpl.ExecuteBifrostTask(TempArgument);
         GlobalLanguage(PreviousLanguage);
-        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreEqual('Athugaðu kóða sniðmátsins á síðunni Vörusniðmát, eða stofnaðu sniðmátið þar fyrst.', ReadText(ResponseJson, 'nextStep'), 'Icelandic nextStep');
+        ResponseJson := TempArgument.GetResponseJson();
+        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), 'code');
+        Assert.AreEqual('Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.', ReadText(ResponseJson, 'error'), 'Icelandic error');
+        Assert.AreEqual('Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.', ReadText(ResponseJson, 'nextStep'), 'Icelandic nextStep');
     end;
 
     [Test]
@@ -271,7 +281,22 @@ codeunit 96960 "Item Create Tests"
         RequestJson.Add('itemNo', '1000');
         ResponseJson := CallCreate(RequestJson);
         Assert.AreEqual('UnknownParameter', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreEqual('Remove the unknown key. Allowed keys are templateCode, description, baseUnitOfMeasure, unitPrice and gtin.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+        Assert.AreEqual('itemNo', ReadText(ResponseJson, 'parameter'), 'parameter');
+        // Foundation 28.0.10 and later refuses unknown keys on non-read types before Inventory runs (core#1160)
+        // with its own shared nextStep; older Foundation reaches this type's own refusal.
+        if FoundationRefusesUnknownWriteKeys() then
+            Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep')
+        else
+            Assert.AreEqual('Remove the unknown key. Allowed keys are templateCode, description, baseUnitOfMeasure, unitPrice and gtin.', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    local procedure FoundationRefusesUnknownWriteKeys(): Boolean
+    var
+        Info: ModuleInfo;
+    begin
+        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info) then
+            Error('Bifrost Foundation is not installed.');
+        exit(Info.AppVersion >= Version.Create(28, 0, 10, 0));
     end;
 
     [Test]
@@ -323,6 +348,16 @@ codeunit 96960 "Item Create Tests"
         if InventorySetup.Attributes then
             exit;
         InventorySetup.Validate(Attributes, true);
+        InventorySetup.Modify(true);
+    end;
+
+    local procedure DisableAttributes()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        InventorySetup.InsertIfNotExists();
+        InventorySetup.Get();
+        InventorySetup.Attributes := false;
         InventorySetup.Modify(true);
     end;
 
