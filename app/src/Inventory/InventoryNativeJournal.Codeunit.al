@@ -12,7 +12,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using System.Utilities;
 
-/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory and revaluation).</summary>
+/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory, reclassification and revaluation).</summary>
 codeunit 10076840 "Inventory Native Journal ori"
 {
     Access = Internal;
@@ -465,6 +465,18 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not (JournalType in [JournalType::"Phys. Inventory", JournalType::Transfer]) then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         Request := Argument.GetRequestJson();
+        if JournalType = JournalType::Transfer then
+            if Argument.Type = "Message Type ori"::"Inventory.Reclassification.Check" then begin
+                if Request.Contains('templateName') then
+                    Request.Remove('journalTemplateName');
+                if Request.Contains('batchName') then
+                    Request.Remove('journalBatchName');
+            end else begin
+                if Request.Contains('journalTemplateName') then
+                    Request.Remove('templateName');
+                if Request.Contains('journalBatchName') then
+                    Request.Remove('batchName');
+            end;
         NormalizeAlias(Argument, Request, 'journalTemplateName', 'templateName');
         NormalizeAlias(Argument, Request, 'journalBatchName', 'batchName');
         if Request.Contains('templateName') or Request.Contains('batchName') then begin
@@ -645,8 +657,10 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not Line.FindSet() then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            // Transfer (reclassification) lines are validated by native Item Jnl.-Post Batch so its error text is returned unchanged.
-            if JournalType <> JournalType::Transfer then
+            // Dedicated reclassification must never post adjustment entries hidden in a Transfer template.
+            if JournalType = JournalType::Transfer then
+                Line.TestField("Entry Type", Line."Entry Type"::Transfer)
+            else
                 if not TryCheckLine(Line, JournalType) then
                     RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             Clear(Result);

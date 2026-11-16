@@ -1,11 +1,12 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Finance.GeneralLedger.Preview;
+using Microsoft.Foundation.Navigate;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Posting;
-using Microsoft.Foundation.Navigate;
 using Origo.Bifrost;
 
+/// <summary>Simulates native posting for selected Transfer journal lines and returns rollback entries.</summary>
 codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -50,21 +51,21 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
-        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
-        BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
-        NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
         JournalTemplate: Record "Item Journal Template";
         JournalBatch: Record "Item Journal Batch";
         ItemJournalLine: Record "Item Journal Line";
-        RequestJson: JsonObject;
-        TemplateName: Code[10];
-        BatchName: Code[10];
         FailureJournal: Codeunit "Inventory Native Journal ori";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         Process: Codeunit "Inventory Read Process ori";
+        RequestJson: JsonObject;
+        TemplateName: Code[10];
+        BatchName: Code[10];
+        WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
+        EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch; is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
+        BatchMissingErr: Label 'Reclassification journal template or batch was not found.', Comment = 'is-IS=Endurflokkunarbókarsniðmát eða keyrsla fannst ekki.';
+        NextStepLbl: Label 'Choose an existing Transfer journal batch and correct its posting errors before retrying.', Comment = 'is-IS=Veldu fyrirliggjandi millifærslubókarkeyrslu og leiðréttu bókunarvillur áður en reynt er aftur.';
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
@@ -179,8 +180,8 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Response.Add('contentType', 'text/json');
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success when native posting preview captured ledger entries.'));
         Fields.Add(ContractMgt.ResponseField('rollback', 'boolean', 'True after native preview rolls back all simulated posting changes.'));
-        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of lines in the existing nonempty batch.'));
-        Field := ContractMgt.ResponseField('lines', 'array', 'Every line of the batch.');
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of selected lines in the existing nonempty batch.'));
+        Field := ContractMgt.ResponseField('lines', 'array', 'The selected lines of the batch.');
         Clear(Children);
         Children.Add(ContractMgt.ResponseField('lineNo', 'integer', 'Line number in the batch.'));
         Children.Add(ContractMgt.ResponseField('itemNo', 'string', 'Item number of the line.'));
@@ -292,7 +293,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
         Notes := 'Runs native posting preview for one existing nonempty Transfer journal batch. Posting validation errors are returned instead of a successful line listing. ' +
             'Successful answers retain lineCount and lines and add preview, totals, entryCount and glEntryCount from captured entries. rollback is true only after native preview succeeds. ' +
             'Preview does not commit the caller transaction or persist journal, item, value or G/L entry changes. The posting permission Inv. Posting Gate and native posting permissions remain required because native posting is executed under rollback. ' +
-            'Inventory.Reclassification.Check only reads the template and counts transfer lines; it needs read permission and does not predict all posting errors. Use PreviewPost before the separate Post operation.';
+            'Inventory.Reclassification.Check validates the selected lines with the standard item journal line check; it needs read permission and reports readiness, errors and warnings. Use PreviewPost before the separate Post operation.';
         exit(true);
     end;
 }

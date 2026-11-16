@@ -51,6 +51,15 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
+        JournalTemplate: Record "Item Journal Template";
+        ItemJournalLine: Record "Item Journal Line";
+        NativeJournal: Codeunit "Inventory Native Journal ori";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Process: Codeunit "Inventory Write Process ori";
+        RequestJson: JsonObject;
+        TemplateName: Code[10];
+        BatchName: Code[10];
         MissingJournalErr: Label 'Journal template %1 was not found.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.';
         WrongTypeErr: Label 'Journal template %1 is not a Transfer template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.';
         TransferExpectedLbl: Label 'an existing Transfer journal template', Comment = 'is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer';
@@ -58,15 +67,6 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         BatchExpectedLbl: Label 'a nonempty Transfer journal batch that passes native posting', Comment = 'is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun';
         BatchNextLbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
         EmptyBatchErr: Label 'Reclassification batch %1 %2 has no lines.', Comment = '%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.';
-        JournalTemplate: Record "Item Journal Template";
-        ItemJournalLine: Record "Item Journal Line";
-        RequestJson: JsonObject;
-        TemplateName: Code[10];
-        BatchName: Code[10];
-        NativeJournal: Codeunit "Inventory Native Journal ori";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        Parts: Codeunit "Inventory Contract Parts ori";
-        Process: Codeunit "Inventory Write Process ori";
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
@@ -153,7 +153,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Target);
-        Target.Add(ContractMgt.TargetEntry('data.journalTemplateName, data.journalBatchName', 'journal template and batch name', 'The item journal template and batch that hold the reclassification lines.'));
+        Target.Add(ContractMgt.TargetEntry('data.journalTemplateName, data.journalBatchName, data.templateName, data.batchName', 'journal template and batch name', 'The item journal template and batch that hold the reclassification lines.'));
         exit(true);
     end;
 
@@ -164,9 +164,10 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Item journal template name, at most 10 characters; read as an upper-case code. Use a reclassification template (type Transfer); other template types are refused before posting. Required unless templateName is sent; journalTemplateName wins when both are sent.'));
         Parameters.Add(ContractMgt.Parameter('templateName', 'string', false, 'Alias of journalTemplateName, read only when journalTemplateName is absent.'));
-        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Name of the journal batch to post, at most 10 characters; read as an upper-case code. Every line of the batch is posted. Required unless batchName is sent; journalBatchName wins when both are sent.'));
+        Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Name of the journal batch to post, at most 10 characters; read as an upper-case code. Without lineSystemIds every line of the batch is posted. Required unless batchName is sent; journalBatchName wins when both are sent.'));
         Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Alias of journalBatchName, read only when journalBatchName is absent.'));
         Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are posted. Without it every line of the batch is used.'));
+        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 
@@ -226,12 +227,19 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     begin
         Clear(Effect);
         Effect.Add('effect', 'irreversible');
-        Effect.Add('changes', 'Posts every line of the item journal batch through the standard item journal batch posting: item ledger and value entries are created, an item register is written and the posted lines leave the journal. The posting commits. It does not create or post a transfer order.');
+        Effect.Add('changes', CountUnit() + ' Posts the selected lines of the item journal batch through the standard item journal batch posting: item ledger and value entries are created, an item register is written and the posted lines leave the journal. Posting is permanent when its transaction commits. It does not create or post a transfer order.');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
         exit(true);
+    end;
+
+    local procedure CountUnit(): Text
+    var
+        CountLbl: Label 'expectedCount counts one journal batch operation, always 1, regardless of the selected line or ledger entry count. It confirms the operation before batch validation. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without posting. Otherwise omission posts. is-IS: expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.', Comment = 'is-IS=expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.';
+    begin
+        exit(CountLbl);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -282,9 +290,9 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Posting is permanent and commits. All lines of the batch are posted; the call has no line selection. It does not create or post a transfer order. ' +
+        Notes := 'Posting is permanent and commits with the message transaction. lineSystemIds selects a nonempty set of distinct lines belonging to the named batch; without it all lines of the batch are posted. It does not create or post a transfer order. ' +
             'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
-            'A batch without lines, or one that does not exist, returns PreconditionFailed. A posting error returns PreconditionFailed with Business Central''s unchanged text and the selected batch; posting is rolled back. ' +
+            'A missing or empty batch returns PreconditionFailed. Native posting errors return PreconditionFailed with Business Central''s unchanged text and the selected batch; selected-line parameter refusals retain their specific code. Failed posting is rolled back. ' +
             'The caller needs the Inv. Posting Gate permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
             'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
