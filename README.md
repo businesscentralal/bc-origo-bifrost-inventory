@@ -32,6 +32,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AvailableToPromise.Get` | Outbound | Answer the earliest date a quantity can be promised and the quantity on the requested date (Order Promising); capable to promise is optional, nothing is kept |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
@@ -262,6 +263,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10077000 | `MsgType.AvailToPromise.Ext ori` | `Inventory.AvailableToPromise.Get` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -278,6 +280,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076844, 10076912–10076918 | Item attributes | `Item Attribute Resolve ori`, `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits |
 | 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
 | 10076857 | Availability | `Avail. By Period Impl ori` |
+| 10077000 | Availability | `Avail. To Promise Impl ori` (`Inventory.AvailableToPromise.Get`) |
 | 10076858–10076866 | Costing | Adjust Cost Run (+ process), Cost Get, Cost To GL Post/Test, Cost Update, Reval Preview, Revaluation Calc, Revaluation Post |
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
 | 10076870–10076872 | Item categories | Get, Set (+ process) |

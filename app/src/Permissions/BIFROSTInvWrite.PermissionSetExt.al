@@ -78,6 +78,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Item Ref. Resolve Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Avail. To Promise Impl ori" = X,
         codeunit "Item Charge Assign Impl ori" = X,
         codeunit "Item Charge Assign Proc ori" = X,
         codeunit "Item Charge Get Impl ori" = X,

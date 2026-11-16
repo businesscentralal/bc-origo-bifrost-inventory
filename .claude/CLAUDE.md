@@ -23,7 +23,7 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
-  shared gates and contract parts 10076919-10076923.
+  shared gates and contract parts 10076919-10076923, available to promise 10077000 (`Inventory.AvailableToPromise.Get`, #105; enum value and enum extension 10077000 too).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
@@ -38,4 +38,4 @@ README "Objects" lists every object with its ID. In short:
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
-- Free: 96960-96961, 96963-96979.
+- 96964 `Avail. To Promise Tests`, 96965 `Avail. To Promise Perm` (#105). Free: 96960-96961, 96963, 96966-96979 (open PRs claim some of these; check before use).
