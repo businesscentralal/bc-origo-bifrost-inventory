@@ -177,6 +177,8 @@ codeunit 96969 "Partial Transfer Tests ori"
     procedure BilingualContractsDeclareEffectAndCountingUnit()
     var
         Contract: Codeunit "Partial Transfer Contract ori";
+        ShipDiscovery: Codeunit "Transfer Ship Impl ori";
+        ReceiveDiscovery: Codeunit "Transfer Receive Impl ori";
         Effect: JsonObject;
         Token: JsonToken;
         English: Text;
@@ -198,6 +200,8 @@ codeunit 96969 "Partial Transfer Tests ori"
             Icelandic := Contract.GetNotes(Ship);
             Assert.IsTrue(Icelandic.Contains('expectedCount telur flutningspantanir'), 'Icelandic help names the counting unit.');
             Assert.AreNotEqual(English, Icelandic, 'Icelandic help is translated.');
+            Assert.IsTrue(ShipDiscovery.GetSelectionDescription().Contains('expectedCount telur flutningspantanir'), 'Ship discovery retains the Icelandic count definition.');
+            Assert.IsTrue(ReceiveDiscovery.GetSelectionDescription().Contains('expectedCount telur flutningspantanir'), 'Receive discovery retains the Icelandic count definition.');
         end;
         GlobalLanguage(SavedLanguage);
         Assert.AreEqual(3, 'Inventory.TransferOrder.Ship'.Split('.').Count(), 'Ship has three name parts.');

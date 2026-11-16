@@ -40,8 +40,11 @@ codeunit 10077021 "Transfer Receive Impl ori" implements "Msg Interface ori", "M
 
     /// <summary>Describes when to select this operation.</summary>
     procedure GetSelectionDescription(): Text
+    var
+        Contract: Codeunit "Partial Transfer Contract ori";
     begin
-        exit(GetDescription());
+        // Foundation deliberately normalizes JSON contract chapters to English; discovery follows the caller's language.
+        exit(GetDescription() + ' ' + Contract.GetCountingUnit());
     end;
 
     /// <summary>Uses the inbound direction.</summary>

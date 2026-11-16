@@ -79,3 +79,5 @@ Both operations require the Transfer Orders domain and the existing write and po
 Sendu `Inventory.TransferOrder.Ship` með `documentNo`, `expectedCount: 1` og `lines` sem inniheldur `lineNo` og `qtyToShip`. Svarið skilar `postedShipmentNo`. Notaðu `Inventory.TransferOrder.Receive` með `qtyToReceive` fyrir móttöku; svarið skilar `postedReceiptNo`.
 
 `expectedCount` telur flutningspantanir, ekki línur eða magn. Sendu 1–200 aðskildar aðallínur með jákvæðu tölulegu magni innan eftirstöðva. Móttaka má ekki fara yfir afhent en ómóttekið magn. Línur sem er sleppt eru ekki bókaðar. Ógildar línur skila `InvalidLine` með `nextStep`. Beinir flutningar nota `Inventory.TransferOrder.Post`. Villur í innbyggðri bókun afturkalla breytingar; heppnuð bókun er vistuð og hunsar Omit Commit. Lokamóttaka getur eytt fullgerðri pöntun en skilar samt númeri bókaðrar móttöku.
+
+Foundation publishes JSON contract chapters in English in every locale. The discovery selection description also defines the counting unit in the caller’s language (1033/1039); the app ships Icelandic XLF for all labels.

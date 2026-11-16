@@ -177,6 +177,12 @@ codeunit 10077024 "Partial Transfer Contract ori"
         Workflow.Add('steps', Steps);
     end;
 
+    /// <summary>Names the confirmation counting unit in the caller's language for the discovery catalogue.</summary>
+    procedure GetCountingUnit(): Text
+    begin
+        exit(CountLbl);
+    end;
+
     /// <summary>Returns the localized overview.</summary>
     procedure GetOverview(Ship: Boolean): Text
     begin
