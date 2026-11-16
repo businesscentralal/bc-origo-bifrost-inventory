@@ -24,6 +24,7 @@ codeunit 96986 "Phys Order Tests ori"
         Library: Codeunit "Inventory Test Library ori";
         Helper: Codeunit "Assembly Order Test Helper";
 
+    /// <summary>AC01 Stock CreatesCalculatedOrderAndRecording.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC01_Stock_CreatesCalculatedOrderAndRecording()
@@ -51,6 +52,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(10, Item.Inventory, 'Create does not post.');
     end;
 
+    /// <summary>AC02 CountEight ComputesDifferenceTwo.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC02_CountEight_ComputesDifferenceTwo()
@@ -77,6 +79,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(10, Item.Inventory, 'Finish does not post.');
     end;
 
+    /// <summary>AC03 FinishedOrder PostsAndReturnsRealNumber.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC03_FinishedOrder_PostsAndReturnsRealNumber()
@@ -107,6 +110,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(8, Item.Inventory, 'Native posting applies the physical count.');
     end;
 
+    /// <summary>AC03 SeparatePostingSeries ReturnsAssignedNumber.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC03_SeparatePostingSeries_ReturnsAssignedNumber()
@@ -142,6 +146,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(Header."No.", Posted."Pre-Assigned No.", 'Posted header retains the source order.');
     end;
 
+    /// <summary>AC02 ZeroCount IsRecordedAndFinished.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC02_ZeroCount_IsRecordedAndFinished()
@@ -163,6 +168,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(10, Line."Quantity (Base)", 'Full expected inventory is a negative difference.');
     end;
 
+    /// <summary>AC04 UnrecordedSecondLine RollsBackFirstCount.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_UnrecordedSecondLine_RollsBackFirstCount()
@@ -191,6 +197,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertOpenAndUnrecorded(Header);
     end;
 
+    /// <summary>AC04 NegativeQuantity RefusesWithoutWrites.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_NegativeQuantity_RefusesWithoutWrites()
@@ -199,6 +206,7 @@ codeunit 96986 "Phys Order Tests ori"
         VerifyInvalidCount('negative');
     end;
 
+    /// <summary>AC04 DuplicateLine RefusesWithoutWrites.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_DuplicateLine_RefusesWithoutWrites()
@@ -207,6 +215,7 @@ codeunit 96986 "Phys Order Tests ori"
         VerifyInvalidCount('duplicate');
     end;
 
+    /// <summary>AC04 UnknownLine RefusesWithoutWrites.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_UnknownLine_RefusesWithoutWrites()
@@ -215,6 +224,7 @@ codeunit 96986 "Phys Order Tests ori"
         VerifyInvalidCount('unknown');
     end;
 
+    /// <summary>AC04 MissingItemFilter ReturnsCodedNextStep.</summary>
     [Test]
     procedure Scenario_AC04_MissingItemFilter_ReturnsCodedNextStep()
     var
@@ -227,6 +237,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertCodedError(Response, 'MissingParameter');
     end;
 
+    /// <summary>AC04 NontextItemFilter ReturnsCodedNextStep.</summary>
     [Test]
     procedure Scenario_AC04_NontextItemFilter_ReturnsCodedNextStep()
     var
@@ -240,6 +251,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertCodedError(Response, 'InvalidParameterFormat');
     end;
 
+    /// <summary>AC04 EmptySelection RollsBackNewHeader.</summary>
     [Test]
     procedure Scenario_AC04_EmptySelection_RollsBackNewHeader()
     var
@@ -257,6 +269,7 @@ codeunit 96986 "Phys Order Tests ori"
         Assert.AreEqual(Before, Header.Count(), 'Empty calculation must leave no orphan header.');
     end;
 
+    /// <summary>AC04 UnknownOrder ReturnsRecordNotFound.</summary>
     [Test]
     procedure Scenario_AC04_UnknownOrder_ReturnsRecordNotFound()
     var
@@ -270,6 +283,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertCodedError(Response, 'RecordNotFound');
     end;
 
+    /// <summary>AC04 PostOpenOrder RefusesWithoutPosting.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_PostOpenOrder_RefusesWithoutPosting()
@@ -289,6 +303,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertOpenAndUnrecorded(Header);
     end;
 
+    /// <summary>AC04 RepeatFinish RefusesCompletedOperation.</summary>
     [Test]
     [HandlerFunctions('RecordingMessage')]
     procedure Scenario_AC04_RepeatFinish_RefusesCompletedOperation()
@@ -307,6 +322,7 @@ codeunit 96986 "Phys Order Tests ori"
         AssertCodedError(Response, 'PreconditionFailed');
     end;
 
+    /// <summary>AC05 BilingualContracts DeclareThreePartsAndEffects.</summary>
     [Test]
     procedure Scenario_AC05_BilingualContracts_DeclareThreePartsAndEffects()
     var
