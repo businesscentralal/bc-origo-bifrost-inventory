@@ -361,6 +361,7 @@ codeunit 10076930 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
             if TempReference."Reference Type No." <> '' then
                 exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, 'referenceTypeNo'));
         TempReference."Reference No." := CopyStr(ReadText(Request, 'referenceNo'), 1, 50);
+        Conflict.ReadIsolation := IsolationLevel::UpdLock;
         Conflict.SetRange("Reference Type", TempReference."Reference Type");
         Conflict.SetRange("Reference Type No.", TempReference."Reference Type No.");
         Conflict.SetRange("Reference No.", TempReference."Reference No.");
