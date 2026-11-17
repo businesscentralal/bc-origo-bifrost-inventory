@@ -32,7 +32,7 @@ README "Objects" lists every object with its ID. In short:
   Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847).
   Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory,
-  15 PurchaseReturns; `Inventory Setup ori` fields 21-25 (`Purchase Returns` is field 25). New setup rows and the
+  15 ItemSubstitution and 16 PurchaseReturns; `Inventory Setup ori` fields 21-26 (`Item Substitution` is field 25; `Purchase Returns` is field 26). New setup rows and the
   tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
 ## Test object IDs (unchanged by the renumbering)
