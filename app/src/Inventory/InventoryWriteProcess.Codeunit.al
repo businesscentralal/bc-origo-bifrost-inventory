@@ -4,14 +4,17 @@ using Microsoft.Assembly.Document;
 using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Microsoft.Foundation.Enums;
-using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Manufacturing.Document;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
+using Microsoft.Service.Document;
 using Origo.Bifrost;
 
 /// <summary>
@@ -25,12 +28,16 @@ codeunit 10076842 "Inventory Write Process ori"
     TableNo = "Message Argument ori";
 
     var
+        TempReserveTracking: Record "Reservation Entry" temporary;
         JournalType: Enum "Item Journal Template Type";
         Operation: Text;
         SourceType: Integer;
         SourceSubtype: Integer;
         SourceNo: Code[20];
         SourceLineNo: Integer;
+        SourceBatchName: Code[10];
+        SourceProdOrderLine: Integer;
+        SupplyEntryNo: Integer;
         ReserveQuantity: Decimal;
         ReserveQuantityBase: Decimal;
         AvailabilityDate: Date;
@@ -40,9 +47,11 @@ codeunit 10076842 "Inventory Write Process ori"
         CostJournalTemplate: Code[10];
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
-        CancelEntryNo: Integer;
+        CancelEntryNos: List of [Integer];
         ApplicationEntryNo: Integer;
         ApplyToEntryNo: Integer;
+        ApplicationLedgerEntryNo: Integer;
+        ApplicationQuantity: Decimal;
         FullAutoReservation: Boolean;
         UnknownOperationErr: Label 'Unknown inventory write operation.', Comment = 'is-IS=Óþekkt birgðaskrifaðgerð.';
 
@@ -96,8 +105,8 @@ codeunit 10076842 "Inventory Write Process ori"
     end;
 
     /// <summary>Sets the source line and quantity for the ReservationCreate operation (select it with SetOperation).</summary>
-    /// <param name="NewSourceType">Source table number: Sales Line, Purchase Line, Transfer Line or Assembly Line.</param>
-    /// <param name="NewSourceSubtype">Document type, or transfer direction 0 outbound / 1 inbound.</param>
+    /// <param name="NewSourceType">The native reservation source table number.</param>
+    /// <param name="NewSourceSubtype">Document type, production status, journal entry type, or transfer direction 0 outbound / 1 inbound.</param>
     /// <param name="NewSourceNo">Source document number.</param>
     /// <param name="NewSourceLineNo">Source line number.</param>
     /// <param name="NewQuantity">Quantity to reserve in the line unit of measure.</param>
@@ -116,11 +125,45 @@ codeunit 10076842 "Inventory Write Process ori"
         ReserveDescription := NewDescription;
     end;
 
+    /// <summary>Sets the additional native source key parts for journal and production reservations.</summary>
+    /// <param name="BatchName">Item journal batch name, otherwise blank.</param>
+    /// <param name="ProdOrderLine">Production order line number for a production line or component, otherwise zero.</param>
+    procedure SetReservationSourceDetails(BatchName: Code[10]; ProdOrderLine: Integer)
+    begin
+        SourceBatchName := BatchName;
+        SourceProdOrderLine := ProdOrderLine;
+    end;
+
+    /// <summary>Restricts ReservationCreate to tracking values and optionally one inventory supply entry.</summary>
+    /// <param name="ItemLedgerEntryNo">Supply entry number, or zero for general matching supply.</param>
+    /// <param name="LotNo">Lot number filter, or blank.</param>
+    /// <param name="SerialNo">Serial number filter, or blank.</param>
+    /// <param name="PackageNo">Package number filter, or blank.</param>
+    procedure SetReservationSupply(ItemLedgerEntryNo: Integer; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50])
+    begin
+        SupplyEntryNo := ItemLedgerEntryNo;
+        TempReserveTracking."Lot No." := LotNo;
+        TempReserveTracking."Serial No." := SerialNo;
+        TempReserveTracking."Package No." := PackageNo;
+    end;
+
     /// <summary>Sets the reservation entry pair for the ReservationCancel operation (select it with SetOperation).</summary>
     /// <param name="EntryNo">The reservation entry number (both sides of the pair share it).</param>
     procedure SetCancelReservation(EntryNo: Integer)
     begin
-        CancelEntryNo := EntryNo;
+        Clear(CancelEntryNos);
+        CancelEntryNos.Add(EntryNo);
+    end;
+
+    /// <summary>Sets several reservation entry pairs for the ReservationCancel operation; all are cancelled in one transaction.</summary>
+    /// <param name="EntryNos">The reservation entry numbers (both sides of each pair share the number).</param>
+    procedure SetCancelReservations(EntryNos: List of [Integer])
+    var
+        EntryNo: Integer;
+    begin
+        Clear(CancelEntryNos);
+        foreach EntryNo in EntryNos do
+            CancelEntryNos.Add(EntryNo);
     end;
 
     /// <summary>Returns whether the last ReservationCreate reserved the full requested quantity.</summary>
@@ -146,6 +189,20 @@ codeunit 10076842 "Inventory Write Process ori"
     begin
         ApplicationEntryNo := EntryNo;
         ApplyToEntryNo := ApplyWith;
+        ApplicationLedgerEntryNo := 0;
+        ApplicationQuantity := 0;
+    end;
+
+    /// <summary>Selects all real applications linked to one ledger entry for atomic unapplication.</summary>
+    procedure SetApplicationLedger(EntryNo: Integer)
+    begin
+        ApplicationLedgerEntryNo := EntryNo;
+    end;
+
+    /// <summary>Limits the native reapplication to an exact positive quantity in base units.</summary>
+    procedure SetApplicationQuantity(Quantity: Decimal)
+    begin
+        ApplicationQuantity := Quantity;
     end;
 
     local procedure UnapplyItemEntry()
@@ -153,17 +210,87 @@ codeunit 10076842 "Inventory Write Process ori"
         ApplicationEntry: Record "Item Application Entry";
         NativePost: Codeunit "Item Jnl.-Post Line";
     begin
-        ApplicationEntry.Get(ApplicationEntryNo);
-        NativePost.UnApply(ApplicationEntry);
+        ApplicationEntry.LockTable();
+        if ApplicationLedgerEntryNo = 0 then begin
+            ApplicationEntry.Get(ApplicationEntryNo);
+            NativePost.UnApply(ApplicationEntry);
+            MarkApplicationForAdjustment(ApplicationEntry);
+            exit;
+        end;
+        ApplicationEntry.FilterGroup(-1);
+        ApplicationEntry.SetRange("Inbound Item Entry No.", ApplicationLedgerEntryNo);
+        ApplicationEntry.SetRange("Outbound Item Entry No.", ApplicationLedgerEntryNo);
+        ApplicationEntry.FilterGroup(0);
+        ApplicationEntry.SetFilter("Outbound Item Entry No.", '<>0');
+        ApplicationEntry.FindFirst();
+        repeat
+            NativePost.UnApply(ApplicationEntry);
+            MarkApplicationForAdjustment(ApplicationEntry);
+        until not ApplicationEntry.FindFirst();
     end;
 
     local procedure ReapplyItemEntry()
     var
         LedgerEntry: Record "Item Ledger Entry";
+        InboundEntry: Record "Item Ledger Entry";
         NativePost: Codeunit "Item Jnl.-Post Line";
+        QuantityLimit: Codeunit "Item Appl. Quantity ori";
+        BeforeOutbound: Decimal;
+        BeforeInbound: Decimal;
+        InvalidPairErr: Label 'Select a negative outbound and positive inbound entry of the same item, variant and location.', Comment = 'is-IS=Veldu neikvæða útleiðandi og jákvæða innleiðandi færslu fyrir sömu vöru, afbrigði og birgðageymslu.';
+        QuantityErr: Label 'The requested base quantity must be available on both entries and must be applied exactly.', Comment = 'is-IS=Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.';
     begin
+        LedgerEntry.LockTable();
         LedgerEntry.Get(ApplicationEntryNo);
+        if ApplicationQuantity = 0 then begin
+            NativePost.ReApply(LedgerEntry, ApplyToEntryNo);
+            exit;
+        end;
+        InboundEntry.Get(ApplyToEntryNo);
+        if LedgerEntry.Positive or (LedgerEntry.Quantity >= 0) or not InboundEntry.Positive or (InboundEntry.Quantity <= 0) or
+           (LedgerEntry."Item No." <> InboundEntry."Item No.") or (LedgerEntry."Variant Code" <> InboundEntry."Variant Code") or
+           (LedgerEntry."Location Code" <> InboundEntry."Location Code")
+        then
+            Error(InvalidPairErr);
+        LedgerEntry.CalcFields("Reserved Quantity");
+        InboundEntry.CalcFields("Reserved Quantity");
+        if (ApplicationQuantity > -(LedgerEntry."Remaining Quantity" - LedgerEntry."Reserved Quantity")) or
+           (ApplicationQuantity > InboundEntry."Remaining Quantity" - InboundEntry."Reserved Quantity")
+        then
+            Error(QuantityErr);
+        BeforeOutbound := LedgerEntry."Remaining Quantity";
+        BeforeInbound := InboundEntry."Remaining Quantity";
+        QuantityLimit.SetSelection(ApplicationEntryNo, ApplyToEntryNo, ApplicationQuantity);
+        BindSubscription(QuantityLimit);
         NativePost.ReApply(LedgerEntry, ApplyToEntryNo);
+        UnbindSubscription(QuantityLimit);
+        LedgerEntry.Get(ApplicationEntryNo);
+        InboundEntry.Get(ApplyToEntryNo);
+        if (LedgerEntry."Remaining Quantity" - BeforeOutbound <> ApplicationQuantity) or
+           (BeforeInbound - InboundEntry."Remaining Quantity" <> ApplicationQuantity)
+        then
+            Error(QuantityErr);
+    end;
+
+    local procedure MarkApplicationForAdjustment(ApplicationEntry: Record "Item Application Entry")
+    begin
+        MarkEntryForAdjustment(ApplicationEntry."Inbound Item Entry No.");
+        MarkEntryForAdjustment(ApplicationEntry."Outbound Item Entry No.");
+    end;
+
+    local procedure MarkEntryForAdjustment(EntryNo: Integer)
+    var
+        Ledger: Record "Item Ledger Entry";
+        Item: Record Item;
+    begin
+        Ledger.Get(EntryNo);
+        Ledger."Applied Entry to Adjust" := true;
+        Ledger.Modify();
+        Item.Get(Ledger."Item No.");
+        if Item."Cost is Adjusted" then begin
+            Item."Cost is Adjusted" := false;
+            Item.Modify();
+        end;
     end;
 
     local procedure PostCostToGL(var Argument: Record "Message Argument ori")
@@ -232,35 +359,119 @@ codeunit 10076842 "Inventory Write Process ori"
 
     local procedure Reserve()
     var
+        DemandEntry: Record "Reservation Entry";
         SalesLine: Record "Sales Line";
+        ServiceLine: Record "Service Line";
+        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrderComponent: Record "Prod. Order Component";
+        ItemJournalLine: Record "Item Journal Line";
+        AssemblyHeader: Record "Assembly Header";
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
         ReservationManagement: Codeunit "Reservation Management";
+        JournalContext: Codeunit "Reserv. Supply Filter ori";
     begin
         case SourceType of
+            Database::"Service Line":
+                begin
+                    ServiceLine.Get(Enum::"Service Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    ServiceLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ServiceLine);
+                end;
+            Database::"Prod. Order Line":
+                begin
+                    ProdOrderLine.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine);
+                    ProdOrderLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ProdOrderLine);
+                end;
+            Database::"Prod. Order Component":
+                begin
+                    ProdOrderComponent.Get(Enum::"Production Order Status".FromInteger(SourceSubtype), SourceNo, SourceProdOrderLine, SourceLineNo);
+                    ProdOrderComponent.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ProdOrderComponent);
+                end;
+            Database::"Item Journal Line":
+                begin
+                    ItemJournalLine.Get(CopyStr(SourceNo, 1, 10), SourceBatchName, SourceLineNo);
+                    ItemJournalLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(ItemJournalLine);
+                end;
+            Database::"Assembly Header":
+                begin
+                    AssemblyHeader.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo);
+                    AssemblyHeader.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(AssemblyHeader);
+                end;
             Database::"Sales Line":
                 begin
                     SalesLine.Get(Enum::"Sales Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    SalesLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(SalesLine);
                 end;
             Database::"Purchase Line":
                 begin
                     PurchaseLine.Get(Enum::"Purchase Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    PurchaseLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(PurchaseLine);
                 end;
             Database::"Transfer Line":
                 begin
                     TransferLine.Get(SourceNo, SourceLineNo);
+                    TransferLine.SetReservationEntry(DemandEntry, Enum::"Transfer Direction".FromInteger(SourceSubtype));
                     ReservationManagement.SetReservSource(TransferLine, Enum::"Transfer Direction".FromInteger(SourceSubtype));
                 end;
             Database::"Assembly Line":
                 begin
                     AssemblyLine.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
+                    AssemblyLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(AssemblyLine);
                 end;
         end;
-        ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
+        ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
+        if SupplyEntryNo <> 0 then
+            ReserveSupplyEntry(ReservationManagement, DemandEntry)
+        else begin
+            // Item journals have native CreateReservation support but do not supply AutoReserve's remaining-quantity event.
+            if SourceType = Database::"Item Journal Line" then
+                BindSubscription(JournalContext);
+            ReservationManagement.AutoReserve(FullAutoReservation, ReserveDescription, AvailabilityDate, ReserveQuantity, ReserveQuantityBase);
+            if SourceType = Database::"Item Journal Line" then
+                UnbindSubscription(JournalContext);
+        end;
+    end;
+
+    local procedure ReserveSupplyEntry(var ReservationManagement: Codeunit "Reservation Management"; DemandEntry: Record "Reservation Entry")
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        SupplyFilter: Codeunit "Reserv. Supply Filter ori";
+        RemainingQuantity: Decimal;
+        RemainingQuantityBase: Decimal;
+        SupplyUnavailableErr: Label 'The selected item ledger entry does not have enough matching, unreserved inventory for this source line.', Comment = 'is-IS=Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.';
+    begin
+        LedgerEntry.Get(SupplyEntryNo);
+        if not ReservationManagement.IsPositive() or not LedgerEntry.Positive or not LedgerEntry.Open or
+           (LedgerEntry."Item No." <> DemandEntry."Item No.") or
+           (LedgerEntry."Variant Code" <> DemandEntry."Variant Code") or
+           (LedgerEntry."Location Code" <> DemandEntry."Location Code") or
+           ((TempReserveTracking."Lot No." <> '') and (LedgerEntry."Lot No." <> TempReserveTracking."Lot No.")) or
+           ((TempReserveTracking."Serial No." <> '') and (LedgerEntry."Serial No." <> TempReserveTracking."Serial No.")) or
+           ((TempReserveTracking."Package No." <> '') and (LedgerEntry."Package No." <> TempReserveTracking."Package No."))
+        then
+            Error(SupplyUnavailableErr);
+        TempReserveTracking.CopyTrackingFromItemLedgEntry(LedgerEntry);
+        ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);
+        RemainingQuantity := ReserveQuantity;
+        RemainingQuantityBase := ReserveQuantityBase;
+        SupplyFilter.SetSupplyEntry(SupplyEntryNo);
+        BindSubscription(SupplyFilter);
+        // Retain the native warehouse availability, tracking, source-quantity and reservation checks.
+        ReservationManagement.AutoReserveOneLine(Enum::"Reservation Summary Type"::"Item Ledger Entry".AsInteger(),
+            RemainingQuantity, RemainingQuantityBase, ReserveDescription, AvailabilityDate);
+        UnbindSubscription(SupplyFilter);
+        if RemainingQuantityBase <> 0 then
+            Error(SupplyUnavailableErr);
+        FullAutoReservation := true;
     end;
 
     /// <summary>Reads both sides and refuses incomplete or inconsistent native reservation pairs.</summary>
@@ -283,11 +494,14 @@ codeunit 10076842 "Inventory Write Process ori"
     var
         ReservationEntry: Record "Reservation Entry";
         ReservationEngineMgt: Codeunit "Reservation Engine Mgt.";
+        CancelEntryNo: Integer;
         InconsistentPairErr: Label 'Reservation %1 no longer contains a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.';
     begin
         ReservationEntry.LockTable();
-        if not HasConsistentReservationPair(CancelEntryNo, ReservationEntry) then
-            Error(InconsistentPairErr, CancelEntryNo);
-        ReservationEngineMgt.CancelReservation(ReservationEntry);
+        foreach CancelEntryNo in CancelEntryNos do begin
+            if not HasConsistentReservationPair(CancelEntryNo, ReservationEntry) then
+                Error(InconsistentPairErr, CancelEntryNo);
+            ReservationEngineMgt.CancelReservation(ReservationEntry);
+        end;
     end;
 }

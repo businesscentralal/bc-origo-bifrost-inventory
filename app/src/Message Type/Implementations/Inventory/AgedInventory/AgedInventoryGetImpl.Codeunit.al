@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Inventory.AgedInventory.Get. Reads the remaining quantity and value of open positive item ledger entries
 /// per age bucket and item, the way the Item Age Composition - Qty. and - Value reports do. Does not write.
 /// </summary>
-codeunit 10076930 "Aged Inventory Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076948 "Aged Inventory Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
