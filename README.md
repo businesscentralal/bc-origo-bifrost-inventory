@@ -63,8 +63,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
-| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
-| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply applications linked to itemLedgerEntryNo through Item Jnl.-Post Line; legacy entryNo selects one application |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply outboundEntryNo to inboundEntryNo for an exact positive base quantity; legacy selectors remain supported |
 | `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
 | `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
 | `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
@@ -74,6 +74,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
+| `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
 | `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
@@ -267,8 +268,8 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
-
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
+| 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -299,6 +300,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
 
@@ -430,7 +432,7 @@ the deployed help contract before sending confirmation controls to that version.
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
 
-## Create, finish and post physical inventory orders / Stofna, ljúka og bóka birgðatalningarpantanir
+### Create, finish and post physical inventory orders / Stofna, ljúka og bóka birgðatalningarpantanir
 
 ```json
 {"type":"Inventory.PhysInventoryOrder.Create","data":{"itemNoFilter":"1000"}}
@@ -449,6 +451,17 @@ app-owned errors and follow the shared retry guidance; an irreversible call is n
 `Finish` tekur `documentNo` eða sama númer í `subject` og valfrjálsar `counts` með `recordingNo`, `lineNo` og `quantity`. Magn er í mælieiningu línunnar; núll er gild talning. Hægt er að senda `serialNo`, `lotNo` og `packageNo`; stöðluð rakningarprófun gildir. Undirbúið viðbótarlínur eða skiptingu rakningar í staðlaða biðlaranum. Allar línur verða að vera taldar áður en skráningum og pöntun er lokið. Mismunur er reiknaður án bókunar. Höfnun afturkallar allar breytingar kallsins.
 
 `Post` bókar eina lokna pöntun og skilar `postedDocumentNo`. **expectedCount telur hausa birgðatalningarpantana: eina pöntun, ekki línur, skráningar eða einingar.** Staðfestingarreglur Foundation gilda. Bókun er varanleg og krefst staðlaðrar vörubókunarheimildar. Ekki er hægt að endurtaka lokna eða bókaða aðgerð. Svið Birgðatalningar og staðlaðar heimildir gilda fyrir allar þrjár aðgerðir.
+
+### Item application selectors and quantity objects (#40)
+
+| ID | Kind | Object |
+|---|---|---|
+| 10077034 | Codeunit | `Item Appl. Quantity ori` (scoped native quantity event) |
+| 96994 | Test codeunit | `Item Application 40 Tests ori` |
+
+`Inventory.ItemApplication.Get` accepts `itemNo` or `itemLedgerEntryNo`, plus exact `locationCode` and `variantCode`, and returns each application once with `inboundEntry` and `outboundEntry` projections.
+
+See [the item application selectors and quantities](docs/contracts.md#item-application-selectors-and-quantities-40).
 
 ### Item substitution objects (#118)
 
