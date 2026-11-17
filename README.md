@@ -74,6 +74,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
+| `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
 | `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
@@ -264,6 +265,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -292,6 +294,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
 
