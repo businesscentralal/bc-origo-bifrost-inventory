@@ -82,8 +82,12 @@ README "Objects" lists every object with its ID. In short:
 ## PR #198 main-merge ID reconciliation
 
 - Item Create uses implementation codeunit and enum value 10076932, process codeunit 10076931, and enum extension 10076848. Purchase Return keeps codeunit/enum value 10076930 and enum extension 10076847 from main. These taken IDs supersede the free-ID notes preserved above.
+
+## PR #224 main-merge ID reconciliation
+
+- Standard cost collides with Item Create on codeunit 10076932, enum value 10076932 and enum extension 10076848. The PR side moves: `Std. Cost Suggest Impl ori` and `Inventory.StandardCost.Suggest` are 10076938; `MsgType.StdCost.EnumExt ori` is 10076850. `Inventory.StandardCost.Implement` stays 10076933. Item Create keeps 10076932 and enum extension 10076848. Codeunits 10076934–10076937 are unchanged.
 - 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
 
 ## PR #195 main-merge ID reconciliation
 
-- `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is claimed by the open standard-cost pull request, so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
+- `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
