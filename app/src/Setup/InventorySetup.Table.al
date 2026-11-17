@@ -10,6 +10,7 @@ using Microsoft.Inventory.Item.Catalog;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
@@ -95,6 +96,10 @@ table 10076836 "Inventory Setup ori"
         {
             Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
         }
+        field(25; Planning; Boolean)
+        {
+            Caption = 'Planning', Comment = 'is-IS=Áætlun';
+        }
     }
 
     keys
@@ -155,6 +160,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Charge");
             Domain::ItemCategory:
                 exit("Item Category");
+            Domain::Planning:
+                exit(Planning);
         end;
         exit(true);
     end;
@@ -241,7 +248,23 @@ table 10076836 "Inventory Setup ori"
                 "Item Category" := true;
                 Changed := true;
             end;
+        if not Planning then
+            if HasPlanningUsage() then begin
+                Planning := true;
+                Changed := true;
+            end;
         exit(Changed);
+    end;
+
+    /// <summary>Turns on Planning only, when a planning worksheet template exists. Other switches stay as they are.</summary>
+    internal procedure EnablePlanningFromUsage(): Boolean
+    begin
+        if Planning then
+            exit(false);
+        if not HasPlanningUsage() then
+            exit(false);
+        Planning := true;
+        exit(true);
     end;
 
     local procedure HasRecords(TableNo: Integer): Boolean
@@ -396,6 +419,16 @@ table 10076836 "Inventory Setup ori"
         if not PriceListLine.ReadPermission() then
             exit(false);
         exit(not PriceListLine.IsEmpty());
+    end;
+
+    local procedure HasPlanningUsage(): Boolean
+    var
+        ReqWkshTemplate: Record "Req. Wksh. Template";
+    begin
+        ReqWkshTemplate.SetRange(Type, ReqWkshTemplate.Type::Planning);
+        if not ReqWkshTemplate.ReadPermission() then
+            exit(false);
+        exit(not ReqWkshTemplate.IsEmpty());
     end;
 
     local procedure HasItemCategoryUsage(): Boolean

@@ -150,6 +150,12 @@ page 10076836 "Inventory Setup Wizard ori"
                     ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
                     Editable = false;
                 }
+                field(Planning; DomainEnabled[16])
+                {
+                    Caption = 'Planning', Comment = 'is-IS=Áætlun';
+                    ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
+                    Editable = false;
+                }
             }
             group(FinishStep)
             {
@@ -317,7 +323,7 @@ page 10076836 "Inventory Setup Wizard ori"
     var
         WizardMgt: Codeunit "Inventory Wizard Mgt ori";
         CurrentStep: Integer;
-        DomainEnabled: array[15] of Boolean;
+        DomainEnabled: array[16] of Boolean;
         CanChangeHttp: Boolean;
         HttpStatusText: Text;
         HttpSummaryText: Text;
@@ -368,5 +374,6 @@ page 10076836 "Inventory Setup Wizard ori"
         DomainEnabled[13] := WizardMgt.ReadDomain("Inventory Domain ori"::Availability);
         DomainEnabled[14] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemCharge);
         DomainEnabled[15] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemCategory);
+        DomainEnabled[16] := WizardMgt.ReadDomain("Inventory Domain ori"::Planning);
     end;
 }

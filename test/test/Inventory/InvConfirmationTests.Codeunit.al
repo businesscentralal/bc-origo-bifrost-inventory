@@ -339,6 +339,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup.Costing := false;
         Setup."Phys. Inventory" := false;
         Setup.Reclassification := false;
+        Setup.Planning := false;
         Setup.Modify();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
@@ -395,10 +396,11 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Costing := PreviousSetup.Costing;
             Setup."Phys. Inventory" := PreviousSetup."Phys. Inventory";
             Setup.Reclassification := PreviousSetup.Reclassification;
+            Setup.Planning := PreviousSetup.Planning;
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(9, Checked, 'All nine app-owned irreversible types must be exercised.');
+        Assert.AreEqual(10, Checked, 'All ten app-owned irreversible types must be exercised.');
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject

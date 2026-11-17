@@ -1,0 +1,466 @@
+namespace Origo.Bifrost.Inventory.Test;
+
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Planning;
+using Microsoft.Inventory.Requisition;
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Vendor;
+using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
+using System.TestLibraries.Utilities;
+
+/// <summary>
+/// Inventory.PlanningWorksheet.Calculate and CarryOut. Native planning commits, so each test removes its own
+/// PW117 fixtures and commits that cleanup.
+/// </summary>
+codeunit 96980 "Plan Wksh Tests ori"
+{
+    Subtype = Test;
+    TestPermissions = Disabled;
+
+    var
+        Assert: Codeunit "Library Assert";
+        Library: Codeunit "Inventory Test Library ori";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryPurchase: Codeunit "Library - Purchase";
+
+    [Test]
+    procedure Calculate_Regenerative_ThenCarryOut_CreatesPurchaseOrder()
+    var
+        Item: Record Item;
+        PurchHeader: Record "Purchase Header";
+        Request: JsonObject;
+        Response: JsonObject;
+        Orders: JsonArray;
+        OrderToken: JsonToken;
+        LineToken: JsonToken;
+        ResponseText: Text;
+        DocumentNo: Code[20];
+    begin
+        // [SCENARIO] Issue117 AC01 and AC02 | Time: a one-year horizon from the work date | Risk: creates and deletes one purchase order.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        Request.Add('mode', 'regenerative');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        Request.Add('itemNo', Item."No.");
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
+        Assert.AreEqual('regenerative', TextValue(Response, 'mode'), ResponseText);
+        Assert.IsTrue(IntegerValue(Response, 'lineCount') >= 1, ResponseText);
+        Assert.IsTrue(Response.Get('lines', LineToken), ResponseText);
+        Assert.IsTrue(LineToken.AsArray().Count() >= 1, ResponseText);
+
+        Clear(Request);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'PW117T|PW117W', Request, false);
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
+        Assert.IsTrue(IntegerValue(Response, 'linesConsumed') >= 1, ResponseText);
+        Assert.IsTrue(Response.Get('orders', OrderToken), ResponseText);
+        Orders := OrderToken.AsArray();
+        Assert.IsTrue(Orders.Count() >= 1, ResponseText);
+        Orders.Get(0, OrderToken);
+        Assert.AreEqual('Purchase', TextValue(OrderToken.AsObject(), 'documentType'), ResponseText);
+        DocumentNo := CopyStr(TextValue(OrderToken.AsObject(), 'documentNo'), 1, MaxStrLen(DocumentNo));
+        Assert.IsTrue(PurchHeader.Get(PurchHeader."Document Type"::Order, DocumentNo), ResponseText);
+
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Calculate_NetChangeWithoutAssignment_ReturnsNoLines()
+    var
+        Item: Record Item;
+        PlanningAssignment: Record "Planning Assignment";
+        Request: JsonObject;
+        Response: JsonObject;
+        ResponseText: Text;
+    begin
+        // [SCENARIO] Issue117 edge | Time: a one-year horizon | Risk: the calculation commits and leaves no lines.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        PlanningAssignment.SetRange("Item No.", Item."No.");
+        if not PlanningAssignment.IsEmpty() then
+            PlanningAssignment.DeleteAll(false);
+        CreatePlanningWorksheet();
+        Request.Add('mode', 'netChange');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        Request.Add('itemNo', Item."No.");
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
+        Assert.AreEqual('netChange', TextValue(Response, 'mode'), ResponseText);
+        Assert.AreEqual(0, IntegerValue(Response, 'lineCount'), ResponseText);
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Calculate_InvalidMode_InvalidParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [SCENARIO] Issue117 invalid input | Time: dates are present so the refusal is the mode | Risk: no worksheet write.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePlanningWorksheet();
+        Request.Add('mode', 'weekly');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        AssertRefusal(Response, 'InvalidParameter');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Calculate_EndingBeforeStart_InvalidParameter()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [SCENARIO] Issue117 invalid input | Time: ending date is the day before the start | Risk: refused before calculation.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePlanningWorksheet();
+        Request.Add('mode', 'regenerative');
+        Request.Add('startingDate', IsoDate(HorizonEnd()));
+        Request.Add('endingDate', IsoDate(HorizonStart()));
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        AssertRefusal(Response, 'InvalidParameter');
+        Assert.AreEqual('endingDate', TextValue(Response, 'parameter'), 'endingDate');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Calculate_UnknownWorksheet_RecordNotFound_BothLanguages()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        EnglishNext: Text;
+        IcelandicNext: Text;
+    begin
+        // [SCENARIO] Issue117 AC03 and AC04 | Time: none | Risk: no worksheet is created.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        Request.Add('mode', 'regenerative');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        // Dispatcher.Execute forces the company default language. Pass the Windows language id
+        // through EnqueueAndProcess so the refusal is built in 1033 and then in 1039.
+        Response := DispatchInLanguage("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'NOSUCH|NAME', Request, 1033);
+        Assert.AreEqual('RecordNotFound', TextValue(Response, 'code'), 'English code');
+        EnglishNext := TextValue(Response, 'nextStep');
+        Assert.AreNotEqual('', EnglishNext, 'English nextStep');
+        Response := DispatchInLanguage("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'NOSUCH|NAME', Request, 1039);
+        Assert.AreEqual('RecordNotFound', TextValue(Response, 'code'), 'Icelandic code');
+        IcelandicNext := TextValue(Response, 'nextStep');
+        Assert.AreNotEqual('', IcelandicNext, 'Icelandic nextStep');
+        Assert.AreNotEqual(EnglishNext, IcelandicNext, 'Icelandic nextStep is translated.');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Calculate_RequisitionTemplate_RecordNotFound()
+    var
+        Item: Record Item;
+        ReqLine: Record "Requisition Line";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: a requisition worksheet line is not calculated or deleted.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreateRequisitionWorksheet();
+        ReqLine.Init();
+        ReqLine."Worksheet Template Name" := 'PW117R';
+        ReqLine."Journal Batch Name" := 'PW117W';
+        ReqLine."Line No." := 10000;
+        ReqLine.Type := ReqLine.Type::Item;
+        ReqLine."No." := Item."No.";
+        ReqLine.Quantity := 1;
+        ReqLine.Insert(false);
+        Commit();
+        Request.Add('mode', 'regenerative');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        Request.Add('itemNo', Item."No.");
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117R|PW117W', Request, false);
+        AssertRefusal(Response, 'RecordNotFound');
+        Assert.IsTrue(ReqLine.Get('PW117R', 'PW117W', 10000), 'The requisition line stays.');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure CarryOut_CancelLine_RefusesBeforeWrite()
+    var
+        Item: Record Item;
+        ReqLine: Record "Requisition Line";
+        PurchLine: Record "Purchase Line";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: an accepted Cancel line must not create or delete a document.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        ReqLine.Init();
+        ReqLine."Worksheet Template Name" := 'PW117T';
+        ReqLine."Journal Batch Name" := 'PW117W';
+        ReqLine."Line No." := 10000;
+        ReqLine.Type := ReqLine.Type::Item;
+        ReqLine."No." := Item."No.";
+        ReqLine.Quantity := 1;
+        ReqLine."Action Message" := ReqLine."Action Message"::Cancel;
+        ReqLine."Accept Action Message" := true;
+        ReqLine."Replenishment System" := ReqLine."Replenishment System"::Purchase;
+        ReqLine."Ref. Order Type" := ReqLine."Ref. Order Type"::Purchase;
+        ReqLine."Ref. Order No." := 'PW117EXIST';
+        ReqLine.Insert(false);
+        Commit();
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'PW117T|PW117W', Request, false);
+        AssertRefusal(Response, 'PreconditionFailed');
+        Assert.IsTrue(ReqLine.Get('PW117T', 'PW117W', 10000), 'The cancel line stays.');
+        PurchLine.SetRange(Type, PurchLine.Type::Item);
+        PurchLine.SetRange("No.", Item."No.");
+        Assert.IsTrue(PurchLine.IsEmpty(), 'No purchase line was created.');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure CarryOut_UnknownWorksheet_RecordNotFound()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // [SCENARIO] Issue117 AC03 | Time: none | Risk: no document is created.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'NOSUCH|NAME', Request, false);
+        AssertRefusal(Response, 'RecordNotFound');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    local procedure AssertRefusal(Response: JsonObject; ExpectedCode: Text)
+    var
+        ResponseText: Text;
+    begin
+        Response.WriteTo(ResponseText);
+        Assert.AreEqual('Error', TextValue(Response, 'status'), ResponseText);
+        Assert.AreEqual(ExpectedCode, TextValue(Response, 'code'), ResponseText);
+        Assert.AreNotEqual('', TextValue(Response, 'nextStep'), ResponseText);
+    end;
+
+    local procedure EnablePlanning()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        if Setup.Planning then
+            exit;
+        Setup.Planning := true;
+        Setup.Modify(true);
+    end;
+
+    local procedure CreatePurchaseItem(var Item: Record Item)
+    var
+        Vendor: Record Vendor;
+    begin
+        LibraryPurchase.CreateVendor(Vendor);
+        Vendor.Validate(Name, CopyStr('PW117 ' + Vendor."No.", 1, MaxStrLen(Vendor.Name)));
+        Vendor.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Validate(Description, CopyStr('PW117 ' + Item."No.", 1, MaxStrLen(Item.Description)));
+        Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
+        Item.Validate("Vendor No.", Vendor."No.");
+        Item.Validate("Reordering Policy", Item."Reordering Policy"::"Fixed Reorder Qty.");
+        Item.Validate("Reorder Point", 10);
+        Item.Validate("Reorder Quantity", 25);
+        Item.Modify(true);
+    end;
+
+    local procedure CreatePlanningWorksheet()
+    begin
+        CreateWorksheet('PW117T', Enum::"Req. Worksheet Template Type"::Planning);
+    end;
+
+    local procedure CreateRequisitionWorksheet()
+    begin
+        CreateWorksheet('PW117R', Enum::"Req. Worksheet Template Type"::"Req.");
+    end;
+
+    local procedure CreateWorksheet(TemplateName: Code[10]; TemplateType: Enum "Req. Worksheet Template Type")
+    var
+        WkshTemplate: Record "Req. Wksh. Template";
+        Worksheet: Record "Requisition Wksh. Name";
+    begin
+        if not WkshTemplate.Get(TemplateName) then begin
+            WkshTemplate.Init();
+            WkshTemplate.Name := TemplateName;
+            WkshTemplate.Validate(Type, TemplateType);
+            WkshTemplate.Recurring := false;
+            WkshTemplate.Description := 'PW117';
+            WkshTemplate.Insert(true);
+        end;
+        if Worksheet.Get(TemplateName, 'PW117W') then
+            exit;
+        Worksheet.Init();
+        Worksheet."Worksheet Template Name" := TemplateName;
+        Worksheet.Name := 'PW117W';
+        Worksheet.Description := 'PW117';
+        Worksheet.Insert(true);
+    end;
+
+    local procedure CleanupFixtures()
+    var
+        Item: Record Item;
+        Vendor: Record Vendor;
+        PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        ReqLine: Record "Requisition Line";
+        Worksheet: Record "Requisition Wksh. Name";
+        WkshTemplate: Record "Req. Wksh. Template";
+        ItemNos: List of [Code[20]];
+        DocumentNos: List of [Code[20]];
+        ItemNo: Code[20];
+        DocumentNo: Code[20];
+    begin
+        Item.SetFilter(Description, 'PW117*');
+        if Item.FindSet() then
+            repeat
+                ItemNos.Add(Item."No.");
+            until Item.Next() = 0;
+        foreach ItemNo in ItemNos do begin
+            PurchLine.Reset();
+            PurchLine.SetRange(Type, PurchLine.Type::Item);
+            PurchLine.SetRange("No.", ItemNo);
+            if PurchLine.FindSet() then
+                repeat
+                    if not DocumentNos.Contains(PurchLine."Document No.") then
+                        DocumentNos.Add(PurchLine."Document No.");
+                until PurchLine.Next() = 0;
+            ReqLine.Reset();
+            ReqLine.SetRange(Type, ReqLine.Type::Item);
+            ReqLine.SetRange("No.", ItemNo);
+            if not ReqLine.IsEmpty() then
+                ReqLine.DeleteAll(true);
+        end;
+        foreach DocumentNo in DocumentNos do
+            if PurchHeader.Get(PurchHeader."Document Type"::Order, DocumentNo) then
+                PurchHeader.Delete(true);
+        ReqLine.Reset();
+        ReqLine.SetFilter("Worksheet Template Name", 'PW117*');
+        if not ReqLine.IsEmpty() then
+            ReqLine.DeleteAll(true);
+        foreach ItemNo in ItemNos do
+            if Item.Get(ItemNo) then
+                Item.Delete(true);
+        Vendor.SetFilter(Name, 'PW117*');
+        if Vendor.FindSet() then
+            repeat
+                Vendor.Delete(true);
+            until Vendor.Next() = 0;
+        if Worksheet.Get('PW117T', 'PW117W') then
+            Worksheet.Delete(true);
+        if Worksheet.Get('PW117R', 'PW117W') then
+            Worksheet.Delete(true);
+        if WkshTemplate.Get('PW117T') then
+            WkshTemplate.Delete(true);
+        if WkshTemplate.Get('PW117R') then
+            WkshTemplate.Delete(true);
+    end;
+
+    local procedure HorizonStart(): Date
+    begin
+        if WorkDate() = 0D then
+            exit(Today());
+        exit(WorkDate());
+    end;
+
+    local procedure HorizonEnd(): Date
+    begin
+        exit(CalcDate('<+1Y>', HorizonStart()));
+    end;
+
+    local procedure IsoDate(DateValue: Date): Text
+    begin
+        exit(Format(DateValue, 0, 9));
+    end;
+
+    local procedure DispatchInLanguage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; WindowsLanguageId: Integer) ResponseJson: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        ResponseContentType: Text[100];
+        MessageId: Guid;
+        ResponseTime: Duration;
+        EmptyTaskId: Guid;
+        RequestText: Text;
+        ResponseText: Text;
+    begin
+        RequestJson.WriteTo(RequestText);
+        RequestContent.AddText(RequestText);
+        Dispatcher.EnqueueAndProcess(
+            MessageType,
+            "Message Version ori"::"1.0",
+            Subject,
+            '',
+            '',
+            RequestContent,
+            EmptyTaskId,
+            WindowsLanguageId,
+            MessageId,
+            ResponseContent,
+            ResponseContentType,
+            ResponseTime);
+        if ResponseContent.Length() > 0 then begin
+            ResponseContent.GetSubText(ResponseText, 1);
+            ResponseJson.ReadFrom(ResponseText);
+        end;
+    end;
+
+    local procedure TextValue(Object: JsonObject; Name: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if not Object.Get(Name, Token) then
+            exit('');
+        if not Token.IsValue() then
+            exit('');
+        exit(Token.AsValue().AsText());
+    end;
+
+    local procedure IntegerValue(Object: JsonObject; Name: Text): Integer
+    var
+        Token: JsonToken;
+    begin
+        if not Object.Get(Name, Token) then
+            exit(0);
+        if not Token.IsValue() then
+            exit(0);
+        exit(Token.AsValue().AsInteger());
+    end;
+}

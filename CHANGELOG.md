@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- #117: `Inventory.PlanningWorksheet.Calculate` (10076930) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076931) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076847, codeunits 10076930, 10076931 and 10076932, enum value 15 Planning, setup field 25 Planning, test codeunit 96980. The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 

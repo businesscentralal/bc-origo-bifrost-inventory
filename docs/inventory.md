@@ -28,6 +28,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.Cost.Get, Cost.Update, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
 - Inventory.Revaluation.Calculate, PreviewPost, and Post
 - Inventory.PhysInventory.Calculate, RecordCount, Record, Check, PreviewPost, and Post
+- Inventory.PlanningWorksheet.Calculate and Inventory.PlanningWorksheet.CarryOut
 
 The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product page) and
 `https://docs.bifrost.origo.is/{locale}/help/inventory/inventory-setup` (context-sensitive help for

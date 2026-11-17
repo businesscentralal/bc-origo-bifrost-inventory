@@ -81,6 +81,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
 | `Inventory.Reservation.AutoReserve` | Inbound | Reserve a sales line from available supply |
 | `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |
+| `Inventory.PlanningWorksheet.Calculate` | Inbound | Replace suggestion lines for the selected items on one planning worksheet (`regenerative` or `netChange`) and return the lines |
+| `Inventory.PlanningWorksheet.CarryOut` | Inbound | Create new purchase, transfer and assembly orders from accepted New lines. Refuses lines that would change an existing document |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
 | `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
 | `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
@@ -167,12 +169,13 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge and Item Category.
+   Item Reference, Availability, Item Charge, Item Category and Planning.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
    write when nothing changes. Later manual choices remain in place; the upgrade does not run
-   again. If no setup row exists, the existing all-domains-enabled rule still applies.
+   again. A separate one-time upgrade, tag `Origo.Bifrost.Inventory-PlanningDomain-20261117`, turns on Planning only when a planning worksheet template exists. It does not turn other domains back on.
+   If no setup row exists, the existing all-domains-enabled rule still applies.
    Calls that reach a disabled domain's implementation return a coded refusal with a next step
    pointing to Inventory Setup. Foundation can omit disabled types from discovery and reject a
    call before it reaches the implementation; this app cannot change that Foundation behavior.
@@ -194,6 +197,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
    | Item Category | Item Category or an Item with a category code |
+   | Planning | A requisition worksheet template of type Planning |
 
    Usage checks only read company data. A source the caller cannot read supplies no signal; no
    extra business-data permission is granted. Administrators can still enable any domain manually.
@@ -249,7 +253,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 10076835 | `Inventory Domain ori` | The fifteen domains |
+| 10076835 | `Inventory Domain ori` | The sixteen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
@@ -262,6 +266,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076847 | `MsgType.PlanWksh.EnumExt ori` | `Inventory.PlanningWorksheet.Calculate`, `Inventory.PlanningWorksheet.CarryOut` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -290,6 +295,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076930–10076932 | Planning worksheet | `Plan Wksh Calc Impl ori`, `Plan Wksh Carry Impl ori`, `Req. Worksheet Engine ori` |
 
 ### Permission sets
 
@@ -402,11 +408,12 @@ Tracking write helper: codeunit `10076925 Inventory Tracking Write ori`; native 
 
 ### Confirm irreversible requests (Foundation core#1151)
 
-On Foundation versions that expose `expectedCount` in the composed help contract, all nine
+On Foundation versions that expose `expectedCount` in the composed help contract, all ten
 Inventory types declaring `irreversible` use the Foundation confirmation protocol:
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.Revaluation.Post`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`, `Inventory.TransferOrder.Post`,
-`Inventory.AssemblyOrder.Post`, `Inventory.Transfer.UndoShipment` and `Inventory.Assembly.UndoPost`.
+`Inventory.AssemblyOrder.Post`, `Inventory.Transfer.UndoShipment`, `Inventory.Assembly.UndoPost`
+and `Inventory.PlanningWorksheet.CarryOut`.
 Call without `data.expectedCount` first: `ConfirmationRequired` reports the count in `expected`
 and changes no business data. Inspect the preview and repeat the same request with that count.
 A stale or wrong count returns `ConfirmationMismatch` and changes nothing. These types use

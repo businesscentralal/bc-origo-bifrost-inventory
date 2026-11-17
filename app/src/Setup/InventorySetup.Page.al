@@ -79,6 +79,10 @@ page 10076835 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether item category message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð vöruflokka séu virk fyrir þetta fyrirtæki.';
                 }
+                field(Planning; Rec.Planning)
+                {
+                    ToolTip = 'Specifies whether planning worksheet message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð áætlunarkeyrslu séu virk fyrir þetta fyrirtæki.';
+                }
             }
         }
     }

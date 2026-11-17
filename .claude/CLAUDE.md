@@ -27,11 +27,16 @@ README "Objects" lists every object with its ID. In short:
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
-  the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
-  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+- Next free codeunit: 10076933. Codeunits 10076925-10076929 and 10076930-10076932 are in use
+  (`Inventory Tracking Write ori` 10076925, `Asm. Preview Adjust ori` 10076929,
+  `Plan Wksh Calc Impl ori` 10076930, `Plan Wksh Carry Impl ori` 10076931, `Req. Worksheet Engine ori` 10076932).
+  10076924 stays unused as a codeunit so the RecordCount value does not clash with the convention.
+  Free: 10076933-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
+- `Inventory Domain ori` value 15 Planning; `Inventory Setup ori` field 25 Planning.
+  Values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory and fields 21-24 remain.
+  New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+  Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
 
 ## Test object IDs (unchanged by the renumbering)
 
