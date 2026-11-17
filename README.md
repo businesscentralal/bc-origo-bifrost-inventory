@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 72 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 76 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -47,6 +47,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.TransferOrder.Create` | Inbound | Create a transfer order |
 | `Inventory.TransferOrder.Release` | Inbound | Release a transfer order |
 | `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
+| `Inventory.TransferOrder.Ship` | Inbound | Ship specified `qtyToShip` values on selected transfer lines; returns `postedShipmentNo` |
+| `Inventory.TransferOrder.Receive` | Inbound | Receive specified `qtyToReceive` values on selected transfer lines; returns `postedReceiptNo` |
 | `Inventory.TransferOrder.Post` | Inbound | Post a transfer order (Ship or Receive). A Receive that completes the order returns Success with `postedReceiptNo` and `orderDeleted: true` |
 | `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
 | `Inventory.TransferOrder.Statistics` | Inbound | Read transfer order statistics |
@@ -159,7 +161,7 @@ own them.
 | Field restrictions | `Inventory Cost Data Guard ori` (10076838) | Subscribes to `OnAfterIsFieldWriteRestrictedForDataRecords` and closes Item Unit Cost, Standard Cost, Last Direct Cost and Unit Price to `Data.Records.Set`; the refusal names `Inventory.Cost.Update` or `Inventory.Price.Update`. |
 | Write process | `Inventory Write Process ori` (10076842) | One `Codeunit.Run` boundary for the journal, card-cost, price and reservation writes, so a native error rolls the whole write back. |
 
-Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
+Types that need the posting permission: `Inventory.TransferOrder.Ship`, `Inventory.TransferOrder.Receive`, `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`,
 `Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post` and `Inventory.Revaluation.PreviewPost`.
@@ -272,7 +274,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076835 | `Inventory Domain ori` | The seventeen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
-| 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
+| 10076837 | `MsgType.EnumExt ori` | 36 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
 | 10076995 | `MsgType.SKU.EnumExt ori` | `Inventory.SKU.Create`, `Inventory.SKU.Get` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
@@ -324,6 +326,12 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
+| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
+| 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
+| 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |
+| 10077023 | `Partial Transfer Process ori` | Atomic native posting |
+| 10077024 | `Partial Transfer Contract ori` | English and Icelandic partial-transfer contracts |
+| 10077025 | `Transfer Posting Setup ori` | BC 28/29 direct-transfer setup compatibility |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
