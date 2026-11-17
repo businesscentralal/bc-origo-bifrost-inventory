@@ -284,9 +284,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(61, CheckedCount - ItemJournalNames.Count(), 'This app registers 61 Inventory types.');
+        LibraryAssert.AreEqual(64, CheckedCount - ItemJournalNames.Count(), 'This app registers 64 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(61, AppTypes.Count(), 'The registered Inventory type list for this app has 61 names.');
+        LibraryAssert.AreEqual(64, AppTypes.Count(), 'The registered Inventory type list for this app has 64 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -400,6 +400,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AppRegisteredInventoryTypes() Types: List of [Text]
     begin
+        Types.Add('Inventory.PhysInventoryOrder.Create');
+        Types.Add('Inventory.PhysInventoryOrder.Finish');
+        Types.Add('Inventory.PhysInventoryOrder.Post');
+
         Types.Add('Inventory.ItemSubstitution.Get');
         Types.Add('Inventory.Cost.Update');
         Types.Add('Inventory.Revaluation.Post');
@@ -713,7 +717,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertComposedResponse(Contract, Parts.GetResponse(Legacy));
+        AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -724,24 +728,49 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
     end;
 
-    local procedure AssertComposedResponse(Contract: JsonObject; Expected: JsonObject)
+    local procedure AssertComposedAttributeResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        FoundationInfo: ModuleInfo;
-        Fields: JsonArray;
+        Implementation: Interface "Msg Contract ori";
+        Info: ModuleInfo;
+        RawResponse: JsonObject;
+        RawContract: JsonObject;
         Token: JsonToken;
+        Fields: JsonArray;
     begin
-        // Foundation 28.0.13 adds the common error-code field; earlier releases preserve app fields.
-        // Assert the complete version-specific response instead of accepting either shape.
-        if not NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', FoundationInfo) then
-            Error('Bifrost Foundation is not installed.');
-        if FoundationInfo.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+        // The implementation must still match the legacy payload exactly.
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        LibraryAssert.IsTrue(Implementation.GetResponse(RawResponse), 'Raw attribute response exists.');
+        RawContract.Add('response', RawResponse);
+        AssertChapterJson(RawContract, 'response', Expected.AsToken());
+        // Foundation 28.0.13 may add its shared error code to the composed response.
+        // Expect that field only when this Foundation build actually composed it in.
+        LibraryAssert.IsTrue(NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info), 'Foundation is installed.');
+        if (Info.AppVersion >= Version.Create(28, 0, 13, 0)) and ComposedResponseDeclaresCode(Contract) then begin
             Expected.Get('fields', Token);
             Fields := Token.AsArray();
-            Fields.Add(ContractMgt.ResponseField('code', 'string',
-                'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+            Fields.Add(ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+            Expected.Replace('fields', Fields);
         end;
         AssertChapterJson(Contract, 'response', Expected.AsToken());
+    end;
+
+    local procedure ComposedResponseDeclaresCode(Contract: JsonObject): Boolean
+    var
+        Response: JsonToken;
+        Fields: JsonToken;
+        Field: JsonToken;
+        Name: JsonToken;
+    begin
+        if not Contract.Get('response', Response) then
+            exit(false);
+        if not Response.AsObject().Get('fields', Fields) then
+            exit(false);
+        foreach Field in Fields.AsArray() do
+            if Field.AsObject().Get('name', Name) then
+                if Name.AsValue().AsText() = 'code' then
+                    exit(true);
+        exit(false);
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
