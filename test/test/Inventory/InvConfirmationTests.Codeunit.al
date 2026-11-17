@@ -234,7 +234,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Clear(Request);
         Request.Add('journalTemplateName', Batch."Journal Template Name");
         Request.Add('journalBatchName', Batch.Name);
-        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", Batch."Journal Template Name" + '|' + Batch.Name, Request, Response);
         Item.SetRange("Location Filter", Location.Code);
         Item.CalcFields(Inventory);
         Assert.AreEqual(2, Item.Inventory, 'Confirmed native reclassification moves the owned stock.');
@@ -390,7 +390,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
-                            // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
+                            // [WHEN] Dispatch a named target without confirmation; Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
                             if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
@@ -471,8 +471,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        // The current Foundation preview counts a named subject; an empty request names no record.
-        Response := DispatchWithSubject(MessageType, 'X-INV-CONFIRM-TEST', Request);
+        // A named target is required: Foundation #1278 sends an unnamed request to normal validation.
+        // Disabled domains guarantee this sentinel never creates, posts or undoes business data.
+        Response := DispatchWithSubject(MessageType, 'XCONFIRM-BOUNDARY', Request);
         AssertText(Response, 'status', 'Error');
     end;
 
