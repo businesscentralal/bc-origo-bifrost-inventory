@@ -29,3 +29,22 @@ Adjust Cost Run Impl ori (10076858) and Cost To GL Post Impl ori (10076861) decl
 The error declarations distinguish the report Run=false response from raised report/conversion errors and Foundation's scheduled-task failure handler. Synchronous dispatch and direct invocation do not themselves establish that scheduled response mapping. Runtime conversion, posting and failure-handler evidence remains pending.
 
 Inventory Contract Batch Tests (96921) contains six costing metadata regressions for typed defaults, filter preconditions, error declarations, report options and reused interface outputs. They have not run: the app still fails compilation, so this draft supplies no runtime, permission or financial execution proof.
+
+## Inventory.ItemSubstitution.Get
+
+```json
+{"type":"Inventory.ItemSubstitution.Get","data":{"itemNo":"1000","variantCode":"RED"}}
+```
+
+Reads direct Item Substitution (5715) records for an existing item and its exact source variant. Omitted or empty `variantCode` selects only the blank variant. Returns `status`, `itemNo`, `variantCode` and `substitutes` (an empty array is a successful result).
+
+| Parameter | Required | Meaning |
+|---|---|---|
+| `itemNo` | Yes | Existing item number, at most 20 characters. |
+| `variantCode` | No | Existing source variant, at most 10 characters; blank selects the blank variant. |
+
+Each substitute includes `substituteType` (`item` or `nonstockItem`), `substituteNo`, `substituteVariantCode`, `description`, `interchangeable`, `inventory` and `inventoryKnown`. Inventory is current on-hand quantity in base units for the exact substitute variant across all locations. It does not deduct reservations or include future supply, and is not a delivery promise. Catalog substitutes have `inventoryKnown=false` and `inventory=0`.
+
+The effect is `read`. No item is created, cached quantity updated, or reciprocal/recursive relationship inferred. Enable **Item Substitution** on **Inventory Setup**; the setup guide displays the switch without changing it. Read access is required for Inventory Setup, Item Substitution, Item, Item Variant and Item Ledger Entry.
+
+Unknown items and variants return `RecordNotFound`. Missing, wrongly typed, overlong or unknown parameters return `MissingParameter`, `InvalidParameterFormat`, `InvalidParameter` or `UnknownParameter`. Disabled domains and missing read permissions return `InvalidParameter` and `PermissionDenied`. Every refusal includes a translated `nextStep`. Use `Help.MessageType` for the complete contract; Foundation returns public help chapters in English for either LCID. App help labels and refusal guidance have is-IS translations. Use `Inventory.AvailabilityByPeriod.Get` for projected availability by period.
