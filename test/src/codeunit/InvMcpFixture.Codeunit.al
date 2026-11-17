@@ -653,7 +653,11 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 ValueEntry.DeleteAll();
                 Ledger.DeleteAll();
                 // Native source/tracking cleanup can update the item; delete the current record version.
+                Clear(Item);
                 Item.Get(ItemNo);
+                // All owned ledger data is gone; native deletion must not adjust the removed test entries.
+                Item."Cost is Adjusted" := true;
+                Item.Modify();
                 Item.Delete(true);
                 if (TrackingCodeName <> '') and TrackingCode.Get(TrackingCodeName) then
                     TrackingCode.Delete(true);
