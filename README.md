@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 66 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 67 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -24,11 +24,13 @@ and `Data.Records.Set`.
 
 ### Message types
 
-The active roster is implemented by the `Message Type ori` enum extensions under `app/src/Message Type/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
+The active roster is implemented by the `Message Type ori` enum extensions under `app/src/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
 and `Help.Implementation.Get` return the same list and each type's contract at runtime.
 
 | Type | Direction | Purpose |
 |------|-----------|---------|
+| `Purchase.Requisition.Calculate` | Inbound | Calculate a bounded native requisition worksheet plan (report 699) |
+| `Purchase.Requisition.CarryOut` | Inbound | Consume selected new suggestions to create purchase or transfer orders |
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemSubstitution.Get` | Outbound | Read direct item substitutes and exact-variant on-hand inventory |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
@@ -447,6 +449,34 @@ the deployed help contract before sending confirmation controls to that version.
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
 
+### Requisition worksheet planning (#131)
+
+`Purchase.Requisition.Calculate` accepts `templateName`, `batchName`, ISO `startingDate` and
+`endingDate`, plus optional native `itemFilter`, `locationFilter` and `variantFilter`. It returns
+`lines` (lineNo, itemNo, quantity, vendorNo, locationCode, variantCode, dueDate, actionMessage,
+replenishmentSystem) and `noOfLines`. Matching lines are replaced only in that worksheet;
+other worksheets are preserved. Templates must be non-recurring Requisition templates without
+automatic batch renaming. Unknown worksheets return `RecordNotFound`.
+
+`Purchase.Requisition.CarryOut` accepts the same worksheet selector and optional `lineNos`
+(a nonempty array of up to 500 distinct positive existing line numbers). Omission selects every
+line, including unaccepted suggestions; a successful call accepts and consumes the selection.
+It returns `linesCarriedOut`, `purchaseOrders` and `transferOrders`, each order as `{ "orderNo": "…" }`.
+Every selected line is validated before writes. Only positive item suggestions with New or blank
+action and Purchase or Transfer replenishment are accepted. Existing-document references,
+drop shipments, special orders, Cancel, Change Qty. and rescheduling are refused. Unselected
+lines remain. Native failures return `BusinessCentralError` and roll back the whole call.
+
+Calculate is `write`; CarryOut is `irreversible`, without posting or printing. `expectedCount`
+confirms **one worksheet selection**, always 1, rather than lines or created orders. The types
+require Full Access plus native worksheet/order permissions. No additional setup domain switch
+or posting permission is introduced because order creation does not post. Native report 699 is
+the purchase/transfer requisition mode; #117 owns the separate regenerative/net-change planning
+reports. Both facades can reuse the internal worksheet and native event helpers added here.
+
+New objects: codeunits 10076941 Calculate, 10076942 CarryOut, 10076943 atomic process,
+10076944 worksheet validation/serialization, 10076945 scoped native subscribers;
+enum extension 10076849; tests 96947.
 ### Price-list objects (#135)
 
 | IDs | Kind | Objects |

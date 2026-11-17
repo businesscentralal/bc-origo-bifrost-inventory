@@ -29,6 +29,12 @@
 - `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
 - `Inventory.Reservation.Create` and the by-line `Inventory.Reservation.Cancel` refuse a sales line whose outstanding quantity is 0 with `PreconditionFailed`.
 - No new objects: codeunits 10076842, 10076892, 10076893 and 10076894 and test codeunit 96946 (7 new tests) change.
+### Added — bounded requisition worksheets (#131)
+
+- `Purchase.Requisition.Calculate` runs native report 699 with worksheet, item/location/variant filters and dates, replacing working lines only within the selected worksheet. `Purchase.Requisition.CarryOut` creates native purchase or transfer orders from all lines or an explicit selection and returns the actual order numbers.
+- Implements Gunnar’s 16 November option A: reject Cancel, changes, rescheduling and existing-document links before any write; no printing, posting or existing-order edits. Calculate declares `write`; CarryOut declares `irreversible`, with bilingual help defining expectedCount as one worksheet selection. Native intermediate commits are suppressed and failures roll back.
+- Added codeunits **10076941–10076945**, enum extension **10076849** (message values **10076941–10076942**), test codeunit **96947**; Full Access execute permissions and synchronized Icelandic XLF. Shared worksheet validation/serialization and the native event boundary are available for coordinated #117; its planning reports and API remain a separate implementation.
+
 ### Added (2026-11-16) - native physical inventory orders (#113)
 
 - `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.

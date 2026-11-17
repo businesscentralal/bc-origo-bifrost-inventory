@@ -6927,6 +6927,126 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method PreviewEntries - NamedType NextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1101326463 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculates a native requisition plan in one worksheet.</source>
+          <target>Reiknar innkaupaáætlun í einu vinnublaði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar innkaupaáætlun í einu vinnublaði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1101326463 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>purchase,requisition,worksheet,planning,orders</source>
+          <target>innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1101326463 - NamedType 2612954968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the native worksheet or item setup described by the error and retry; the failed call saved no changes.</source>
+          <target>Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType NativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1101326463 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculates a requisition plan with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.</source>
+          <target>Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1101326463 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use templateName and batchName to select one non-recurring requisition worksheet.</source>
+          <target>Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new orders from selected requisition worksheet lines.</source>
+          <target>Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>purchase,requisition,worksheet,planning,orders</source>
+          <target>innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 2612954968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the native worksheet or item setup described by the error and retry; the failed call saved no changes.</source>
+          <target>Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount is always 1: the single worksheet selection, not the number of lines or orders. No printing or posting.</source>
+          <target>Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount er alltaf 1: eitt val úr vinnublaði, ekki fjöldi lína eða pantana. Hvorki prentar né bókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount er alltaf 1: eitt val úr vinnublaði, ekki fjöldi lína eða pantana. Hvorki prentar né bókar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use templateName and batchName to select one non-recurring requisition worksheet.</source>
+          <target>Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected worksheet has no lines to carry out.</source>
+          <target>Valið vinnublað hefur engar línur til framkvæmda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valið vinnublað hefur engar línur til framkvæmda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 3130753388" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculate the worksheet or select existing suggestions before carrying out.</source>
+          <target>Reiknaðu vinnublaðið eða veldu fyrirliggjandi tillögur áður en þær eru framkvæmdar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknaðu vinnublaðið eða veldu fyrirliggjandi tillögur áður en þær eru framkvæmdar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType EmptyNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 3177803720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The requisition request is invalid.</source>
+          <target>Innkaupabeiðnin er ógild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupabeiðnin er ógild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType InvalidErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 780995952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named parameter using the message help and retry.</source>
+          <target>Leiðréttu tilgreinda færibreytu samkvæmt hjálp skilaboðanna og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda færibreytu samkvæmt hjálp skilaboðanna og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType InvalidNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected worksheet or line does not exist.</source>
+          <target>Valið vinnublað eða lína er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valið vinnublað eða lína er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an existing requisition worksheet and existing line numbers.</source>
+          <target>Veldu fyrirliggjandi innkaupavinnublað og línunúmer sem eru til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu fyrirliggjandi innkaupavinnublað og línunúmer sem eru til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission to write requisition lines and new order documents is required.</source>
+          <target>Heimild til að skrifa innkaupalínur og ný pöntunarskjöl er nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild til að skrifa innkaupalínur og ný pöntunarskjöl er nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for the native worksheet and order permissions required by this operation.</source>
+          <target>Biddu kerfisstjóra um heimildir fyrir vinnublað og pantanir sem aðgerðin krefst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um heimildir fyrir vinnublað og pantanir sem aðgerðin krefst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 61589673" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selection contains a line that cannot create a new order safely.</source>
+          <target>Valið inniheldur línu sem getur ekki stofnað nýja pöntun á öruggan hátt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valið inniheldur línu sem getur ekki stofnað nýja pöntun á öruggan hátt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType UnsafeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1789494434 - NamedType 2842031969" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select only new purchase or transfer suggestions without existing document links, drop shipments or special orders. Cancel and change actions are refused.</source>
+          <target>Veldu aðeins tillögur að nýjum innkaupa- eða millifærslupöntunum án tenginga við fyrirliggjandi skjöl, beinna sendinga eða sérpantana. Afturköllun og breytingaraðgerðum er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu aðeins tillögur að nýjum innkaupa- eða millifærslupöntunum án tenginga við fyrirliggjandi skjöl, beinna sendinga eða sérpantana. Afturköllun og breytingaraðgerðum er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Worksheet ori - NamedType UnsafeNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
           <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
