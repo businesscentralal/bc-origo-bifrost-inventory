@@ -111,6 +111,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Aðallykill</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Primary Key - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 574026158 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Returns</source>
+          <target>Innkaupaskil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Purchase Returns - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 2190767219 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reclassification</source>
           <target>Endurflokkun</target>
@@ -6159,6 +6165,612 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Price Update Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Purchase Returns domain is turned off for this company.</source>
+          <target>Innkaupaskilasviðið er óvirkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskilasviðið er óvirkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to turn Purchase Returns on from the Inventory Setup page.</source>
+          <target>Biddu kerfisstjóra að kveikja á innkaupaskilum á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra að kveikja á innkaupaskilum á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3654615993 - NamedType 3816881144" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted line was not copied onto the purchase document.</source>
+          <target>Bókaða línan var ekki afrituð á innkaupaskjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaða línan var ekki afrituð á innkaupaskjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method CollectCopiedLines - NamedType NothingCopiedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3654615993 - NamedType 3529261777" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted line was copied as several item lines, so a partial quantity cannot be stored.</source>
+          <target>Bókaða línan var afrituð sem nokkrar vörulínur, svo ekki er hægt að vista hlutamagn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaða línan var afrituð sem nokkrar vörulínur, svo ekki er hægt að vista hlutamagn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method CollectCopiedLines - NamedType SplitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2979007805 - NamedType 1132247979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omit vendorNo, or send the buy-from vendor of that document.</source>
+          <target>Slepptu vendorNo, eða sendu lánardrottin sem keypt er frá á því skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptu vendorNo, eða sendu lánardrottin sem keypt er frá á því skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ConflictNextStep - NamedType ConflictNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1725091897 - NamedType 3135774173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted line could not be copied onto the purchase document.</source>
+          <target>Ekki tókst að afrita bókuðu línuna á innkaupaskjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki tókst að afrita bókuðu línuna á innkaupaskjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method CopyOneLine - NamedType CopyFailedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1222853438 - NamedType 2964244836" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the document type and number, or omit documentNo to create a new document.</source>
+          <target>Athugaðu tegund og númer skjalsins, eða slepptu documentNo til að stofna nýtt skjal.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu tegund og númer skjalsins, eða slepptu documentNo til að stofna nýtt skjal.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method DocumentNextStep - NamedType DocumentNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a purchase return order or credit memo from posted receipt or invoice lines.</source>
+          <target>Býr til innkaupaskilapöntun eða kreditreikning úr bókuðum vörumóttökum eða reikningslínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til innkaupaskilapöntun eða kreditreikning úr bókuðum vörumóttökum eða reikningslínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an open purchase return order or credit memo, or adds lines to an existing open one, and copies the selected posted item lines onto it. Each new item line applies back to the original item entry. A smaller quantity is stored when the posted line applies to one item entry. Nothing is posted, and a refusal saves nothing.</source>
+          <target>Stofnar opna innkaupaskilapöntun eða kreditreikning, eða bætir línum á opið skjal sem er til, og afritar valdar bókaðar vörulínur á það. Hver ný vörulína tengist aftur við upphaflegu vörufærsluna. Minna magn er vistað þegar bókaða línan tengist einni vörufærslu. Ekkert er bókað og höfnun vistar ekkert.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar opna innkaupaskilapöntun eða kreditreikning, eða bætir línum á opið skjal sem er til, og afritar valdar bókaðar vörulínur á það. Hver ný vörulína tengist aftur við upphaflegu vörufærsluna. Minna magn er vistað þegar bókaða línan tengist einni vörufærslu. Ekkert er bókað og höfnun vistar ekkert.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType or lines is missing, a line has no sourceType, documentNo, lineNo or quantity, or a new document has no vendorNo.</source>
+          <target>documentType eða lines vantar, línu vantar sourceType, documentNo, lineNo eða quantity, eða nýju skjali vantar vendorNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType eða lines vantar, línu vantar sourceType, documentNo, lineNo eða quantity, eða nýju skjali vantar vendorNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType, lines, and vendorNo when you are creating a document. Each line needs sourceType, documentNo, lineNo and quantity.</source>
+          <target>Sendu documentType, lines og vendorNo þegar þú stofnar skjal. Hver lína þarf sourceType, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType, lines og vendorNo þegar þú stofnar skjal. Hver lína þarf sourceType, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType, documentNo, vendorNo and sourceType as text, lineNo as a whole number, quantity as a number, and lines as an array of objects.</source>
+          <target>Sendu documentType, documentNo, vendorNo og sourceType sem texta, lineNo sem heiltölu, quantity sem tölu og lines sem fylki af hlutum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType, documentNo, vendorNo og sourceType sem texta, lineNo sem heiltölu, quantity sem tölu og lines sem fylki af hlutum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request or a line contains a key this type does not read.</source>
+          <target>Beiðnin eða lína inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin eða lína inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo, vendorNo and lines. Each line allows sourceType, documentNo, lineNo and quantity.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, vendorNo og lines. Hver lína leyfir sourceType, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, vendorNo og lines. Hver lína leyfir sourceType, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The vendor, the purchase document, or the posted receipt or invoice line does not exist.</source>
+          <target>Lánardrottinn, innkaupaskjalið eða bókaða vörumóttöku- eða reikningslínan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lánardrottinn, innkaupaskjalið eða bókaða vörumóttöku- eða reikningslínan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the vendor number, the document number, and the posted document number and line number.</source>
+          <target>Athugaðu númer lánardrottins, númer skjalsins og númer og línunúmer bókaða skjalsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númer lánardrottins, númer skjalsins og númer og línunúmer bókaða skjalsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>vendorNo was sent with documentNo and it is not the buy-from vendor of that document.</source>
+          <target>vendorNo var sent með documentNo og er ekki lánardrottinn sem keypt er frá á því skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vendorNo var sent með documentNo og er ekki lánardrottinn sem keypt er frá á því skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omit vendorNo, or send the buy-from vendor of that document.</source>
+          <target>Slepptu vendorNo, eða sendu lánardrottin sem keypt er frá á því skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptu vendorNo, eða sendu lánardrottin sem keypt er frá á því skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType is not ReturnOrder or CreditMemo, sourceType is not Receipt or Invoice, lineNo is not a positive whole number, or the Purchase Returns domain is turned off.</source>
+          <target>documentType er ekki ReturnOrder eða CreditMemo, sourceType er ekki Receipt eða Invoice, lineNo er ekki jákvæð heiltala, eða innkaupaskilasviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType er ekki ReturnOrder eða CreditMemo, sourceType er ekki Receipt eða Invoice, lineNo er ekki jákvæð heiltala, eða innkaupaskilasviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send ReturnOrder or CreditMemo, Receipt or Invoice, and a positive line number, or turn Purchase Returns on from the Inventory Setup page.</source>
+          <target>Sendu ReturnOrder eða CreditMemo, Receipt eða Invoice og jákvætt línunúmer, eða kveiktu á innkaupaskilum á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu ReturnOrder eða CreditMemo, Receipt eða Invoice og jákvætt línunúmer, eða kveiktu á innkaupaskilum á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3617665636" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The quantity is not greater than zero, is above the quantity left to reverse, the posted line is not an item line, it belongs to another vendor, the same posted line is sent twice, or a partial quantity was asked for a line that is split across several item entries.</source>
+          <target>Magnið er ekki stærra en núll, er yfir magninu sem eftir er að bakfæra, bókaða línan er ekki vörulína, hún tilheyrir öðrum lánardrottni, sama bókaða línan er send tvisvar, eða beðið var um hlutamagn af línu sem skiptist á fleiri en eina vörufærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magnið er ekki stærra en núll, er yfir magninu sem eftir er að bakfæra, bókaða línan er ekki vörulína, hún tilheyrir öðrum lánardrottni, sama bókaða línan er send tvisvar, eða beðið var um hlutamagn af línu sem skiptist á fleiri en eina vörufærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType LineWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 1852780629" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a quantity greater than zero and at most the quantity still left to reverse, from an item line of the same vendor. Send the full remaining quantity when the line is split across several item entries.</source>
+          <target>Sendu magn sem er stærra en núll og mest það magn sem enn er eftir að bakfæra, af vörulínu sama lánardrottins. Sendu allt magnið sem eftir er þegar línan skiptist á fleiri en eina vörufærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu magn sem er stærra en núll og mest það magn sem enn er eftir að bakfæra, af vörulínu sama lánardrottins. Sendu allt magnið sem eftir er þegar línan skiptist á fleiri en eina vörufærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType LineFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 2601404958" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The purchase document named by documentNo is not open.</source>
+          <target>Innkaupaskjalið sem documentNo nefnir er ekki opið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskjalið sem documentNo nefnir er ekki opið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType OpenWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 4064397883" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the purchase document, or omit documentNo to create a new one.</source>
+          <target>Opnaðu innkaupaskjalið aftur, eða slepptu documentNo til að stofna nýtt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu innkaupaskjalið aftur, eða slepptu documentNo til að stofna nýtt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType OpenFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 1041621829" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lines contains more than 200 entries.</source>
+          <target>lines inniheldur fleiri en 200 færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lines inniheldur fleiri en 200 færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType LimitWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 1813551948" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send at most 200 posted lines in one call.</source>
+          <target>Sendu mest 200 bókaðar línur í einu kalli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu mest 200 bókaðar línur í einu kalli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType LimitFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot create purchase documents or read posted purchase lines.</source>
+          <target>Kallandinn getur ekki stofnað innkaupaskjöl eða lesið bókaðar innkaupalínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki stofnað innkaupaskjöl eða lesið bókaðar innkaupalínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the copy itself, after the request was checked. Nothing is saved.</source>
+          <target>Business Central hafnar afrituninni sjálfri eftir að beiðnin var könnuð. Ekkert er vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar afrituninni sjálfri eftir að beiðnin var könnuð. Ekkert er vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the purchase document or the posted line, and send the call again.</source>
+          <target>Lestu villutextann, leiðréttu innkaupaskjalið eða bókuðu línuna og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, leiðréttu innkaupaskjalið eða bókuðu línuna og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a return order from a posted receipt line</source>
+          <target>Stofna skilapöntun úr bókaðri vörumóttökulínu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna skilapöntun úr bókaðri vörumóttökulínu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>purchase return, vendor return, credit memo, reverse receipt, reverse invoice</source>
+          <target>innkaupaskil, skil til lánardrottins, kreditreikningur, bakfæra vörumóttöku, bakfæra reikning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=innkaupaskil, skil til lánardrottins, kreditreikningur, bakfæra vörumóttöku, bakfæra reikning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A successful call saves an open purchase return order or credit memo and the copied item lines. A refusal leaves every purchase document unchanged. The call does not post, does not delete a posted document and does not undo the receipt or the invoice. Calling it again for the same posted line can create another open document, because an unposted return does not reduce the quantity left to reverse. Post the return later from the purchase document. The caller needs permission to create purchase documents and to read posted purchase receipts, invoices and item entries.</source>
+          <target>Kall sem tekst vistar opna innkaupaskilapöntun eða kreditreikning og afrituðu vörulínurnar. Höfnun skilur öll innkaupaskjöl eftir óbreytt. Kallið bókar ekki, eyðir ekki bókuðu skjali og bakfærir ekki vörumóttökuna eða reikninginn. Að kalla aftur fyrir sömu bókuðu línu getur stofnað annað opið skjal, því óbókað skil minnkar ekki magnið sem eftir er að bakfæra. Bókaðu skilið síðar af innkaupaskjalinu. Kallandinn þarf heimild til að stofna innkaupaskjöl og til að lesa bókaðar vörumóttökur, reikninga og vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar opna innkaupaskilapöntun eða kreditreikning og afrituðu vörulínurnar. Höfnun skilur öll innkaupaskjöl eftir óbreytt. Kallið bókar ekki, eyðir ekki bókuðu skjali og bakfærir ekki vörumóttökuna eða reikninginn. Að kalla aftur fyrir sömu bókuðu línu getur stofnað annað opið skjal, því óbókað skil minnkar ekki magnið sem eftir er að bakfæra. Bókaðu skilið síðar af innkaupaskjalinu. Kallandinn þarf heimild til að stofna innkaupaskjöl og til að lesa bókaðar vörumóttökur, reikninga og vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an open purchase return order or credit memo, or adds lines to an existing open one, from posted purchase receipt or invoice item lines. The quantity has to be greater than zero and no higher than the quantity still left to reverse. The new lines apply back to the original item entries. A partial quantity is stored when the posted line applies to one item entry. Nothing is posted. The answer is the document number and the copied item lines.</source>
+          <target>Stofnar opna innkaupaskilapöntun eða kreditreikning, eða bætir línum á opið skjal sem er til, úr bókuðum vörulínum vörumóttöku eða reiknings. Magnið verður að vera stærra en núll og ekki hærra en magnið sem enn er eftir að bakfæra. Nýju línurnar tengjast aftur við upphaflegu vörufærslurnar. Hlutamagn er vistað þegar bókaða línan tengist einni vörufærslu. Ekkert er bókað. Svarið er númer skjalsins og afrituðu vörulínurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar opna innkaupaskilapöntun eða kreditreikning, eða bætir línum á opið skjal sem er til, úr bókuðum vörulínum vörumóttöku eða reiknings. Magnið verður að vera stærra en núll og ekki hærra en magnið sem enn er eftir að bakfæra. Nýju línurnar tengjast aftur við upphaflegu vörufærslurnar. Hlutamagn er vistað þegar bókaða línan tengist einni vörufærslu. Ekkert er bókað. Svarið er númer skjalsins og afrituðu vörulínurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 2636616999" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ReturnOrder creates a purchase return order. CreditMemo creates a purchase credit memo. The same value selects an existing document when documentNo is sent.</source>
+          <target>ReturnOrder stofnar innkaupaskilapöntun. CreditMemo stofnar kreditreikning innkaupa. Sama gildi velur skjal sem er til þegar documentNo er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ReturnOrder stofnar innkaupaskilapöntun. CreditMemo stofnar kreditreikning innkaupa. Sama gildi velur skjal sem er til þegar documentNo er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType DocumentTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of an existing open purchase return order or credit memo. Omit it to create a new document for vendorNo.</source>
+          <target>Númer opinna innkaupaskilapöntunar eða kreditreiknings sem er til. Slepptu því til að stofna nýtt skjal fyrir vendorNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opinna innkaupaskilapöntunar eða kreditreiknings sem er til. Slepptu því til að stofna nýtt skjal fyrir vendorNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 2193582545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Buy-from vendor number. Required when documentNo is omitted. When documentNo is sent it must match that document, or be omitted.</source>
+          <target>Númer lánardrottins sem keypt er frá. Áskilið þegar documentNo er sleppt. Þegar documentNo er sent verður það að passa við skjalið, eða vera sleppt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer lánardrottins sem keypt er frá. Áskilið þegar documentNo er sleppt. Þegar documentNo er sent verður það að passa við skjalið, eða vera sleppt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType VendorNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 3616618409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted item lines to copy. At most 200. Each entry names a receipt or invoice line and the quantity to reverse, in the unit of measure of that posted line.</source>
+          <target>Bókaðar vörulínur sem á að afrita. Mest 200. Hver færsla nefnir vörumóttöku- eða reikningslínu og magnið sem á að bakfæra, í mælieiningu þeirrar bókuðu línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaðar vörulínur sem á að afrita. Mest 200. Hver færsla nefnir vörumóttöku- eða reikningslínu og magnið sem á að bakfæra, í mælieiningu þeirrar bókuðu línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType LinesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receipt or Invoice.</source>
+          <target>Receipt eða Invoice.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Receipt eða Invoice.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 3238020532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted receipt number or posted invoice number.</source>
+          <target>Númer bókaðrar vörumóttöku eða bókaðs reiknings.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer bókaðrar vörumóttöku eða bókaðs reiknings.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType SourceDocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 3265441107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line number on that posted document.</source>
+          <target>Línunúmer á því bókaða skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer á því bókaða skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType SourceLineLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3615801952 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity to reverse, greater than zero and at most the quantity still left on the posted item line. A partial quantity is accepted when the line applies to one item entry. Send the full remaining quantity when the line is split across several item entries.</source>
+          <target>Magn sem á að bakfæra, stærra en núll og mest það magn sem enn er eftir á bókuðu vörulínunni. Hlutamagn er leyft þegar línan tengist einni vörufærslu. Sendu allt magnið sem eftir er þegar línan skiptist á fleiri en eina vörufærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn sem á að bakfæra, stærra en núll og mest það magn sem enn er eftir á bókuðu vörulínunni. Hlutamagn er leyft þegar línan tengist einni vörufærslu. Sendu allt magnið sem eftir er þegar línan skiptist á fleiri en eina vörufærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetParameters - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1033708611 - NamedType 1494598140" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read how the received quantity is applied before choosing the quantity to reverse.</source>
+          <target>Lesa hvernig móttekið magn er jafnað áður en magnið sem á að bakfæra er valið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa hvernig móttekið magn er jafnað áður en magnið sem á að bakfæra er valið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetRelated - NamedType ApplicationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an open purchase return order or credit memo and copies the selected posted lines onto it with the remaining quantity applied back to the original item entries. Nothing is posted.</source>
+          <target>Býr til opna innkaupaskilapöntun eða kreditreikning og afritar valdar bókaðar línur á hann með magni sem eftir er tengt aftur við upphaflegu vörufærslurnar. Ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til opna innkaupaskilapöntun eða kreditreikning og afritar valdar bókaðar línur á hann með magni sem eftir er tengt aftur við upphaflegu vörufærslurnar. Ekkert er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3897248833 - NamedType 1485212386" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor of a new return order or credit memo. Required when documentNo is omitted.</source>
+          <target>Lánardrottinn á nýrri skilapöntun eða kreditreikningi. Áskilið þegar documentNo er sleppt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lánardrottinn á nýrri skilapöntun eða kreditreikningi. Áskilið þegar documentNo er sleppt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetTarget - NamedType VendorLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3897248833 - NamedType 4058751071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of an existing open purchase return order or credit memo. Omit it to create a new document.</source>
+          <target>Númer opinna innkaupaskilapöntunar eða kreditreiknings sem er til. Slepptu því til að stofna nýtt skjal.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opinna innkaupaskilapöntunar eða kreditreiknings sem er til. Slepptu því til að stofna nýtt skjal.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetTarget - NamedType DocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3502481479 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the item application of the received entry when you need to see what is still left.</source>
+          <target>Lesa vörujöfnun mótteknu færslunnar þegar sjá þarf hvað er enn eftir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa vörujöfnun mótteknu færslunnar þegar sjá þarf hvað er enn eftir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetWorkflow - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3502481479 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the open return order or credit memo and copy the posted lines onto it. Nothing is posted.</source>
+          <target>Stofna opnu skilapöntunina eða kreditreikninginn og afrita bókuðu línurnar á hann. Ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna opnu skilapöntunina eða kreditreikninginn og afrita bókuðu línurnar á hann. Ekkert er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method GetWorkflow - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2174457454 - NamedType 1562329684" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the posted line number as a positive whole number.</source>
+          <target>Sendu línunúmer bókaða skjalsins sem jákvæða heiltölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu línunúmer bókaða skjalsins sem jákvæða heiltölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method LineNoNextStep - NamedType LineNoNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 77833744 - NamedType 1346508330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the purchase document or the posted line, and send the call again. Nothing was saved.</source>
+          <target>Lestu villutextann, leiðréttu innkaupaskjalið eða bókuðu línuna og sendu kallið aftur. Ekkert var vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, leiðréttu innkaupaskjalið eða bókuðu línuna og sendu kallið aftur. Ekkert var vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method NativeNextStep - NamedType NativeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1181781311 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an open purchase return document with the posted lines copied onto it</source>
+          <target>opið innkaupaskilaskjal með bókuðu línunum afrituðum á það</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=opið innkaupaskilaskjal með bókuðu línunum afrituðum á það</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method OpenDocumentExpected - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1083639419 - NamedType 102416125" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the purchase document, or omit documentNo to create a new one.</source>
+          <target>Opnaðu innkaupaskjalið aftur, eða slepptu documentNo til að stofna nýtt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu innkaupaskjalið aftur, eða slepptu documentNo til að stofna nýtt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method OpenNextStep - NamedType OpenNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign Bifrost full access and a Business Central permission set that can create purchase documents and read posted purchase receipts and invoices.</source>
+          <target>Úthlutaðu fullum aðgangi Bifröst og Business Central heimildasafni sem getur stofnað innkaupaskjöl og lesið bókaðar vörumóttökur og reikninga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu fullum aðgangi Bifröst og Business Central heimildasafni sem getur stofnað innkaupaskjöl og lesið bókaðar vörumóttökur og reikninga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1066166438 - NamedType 3907769356" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the posted document number and line number.</source>
+          <target>Athugaðu númer og línunúmer bókaða skjalsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númer og línunúmer bókaða skjalsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method PostedLineNextStep - NamedType PostedLineNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1259842522 - NamedType 2759986912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a quantity greater than zero and at most the quantity that is still left to reverse on that posted line.</source>
+          <target>Sendu magn sem er stærra en núll og mest það magn sem enn er eftir að bakfæra á þeirri bókuðu línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu magn sem er stærra en núll og mest það magn sem enn er eftir að bakfæra á þeirri bókuðu línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method QuantityNextStep - NamedType QuantityNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo, vendorNo and lines.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, vendorNo og lines.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, vendorNo og lines.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3978078080 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be an array.</source>
+          <target>%1 verður að vera fylki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireArray - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3978078080 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as an array of objects.</source>
+          <target>Sendu %1 sem fylki af hlutum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem fylki af hlutum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireArray - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 404762370 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a number.</source>
+          <target>%1 verður að vera tala.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireDecimal - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 404762370 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a number.</source>
+          <target>Sendu %1 sem tölu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem tölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireDecimal - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3151916237 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a whole number.</source>
+          <target>%1 verður að vera heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireInteger - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 3151916237 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a whole number.</source>
+          <target>Sendu %1 sem heiltölu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem heiltölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireInteger - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2434615052 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method RequireText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1940601004 - NamedType 928911334" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send Receipt or Invoice.</source>
+          <target>Sendu Receipt eða Invoice.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu Receipt eða Invoice.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method SourceTypeNextStep - NamedType SourceTypeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2700772989 - NamedType 1264649167" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Each lines entry must be an object.</source>
+          <target>Hver færsla í lines verður að vera hlutur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hver færsla í lines verður að vera hlutur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateLines - NamedType NotObjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2700772989 - NamedType 1294783609" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send each lines entry as an object with sourceType, documentNo, lineNo and quantity.</source>
+          <target>Sendu hverja færslu í lines sem hlut með sourceType, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu hverja færslu í lines sem hlut með sourceType, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateLines - NamedType NotObjectNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The lines entry contains an unknown key.</source>
+          <target>Færslan í lines inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færslan í lines inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Each line allows sourceType, documentNo, lineNo and quantity.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Hver lína leyfir sourceType, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Hver lína leyfir sourceType, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required on a line.</source>
+          <target>%1 er áskilið á línu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 er áskilið á línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send sourceType, documentNo, lineNo and quantity on every line.</source>
+          <target>Sendu sourceType, documentNo, lineNo og quantity á hverri línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu sourceType, documentNo, lineNo og quantity á hverri línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 3680524780" size-unit="char" translate="yes" xml:space="preserve">
+          <source>sourceType must be Receipt or Invoice.</source>
+          <target>sourceType verður að vera Receipt eða Invoice.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=sourceType verður að vera Receipt eða Invoice.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType SourceTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 1356545731" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receipt or Invoice</source>
+          <target>Receipt eða Invoice</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Receipt eða Invoice</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType SourceTypeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 3074671870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNo must be a positive whole number.</source>
+          <target>lineNo verður að vera jákvæð heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNo verður að vera jákvæð heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType LineNoErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity must be greater than zero.</source>
+          <target>quantity verður að vera stærra en núll.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity verður að vera stærra en núll.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType QuantityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only an item line can be reversed by this call.</source>
+          <target>Aðeins vörulínu er hægt að bakfæra með þessu kalli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins vörulínu er hægt að bakfæra með þessu kalli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType NotItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 2605746843" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted line belongs to another vendor.</source>
+          <target>Bókaða línan tilheyrir öðrum lánardrottni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaða línan tilheyrir öðrum lánardrottni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType VendorErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 1964486966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The quantity is above the quantity left to reverse.</source>
+          <target>Magnið er yfir magninu sem eftir er að bakfæra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magnið er yfir magninu sem eftir er að bakfæra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType AboveErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 624188174" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The same posted line was sent more than once.</source>
+          <target>Sama bókaða línan var send oftar en einu sinni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sama bókaða línan var send oftar en einu sinni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType DuplicateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 3529261777" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This posted line is split across more than one item entry. Send the full remaining quantity.</source>
+          <target>Þessi bókaða lína skiptist á fleiri en eina vörufærslu. Sendu allt magnið sem eftir er.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þessi bókaða lína skiptist á fleiri en eina vörufærslu. Sendu allt magnið sem eftir er.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType SplitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 970724080 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted line does not exist.</source>
+          <target>Bókaða línan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaða línan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateOneLine - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 906389811" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType is required.</source>
+          <target>documentType er áskilið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType er áskilið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 1083877661" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send ReturnOrder or CreditMemo.</source>
+          <target>Sendu ReturnOrder eða CreditMemo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu ReturnOrder eða CreditMemo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingTypeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 856751175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType must be ReturnOrder or CreditMemo.</source>
+          <target>documentType verður að vera ReturnOrder eða CreditMemo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType verður að vera ReturnOrder eða CreditMemo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType TypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 3894911200" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ReturnOrder or CreditMemo</source>
+          <target>ReturnOrder eða CreditMemo</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ReturnOrder eða CreditMemo</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType TypeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 3324403855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>vendorNo is required when documentNo is omitted.</source>
+          <target>vendorNo er áskilið þegar documentNo er sleppt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vendorNo er áskilið þegar documentNo er sleppt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingVendorErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 1514442809" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the buy-from vendor number, or send documentNo of an existing open document.</source>
+          <target>Sendu númer lánardrottins sem keypt er frá, eða sendu documentNo á opnu skjali sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer lánardrottins sem keypt er frá, eða sendu documentNo á opnu skjali sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingVendorNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 827015599" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The vendor does not exist.</source>
+          <target>Lánardrottinn er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lánardrottinn er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType VendorMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 1663943482" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The purchase document does not exist.</source>
+          <target>Innkaupaskjalið er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskjalið er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType DocumentMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 1425329136" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The purchase document is not open.</source>
+          <target>Innkaupaskjalið er ekki opið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskjalið er ekki opið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType NotOpenErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>vendorNo does not match the buy-from vendor of the document.</source>
+          <target>vendorNo passar ekki við lánardrottin sem keypt er frá á skjalinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vendorNo passar ekki við lánardrottin sem keypt er frá á skjalinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 804695256" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lines is required.</source>
+          <target>lines er áskilið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lines er áskilið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingLinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 3471225010" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lines as an array with at least one posted line.</source>
+          <target>Sendu lines sem fylki með að minnsta kosti einni bókaðri línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lines sem fylki með að minnsta kosti einni bókaðri línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType MissingLinesNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 2836870124" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lines contains more than 200 entries.</source>
+          <target>lines inniheldur fleiri en 200 færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lines inniheldur fleiri en 200 færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType LimitErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 1380282473 - NamedType 3414125030" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send at most 200 posted lines in one call.</source>
+          <target>Sendu mest 200 bókaðar línur í einu kalli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu mest 200 bókaðar línur í einu kalli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method ValidateRequest - NamedType LimitNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2658733353 - NamedType 4234391159" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a posted line that belongs to the same vendor as the return document.</source>
+          <target>Sendu bókaða línu sem tilheyrir sama lánardrottni og skilaskjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu bókaða línu sem tilheyrir sama lánardrottni og skilaskjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method VendorLineNextStep - NamedType VendorLineNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3900591428 - Method 2661243107 - NamedType 267659493" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the vendor number.</source>
+          <target>Athugaðu númer lánardrottins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númer lánardrottins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method VendorNextStep - NamedType VendorNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 3571782927 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send templateName and batchName for an existing Transfer journal template.</source>
           <target>Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.</target>
@@ -8649,6 +9261,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort birgðatalningarskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control PhysInventory - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 3677985854 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether purchase return message types are enabled for this company.</source>
+          <target>Tilgreinir hvort skilaboð innkaupaskila séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort skilaboð innkaupaskila séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control PurchaseReturns - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 2190767219 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether reclassification message types are enabled for this company.</source>
           <target>Tilgreinir hvort endurflokkunarskilaboð séu virk fyrir þetta fyrirtæki.</target>
@@ -8900,6 +9518,18 @@
           <target>Birgðatalning</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PhysInventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3677985854 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PurchaseReturns - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 3677985854 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase returns</source>
+          <target>Innkaupaskil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PurchaseReturns - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3550083798 - Control 2190767219 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether this domain is enabled in this company.</source>
@@ -9242,6 +9872,12 @@
           <target>Birgðatalning</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue PhysInventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 3677985854 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Returns</source>
+          <target>Innkaupaskil</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskil</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue PurchaseReturns - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2190767219 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reclassification</source>
