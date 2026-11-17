@@ -30,6 +30,18 @@
 - `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
 - Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
 - Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
+### Fixed (2026-11-17) - Catalogue census after main merges (PR #203)
+
+- Reconciled codeunit 96921's expected census with the merged registrations: 48 scoped localization entries and 71 Inventory message types, including Item.Create from main. The explicit rosters, bidirectional membership checks and English/Icelandic assertions remain intact.
+
+### Added (2026-11-16) - Sales.SalesInvoice.GetShipmentLines (#132)
+
+- New message type `Sales.SalesInvoice.GetShipmentLines` (enum value 10077028 in enum extension 10076900 `MsgType.SalesGetShpt.Ext ori`; codeunits 10077028 `Sales Get Shipment Impl ori` and 10077029 `Sales Get Shipment Proc ori`; renumbered from 10077020-10077021 when merging main, because #118 took codeunit and enum value 10077020 and open PRs claim 10077021-10077027). It pulls posted, not invoiced sales shipment lines into an open sales invoice through native codeunit 64 `Sales-Get Shipment` (`SetSalesHeader`, `CreateInvLines`), the same routine as the Get Shipment Lines action, so remaining-quantity checks, item charge copying and the invoice-to-shipment link stay native.
+- Request: `documentNo` or `systemId` of the open invoice, and `shipmentNos` (array) or `allShipments` (true). A shipment of another bill-to customer or currency is refused with `InvalidLine` and nothing is added; already invoiced lines, and lines already on an open sales invoice, are skipped and listed in `skippedLines` (`invoiced` / `onOpenInvoice`), so sending the same request again adds nothing. Released invoices answer `PreconditionFailed` pointing to `Sales.Document.Reopen`. Every refusal has a Bifröst code and `nextStep`.
+- Effect `write` (not irreversible; nothing is posted and added lines can be deleted), `posts: false`, `idempotent: true` (core#1365 D1). Help, refusals and examples in en-US and is-IS; is-IS.xlf regenerated with `tools/Update-IcelandicXlf.ps1`.
+- Invoice line types and status values use English enum names in both locales, matching the shared response convention.
+- Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
+- `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 

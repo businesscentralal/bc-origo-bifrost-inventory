@@ -11181,6 +11181,366 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for Sales.SalesInvoice.GetShipmentLines.</source>
+          <target>Heimild hafnað fyrir Sales.SalesInvoice.GetShipmentLines.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir Sales.SalesInvoice.GetShipmentLines.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3658467977 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set and a Business Central permission set that can change sales invoices and read posted shipments.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölureikningum og lesið bókaðar afhendingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölureikningum og lesið bókaðar afhendingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method AssertCanRun - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pulls posted, not invoiced sales shipment lines into an open sales invoice.</source>
+          <target>Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Adds invoice lines to the open sales invoice from posted, not invoiced shipment lines, with a heading text line per shipment, as the Get Shipment Lines action does. Nothing is posted; the added lines can be deleted from the open invoice. Lines already on an open sales invoice are skipped, so sending the same request again adds nothing. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.</source>
+          <target>Bætir reikningslínum við opna sölureikninginn úr bókuðum, óreikningsfærðum afhendingarlínum, með fyrirsagnarlínu fyrir hverja afhendingu, eins og aðgerðin Sækja afhendingarlínur gerir. Ekkert er bókað; hægt er að eyða línunum sem bættust við af opna reikningnum. Línum sem eru þegar á opnum sölureikningi er sleppt, svo sama beiðni send aftur bætir engu við. Höfnun vistar ekkert. Keðjuð Omit Commit köll haldast í færslu kallandans; stök köll nota einangraða skrift.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bætir reikningslínum við opna sölureikninginn úr bókuðum, óreikningsfærðum afhendingarlínum, með fyrirsagnarlínu fyrir hverja afhendingu, eins og aðgerðin Sækja afhendingarlínur gerir. Ekkert er bókað; hægt er að eyða línunum sem bættust við af opna reikningnum. Línum sem eru þegar á opnum sölureikningi er sleppt, svo sama beiðni send aftur bætir engu við. Höfnun vistar ekkert. Keðjuð Omit Commit köll haldast í færslu kallandans; stök köll nota einangraða skrift.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Neither documentNo nor systemId was sent, or neither shipmentNos nor allShipments was sent.</source>
+          <target>Hvorki documentNo né systemId var sent, eða hvorki shipmentNos né allShipments var sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hvorki documentNo né systemId var sent, eða hvorki shipmentNos né allShipments var sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo or systemId, and shipmentNos or allShipments.</source>
+          <target>Sendu documentNo eða systemId, og shipmentNos eða allShipments.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo eða systemId, og shipmentNos eða allShipments.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type, systemId is not a GUID, or a document/shipment number is blank, longer than 20 characters or not text.</source>
+          <target>Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða skjals- eða afhendingarnúmer er tómt, lengra en 20 stafir eða ekki texti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð, systemId er ekki GUID, eða skjals- eða afhendingarnúmer er tómt, lengra en 20 stafir eða ekki texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo and each shipmentNos entry as non-blank text of at most 20 characters, systemId as a GUID and allShipments as true.</source>
+          <target>Sendu documentNo og hvert gildi í shipmentNos sem texta sem er ekki tómur og er að hámarki 20 stafir, systemId sem GUID og allShipments sem true.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og hvert gildi í shipmentNos sem texta sem er ekki tómur og er að hámarki 20 stafir, systemId sem GUID og allShipments sem true.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentNo, systemId, shipmentNos and allShipments.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentNo, systemId, shipmentNos og allShipments.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentNo, systemId, shipmentNos og allShipments.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No sales invoice has this No. or systemId, or a shipment in shipmentNos does not exist.</source>
+          <target>Enginn sölureikningur hefur þetta númer eða systemId, eða afhending í shipmentNos er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Enginn sölureikningur hefur þetta númer eða systemId, eða afhending í shipmentNos er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentNo or systemId, and each No. in shipmentNos.</source>
+          <target>Athugaðu documentNo eða systemId, og hvert númer í shipmentNos.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentNo eða systemId, og hvert númer í shipmentNos.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo and systemId were both sent, or shipmentNos and allShipments were both sent.</source>
+          <target>documentNo og systemId voru bæði send, eða shipmentNos og allShipments voru bæði send.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo og systemId voru bæði send, eða shipmentNos og allShipments voru bæði send.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one of documentNo or systemId, and one of shipmentNos or allShipments.</source>
+          <target>Sendu annaðhvort documentNo eða systemId, og annaðhvort shipmentNos eða allShipments.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort documentNo eða systemId, og annaðhvort shipmentNos eða allShipments.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2793673097" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales invoice is released or pending approval.</source>
+          <target>Sölureikningurinn er útgefinn eða bíður samþykkis.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sölureikningurinn er útgefinn eða bíður samþykkis.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType NotOpenWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 512546832" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the invoice with Sales.Document.Reopen, then send the request again.</source>
+          <target>Opnaðu reikninginn aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu reikninginn aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType NotOpenFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 603584475" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A shipment in shipmentNos belongs to another bill-to customer or another currency than the invoice.</source>
+          <target>Afhending í shipmentNos tilheyrir öðrum reikningsviðskiptamanni eða öðrum gjaldmiðli en reikningurinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afhending í shipmentNos tilheyrir öðrum reikningsviðskiptamanni eða öðrum gjaldmiðli en reikningurinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType InvalidLineWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 2767880022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only shipments of the bill-to customer and currency of the invoice, or create a separate invoice for the other customer.</source>
+          <target>Sendu aðeins afhendingar reikningsviðskiptamanns og gjaldmiðils reikningsins, eða stofnaðu sérstakan reikning fyrir hinn viðskiptamanninn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins afhendingar reikningsviðskiptamanns og gjaldmiðils reikningsins, eða stofnaðu sérstakan reikning fyrir hinn viðskiptamanninn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType InvalidLineFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 3939208423" size-unit="char" translate="yes" xml:space="preserve">
+          <source>allShipments is false.</source>
+          <target>allShipments er false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=allShipments er false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType ValueWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 851118914" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send allShipments as true, or send shipmentNos instead.</source>
+          <target>Sendu allShipments sem true, eða sendu shipmentNos í staðinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu allShipments sem true, eða sendu shipmentNos í staðinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType ValueFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot change sales lines or read posted sales shipments.</source>
+          <target>Kallandinn getur ekki breytt sölulínum eða lesið bókaðar söluafhendingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki breytt sölulínum eða lesið bókaðar söluafhendingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set and a Business Central permission set that can change sales invoices and read posted shipments.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölureikningum og lesið bókaðar afhendingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölureikningum og lesið bókaðar afhendingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 48211173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refused to add a line, for example because the VAT business posting group of the shipment differs from the invoice.</source>
+          <target>Business Central hafnaði því að bæta línu við, til dæmis af því að VSK-viðskiptabókunarflokkur afhendingarinnar er annar en reikningsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnaði því að bæta línu við, til dæmis af því að VSK-viðskiptabókunarflokkur afhendingarinnar er annar en reikningsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType BusinessCentralWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1158096087 - NamedType 4006977964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the invoice or the shipment in Business Central, and send the request again. Nothing was added.</source>
+          <target>Lestu villutextann, lagaðu reikninginn eða afhendinguna í Business Central og sendu beiðnina aftur. Engu var bætt við.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu reikninginn eða afhendinguna í Business Central og sendu beiðnina aftur. Engu var bætt við.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetErrors - NamedType BusinessCentralFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3255554567 - NamedType 1700174467" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice two posted shipments on one sales invoice</source>
+          <target>Reikningsfæra tvær bókaðar afhendingar á einum sölureikningi</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reikningsfæra tvær bókaðar afhendingar á einum sölureikningi</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetExamples - NamedType ShipmentsTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3255554567 - NamedType 727063581" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice every not invoiced shipment of the customer</source>
+          <target>Reikningsfæra allar óreikningsfærðar afhendingar viðskiptamannsins</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reikningsfæra allar óreikningsfærðar afhendingar viðskiptamannsins</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetExamples - NamedType AllTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>get shipment lines, combined invoice, shipment, sales invoice, not invoiced</source>
+          <target>sækja afhendingarlínur, samsettur reikningur, afhending, sölureikningur, óreikningsfært</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=sækja afhendingarlínur, samsettur reikningur, afhending, sölureikningur, óreikningsfært</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A shipment of another bill-to customer or another currency is refused with InvalidLine and nothing is added. With allShipments, only shipment lines of the bill-to customer and currency of the invoice are read, and skippedLines lists only lines that are already on an open sales invoice. Business Central adds a heading text line for each shipment and copies item charge assignments, prices and discounts from the order, exactly as the native action does. A native refusal, such as a VAT business posting group that differs from the invoice, rolls the whole call back. The invoice is not posted; post it with Sales.Document.Post.</source>
+          <target>Afhendingu annars reikningsviðskiptamanns eða annars gjaldmiðils er hafnað með InvalidLine og engu er bætt við. Með allShipments eru aðeins lesnar afhendingarlínur reikningsviðskiptamanns og gjaldmiðils reikningsins, og skippedLines telur aðeins upp línur sem eru þegar á opnum sölureikningi. Business Central bætir við fyrirsagnarlínu fyrir hverja afhendingu og afritar úthlutanir kostnaðarauka, verð og afslætti úr pöntuninni, nákvæmlega eins og innbyggða aðgerðin gerir. Innbyggð höfnun, til dæmis VSK-viðskiptabókunarflokkur sem er annar en reikningsins, afturkallar allt kallið. Reikningurinn er ekki bókaður; bókaðu hann með Sales.Document.Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afhendingu annars reikningsviðskiptamanns eða annars gjaldmiðils er hafnað með InvalidLine og engu er bætt við. Með allShipments eru aðeins lesnar afhendingarlínur reikningsviðskiptamanns og gjaldmiðils reikningsins, og skippedLines telur aðeins upp línur sem eru þegar á opnum sölureikningi. Business Central bætir við fyrirsagnarlínu fyrir hverja afhendingu og afritar úthlutanir kostnaðarauka, verð og afslætti úr pöntuninni, nákvæmlega eins og innbyggða aðgerðin gerir. Innbyggð höfnun, til dæmis VSK-viðskiptabókunarflokkur sem er annar en reikningsins, afturkallar allt kallið. Reikningurinn er ekki bókaður; bókaðu hann með Sales.Document.Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Pulls posted, not invoiced sales shipment lines into an open sales invoice, as the Get Shipment Lines action on the sales invoice does, so several shipments of one customer are invoiced together. Send shipmentNos to name the shipments, or allShipments to take every not invoiced shipment line of the bill-to customer of the invoice in its currency. The answer lists the invoice lines added and the shipment lines skipped because they are already invoiced or already on an open sales invoice.</source>
+          <target>Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning, eins og aðgerðin Sækja afhendingarlínur á sölureikningnum gerir, svo nokkrar afhendingar eins viðskiptamanns séu reikningsfærðar saman. Sendu shipmentNos til að tilgreina afhendingarnar, eða allShipments til að taka allar óreikningsfærðar afhendingarlínur reikningsviðskiptamanns reikningsins í gjaldmiðli hans. Svarið telur upp reikningslínurnar sem bættust við og afhendingarlínurnar sem var sleppt af því að þær eru þegar reikningsfærðar eða þegar á opnum sölureikningi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning, eins og aðgerðin Sækja afhendingarlínur á sölureikningnum gerir, svo nokkrar afhendingar eins viðskiptamanns séu reikningsfærðar saman. Sendu shipmentNos til að tilgreina afhendingarnar, eða allShipments til að taka allar óreikningsfærðar afhendingarlínur reikningsviðskiptamanns reikningsins í gjaldmiðli hans. Svarið telur upp reikningslínurnar sem bættust við og afhendingarlínurnar sem var sleppt af því að þær eru þegar reikningsfærðar eða þegar á opnum sölureikningi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3615801952 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of the open sales invoice. Send this or systemId.</source>
+          <target>Númer opins sölureiknings. Sendu þetta eða systemId.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opins sölureiknings. Sendu þetta eða systemId.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetParameters - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3615801952 - NamedType 2790193734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>systemId of the open sales invoice. Send this or documentNo.</source>
+          <target>systemId opins sölureiknings. Sendu þetta eða documentNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=systemId opins sölureiknings. Sendu þetta eða documentNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetParameters - NamedType SystemIdLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3615801952 - NamedType 2192784868" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of each posted sales shipment to take lines from. Every shipment must belong to the bill-to customer and currency of the invoice. Send this or allShipments.</source>
+          <target>Númer hverrar bókaðrar söluafhendingar sem línur eru teknar úr. Hver afhending verður að tilheyra reikningsviðskiptamanni og gjaldmiðli reikningsins. Sendu þetta eða allShipments.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer hverrar bókaðrar söluafhendingar sem línur eru teknar úr. Hver afhending verður að tilheyra reikningsviðskiptamanni og gjaldmiðli reikningsins. Sendu þetta eða allShipments.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetParameters - NamedType ShipmentNosLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3615801952 - NamedType 4114065148" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true to take every posted, not invoiced shipment line of the bill-to customer of the invoice in its currency. Send this or shipmentNos.</source>
+          <target>true til að taka allar bókaðar, óreikningsfærðar afhendingarlínur reikningsviðskiptamanns reikningsins í gjaldmiðli hans. Sendu þetta eða shipmentNos.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true til að taka allar bókaðar, óreikningsfærðar afhendingarlínur reikningsviðskiptamanns reikningsins í gjaldmiðli hans. Sendu þetta eða shipmentNos.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetParameters - NamedType AllShipmentsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1033708611 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the empty sales invoice for the bill-to customer first.</source>
+          <target>Stofnaðu fyrst tóman sölureikning fyrir reikningsviðskiptamanninn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu fyrst tóman sölureikning fyrir reikningsviðskiptamanninn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetRelated - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1033708611 - NamedType 4091959022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post the invoice once the lines are in; this type does not post.</source>
+          <target>Bókaðu reikninginn þegar línurnar eru komnar inn; þessi tegund bókar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaðu reikninginn þegar línurnar eru komnar inn; þessi tegund bókar ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetRelated - NamedType PostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoices several posted shipments of one customer on one sales invoice, as the Get Shipment Lines action does, and lists the lines it added and the lines it skipped.</source>
+          <target>Reikningsfærir nokkrar bókaðar afhendingar eins viðskiptamanns á einum sölureikningi, eins og aðgerðin Sækja afhendingarlínur gerir, og telur upp línurnar sem bættust við og línurnar sem var sleppt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reikningsfærir nokkrar bókaðar afhendingar eins viðskiptamanns á einum sölureikningi, eins og aðgerðin Sækja afhendingarlínur gerir, og telur upp línurnar sem bættust við og línurnar sem var sleppt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3897248833 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The No. of the open sales invoice that receives the lines.</source>
+          <target>Númer opna sölureikningsins sem fær línurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opna sölureikningsins sem fær línurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetTarget - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3897248833 - NamedType 2790193734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The system id of that sales invoice, as an alternative to data.documentNo. Send one of them, not both.</source>
+          <target>Kerfiskenni sölureikningsins, í stað data.documentNo. Sendu annað þeirra, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kerfiskenni sölureikningsins, í stað data.documentNo. Sendu annað þeirra, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method GetTarget - NamedType SystemIdLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentNo, systemId, shipmentNos and allShipments.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentNo, systemId, shipmentNos og allShipments.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentNo, systemId, shipmentNos og allShipments.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3302922151 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No sales invoice %1 was found.</source>
+          <target>Sölureikningur %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no. or system id, is-IS=Sölureikningur %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveInvoice - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3302922151 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentNo or systemId; this type takes an open sales invoice, not an order or a posted invoice.</source>
+          <target>Athugaðu documentNo eða systemId; þessi tegund tekur opinn sölureikning, ekki pöntun eða bókaðan reikning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentNo eða systemId; þessi tegund tekur opinn sölureikning, ekki pöntun eða bókaðan reikning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveInvoice - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3302922151 - NamedType 1425329136" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales invoice %1 is not open; its status is %2.</source>
+          <target>Sölureikningur %1 er ekki opinn; staða hans er %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = invoice no., %2 = status, is-IS=Sölureikningur %1 er ekki opinn; staða hans er %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveInvoice - NamedType NotOpenErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3302922151 - NamedType 1643071928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the invoice with Sales.Document.Reopen, then send the request again.</source>
+          <target>Opnaðu reikninginn aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu reikninginn aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveInvoice - NamedType NotOpenNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1597054417 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted sales shipment %1 was not found.</source>
+          <target>Bókuð söluafhending %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = shipment no., is-IS=Bókuð söluafhending %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveShipments - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1597054417 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the No. in shipmentNos, or send allShipments as true to take every not invoiced shipment of the customer.</source>
+          <target>Athugaðu númerið í shipmentNos, eða sendu allShipments sem true til að taka allar óreikningsfærðar afhendingar viðskiptamannsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númerið í shipmentNos, eða sendu allShipments sem true til að taka allar óreikningsfærðar afhendingar viðskiptamannsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveShipments - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1597054417 - NamedType 1056844223" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment %1 belongs to bill-to customer %2, not to %3 on invoice %4.</source>
+          <target>Afhending %1 tilheyrir reikningsviðskiptamanni %2, ekki %3 á reikningi %4.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = shipment no., %2 = shipment bill-to customer, %3 = invoice bill-to customer, %4 = invoice no., is-IS=Afhending %1 tilheyrir reikningsviðskiptamanni %2, ekki %3 á reikningi %4.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveShipments - NamedType OtherCustomerErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1597054417 - NamedType 3508249722" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment %1 is in currency "%2", not "%3" like invoice %4.</source>
+          <target>Afhending %1 er í gjaldmiðlinum "%2", ekki "%3" eins og reikningur %4.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = shipment no., %2 = shipment currency, %3 = invoice currency, %4 = invoice no., is-IS=Afhending %1 er í gjaldmiðlinum "%2", ekki "%3" eins og reikningur %4.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveShipments - NamedType OtherCurrencyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 1597054417 - NamedType 1840233902" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only shipments of the bill-to customer and currency of the invoice, or create a separate invoice for the other shipments. Nothing was added.</source>
+          <target>Sendu aðeins afhendingar reikningsviðskiptamanns og gjaldmiðils reikningsins, eða stofnaðu sérstakan reikning fyrir hinar afhendingarnar. Engu var bætt við.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins afhendingar reikningsviðskiptamanns og gjaldmiðils reikningsins, eða stofnaðu sérstakan reikning fyrir hinar afhendingarnar. Engu var bætt við.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ResolveShipments - NamedType InvalidLineNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 1053517988" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo or systemId is required.</source>
+          <target>documentNo eða systemId er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo eða systemId er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType MissingInvoiceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 2746709036" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the No. or the systemId of the open sales invoice.</source>
+          <target>Sendu númer eða systemId opna sölureikningsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer eða systemId opna sölureikningsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType MissingInvoiceNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 845101464" size-unit="char" translate="yes" xml:space="preserve">
+          <source>shipmentNos or allShipments is required.</source>
+          <target>shipmentNos eða allShipments er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=shipmentNos eða allShipments er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType MissingSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 3798038208" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send shipmentNos with the posted shipments to invoice, or allShipments as true.</source>
+          <target>Sendu shipmentNos með bókuðu afhendingunum sem á að reikningsfæra, eða allShipments sem true.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu shipmentNos með bókuðu afhendingunum sem á að reikningsfæra, eða allShipments sem true.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType MissingSourceNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 4150561103" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo or systemId, not both.</source>
+          <target>Sendu documentNo eða systemId, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo eða systemId, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType BothInvoiceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 2990120147" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send shipmentNos or allShipments, not both.</source>
+          <target>Sendu shipmentNos eða allShipments, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu shipmentNos eða allShipments, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType BothSourceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 3754731864" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove one of the two keys and send the request again.</source>
+          <target>Fjarlægðu annan lykilinn og sendu beiðnina aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu annan lykilinn og sendu beiðnina aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType BothNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 has the wrong format.</source>
+          <target>%1 er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, is-IS=%1 er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 4063910082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as %2.</source>
+          <target>Sendu %1 sem %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, %2 = expected format, is-IS=Sendu %1 sem %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType FormatNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 1437162932" size-unit="char" translate="yes" xml:space="preserve">
+          <source>allShipments must be true when it is sent.</source>
+          <target>allShipments verður að vera true þegar það er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=allShipments verður að vera true þegar það er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType FalseErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2726396422 - Method 3959087835 - NamedType 2602517308" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send allShipments as true, or send shipmentNos instead.</source>
+          <target>Sendu allShipments sem true, eða sendu shipmentNos í staðinn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu allShipments sem true, eða sendu shipmentNos í staðinn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Get Shipment Impl ori - Method ValidateShape - NamedType FalseNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3326579340 - NamedType 1188720524" size-unit="char" translate="yes" xml:space="preserve">
           <source>a positive JSON integer</source>
           <target>jákvæð JSON-heiltala</target>
