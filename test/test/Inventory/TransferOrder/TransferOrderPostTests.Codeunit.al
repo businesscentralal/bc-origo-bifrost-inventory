@@ -178,21 +178,24 @@ codeunit 96914 "Transfer Order Post Tests"
     procedure Scenario_AC06_CountUnits_LocalizedForChangedPostTypes()
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Implementation: Interface "Msg Contract ori";
         MessageType: Enum "Message Type ori";
         Contract: JsonObject;
         Effect: JsonToken;
         Changes: JsonToken;
         Parameter: JsonToken;
         Name: JsonToken;
-        Description: JsonToken;
-        Parameters: JsonToken;
+        AppParameters: JsonArray;
+        Examples: JsonArray;
+        ExampleText: Text;
         Types: List of [Enum "Message Type ori"];
         PreviousLanguage: Integer;
         LanguageId: Integer;
         Languages: List of [Integer];
-        HasCount: Boolean;
+        DeclaresCount: Boolean;
     begin
         // Issue #39 AC06 | Time: no date dependency | Risk: None.
+        // Foundation owns expectedCount. The app documents the one-document unit in effect help and examples.
         Initialize();
         Types.Add("Message Type ori"::"Inventory.TransferOrder.Post");
         Types.Add("Message Type ori"::"Inventory.Transfer.UndoShipment");
@@ -207,25 +210,27 @@ codeunit 96914 "Transfer Order Post Tests"
                 Clear(Contract);
                 // [WHEN] The registered help contract is composed by Foundation.
                 ContractMgt.GetContract(MessageType, Contract);
-                // [THEN] Effect and count parameter name the unit, including in Icelandic.
+                // [THEN] Effect help names the one-document unit, including in Icelandic.
                 Contract.Get('effect', Effect);
                 Effect.AsObject().Get('changes', Changes);
                 Assert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount'), 'Effect names the confirmation count.');
+                Assert.IsTrue(Changes.AsValue().AsText().Contains('1'), 'Count is one order or posted document.');
                 if LanguageId = 1039 then
                     Assert.IsTrue(Changes.AsValue().AsText().Contains('telur'), 'Count unit is translated into Icelandic.');
-                Contract.Get('parameters', Parameters);
-                HasCount := false;
-                foreach Parameter in Parameters.AsArray() do begin
+                Implementation := MessageType;
+                Clear(AppParameters);
+                Assert.IsTrue(Implementation.GetParameters(AppParameters), 'App parameters exist.');
+                DeclaresCount := false;
+                foreach Parameter in AppParameters do begin
                     Parameter.AsObject().Get('name', Name);
-                    if Name.AsValue().AsText() = 'expectedCount' then begin
-                        HasCount := true;
-                        Parameter.AsObject().Get('description', Description);
-                        Assert.IsTrue(Description.AsValue().AsText().Contains('1'), 'Count is one order or posted document.');
-                        if LanguageId = 1039 then
-                            Assert.IsTrue(Description.AsValue().AsText().Contains('telur'), 'Parameter count unit is translated.');
-                    end;
+                    if Name.AsValue().AsText() = 'expectedCount' then
+                        DeclaresCount := true;
                 end;
-                Assert.IsTrue(HasCount, 'Count parameter is present.');
+                Assert.IsFalse(DeclaresCount, 'expectedCount stays with Foundation.');
+                Clear(Examples);
+                Assert.IsTrue(Implementation.GetExamples(Examples), 'Examples exist.');
+                Examples.WriteTo(ExampleText);
+                Assert.IsTrue(ExampleText.Contains('expectedCount'), 'Example includes the confirmation count.');
             end;
         end;
         GlobalLanguage(PreviousLanguage);
