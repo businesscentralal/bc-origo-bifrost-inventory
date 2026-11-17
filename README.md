@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 77 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 76 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -40,6 +40,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
 | `Inventory.SKU.Get` | Outbound | Read stockkeeping units with their planning and cost fields |
 | `Inventory.SKU.Create` | Inbound | Create stockkeeping units per location and variant (report 5706), optionally replacing existing ones |
+| `Inventory.ItemUnitOfMeasure.Get` | Outbound | Read the units of measure of an item with the base unit flagged |
+| `Inventory.ItemUnitOfMeasure.Create` | Inbound | Create a unit of measure on an existing item |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
@@ -294,6 +296,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
+| 10077015 | `MsgType.ItemUoM.EnumExt ori` | `Inventory.ItemUnitOfMeasure.Get` (10077011), `Inventory.ItemUnitOfMeasure.Create` (10077012) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -330,12 +333,13 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
 | 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
-| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
+| 10077011–10077013 | Item units of measure | Get, Create, Create process |
 | 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
 | 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |
 | 10077023 | `Partial Transfer Process ori` | Atomic native posting |
 | 10077024 | `Partial Transfer Contract ori` | English and Icelandic partial-transfer contracts |
 | 10077025 | `Transfer Posting Setup ori` | BC 28/29 direct-transfer setup compatibility |
+| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
