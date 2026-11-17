@@ -428,6 +428,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');
         Types.Add('Inventory.TransferOrder.Post');
+        Types.Add('Inventory.TransferOrder.Ship');
+        Types.Add('Inventory.TransferOrder.Receive');
         Types.Add('Inventory.TransferOrder.PreviewPost');
         Types.Add('Inventory.TransferOrder.Statistics');
         Types.Add('Inventory.AssemblyOrder.Create');
@@ -727,7 +729,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
+        // Main compares the composed response before this branch strips the shared code field.
         AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
+        AssertComposedResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -736,6 +740,45 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
+    var
+        Implementation: Interface "Msg Contract ori";
+        RawResponse: JsonObject;
+        RawContract: JsonObject;
+        ActualContract: JsonObject;
+        ActualResponse: JsonObject;
+        Actual: JsonToken;
+        Entry: JsonToken;
+        Fields: JsonArray;
+        Info: ModuleInfo;
+        CodeCount: Integer;
+    begin
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        Implementation.GetResponse(RawResponse);
+        RawContract.Add('response', RawResponse);
+        AssertChapterJson(RawContract, 'response', Expected.AsToken());
+        LibraryAssert.IsTrue(Contract.Get('response', Actual), 'Composed response exists.');
+        ActualResponse := Actual.AsObject();
+        ActualResponse.Get('fields', Actual);
+        foreach Entry in Actual.AsArray() do begin
+            Entry.AsObject().Get('name', Actual);
+            if Actual.AsValue().AsText() = 'code' then begin
+                CodeCount += 1;
+                AssertJsonText(Entry.AsObject(), 'type', 'string');
+                AssertJsonText(Entry.AsObject(), 'description', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.');
+            end else
+                Fields.Add(Entry);
+        end;
+        NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info);
+        if Info.AppVersion >= Version.Create(28, 0, 13, 0) then
+            LibraryAssert.AreEqual(1, CodeCount, 'Foundation 28.0.13 adds exactly one response code field.')
+        else
+            LibraryAssert.AreEqual(0, CodeCount, 'Earlier Foundation preserves response fields.');
+        ActualResponse.Replace('fields', Fields);
+        ActualContract.Add('response', ActualResponse);
+        AssertChapterJson(ActualContract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedAttributeResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
