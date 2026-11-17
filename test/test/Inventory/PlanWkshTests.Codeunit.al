@@ -145,6 +145,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         EnablePlanning();
         CreatePurchaseItem(Item);
         CreatePlanningWorksheet();
+        Library.PrepareLibraryGLAccountNumbers();
         Warehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
         Warehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
         FromLocation.Name := 'XP117 transfer source';
