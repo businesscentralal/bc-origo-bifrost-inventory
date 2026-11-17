@@ -810,8 +810,14 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
             // The helper adds confirmation keys to the JsonObject for posting calls.
             Clear(Request);
             Response := Library.ExecuteType(MessageType, Batch."Journal Template Name" + '|' + Batch.Name, Request, false);
-            AssertRefusal(Response, 'BusinessCentralError', 'journalBatch');
-            Assert.AreEqual(Batch."Journal Template Name" + '|' + Batch.Name, TextValue(Response, 'received'), 'Actual selected batch context.');
+            if MessageType in ["Message Type ori"::"Inventory.PhysInventory.Check", "Message Type ori"::"Inventory.PhysInventory.Post"] then
+                AssertRefusal(Response, 'InvalidParameter', 'templateName')
+            else
+                AssertRefusal(Response, 'BusinessCentralError', 'journalBatch');
+            if MessageType in ["Message Type ori"::"Inventory.PhysInventory.Check", "Message Type ori"::"Inventory.PhysInventory.Post"] then
+                Assert.AreEqual(Batch."Journal Template Name", TextValue(Response, 'received'), 'Selected template context.')
+            else
+                Assert.AreEqual(Batch."Journal Template Name" + '|' + Batch.Name, TextValue(Response, 'received'), 'Actual selected batch context.');
             Assert.AreEqual(BeforeCount, Entries.Count(), 'Native refusal posts nothing.');
         end;
         GlobalLanguage(OldLanguage);
