@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 67 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 76 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -37,6 +37,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
+| `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
 | `Inventory.NonstockItem.Create` | Inbound | Create an item from a catalog item with the catalog item's item template |
 | `Inventory.SKU.Get` | Outbound | Read stockkeeping units with their planning and cost fields |
 | `Inventory.SKU.Create` | Inbound | Create stockkeeping units per location and variant (report 5706), optionally replacing existing ones |
@@ -286,6 +287,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076848 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10077019 | `MsgType.Nonstock.EnumExt ori` | `Inventory.NonstockItem.Create` |
@@ -325,8 +327,9 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
-| 10077019, 10077021 | Catalog items | `Nonstock Item Create Impl ori` (+ process) |
+| 10077019, 10076947 | Catalog items | `Nonstock Item Create Impl ori` (+ process) |
 | 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
 | 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
 | 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |

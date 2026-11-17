@@ -15,7 +15,7 @@
 README "Objects" lists every object with its ID. In short:
 
 - Tables 10076835 `Inv. Posting ori`, 10076836 `Inventory Setup ori`; page 10076835 `Inventory Setup ori`;
-  enum 10076835 `Inventory Domain ori`; enum extensions on `Message Type ori` 10076835-10076846;
+  enum 10076835 `Inventory Domain ori`; enum extensions on `Message Type ori` 10076835-10076847 and 10076906;
   permission sets 10076835-10076837 (InvAttrRead, InvAttrWrite, InvPost), extensions 10076835-10076836 (InvRead, InvWrite).
 - Codeunits 10076835-10076923, grouped by domain (alphabetical by folder): lifecycle 10076835-10076836 and 10076845,
   shared reads/writes 10076837-10076843, write restrictions 10076846-10076848, assembly 10076849-10076856,
@@ -23,13 +23,24 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
+  shared gates and contract parts 10076919-10076923, item create 10076931-10076932 (`Inventory.Item.Create`, #130; 10076925-10076929 are already used by shared codeunits),
+  sales return from posted documents 10077032-10077033 (`Sales.ReturnOrder.CreateFromPosted`, #136).
   shared gates and contract parts 10076919-10076923, assembly reads 10076965-10076966 (`Inventory.AssemblyToOrder.Get`,
   `Inventory.AssemblyBOM.Get`, #116; enum values 10076965-10076966 in enum extension 10076960).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
+  (10076882) with `Inventory.PhysInventory.Record`.
+- Next free codeunit: 10076932 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
+  the convention). Taken above that: 10077020 `Item Subst. Get Impl ori` (#118) and 10077032-10077033
+  `Sales Ret. Ord. Post. Impl/Proc ori` (#136). Free: 10076932-10077019, 10077021-10077029 and 10077034 for codeunits,
+  10076836-10077034 for pages/enums, 10076837-10077034 for tables, 10076848-10076905 and 10076907-10077034 for enum extensions,
+  10076838-10077034 for permission sets.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is free at the top of the range.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
+  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared
   number is a different object type.
-- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077019 and 10077021 (catalog items) and 10077032-10077033. Next free codeunit: 10076931
+- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077019 and 10076947 (catalog items) and 10077032-10077033. Next free codeunit: 10076931
   (10076925-10076929 and 10076931-10077018, 10077022-10077031 are free except as taken by open PRs; 10077034 is free at the top of the range).
   Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847; 10076906 is `MsgType.SalesRetOrd.Ext ori`; 10077019 is `MsgType.Nonstock.EnumExt ori`).
   Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
@@ -38,7 +49,7 @@ README "Objects" lists every object with its ID. In short:
   fields 21-27 (`Item Substitution` is field 25, `Purchase Returns` is field 26, `Catalog Items` is field 27). New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
 - Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
-  10077021 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, so Catalog Items uses value 17, field 27 and setup-guide slot 18.
+  10076947 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, so Catalog Items uses value 17, field 27 and setup-guide slot 18.
 
 ## Test object IDs (unchanged by the renumbering)
 
@@ -67,3 +78,14 @@ README "Objects" lists every object with its ID. In short:
 - 96980 `Purch. Return Create Tests` (#137).
 - 96998 `Nonstock Item Create Tests` (#119).
 - Next free test codeunit: 96981, except 96998 and other IDs already used on main or by open PRs. 96960-96961 stay free. 96963-96980 are in use.
+- 96960 `Item Create Tests`, 96961 `Item Create Perm` (#130). 96991 `Sales Ret. Ord. Post. Tests` (#136). Free: 96964-96969 (96963 and 96970-96979 are used; 96990 is used by an earlier open PR).
+- 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.
+
+## PR #198 main-merge ID reconciliation
+
+- Item Create uses implementation codeunit and enum value 10076932, process codeunit 10076931, and enum extension 10076848. Purchase Return keeps codeunit/enum value 10076930 and enum extension 10076847 from main. These taken IDs supersede the free-ID notes preserved above.
+- 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
+
+## PR #201 main-merge ID reconciliation
+
+- Catalog Items process codeunit is 10076947 (formerly 10077021); main keeps 10077021 `Transfer Receive Impl ori`. Checked against current main and all 20 other open PR heads. These taken IDs supersede the historical free-ID notes above. The catalog message enum value remains 10077019.
