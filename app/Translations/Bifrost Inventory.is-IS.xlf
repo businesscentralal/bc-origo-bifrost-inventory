@@ -10491,12 +10491,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les magn, pakka, þyngdir og rúmmál millifærslupöntunar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Stats Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one posted transfer shipment document, always 1, not the selected lines or corrective entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</source>
-          <target>expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method CountUnit - NamedType CountLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 116675360 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Receives selected quantities on a transfer order and returns the posted document.</source>
           <target>Tekur á móti valið magn á flutningspöntun og skilar bókaða skjalinu.</target>
@@ -10520,6 +10514,12 @@
           <target>hlutaflutningur, flutningspöntun, valdar línur, magn</target>
           <note from="Developer" annotates="general" priority="2">is-IS=hlutaflutningur, flutningspöntun, valdar línur, magn</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Ship Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one posted transfer shipment document, always 1, not the selected lines or corrective entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</source>
+          <target>expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
           <source>documentNo is required.</source>
