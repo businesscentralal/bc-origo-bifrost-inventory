@@ -944,6 +944,15 @@ def _product_reuse_allowed(product_reuse):
     return True
 
 
+REUSE_RECORD_KEYS = ("baselineWorkflowRunId", "baselineWorkflowSHA", "packageFile", "packageSha256")
+
+
+def _reuse_record(product_reuse):
+    """The accepted-reuse record Finalize stores in state.json and later stages are bound to (#237)."""
+    return {key: str(product_reuse.get(key) or "").lower() if key in ("baselineWorkflowSHA", "packageSha256")
+            else str(product_reuse.get(key) or "") for key in REUSE_RECORD_KEYS}
+
+
 def reconcile(root, context, stage, signature=None, product_reuse=None):
     """Check expected hooks and actual published artifact paths, also after Sign."""
     root = Path(root)
@@ -955,6 +964,14 @@ def reconcile(root, context, stage, signature=None, product_reuse=None):
     reuse_app = False
     if "app" not in receipts:
         if _product_reuse_allowed(product_reuse):
+            if stage != "finalize":
+                # 17.11.2026 (inventory#237): baseline env/Apps evidence is gone after RunPipeline.
+                # Later stages are bound to the record Finalize accepted and hashed into finalize.json.
+                recorded = state.get("productReuse")
+                require(isinstance(recorded, dict),
+                        "Product compile receipt missing and Finalize accepted no baseline product reuse")
+                require(_reuse_record(product_reuse) == _reuse_record(recorded),
+                        "Product reuse does not match the record Finalize accepted")
             package_path = (root / str(product_reuse["packageFile"])).resolve()
             require(package_path.is_file(), "Baseline-reused product package missing")
             require(file_hash(package_path) == product_reuse["packageSha256"],
@@ -1015,6 +1032,10 @@ def reconcile(root, context, stage, signature=None, product_reuse=None):
         finalized = json.loads((directory / "finalize.json").read_text(encoding="utf-8-sig"))
         require(finalized["context"] == context and finalized["stateSha256"] == file_hash(directory / "state.json"),
                 "Missing/stale/displaced PipelineFinalize")
+    if stage == "finalize" and reuse_app:
+        # Persist before stateSha256 is taken, so Pipeline validates against this exact record.
+        state["productReuse"] = _reuse_record(product_reuse)
+        (directory / "state.json").write_text(json.dumps(state, indent=2) + "\n")
     result = {"context": context, "stage": stage, "stateSha256": file_hash(directory / "state.json"), "outputs": outputs}
     if signature:
         result["signature"] = signature

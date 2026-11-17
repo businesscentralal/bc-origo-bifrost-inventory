@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - AppSource gate keeps Finalize's baseline reuse for the Pipeline step (#237)
+
+- AppSource build gate (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/AppSourceBuildGate.md`): Finalize stores the baseline-reused product it accepted (baseline run, baseline SHA, package file and SHA-256) as `productReuse` in `state.json`. The Pipeline step validates against that record instead of the baseline env and Apps folder, which are gone by then, so test-only PRs no longer fail there. No receipt and no record, a record mismatch, a changed package hash and `app/` changes still fail closed. New tests in `tools/tests/test_appsource_gate.py`; no AL or workflow change.
+
 ### Fixed — issue 134 ID clash with merged Get Shipment Lines (#215)
 
 - Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
