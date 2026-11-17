@@ -71,6 +71,52 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateEmptyBatch();
     end;
 
+    /// <summary>Creates only the owned issue154 journals and unposted count item, on explicit UI invocation.</summary>
+    procedure Create154Fixtures()
+    var
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Item: Record Item;
+        FeatureSetup: Record "Inventory Setup ori";
+        LibraryInventory: Codeunit "Library - Inventory";
+        TemplateName: Code[10];
+        TemplateNames: List of [Code[10]];
+    begin
+        if not IsOwnedCompany() then
+            Error('Owned CRONUS verification company required.');
+        TemplateNames.Add('X154I');
+        TemplateNames.Add('X154P');
+        TemplateNames.Add('X154R');
+        foreach TemplateName in TemplateNames do
+            if JournalTemplate.Get(TemplateName) then
+                Error('Owned issue154 fixture exists; inspect and clean it before seeding.');
+        if Item.Get('X154-COUNT') then
+            Error('Owned issue154 count item exists; inspect it before seeding.');
+        FeatureSetup.InsertIfNotExists();
+        FeatureSetup."Phys. Inventory" := true;
+        FeatureSetup.Modify();
+        foreach TemplateName in TemplateNames do begin
+            Clear(JournalTemplate);
+            if TemplateName = 'X154I' then
+                LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Item)
+            else
+                LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::"Phys. Inventory");
+            JournalTemplate.Rename(TemplateName);
+            JournalTemplate.Recurring := TemplateName = 'X154R';
+            JournalTemplate.Modify();
+            LibraryInventory.CreateItemJournalBatch(Batch, TemplateName);
+            Batch.Rename(TemplateName, 'OWN');
+        end;
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('X154-COUNT');
+        LibraryInventory.CreateItemJournalLine(Line, 'X154P', 'OWN', Line."Entry Type"::"Positive Adjmt.", Item."No.", 0);
+        Line.Validate("Phys. Inventory", true);
+        Line.Validate("Qty. (Calculated)", 5);
+        Line.Validate("Qty. (Phys. Inventory)", 5);
+        Line.Modify(true);
+    end;
+
     /// <summary>Explicitly seeds independent physical-count batches and periods for issue151 in the owned evaluation company.</summary>
     procedure CreateRefusalFixtures()
     var
