@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
+
+- `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
+- Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
+- Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
+
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
 - Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
@@ -34,14 +40,24 @@
 - Add `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement` with native worksheet suggestion and implementation, explicit unposted write effects, selected worksheet/journal responses, bilingual help and coded refusals with next steps. Implementation updates item/SKU costs; posting remains a separate revaluation operation.
 - Add codeunits 10076933–10076937 and 10076938, enum extension 10076850 and test codeunits 96982–96983. Tests cover suggestions, revaluation creation without ledger posting, zero stock, replay, invalid input and bilingual contracts.
 - Main-merge ID collision with Item Create (#130): `Std. Cost Suggest Impl ori` and `Inventory.StandardCost.Suggest` move from 10076932 to the next free codeunit and matching enum value 10076938. Enum extension `MsgType.StdCost.EnumExt ori` moves from 10076848 to the next free enum extension 10076850. `Inventory.StandardCost.Implement` stays on codeunit and value 10076933. Item Create keeps codeunit and enum value 10076932 and enum extension 10076848.
+
 ### Fixed - merge main into assembly reads (#225)
 
 - Resolve the physical-inventory order ID collision by moving the PR's assembly read codeunits and message-type values from **10076960–10076961** to the next free IDs **10076965–10076966**. The enum extension ID remains **10076960**. Both features and all contract checks are retained; the combined Inventory catalogue has 65 types.
+
 ### Added — bounded requisition worksheets (#131)
 
 - `Purchase.Requisition.Calculate` runs native report 699 with worksheet, item/location/variant filters and dates, replacing working lines only within the selected worksheet. `Purchase.Requisition.CarryOut` creates native purchase or transfer orders from all lines or an explicit selection and returns the actual order numbers.
 - Implements Gunnar’s 16 November option A: reject Cancel, changes, rescheduling and existing-document links before any write; no printing, posting or existing-order edits. Calculate declares `write`; CarryOut declares `irreversible`, with bilingual help defining expectedCount as one worksheet selection. Native intermediate commits are suppressed and failures roll back.
 - Added codeunits **10076941–10076945**, enum extension **10076849** (message values **10076941–10076942**), test codeunit **96947**; Full Access execute permissions and synchronized Icelandic XLF. Shared worksheet validation/serialization and the native event boundary are available for coordinated #117; its planning reports and API remain a separate implementation.
+
+### Added (2026-11-16) - Inventory.ItemUnitOfMeasure.Create and Inventory.ItemUnitOfMeasure.Get (#100)
+
+- `Inventory.ItemUnitOfMeasure.Create` (enum value and codeunit 10077012 `Item UoM Create Impl ori`, isolated write 10077013 `Item UoM Create Proc ori`) creates one new unit of measure on an existing item from `itemNo`, `code` (a unit of measure defined in Business Central), `qtyPerUnitOfMeasure` (greater than 0), and optional `length`, `width`, `height` and `weight`, and answers the saved unit. Effect `write` (not irreversible, not idempotent): a code the item already has is refused with `PreconditionFailed` and never changes its quantity per unit, and the refusal says so when item ledger entries use the unit; an unknown item or unit of measure code gives `RecordNotFound`. Every refusal carries a `nextStep` and saves nothing.
+- `Inventory.ItemUnitOfMeasure.Get` (enum value and codeunit 10077011 `Item UoM Get Impl ori`) answers every unit of an item in code order, or one unit with `code`, with `isBaseUnit`, dimensions, cubage, weight and `hasLedgerEntries`, plus the item's `baseUnitOfMeasure`. Effect `read`.
+- Enum extension 10077015 `MsgType.ItemUoM.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch and no Data.Records write restriction were added, so existing generic writes keep working.
+- Permissions: both types also require read access to Item Ledger Entry, so `hasLedgerEntries` and the ledger-entry refusal are never reported as absent for a caller who cannot read ledger entries; such a caller gets `PermissionDenied` with a next step. Create's help no longer claims generic writes are refused.
+- Tests: `Item UoM Tests` (96984). `Inventory Contract Batch Tests` (96921) now counts 65 Inventory types (60 on main before the merge, plus the three physical inventory order types from #113 and the two Item UoM types from this PR).
 
 ### Added (2026-11-16) - native physical inventory orders (#113)
 
@@ -145,7 +161,6 @@
 - BC 28/29 transfer posting and preview read the applicable setup field by ID; BC 29 uses enum field 5857 rather than the obsolete option field 5855. Existing direct-transfer tests cover both posting modes.
 - No object IDs added. Changed product codeunits: 10076842, 10076901, 10076903, 10076909, 10076910. Regression tests extend 96909 and 96914; explicit owned MCP setup and cleanup (including native Inventory Posting Setup rows for the owned locations) extend test codeunit/page 96973 and helper 96904.
 - Regression 96914 checks the bilingual one-document count in effect help and in the examples. It does not require the app to declare `expectedCount`; Foundation owns that parameter.
-
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
