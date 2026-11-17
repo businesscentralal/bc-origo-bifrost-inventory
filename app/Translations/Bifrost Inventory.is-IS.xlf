@@ -81,6 +81,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Reference - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 3217357734 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable reading item substitutions and their on-hand inventory.</source>
+          <target>Virkja lestur vöruskipta og núverandi birgða þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkja lestur vöruskipta og núverandi birgða þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Substitution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 88444387 - Field 3217357734 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Substitution - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 392666526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>
           <target>Vörurakning</target>
@@ -4365,6 +4377,210 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 880711966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Substitution domain is disabled.</source>
+          <target>Slökkt er á vöruskiptasviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vöruskiptasviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3740637095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to enable Item Substitution on Inventory Setup.</source>
+          <target>Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be JSON text.</source>
+          <target>%1 verður að vera JSON-texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter; is-IS=%1 verður að vera JSON-texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType FormatLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 4063910082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo and variantCode as text, not null, numbers, arrays or objects.</source>
+          <target>Sendu itemNo og variantCode sem texta, ekki null, tölur, fylki eða hluti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo og variantCode sem texta, ekki null, tölur, fylki eða hluti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType FormatNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 4280004770" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 exceeds %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = maximum length; is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType LengthLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1059279187" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use at most 20 characters for itemNo and 10 for variantCode.</source>
+          <target>Notaðu mest 20 stafi fyrir itemNo og 10 fyrir variantCode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu mest 20 stafi fyrir itemNo og 10 fyrir variantCode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType LengthNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is required.</source>
+          <target>itemNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3129818787" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the source item number in data.itemNo.</source>
+          <target>Sendu vörunúmer upprunavörunnar í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmer upprunavörunnar í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType MissingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 704880291" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item or variant does not exist.</source>
+          <target>Varan eða afbrigðið er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan eða afbrigðið er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType NotFoundLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the source and substitute item numbers and variants in Business Central.</source>
+          <target>Athugaðu vörunúmer og afbrigði upprunavörunnar og staðgengilsins í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmer og afbrigði upprunavörunnar og staðgengilsins í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read permission is required for inventory setup, substitutions, items, variants and item ledger entries.</source>
+          <target>Lesheimild þarf fyrir uppsetningu birgða, vöruskipti, vörur, afbrigði og vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesheimild þarf fyrir uppsetningu birgða, vöruskipti, vörur, afbrigði og vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for BIFROST Read and read permission to the native tables used by this type.</source>
+          <target>Biddu stjórnanda um BIFROST Read og lesheimild að stöðluðu töflunum sem þessi tegund notar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um BIFROST Read og lesheimild að stöðluðu töflunum sem þessi tegund notar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown parameter.</source>
+          <target>Beiðnin inniheldur óþekkta færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekkta færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2001379935" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only itemNo and optional variantCode under data.</source>
+          <target>Sendu aðeins itemNo og valkvætt variantCode undir data.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins itemNo og valkvætt variantCode undir data.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType UnknownNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads direct item substitutes and their current on-hand inventory.</source>
+          <target>Les beina staðgengla vöru og núverandi birgðir þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les beina staðgengla vöru og núverandi birgðir þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads substitutions and inventory; does not update cached quantities or create items.</source>
+          <target>Les vöruskipti og birgðir; uppfærir ekki vistuð magn eða stofnar vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les vöruskipti og birgðir; uppfærir ekki vistuð magn eða stofnar vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 2719903620 - NamedType 3871721722" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item in data.itemNo; subject is not used.</source>
+          <target>Sendu vöruna í data.itemNo; subject er ekki notað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vöruna í data.itemNo; subject er ekki notað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetEnvelope - NamedType SubjectLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read substitutes for an item without a variant</source>
+          <target>Lesa staðgengla vöru án afbrigðis</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa staðgengla vöru án afbrigðis</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item substitution, substitute, variant, inventory</source>
+          <target>vöruskipti, staðgengill, afbrigði, birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruskipti, staðgengill, afbrigði, birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads direct substitution records for the item and exact source variant, including blank. Inventory is current on-hand quantity in base units for the exact substitute variant across all locations, not promised availability; reservations and future supply are not included. Catalog substitutes have inventoryKnown=false and inventory=0. No recursive search, cached inventory update or item creation occurs. A valid item with no substitutions returns an empty array.</source>
+          <target>Les beinar vöruskiptafærslur fyrir vöruna og nákvæmt afbrigði upprunavöru, þar með talið tómt gildi. Inventory er núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum, ekki lofað framboð; frátektir og væntanleg aðföng eru ekki innifalin. Staðgenglar úr vörulista hafa inventoryKnown=false og inventory=0. Engin endurkvæm leit, uppfærsla vistaðra birgða eða vörustofnun á sér stað. Gild vara án vöruskipta skilar tómu fylki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les beinar vöruskiptafærslur fyrir vöruna og nákvæmt afbrigði upprunavöru, þar með talið tómt gildi. Inventory er núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum, ekki lofað framboð; frátektir og væntanleg aðföng eru ekki innifalin. Staðgenglar úr vörulista hafa inventoryKnown=false og inventory=0. Engin endurkvæm leit, uppfærsla vistaðra birgða eða vörustofnun á sér stað. Gild vara án vöruskipta skilar tómu fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3615801952 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing source item number, at most 20 characters.</source>
+          <target>Vörunúmer fyrirliggjandi upprunavöru, mest 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer fyrirliggjandi upprunavöru, mest 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetParameters - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source variant code, at most 10 characters. Omitted or empty selects only substitutions for the blank variant.</source>
+          <target>Afbrigðiskóði upprunavöru, mest 10 stafir. Ef honum er sleppt eða hann er tómur eru aðeins valin vöruskipti fyrir tómt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði upprunavöru, mest 10 stafir. Ef honum er sleppt eða hann er tómur eru aðeins valin vöruskipti fyrir tómt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read availability over periods for an item.</source>
+          <target>Lesa framboð vöru eftir tímabilum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa framboð vöru eftir tímabilum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3193096050" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success; refusals use the standard error envelope.</source>
+          <target>Success; höfnun notar staðlað villusvar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success; höfnun notar staðlað villusvar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType StatusLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source item number.</source>
+          <target>Vörunúmer upprunavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer upprunavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact source variant code, including blank.</source>
+          <target>Nákvæmur afbrigðiskóði upprunavöru, þar með talið tómt gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur afbrigðiskóði upprunavöru, þar með talið tómt gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 885739933" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Direct substitution records; an empty array is a successful result.</source>
+          <target>Beinar vöruskiptafærslur; tómt fylki er árangursrík niðurstaða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beinar vöruskiptafærslur; tómt fylki er árangursrík niðurstaða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType RowsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 961827798" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item or nonstockItem, independent of the session language.</source>
+          <target>item eða nonstockItem, óháð tungumáli setunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=item eða nonstockItem, óháð tungumáli setunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType TypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 1314000525" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Substitute item number or catalog entry number.</source>
+          <target>Vörunúmer staðgengils eða færslunúmer vörulista.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer staðgengils eða færslunúmer vörulista.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType NoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2596667955" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Substitute variant code.</source>
+          <target>Afbrigðiskóði staðgengils.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði staðgengils.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType SubVariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description stored on the substitution.</source>
+          <target>Lýsing vistuð á vöruskiptunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing vistuð á vöruskiptunum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 1543027814" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native interchangeable flag; no reverse relationships are inferred.</source>
+          <target>Staðlað merki um gagnkvæm vöruskipti; öfug tengsl eru ekki ályktuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðlað merki um gagnkvæm vöruskipti; öfug tengsl eru ekki ályktuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType InterchangeableLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3691251604" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current on-hand quantity in base units for the exact substitute variant across all locations. Zero for catalog items; not a promise or a deduction of reservations.</source>
+          <target>Núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum. Núll fyrir vörulistavörur; ekki loforð um afhendingu og frátektir eru ekki dregnar frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum. Núll fyrir vörulistavörur; ekki loforð um afhendingu og frátektir eru ekki dregnar frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType InventoryLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2781335531" size-unit="char" translate="yes" xml:space="preserve">
+          <source>True for an item with calculated inventory; false for a catalog substitute.</source>
+          <target>True fyrir vöru með reiknaðar birgðir; false fyrir staðgengil úr vörulista.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=True fyrir vöru með reiknaðar birgðir; false fyrir staðgengil úr vörulista.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType KnownLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
@@ -6693,6 +6909,528 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Revaluation Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - NamedType 1188720524" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a positive JSON integer</source>
+          <target>jákvæð JSON-heiltala</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-heiltala</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - NamedType IntegerExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - NamedType 1792354943" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a positive JSON number</source>
+          <target>jákvæð JSON-tala</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=jákvæð JSON-tala</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - NamedType NumberExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for Sales.ReturnOrder.CreateFromPosted.</source>
+          <target>Heimild hafnað fyrir Sales.ReturnOrder.CreateFromPosted.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir Sales.ReturnOrder.CreateFromPosted.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3658467977 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set and a Business Central permission set that can change sales return orders and credit memos and read posted sales documents.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölutilbakaskilapöntunum og sölukreditreikningum og lesið bókuð söluskjöl.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölutilbakaskilapöntunum og sölukreditreikningum og lesið bókuð söluskjöl.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method AssertCanRun - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3979922425 - NamedType 3554791791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>customerNo %1 is not the customer %2 of the document.</source>
+          <target>customerNo %1 er ekki viðskiptamaður %2 á skjalinu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = sent customer, %2 = document customer, is-IS=customerNo %1 er ekki viðskiptamaður %2 á skjalinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CheckCustomerMatches - NamedType CustomerMismatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3979922425 - NamedType 3803344327" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Leave customerNo out, or send the customer of the existing document.</source>
+          <target>Slepptu customerNo, eða sendu viðskiptamann skjalsins sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptu customerNo, eða sendu viðskiptamann skjalsins sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CheckCustomerMatches - NamedType CustomerMismatchNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 1515376880" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line contains an unknown key.</source>
+          <target>Línan inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType UnknownLineKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 3689475768" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. A line takes source, documentNo, lineNo and quantity.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Lína tekur source, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Lína tekur source, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType UnknownLineKeyNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 644752148" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required on every line.</source>
+          <target>%1 er nauðsynlegt á hverri línu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line key, is-IS=%1 er nauðsynlegt á hverri línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType MissingLineKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 2294315996" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send source, documentNo, lineNo and quantity on every line.</source>
+          <target>Sendu source, documentNo, lineNo og quantity á hverri línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu source, documentNo, lineNo og quantity á hverri línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType MissingLineKeyNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 286960381" size-unit="char" translate="yes" xml:space="preserve">
+          <source>source must be Invoice or Shipment.</source>
+          <target>source verður að vera Invoice eða Shipment.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=source verður að vera Invoice eða Shipment.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType SourceValueErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 148499893" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send source as Invoice for a posted sales invoice line or Shipment for a posted sales shipment line.</source>
+          <target>Sendu source sem Invoice fyrir bókaða sölureikningslínu eða Shipment fyrir bókaða söluafhendingarlínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu source sem Invoice fyrir bókaða sölureikningslínu eða Shipment fyrir bókaða söluafhendingarlínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType SourceValueNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 3085223924" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted %1 %2 line %3 was not found.</source>
+          <target>Bókuð %1 %2 lína %3 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source, %2 = document no., %3 = line no., is-IS=Bókuð %1 %2 lína %3 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType LineNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 2926422140" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentNo and lineNo of the posted document.</source>
+          <target>Athugaðu documentNo og lineNo bókaða skjalsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentNo og lineNo bókaða skjalsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType LineNotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 1056844223" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted %1 %2 line %3 belongs to customer %4, not to %5 of the document.</source>
+          <target>Bókuð %1 %2 lína %3 tilheyrir viðskiptamanni %4, ekki %5 á skjalinu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source, %2 = document no., %3 = line no., %4 = line customer, %5 = document customer, is-IS=Bókuð %1 %2 lína %3 tilheyrir viðskiptamanni %4, ekki %5 á skjalinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType OtherCustomerErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 4071089047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only lines of the customer of the document, or create a separate document for the other customer. Nothing was created.</source>
+          <target>Sendu aðeins línur viðskiptamanns skjalsins, eða stofnaðu sérstakt skjal fyrir hinn viðskiptamanninn. Ekkert var stofnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins línur viðskiptamanns skjalsins, eða stofnaðu sérstakt skjal fyrir hinn viðskiptamanninn. Ekkert var stofnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType OtherCustomerNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 2395347675" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted %1 %2 line %3 is a text line without a type and cannot be reversed.</source>
+          <target>Bókuð %1 %2 lína %3 er textalína án tegundar og ekki hægt að bakfæra hana.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source, %2 = document no., %3 = line no., is-IS=Bókuð %1 %2 lína %3 er textalína án tegundar og ekki hægt að bakfæra hana.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType BlankLineErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 904384979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only lines that have a type and a quantity. Nothing was created.</source>
+          <target>Sendu aðeins línur sem hafa tegund og magn. Ekkert var stofnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins línur sem hafa tegund og magn. Ekkert var stofnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType BlankLineNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 1726356118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted %1 %2 line %3 has %4 left to reverse, but %5 was requested.</source>
+          <target>Bókuð %1 %2 lína %3 á %4 eftir að bakfæra en beðið var um %5.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source, %2 = document no., %3 = line no., %4 = remaining quantity, %5 = requested quantity, is-IS=Bókuð %1 %2 lína %3 á %4 eftir að bakfæra en beðið var um %5.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType TooMuchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3094182332 - NamedType 2797224926" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a quantity up to the remaining quantity. Nothing was created.</source>
+          <target>Sendu magn upp að afgangsmagninu. Ekkert var stofnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu magn upp að afgangsmagninu. Ekkert var stofnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method CollectLine - NamedType TooMuchNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a sales return order or credit memo from posted sales invoice or shipment lines.</source>
+          <target>Stofnar sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum sölureiknings- eða afhendingarlínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum sölureiknings- eða afhendingarlínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a sales return order or credit memo, or adds lines to an open one, from posted invoice or shipment lines, copying them with exact cost reversal so Appl.-from Item Entry is set on item lines. Nothing is posted; the document and its lines can be deleted while it is open. Sending the request again adds the lines a second time. A refusal saves nothing. Chained Omit Commit calls stay in the caller transaction; standalone calls use an isolated write.</source>
+          <target>Stofnar sölutilbakaskilapöntun eða sölukreditreikning, eða bætir línum við opið skjal, úr bókuðum reiknings- eða afhendingarlínum og afritar þær með nákvæmri kostnaðarbakfærslu svo Jafna við vörufærslu er útfyllt á vörulínum. Ekkert er bókað; hægt er að eyða skjalinu og línum þess meðan það er opið. Ef beiðnin er send aftur bætast línurnar við í annað sinn. Höfnun vistar ekkert. Keðjuð Omit Commit köll haldast í færslu kallandans; stök köll nota einangraða skrift.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar sölutilbakaskilapöntun eða sölukreditreikning, eða bætir línum við opið skjal, úr bókuðum reiknings- eða afhendingarlínum og afritar þær með nákvæmri kostnaðarbakfærslu svo Jafna við vörufærslu er útfyllt á vörulínum. Ekkert er bókað; hægt er að eyða skjalinu og línum þess meðan það er opið. Ef beiðnin er send aftur bætast línurnar við í annað sinn. Höfnun vistar ekkert. Keðjuð Omit Commit köll haldast í færslu kallandans; stök köll nota einangraða skrift.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType, lines, customerNo for a new document, or a field of a line (source, documentNo, lineNo, quantity) was not sent.</source>
+          <target>documentType, lines, customerNo fyrir nýtt skjal, eða reitur línu (source, documentNo, lineNo, quantity) var ekki sendur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType, lines, customerNo fyrir nýtt skjal, eða reitur línu (source, documentNo, lineNo, quantity) var ekki sendur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType and a non-empty lines array of {source, documentNo, lineNo, quantity}, and customerNo when no existing document is named.</source>
+          <target>Sendu documentType og lines sem er ekki tómt fylki af {source, documentNo, lineNo, quantity}, og customerNo þegar ekkert skjal sem er til er tilgreint.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType og lines sem er ekki tómt fylki af {source, documentNo, lineNo, quantity}, og customerNo þegar ekkert skjal sem er til er tilgreint.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type or value form, systemId is not a GUID, lines is empty or holds something that is not an object, lineNo is not a positive whole number or quantity is not a positive number.</source>
+          <target>Lykill er á rangri JSON-gerð eða gildissniði, systemId er ekki GUID, lines er tómt eða inniheldur eitthvað sem er ekki hlutur, lineNo er ekki jákvæð heiltala eða quantity er ekki jákvæð tala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð eða gildissniði, systemId er ekki GUID, lines er tómt eða inniheldur eitthvað sem er ekki hlutur, lineNo er ekki jákvæð heiltala eða quantity er ekki jákvæð tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send text for the text keys, lines as a non-empty array of objects, lineNo as a positive integer and quantity as a number above 0.</source>
+          <target>Sendu texta fyrir textalyklana, lines sem fylki af hlutum sem er ekki tómt, lineNo sem jákvæða heiltölu og quantity sem tölu yfir 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu texta fyrir textalyklana, lines sem fylki af hlutum sem er ekki tómt, lineNo sem jákvæða heiltölu og quantity sem tölu yfir 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request or a line contains a key this type does not read.</source>
+          <target>Beiðnin eða lína inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin eða lína inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo, systemId, customerNo and lines; a line takes source, documentNo, lineNo and quantity.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, systemId, customerNo og lines; lína tekur source, documentNo, lineNo og quantity.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, systemId, customerNo og lines; lína tekur source, documentNo, lineNo og quantity.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo and systemId were both sent, or documentType does not match the existing document.</source>
+          <target>documentNo og systemId voru bæði send, eða documentType passar ekki við skjalið sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo og systemId voru bæði send, eða documentType passar ekki við skjalið sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one of documentNo or systemId, and the documentType of that document.</source>
+          <target>Sendu annaðhvort documentNo eða systemId, og documentType þess skjals.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort documentNo eða systemId, og documentType þess skjals.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 3939208423" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType is not ReturnOrder or CreditMemo, source is not Invoice or Shipment, or the customer does not exist.</source>
+          <target>documentType er hvorki ReturnOrder né CreditMemo, source er hvorki Invoice né Shipment, eða viðskiptamaðurinn er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType er hvorki ReturnOrder né CreditMemo, source er hvorki Invoice né Shipment, eða viðskiptamaðurinn er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType ValueWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 851118914" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType as ReturnOrder or CreditMemo, source as Invoice or Shipment, and an existing customer.</source>
+          <target>Sendu documentType sem ReturnOrder eða CreditMemo, source sem Invoice eða Shipment, og viðskiptamann sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType sem ReturnOrder eða CreditMemo, source sem Invoice eða Shipment, og viðskiptamann sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType ValueFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The named return order or credit memo, posted invoice, posted shipment or posted line does not exist.</source>
+          <target>Tilbakaskilapöntunin eða kreditreikningurinn, bókaði reikningurinn, bókaða afhendingin eða bókaða línan sem er nefnd er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilbakaskilapöntunin eða kreditreikningurinn, bókaði reikningurinn, bókaða afhendingin eða bókaða línan sem er nefnd er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentNo or systemId and the documentNo and lineNo of each line. Posted lines that were corrected or deleted are not available.</source>
+          <target>Athugaðu documentNo eða systemId og documentNo og lineNo hverrar línu. Bókaðar línur sem voru leiðréttar eða eytt eru ekki tiltækar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentNo eða systemId og documentNo og lineNo hverrar línu. Bókaðar línur sem voru leiðréttar eða eytt eru ekki tiltækar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 2793673097" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The existing return order or credit memo is released or pending approval.</source>
+          <target>Tilbakaskilapöntunin eða kreditreikningurinn sem er til er útgefinn eða bíður samþykkis.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilbakaskilapöntunin eða kreditreikningurinn sem er til er útgefinn eða bíður samþykkis.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType NotOpenWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 512546832" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the document with Sales.Document.Reopen, then send the request again.</source>
+          <target>Opnaðu skjalið aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu skjalið aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType NotOpenFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 603584475" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A posted line belongs to another customer than the document, is a blank text line, or the quantity is above what is left to reverse.</source>
+          <target>Bókuð lína tilheyrir öðrum viðskiptamanni en skjalið, er auð textalína, eða magnið er umfram það sem er eftir að bakfæra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókuð lína tilheyrir öðrum viðskiptamanni en skjalið, er auð textalína, eða magnið er umfram það sem er eftir að bakfæra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType InvalidLineWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 2767880022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only lines of the customer of the document, and a quantity up to the remaining quantity named in the answer. Nothing was created.</source>
+          <target>Sendu aðeins línur viðskiptamanns skjalsins, og magn upp að afgangsmagninu sem kemur fram í svarinu. Ekkert var stofnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins línur viðskiptamanns skjalsins, og magn upp að afgangsmagninu sem kemur fram í svarinu. Ekkert var stofnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType InvalidLineFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot change sales lines or read posted sales invoices and shipments.</source>
+          <target>Kallandinn getur ekki breytt sölulínum eða lesið bókaða sölureikninga og afhendingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki breytt sölulínum eða lesið bókaða sölureikninga og afhendingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set and a Business Central permission set that can change sales return orders and credit memos and read posted sales documents.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölutilbakaskilapöntunum og sölukreditreikningum og lesið bókuð söluskjöl.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst og Business Central heimildasafni sem getur breytt sölutilbakaskilapöntunum og sölukreditreikningum og lesið bókuð söluskjöl.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 48211173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refused the copy, for example because the exact cost reversing link of an item line is missing or the currency differs from the document.</source>
+          <target>Business Central hafnaði afrituninni, til dæmis af því að nákvæma kostnaðarbakfærslutengingu vantar á vörulínu eða gjaldmiðillinn er annar en á skjalinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnaði afrituninni, til dæmis af því að nákvæma kostnaðarbakfærslutengingu vantar á vörulínu eða gjaldmiðillinn er annar en á skjalinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType BusinessCentralWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1158096087 - NamedType 4006977964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the posted line selection or the document in Business Central, and send the request again. Nothing was created.</source>
+          <target>Lestu villutextann, lagaðu val bókuðu línanna eða skjalið í Business Central og sendu beiðnina aftur. Ekkert var stofnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu val bókuðu línanna eða skjalið í Business Central og sendu beiðnina aftur. Ekkert var stofnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetErrors - NamedType BusinessCentralFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3255554567 - NamedType 2108208242" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a return order for part of a posted invoice line</source>
+          <target>Stofna tilbakaskilapöntun fyrir hluta af bókaðri reikningslínu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna tilbakaskilapöntun fyrir hluta af bókaðri reikningslínu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetExamples - NamedType NewTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3255554567 - NamedType 1738058131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add a shipment line to an open credit memo</source>
+          <target>Bæta afhendingarlínu við opinn kreditreikning</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bæta afhendingarlínu við opinn kreditreikning</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetExamples - NamedType ExistingTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>return order, credit memo, get posted document lines to reverse, customer return, copy document</source>
+          <target>tilbakaskilapöntun, kreditreikningur, sækja bókaðar skjalalínur til að bakfæra, skil viðskiptamanns, afrita skjal</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=tilbakaskilapöntun, kreditreikningur, sækja bókaðar skjalalínur til að bakfæra, skil viðskiptamanns, afrita skjal</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A line of another customer, a blank text line, or a quantity above what is left to reverse is refused with InvalidLine and nothing is created. What is left to reverse is the shipped quantity not yet returned for item lines, and the posted quantity for other lines. Quantities are in the unit of measure of the posted line. The same posted line sent twice in one request is added up. The call does not count lines already on open documents, so sending the same request again adds the lines again. The document is not posted; post it with Sales.Document.Post.</source>
+          <target>Línu annars viðskiptamanns, auðri textalínu eða magni umfram það sem er eftir að bakfæra er hafnað með InvalidLine og ekkert er stofnað. Það sem er eftir að bakfæra er afhent magn sem hefur ekki verið skilað fyrir vörulínur, og bókað magn fyrir aðrar línur. Magn er í mælieiningu bókuðu línunnar. Sama bókaða línan send tvisvar í einni beiðni leggst saman. Kallið telur ekki línur sem eru þegar á opnum skjölum, svo sama beiðni send aftur bætir línunum við aftur. Skjalið er ekki bókað; bókaðu það með Sales.Document.Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línu annars viðskiptamanns, auðri textalínu eða magni umfram það sem er eftir að bakfæra er hafnað með InvalidLine og ekkert er stofnað. Það sem er eftir að bakfæra er afhent magn sem hefur ekki verið skilað fyrir vörulínur, og bókað magn fyrir aðrar línur. Magn er í mælieiningu bókuðu línunnar. Sama bókaða línan send tvisvar í einni beiðni leggst saman. Kallið telur ekki línur sem eru þegar á opnum skjölum, svo sama beiðni send aftur bætir línunum við aftur. Skjalið er ekki bókað; bókaðu það með Sales.Document.Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a sales return order or credit memo, or fills an open one, from posted sales invoice or shipment lines with quantities, as the Get Posted Document Lines to Reverse action does. Item lines are linked to the original item entries (Appl.-from Item Entry), so the return restores the original cost. Send documentType and the lines, and customerNo for a new document or documentNo or systemId for an existing one.</source>
+          <target>Stofnar sölutilbakaskilapöntun eða sölukreditreikning, eða fyllir út opið skjal, úr bókuðum sölureiknings- eða afhendingarlínum með magni, eins og aðgerðin Sækja bókaðar skjalalínur til að bakfæra gerir. Vörulínur eru tengdar upphaflegu vörufærslunum (Jafna við vörufærslu) svo skilin færa upphaflegan kostnað til baka. Sendu documentType og lines, og customerNo fyrir nýtt skjal eða documentNo eða systemId fyrir skjal sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar sölutilbakaskilapöntun eða sölukreditreikning, eða fyllir út opið skjal, úr bókuðum sölureiknings- eða afhendingarlínum með magni, eins og aðgerðin Sækja bókaðar skjalalínur til að bakfæra gerir. Vörulínur eru tengdar upphaflegu vörufærslunum (Jafna við vörufærslu) svo skilin færa upphaflegan kostnað til baka. Sendu documentType og lines, og customerNo fyrir nýtt skjal eða documentNo eða systemId fyrir skjal sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 2636616999" size-unit="char" translate="yes" xml:space="preserve">
+          <source>ReturnOrder or CreditMemo: the kind of document to create, or the kind of the existing document named by documentNo or systemId.</source>
+          <target>ReturnOrder eða CreditMemo: tegund skjalsins sem á að stofna, eða tegund skjalsins sem documentNo eða systemId vísar á.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ReturnOrder eða CreditMemo: tegund skjalsins sem á að stofna, eða tegund skjalsins sem documentNo eða systemId vísar á.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType DocumentTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of an existing open return order or credit memo. Leave out documentNo and systemId to create a new document. Send this or systemId, not both.</source>
+          <target>Númer opinnar tilbakaskilapöntunar eða kreditreiknings sem er til. Slepptu documentNo og systemId til að stofna nýtt skjal. Sendu þetta eða systemId, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opinnar tilbakaskilapöntunar eða kreditreiknings sem er til. Slepptu documentNo og systemId til að stofna nýtt skjal. Sendu þetta eða systemId, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 2790193734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>systemId of an existing open return order or credit memo. Send this or documentNo, not both.</source>
+          <target>systemId opinnar tilbakaskilapöntunar eða kreditreiknings sem er til. Sendu þetta eða documentNo, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=systemId opinnar tilbakaskilapöntunar eða kreditreiknings sem er til. Sendu þetta eða documentNo, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType SystemIdLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 2898685577" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of the customer. Required for a new document; for an existing document it must be the customer of that document when it is sent. Every posted line must belong to this customer.</source>
+          <target>Númer viðskiptamanns. Nauðsynlegt fyrir nýtt skjal; fyrir skjal sem er til verður það að vera viðskiptamaður þess skjals þegar það er sent. Allar bókaðar línur verða að tilheyra þessum viðskiptamanni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer viðskiptamanns. Nauðsynlegt fyrir nýtt skjal; fyrir skjal sem er til verður það að vera viðskiptamaður þess skjals þegar það er sent. Allar bókaðar línur verða að tilheyra þessum viðskiptamanni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType CustomerNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 3616618409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted lines to reverse, with the quantity of each. At least one line.</source>
+          <target>Bókuðu línurnar sem á að bakfæra, með magni hverrar. Minnst ein lína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókuðu línurnar sem á að bakfæra, með magni hverrar. Minnst ein lína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType LinesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 1895768393" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice for a line of a posted sales invoice, Shipment for a line of a posted sales shipment.</source>
+          <target>Invoice fyrir línu á bókuðum sölureikningi, Shipment fyrir línu á bókaðri söluafhendingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Invoice fyrir línu á bókuðum sölureikningi, Shipment fyrir línu á bókaðri söluafhendingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType SourceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 955563182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. of the posted sales invoice or posted sales shipment.</source>
+          <target>Númer bókaða sölureikningsins eða bókuðu söluafhendingarinnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer bókaða sölureikningsins eða bókuðu söluafhendingarinnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType LineDocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line number on that posted document.</source>
+          <target>Línunúmer á því bókaða skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer á því bókaða skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType LineNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3615801952 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity to reverse in the unit of measure of the posted line, greater than 0 and not above what is left to reverse (for item lines the shipped quantity not yet returned). The same line sent twice is added up.</source>
+          <target>Magn sem á að bakfæra í mælieiningu bókuðu línunnar, stærra en 0 og ekki umfram það sem er eftir að bakfæra (fyrir vörulínur afhent magn sem hefur ekki verið skilað). Sama lína send tvisvar leggst saman.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn sem á að bakfæra í mælieiningu bókuðu línunnar, stærra en 0 og ekki umfram það sem er eftir að bakfæra (fyrir vörulínur afhent magn sem hefur ekki verið skilað). Sama lína send tvisvar leggst saman.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetParameters - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1033708611 - NamedType 4091959022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post the return order or credit memo once the lines are checked; this type does not post.</source>
+          <target>Bókaðu tilbakaskilapöntunina eða kreditreikninginn þegar línurnar hafa verið yfirfarnar; þessi tegund bókar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaðu tilbakaskilapöntunina eða kreditreikninginn þegar línurnar hafa verið yfirfarnar; þessi tegund bókar ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetRelated - NamedType PostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1033708611 - NamedType 755373819" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen a released return order or credit memo before filling it.</source>
+          <target>Opnaðu útgefna tilbakaskilapöntun eða kreditreikning aftur áður en hann er fylltur út.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu útgefna tilbakaskilapöntun eða kreditreikning aftur áður en hann er fylltur út.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetRelated - NamedType ReopenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates or fills a sales return order or credit memo from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does, and answers the document and the lines with Appl.-from Item Entry set.</source>
+          <target>Stofnar eða fyllir út sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum reiknings- eða afhendingarlínum með magni, eins og Sækja bókaðar skjalalínur til að bakfæra gerir, og svarar skjalinu og línunum með Jafna við vörufærslu útfyllt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eða fyllir út sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum reiknings- eða afhendingarlínum með magni, eins og Sækja bókaðar skjalalínur til að bakfæra gerir, og svarar skjalinu og línunum með Jafna við vörufærslu útfyllt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3897248833 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The No. of an existing open return order or credit memo that receives the lines. Leave out documentNo and systemId to create a new document.</source>
+          <target>Númer opinnar tilbakaskilapöntunar eða kreditreiknings sem fær línurnar. Slepptu documentNo og systemId til að stofna nýtt skjal.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer opinnar tilbakaskilapöntunar eða kreditreiknings sem fær línurnar. Slepptu documentNo og systemId til að stofna nýtt skjal.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetTarget - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3897248833 - NamedType 2790193734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The system id of that document, as an alternative to data.documentNo. Send one of them, not both.</source>
+          <target>Kerfiskenni þess skjals, í stað data.documentNo. Sendu annað þeirra, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kerfiskenni þess skjals, í stað data.documentNo. Sendu annað þeirra, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method GetTarget - NamedType SystemIdLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo, systemId, customerNo and lines.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, systemId, customerNo og lines.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo, systemId, customerNo og lines.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No open return order or credit memo %1 was found.</source>
+          <target>Engin opin tilbakaskilapöntun eða kreditreikningur %1 fannst.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no. or system id, is-IS=Engin opin tilbakaskilapöntun eða kreditreikningur %1 fannst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentNo or systemId; this type takes a sales return order or credit memo, not an order, an invoice or a posted document.</source>
+          <target>Athugaðu documentNo eða systemId; þessi tegund tekur sölutilbakaskilapöntun eða sölukreditreikning, ekki pöntun, reikning eða bókað skjal.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentNo eða systemId; þessi tegund tekur sölutilbakaskilapöntun eða sölukreditreikning, ekki pöntun, reikning eða bókað skjal.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 2544020971" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document %1 is a %2, not a %3.</source>
+          <target>Skjal %1 er %2, ekki %3.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., %2 = actual document type, %3 = requested document type, is-IS=Skjal %1 er %2, ekki %3.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType TypeMismatchErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 3377255459" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the documentType of the document named by documentNo or systemId.</source>
+          <target>Sendu documentType skjalsins sem documentNo eða systemId vísar á.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType skjalsins sem documentNo eða systemId vísar á.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType TypeMismatchNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 1425329136" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document %1 is not open; its status is %2.</source>
+          <target>Skjal %1 er ekki opið; staða þess er %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., %2 = status, is-IS=Skjal %1 er ekki opið; staða þess er %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType NotOpenErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1704400769 - NamedType 1643071928" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reopen the document with Sales.Document.Reopen, then send the request again.</source>
+          <target>Opnaðu skjalið aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu skjalið aftur með Sales.Document.Reopen og sendu beiðnina síðan aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveExisting - NamedType NotOpenNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 2607920032 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>customerNo is required when no existing document is named.</source>
+          <target>customerNo er nauðsynlegt þegar ekkert skjal sem er til er tilgreint.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=customerNo er nauðsynlegt þegar ekkert skjal sem er til er tilgreint.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveNewCustomer - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 2607920032 - NamedType 3129818787" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send customerNo, or send documentNo or systemId of an existing open return order or credit memo.</source>
+          <target>Sendu customerNo, eða sendu documentNo eða systemId opinnar tilbakaskilapöntunar eða kreditreiknings sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu customerNo, eða sendu documentNo eða systemId opinnar tilbakaskilapöntunar eða kreditreiknings sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveNewCustomer - NamedType MissingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 2607920032 - NamedType 3998550123" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer %1 does not exist.</source>
+          <target>Viðskiptamaður %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = customer no., is-IS=Viðskiptamaður %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveNewCustomer - NamedType UnknownCustomerErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 2607920032 - NamedType 4032822947" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the No. of an existing customer.</source>
+          <target>Sendu númer viðskiptamanns sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer viðskiptamanns sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ResolveNewCustomer - NamedType UnknownCustomerNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1313545120 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 has the wrong format.</source>
+          <target>%1 er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, is-IS=%1 er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RespondLineFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 1313545120 - NamedType 4063910082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as %2.</source>
+          <target>Sendu %1 sem %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, %2 = expected format, is-IS=Sendu %1 sem %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RespondLineFormat - NamedType FormatNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 57949214 - NamedType 690841808" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central could not copy %1 of the posted lines to the document.</source>
+          <target>Business Central gat ekki afritað %1 af bókuðu línunum á skjalið.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = number of lines, is-IS=Business Central gat ekki afritað %1 af bókuðu línunum á skjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RunCreateFromPosted - NamedType NotCopiedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 57949214 - NamedType 2875344746" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A posted item line has no exact cost reversing link, so it cannot be reversed with Appl.-from Item Entry.</source>
+          <target>Bókuð vörulína hefur enga nákvæma kostnaðarbakfærslutengingu og því er ekki hægt að bakfæra hana með Jafna við vörufærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókuð vörulína hefur enga nákvæma kostnaðarbakfærslutengingu og því er ekki hægt að bakfæra hana með Jafna við vörufærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method RunCreateFromPosted - NamedType CostLinkErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 906389811" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType is required.</source>
+          <target>documentType er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType MissingTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 1844920139" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType as ReturnOrder or CreditMemo.</source>
+          <target>Sendu documentType sem ReturnOrder eða CreditMemo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType sem ReturnOrder eða CreditMemo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType MissingTypeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 804695256" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lines is required.</source>
+          <target>lines er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lines er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType MissingLinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 1403915008" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lines as a non-empty array of {source, documentNo, lineNo, quantity}.</source>
+          <target>Sendu lines sem fylki af {source, documentNo, lineNo, quantity} sem er ekki tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lines sem fylki af {source, documentNo, lineNo, quantity} sem er ekki tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType MissingLinesNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 1689413328" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo or systemId, not both.</source>
+          <target>Sendu documentNo eða systemId, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo eða systemId, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType BothErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 3754731864" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove one of the two keys and send the request again.</source>
+          <target>Fjarlægðu annan lykilinn og sendu beiðnina aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu annan lykilinn og sendu beiðnina aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType BothNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 has the wrong format.</source>
+          <target>%1 er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, is-IS=%1 er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 4063910082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as %2.</source>
+          <target>Sendu %1 sem %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = request key, %2 = expected format, is-IS=Sendu %1 sem %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType FormatNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 3563095738" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType must be ReturnOrder or CreditMemo.</source>
+          <target>documentType verður að vera ReturnOrder eða CreditMemo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType verður að vera ReturnOrder eða CreditMemo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType TypeValueErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3326579340 - Method 3959087835 - NamedType 958864674" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType as ReturnOrder or CreditMemo.</source>
+          <target>Sendu documentType sem ReturnOrder eða CreditMemo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType sem ReturnOrder eða CreditMemo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType TypeValueNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.</source>
           <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</target>
@@ -7491,6 +8229,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísanir</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemReference - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 940779590 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows whether reading item substitutions is enabled for this company.</source>
+          <target>Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemSubstitution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 940779590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemSubstitution - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3550083798 - Control 2981724990 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether this domain is enabled in this company.</source>
           <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
@@ -7838,6 +8588,12 @@
           <target>Vörutilvísun</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemReference - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 940779590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemSubstitution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2981724990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>
