@@ -2,13 +2,17 @@
 
 ## [Unreleased]
 
+### Fixed - catalogue census after main merges (PR #211)
+
+- Paired CI at `da644d87` failed `AllInventoryTypes_RelatedNamesExist`: the test still expected 78 Inventory types after main's cycle count landed. Merging main again brought `Inventory.ItemVariant.Get` and `Inventory.ItemVariant.Create`, whose roster expects 80 without available-to-promise. This branch also registers `Inventory.AvailableToPromise.Get`, so the explicit roster and the enum extensions name 81 Inventory types. Codeunit 96921 and the README overview now expect 81. No message contract changed.
+
 ### Fixed - blank-line test ID collision (PR #211)
 
 - Main owns codeunit 96964 as `Inv. 186 Blank Line Tests ori`. Move unreleased `Avail. To Promise Tests` from 96964 to 96926, the first free codeunit ID in the test range after checking main and every open Inventory pull request (96925 is claimed by #221). `Avail. To Promise Perm` stays 96924. Test behavior is unchanged.
 
 ### Fixed - main merge reconciliation (PR #211)
 
-- Preserve main's Planning test codeunit 96965. Move the unreleased `Avail. To Promise Perm` test codeunit from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs. Test behavior is unchanged. The combined catalogue census retains all 78 Inventory types.
+- Preserve main's Planning test codeunit 96965. Move the unreleased `Avail. To Promise Perm` test codeunit from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs. Test behavior is unchanged. That merge retained 78 Inventory types; later main merges raise the census, and the catalogue bullet above states the current count.
 
 ### Fixed — available-to-promise requested date (#105, PR #211)
 
@@ -20,7 +24,7 @@
 - Capable to promise (codeunit 99000886) runs only with `capableToPromise: true` (off by default). It uses a private order promising id, so no number series is used, and the requisition lines it builds are deleted before the answer. No order promising lines or reservations are kept.
 - Refusals: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `RecordNotFound` (item, variant, location), `InvalidParameter` (quantity 0 or below, Availability domain off), `PreconditionFailed` (service or non-inventory item; capable to promise without an order promising template and worksheet), `PermissionDenied`. Each carries a `nextStep`; help and refusals are in en-US and is-IS (XLF regenerated).
 - The contract declares its real effect: `read`, nothing kept, idempotent (core#1365 D1). Gated by the existing Availability domain; no new setup field. `BIFROST InvRead ori` and `BIFROST InvWrite ori` execute the codeunit.
-- Tests: `Avail. To Promise Tests` (96926) and `Avail. To Promise Perm` (96924). `Inventory Contract Batch Tests` counts 78 Inventory types and 49 scoped types after the main merges. The earlier 96964/96965 test IDs and the 60/72 census figures were superseded by the ID reconciliations in this unreleased section.
+- Tests: `Avail. To Promise Tests` (96926) and `Avail. To Promise Perm` (96924). `Inventory Contract Batch Tests` counts 81 Inventory types and 49 scoped types after the cycle-count and item-variant merges. The earlier 96964/96965 test IDs and the 60/72/78 census figures were superseded by the ID reconciliations in this unreleased section.
 ### Fixed - main merge ID reconciliation (PR #233)
 
 - Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
