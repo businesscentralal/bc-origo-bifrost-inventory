@@ -12,7 +12,8 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         DescriptionLbl: Label 'Creates new orders from selected requisition worksheet lines.', Comment = 'is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.';
         SelectionLbl: Label 'Use templateName and batchName to select one non-recurring requisition worksheet.', Comment = 'is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.';
         KeywordsLbl: Label 'purchase,requisition,worksheet,planning,orders', Comment = 'is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir';
-        NotesLbl: Label 'Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount is always 1: the single worksheet selection, not the number of lines or orders. No printing or posting.', Comment = 'is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount er alltaf 1: eitt val úr vinnublaði, ekki fjöldi lína eða pantana. Hvorki prentar né bókar.';
+        NotesLbl: Label 'Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount counts worksheet selections: always 1, not the number of lines or orders. No printing or posting.', Comment = 'is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.';
+        ExpectedCountLbl: Label 'expectedCount counts worksheet selections: always 1, not the number of lines or orders. Send 1 before carry-out when confirmation is enabled.', Comment = 'is-IS=expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.';
         NativeNextLbl: Label 'Correct the native worksheet or item setup described by the error and retry; the failed call saved no changes.', Comment = 'is-IS=Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.';
 
     /// <summary>Checks native worksheet and order permissions.</summary>
@@ -83,6 +84,7 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         LineNumber.Add('description', 'An existing positive worksheet line number; each number may appear only once.');
         LineNumbers.Add('items', LineNumber);
         Parameters.Add(LineNumbers);
+        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, ExpectedCountLbl));
         exit(true);
     end;
 
