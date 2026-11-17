@@ -1893,6 +1893,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Engin innbyggð vöruskrá var mynduð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NothingPostedErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2469539645" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a reclassification (Transfer) template.</source>
+          <target>Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NotTransferTemplateErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 2191129744" size-unit="char" translate="yes" xml:space="preserve">
           <source>Unsupported journal parameter %1.</source>
           <target>Bókafæribreytan %1 er ekki studd.</target>
@@ -8823,6 +8829,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Athugar millifærslusniðmátið og sannreynir valdar bókarlínur. Bókun er sérstök tegund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts one journal batch operation, always 1, regardless of the selected line or ledger entry count. It confirms the operation before batch validation. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without posting. Otherwise omission posts. is-IS: expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</source>
+          <target>expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method CountUnit - NamedType CountLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal template %1 was not found.</source>
           <target>Bókarsniðmátið %1 fannst ekki.</target>
@@ -13844,18 +13856,6 @@
           <target>Bókunarhlið birgða</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókunarhlið birgða</note>
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST InvPost ori - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 40274530 - NamedType 2469539645" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Journal template %1 is not a reclassification (Transfer) template.</source>
-          <target>Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).</target>
-          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType NotTransferTemplateErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 1610241559 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts one journal batch operation, always 1, regardless of the selected line or ledger entry count. It confirms the operation before batch validation. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without posting. Otherwise omission posts. is-IS: expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</source>
-          <target>expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
       </group>
     </body>
