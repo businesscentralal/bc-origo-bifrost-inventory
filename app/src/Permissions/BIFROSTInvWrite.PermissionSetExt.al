@@ -12,6 +12,14 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     IncludedPermissionSets = "BIFROST InvAttrWrite ori";
 
     Permissions =
+        codeunit "Purch Get Receipt Impl ori" = X,
+        codeunit "Purch Get Receipt Proc ori" = X,
+        codeunit "Std. Cost Suggest Impl ori" = X,
+        codeunit "Std. Cost Implement Impl ori" = X,
+        codeunit "Std. Cost Management ori" = X,
+        codeunit "Std. Cost Process ori" = X,
+        codeunit "Std. Cost Suggest Proc ori" = X,
+        codeunit "Std. Cost Contract ori" = X,
         codeunit "Transfer Posting Setup ori" = X,
         codeunit "Transfer Ship Impl ori" = X,
         codeunit "Transfer Receive Impl ori" = X,
@@ -105,6 +113,8 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Assembly BOM Get Impl ori" = X,
         codeunit "Item Charge Assign Impl ori" = X,
         codeunit "Item Charge Assign Proc ori" = X,
+        codeunit "Sales Get Shipment Impl ori" = X,
+        codeunit "Sales Get Shipment Proc ori" = X,
         codeunit "Sales Ret. Ord. Post. Impl ori" = X,
         codeunit "Sales Ret. Ord. Post. Proc ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
@@ -113,6 +123,9 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Item Category Set Impl ori" = X,
         codeunit "Item Category Set Proc ori" = X,
         codeunit "Item Category Restrict ori" = X,
+        codeunit "Item UoM Get Impl ori" = X,
+        codeunit "Item UoM Create Impl ori" = X,
+        codeunit "Item UoM Create Proc ori" = X,
         codeunit "Reserv. AutoReserve Impl ori" = X,
         codeunit "Reserv. AutoReserve Proc ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
