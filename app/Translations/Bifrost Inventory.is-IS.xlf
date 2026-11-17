@@ -6297,6 +6297,492 @@
           <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = unit of measure code, is-IS=Vara %1 hefur enga mælieiningu %2.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method WriteResponse - NamedType UnitNotFoundErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 549346375 - NamedType 4286378729" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose another variant code, or read the existing variant with Inventory.ItemVariant.Get.</source>
+          <target>Veldu annan afbrigðiskóða, eða lestu afbrigðið sem er til með Inventory.ItemVariant.Get.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu annan afbrigðiskóða, eða lestu afbrigðið sem er til með Inventory.ItemVariant.Get.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ExistsNextStep - NamedType ExistsNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a variant on an item.</source>
+          <target>Stofnar afbrigði á vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar afbrigði á vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo or code is missing or empty.</source>
+          <target>itemNo eða code vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo eða code vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of an existing item and the code of the new variant.</source>
+          <target>Sendu númer vöru sem er til og kóða nýja afbrigðisins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vöru sem er til og kóða nýja afbrigðisins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, code, description and description2 as text, and blocked as true or false.</source>
+          <target>Sendu itemNo, code, description og description2 sem texta, og blocked sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, code, description og description2 sem texta, og blocked sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item matched itemNo.</source>
+          <target>Engin vara passaði við itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vara passaði við itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 2370535284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A text is longer than its field.</source>
+          <target>Texti er lengri en reiturinn hans.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Texti er lengri en reiturinn hans.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType TooLongWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 3448983717" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an itemNo of at most 20 characters, a code of at most 10, a description of at most 100 and a description2 of at most 50.</source>
+          <target>Sendu itemNo sem er mest 20 stafir, code sem er mest 10, description sem er mest 100 og description2 sem er mest 50.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er mest 20 stafir, code sem er mest 10, description sem er mest 100 og description2 sem er mest 50.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType TooLongFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 568181194" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item already has a variant with that code.</source>
+          <target>Varan hefur þegar afbrigði með þeim kóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan hefur þegar afbrigði með þeim kóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType ExistsWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items or create item variants.</source>
+          <target>Kallandinn getur ekki lesið vörur eða stofnað vöruafbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða stofnað vöruafbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the save itself, after the request was checked. Nothing is saved.</source>
+          <target>Business Central hafnar sjálfri vistuninni eftir að beiðnin var yfirfarin. Ekkert er vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar sjálfri vistuninni eftir að beiðnin var yfirfarin. Ekkert er vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the cause in Business Central and send the call again.</source>
+          <target>Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a blue variant of an item</source>
+          <target>Stofna blátt afbrigði af vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna blátt afbrigði af vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item variant, new variant, variant code, color, size</source>
+          <target>vöruafbrigði, nýtt afbrigði, afbrigðiskóði, litur, stærð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruafbrigði, nýtt afbrigði, afbrigðiskóði, litur, stærð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A successful call saves one new variant. A refusal saves nothing. The call does not change or delete existing variants, does not change the item and does not post. Sending the same request twice is refused the second time because the variant exists. Generic data writes to item variants are refused, so use this call. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Kall sem tekst vistar eitt nýtt afbrigði. Höfnun vistar ekkert. Kallið breytir hvorki né eyðir afbrigðum sem eru til, breytir ekki vörunni og bókar ekki. Sé sama beiðni send tvisvar er henni hafnað í seinna skiptið því afbrigðið er til. Almennum gagnaskrifum í vöruafbrigði er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar eitt nýtt afbrigði. Höfnun vistar ekkert. Kallið breytir hvorki né eyðir afbrigðum sem eru til, breytir ekki vörunni og bókar ekki. Sé sama beiðni send tvisvar er henni hafnað í seinna skiptið því afbrigðið er til. Almennum gagnaskrifum í vöruafbrigði er hafnað, svo notaðu þetta kall. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a new variant on an existing item from itemNo and code, with an optional description, description 2 and blocked flag. The answer is the saved variant with code, descriptions, blocked flags and system id.</source>
+          <target>Stofnar nýtt afbrigði á vöru sem er til út frá itemNo og code, með valfrjálsri lýsingu, lýsingu 2 og lokunarflaggi. Svarið er vistaða afbrigðið með kóða, lýsingum, lokunarflöggum og kerfiskenni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýtt afbrigði á vöru sem er til út frá itemNo og code, með valfrjálsri lýsingu, lýsingu 2 og lokunarflaggi. Svarið er vistaða afbrigðið með kóða, lýsingum, lokunarflöggum og kerfiskenni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of an existing item, at most 20 characters. Required.</source>
+          <target>Númer vöru sem er til, mest 20 stafir. Skylt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer vöru sem er til, mest 20 stafir. Skylt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3615801952 - NamedType 3426680361" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code of the new variant, at most 10 characters. Required. A code that already exists on the item is refused.</source>
+          <target>Kóði nýja afbrigðisins, mest 10 stafir. Skylt. Kóða sem er þegar til á vörunni er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði nýja afbrigðisins, mest 10 stafir. Skylt. Kóða sem er þegar til á vörunni er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetParameters - NamedType CodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3615801952 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description of the variant, at most 100 characters.</source>
+          <target>Lýsing afbrigðisins, mest 100 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing afbrigðisins, mest 100 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetParameters - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3615801952 - NamedType 3425271162" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Second description line of the variant, at most 50 characters.</source>
+          <target>Önnur lýsingarlína afbrigðisins, mest 50 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Önnur lýsingarlína afbrigðisins, mest 50 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetParameters - NamedType Description2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3615801952 - NamedType 4221581950" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true or false. true creates the variant blocked for every transaction. Defaults to false.</source>
+          <target>true eða false. true stofnar afbrigðið lokað fyrir allar færslur. Sjálfgefið er false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true eða false. true stofnar afbrigðið lokað fyrir allar færslur. Sjálfgefið er false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetParameters - NamedType BlockedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1033708611 - NamedType 605610168" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the variants an item already has instead of creating one.</source>
+          <target>Lesa afbrigðin sem vara hefur þegar í stað þess að stofna nýtt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa afbrigðin sem vara hefur þegar í stað þess að stofna nýtt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetRelated - NamedType GetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new variant, such as a color or a size, on an existing item.</source>
+          <target>Stofnaðu nýtt afbrigði, til dæmis lit eða stærð, á vöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu nýtt afbrigði, til dæmis lit eða stærð, á vöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3897248833 - NamedType 3189074466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The existing item that receives the new variant.</source>
+          <target>Varan sem er til og fær nýja afbrigðið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem er til og fær nýja afbrigðið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetTarget - NamedType ItemTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3897248833 - NamedType 1400125762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The code of the new variant. It must not exist on the item yet.</source>
+          <target>Kóði nýja afbrigðisins. Hann má ekki vera til á vörunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði nýja afbrigðisins. Hann má ekki vera til á vörunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method GetTarget - NamedType CodeTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3501429861 - NamedType 3668247699" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number. The item must exist before a variant can be created on it.</source>
+          <target>Athugaðu vörunúmerið. Varan verður að vera til áður en hægt er að stofna afbrigði á henni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið. Varan verður að vera til áður en hægt er að stofna afbrigði á henni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ItemNotFoundNextStep - NamedType ItemNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3968481278 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be true or false.</source>
+          <target>%1 verður að vera true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method OptionalBoolean - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3968481278 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as true or false.</source>
+          <target>Sendu %1 sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method OptionalBoolean - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3539940869 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method OptionalText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3539940869 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method OptionalText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and create item variants.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og stofnað vöruafbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og stofnað vöruafbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 3132612207 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, code, description, description2 and blocked.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, code, description, description2 og blocked.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, code, description, description2 og blocked.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method UnknownNextStep - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 2871054791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty.</source>
+          <target>itemNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType ItemNoMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 3040129649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of the item that gets the new variant.</source>
+          <target>Sendu númer vörunnar sem fær nýja afbrigðið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vörunnar sem fær nýja afbrigðið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType ItemNoMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 3905208624" size-unit="char" translate="yes" xml:space="preserve">
+          <source>code is missing or empty.</source>
+          <target>code vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=code vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType CodeMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 731406090" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the code of the new variant, at most 10 characters.</source>
+          <target>Sendu kóða nýja afbrigðisins, mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu kóða nýja afbrigðisins, mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType CodeMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 does not exist.</source>
+          <target>Vara %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, is-IS=Vara %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 3529219039" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 already has variant %2.</source>
+          <target>Vara %1 hefur þegar afbrigðið %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = variant code, is-IS=Vara %1 hefur þegar afbrigðið %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType ExistsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1140648966 - Method 1380282473 - NamedType 1076741934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a variant code not used on the item</source>
+          <target>afbrigðiskóði sem er ekki notaður á vörunni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afbrigðiskóði sem er ekki notaður á vörunni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Create Impl ori - Method ValidateRequest - NamedType NotExistingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the variants of an item.</source>
+          <target>Les afbrigði vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les afbrigði vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty, or code was sent empty.</source>
+          <target>itemNo vantar eða er tómt, eða code var sent tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt, eða code var sent tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a non-empty itemNo, and send code only when you want one variant.</source>
+          <target>Sendu itemNo sem er ekki tómt, og sendu code aðeins ef þú vilt eitt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er ekki tómt, og sendu code aðeins ef þú vilt eitt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo or code is not a JSON string.</source>
+          <target>itemNo eða code er ekki JSON-strengur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo eða code er ekki JSON-strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo and code as text.</source>
+          <target>Sendu itemNo og code sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo og code sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item matched itemNo, or the item has no variant with that code.</source>
+          <target>Engin vara passaði við itemNo, eða varan hefur ekkert afbrigði með þeim kóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vara passaði við itemNo, eða varan hefur ekkert afbrigði með þeim kóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is longer than 20 characters or code is longer than 10 characters.</source>
+          <target>itemNo er lengra en 20 stafir eða code er lengra en 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er lengra en 20 stafir eða code er lengra en 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an itemNo of at most 20 characters and a code of at most 10 characters.</source>
+          <target>Sendu itemNo sem er mest 20 stafir og code sem er mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er mest 20 stafir og code sem er mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items or item variants.</source>
+          <target>Kallandinn getur ekki lesið vörur eða vöruafbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða vöruafbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read every variant of an item</source>
+          <target>Lesa öll afbrigði vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa öll afbrigði vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item variant, variant code, color, size</source>
+          <target>vöruafbrigði, afbrigðiskóði, litur, stærð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruafbrigði, afbrigðiskóði, litur, stærð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This call only reads. An item without variants answers an empty variants array, not an error. The caller needs read access to items and item variants.</source>
+          <target>Þetta kall les eingöngu. Vara án afbrigða svarar tómu variants-fylki, ekki villu. Kallandinn þarf lesaðgang að vörum og vöruafbrigðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þetta kall les eingöngu. Vara án afbrigða svarar tómu variants-fylki, ekki villu. Kallandinn þarf lesaðgang að vörum og vöruafbrigðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the variants of one item with code, description, description 2, blocked, sales blocked, purchasing blocked and system id. Send itemNo to read every variant of the item in code order, and add code to read one variant.</source>
+          <target>Les afbrigði einnar vöru með kóða, lýsingu, lýsingu 2, lokað, lokað fyrir sölu, lokað fyrir innkaup og kerfiskenni. Sendu itemNo til að lesa öll afbrigði vörunnar í röð kóða, og bættu code við til að lesa eitt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les afbrigði einnar vöru með kóða, lýsingu, lýsingu 2, lokað, lokað fyrir sölu, lokað fyrir innkaup og kerfiskenni. Sendu itemNo til að lesa öll afbrigði vörunnar í röð kóða, og bættu code við til að lesa eitt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number, at most 20 characters. Required.</source>
+          <target>Vörunúmer, mest 20 stafir. Skylt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer, mest 20 stafir. Skylt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3615801952 - NamedType 3426680361" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Variant code, at most 10 characters. Omit code to read every variant of the item.</source>
+          <target>Afbrigðiskóði, mest 10 stafir. Slepptu code til að lesa öll afbrigði vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði, mest 10 stafir. Slepptu code til að lesa öll afbrigði vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetParameters - NamedType CodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1033708611 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new variant on the item instead of reading the existing ones.</source>
+          <target>Stofna nýtt afbrigði á vörunni í stað þess að lesa þau sem eru til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna nýtt afbrigði á vörunni í stað þess að lesa þau sem eru til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetRelated - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show the variants of an item, or one variant by its code.</source>
+          <target>Sýndu afbrigði vöru, eða eitt afbrigði eftir kóða þess.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýndu afbrigði vöru, eða eitt afbrigði eftir kóða þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3897248833 - NamedType 3189074466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item whose variants are read.</source>
+          <target>Varan sem afbrigðin eru lesin fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem afbrigðin eru lesin fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetTarget - NamedType ItemTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3897248833 - NamedType 1400125762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One variant of the item. Omit code to read every variant of the item.</source>
+          <target>Eitt afbrigði vörunnar. Slepptu code til að lesa öll afbrigði vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eitt afbrigði vörunnar. Slepptu code til að lesa öll afbrigði vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method GetTarget - NamedType CodeTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1978222490 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number, or omit code to read every variant of the item.</source>
+          <target>Athugaðu vörunúmerið, eða slepptu code til að lesa öll afbrigði vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið, eða slepptu code til að lesa öll afbrigði vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method NotFoundNextStep - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items and item variants.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur og vöruafbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur og vöruafbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 2434615052 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method RequireText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3132612207 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo and code.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og code.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og code.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method UnknownNextStep - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1380282473 - NamedType 2871054791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty.</source>
+          <target>itemNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method ValidateRequest - NamedType ItemNoMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1380282473 - NamedType 3040129649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of the item whose variants you want to read.</source>
+          <target>Sendu númer vörunnar sem þú vilt lesa afbrigði fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vörunnar sem þú vilt lesa afbrigði fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method ValidateRequest - NamedType ItemNoMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1380282473 - NamedType 2100310615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>code is empty.</source>
+          <target>code er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=code er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method ValidateRequest - NamedType CodeEmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1380282473 - NamedType 3591509729" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a variant code, or omit code to read every variant of the item.</source>
+          <target>Sendu afbrigðiskóða, eða slepptu code til að lesa öll afbrigði vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu afbrigðiskóða, eða slepptu code til að lesa öll afbrigði vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method ValidateRequest - NamedType CodeEmptyNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 3105766123 - NamedType 3741542957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omit code to list the variants of the item, or create the variant with Inventory.ItemVariant.Create.</source>
+          <target>Slepptu code til að fá lista yfir afbrigði vörunnar, eða stofnaðu afbrigðið með Inventory.ItemVariant.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptu code til að fá lista yfir afbrigði vörunnar, eða stofnaðu afbrigðið með Inventory.ItemVariant.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method VariantNotFoundNextStep - NamedType VariantNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1506114554 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 does not exist.</source>
+          <target>Vara %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, is-IS=Vara %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method WriteResponse - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1990411220 - Method 1506114554 - NamedType 2025010403" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 has no variant %2.</source>
+          <target>Vara %1 hefur ekkert afbrigði %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = variant code, is-IS=Vara %1 hefur ekkert afbrigði %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Variant Get Impl ori - Method WriteResponse - NamedType VariantNotFoundErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
