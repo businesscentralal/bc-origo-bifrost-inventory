@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// Inventory.AssemblyBOM.Get. Answers the assembly BOM components of an item (BOM Component, table 90), optionally
 /// exploded through every sub-assembly level. Read only.
 /// </summary>
-codeunit 10076961 "Assembly BOM Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076966 "Assembly BOM Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

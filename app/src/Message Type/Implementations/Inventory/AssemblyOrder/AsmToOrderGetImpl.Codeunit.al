@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// Inventory.AssemblyToOrder.Get. Answers the assembly order linked to a sales line through the Assemble-to-Order Link
 /// (table 904), with its lines. Read only.
 /// </summary>
-codeunit 10076960 "Asm. To Order Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076965 "Asm. To Order Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
