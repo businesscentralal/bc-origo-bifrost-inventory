@@ -438,6 +438,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Tracking.Assign');
         Types.Add('Inventory.Tracking.Delete');
         Types.Add('Inventory.TrackingAvailability.Get');
+        Types.Add('Inventory.TrackingInfo.Get');
         Types.Add('Inventory.Transfer.UndoShipment');
         Types.Add('Inventory.Transfer.UndoReceipt');
         Types.Add('Inventory.Assembly.UndoPost');
