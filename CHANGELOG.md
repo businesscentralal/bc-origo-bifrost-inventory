@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Fixed - main merge ID reconciliation (PR #233)
+
+- Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
+
+### Fixed - planning worksheet review (#233)
+
+- Preserve Item Substitution domain 15/field 25; move unreleased Planning to domain 17/field 27 and independent wizard slot 18, preserving Purchase Returns 16/26 from main #219. Reconcile the 65-type catalogue and Foundation-composed contracts. Confirmation boundary tests name a subject; planning regression tests verify other worksheets survive calculation. Add explicit owned MCP seed/cleanup actions to the test app. Collect committed native transfer and assembly headers when the resilient report does not share its nested document buffer; new regression cases verify both order types.
+
+### Added
+- #117: `Inventory.PlanningWorksheet.Calculate` (10076949) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076939) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076947, codeunits 10076949, 10076939 and 10076946, enum value 17 Planning, setup field 27 Planning, test codeunit 96965 (96968 was taken by SKU Tests on main, so this PR moved to the next unused test ID). The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+
 ### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 
 - `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
@@ -114,6 +125,10 @@
 - Test helper 96904 sets and restores the matching field for each target. Existing preview tests 96912 cover both posting modes; tests 96914 retain partial shipment/receipt coverage and add single-document direct-transfer posting coverage. No new object IDs or user-facing text.
 - For BC 29 symbol builds, pass `/define:BC29` to **both** the product and test compiler invocations. For BC 28.5 builds, omit it. See `docs/development/direct-transfer-compatibility.md`.
 - Merge resolution (2026-11-17): main’s PR #213 runtime field detection supersedes the compile-time branches above while preserving both posting choices and the single-document regression test. Neither target now requires a compiler define. The build guide reflects this resolution.
+### Fixed (2026-11-16) - physical inventory blank-row parity (#186)
+
+- Check and PreviewPost now use Post's existing empty-row filter in `Inventory Native Journal ori` (10076840). Rows without an item and with all three quantity fields zero are ignored after applying the requested selection; nonempty missing-item rows keep the native typed refusal.
+- Added test codeunit 96964 `Inv. 186 Blank Line Tests ori`: eight bilingual dispatcher tests cover mixed batches, explicit subsets, blank-only selections, all three nonzero quantity fields, preview rollback and actual posting parity. No new product objects or user-facing text.
 
 ### Added (2026-11-16) - Item substitutions (#118)
 
@@ -163,6 +178,16 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
+### Fixed (2026-11-16) - selected transfer shipment undo and assembly recreation (#39)
+
+- `Inventory.Transfer.UndoShipment` accepts optional `lineNos` (1–100 distinct positive posted line numbers). It validates the complete selection before native undo, refuses missing or already-corrected lines, and preserves unselected lines. Omission retains all non-correction lines.
+- `Inventory.Assembly.UndoPost` accepts a JSON boolean `recreateOrder`, default false, and passes it to native `Assembly-Post.Undo` within the existing atomic transaction.
+- Confirmation parameters stay owned by Foundation; bilingual count units remain in effect help. Assembly undo builds a separate request containing only the validated recreation flag for its isolated writer, retaining public setter compatibility. No object IDs added.
+- Foundation currently builds contract chapters in English even at LCID 1039. Count definitions therefore include both en-US and is-IS wording in the source text; translated XLF targets remain synchronized.
+- All three changed irreversible contracts (shipment undo, assembly undo and transfer posting) explain in en-US and is-IS that `expectedCount` counts one posted document, not lines or entries. The receipt compatibility identifier remains disabled: neither the BC 28 source nor BC 29 symbols contain a native receipt undo.
+- BC 28/29 transfer posting and preview read the applicable setup field by ID; BC 29 uses enum field 5857 rather than the obsolete option field 5855. Existing direct-transfer tests cover both posting modes.
+- No object IDs added. Changed product codeunits: 10076842, 10076901, 10076903, 10076909, 10076910. Regression tests extend 96909 and 96914; explicit owned MCP setup and cleanup (including native Inventory Posting Setup rows for the owned locations) extend test codeunit/page 96973 and helper 96904.
+- Regression 96914 checks the bilingual one-document count in effect help and in the examples. It does not require the app to declare `expectedCount`; Foundation owns that parameter.
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.

@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Purchases.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
@@ -11,12 +12,12 @@ using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Pricing.PriceList;
-using Microsoft.Purchases.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 
@@ -106,6 +107,10 @@ table 10076836 "Inventory Setup ori"
         {
             Caption = 'Purchase Returns', Comment = 'is-IS=Innkaupaskil';
         }
+        field(27; Planning; Boolean)
+        {
+            Caption = 'Planning', Comment = 'is-IS=Áætlun';
+        }
     }
 
     keys
@@ -170,6 +175,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Substitution");
             Domain::PurchaseReturns:
                 exit("Purchase Returns");
+            Domain::Planning:
+                exit(Planning);
         end;
         exit(true);
     end;
@@ -266,7 +273,23 @@ table 10076836 "Inventory Setup ori"
                 "Purchase Returns" := true;
                 Changed := true;
             end;
+        if not Planning then
+            if HasPlanningUsage() then begin
+                Planning := true;
+                Changed := true;
+            end;
         exit(Changed);
+    end;
+
+    /// <summary>Turns on Planning only, when a planning worksheet template exists. Other switches stay as they are.</summary>
+    internal procedure EnablePlanningFromUsage(): Boolean
+    begin
+        if Planning then
+            exit(false);
+        if not HasPlanningUsage() then
+            exit(false);
+        Planning := true;
+        exit(true);
     end;
 
     local procedure HasRecords(TableNo: Integer): Boolean
@@ -431,6 +454,16 @@ table 10076836 "Inventory Setup ori"
         if not PurchaseHeader.ReadPermission() then
             exit(false);
         exit(not PurchaseHeader.IsEmpty());
+    end;
+
+    local procedure HasPlanningUsage(): Boolean
+    var
+        ReqWkshTemplate: Record "Req. Wksh. Template";
+    begin
+        ReqWkshTemplate.SetRange(Type, ReqWkshTemplate.Type::Planning);
+        if not ReqWkshTemplate.ReadPermission() then
+            exit(false);
+        exit(not ReqWkshTemplate.IsEmpty());
     end;
 
     local procedure HasItemCategoryUsage(): Boolean
