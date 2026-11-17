@@ -724,6 +724,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     begin
         Names.Add('Sales.Shipment.Undo|lineNos');
         Names.Add('Purchase.Receipt.Undo|lineNos');
+        Names.Add('Inventory.Tracking.Delete|entryNos');
         Names.Add('Inventory.Attribute.Get|attributeNames');
         Names.Add('Inventory.Attribute.Get|attributeIds');
         Names.Add('Inventory.AttributeDefinition.Create|optionValues');
