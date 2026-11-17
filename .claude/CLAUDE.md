@@ -84,3 +84,9 @@ README "Objects" lists every object with its ID. In short:
 
 - Standard cost collides with Item Create on codeunit 10076932, enum value 10076932 and enum extension 10076848. The PR side moves: `Std. Cost Suggest Impl ori` and `Inventory.StandardCost.Suggest` are 10076938; `MsgType.StdCost.EnumExt ori` is 10076850. `Inventory.StandardCost.Implement` stays 10076933. Item Create keeps 10076932 and enum extension 10076848. Codeunits 10076934–10076937 are unchanged.
 - 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
+
+## Issue 133 object claims (2026-11-17 main-merge)
+
+- Main-merge ID collision: codeunit 10077030 stays `Reserv. Supply Filter ori`. `Purch Get Receipt Impl ori` and message value `Purchase.PurchaseInvoice.GetReceiptLines` are 10077018 (formerly 10077030). 10077027 is claimed by open pull requests #206 and #215; 10077028–10077029 are claimed by #203. Process codeunit 10077031 and enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori` stay. These taken IDs supersede the free-ID notes preserved above.
+- Test codeunit 96996 `Purch Get Receipt Tests`.
+- Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
