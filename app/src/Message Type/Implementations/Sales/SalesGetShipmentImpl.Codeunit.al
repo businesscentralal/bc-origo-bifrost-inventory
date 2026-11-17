@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// the way the Get Shipment Lines action on the sales invoice subform does (codeunit 64 Sales-Get Shipment).
 /// The write runs in Sales Get Shipment Proc ori so a failure rolls back and answers a clean error.
 /// </summary>
-codeunit 10077020 "Sales Get Shipment Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077028 "Sales Get Shipment Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

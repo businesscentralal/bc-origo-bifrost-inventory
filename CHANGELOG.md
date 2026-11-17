@@ -4,15 +4,33 @@
 
 ### Added (2026-11-16) - Sales.SalesInvoice.GetShipmentLines (#132)
 
-- New message type `Sales.SalesInvoice.GetShipmentLines` (enum value 10077020 in enum extension 10076900 `MsgType.SalesGetShpt.Ext ori`; codeunits 10077020 `Sales Get Shipment Impl ori` and 10077021 `Sales Get Shipment Proc ori`). It pulls posted, not invoiced sales shipment lines into an open sales invoice through native codeunit 64 `Sales-Get Shipment` (`SetSalesHeader`, `CreateInvLines`), the same routine as the Get Shipment Lines action, so remaining-quantity checks, item charge copying and the invoice-to-shipment link stay native.
+- New message type `Sales.SalesInvoice.GetShipmentLines` (enum value 10077028 in enum extension 10076900 `MsgType.SalesGetShpt.Ext ori`; codeunits 10077028 `Sales Get Shipment Impl ori` and 10077029 `Sales Get Shipment Proc ori`; renumbered from 10077020-10077021 when merging main, because #118 took codeunit and enum value 10077020 and open PRs claim 10077021-10077027). It pulls posted, not invoiced sales shipment lines into an open sales invoice through native codeunit 64 `Sales-Get Shipment` (`SetSalesHeader`, `CreateInvLines`), the same routine as the Get Shipment Lines action, so remaining-quantity checks, item charge copying and the invoice-to-shipment link stay native.
 - Request: `documentNo` or `systemId` of the open invoice, and `shipmentNos` (array) or `allShipments` (true). A shipment of another bill-to customer or currency is refused with `InvalidLine` and nothing is added; already invoiced lines, and lines already on an open sales invoice, are skipped and listed in `skippedLines` (`invoiced` / `onOpenInvoice`), so sending the same request again adds nothing. Released invoices answer `PreconditionFailed` pointing to `Sales.Document.Reopen`. Every refusal has a Bifröst code and `nextStep`.
 - Effect `write` (not irreversible; nothing is posted and added lines can be deleted), `posts: false`, `idempotent: true` (core#1365 D1). Help, refusals and examples in en-US and is-IS; is-IS.xlf regenerated with `tools/Update-IcelandicXlf.ps1`.
 - Invoice line types and status values use English enum names in both locales, matching the shared response convention.
 - Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
 - `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
 
+### Added (2026-11-16) - Item substitutions (#118)
+
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
+
+
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
+### Added (2026-11-16) - Sales.ReturnOrder.CreateFromPosted (#136)
+
+- New message type `Sales.ReturnOrder.CreateFromPosted` (enum value 10077032 in enum extension 10076906 `MsgType.SalesRetOrd.Ext ori`; codeunits 10077032 `Sales Ret. Ord. Post. Impl ori` and 10077033 `Sales Ret. Ord. Post. Proc ori`). It creates a sales return order or credit memo, or fills an open one, from posted sales invoice or shipment lines with quantities, through native codeunit 6620 `Copy Document Mgt.` (`SetProperties` with exact cost reversal, `CopySalesInvLinesToDoc`, `CopySalesShptLinesToDoc`), the same routine as Get Posted Document Lines to Reverse, so item lines get Appl.-from Item Entry.
+- Request: `documentType` (`ReturnOrder` or `CreditMemo`), `customerNo` for a new document or `documentNo`/`systemId` for an existing open one, and `lines` of `{source (Invoice|Shipment), documentNo, lineNo, quantity}`. The answer gives the document no., `created`, and the added lines with `applFromItemEntryNo`. A quantity above what is left to reverse (shipped quantity not yet returned for item lines) and a line of another customer are refused with `InvalidLine`, a released document with `PreconditionFailed` (pointing to `Sales.Document.Reopen`); every refusal has a Bifröst code and `nextStep` and nothing is created.
+- Effect `write` (not irreversible; nothing is posted and the document can be deleted while open), `posts: false`, `idempotent: false` (core#1365 D1). Help, refusals and examples in en-US and is-IS; is-IS.xlf regenerated with `tools/Update-IcelandicXlf.ps1`.
+- `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96991 `Sales Ret. Ord. Post. Tests` (new return order from an invoice line with item entry link, credit memo from a shipment line, quantity above remaining, same line twice, other customer, released document, coded invalid input, bilingual help).
+
+### Fixed (2026-11-16) - Sales.ReturnOrder.CreateFromPosted build and write order (#136)
+
+- Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
+- The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
+- The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
 
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
