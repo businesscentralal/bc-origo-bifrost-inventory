@@ -10665,6 +10665,516 @@
           <note from="Developer" annotates="general" priority="2">%1 = list of keys, is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru %1.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3461834954 - NamedType 3375937434" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Suggests standard costs for filtered items in a standard cost worksheet.</source>
+          <target>Leggur til staðalkostnað fyrir síaðar vörur í staðalkostnaðarvinnublaði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leggur til staðalkostnað fyrir síaðar vörur í staðalkostnaðarvinnublaði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method Description - NamedType SuggestLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3461834954 - NamedType 3751137767" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Updates item and SKU standard costs and creates unposted revaluation journal lines from a worksheet.</source>
+          <target>Uppfærir staðalkostnað vara og birgðahaldseininga og stofnar óbókaðar endurmatsbókarlínur úr vinnublaði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærir staðalkostnað vara og birgðahaldseininga og stofnar óbókaðar endurmatsbókarlínur úr vinnublaði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method Description - NamedType ImplementLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1479631707 - NamedType 4278021287" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Costing is enabled and the caller has native read/write permissions on all affected records.</source>
+          <target>Kostnaðarsviðið er virkt og kallandi hefur les- og skrifheimildir á allar færslur sem verða fyrir áhrifum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðarsviðið er virkt og kallandi hefur les- og skrifheimildir á allar færslur sem verða fyrir áhrifum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetEffect - NamedType PreconditionsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 2719903620 - NamedType 3871721722" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Subject is not used. Select the worksheet with data.worksheetName.</source>
+          <target>Subject er ekki notað. Veldu vinnublaðið með data.worksheetName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Subject er ekki notað. Veldu vinnublaðið með data.worksheetName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetEnvelope - NamedType SubjectLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required text parameter is missing or empty.</source>
+          <target>Áskilin textafæribreyta vantar eða er tóm.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilin textafæribreyta vantar eða er tóm.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A parameter has the wrong JSON type, an invalid filter or a non-ISO date.</source>
+          <target>Færibreyta hefur ranga JSON-gerð, ógilda síu eða dagsetningu sem er ekki á ISO-formi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreyta hefur ranga JSON-gerð, ógilda síu eða dagsetningu sem er ekki á ISO-formi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType FormatLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1066607173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A value is too long, the factor is not positive, the journal type is wrong, or Costing is disabled.</source>
+          <target>Gildi er of langt, stuðull er ekki jákvæður, gerð bókar er röng eða kostnaðarsviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildi er of langt, stuðull er ekki jákvæður, gerð bókar er röng eða kostnaðarsviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType InvalidLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request includes an unknown parameter.</source>
+          <target>Beiðnin inniheldur óþekkta færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekkta færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1807446229" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A worksheet, matching item, journal template or batch does not exist.</source>
+          <target>Vinnublað, samsvarandi vara, bókarsniðmát eða keyrsla er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vinnublað, samsvarandi vara, bókarsniðmát eða keyrsla er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType MissingRecordLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1687577938" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The batch is not empty, the worksheet is empty or already implemented, or a selected line is not an unblocked Standard-cost inventory item.</source>
+          <target>Keyrslan er ekki tóm, vinnublaðið er tómt eða þegar framkvæmt, eða valin lína er ekki ólokuð birgðavara með staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrslan er ekki tóm, vinnublaðið er tómt eða þegar framkvæmt, eða valin lína er ekki ólokuð birgðavara með staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType PreconditionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native read or write permissions are missing.</source>
+          <target>Les- eða skrifheimildir Business Central vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les- eða skrifheimildir Business Central vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 2119438125" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central rejected the operation. No writes from the failed call are saved.</source>
+          <target>Business Central hafnaði aðgerðinni. Engar breytingar úr misheppnuðu kalli eru vistaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnaði aðgerðinni. Engar breytingar úr misheppnuðu kalli eru vistaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType NativeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 1331404392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the parameter using this help and retry.</source>
+          <target>Leiðréttu færibreytuna samkvæmt þessari hjálp og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu færibreytuna samkvæmt þessari hjálp og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType RequestNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 356037276" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose existing records or create the missing setup in Business Central.</source>
+          <target>Veldu færslur sem eru til eða stofnaðu uppsetninguna sem vantar í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu færslur sem eru til eða stofnaðu uppsetninguna sem vantar í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType RecordNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 3173015710" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the worksheet and use an empty Revaluation batch with unimplemented item lines.</source>
+          <target>Yfirfarðu vinnublaðið og notaðu tóma endurmatskeyrslu með óframkvæmdum vörulínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Yfirfarðu vinnublaðið og notaðu tóma endurmatskeyrslu með óframkvæmdum vörulínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType PreconditionsNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for the required Bifrost and native table permissions.</source>
+          <target>Biddu kerfisstjóra um nauðsynlegar Bifrost-heimildir og töfluheimildir Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um nauðsynlegar Bifrost-heimildir og töfluheimildir Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1158096087 - NamedType 2612954968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the reported Business Central error and retry.</source>
+          <target>Leiðréttu tilgreinda Business Central villu og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreinda Business Central villu og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetErrors - NamedType NativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3255554567 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an existing TEST worksheet and your own item or empty revaluation journal batch.</source>
+          <target>Notaðu TEST vinnublað sem er til og eigin vöru eða tóma endurmatsbókarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu TEST vinnublað sem er til og eigin vöru eða tóma endurmatsbókarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetExamples - NamedType ExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3650283039 - NamedType 3375937434" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs Suggest Item Standard Cost for the selected Standard-cost inventory items. Existing selected worksheet lines are refreshed from item card costs; other lines stay unchanged. The factor affects standard cost only. It writes worksheet lines but does not change item costs or post.</source>
+          <target>Keyrir tillögu að staðalkostnaði fyrir valdar birgðavörur með staðalkostnað. Völdum fyrirliggjandi línum vinnublaðs er endurnýjað úr kostnaði vöruspjalds; aðrar línur haldast óbreyttar. Stuðullinn hefur aðeins áhrif á staðalkostnað. Skrifar línur vinnublaðs en breytir ekki vörukostnaði og bókar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir tillögu að staðalkostnaði fyrir valdar birgðavörur með staðalkostnað. Völdum fyrirliggjandi línum vinnublaðs er endurnýjað úr kostnaði vöruspjalds; aðrar línur haldast óbreyttar. Stuðullinn hefur aðeins áhrif á staðalkostnað. Skrifar línur vinnublaðs en breytir ekki vörukostnaði og bókar ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetNotes - NamedType SuggestLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3650283039 - NamedType 3751137767" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Runs Implement Standard Cost Change for all item lines in the worksheet. It updates item costs and cost shares, updates SKU standard costs according to Manufacturing Setup, marks lines implemented, and calculates native revaluation journal lines. Zero-stock items can update costs without generating a journal line. Already implemented or non-item lines are refused. No ledger entries are posted. Review the resulting journal and use Inventory.Revaluation.PreviewPost or Inventory.Revaluation.Post separately.</source>
+          <target>Keyrir framkvæmd staðalkostnaðarbreytinga fyrir allar vörulínur vinnublaðsins. Uppfærir vörukostnað og kostnaðarhluta, uppfærir staðalkostnað birgðahaldseininga samkvæmt framleiðsluuppsetningu, merkir línur framkvæmdar og reiknar endurmatsbókarlínur. Vörur án birgða geta fengið uppfærðan kostnað án nýrrar bókarlínu. Þegar framkvæmdum línum og línum sem eru ekki vörur er hafnað. Engar fjárhagsfærslur eru bókaðar. Yfirfarðu bókina og notaðu Inventory.Revaluation.PreviewPost eða Inventory.Revaluation.Post sérstaklega.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir framkvæmd staðalkostnaðarbreytinga fyrir allar vörulínur vinnublaðsins. Uppfærir vörukostnað og kostnaðarhluta, uppfærir staðalkostnað birgðahaldseininga samkvæmt framleiðsluuppsetningu, merkir línur framkvæmdar og reiknar endurmatsbókarlínur. Vörur án birgða geta fengið uppfærðan kostnað án nýrrar bókarlínu. Þegar framkvæmdum línum og línum sem eru ekki vörur er hafnað. Engar fjárhagsfærslur eru bókaðar. Yfirfarðu bókina og notaðu Inventory.Revaluation.PreviewPost eða Inventory.Revaluation.Post sérstaklega.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetNotes - NamedType ImplementLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 1682856384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing worksheet name, at most 10 characters.</source>
+          <target>Heiti vinnublaðs sem er til, mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti vinnublaðs sem er til, mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType WorksheetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 4139432870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required Business Central filter on Item No., at most 2048 characters. Only Inventory items with Standard costing are selected. Blocked selected items are refused.</source>
+          <target>Áskilin Business Central sía á vörunúmer, mest 2048 stafir. Aðeins birgðavörur með staðalkostnað eru valdar. Völdum lokuðum vörum er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilin Business Central sía á vörunúmer, mest 2048 stafir. Aðeins birgðavörur með staðalkostnað eru valdar. Völdum lokuðum vörum er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType FilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 654642145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Positive JSON number multiplying the current item standard cost, rounded to five decimal places. Indirect cost and overhead rate retain factor 1.</source>
+          <target>Jákvæð JSON-tala sem margfaldar núverandi staðalkostnað vöru, námunduð að fimm aukastöfum. Óbeinn kostnaður og kostnaðarauki halda stuðlinum 1.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Jákvæð JSON-tala sem margfaldar núverandi staðalkostnað vöru, námunduð að fimm aukastöfum. Óbeinn kostnaður og kostnaðarauki halda stuðlinum 1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType FactorLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing Revaluation journal template, at most 10 characters.</source>
+          <target>Sniðmát endurmatsbókar sem er til, mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmát endurmatsbókar sem er til, mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType TemplateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 1533895450" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing empty batch under the selected template, at most 10 characters. Any existing line causes refusal.</source>
+          <target>Tóm keyrsla sem er til undir völdu sniðmáti, mest 10 stafir. Fyrirliggjandi lína veldur höfnun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tóm keyrsla sem er til undir völdu sniðmáti, mest 10 stafir. Fyrirliggjandi lína veldur höfnun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType BatchLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required revaluation posting date as yyyy-mm-dd. It does not post the journal.</source>
+          <target>Áskilin bókunardagsetning endurmats sem yyyy-mm-dd. Bókin er ekki bókuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilin bókunardagsetning endurmats sem yyyy-mm-dd. Bókin er ekki bókuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType DateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3615801952 - NamedType 4058751071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document number for new journal lines, at most 20 characters.</source>
+          <target>Fylgiskjalsnúmer fyrir nýjar bókarlínur, mest 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylgiskjalsnúmer fyrir nýjar bókarlínur, mest 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetParameters - NamedType DocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1033708611 - NamedType 3375937434" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Suggest worksheet lines before implementation.</source>
+          <target>Leggðu til línur vinnublaðs fyrir framkvæmd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leggðu til línur vinnublaðs fyrir framkvæmd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetRelated - NamedType SuggestLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1033708611 - NamedType 3751137767" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Implement reviewed worksheet lines into an empty revaluation batch.</source>
+          <target>Framkvæmdu yfirfarnar línur vinnublaðs í tómri endurmatskeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framkvæmdu yfirfarnar línur vinnublaðs í tómri endurmatskeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetRelated - NamedType ImplementLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1033708611 - NamedType 2544287428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preview the generated journal before posting it.</source>
+          <target>Forskoðaðu myndaða bók áður en hún er bókuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðaðu myndaða bók áður en hún er bókuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetRelated - NamedType PreviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1033708611 - NamedType 4091959022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post the generated revaluation journal as a separate guarded operation.</source>
+          <target>Bókaðu myndaða endurmatsbók sem sérstaka varða aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaðu myndaða endurmatsbók sem sérstaka varða aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetRelated - NamedType PostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 3193096050" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success for a completed operation; refusals use the standard error envelope.</source>
+          <target>Success fyrir lokna aðgerð; höfnun notar staðlað villuumslag.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success fyrir lokna aðgerð; höfnun notar staðlað villuumslag.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType StatusLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 1682856384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Selected worksheet name.</source>
+          <target>Heiti valins vinnublaðs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti valins vinnublaðs.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType WorksheetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of returned lines.</source>
+          <target>Fjöldi lína í svari.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi lína í svari.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType CountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 3616618409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only the suggested worksheet lines or newly created journal lines.</source>
+          <target>Aðeins tillögulínur vinnublaðs eða nýstofnaðar bókarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins tillögulínur vinnublaðs eða nýstofnaðar bókarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType LinesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 1733831957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Always false. Posting remains a separate Inventory.Revaluation.Post call.</source>
+          <target>Alltaf false. Bókun fer fram í sérstöku Inventory.Revaluation.Post kalli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Alltaf false. Bókun fer fram í sérstöku Inventory.Revaluation.Post kalli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType PostedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number.</source>
+          <target>Vörunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 2699561107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current item standard cost before suggestion.</source>
+          <target>Núverandi staðalkostnaður vöru fyrir tillögu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Núverandi staðalkostnaður vöru fyrir tillögu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType CostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 2444738535" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Suggested standard cost.</source>
+          <target>Tillaga að staðalkostnaði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tillaga að staðalkostnaði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType NewCostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 3929749232" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Whether the worksheet line has been implemented.</source>
+          <target>Hvort lína vinnublaðs hefur verið framkvæmd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hvort lína vinnublaðs hefur verið framkvæmd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType ImplementedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Revaluation journal template.</source>
+          <target>Sniðmát endurmatsbókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmát endurmatsbókar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType TemplateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 1533895450" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Revaluation journal batch.</source>
+          <target>Keyrsla endurmatsbókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrsla endurmatsbókar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType BatchLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Actual journal line number.</source>
+          <target>Raunverulegt línunúmer bókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Raunverulegt línunúmer bókar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType LineNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting date as yyyy-mm-dd.</source>
+          <target>Bókunardagsetning sem yyyy-mm-dd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókunardagsetning sem yyyy-mm-dd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType DateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 4058751071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document number.</source>
+          <target>Fylgiskjalsnúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylgiskjalsnúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType DocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native revaluation quantity.</source>
+          <target>Magn endurmats samkvæmt Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn endurmats samkvæmt Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Proposed revalued unit cost.</source>
+          <target>Tillaga að endurmetnum einingarkostnaði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tillaga að endurmetnum einingarkostnaði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType UnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 4268477247 - NamedType 2442600875" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Proposed revalued inventory value.</source>
+          <target>Tillaga að endurmetnu birgðavirði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tillaga að endurmetnu birgðavirði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetResponse - NamedType ValueLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing standard cost worksheet name.</source>
+          <target>Heiti staðalkostnaðarvinnublaðs sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti staðalkostnaðarvinnublaðs sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3502481479 - NamedType 3375937434" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Suggest and review standard cost worksheet lines.</source>
+          <target>Leggðu til og yfirfarðu línur staðalkostnaðarvinnublaðs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leggðu til og yfirfarðu línur staðalkostnaðarvinnublaðs.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetWorkflow - NamedType SuggestLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3502481479 - NamedType 3751137767" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update item costs and generate unposted revaluation journal lines.</source>
+          <target>Uppfærðu vörukostnað og myndaðu óbókaðar endurmatsbókarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppfærðu vörukostnað og myndaðu óbókaðar endurmatsbókarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetWorkflow - NamedType ImplementLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3502481479 - NamedType 2544287428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preview the generated journal before posting.</source>
+          <target>Forskoðaðu myndaða bók fyrir bókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Forskoðaðu myndaða bók fyrir bókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetWorkflow - NamedType PreviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 3502481479 - NamedType 4091959022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post the reviewed revaluation journal in a separate call.</source>
+          <target>Bókaðu yfirfarna endurmatsbók í sérstöku kalli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaðu yfirfarna endurmatsbók í sérstöku kalli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method GetWorkflow - NamedType PostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3041386804 - Method 1009384294 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>standard cost, worksheet, adjustment factor, revaluation</source>
+          <target>staðalkostnaður, vinnublað, leiðréttingarstuðull, endurmat</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=staðalkostnaður, vinnublað, leiðréttingarstuðull, endurmat</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Contract ori - Method Keywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3894482180 - NamedType 1346508330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the Business Central error and retry. No standard cost changes from this call were saved.</source>
+          <target>Leiðréttu villuna í Business Central og reyndu aftur. Engar staðalkostnaðarbreytingar úr þessu kalli voru vistaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu villuna í Business Central og reyndu aftur. Engar staðalkostnaðarbreytingar úr þessu kalli voru vistaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ExecuteImplement - NamedType NativeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 2485053373 - NamedType 1346508330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the Business Central error and retry. No standard cost changes from this call were saved.</source>
+          <target>Leiðréttu villuna í Business Central og reyndu aftur. Engar staðalkostnaðarbreytingar úr þessu kalli voru vistaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu villuna í Business Central og reyndu aftur. Engar staðalkostnaðarbreytingar úr þessu kalli voru vistaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ExecuteSuggest - NamedType NativeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 2434615052 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required text parameter is missing or empty.</source>
+          <target>Áskilin textafæribreyta vantar eða er tóm.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilin textafæribreyta vantar eða er tóm.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method RequireText - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 2434615052 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter must be JSON text within its documented length.</source>
+          <target>Færibreytan verður að vera JSON-texti innan tilgreindrar lengdar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan verður að vera JSON-texti innan tilgreindrar lengdar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method RequireText - NamedType FormatLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 2434615052 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as nonempty text of at most %2 characters.</source>
+          <target>Sendu %1 sem ótóman texta sem er mest %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = maximum length, is-IS=Sendu %1 sem ótóman texta sem er mest %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method RequireText - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission to read or change standard cost data is missing.</source>
+          <target>Heimild til að lesa eða breyta staðalkostnaðargögnum vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild til að lesa eða breyta staðalkostnaðargögnum vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for BIFROST Full ori and the native worksheet, item, stockkeeping unit and journal permissions needed for this operation.</source>
+          <target>Biddu kerfisstjóra um BIFROST Full ori og nauðsynlegar heimildir fyrir vinnublað, vörur, birgðahaldseiningar og bók fyrir þessa aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um BIFROST Full ori og nauðsynlegar heimildir fyrir vinnublað, vörur, birgðahaldseiningar og bók fyrir þessa aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 3379277262" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Costing domain is disabled.</source>
+          <target>Kostnaðarsviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðarsviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType DomainLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 2340038615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable Costing on Inventory Setup and retry.</source>
+          <target>Virkjaðu kostnaðarsviðið í uppsetningu birgða og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkjaðu kostnaðarsviðið í uppsetningu birgða og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType DomainNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown parameter.</source>
+          <target>Beiðnin inniheldur óþekkta færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekkta færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 2001379935" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the parameter and use only parameters listed in help for this message type.</source>
+          <target>Fjarlægðu færibreytuna og notaðu aðeins færibreytur sem hjálp fyrir þessa skilaboðategund tilgreinir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu færibreytuna og notaðu aðeins færibreytur sem hjálp fyrir þessa skilaboðategund tilgreinir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType UnknownNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 2201573804" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The standard cost worksheet name does not exist.</source>
+          <target>Heiti staðalkostnaðarvinnublaðsins er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti staðalkostnaðarvinnublaðsins er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType MissingWorksheetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 278876853" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the worksheet name in Business Central or choose an existing worksheet.</source>
+          <target>Stofnaðu heiti vinnublaðsins í Business Central eða veldu vinnublað sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu heiti vinnublaðsins í Business Central eða veldu vinnublað sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType WorksheetNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>postingDate must be a nonzero ISO date (yyyy-mm-dd).</source>
+          <target>postingDate verður að vera gild ISO-dagsetning (yyyy-mm-dd).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=postingDate verður að vera gild ISO-dagsetning (yyyy-mm-dd).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType DateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 1412843979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the intended revaluation date as yyyy-mm-dd.</source>
+          <target>Sendu fyrirhugaða endurmatsdagsetningu sem yyyy-mm-dd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu fyrirhugaða endurmatsdagsetningu sem yyyy-mm-dd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType DateNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 2897994277" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The revaluation journal template or batch is missing or has the wrong type.</source>
+          <target>Sniðmát eða keyrsla endurmatsbókar vantar eða er af rangri gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðmát eða keyrsla endurmatsbókar vantar eða er af rangri gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType JournalLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 687683856" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create or select a Revaluation journal template and an existing batch.</source>
+          <target>Stofnaðu eða veldu sniðmát endurmatsbókar og keyrslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu eða veldu sniðmát endurmatsbókar og keyrslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType JournalNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 536386669" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected revaluation journal batch is not empty.</source>
+          <target>Valin endurmatsbókarkeyrsla er ekki tóm.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin endurmatsbókarkeyrsla er ekki tóm.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType JournalNotEmptyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 3807422315" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an empty revaluation journal batch; review existing lines separately before retrying.</source>
+          <target>Notaðu tóma endurmatsbókarkeyrslu; yfirfarðu fyrirliggjandi línur sérstaklega áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu tóma endurmatsbókarkeyrslu; yfirfarðu fyrirliggjandi línur sérstaklega áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType JournalEmptyNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 436939961" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The standard cost worksheet is empty.</source>
+          <target>Staðalkostnaðarvinnublaðið er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðalkostnaðarvinnublaðið er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType EmptyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 3378956203" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Run Inventory.StandardCost.Suggest for this worksheet first.</source>
+          <target>Keyrðu fyrst Inventory.StandardCost.Suggest fyrir þetta vinnublað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrðu fyrst Inventory.StandardCost.Suggest fyrir þetta vinnublað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType SuggestNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worksheet contains a non-item line, an implemented line, or an item that is blocked or no longer uses Standard costing.</source>
+          <target>Vinnublaðið inniheldur línu sem er ekki vara, þegar framkvæmda línu, eða vöru sem er lokuð eða notar ekki lengur staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vinnublaðið inniheldur línu sem er ekki vara, þegar framkvæmda línu, eða vöru sem er lokuð eða notar ekki lengur staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 1424238475 - NamedType 4175692615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the worksheet in Business Central and use only unimplemented lines for unblocked Standard-cost inventory items.</source>
+          <target>Yfirfarðu vinnublaðið í Business Central og notaðu aðeins óframkvæmdar línur fyrir ólokaðar birgðavörur með staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Yfirfarðu vinnublaðið í Business Central og notaðu aðeins óframkvæmdar línur fyrir ólokaðar birgðavörur með staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateImplement - NamedType SelectionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 654642145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>adjustmentFactor must be a positive JSON number.</source>
+          <target>adjustmentFactor verður að vera jákvæð JSON-tala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=adjustmentFactor verður að vera jákvæð JSON-tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType FactorLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 1366381396" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send adjustmentFactor as a number greater than zero, for example 1.1.</source>
+          <target>Sendu adjustmentFactor sem tölu stærri en núll, til dæmis 1.1.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu adjustmentFactor sem tölu stærri en núll, til dæmis 1.1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType FactorNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 4139432870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item filter is invalid.</source>
+          <target>Vörusían er ógild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörusían er ógild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType FilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 3155622607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a valid Business Central item number filter in itemFilter.</source>
+          <target>Sendu gilda Business Central síu á vörunúmer í itemFilter.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu gilda Business Central síu á vörunúmer í itemFilter.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType FilterNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 3833775903" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The filter matches no inventory items with Standard costing.</source>
+          <target>Sían finnur engar birgðavörur með staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sían finnur engar birgðavörur með staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType NoItemsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 2317576813" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose inventory items with the Standard costing method and retry.</source>
+          <target>Veldu birgðavörur með staðalkostnaðaraðferð og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu birgðavörur með staðalkostnaðaraðferð og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType ItemsNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worksheet contains a non-item line, an implemented line, or an item that is blocked or no longer uses Standard costing.</source>
+          <target>Vinnublaðið inniheldur línu sem er ekki vara, þegar framkvæmda línu, eða vöru sem er lokuð eða notar ekki lengur staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vinnublaðið inniheldur línu sem er ekki vara, þegar framkvæmda línu, eða vöru sem er lokuð eða notar ekki lengur staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4025035779 - Method 3482509782 - NamedType 4175692615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Review the worksheet in Business Central and use only unimplemented lines for unblocked Standard-cost inventory items.</source>
+          <target>Yfirfarðu vinnublaðið í Business Central og notaðu aðeins óframkvæmdar línur fyrir ólokaðar birgðavörur með staðalkostnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Yfirfarðu vinnublaðið í Business Central og notaðu aðeins óframkvæmdar línur fyrir ólokaðar birgðavörur með staðalkostnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateSuggest - NamedType SelectionNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.</source>
           <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</target>

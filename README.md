@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 73 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 75 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -288,6 +288,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
 | 10076848 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
+| 10076850 | `MsgType.StdCost.EnumExt ori` | `Inventory.StandardCost.Suggest` (10076938), `Inventory.StandardCost.Implement` (10076933) |
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
@@ -328,6 +329,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
+| 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077011–10077013 | Item units of measure | Get, Create, Create process |
 | 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
@@ -467,6 +469,16 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Standard cost worksheet
+
+`Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.
+
+`Inventory.StandardCost.Implement` takes `worksheetName`, `journalTemplateName`, `journalBatchName`, `postingDate` (`yyyy-mm-dd`) and `documentNo`. The batch must exist under a Revaluation template and be empty. Every worksheet row must be an unimplemented, unblocked Standard-cost Inventory item. Native implementation updates item and SKU costs/cost shares according to Business Central setup, marks worksheet rows implemented and creates revaluation journal lines. Zero-stock items may produce no journal lines. Both types return `status`, `worksheetName`, `lineCount`, `lines` and `posted: false`.
+
+Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
+
+Objects: codeunits 10076938 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076850 `MsgType.StdCost.EnumExt ori` (values 10076938 and 10076933); test codeunits 96982–96983 `Standard Cost Tests ori`.
 
 ### Requisition worksheet planning (#131)
 
