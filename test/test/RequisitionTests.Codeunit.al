@@ -329,6 +329,7 @@ codeunit 96947 "Requisition Tests ori"
         Line.Validate("Location Code", ToLocation.Code);
         Line.Validate("Replenishment System", Line."Replenishment System"::Transfer);
         Line.Validate("Transfer-from Code", FromLocation.Code);
+        Line."Transfer Shipment Date" := WorkDate();
         Line.Modify(true);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
