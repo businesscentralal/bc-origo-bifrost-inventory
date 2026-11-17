@@ -89,6 +89,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Price.List.Activate` | Inbound | Verify native price lines, refuse duplicate prices and activate the list |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
+| `Sales.SalesInvoice.GetShipmentLines` | Inbound | Pull posted, not invoiced sales shipment lines into an open sales invoice (`shipmentNos` or `allShipments`), as the Get Shipment Lines action does; refuses another bill-to customer with `InvalidLine` and lists skipped lines |
 | `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
@@ -300,6 +301,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
+| 10076900 | `MsgType.SalesGetShpt.Ext ori` | `Sales.SalesInvoice.GetShipmentLines` |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
@@ -344,12 +346,13 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077011–10077013 | Item units of measure | Get, Create, Create process |
-| 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
-| 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |
-| 10077023 | `Partial Transfer Process ori` | Atomic native posting |
-| 10077024 | `Partial Transfer Contract ori` | English and Icelandic partial-transfer contracts |
-| 10077025 | `Transfer Posting Setup ori` | BC 28/29 direct-transfer setup compatibility |
-| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
+| 10077021 | Partial transfers | `Transfer Receive Impl ori` (partial transfer receipt) |
+| 10077022 | Partial transfers | `Partial Transfer Mgt ori` (validates selected transfer quantities) |
+| 10077023 | Partial transfers | `Partial Transfer Process ori` (atomic native posting) |
+| 10077024 | Partial transfers | `Partial Transfer Contract ori` (English and Icelandic contracts) |
+| 10077025 | Partial transfers | `Transfer Posting Setup ori` (BC 28/29 direct-transfer setup compatibility) |
+| 10077026 | Partial transfers | `Transfer Ship Impl ori` (partial transfer shipment) |
+| 10077028–10077029 | Sales shipments | `Sales Get Shipment Impl ori` (`Sales.SalesInvoice.GetShipmentLines`), `Sales Get Shipment Proc ori` (isolated write) |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
