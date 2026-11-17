@@ -5685,6 +5685,564 @@
           <note from="Developer" annotates="general" priority="2">is-IS=True fyrir vöru með reiknaðar birgðir; false fyrir staðgengil úr vörulista.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType KnownLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 549346375 - NamedType 4286378729" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose another unit of measure code, or read the existing unit with Inventory.ItemUnitOfMeasure.Get.</source>
+          <target>Veldu annan mælieiningarkóða, eða lestu eininguna sem er til með Inventory.ItemUnitOfMeasure.Get.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu annan mælieiningarkóða, eða lestu eininguna sem er til með Inventory.ItemUnitOfMeasure.Get.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ExistsNextStep - NamedType ExistsNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a unit of measure on an item.</source>
+          <target>Stofnar mælieiningu á vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar mælieiningu á vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo, code or qtyPerUnitOfMeasure is missing or empty.</source>
+          <target>itemNo, code eða qtyPerUnitOfMeasure vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo, code eða qtyPerUnitOfMeasure vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of an existing item, the code of the new unit and its quantity per unit of measure.</source>
+          <target>Sendu númer vöru sem er til, kóða nýju einingarinnar og magn hennar í mælieiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vöru sem er til, kóða nýju einingarinnar og magn hennar í mælieiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo and code as text, and qtyPerUnitOfMeasure, length, width, height and weight as JSON numbers.</source>
+          <target>Sendu itemNo og code sem texta, og qtyPerUnitOfMeasure, length, width, height og weight sem JSON-tölur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo og code sem texta, og qtyPerUnitOfMeasure, length, width, height og weight sem JSON-tölur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item matched itemNo, or code is not a unit of measure defined in Business Central.</source>
+          <target>Engin vara passaði við itemNo, eða code er ekki mælieining skilgreind í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vara passaði við itemNo, eða code er ekki mælieining skilgreind í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A text is longer than its field, qtyPerUnitOfMeasure is not greater than 0, or a dimension or the weight is negative.</source>
+          <target>Texti er lengri en reiturinn hans, qtyPerUnitOfMeasure er ekki stærra en 0, eða mál eða þyngd er neikvætt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Texti er lengri en reiturinn hans, qtyPerUnitOfMeasure er ekki stærra en 0, eða mál eða þyngd er neikvætt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an itemNo of at most 20 characters, a code of at most 10, a quantity per unit of measure greater than 0 and dimensions and weight of 0 or more.</source>
+          <target>Sendu itemNo sem er mest 20 stafir, code sem er mest 10, magn í mælieiningu stærra en 0 og mál og þyngd 0 eða hærra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er mest 20 stafir, code sem er mest 10, magn í mælieiningu stærra en 0 og mál og þyngd 0 eða hærra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 568181194" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item already has a unit of measure with that code. When item ledger entries use it, its quantity per unit of measure cannot change.</source>
+          <target>Varan hefur þegar mælieiningu með þeim kóða. Þegar birgðafærslur nota hana má ekki breyta magni í mælieiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan hefur þegar mælieiningu með þeim kóða. Þegar birgðafærslur nota hana má ekki breyta magni í mælieiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType ExistsWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items or item ledger entries, or create item units of measure.</source>
+          <target>Kallandinn getur ekki lesið vörur eða birgðafærslur, eða stofnað vörumælieiningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur eða birgðafærslur, eða stofnað vörumælieiningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the save itself, after the request was checked. Nothing is saved.</source>
+          <target>Business Central hafnar sjálfri vistuninni eftir að beiðnin var yfirfarin. Ekkert er vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar sjálfri vistuninni eftir að beiðnin var yfirfarin. Ekkert er vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the cause in Business Central and send the call again.</source>
+          <target>Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a box of six for an item</source>
+          <target>Stofna kassa með sex stykkjum fyrir vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna kassa með sex stykkjum fyrir vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item unit of measure, new unit, carton, pallet, quantity per unit, weight, dimensions</source>
+          <target>vörumælieining, ný eining, kassi, bretti, magn í einingu, þyngd, mál</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörumælieining, ný eining, kassi, bretti, magn í einingu, þyngd, mál</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A successful call saves one new unit of measure. A refusal saves nothing. The call never changes the quantity per unit of an existing unit: when the code already exists, it is refused with PreconditionFailed, and the refusal says so when item ledger entries use the unit. The call does not change the base unit of the item, does not delete anything and does not post. Existing generic data writes to item units of measure keep working; this call adds a checked way to create one unit. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almenn gagnaskrif í vörumælieiningar virka áfram eins og áður; þetta kall bætir við athuguðum möguleika til að stofna eina einingu. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kall sem tekst vistar eina nýja mælieiningu. Höfnun vistar ekkert. Kallið breytir aldrei magni í mælieiningu sem er til: sé kóðinn þegar til er því hafnað með PreconditionFailed, og höfnunin segir það þegar birgðafærslur nota eininguna. Kallið breytir ekki grunneiningu vörunnar, eyðir engu og bókar ekki. Almenn gagnaskrif í vörumælieiningar virka áfram eins og áður; þetta kall bætir við athuguðum möguleika til að stofna eina einingu. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a new unit of measure on an existing item from itemNo, code and qtyPerUnitOfMeasure, with optional length, width, height and weight. The answer is the saved unit with quantity per unit of measure, base unit flag, dimensions, cubage, weight and system id.</source>
+          <target>Stofnar nýja mælieiningu á vöru sem er til út frá itemNo, code og qtyPerUnitOfMeasure, með valfrjálsri lengd, breidd, hæð og þyngd. Svarið er vistaða einingin með magni í mælieiningu, grunneiningarmerki, málum, rúmmáli, þyngd og kerfiskenni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýja mælieiningu á vöru sem er til út frá itemNo, code og qtyPerUnitOfMeasure, með valfrjálsri lengd, breidd, hæð og þyngd. Svarið er vistaða einingin með magni í mælieiningu, grunneiningarmerki, málum, rúmmáli, þyngd og kerfiskenni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of an existing item, at most 20 characters. Required.</source>
+          <target>Númer vöru sem er til, mest 20 stafir. Skylt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer vöru sem er til, mest 20 stafir. Skylt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 3426680361" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code of the new unit of measure, at most 10 characters. Required. It must exist as a unit of measure in Business Central. A code that already exists on the item is refused.</source>
+          <target>Kóði nýju mælieiningarinnar, mest 10 stafir. Skylt. Hann verður að vera til sem mælieining í Business Central. Kóða sem er þegar til á vörunni er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði nýju mælieiningarinnar, mest 10 stafir. Skylt. Hann verður að vera til sem mælieining í Business Central. Kóða sem er þegar til á vörunni er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType CodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 3259830970" size-unit="char" translate="yes" xml:space="preserve">
+          <source>How many base units one new unit holds, a JSON number greater than 0. Required.</source>
+          <target>Hversu margar grunneiningar ein ný eining inniheldur, JSON-tala stærri en 0. Skylt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hversu margar grunneiningar ein ný eining inniheldur, JSON-tala stærri en 0. Skylt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType QtyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 4280004770" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Length of one unit, a JSON number of 0 or more. Optional.</source>
+          <target>Lengd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lengd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType LengthLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 1154098152" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Width of one unit, a JSON number of 0 or more. Optional.</source>
+          <target>Breidd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breidd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType WidthLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 2963208439" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Height of one unit, a JSON number of 0 or more. Optional.</source>
+          <target>Hæð einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hæð einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType HeightLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3615801952 - NamedType 2844867870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Weight of one unit, a JSON number of 0 or more. Optional.</source>
+          <target>Þyngd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þyngd einnar einingar, JSON-tala 0 eða hærri. Valfrjálst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetParameters - NamedType WeightLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1033708611 - NamedType 605610168" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the units of measure an item already has, with the base unit flagged, instead of creating one.</source>
+          <target>Lesa mælieiningarnar sem vara hefur þegar, með grunneininguna merkta, í stað þess að stofna nýja.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa mælieiningarnar sem vara hefur þegar, með grunneininguna merkta, í stað þess að stofna nýja.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetRelated - NamedType GetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new unit of measure, such as a carton or a pallet, on an existing item.</source>
+          <target>Stofnaðu nýja mælieiningu, til dæmis kassa eða bretti, á vöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu nýja mælieiningu, til dæmis kassa eða bretti, á vöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3897248833 - NamedType 3189074466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The existing item that receives the new unit of measure.</source>
+          <target>Varan sem er til og fær nýju mælieininguna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem er til og fær nýju mælieininguna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetTarget - NamedType ItemTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3897248833 - NamedType 343855953" size-unit="char" translate="yes" xml:space="preserve">
+          <source>How many base units one new unit holds.</source>
+          <target>Hversu margar grunneiningar ein ný eining inniheldur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hversu margar grunneiningar ein ný eining inniheldur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetTarget - NamedType QtyTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3897248833 - NamedType 1400125762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The code of the new unit of measure. It must be a unit of measure defined in Business Central and must not exist on the item yet.</source>
+          <target>Kóði nýju mælieiningarinnar. Hann verður að vera skilgreindur mælieiningarkóði í Business Central og má ekki vera til á vörunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði nýju mælieiningarinnar. Hann verður að vera skilgreindur mælieiningarkóði í Business Central og má ekki vera til á vörunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method GetTarget - NamedType CodeTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3501429861 - NamedType 3668247699" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number. The item must exist before a unit of measure can be created on it.</source>
+          <target>Athugaðu vörunúmerið. Varan verður að vera til áður en hægt er að stofna mælieiningu á henni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið. Varan verður að vera til áður en hægt er að stofna mælieiningu á henni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ItemNotFoundNextStep - NamedType ItemNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1140869114 - NamedType 1222039610" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be 0 or more.</source>
+          <target>%1 verður að vera 0 eða hærra.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera 0 eða hærra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method OptionalDimension - NamedType NegativeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1140869114 - NamedType 2213642960" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a number of 0 or more, or leave it out.</source>
+          <target>Sendu %1 sem tölu 0 eða hærri, eða slepptu því.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem tölu 0 eða hærri, eða slepptu því.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method OptionalDimension - NamedType NegativeNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3539940869 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method OptionalText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3539940869 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method OptionalText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can read items and item ledger entries and create item units of measure.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og birgðafærslur og stofnað vörumælieiningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur lesið vörur og birgðafærslur og stofnað vörumælieiningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3764667411 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a number.</source>
+          <target>%1 verður að vera tala.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ReadNumber - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3764667411 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a JSON number.</source>
+          <target>Sendu %1 sem JSON-tölu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem JSON-tölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ReadNumber - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 3132612207 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, code, qtyPerUnitOfMeasure, length, width, height and weight.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, code, qtyPerUnitOfMeasure, length, width, height og weight.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, code, qtyPerUnitOfMeasure, length, width, height og weight.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method UnknownNextStep - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 2871054791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty.</source>
+          <target>itemNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType ItemNoMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 3040129649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of the item that gets the new unit of measure.</source>
+          <target>Sendu númer vörunnar sem fær nýju mælieininguna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vörunnar sem fær nýju mælieininguna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType ItemNoMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 3905208624" size-unit="char" translate="yes" xml:space="preserve">
+          <source>code is missing or empty.</source>
+          <target>code vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=code vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType CodeMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 731406090" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the code of the new unit of measure, at most 10 characters.</source>
+          <target>Sendu kóða nýju mælieiningarinnar, mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu kóða nýju mælieiningarinnar, mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType CodeMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1032971975" size-unit="char" translate="yes" xml:space="preserve">
+          <source>qtyPerUnitOfMeasure is missing.</source>
+          <target>qtyPerUnitOfMeasure vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=qtyPerUnitOfMeasure vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType QtyMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 3348432753" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send qtyPerUnitOfMeasure as a JSON number greater than 0.</source>
+          <target>Sendu qtyPerUnitOfMeasure sem JSON-tölu stærri en 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu qtyPerUnitOfMeasure sem JSON-tölu stærri en 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType QtyMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 2819328513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>qtyPerUnitOfMeasure must be greater than 0.</source>
+          <target>qtyPerUnitOfMeasure verður að vera stærra en 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=qtyPerUnitOfMeasure verður að vera stærra en 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType QtyNotPositiveErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1247507847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send how many base units one new unit holds, a number greater than 0.</source>
+          <target>Sendu hversu margar grunneiningar ein ný eining inniheldur, tölu stærri en 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu hversu margar grunneiningar ein ný eining inniheldur, tölu stærri en 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType QtyNotPositiveNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 does not exist.</source>
+          <target>Vara %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, is-IS=Vara %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1415325532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit of measure %1 is not defined in Business Central.</source>
+          <target>Mælieining %1 er ekki skilgreind í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = unit of measure code, is-IS=Mælieining %1 er ekki skilgreind í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType UnitNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1820540022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the unit of measure in Business Central first, or send a code that exists in the Units of Measure list.</source>
+          <target>Stofnaðu mælieininguna í Business Central fyrst, eða sendu kóða sem er til í mælieininga-listanum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu mælieininguna í Business Central fyrst, eða sendu kóða sem er til í mælieininga-listanum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType UnitNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 3529219039" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 already has unit of measure %2.</source>
+          <target>Vara %1 hefur þegar mælieininguna %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = unit of measure code, is-IS=Vara %1 hefur þegar mælieininguna %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType ExistsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1272250295" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 already has unit of measure %2, and item ledger entries use it, so its quantity per unit of measure cannot change.</source>
+          <target>Vara %1 hefur þegar mælieininguna %2 og birgðafærslur nota hana, svo ekki má breyta magni í mælieiningu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = unit of measure code, is-IS=Vara %1 hefur þegar mælieininguna %2 og birgðafærslur nota hana, svo ekki má breyta magni í mælieiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType ExistsWithEntriesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4274923246 - Method 1380282473 - NamedType 1076741934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a unit of measure code not used on the item</source>
+          <target>mælieiningarkóði sem er ekki notaður á vörunni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=mælieiningarkóði sem er ekki notaður á vörunni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Create Impl ori - Method ValidateRequest - NamedType NotExistingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the units of measure of an item.</source>
+          <target>Les mælieiningar vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les mælieiningar vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty, or code was sent empty.</source>
+          <target>itemNo vantar eða er tómt, eða code var sent tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt, eða code var sent tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a non-empty itemNo, and send code only when you want one unit.</source>
+          <target>Sendu itemNo sem er ekki tómt, og sendu code aðeins ef þú vilt eina einingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er ekki tómt, og sendu code aðeins ef þú vilt eina einingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo or code is not a JSON string.</source>
+          <target>itemNo eða code er ekki JSON-strengur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo eða code er ekki JSON-strengur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo and code as text.</source>
+          <target>Sendu itemNo og code sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo og code sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item matched itemNo, or the item has no unit of measure with that code.</source>
+          <target>Engin vara passaði við itemNo, eða varan hefur enga mælieiningu með þeim kóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin vara passaði við itemNo, eða varan hefur enga mælieiningu með þeim kóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is longer than 20 characters or code is longer than 10 characters.</source>
+          <target>itemNo er lengra en 20 stafir eða code er lengra en 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er lengra en 20 stafir eða code er lengra en 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an itemNo of at most 20 characters and a code of at most 10 characters.</source>
+          <target>Sendu itemNo sem er mest 20 stafir og code sem er mest 10 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem er mest 20 stafir og code sem er mest 10 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items, item units of measure or item ledger entries.</source>
+          <target>Kallandinn getur ekki lesið vörur, vörumælieiningar eða birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur, vörumælieiningar eða birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read every unit of measure of an item</source>
+          <target>Lesa allar mælieiningar vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa allar mælieiningar vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item unit of measure, base unit, quantity per unit, carton, pallet, weight</source>
+          <target>vörumælieining, grunneining, magn í einingu, kassi, bretti, þyngd</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörumælieining, grunneining, magn í einingu, kassi, bretti, þyngd</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This call only reads. isBaseUnit is true for the unit that is the base unit of measure of the item. hasLedgerEntries is true when item ledger entries of the item use the unit; the quantity per unit of such a unit must not change. An item without units answers an empty units array, not an error. The caller needs read access to items, item units of measure and item ledger entries.</source>
+          <target>Þetta kall les eingöngu. isBaseUnit er true fyrir eininguna sem er grunnmælieining vörunnar. hasLedgerEntries er true þegar birgðafærslur vörunnar nota eininguna; magni í slíkri einingu má ekki breyta. Vara án eininga svarar tómu units-fylki, ekki villu. Kallandinn þarf lesaðgang að vörum, vörumælieiningum og birgðafærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þetta kall les eingöngu. isBaseUnit er true fyrir eininguna sem er grunnmælieining vörunnar. hasLedgerEntries er true þegar birgðafærslur vörunnar nota eininguna; magni í slíkri einingu má ekki breyta. Vara án eininga svarar tómu units-fylki, ekki villu. Kallandinn þarf lesaðgang að vörum, vörumælieiningum og birgðafærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the units of measure of one item with code, quantity per unit of measure, base unit flag, length, width, height, cubage, weight, a flag that says whether item ledger entries use the unit, and system id. Send itemNo to read every unit in code order, and add code to read one unit.</source>
+          <target>Les mælieiningar einnar vöru með kóða, magni í mælieiningu, grunneiningarmerki, lengd, breidd, hæð, rúmmáli, þyngd, merki um hvort birgðafærslur nota eininguna og kerfiskenni. Sendu itemNo til að lesa allar einingar í röð kóða, og bættu code við til að lesa eina einingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les mælieiningar einnar vöru með kóða, magni í mælieiningu, grunneiningarmerki, lengd, breidd, hæð, rúmmáli, þyngd, merki um hvort birgðafærslur nota eininguna og kerfiskenni. Sendu itemNo til að lesa allar einingar í röð kóða, og bættu code við til að lesa eina einingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number, at most 20 characters. Required.</source>
+          <target>Vörunúmer, mest 20 stafir. Skylt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer, mest 20 stafir. Skylt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3615801952 - NamedType 3426680361" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit of measure code, at most 10 characters. Omit code to read every unit of the item.</source>
+          <target>Mælieiningarkóði, mest 10 stafir. Slepptu code til að lesa allar mælieiningar vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Mælieiningarkóði, mest 10 stafir. Slepptu code til að lesa allar mælieiningar vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetParameters - NamedType CodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1033708611 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new unit of measure on the item instead of reading the existing ones.</source>
+          <target>Stofna nýja mælieiningu á vörunni í stað þess að lesa þær sem eru til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna nýja mælieiningu á vörunni í stað þess að lesa þær sem eru til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetRelated - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Show the units of measure of an item with the base unit flagged, or one unit by its code.</source>
+          <target>Sýndu mælieiningar vöru með grunneininguna merkta, eða eina einingu eftir kóða hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýndu mælieiningar vöru með grunneininguna merkta, eða eina einingu eftir kóða hennar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3897248833 - NamedType 3189074466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item whose units of measure are read.</source>
+          <target>Varan sem mælieiningarnar eru lesnar fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem mælieiningarnar eru lesnar fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetTarget - NamedType ItemTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3897248833 - NamedType 1400125762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One unit of measure of the item. Omit code to read every unit of the item.</source>
+          <target>Ein mælieining vörunnar. Slepptu code til að lesa allar mælieiningar vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ein mælieining vörunnar. Slepptu code til að lesa allar mælieiningar vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method GetTarget - NamedType CodeTargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1978222490 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item number, or omit code to read every unit of measure of the item.</source>
+          <target>Athugaðu vörunúmerið, eða slepptu code til að lesa allar mælieiningar vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið, eða slepptu code til að lesa allar mælieiningar vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method NotFoundNextStep - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read items, item units of measure and item ledger entries.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur, vörumælieiningar og birgðafærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið vörur, vörumælieiningar og birgðafærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 2434615052 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method RequireText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 4154166716 - NamedType 1820540022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omit code to list the units of the item, or create the unit with Inventory.ItemUnitOfMeasure.Create.</source>
+          <target>Slepptu code til að fá lista yfir einingar vörunnar, eða stofnaðu eininguna með Inventory.ItemUnitOfMeasure.Create.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptu code til að fá lista yfir einingar vörunnar, eða stofnaðu eininguna með Inventory.ItemUnitOfMeasure.Create.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method UnitNotFoundNextStep - NamedType UnitNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 3132612207 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo and code.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og code.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og code.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method UnknownNextStep - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1380282473 - NamedType 2871054791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty.</source>
+          <target>itemNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method ValidateRequest - NamedType ItemNoMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1380282473 - NamedType 3040129649" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the number of the item whose units of measure you want to read.</source>
+          <target>Sendu númer vörunnar sem þú vilt lesa mælieiningar fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer vörunnar sem þú vilt lesa mælieiningar fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method ValidateRequest - NamedType ItemNoMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1380282473 - NamedType 2100310615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>code is empty.</source>
+          <target>code er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=code er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method ValidateRequest - NamedType CodeEmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1380282473 - NamedType 3591509729" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a unit of measure code, or omit code to read every unit of the item.</source>
+          <target>Sendu mælieiningarkóða, eða slepptu code til að lesa allar mælieiningar vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu mælieiningarkóða, eða slepptu code til að lesa allar mælieiningar vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method ValidateRequest - NamedType CodeEmptyNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1506114554 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 does not exist.</source>
+          <target>Vara %1 er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, is-IS=Vara %1 er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method WriteResponse - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 200652028 - Method 1506114554 - NamedType 1415325532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 has no unit of measure %2.</source>
+          <target>Vara %1 hefur enga mælieiningu %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number, %2 = unit of measure code, is-IS=Vara %1 hefur enga mælieiningu %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item UoM Get Impl ori - Method WriteResponse - NamedType UnitNotFoundErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
