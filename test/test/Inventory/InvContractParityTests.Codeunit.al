@@ -727,6 +727,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     /// <summary>Array parameters whose items are plain values, so they have no children.</summary>
     local procedure ScalarArrayParameters() Names: List of [Text]
     begin
+        Names.Add('Purchase.PurchaseInvoice.GetReceiptLines|receiptNos');
         Names.Add('Inventory.Tracking.Delete|entryNos');
         Names.Add('Inventory.Attribute.Get|attributeNames');
         Names.Add('Inventory.Attribute.Get|attributeIds');
