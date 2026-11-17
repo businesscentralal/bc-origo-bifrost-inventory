@@ -4,7 +4,7 @@ using Microsoft.Inventory.Requisition;
 using Origo.Bifrost;
 
 /// <summary>Replaces suggestion lines on one planning worksheet and returns the new lines.</summary>
-codeunit 10076930 "Plan Wksh Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076933 "Plan Wksh Calc Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

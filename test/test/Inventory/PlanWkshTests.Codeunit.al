@@ -17,7 +17,7 @@ using System.TestLibraries.Utilities;
 /// Inventory.PlanningWorksheet.Calculate and CarryOut. Native planning commits, so each test removes its own
 /// XP117 fixtures and commits that cleanup.
 /// </summary>
-codeunit 96980 "Plan Wksh Tests ori"
+codeunit 96995 "Plan Wksh Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;

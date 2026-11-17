@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Purchases.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
@@ -515,6 +516,38 @@ codeunit 96963 "Inventory Domain Usage Tests"
     end;
 
     [Test]
+    procedure Scenario_AC05_PurchaseReturnUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] No usage signals, then one purchase return order header.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Purchase Header");
+        SetField(UsageRecord, 'Document Type', "Purchase Document Type"::"Return Order");
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row; the table trigger must run.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] A return order is enough to turn Purchase Returns on.
+        AssertDomain(InventorySetup, 26, true);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PurchaseReturnNoUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] Purchase documents, including ordinary orders, are cleared in this transaction.
+        ClearUsage();
+        // [WHEN] A setup row is created without a return order or credit memo.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Purchase Returns stays off. A purchase order is not a signal.
+        AssertDomain(InventorySetup, 26, false);
+    end;
+
+    [Test]
     procedure Scenario_AC05_PlanningUsage_EnablesDomain()
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -531,7 +564,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [WHEN] A user creates the setup row.
         InventorySetup.InsertIfNotExists();
         // [THEN] The planning template enables Planning and leaves the other new switch testable on its own.
-        AssertDomain(InventorySetup, 26, true);
+        AssertDomain(InventorySetup, 27, true);
     end;
 
     [Test]
@@ -545,7 +578,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [WHEN] A setup row is created without usage.
         InventorySetup.InsertIfNotExists();
         // [THEN] Planning stays off.
-        AssertDomain(InventorySetup, 26, false);
+        AssertDomain(InventorySetup, 27, false);
     end;
 
     [Test]
@@ -736,7 +769,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 26 do begin
+        for FieldNo := 10 to 27 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -801,7 +834,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 26 do begin
+        for FieldNo := 10 to 27 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -925,6 +958,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Item Substitution");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
+        ClearTable(Database::"Purchase Header");
         ClearTable(Database::"Requisition Line");
         ClearTable(Database::"Requisition Wksh. Name");
         ClearTable(Database::"Req. Wksh. Template");

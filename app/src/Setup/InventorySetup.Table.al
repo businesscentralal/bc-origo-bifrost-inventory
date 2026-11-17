@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Purchases.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
@@ -102,7 +103,11 @@ table 10076836 "Inventory Setup ori"
             Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
             ToolTip = 'Enable reading item substitutions and their on-hand inventory.', Comment = 'is-IS=Virkja lestur vöruskipta og núverandi birgða þeirra.';
         }
-        field(26; Planning; Boolean)
+        field(26; "Purchase Returns"; Boolean)
+        {
+            Caption = 'Purchase Returns', Comment = 'is-IS=Innkaupaskil';
+        }
+        field(27; Planning; Boolean)
         {
             Caption = 'Planning', Comment = 'is-IS=Áætlun';
         }
@@ -168,6 +173,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Category");
             Domain::ItemSubstitution:
                 exit("Item Substitution");
+            Domain::PurchaseReturns:
+                exit("Purchase Returns");
             Domain::Planning:
                 exit(Planning);
         end;
@@ -259,6 +266,11 @@ table 10076836 "Inventory Setup ori"
         if not "Item Substitution" then
             if HasRecords(Database::"Item Substitution") then begin
                 "Item Substitution" := true;
+                Changed := true;
+            end;
+        if not "Purchase Returns" then
+            if HasPurchaseReturnUsage() then begin
+                "Purchase Returns" := true;
                 Changed := true;
             end;
         if not Planning then
@@ -432,6 +444,16 @@ table 10076836 "Inventory Setup ori"
         if not PriceListLine.ReadPermission() then
             exit(false);
         exit(not PriceListLine.IsEmpty());
+    end;
+
+    local procedure HasPurchaseReturnUsage(): Boolean
+    var
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        PurchaseHeader.SetFilter("Document Type", '%1|%2', PurchaseHeader."Document Type"::"Return Order", PurchaseHeader."Document Type"::"Credit Memo");
+        if not PurchaseHeader.ReadPermission() then
+            exit(false);
+        exit(not PurchaseHeader.IsEmpty());
     end;
 
     local procedure HasPlanningUsage(): Boolean

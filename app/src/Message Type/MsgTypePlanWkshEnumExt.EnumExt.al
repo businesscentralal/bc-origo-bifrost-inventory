@@ -2,9 +2,9 @@ namespace Origo.Bifrost.Inventory;
 
 using Origo.Bifrost;
 
-enumextension 10076847 "MsgType.PlanWksh.EnumExt ori" extends "Message Type ori"
+enumextension 10076848 "MsgType.PlanWksh.EnumExt ori" extends "Message Type ori"
 {
-    value(10076930; "Inventory.PlanningWorksheet.Calculate")
+    value(10076933; "Inventory.PlanningWorksheet.Calculate")
     {
         Caption = 'Inventory.PlanningWorksheet.Calculate', Locked = true;
         Implementation = "Msg Interface ori" = "Plan Wksh Calc Impl ori", "Msg Discovery ori" = "Plan Wksh Calc Impl ori", "Msg Contract ori" = "Plan Wksh Calc Impl ori";

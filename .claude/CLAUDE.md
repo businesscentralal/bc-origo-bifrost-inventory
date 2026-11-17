@@ -26,20 +26,21 @@ README "Objects" lists every object with its ID. In short:
   shared gates and contract parts 10076919-10076923.
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
-  (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076933. Codeunits 10076925-10076929 and 10076930-10076932 are in use
-  (`Inventory Tracking Write ori` 10076925, `Asm. Preview Adjust ori` 10076929,
-  `Plan Wksh Calc Impl ori` 10076930, `Plan Wksh Carry Impl ori` 10076931, `Req. Worksheet Engine ori` 10076932).
-  10076924 stays unused as a codeunit so the RecordCount value does not clash with the convention.
-  Codeunit allocation starts at 10076933; check existing objects and open PRs before use. Remaining range is 10076933-10077034; 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076848-10077034 (excluding allocated 10076860 and 10076906) for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` value 16 Planning; `Inventory Setup ori` field 26 Planning.
-  ItemSubstitution keeps released value 15 and field 25. Values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory and fields 21-24 remain.
-  New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+  (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared number is a different object type.
+- Preserve released Purchase Returns codeunit/message value 10076930 and enum extension 10076847.
+  Unreleased Planning uses `Plan Wksh Calc Impl ori` codeunit/message value 10076933,
+  `Plan Wksh Carry Impl ori` 10076931, `Req. Worksheet Engine ori` 10076932 and enum extension 10076848.
+  Codeunits 10076925-10076929 remain allocated (tracking through assembly preview). Next free codeunit: 10076934;
+  check main and open PRs. Next free enum extension: 10076849 (10076860 and 10076906 remain allocated).
+  Page, table and permission-set ranges are unchanged where objects have not been allocated.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032,
+  enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 belong to earlier open PRs;
+  10077034 is the Item Application quantity helper. Check source and open PRs before choosing an ID.
+- `Inventory Domain ori`: 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution,
+  16 PurchaseReturns and 17 Planning. Setup fields 21-27 correspond to these domains; preserve released fields
+  25 Item Substitution and 26 Purchase Returns. Planning is unreleased field 27, wizard slot 18.
+  New setup rows and the tagged issue147 upgrade enable domains from company usage; existing switches are never turned off.
   Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
-- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is the Item Application quantity helper.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
-  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
 ## Test object IDs (unchanged by the renumbering)
 
@@ -52,3 +53,4 @@ README "Objects" lists every object with its ID. In short:
 
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
 - Test codeunit 96994 `Item Application 40 Tests ori`.
+- 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.

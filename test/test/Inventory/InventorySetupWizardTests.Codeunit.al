@@ -166,6 +166,7 @@ codeunit 96920 "Inventory Setup Wizard Tests"
         SetupPage.OpenEdit();
         SetupPage.Planning.SetValue(true);
         SetupPage.ItemSubstitution.SetValue(false);
+        SetupPage.PurchaseReturns.SetValue(false);
         SetupPage.Close();
         Wizard.OpenView();
         Wizard.NextStep.Invoke();
@@ -173,10 +174,12 @@ codeunit 96920 "Inventory Setup Wizard Tests"
         Wizard.NextStep.Invoke();
         Wizard.Planning.AssertEquals(true);
         Wizard.ItemSubstitution.AssertEquals(false);
+        Wizard.PurchaseReturns.AssertEquals(false);
         Wizard.Close();
         SetupPage.OpenEdit();
         SetupPage.Planning.SetValue(false);
         SetupPage.ItemSubstitution.SetValue(true);
+        SetupPage.PurchaseReturns.SetValue(true);
         SetupPage.Close();
         Wizard.OpenView();
         Wizard.NextStep.Invoke();
@@ -184,6 +187,7 @@ codeunit 96920 "Inventory Setup Wizard Tests"
         Wizard.NextStep.Invoke();
         Wizard.Planning.AssertEquals(false);
         Wizard.ItemSubstitution.AssertEquals(true);
+        Wizard.PurchaseReturns.AssertEquals(true);
         Wizard.Close();
     end;
 
