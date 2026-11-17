@@ -75,6 +75,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Reclass Check Impl ori" = X,
         codeunit "Reclass Preview Impl ori" = X,
         codeunit "Reclass Post Impl ori" = X,
+        codeunit "Reserv. Supply Filter ori" = X,
         codeunit "Reservation Create Impl ori" = X,
         codeunit "Reservation Cancel Impl ori" = X,
         codeunit "Phys. Inv. Calc Impl ori" = X,
@@ -103,5 +104,6 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Reserv. AutoReserve Impl ori" = X,
         codeunit "Reserv. AutoReserve Proc ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
+        codeunit "Purch. Return Create Impl ori" = X,
         codeunit "Order Tracking Transfer ori" = X;
 }
