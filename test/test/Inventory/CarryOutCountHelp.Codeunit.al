@@ -4,7 +4,7 @@ using Origo.Bifrost;
 using System.TestLibraries.Utilities;
 
 /// <summary>Checks that both carry-out types name the worksheet selection counted by expectedCount (#234).</summary>
-codeunit 96964 "CarryOut Count Help ori"
+codeunit 96948 "CarryOut Count Help ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;
