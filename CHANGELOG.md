@@ -2,11 +2,16 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Item substitutions (#118)
+
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
 ### Fixed (2026-11-16) - physical inventory coded refusals (#154)
 
 - Wrong-template and recurring-template selections now return `InvalidParameter` and `PreconditionFailed` on `templateName` with fully localized errors and next steps, for Calculate, RecordCount, legacy Record, Check, PreviewPost and Post. Shared batch and count help entries name the runtime codes in both languages; nested unsupported count keys preserve their actual received value.
 - Test fixture codeunit/page 96973 can explicitly seed only the owned issue154 journals and unposted count item for MCP verification; no fixture runs on install and the change log write guard is unchanged.
 - Existing codeunits 10076840, 10076880–10076885 and tests 96921/96944/96975/96978 are extended; no object IDs added. Bilingual native regressions cover malformed counts, selectors, templates, help and unchanged owned journal data. Dispatch tests pass LCID explicitly; confirmation tests enable their own required confirmation setting, and attribute parity includes the Foundation 28.0.13 shared response code descriptor.
+
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
