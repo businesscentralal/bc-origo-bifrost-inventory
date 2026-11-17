@@ -594,11 +594,20 @@ codeunit 96973 "Inv. MCP Fixture ori"
         EntryRelation: Record "Item Entry Relation";
         ItemApplication: Record "Item Application Entry";
         Ledger: Record "Item Ledger Entry";
+        RemainingLedger: Record "Item Ledger Entry";
+        ItemRegister: Record "Item Register";
         ValueEntry: Record "Value Entry";
         Pending: Record "Post Value Entry to G/L";
         Reservation: Record "Reservation Entry";
         TrackingCode: Record "Item Tracking Code";
+        PostingSetup: Record "Inventory Posting Setup";
+        Contact: Record Contact;
+        ContactRelation: Record "Contact Business Relation";
         ReservationManagement: Codeunit "Reservation Management";
+        RegisterNos: List of [Integer];
+        ContactNos: List of [Code[20]];
+        RegisterNo: Integer;
+        ContactNo: Code[20];
         DocumentNo: Code[20];
         ItemNo: Code[20];
         TrackingCodeName: Code[10];
@@ -633,6 +642,11 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 Ledger.SetRange("Item No.", ItemNo);
                 if Ledger.FindSet() then
                     repeat
+                        ItemRegister.SetFilter("From Entry No.", '<=%1', Ledger."Entry No.");
+                        ItemRegister.SetFilter("To Entry No.", '>=%1', Ledger."Entry No.");
+                        if ItemRegister.FindFirst() then
+                            if not RegisterNos.Contains(ItemRegister."No.") then
+                                RegisterNos.Add(ItemRegister."No.");
                         ReservationManagement.SetReservSource(Ledger);
                         ReservationManagement.DeleteReservEntries(true, 0);
                         EntryRelation.SetRange("Item Entry No.", Ledger."Entry No.");
@@ -652,6 +666,14 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 ValueEntry.SetRange("Item No.", ItemNo);
                 ValueEntry.DeleteAll();
                 Ledger.DeleteAll();
+                foreach RegisterNo in RegisterNos do begin
+                    ItemRegister.Reset();
+                    if ItemRegister.Get(RegisterNo) then begin
+                        RemainingLedger.SetRange("Entry No.", ItemRegister."From Entry No.", ItemRegister."To Entry No.");
+                        if RemainingLedger.IsEmpty() then
+                            ItemRegister.Delete(true);
+                    end;
+                end;
                 // Native source/tracking cleanup can update the item; delete the current record version.
                 Clear(Item);
                 Item.Get(ItemNo);
@@ -663,8 +685,22 @@ codeunit 96973 "Inv. MCP Fixture ori"
                     TrackingCode.Delete(true);
             end;
         end;
-        if Customer.Get('W6I7C' + Suffix) then
+        if Customer.Get('W6I7C' + Suffix) then begin
+            ContactRelation.SetRange("Link to Table", ContactRelation."Link to Table"::Customer);
+            ContactRelation.SetRange("No.", Customer."No.");
+            if ContactRelation.FindSet() then
+                repeat
+                    ContactNos.Add(ContactRelation."Contact No.");
+                until ContactRelation.Next() = 0;
             Customer.Delete(true);
+            foreach ContactNo in ContactNos do
+                if Contact.Get(ContactNo) then
+                    Contact.Delete(true);
+        end;
+        foreach Kind in 'F|D|I'.Split('|') do begin
+            PostingSetup.SetRange("Location Code", 'W6I7' + Kind + Suffix);
+            PostingSetup.DeleteAll(true);
+        end;
         if Location.Get('W6I7F' + Suffix) then
             Location.Delete(true);
         if Location.Get('W6I7D' + Suffix) then
