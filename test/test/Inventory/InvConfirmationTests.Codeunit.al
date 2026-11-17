@@ -253,8 +253,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
     begin
         // Library - ERM pads a sequence into the account number without checking the final key.
         // Use owned GUID keys instead; existing accounts and their posting setup remain untouched.
-        Location.Init();
         repeat
+            Clear(Location);
+            Location.Init();
             Location.Code := CopyStr('X' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(Location.Code));
         until not Location.Get(Location.Code);
         Location.Name := Location.Code;
@@ -274,8 +275,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
     var
         Account: Record "G/L Account";
     begin
-        Account.Init();
         repeat
+            Clear(Account);
+            Account.Init();
             Account."No." := CopyStr('X' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(Account."No."));
         until not Account.Get(Account."No.");
         Account.Validate(Name, Account."No.");
