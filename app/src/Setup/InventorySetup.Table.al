@@ -16,6 +16,7 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Pricing.PriceList;
+using Microsoft.Purchases.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 
@@ -101,6 +102,10 @@ table 10076836 "Inventory Setup ori"
             Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
             ToolTip = 'Enable reading item substitutions and their on-hand inventory.', Comment = 'is-IS=Virkja lestur vöruskipta og núverandi birgða þeirra.';
         }
+        field(26; "Purchase Returns"; Boolean)
+        {
+            Caption = 'Purchase Returns', Comment = 'is-IS=Innkaupaskil';
+        }
     }
 
     keys
@@ -163,6 +168,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Category");
             Domain::ItemSubstitution:
                 exit("Item Substitution");
+            Domain::PurchaseReturns:
+                exit("Purchase Returns");
         end;
         exit(true);
     end;
@@ -252,6 +259,11 @@ table 10076836 "Inventory Setup ori"
         if not "Item Substitution" then
             if HasRecords(Database::"Item Substitution") then begin
                 "Item Substitution" := true;
+                Changed := true;
+            end;
+        if not "Purchase Returns" then
+            if HasPurchaseReturnUsage() then begin
+                "Purchase Returns" := true;
                 Changed := true;
             end;
         exit(Changed);
@@ -409,6 +421,16 @@ table 10076836 "Inventory Setup ori"
         if not PriceListLine.ReadPermission() then
             exit(false);
         exit(not PriceListLine.IsEmpty());
+    end;
+
+    local procedure HasPurchaseReturnUsage(): Boolean
+    var
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        PurchaseHeader.SetFilter("Document Type", '%1|%2', PurchaseHeader."Document Type"::"Return Order", PurchaseHeader."Document Type"::"Credit Memo");
+        if not PurchaseHeader.ReadPermission() then
+            exit(false);
+        exit(not PurchaseHeader.IsEmpty());
     end;
 
     local procedure HasItemCategoryUsage(): Boolean
