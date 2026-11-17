@@ -470,6 +470,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Reservation.Create');
         Types.Add('Inventory.Reservation.Cancel');
         Types.Add('Inventory.PhysInventory.Calculate');
+        Types.Add('Inventory.CycleCount.Calculate');
         Types.Add('Inventory.PhysInventory.Record');
         Types.Add('Inventory.PhysInventory.Post');
         Types.Add('Inventory.ItemReference.Resolve');
