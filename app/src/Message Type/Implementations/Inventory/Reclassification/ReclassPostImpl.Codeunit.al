@@ -286,7 +286,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Posts every line of a reclassification journal batch through the standard item journal batch posting. Posting is permanent and needs the Inv. Posting Gate permission set.';
+        Overview := 'Posts the selected lines of a reclassification journal batch (all lines of the batch when lineSystemIds is absent) through the standard item journal batch posting. Posting is permanent and needs the Inv. Posting Gate permission set.';
         exit(true);
     end;
 
