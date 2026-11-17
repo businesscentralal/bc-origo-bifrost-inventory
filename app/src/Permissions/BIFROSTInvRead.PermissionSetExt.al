@@ -12,6 +12,8 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
     IncludedPermissionSets = "BIFROST InvAttrRead ori";
 
     Permissions =
+        table "Inventory Valuation Buffer ori" = X,
+        codeunit "Valuation Get Impl ori" = X,
         codeunit "Transfer Posting Setup ori" = X,
         codeunit "Price List Restrict ori" = X,
         page "Inventory Setup Wizard ori" = X,
@@ -54,6 +56,8 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Item Category Get Impl ori" = X,
         codeunit "Item Category Restrict ori" = X,
         codeunit "Item UoM Get Impl ori" = X,
+        codeunit "Item Variant Get Impl ori" = X,
+        codeunit "Item Variant Restrict ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
         codeunit "Order Tracking Transfer ori" = X,
         codeunit "SKU Get Impl ori" = X,

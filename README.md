@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 78 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 89 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -43,6 +43,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemUnitOfMeasure.Get` | Outbound | Read the units of measure of an item with the base unit flagged |
 | `Inventory.ItemUnitOfMeasure.Create` | Inbound | Create a unit of measure on an existing item |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
+| `Inventory.ItemVariant.Get` | Outbound | Read the variants of an item, or one variant by code |
+| `Inventory.ItemVariant.Create` | Inbound | Create a new variant on an existing item |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -64,6 +66,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AssemblyToOrder.Get` | Outbound | Read the assemble-to-order assembly order linked to a sales line, with its lines |
 | `Inventory.AssemblyBOM.Get` | Outbound | Read the assembly BOM components of an item, optionally exploded through all levels |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
+| `Inventory.Valuation.Get` | Outbound | Read quantity and actual/expected LCY value at a date, grouped by item/location/variant with take/skip paging |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
 | `Inventory.CostToGL.Post` | Inbound | Run report 1002 without applying request filters or initializing Post; success confirms completion, not G/L posting |
@@ -307,6 +310,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
+| 10076890 | `MsgType.ItemVar.EnumExt ori` | `Inventory.ItemVariant.Get` (10076990), `Inventory.ItemVariant.Create` (10076991) |
 | 10077015 | `MsgType.ItemUoM.EnumExt ori` | `Inventory.ItemUnitOfMeasure.Get` (10077011), `Inventory.ItemUnitOfMeasure.Create` (10077012) |
 | 10077030 | `MsgType.PurchGetRcpt.Ext ori` | `Purchase.PurchaseInvoice.GetReceiptLines` (value 10077018) |
 
@@ -356,6 +360,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10077026 | Partial transfers | `Transfer Ship Impl ori` (partial transfer shipment) |
 | 10077028–10077029 | Sales shipments | `Sales Get Shipment Impl ori` (`Sales.SalesInvoice.GetShipmentLines`), `Sales Get Shipment Proc ori` (isolated write) |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
+| 10076990–10076993 | Item variants | Get, Create, Create process, `Item Variant Restrict ori` (Data.Records write restriction on Item Variant) |
 
 ### Permission sets
 
@@ -488,6 +493,31 @@ the deployed help contract before sending confirmation controls to that version.
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
 
+### Inventory valuation at a date
+
+```json
+{"type":"Inventory.Valuation.Get","data":{"asOfDate":"2026-10-31","itemFilter":"1000","take":100,"skip":0}}
+```
+
+`Inventory.Valuation.Get` takes required `asOfDate` (`YYYY-MM-DD`) and optional BC filters
+`itemFilter`, `locationFilter`, `variantFilter`, and `inventoryPostingGroupFilter`.
+It selects inventory items using their current posting group and sums Value Entry quantity,
+actual cost and expected cost through the posting date, matching report 1001's ending totals.
+Costs are in LCY; quantities use the base unit. Adjustments and expected-cost reversals are
+included, but no adjustment batch is run. An item's current card cost is not used.
+
+`rows` are ordered by item number, location code and variant code. `take` defaults to 100
+(1–1000), `skip` defaults to 0 (0–2147483647), and `totalCount`/`hasMore` describe the page.
+Blank location/variant codes and zero-balance groups with entries are retained; items without
+matching entries produce no row. Paging reflects current entries, so postings between calls
+can change results. Costing must be enabled and the caller must have Item and Value Entry
+read permission. The message declares `effect: read` and only uses a temporary buffer.
+
+Objects: codeunit 10077027 `Valuation Get Impl ori`, temporary table 10077020
+`Inventory Valuation Buffer ori`, message enum value 10077027, test codeunit 96989
+`Inventory Valuation Tests ori`. The codeunit and enum value moved to the next free ID 10077027 because main
+uses 10077021 for partial transfer receipt. The temporary table stays 10077020.
+
 ### Undo selected shipment lines or recreate an assembly order
 
 ```json
@@ -523,6 +553,7 @@ Adds the remaining uninvoiced receipt quantities through the native Get Receipt 
 An explicitly selected receipt of another pay-to vendor or currency returns `InvalidLine` with `nextStep`, without adding lines. Native validation failures roll back the call. The effect is `write`; this operation does not post. Review the invoice, then use `Purchase.Document.Post`.
 
 Objects: implementation and message value 10077018, process 10077031, enum extension 10077030, tests 96996. Main assigns codeunit 10077030 to `Reserv. Supply Filter ori`, so the receipt implementation moved to 10077018. Execution extends Foundation's Full role; standard purchase document permissions still apply. No Inventory domain switch is added for this purchase-document operation.
+
 ### Standard cost worksheet
 
 `Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.

@@ -12,6 +12,8 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     IncludedPermissionSets = "BIFROST InvAttrWrite ori";
 
     Permissions =
+        table "Inventory Valuation Buffer ori" = X,
+        codeunit "Valuation Get Impl ori" = X,
         codeunit "Purch Get Receipt Impl ori" = X,
         codeunit "Purch Get Receipt Proc ori" = X,
         codeunit "Std. Cost Suggest Impl ori" = X,
@@ -126,6 +128,10 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Item UoM Get Impl ori" = X,
         codeunit "Item UoM Create Impl ori" = X,
         codeunit "Item UoM Create Proc ori" = X,
+        codeunit "Item Variant Get Impl ori" = X,
+        codeunit "Item Variant Create Impl ori" = X,
+        codeunit "Item Variant Create Proc ori" = X,
+        codeunit "Item Variant Restrict ori" = X,
         codeunit "Reserv. AutoReserve Impl ori" = X,
         codeunit "Reserv. AutoReserve Proc ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
