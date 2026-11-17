@@ -1815,6 +1815,18 @@
           <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method CancelReservation - NamedType InconsistentPairErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - Method 3976827454 - NamedType 3339915146" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select a negative outbound and positive inbound entry of the same item, variant and location.</source>
+          <target>Veldu neikvæða útleiðandi og jákvæða innleiðandi færslu fyrir sömu vöru, afbrigði og birgðageymslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu neikvæða útleiðandi og jákvæða innleiðandi færslu fyrir sömu vöru, afbrigði og birgðageymslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method ReapplyItemEntry - NamedType InvalidPairErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - Method 3976827454 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The requested base quantity must be available on both entries and must be applied exactly.</source>
+          <target>Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method ReapplyItemEntry - NamedType QuantityErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 3571782927 - NamedType 2247369567" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemLedgerEntryNo is required.</source>
           <target>itemLedgerEntryNo er nauðsynlegt.</target>
@@ -1828,9 +1840,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method ExecuteBifrostTask - NamedType NotIntegerErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reads item application entries for an item ledger entry.</source>
-          <target>Les vörujöfnunarfærslur fyrir vörufærslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Les vörujöfnunarfærslur fyrir vörufærslu.</note>
+          <source>Reads item applications and joined ledger entries by item or ledger entry.</source>
+          <target>Les vörujafnanir og tengdar vörufærslur eftir vöru eða færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les vörujafnanir og tengdar vörufærslur eftir vöru eða færslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 1158096087 - NamedType 2959677318" size-unit="char" translate="yes" xml:space="preserve">
@@ -1887,11 +1899,53 @@
           <note from="Developer" annotates="general" priority="2">is-IS=vörujöfnun, jafnaðar færslur</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo or itemLedgerEntryNo. Optional locationCode and variantCode are exact filters on the selected ledger entry; empty strings select blank codes. Applications recorded under or linked to a matching entry are returned once, with both joined entries. Missing matches return an empty list. Use itemLedgerEntryNo to unapply linked real applications, or entryNo for one legacy application. Native read permissions and the Item Application domain are required.</source>
+          <target>Sendu itemNo eða itemLedgerEntryNo. Valfrjáls locationCode og variantCode eru nákvæmar síur á valinni vörufærslu; tómir strengir velja auða kóða. Jafnanir skráðar á eða tengdar samsvarandi færslu koma einu sinni fyrir ásamt báðum tengdum færslum. Ef ekkert passar fæst tómur listi. Notaðu itemLedgerEntryNo til að afturkalla tengdar raunverulegar jafnanir eða entryNo fyrir eina eldri jöfnun. Lesheimildir og virkt vörujöfnunarsvið eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo eða itemLedgerEntryNo. Valfrjáls locationCode og variantCode eru nákvæmar síur á valinni vörufærslu; tómir strengir velja auða kóða. Jafnanir skráðar á eða tengdar samsvarandi færslu koma einu sinni fyrir ásamt báðum tengdum færslum. Ef ekkert passar fæst tómur listi. Notaðu itemLedgerEntryNo til að afturkalla tengdar raunverulegar jafnanir eða entryNo fyrir eina eldri jöfnun. Lesheimildir og virkt vörujöfnunarsvið eru nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 3615801952 - NamedType 1454121626" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number. Send itemNo or itemLedgerEntryNo; when both are sent they must both match.</source>
+          <target>Vörunúmer. Sendu itemNo eða itemLedgerEntryNo; ef bæði eru send verða bæði að passa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Sendu itemNo eða itemLedgerEntryNo; ef bæði eru send verða bæði að passa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetParameters - NamedType Help401Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 3615801952 - NamedType 937653367" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional exact location on the selected ledger entry; an empty string selects the blank location.</source>
+          <target>Valfrjáls nákvæm birgðageymsla á valinni vörufærslu; tómur strengur velur auða birgðageymslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls nákvæm birgðageymsla á valinni vörufærslu; tómur strengur velur auða birgðageymslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetParameters - NamedType Help402Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 3615801952 - NamedType 4037680344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional exact variant on the selected ledger entry; an empty string selects the blank variant.</source>
+          <target>Valfrjálst nákvæmt afbrigði á valinni vörufærslu; tómur strengur velur autt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst nákvæmt afbrigði á valinni vörufærslu; tómur strengur velur autt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetParameters - NamedType Help403Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 4268477247 - NamedType 3782059133" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Joined inbound item ledger entry: entryNo, itemNo, locationCode, variantCode, quantity, remainingQuantity and positive. Empty if there is no entry.</source>
+          <target>Tengd innleiðandi vörufærsla: entryNo, itemNo, locationCode, variantCode, quantity, remainingQuantity og positive. Tómt ef engin færsla er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tengd innleiðandi vörufærsla: entryNo, itemNo, locationCode, variantCode, quantity, remainingQuantity og positive. Tómt ef engin færsla er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetResponse - NamedType Help404Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 886104080 - Method 4268477247 - NamedType 2545542110" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Joined outbound item ledger entry with the same fields. Empty if there is no outbound entry.</source>
+          <target>Tengd útleiðandi vörufærsla með sömu reitum. Tómt ef engin útleiðandi færsla er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tengd útleiðandi vörufærsla með sömu reitum. Tómt ef engin útleiðandi færsla er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetResponse - NamedType Help405Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads application entries. Unapply and reapply are separate types.</source>
           <target>Les jöfnunarfærslur. Afturköllun og endurjöfnun eru aðskildar tegundir.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les jöfnunarfærslur. Afturköllun og endurjöfnun eru aðskildar tegundir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Get Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1671683899 - Method 3081222034 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central cannot apply the exact requested quantity to the selected entries.</source>
+          <target>Business Central getur ekki jafnað nákvæmlega umbeðið magn við valdar færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central getur ekki jafnað nákvæmlega umbeðið magn við valdar færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Quantity ori - Method LimitQuantity - NamedType QuantityErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1835291251 - Method 3571782927 - NamedType 2791289126" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item ledger entry %1 was not found.</source>
@@ -2001,11 +2055,59 @@
           <note from="Developer" annotates="general" priority="2">is-IS=jafna vöru aftur, jafna vörufærslu</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send outboundEntryNo, inboundEntryNo and positive quantity in base units. The entries must be negative and positive respectively, for the same item, variant and location, with enough unreserved remaining quantity. The native worksheet path applies exactly that quantity or rolls back. Legacy itemLedgerEntryNo/applyToEntryNo still apply the native remaining quantity when quantity is absent. Do not mix the two selector forms. Missing keys return MissingParameter, invalid formats return InvalidParameterFormat, missing entries return RecordNotFound and native refusals return BusinessCentralError. Item costs remain pending adjustment; run Inventory.AdjustCost.Run separately. No document is posted.</source>
+          <target>Sendu outboundEntryNo, inboundEntryNo og jákvætt quantity í grunneiningum. Færslurnar verða að vera neikvæð og jákvæð í þeirri röð, fyrir sömu vöru, afbrigði og birgðageymslu, með nægu ófráteknu eftirstandandi magni. Stöðluð jöfnun jafnar nákvæmlega þetta magn eða afturkallar aðgerðina. Eldri itemLedgerEntryNo/applyToEntryNo jafna enn eftirstandandi magn samkvæmt kerfinu þegar quantity vantar. Ekki blanda valsniðunum. Vantaðir lyklar skila MissingParameter, rangt snið InvalidParameterFormat, vantaðar færslur RecordNotFound og kerfishöfnun BusinessCentralError. Vörukostnaður bíður leiðréttingar; keyrðu Inventory.AdjustCost.Run sérstaklega. Ekkert skjal er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu outboundEntryNo, inboundEntryNo og jákvætt quantity í grunneiningum. Færslurnar verða að vera neikvæð og jákvæð í þeirri röð, fyrir sömu vöru, afbrigði og birgðageymslu, með nægu ófráteknu eftirstandandi magni. Stöðluð jöfnun jafnar nákvæmlega þetta magn eða afturkallar aðgerðina. Eldri itemLedgerEntryNo/applyToEntryNo jafna enn eftirstandandi magn samkvæmt kerfinu þegar quantity vantar. Ekki blanda valsniðunum. Vantaðir lyklar skila MissingParameter, rangt snið InvalidParameterFormat, vantaðar færslur RecordNotFound og kerfishöfnun BusinessCentralError. Vörukostnaður bíður leiðréttingar; keyrðu Inventory.AdjustCost.Run sérstaklega. Ekkert skjal er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 3615801952 - NamedType 1454121626" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Negative item ledger entry. Use with inboundEntryNo and quantity; legacy itemLedgerEntryNo/applyToEntryNo remain supported.</source>
+          <target>Neikvæð vörufærsla. Notaðu með inboundEntryNo og quantity; eldri itemLedgerEntryNo/applyToEntryNo eru enn studd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Neikvæð vörufærsla. Notaðu með inboundEntryNo og quantity; eldri itemLedgerEntryNo/applyToEntryNo eru enn studd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetParameters - NamedType Help401Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 3615801952 - NamedType 937653367" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Positive item ledger entry of the same item, location and variant.</source>
+          <target>Jákvæð vörufærsla fyrir sömu vöru, birgðageymslu og afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Jákvæð vörufærsla fyrir sömu vöru, birgðageymslu og afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetParameters - NamedType Help402Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 3615801952 - NamedType 4037680344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Positive quantity in base units, required with outboundEntryNo/inboundEntryNo. Must be available on both entries; the exact quantity is applied or the entire change is rolled back.</source>
+          <target>Jákvætt magn í grunneiningum, nauðsynlegt með outboundEntryNo/inboundEntryNo. Verður að vera tiltækt á báðum færslum; nákvæmlega þetta magn er jafnað eða breytingin öll afturkölluð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Jákvætt magn í grunneiningum, nauðsynlegt með outboundEntryNo/inboundEntryNo. Verður að vera tiltækt á báðum færslum; nákvæmlega þetta magn er jafnað eða breytingin öll afturkölluð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetParameters - NamedType Help403Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1835291251 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reapplies an outbound item ledger entry to an inbound entry.</source>
           <target>Jafnar útleiðandi vörufærslu aftur við innleiðandi færslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Jafnar útleiðandi vörufærslu aftur við innleiðandi færslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 4275948382 - NamedType 295450351" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send outboundEntryNo, inboundEntryNo and quantity together, or the legacy entry numbers.</source>
+          <target>Sendu outboundEntryNo, inboundEntryNo og quantity saman, eða eldri færslunúmerin.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu outboundEntryNo, inboundEntryNo og quantity saman, eða eldri færslunúmerin.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method ReadSelection - NamedType SelectionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 4275948382 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity must be a positive JSON number in base units.</source>
+          <target>quantity verður að vera jákvæð JSON-tala í grunneiningum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity verður að vera jákvæð JSON-tala í grunneiningum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method ReadSelection - NamedType QuantityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1835291251 - Method 4275948382 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read Inventory.ItemApplication.Get and select matching positive and negative entries with enough remaining quantity.</source>
+          <target>Lestu Inventory.ItemApplication.Get og veldu samsvarandi jákvæða og neikvæða færslu með nægu eftirstandandi magni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.ItemApplication.Get og veldu samsvarandi jákvæða og neikvæða færslu með nægu eftirstandandi magni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Reapply Impl ori - Method ReadSelection - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 4119187822" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No real application was found for item ledger entry %1.</source>
+          <target>Engin raunveruleg jöfnun fannst fyrir vörufærslu %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item ledger entry no.; is-IS=Engin raunveruleg jöfnun fannst fyrir vörufærslu %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method ExecuteBifrostTask - NamedType LedgerApplicationErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item application entry %1 was not found.</source>
@@ -2024,6 +2126,12 @@
           <target>Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.ItemApplication.Get og sendu færslunúmer fyrirliggjandi færslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method ExecuteBifrostTask - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 3589024572" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send either itemLedgerEntryNo or entryNo, not both.</source>
+          <target>Sendu annaðhvort itemLedgerEntryNo eða entryNo, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort itemLedgerEntryNo eða entryNo, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method ExecuteBifrostTask - NamedType SelectorErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2654937359 - Method 3571782927 - NamedType 2612954968" size-unit="char" translate="yes" xml:space="preserve">
           <source>Correct the item application according to the Business Central refusal and retry.</source>
@@ -2115,10 +2223,22 @@
           <note from="Developer" annotates="general" priority="2">is-IS=afturkalla vörujöfnun, afturkalla jöfnun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemLedgerEntryNo to unapply every real application linked to that ledger entry in one transaction. Alternatively, legacy entryNo removes one application. Do not send both. Inbound self-applications cannot be unapplied. Native worksheet rules reject closed periods, transfers, drop shipments and other unsupported changes. A native refusal returns BusinessCentralError and rolls back the entire operation. The item and ledger entries remain marked for adjustment; run Inventory.AdjustCost.Run separately. No document is posted.</source>
+          <target>Sendu itemLedgerEntryNo til að afturkalla allar raunverulegar jafnanir tengdar vörufærslunni í einni gagnagrunnsfærslu. Eldra entryNo afturkallar eina jöfnun. Ekki senda bæði. Ekki er hægt að afturkalla sjálfsjöfnun innleiðandi færslu. Staðlaðar reglur jöfnunarvinnublaðs hafna lokuðum tímabilum, flutningum, beinum afhendingum og öðrum óstuddum breytingum. Kerfishöfnun skilar BusinessCentralError og afturkallar alla aðgerðina. Vara og vörufærslur eru merktar til leiðréttingar; keyrðu Inventory.AdjustCost.Run sérstaklega. Ekkert skjal er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemLedgerEntryNo til að afturkalla allar raunverulegar jafnanir tengdar vörufærslunni í einni gagnagrunnsfærslu. Eldra entryNo afturkallar eina jöfnun. Ekki senda bæði. Ekki er hægt að afturkalla sjálfsjöfnun innleiðandi færslu. Staðlaðar reglur jöfnunarvinnublaðs hafna lokuðum tímabilum, flutningum, beinum afhendingum og öðrum óstuddum breytingum. Kerfishöfnun skilar BusinessCentralError og afturkallar alla aðgerðina. Vara og vörufærslur eru merktar til leiðréttingar; keyrðu Inventory.AdjustCost.Run sérstaklega. Ekkert skjal er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2654937359 - Method 3615801952 - NamedType 1454121626" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unapply the real applications linked to this item ledger entry atomically. Send this or the legacy single-application entryNo, not both.</source>
+          <target>Afturkallar allar raunverulegar jafnanir tengdar þessari vörufærslu í einni færslu. Sendu þetta eða eldra entryNo fyrir eina jöfnun, ekki bæði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar allar raunverulegar jafnanir tengdar þessari vörufærslu í einni færslu. Sendu þetta eða eldra entryNo fyrir eina jöfnun, ekki bæði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetParameters - NamedType Help401Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2654937359 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Unapplies one item application entry by entry number.</source>
-          <target>Afturkallar eina vörujöfnunarfærslu eftir færslunúmeri.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar eina vörujöfnunarfærslu eftir færslunúmeri.</note>
+          <source>Unapplies linked item applications by ledger entry, or one application by entryNo.</source>
+          <target>Afturkallar tengdar vörujafnanir eftir vörufærslu eða eina jöfnun eftir entryNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar tengdar vörujafnanir eftir vörufærslu eða eina jöfnun eftir entryNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Appl. Unapply Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3097464485 - NamedType 4064790880" size-unit="char" translate="yes" xml:space="preserve">
