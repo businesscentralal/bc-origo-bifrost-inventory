@@ -7,6 +7,7 @@ using Microsoft.Inventory.Counting.Recording;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -700,7 +701,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 25 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -765,7 +766,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 25 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -886,6 +887,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Inventory Period");
         ClearTable(Database::"Price List Line");
         ClearTable(Database::"Item Reference");
+        ClearTable(Database::"Item Substitution");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
     end;
