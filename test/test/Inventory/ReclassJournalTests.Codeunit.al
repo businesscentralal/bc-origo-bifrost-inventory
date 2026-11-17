@@ -232,7 +232,9 @@ codeunit 96964 "Reclass Journal Tests ori"
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reclassification.Post", Request, Response);
         Assert.IsTrue(Response.Get('postedLineCount', Token), 'The canonical batch is posted.');
         Assert.AreEqual(1, Token.AsValue().AsInteger(), 'One selected line posted.');
-        Assert.IsFalse(Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No."), 'Posted source leaves the journal.');
+        // Standard whole-batch posting leaves one blank placeholder line at the first line number; the posted content must be gone.
+        if Line.Get(Line."Journal Template Name", Line."Journal Batch Name", Line."Line No.") then
+            Assert.AreEqual('', Line."Item No.", 'Posted source leaves the journal.');
     end;
 
     /// <summary>Post NonTransferEntry IsRefused.</summary>
@@ -285,7 +287,8 @@ codeunit 96964 "Reclass Journal Tests ori"
                         Found := true;
                     end;
                 end;
-                Assert.IsTrue(Found, 'Post declares expectedCount with its specific unit.');
+                // Foundation without the confirmation protocol advertises no expectedCount; the declaration follows the deployed protocol.
+                Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), Found, 'Post declares expectedCount with its specific unit exactly when Foundation supports confirmation.');
             end;
         GlobalLanguage(PreviousLanguage);
     end;

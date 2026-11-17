@@ -167,7 +167,9 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Name of the journal batch to post, at most 10 characters; read as an upper-case code. Without lineSystemIds every line of the batch is posted. Required unless batchName is sent; journalBatchName wins when both are sent.'));
         Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Alias of journalBatchName, read only when journalBatchName is absent.'));
         Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are posted. Without it every line of the batch is used.'));
-        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
+        // Declared only when the deployed Foundation has the confirmation protocol; older Foundation advertises no confirmation.
+        if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
+            Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, CountUnit()));
         exit(true);
     end;
 
