@@ -57,7 +57,7 @@ codeunit 96971 "Inv. Catalogue Quality Tests"
             CheckCount += 9;
         end;
         GlobalLanguage(OriginalLanguage);
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked (' + Format(TypeCount) + ').');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked (' + Format(TypeCount) + ').');
         Assert.IsTrue(CheckCount >= 531, 'All catalogue texts of every type are checked in both languages.');
     end;
 
@@ -92,7 +92,7 @@ codeunit 96971 "Inv. Catalogue Quality Tests"
             TypeCount += 1;
         end;
         GlobalLanguage(OriginalLanguage);
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked (' + Format(TypeCount) + ').');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked (' + Format(TypeCount) + ').');
     end;
 
     /// <summary>Every message type of this app: its implementation id is its enum value inside the app object range.</summary>

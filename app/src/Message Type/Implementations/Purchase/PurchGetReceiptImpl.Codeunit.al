@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// the way the Get Receipt Lines action on the purchase invoice subform does (codeunit 74 Purch.-Get Receipt).
 /// The write runs in Purch Get Receipt Proc ori so a failure rolls back and answers a clean error.
 /// </summary>
-codeunit 10077030 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077018 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
