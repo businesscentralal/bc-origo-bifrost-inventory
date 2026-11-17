@@ -179,7 +179,7 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
         Implementation = "Msg Interface ori" = "Revaluation Calc Impl ori", "Msg Discovery ori" = "Revaluation Calc Impl ori", "Msg Contract ori" = "Revaluation Calc Impl ori";
     }
     /// <summary>Posts selected transfer ship quantities.</summary>
-    value(10077020; "Inventory.TransferOrder.Ship")
+    value(10077026; "Inventory.TransferOrder.Ship")
     {
         Caption = 'Inventory.TransferOrder.Ship', Locked = true;
         Implementation = "Msg Interface ori" = "Transfer Ship Impl ori", "Msg Discovery ori" = "Transfer Ship Impl ori", "Msg Contract ori" = "Transfer Ship Impl ori";

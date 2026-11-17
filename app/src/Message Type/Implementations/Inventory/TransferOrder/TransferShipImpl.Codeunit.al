@@ -4,7 +4,7 @@ using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
 
 /// <summary>Posts selected transfer order quantities through Inventory.TransferOrder.Ship.</summary>
-codeunit 10077020 "Transfer Ship Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077026 "Transfer Ship Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
