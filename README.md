@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 85 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 89 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -43,6 +43,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemUnitOfMeasure.Get` | Outbound | Read the units of measure of an item with the base unit flagged |
 | `Inventory.ItemUnitOfMeasure.Create` | Inbound | Create a unit of measure on an existing item |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
+| `Inventory.ItemVariant.Get` | Outbound | Read the variants of an item, or one variant by code |
+| `Inventory.ItemVariant.Create` | Inbound | Create a new variant on an existing item |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -102,6 +104,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemTracing.Get` | Outbound | Trace a lot or serial number through the item ledger, from origin to usage or back (`lotNo` and/or `serialNo`, optional `itemNo`, `variantCode`, `direction`); read only, refuses above 1000 nodes with `LimitExceeded` |
 | `Inventory.PlanningWorksheet.Calculate` | Inbound | Replace suggestion lines for the selected items on one planning worksheet (`regenerative` or `netChange`) and return the lines |
 | `Inventory.PlanningWorksheet.CarryOut` | Inbound | Create new purchase, transfer and assembly orders from accepted New lines. Refuses lines that would change an existing document |
+| `Inventory.CycleCount.Calculate` | Inbound | Calculate a cycle counting journal: fills an empty physical inventory journal batch with the items and stockkeeping units that are due by their counting period (native report 790, native counting dates advanced). `postingDate` and `documentNo` are required; `itemNo`, `locationCode`, `variantCode` and `itemsNotOnInventory` are optional; an item without a counting period is refused with `PreconditionFailed`. Effect: write; posting stays with `Inventory.PhysInventory.Post` |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
 | `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
 | `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
@@ -291,6 +294,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
 | 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
+| 10076870 | `MsgType.CycleCount.EnumExt ori` | `Inventory.CycleCount.Calculate` (value 10076970) |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
 | 10077029 | `MsgType.ItemTrace.Ext ori` | `Inventory.ItemTracing.Get` |
@@ -307,6 +311,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
+| 10076890 | `MsgType.ItemVar.EnumExt ori` | `Inventory.ItemVariant.Get` (10076990), `Inventory.ItemVariant.Create` (10076991) |
 | 10077015 | `MsgType.ItemUoM.EnumExt ori` | `Inventory.ItemUnitOfMeasure.Get` (10077011), `Inventory.ItemUnitOfMeasure.Create` (10077012) |
 | 10077030 | `MsgType.PurchGetRcpt.Ext ori` | `Purchase.PurchaseInvoice.GetReceiptLines` (value 10077018) |
 
@@ -357,6 +362,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10077026 | Partial transfers | `Transfer Ship Impl ori` (partial transfer shipment) |
 | 10077028–10077029 | Sales shipments | `Sales Get Shipment Impl ori` (`Sales.SalesInvoice.GetShipmentLines`), `Sales Get Shipment Proc ori` (isolated write) |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
+| 10076990–10076993 | Item variants | Get, Create, Create process, `Item Variant Restrict ori` (Data.Records write restriction on Item Variant) |
 
 ### Permission sets
 
