@@ -551,6 +551,13 @@ codeunit 96946 "Reservation Create Tests"
     end;
 
     [Test]
+    procedure Scenario_AC05_TrackedSelectedSupply_CancelThenRecreateSucceeds()
+    begin
+        // Story #7: native cancellation retains tracking; recreating must return the new reservation pair.
+        VerifySupplySelection('trackedRepeat');
+    end;
+
+    [Test]
     procedure Scenario_AC05_InsufficientSelectedSupply_LeavesNoReservation()
     begin
         // Story #7, AC04/AC05 | Time: WorkDate for supply and demand | Risk: None
@@ -980,6 +987,7 @@ codeunit 96946 "Reservation Create Tests"
         LibraryInventory: Codeunit "Library - Inventory";
         Request: JsonObject;
         Response: JsonObject;
+        CancelRequest: JsonObject;
         Token: JsonToken;
         LotNo: Code[50];
         SerialNo: Code[50];
@@ -993,6 +1001,16 @@ codeunit 96946 "Reservation Create Tests"
         RequestedQuantity := 2;
         LibraryInventory.CreateItemTrackingCode(ItemTrackingCode);
         case CaseName of
+            'trackedRepeat':
+                begin
+                    ItemTrackingCode."Lot Specific Tracking" := true;
+                    ItemTrackingCode."SN Specific Tracking" := true;
+                    ItemTrackingCode."Package Specific Tracking" := true;
+                    LotNo := 'CHOSEN-LOT';
+                    SerialNo := 'CHOSEN-SERIAL';
+                    PackageNo := 'CHOSEN-PACKAGE';
+                    RequestedQuantity := 1;
+                end;
             'lot', 'conflict':
                 begin
                     ItemTrackingCode."Lot Specific Tracking" := true;
@@ -1013,16 +1031,19 @@ codeunit 96946 "Reservation Create Tests"
         ItemTrackingCode.Modify(true);
         Item.Validate("Item Tracking Code", ItemTrackingCode.Code);
         Item.Modify(true);
-        if CaseName in ['lot', 'conflict'] then
-            PostTrackedSupply(Item, SalesLine."Location Code", 'OTHER-LOT', '', '', 3)
+        if CaseName = 'trackedRepeat' then
+            PostTrackedSupply(Item, SalesLine."Location Code", 'OTHER-LOT', 'OTHER-SERIAL', 'OTHER-PACKAGE', 1)
         else
-            if CaseName in ['serial', 'serialOver'] then
-                PostTrackedSupply(Item, SalesLine."Location Code", '', 'OTHER-SERIAL', '', 1)
+            if CaseName in ['lot', 'conflict'] then
+                PostTrackedSupply(Item, SalesLine."Location Code", 'OTHER-LOT', '', '', 3)
             else
-                if CaseName = 'package' then
-                    PostTrackedSupply(Item, SalesLine."Location Code", '', '', 'OTHER-PACKAGE', 3)
+                if CaseName in ['serial', 'serialOver'] then
+                    PostTrackedSupply(Item, SalesLine."Location Code", '', 'OTHER-SERIAL', '', 1)
                 else
-                    PostTrackedSupply(Item, SalesLine."Location Code", '', '', '', 3);
+                    if CaseName = 'package' then
+                        PostTrackedSupply(Item, SalesLine."Location Code", '', '', 'OTHER-PACKAGE', 3)
+                    else
+                        PostTrackedSupply(Item, SalesLine."Location Code", '', '', '', 3);
         PostTrackedSupply(Item, SalesLine."Location Code", LotNo, SerialNo, PackageNo, RequestedQuantity);
         LedgerEntry.SetRange("Item No.", Item."No.");
         LedgerEntry.FindLast();
@@ -1041,7 +1062,7 @@ codeunit 96946 "Reservation Create Tests"
             Request.Add('serialNo', SerialNo);
         if PackageNo <> '' then
             Request.Add('packageNo', PackageNo);
-        if CaseName in ['selected', 'insufficient', 'conflict'] then
+        if CaseName in ['selected', 'insufficient', 'conflict', 'trackedRepeat'] then
             Request.Add('itemLedgerEntryNo', SupplyEntryNo);
 
         // [WHEN] Create selects the tracking dimensions or the explicitly named supply entry.
@@ -1069,6 +1090,22 @@ codeunit 96946 "Reservation Create Tests"
         Entry.Get(Entry."Entry No.", true);
         Assert.AreEqual(Database::"Item Ledger Entry", Entry."Source Type", 'Inventory supply.');
         Assert.AreEqual(SupplyEntryNo, Entry."Source Ref. No.", 'Only the chosen supply entry.');
+        if CaseName = 'trackedRepeat' then begin
+            // [WHEN] The selected tracked reservation is cancelled and recreated on the same native source.
+            CancelRequest.Add('entryNo', Entry."Entry No.");
+            Clear(Response);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", CancelRequest, Response);
+            AssertStatus(Response, 'Success');
+            Clear(Response);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Create", Request, Response);
+            // [THEN] Native conversion of retained tracking returns Success, not a stale partial-record JIT error.
+            AssertStatus(Response, 'Success');
+            Response.Get('quantity', Token);
+            Assert.AreEqual(1, Token.AsValue().AsDecimal(), 'One tracked unit is reserved again.');
+            Response.Get('entryNo', Token);
+            Entry.Get(Token.AsValue().AsInteger(), true);
+            Assert.AreEqual(SupplyEntryNo, Entry."Source Ref. No.", 'The same selected supply is reserved again.');
+        end;
     end;
 
     local procedure PostTrackedSupply(Item: Record Item; LocationCode: Code[10]; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50]; Quantity: Decimal)

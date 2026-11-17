@@ -8,6 +8,8 @@
 
 ### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
 
+- Recreating a selected tracked reservation after cancellation clears the old partial reservation record before reading the result. Native tracking conversion can replace that record; the response now reports the created pair instead of failing a JIT field load after creation.
+
 - Source-line cancellation now requires `sourceProdOrderLine` and `sourceSubtype` for production output (5406) and components (5407). Incomplete pointers return `MissingParameter` before writes; complete pointers preserve sibling lines and other production statuses. Native regression coverage and bilingual parameter help cover the required keys.
 
 
