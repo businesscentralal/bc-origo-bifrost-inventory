@@ -13,7 +13,7 @@ using System.TestLibraries.Utilities;
 /// Inventory.ItemTracing.Get: the trace of a lot number through the item ledger in both directions,
 /// read-only behaviour, refusals, the node cap and help.
 /// </summary>
-codeunit 96960 "Item Tracing Get Tests"
+codeunit 96998 "Item Tracing Get Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

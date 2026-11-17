@@ -10,6 +10,7 @@ codeunit 10076922 "Inventory Domain Gate ori"
 {
     Access = Internal;
 
+    /// <summary>Reports whether the company switch and required native permissions allow this operation.</summary>
     procedure IsEnabled(Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -26,15 +27,20 @@ codeunit 10076922 "Inventory Domain Gate ori"
         exit(RecRef.ReadPermission());
     end;
 
+    /// <summary>Returns the setup or permission refusal; disabled tracking writes use PreconditionFailed.</summary>
     procedure AssertEnabled(var Argument: Record "Message Argument ori"; Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
+        DisabledErrorCode: Enum "Bifrost Error Code ori";
         DomainDisabledErr: Label 'The %1 domain is turned off for this company. Turn it on from Inventory Setup.', Comment = '%1 = domain, is-IS=%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.';
         DomainDisabledNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
     begin
         if not InventorySetup.IsDomainEnabled(Domain) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', DomainDisabledNextStepLbl);
+            DisabledErrorCode := "Bifrost Error Code ori"::InvalidParameter;
+            if (Domain = "Inventory Domain ori"::ItemTracking) and NeedWrite then
+                DisabledErrorCode := "Bifrost Error Code ori"::PreconditionFailed;
+            Argument.RespondWithError(DisabledErrorCode, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', DomainDisabledNextStepLbl);
             exit(false);
         end;
         if IsEnabled(Domain, FilterTableNo, NeedWrite, NeedPost) then

@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// does: from the origin to where it was used, or from the use back to where it came from. It only reads: the
 /// trace is built in temporary records.
 /// </summary>
-codeunit 10076930 "Item Tracing Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
