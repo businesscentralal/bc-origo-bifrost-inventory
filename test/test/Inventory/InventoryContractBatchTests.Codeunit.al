@@ -286,9 +286,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(62, CheckedCount - ItemJournalNames.Count(), 'This app registers 62 Inventory types.');
+        LibraryAssert.AreEqual(65, CheckedCount - ItemJournalNames.Count(), 'This app registers 65 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(62, AppTypes.Count(), 'The registered Inventory type list for this app has 62 names.');
+        LibraryAssert.AreEqual(65, AppTypes.Count(), 'The registered Inventory type list for this app has 65 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -402,6 +402,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AppRegisteredInventoryTypes() Types: List of [Text]
     begin
+        Types.Add('Inventory.PhysInventoryOrder.Create');
+        Types.Add('Inventory.PhysInventoryOrder.Finish');
+        Types.Add('Inventory.PhysInventoryOrder.Post');
+
         Types.Add('Inventory.ItemSubstitution.Get');
         Types.Add('Inventory.Cost.Update');
         Types.Add('Inventory.Revaluation.Post');
@@ -716,7 +720,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertResponseChapter(Contract, Parts.GetResponse(Legacy));
+        AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -727,39 +731,30 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
     end;
 
-    /// <summary>Foundation 28.0.13+ appends the conditional error "code" descriptor to published responses (core #1345). Every app-owned field must still match exactly and in order.</summary>
-    local procedure AssertResponseChapter(Contract: JsonObject; Expected: JsonObject)
+    local procedure AssertComposedAttributeResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
     var
-        Trimmed: JsonObject;
-        Wrapper: JsonObject;
-        ActualFields: JsonArray;
-        OwnFields: JsonArray;
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Implementation: Interface "Msg Contract ori";
+        Info: ModuleInfo;
+        RawResponse: JsonObject;
+        RawContract: JsonObject;
         Token: JsonToken;
-        Field: JsonToken;
-        Last: JsonToken;
+        Fields: JsonArray;
     begin
-        LibraryAssert.IsTrue(Contract.Get('response', Token), 'Missing chapter response.');
-        Trimmed := Token.AsObject().Clone().AsObject();
-        Trimmed.Get('fields', Token);
-        ActualFields := Token.AsArray();
-        foreach Field in ActualFields do
-            if not IsFoundationErrorCodeField(Field) then
-                OwnFields.Add(Field);
-        LibraryAssert.IsTrue(ActualFields.Count() - OwnFields.Count() <= 1, 'Foundation adds at most one response field.');
-        if ActualFields.Count() > OwnFields.Count() then begin
-            ActualFields.Get(ActualFields.Count() - 1, Last);
-            LibraryAssert.IsTrue(IsFoundationErrorCodeField(Last), 'The Foundation code descriptor is the last response field.');
+        // The implementation must still match the legacy payload exactly.
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        LibraryAssert.IsTrue(Implementation.GetResponse(RawResponse), 'Raw attribute response exists.');
+        RawContract.Add('response', RawResponse);
+        AssertChapterJson(RawContract, 'response', Expected.AsToken());
+        // Foundation 28.0.13 adds its shared error code to composed JSON responses.
+        LibraryAssert.IsTrue(NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info), 'Foundation is installed.');
+        if Info.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+            Expected.Get('fields', Token);
+            Fields := Token.AsArray();
+            Fields.Add(ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+            Expected.Replace('fields', Fields);
         end;
-        Trimmed.Replace('fields', OwnFields);
-        Wrapper.Add('response', Trimmed);
-        AssertChapterJson(Wrapper, 'response', Expected.AsToken());
-    end;
-
-    local procedure IsFoundationErrorCodeField(Field: JsonToken): Boolean
-    var
-        NameToken: JsonToken;
-    begin
-        exit(Field.AsObject().Get('name', NameToken) and (NameToken.AsValue().AsText() = 'code'));
+        AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
