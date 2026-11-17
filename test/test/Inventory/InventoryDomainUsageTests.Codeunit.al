@@ -7,6 +7,7 @@ using Microsoft.Inventory.Counting.Recording;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -530,7 +531,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [WHEN] A user creates the setup row.
         InventorySetup.InsertIfNotExists();
         // [THEN] The planning template enables Planning and leaves the other new switch testable on its own.
-        AssertDomain(InventorySetup, 25, true);
+        AssertDomain(InventorySetup, 26, true);
     end;
 
     [Test]
@@ -544,7 +545,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [WHEN] A setup row is created without usage.
         InventorySetup.InsertIfNotExists();
         // [THEN] Planning stays off.
-        AssertDomain(InventorySetup, 25, false);
+        AssertDomain(InventorySetup, 26, false);
     end;
 
     [Test]
@@ -735,7 +736,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 26 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -800,7 +801,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 26 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -921,6 +922,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Inventory Period");
         ClearTable(Database::"Price List Line");
         ClearTable(Database::"Item Reference");
+        ClearTable(Database::"Item Substitution");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
         ClearTable(Database::"Requisition Line");

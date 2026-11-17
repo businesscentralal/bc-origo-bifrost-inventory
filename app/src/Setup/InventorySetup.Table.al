@@ -7,6 +7,7 @@ using Microsoft.Inventory.Counting.Recording;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -96,7 +97,12 @@ table 10076836 "Inventory Setup ori"
         {
             Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
         }
-        field(25; Planning; Boolean)
+        field(25; "Item Substitution"; Boolean)
+        {
+            Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
+            ToolTip = 'Enable reading item substitutions and their on-hand inventory.', Comment = 'is-IS=Virkja lestur vöruskipta og núverandi birgða þeirra.';
+        }
+        field(26; Planning; Boolean)
         {
             Caption = 'Planning', Comment = 'is-IS=Áætlun';
         }
@@ -160,6 +166,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Charge");
             Domain::ItemCategory:
                 exit("Item Category");
+            Domain::ItemSubstitution:
+                exit("Item Substitution");
             Domain::Planning:
                 exit(Planning);
         end;
@@ -246,6 +254,11 @@ table 10076836 "Inventory Setup ori"
         if not "Item Category" then
             if HasItemCategoryUsage() then begin
                 "Item Category" := true;
+                Changed := true;
+            end;
+        if not "Item Substitution" then
+            if HasRecords(Database::"Item Substitution") then begin
+                "Item Substitution" := true;
                 Changed := true;
             end;
         if not Planning then

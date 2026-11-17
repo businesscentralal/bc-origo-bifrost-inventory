@@ -31,12 +31,15 @@ README "Objects" lists every object with its ID. In short:
   (`Inventory Tracking Write ori` 10076925, `Asm. Preview Adjust ori` 10076929,
   `Plan Wksh Calc Impl ori` 10076930, `Plan Wksh Carry Impl ori` 10076931, `Req. Worksheet Engine ori` 10076932).
   10076924 stays unused as a codeunit so the RecordCount value does not clash with the convention.
-  Free: 10076933-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` value 15 Planning; `Inventory Setup ori` field 25 Planning.
-  Values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory and fields 21-24 remain.
+  Codeunit allocation starts at 10076933; check existing objects and open PRs before use. Remaining range is 10076933-10077034; 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 (excluding allocated 10076860 and 10076906) for enum extensions, 10076838-10077034 for permission sets.
+- `Inventory Domain ori` value 16 Planning; `Inventory Setup ori` field 26 Planning.
+  ItemSubstitution keeps released value 15 and field 25. Values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory and fields 21-24 remain.
   New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is the Item Application quantity helper.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory; `Inventory Setup ori`
+  fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
 
 ## Test object IDs (unchanged by the renumbering)
 
@@ -44,3 +47,8 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+
+## Issue 40 additions
+
+- Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
+- Test codeunit 96994 `Item Application 40 Tests ori`.

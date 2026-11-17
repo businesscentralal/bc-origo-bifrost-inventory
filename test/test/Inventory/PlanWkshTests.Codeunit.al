@@ -11,7 +11,7 @@ using System.TestLibraries.Utilities;
 
 /// <summary>
 /// Inventory.PlanningWorksheet.Calculate and CarryOut. Native planning commits, so each test removes its own
-/// PW117 fixtures and commits that cleanup.
+/// XP117 fixtures and commits that cleanup.
 /// </summary>
 codeunit 96980 "Plan Wksh Tests ori"
 {
@@ -47,7 +47,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         Request.Add('startingDate', IsoDate(HorizonStart()));
         Request.Add('endingDate', IsoDate(HorizonEnd()));
         Request.Add('itemNo', Item."No.");
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117T|XP117W', Request, false);
         Response.WriteTo(ResponseText);
         Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
         Assert.AreEqual('regenerative', TextValue(Response, 'mode'), ResponseText);
@@ -56,7 +56,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         Assert.IsTrue(LineToken.AsArray().Count() >= 1, ResponseText);
 
         Clear(Request);
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, false);
         Response.WriteTo(ResponseText);
         Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
         Assert.IsTrue(IntegerValue(Response, 'linesConsumed') >= 1, ResponseText);
@@ -68,6 +68,67 @@ codeunit 96980 "Plan Wksh Tests ori"
         DocumentNo := CopyStr(TextValue(OrderToken.AsObject(), 'documentNo'), 1, MaxStrLen(DocumentNo));
         Assert.IsTrue(PurchHeader.Get(PurchHeader."Document Type"::Order, DocumentNo), ResponseText);
 
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Scenario_AC01_Calculate_PreservesOtherWorksheet()
+    var
+        Item: Record Item;
+        OtherLine: Record "Requisition Line";
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // Issue #117 AC01 | Time: one-year work-date horizon | Risk: owned worksheets only.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        CreateWorksheet('XP117OTHER', Enum::"Req. Worksheet Template Type"::Planning);
+        OtherLine.Init();
+        OtherLine."Worksheet Template Name" := 'XP117OTHER';
+        OtherLine."Journal Batch Name" := 'XP117W';
+        OtherLine."Line No." := 10000;
+        OtherLine.Type := OtherLine.Type::Item;
+        OtherLine."No." := Item."No.";
+        OtherLine.Quantity := 7;
+        OtherLine."Due Date" := HorizonStart();
+        OtherLine."Action Message" := OtherLine."Action Message"::New;
+        OtherLine.Insert(false);
+        Commit();
+        Request.Add('mode', 'regenerative');
+        Request.Add('startingDate', IsoDate(HorizonStart()));
+        Request.Add('endingDate', IsoDate(HorizonEnd()));
+        Request.Add('itemNo', Item."No.");
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117T|XP117W', Request, false);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'Calculation succeeds.');
+        Assert.IsTrue(IntegerValue(Response, 'lineCount') > 0, 'Selected worksheet receives suggestions.');
+        Assert.IsTrue(OtherLine.Get('XP117OTHER', 'XP117W', 10000), 'Other worksheet line survives native calculation.');
+        Assert.AreEqual(7, OtherLine.Quantity, 'Other worksheet quantity is unchanged.');
+        Assert.AreEqual(Item."No.", OtherLine."No.", 'Other worksheet still names the same item.');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    /// <summary>Creates a fresh owned worksheet and purchase item for explicit MCP verification.</summary>
+    procedure SeedMcpFixtures(): Text
+    var
+        Item: Record Item;
+        Worksheet: Record "Requisition Wksh. Name";
+    begin
+        Assert.IsFalse(Worksheet.Get('XP117T', 'XP117W'), 'Clean the existing owned worksheet before seeding.');
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        Commit();
+        exit(Item."No." + '|' + IsoDate(HorizonStart()) + '|' + IsoDate(HorizonEnd()));
+    end;
+
+    /// <summary>Removes only this codeunit's owned planning fixtures and created orders after MCP verification.</summary>
+    procedure CleanupMcpFixtures()
+    begin
         CleanupFixtures();
         Commit();
     end;
@@ -94,7 +155,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         Request.Add('startingDate', IsoDate(HorizonStart()));
         Request.Add('endingDate', IsoDate(HorizonEnd()));
         Request.Add('itemNo', Item."No.");
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117T|XP117W', Request, false);
         Response.WriteTo(ResponseText);
         Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
         Assert.AreEqual('netChange', TextValue(Response, 'mode'), ResponseText);
@@ -117,7 +178,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         Request.Add('mode', 'weekly');
         Request.Add('startingDate', IsoDate(HorizonStart()));
         Request.Add('endingDate', IsoDate(HorizonEnd()));
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117T|XP117W', Request, false);
         AssertRefusal(Response, 'InvalidParameter');
         CleanupFixtures();
         Commit();
@@ -137,7 +198,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         Request.Add('mode', 'regenerative');
         Request.Add('startingDate', IsoDate(HorizonEnd()));
         Request.Add('endingDate', IsoDate(HorizonStart()));
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117T|XP117W', Request, false);
         AssertRefusal(Response, 'InvalidParameter');
         Assert.AreEqual('endingDate', TextValue(Response, 'parameter'), 'endingDate');
         CleanupFixtures();
@@ -189,8 +250,8 @@ codeunit 96980 "Plan Wksh Tests ori"
         CreatePurchaseItem(Item);
         CreateRequisitionWorksheet();
         ReqLine.Init();
-        ReqLine."Worksheet Template Name" := 'PW117R';
-        ReqLine."Journal Batch Name" := 'PW117W';
+        ReqLine."Worksheet Template Name" := 'XP117R';
+        ReqLine."Journal Batch Name" := 'XP117W';
         ReqLine."Line No." := 10000;
         ReqLine.Type := ReqLine.Type::Item;
         ReqLine."No." := Item."No.";
@@ -201,9 +262,9 @@ codeunit 96980 "Plan Wksh Tests ori"
         Request.Add('startingDate', IsoDate(HorizonStart()));
         Request.Add('endingDate', IsoDate(HorizonEnd()));
         Request.Add('itemNo', Item."No.");
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'PW117R|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.Calculate", 'XP117R|XP117W', Request, false);
         AssertRefusal(Response, 'RecordNotFound');
-        Assert.IsTrue(ReqLine.Get('PW117R', 'PW117W', 10000), 'The requisition line stays.');
+        Assert.IsTrue(ReqLine.Get('XP117R', 'XP117W', 10000), 'The requisition line stays.');
         CleanupFixtures();
         Commit();
     end;
@@ -224,8 +285,8 @@ codeunit 96980 "Plan Wksh Tests ori"
         CreatePurchaseItem(Item);
         CreatePlanningWorksheet();
         ReqLine.Init();
-        ReqLine."Worksheet Template Name" := 'PW117T';
-        ReqLine."Journal Batch Name" := 'PW117W';
+        ReqLine."Worksheet Template Name" := 'XP117T';
+        ReqLine."Journal Batch Name" := 'XP117W';
         ReqLine."Line No." := 10000;
         ReqLine.Type := ReqLine.Type::Item;
         ReqLine."No." := Item."No.";
@@ -234,12 +295,12 @@ codeunit 96980 "Plan Wksh Tests ori"
         ReqLine."Accept Action Message" := true;
         ReqLine."Replenishment System" := ReqLine."Replenishment System"::Purchase;
         ReqLine."Ref. Order Type" := ReqLine."Ref. Order Type"::Purchase;
-        ReqLine."Ref. Order No." := 'PW117EXIST';
+        ReqLine."Ref. Order No." := 'XP117EXIST';
         ReqLine.Insert(false);
         Commit();
-        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'PW117T|PW117W', Request, false);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, false);
         AssertRefusal(Response, 'PreconditionFailed');
-        Assert.IsTrue(ReqLine.Get('PW117T', 'PW117W', 10000), 'The cancel line stays.');
+        Assert.IsTrue(ReqLine.Get('XP117T', 'XP117W', 10000), 'The cancel line stays.');
         PurchLine.SetRange(Type, PurchLine.Type::Item);
         PurchLine.SetRange("No.", Item."No.");
         Assert.IsTrue(PurchLine.IsEmpty(), 'No purchase line was created.');
@@ -289,10 +350,10 @@ codeunit 96980 "Plan Wksh Tests ori"
         Vendor: Record Vendor;
     begin
         LibraryPurchase.CreateVendor(Vendor);
-        Vendor.Validate(Name, CopyStr('PW117 ' + Vendor."No.", 1, MaxStrLen(Vendor.Name)));
+        Vendor.Validate(Name, CopyStr('XP117 ' + Vendor."No.", 1, MaxStrLen(Vendor.Name)));
         Vendor.Modify(true);
         LibraryInventory.CreateItem(Item);
-        Item.Validate(Description, CopyStr('PW117 ' + Item."No.", 1, MaxStrLen(Item.Description)));
+        Item.Validate(Description, CopyStr('XP117 ' + Item."No.", 1, MaxStrLen(Item.Description)));
         Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
         Item.Validate("Vendor No.", Vendor."No.");
         Item.Validate("Reordering Policy", Item."Reordering Policy"::"Fixed Reorder Qty.");
@@ -303,12 +364,12 @@ codeunit 96980 "Plan Wksh Tests ori"
 
     local procedure CreatePlanningWorksheet()
     begin
-        CreateWorksheet('PW117T', Enum::"Req. Worksheet Template Type"::Planning);
+        CreateWorksheet('XP117T', Enum::"Req. Worksheet Template Type"::Planning);
     end;
 
     local procedure CreateRequisitionWorksheet()
     begin
-        CreateWorksheet('PW117R', Enum::"Req. Worksheet Template Type"::"Req.");
+        CreateWorksheet('XP117R', Enum::"Req. Worksheet Template Type"::"Req.");
     end;
 
     local procedure CreateWorksheet(TemplateName: Code[10]; TemplateType: Enum "Req. Worksheet Template Type")
@@ -321,15 +382,15 @@ codeunit 96980 "Plan Wksh Tests ori"
             WkshTemplate.Name := TemplateName;
             WkshTemplate.Validate(Type, TemplateType);
             WkshTemplate.Recurring := false;
-            WkshTemplate.Description := 'PW117';
+            WkshTemplate.Description := 'XP117';
             WkshTemplate.Insert(true);
         end;
-        if Worksheet.Get(TemplateName, 'PW117W') then
+        if Worksheet.Get(TemplateName, 'XP117W') then
             exit;
         Worksheet.Init();
         Worksheet."Worksheet Template Name" := TemplateName;
-        Worksheet.Name := 'PW117W';
-        Worksheet.Description := 'PW117';
+        Worksheet.Name := 'XP117W';
+        Worksheet.Description := 'XP117';
         Worksheet.Insert(true);
     end;
 
@@ -347,7 +408,7 @@ codeunit 96980 "Plan Wksh Tests ori"
         ItemNo: Code[20];
         DocumentNo: Code[20];
     begin
-        Item.SetFilter(Description, 'PW117*');
+        Item.SetFilter(Description, 'XP117*');
         if Item.FindSet() then
             repeat
                 ItemNos.Add(Item."No.");
@@ -371,24 +432,28 @@ codeunit 96980 "Plan Wksh Tests ori"
             if PurchHeader.Get(PurchHeader."Document Type"::Order, DocumentNo) then
                 PurchHeader.Delete(true);
         ReqLine.Reset();
-        ReqLine.SetFilter("Worksheet Template Name", 'PW117*');
+        ReqLine.SetFilter("Worksheet Template Name", 'XP117*');
         if not ReqLine.IsEmpty() then
             ReqLine.DeleteAll(true);
         foreach ItemNo in ItemNos do
             if Item.Get(ItemNo) then
                 Item.Delete(true);
-        Vendor.SetFilter(Name, 'PW117*');
+        Vendor.SetFilter(Name, 'XP117*');
         if Vendor.FindSet() then
             repeat
                 Vendor.Delete(true);
             until Vendor.Next() = 0;
-        if Worksheet.Get('PW117T', 'PW117W') then
+        if Worksheet.Get('XP117T', 'XP117W') then
             Worksheet.Delete(true);
-        if Worksheet.Get('PW117R', 'PW117W') then
+        if Worksheet.Get('XP117R', 'XP117W') then
             Worksheet.Delete(true);
-        if WkshTemplate.Get('PW117T') then
+        if Worksheet.Get('XP117OTHER', 'XP117W') then
+            Worksheet.Delete(true);
+        if WkshTemplate.Get('XP117OTHER') then
             WkshTemplate.Delete(true);
-        if WkshTemplate.Get('PW117R') then
+        if WkshTemplate.Get('XP117T') then
+            WkshTemplate.Delete(true);
+        if WkshTemplate.Get('XP117R') then
             WkshTemplate.Delete(true);
     end;
 

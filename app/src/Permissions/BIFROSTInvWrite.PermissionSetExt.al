@@ -12,6 +12,12 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     IncludedPermissionSets = "BIFROST InvAttrWrite ori";
 
     Permissions =
+        codeunit "Phys Order Create Impl ori" = X,
+        codeunit "Phys Order Finish Impl ori" = X,
+        codeunit "Phys Order Post Impl ori" = X,
+        codeunit "Phys Order Process ori" = X,
+        codeunit "Phys Order Contract ori" = X,
+
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
@@ -60,6 +66,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Inventory Contract Parts ori" = X,
         codeunit "Inventory Native Journal ori" = X,
         codeunit "Inventory Write Process ori" = X,
+        codeunit "Item Appl. Quantity ori" = X,
         codeunit "Reclass Check Impl ori" = X,
         codeunit "Reclass Preview Impl ori" = X,
         codeunit "Reclass Post Impl ori" = X,
@@ -80,6 +87,8 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Avail. By Period Impl ori" = X,
         codeunit "Item Charge Assign Impl ori" = X,
         codeunit "Item Charge Assign Proc ori" = X,
+        codeunit "Sales Ret. Ord. Post. Impl ori" = X,
+        codeunit "Sales Ret. Ord. Post. Proc ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
         codeunit "Item Charge Restrict ori" = X,
         codeunit "Item Category Get Impl ori" = X,

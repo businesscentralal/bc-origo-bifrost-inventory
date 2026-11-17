@@ -75,6 +75,10 @@ page 10076835 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether item charge assignment message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð úthlutunar kostnaðarauka séu virk fyrir þetta fyrirtæki.';
                 }
+                field(ItemSubstitution; Rec."Item Substitution")
+                {
+                    ApplicationArea = All;
+                }
                 field(ItemCategory; Rec."Item Category")
                 {
                     ToolTip = 'Specifies whether item category message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð vöruflokka séu virk fyrir þetta fyrirtæki.';
