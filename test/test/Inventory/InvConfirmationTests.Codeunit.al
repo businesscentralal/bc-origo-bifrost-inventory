@@ -63,9 +63,13 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
+        FoundationSetup: RecordRef;
+        PreviousConfirmation: Boolean;
+        ChangedConfirmation: Boolean;
         PreviousLanguage: Integer;
     begin
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
+        ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         Setup.InsertIfNotExists();
         Setup."Transfer Orders" := true;
         Setup.Assembly := true;
@@ -89,6 +93,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyCosting();
         VerifyJournals();
         GlobalLanguage(PreviousLanguage);
+        RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
     end;
 
     local procedure VerifyTransfer()
@@ -315,6 +320,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         PreviousSetup: Record "Inventory Setup ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        FoundationSetup: RecordRef;
         Implementation: Interface "Msg Contract ori";
         MessageType: Enum "Message Type ori";
         TypeName: Text;
@@ -331,9 +337,12 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         SupportsConfirmation: Boolean;
         DeclaresConfirmation: Boolean;
         DeclaredParameters: JsonArray;
+        PreviousConfirmation: Boolean;
+        ChangedConfirmation: Boolean;
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
+        ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         // No business document or ledger entry is created, posted or undone by this boundary test.
         HadSetup := PreviousSetup.Get();
         Setup.InsertIfNotExists();
@@ -415,6 +424,49 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         end else
             Setup.Delete();
         Assert.AreEqual(10, Checked, 'All ten app-owned irreversible types must be exercised.');
+        RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
+    end;
+
+    local procedure EnableRequiredConfirmation(var FoundationSetup: RecordRef; var PreviousConfirmation: Boolean): Boolean
+    var
+        ConfirmationField: FieldRef;
+        FieldIndex: Integer;
+    begin
+        if not Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
+            exit(false);
+        FoundationSetup.Open(Database::"Setup ori");
+        Assert.IsTrue(FoundationSetup.FindFirst(), 'Confirmation tests require existing Foundation setup.');
+        for FieldIndex := 1 to FoundationSetup.FieldCount() do begin
+            ConfirmationField := FoundationSetup.FieldIndex(FieldIndex);
+            if ConfirmationField.Name() = 'Require Irreversible Confirm' then begin
+                PreviousConfirmation := ConfirmationField.Value();
+                ConfirmationField.Value := true;
+                FoundationSetup.Modify();
+                exit(true);
+            end;
+        end;
+        // Earlier confirmation-capable Foundation versions always require confirmation.
+        FoundationSetup.Close();
+        exit(false);
+    end;
+
+    local procedure RestoreConfirmation(var FoundationSetup: RecordRef; ChangedConfirmation: Boolean; PreviousConfirmation: Boolean)
+    var
+        ConfirmationField: FieldRef;
+        FieldIndex: Integer;
+    begin
+        if not ChangedConfirmation then
+            exit;
+        FoundationSetup.FindFirst();
+        for FieldIndex := 1 to FoundationSetup.FieldCount() do begin
+            ConfirmationField := FoundationSetup.FieldIndex(FieldIndex);
+            if ConfirmationField.Name() = 'Require Irreversible Confirm' then begin
+                ConfirmationField.Value := PreviousConfirmation;
+                FoundationSetup.Modify();
+                FoundationSetup.Close();
+                exit;
+            end;
+        end;
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject

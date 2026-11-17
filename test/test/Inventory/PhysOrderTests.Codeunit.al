@@ -119,7 +119,6 @@ codeunit 96986 "Phys Order Tests ori"
         Header: Record "Phys. Invt. Order Header";
         Setup: Record "Inventory Setup";
         Posted: Record "Pstd. Phys. Invt. Order Hdr";
-        SeriesLine: Record "No. Series Line";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
@@ -128,10 +127,6 @@ codeunit 96986 "Phys Order Tests ori"
         Initialize();
         Setup.Get();
         Setup."Posted Phys. Invt. Order Nos." := CreateNoSeries();
-        SeriesLine.Get(Setup."Posted Phys. Invt. Order Nos.", 10000);
-        SeriesLine."Starting No." := 'W4PP000001';
-        SeriesLine."Ending No." := 'W4PP999999';
-        SeriesLine.Modify(true);
         Setup.Modify(true);
         CreateStock(Item);
         CreateOrder(Item."No.", Header, Response);

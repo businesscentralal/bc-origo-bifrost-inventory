@@ -715,7 +715,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -724,6 +724,32 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedAttributeResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Implementation: Interface "Msg Contract ori";
+        Info: ModuleInfo;
+        RawResponse: JsonObject;
+        RawContract: JsonObject;
+        Token: JsonToken;
+        Fields: JsonArray;
+    begin
+        // The implementation must still match the legacy payload exactly.
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        LibraryAssert.IsTrue(Implementation.GetResponse(RawResponse), 'Raw attribute response exists.');
+        RawContract.Add('response', RawResponse);
+        AssertChapterJson(RawContract, 'response', Expected.AsToken());
+        // Foundation 28.0.13 adds its shared error code to composed JSON responses.
+        LibraryAssert.IsTrue(NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info), 'Foundation is installed.');
+        if Info.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+            Expected.Get('fields', Token);
+            Fields := Token.AsArray();
+            Fields.Add(ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+            Expected.Replace('fields', Fields);
+        end;
+        AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
