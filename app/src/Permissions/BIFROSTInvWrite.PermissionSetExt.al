@@ -104,5 +104,10 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Reserv. AutoReserve Proc ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
         codeunit "Purch. Return Create Impl ori" = X,
-        codeunit "Order Tracking Transfer ori" = X;
+        codeunit "Order Tracking Transfer ori" = X,
+        codeunit "SKU Create Impl ori" = X,
+        codeunit "SKU Create Proc ori" = X,
+        codeunit "SKU Get Impl ori" = X,
+        codeunit "SKU Request ori" = X,
+        codeunit "SKU Restrict ori" = X;
 }

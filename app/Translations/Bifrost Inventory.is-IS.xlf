@@ -8685,6 +8685,384 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType sem ReturnOrder eða CreditMemo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType TypeValueNextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates stockkeeping units per location and variant for the selected items.</source>
+          <target>Stofnar birgðageymsluvörur fyrir staðsetningar og afbrigði valinna vara.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar birgðageymsluvörur fyrir staðsetningar og afbrigði valinna vara.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemFilter is missing or empty.</source>
+          <target>itemFilter vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemFilter vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemFilter, a filter on Item No., for example 1000..1100.</source>
+          <target>Sendu itemFilter, síu á vörunúmer, til dæmis 1000..1100.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemFilter, síu á vörunúmer, til dæmis 1000..1100.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the filters and createPer as text, and itemInInventoryOnly and replaceExisting as true or false.</source>
+          <target>Sendu síurnar og createPer sem texta, og itemInInventoryOnly og replaceExisting sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu síurnar og createPer sem texta, og itemInInventoryOnly og replaceExisting sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemFilter, locationFilter, variantFilter, createPer, itemInInventoryOnly and replaceExisting.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemFilter, locationFilter, variantFilter, createPer, itemInInventoryOnly og replaceExisting.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemFilter, locationFilter, variantFilter, createPer, itemInInventoryOnly og replaceExisting.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>createPer is not Location, Variant or LocationAndVariant, a filter is not valid, or the Availability domain is turned off.</source>
+          <target>createPer er ekki Location, Variant eða LocationAndVariant, sía er ógild, eða framboðssviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=createPer er ekki Location, Variant eða LocationAndVariant, sía er ógild, eða framboðssviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the value, or turn the Availability domain on from the Inventory Setup page.</source>
+          <target>Leiðréttu gildið, eða kveiktu á framboðssviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu gildið, eða kveiktu á framboðssviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemFilter matches no item.</source>
+          <target>itemFilter passar ekki við neina vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemFilter passar ekki við neina vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item filter, or read items with Data.Records.Get.</source>
+          <target>Athugaðu vörusíuna, eða lestu vörur með Data.Records.Get.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörusíuna, eða lestu vörur með Data.Records.Get.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot write stockkeeping units.</source>
+          <target>Kallandinn getur ekki skrifað birgðageymsluvörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki skrifað birgðageymsluvörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a permission set that changes stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafni sem breytir birgðageymsluvörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafni sem breytir birgðageymsluvörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Make units per location for item 1000 and replace existing ones</source>
+          <target>Stofna einingar fyrir hverja staðsetningu vöru 1000 og skipta út þeim sem eru til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna einingar fyrir hverja staðsetningu vöru 1000 og skipta út þeim sem eru til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>create stockkeeping units, sku, location, variant, replace</source>
+          <target>stofna birgðageymsluvörur, sku, staðsetning, afbrigði, skipta út</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=stofna birgðageymsluvörur, sku, staðsetning, afbrigði, skipta út</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemFilter is required. Existing units are kept unless replaceExisting is true; skuCount counts replaced units, created counts only units that did not exist before. locationFilter and variantFilter narrow the locations and variants the units are made for. The call does not delete units that fall outside the filters and never changes items.</source>
+          <target>itemFilter er nauðsynlegt. Einingar sem eru til haldast nema replaceExisting sé true; skuCount telur einingar sem var skipt út, created telur aðeins einingar sem voru ekki til áður. locationFilter og variantFilter þrengja staðsetningar og afbrigði sem einingar eru stofnaðar fyrir. Kallið eyðir ekki einingum utan síanna og breytir aldrei vörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemFilter er nauðsynlegt. Einingar sem eru til haldast nema replaceExisting sé true; skuCount telur einingar sem var skipt út, created telur aðeins einingar sem voru ekki til áður. locationFilter og variantFilter þrengja staðsetningar og afbrigði sem einingar eru stofnaðar fyrir. Kallið eyðir ekki einingum utan síanna og breytir aldrei vörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates stockkeeping units per location, variant or both for the items matching itemFilter, with the options of the Create Stockkeeping Unit report. The new units copy cost and planning values from the item card.</source>
+          <target>Stofnar birgðageymsluvörur fyrir staðsetningu, afbrigði eða hvort tveggja fyrir vörur sem passa við itemFilter, með valkostum skýrslunnar Stofna birgðageymsluvörur. Nýju einingarnar afrita kostnaðar- og skipulagsgildi úr vöruspjaldinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar birgðageymsluvörur fyrir staðsetningu, afbrigði eða hvort tveggja fyrir vörur sem passa við itemFilter, með valkostum skýrslunnar Stofna birgðageymsluvörur. Nýju einingarnar afrita kostnaðar- og skipulagsgildi úr vöruspjaldinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 220381409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on Item No., for example 1000 or 1000..1100. Required, so a call never makes units for every item by accident.</source>
+          <target>Business Central sía á vörunúmer, til dæmis 1000 eða 1000..1100. Nauðsynleg, svo kall stofni aldrei fyrir slysni einingar fyrir allar vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central sía á vörunúmer, til dæmis 1000 eða 1000..1100. Nauðsynleg, svo kall stofni aldrei fyrir slysni einingar fyrir allar vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType ItemFilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 2210791033" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on location codes. Omit it to use every location that is not an in-transit location.</source>
+          <target>Business Central sía á staðsetningarkóða. Slepptu henni til að nota allar staðsetningar sem eru ekki flutningsstaðsetningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central sía á staðsetningarkóða. Slepptu henni til að nota allar staðsetningar sem eru ekki flutningsstaðsetningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType LocationFilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 4125524023" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on variant codes. Omit it to use every variant of the item.</source>
+          <target>Business Central sía á afbrigðiskóða. Slepptu henni til að nota öll afbrigði vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central sía á afbrigðiskóða. Slepptu henni til að nota öll afbrigði vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType VariantFilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 1544223947" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location, Variant or LocationAndVariant. Default Location. Sets what one unit is made per.</source>
+          <target>Location, Variant eða LocationAndVariant. Sjálfgefið Location. Ákveður fyrir hvað ein eining er stofnuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Location, Variant eða LocationAndVariant. Sjálfgefið Location. Ákveður fyrir hvað ein eining er stofnuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType CreatePerLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 4213397016" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true or false. true makes units only for items that have inventory. Default true, as on the report request page.</source>
+          <target>true eða false. true stofnar einingar aðeins fyrir vörur sem eru til á lager. Sjálfgefið true, eins og á beiðnisíðu skýrslunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true eða false. true stofnar einingar aðeins fyrir vörur sem eru til á lager. Sjálfgefið true, eins og á beiðnisíðu skýrslunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType InventoryOnlyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3615801952 - NamedType 161560794" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true or false. true replaces units that already exist with new ones made from the item card. Default false: existing units are kept.</source>
+          <target>true eða false. true skiptir út einingum sem eru til fyrir nýjar einingar úr vöruspjaldinu. Sjálfgefið false: einingar sem eru til haldast.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true eða false. true skiptir út einingum sem eru til fyrir nýjar einingar úr vöruspjaldinu. Sjálfgefið false: einingar sem eru til haldast.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetParameters - NamedType ReplaceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1033708611 - NamedType 605610168" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the stockkeeping units and their planning and cost fields.</source>
+          <target>Lesa birgðageymsluvörur og skipulags- og kostnaðarreiti þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa birgðageymsluvörur og skipulags- og kostnaðarreiti þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetRelated - NamedType GetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the missing stockkeeping units of the items matching an item filter, as the Create Stockkeeping Unit report does.</source>
+          <target>Stofnaðu birgðageymsluvörur sem vantar fyrir vörur sem passa við vörusíu, eins og skýrslan Stofna birgðageymsluvörur gerir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu birgðageymsluvörur sem vantar fyrir vörur sem passa við vörusíu, eins og skýrslan Stofna birgðageymsluvörur gerir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An Item No. filter that selects the items to make units for.</source>
+          <target>Vörunúmerssía sem velur vörurnar sem á að stofna einingar fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerssía sem velur vörurnar sem á að stofna einingar fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemFilter is required.</source>
+          <target>itemFilter er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemFilter er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemFilter, a filter on Item No., for example 1000..1100.</source>
+          <target>Sendu itemFilter, síu á vörunúmer, til dæmis 1000..1100.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemFilter, síu á vörunúmer, til dæmis 1000..1100.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 160901118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>createPer is not a valid creation method.</source>
+          <target>createPer er ekki gild stofnunaraðferð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=createPer er ekki gild stofnunaraðferð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType MethodErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 3448857940" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send createPer as Location, Variant or LocationAndVariant.</source>
+          <target>Sendu createPer sem Location, Variant eða LocationAndVariant.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu createPer sem Location, Variant eða LocationAndVariant.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType MethodNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 199971095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A filter is not valid.</source>
+          <target>Sía er ógild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sía er ógild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType FilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 1154986913" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the filter syntax, for example 1000..1100 or 1000|2000.</source>
+          <target>Leiðréttu setningafræði síunnar, til dæmis 1000..1100 eða 1000|2000.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu setningafræði síunnar, til dæmis 1000..1100 eða 1000|2000.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType FilterNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemFilter matches no item.</source>
+          <target>itemFilter passar ekki við neina vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemFilter passar ekki við neina vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1197651071 - Method 1380282473 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item filter. Items can be read with Data.Records.Get.</source>
+          <target>Athugaðu vörusíuna. Hægt er að lesa vörur með Data.Records.Get.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörusíuna. Hægt er að lesa vörur með Data.Records.Get.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Create Impl ori - Method ValidateRequest - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads stockkeeping units with their planning and cost fields.</source>
+          <target>Les birgðageymsluvörur með skipulags- og kostnaðarreitum þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðageymsluvörur með skipulags- og kostnaðarreitum þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, locationCode and variantCode as text.</source>
+          <target>Sendu itemNo, locationCode og variantCode sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, locationCode og variantCode sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, locationCode and variantCode.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, locationCode og variantCode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, locationCode og variantCode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A code is too long, or the Availability domain is turned off.</source>
+          <target>Kóði er of langur, eða framboðssviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði er of langur, eða framboðssviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shorten the code, or turn the Availability domain on from the Inventory Setup page.</source>
+          <target>Styttu kóðann, eða kveiktu á framboðssviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Styttu kóðann, eða kveiktu á framboðssviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read stockkeeping units.</source>
+          <target>Kallandinn getur ekki lesið birgðageymsluvörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið birgðageymsluvörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a permission set that reads stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafni sem les birgðageymsluvörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafni sem les birgðageymsluvörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the stockkeeping units of item 1000 at location MAIN</source>
+          <target>Lesa birgðageymsluvörur vöru 1000 á staðsetningu MAIN</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa birgðageymsluvörur vöru 1000 á staðsetningu MAIN</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>stockkeeping unit, sku, location, variant, reorder point, planning</source>
+          <target>birgðageymsluvara, sku, staðsetning, afbrigði, pöntunarmark, áætlun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðageymsluvara, sku, staðsetning, afbrigði, pöntunarmark, áætlun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>locationCode and variantCode are exact codes: an empty text selects units without that code, an omitted key does not restrict. At most 500 units are listed, in key order; truncated is true when more matched. Use Inventory.SKU.Create to make missing units.</source>
+          <target>locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í lyklaröð; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=locationCode og variantCode eru nákvæmir kóðar: tómur texti velur einingar án kóðans, lykill sem er sleppt takmarkar ekki. Í mesta lagi 500 einingar eru taldar upp, í lyklaröð; truncated er true þegar fleiri pössuðu. Notaðu Inventory.SKU.Create til að stofna einingar sem vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads stockkeeping units (one per item, location and variant) with their planning and cost fields. Nothing is changed.</source>
+          <target>Les birgðageymsluvörur (eina fyrir hverja vöru, staðsetningu og afbrigði) með skipulags- og kostnaðarreitum. Engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðageymsluvörur (eina fyrir hverja vöru, staðsetningu og afbrigði) með skipulags- og kostnaðarreitum. Engu er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number, at most 20 characters. Omit it to read the units of every item.</source>
+          <target>Vörunúmer, mest 20 stafir. Slepptu því til að lesa einingar allra vara.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer, mest 20 stafir. Slepptu því til að lesa einingar allra vara.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 3615801952 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact location code, at most 10 characters. An empty text selects units without a location. Omit it to read every location.</source>
+          <target>Nákvæmur staðsetningarkóði, mest 10 stafir. Tómur texti velur einingar án staðsetningar. Slepptu honum til að lesa allar staðsetningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur staðsetningarkóði, mest 10 stafir. Tómur texti velur einingar án staðsetningar. Slepptu honum til að lesa allar staðsetningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetParameters - NamedType LocationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact variant code, at most 10 characters. An empty text selects units without a variant. Omit it to read every variant.</source>
+          <target>Nákvæmur afbrigðiskóði, mest 10 stafir. Tómur texti velur einingar án afbrigðis. Slepptu honum til að lesa öll afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur afbrigðiskóði, mest 10 stafir. Tómur texti velur einingar án afbrigðis. Slepptu honum til að lesa öll afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 1033708611 - NamedType 3952724154" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create the stockkeeping units that are missing for an item.</source>
+          <target>Stofna birgðageymsluvörur sem vantar fyrir vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna birgðageymsluvörur sem vantar fyrir vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetRelated - NamedType CreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3588635097 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the stockkeeping units of an item, optionally for one location or variant.</source>
+          <target>Lestu birgðageymsluvörur vöru, að vali fyrir eina staðsetningu eða eitt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu birgðageymsluvörur vöru, að vali fyrir eina staðsetningu eða eitt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 225315183" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions, and read permission on stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafninu „Aðeins lestur“ í Bifröst með birgðalestrarheimildum, og lestrarheimild á birgðageymsluvörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðeins lestur“ í Bifröst með birgðalestrarheimildum, og lestrarheimild á birgðageymsluvörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType ReadNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3658467977 - NamedType 3562499966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions, and write permission on stockkeeping units.</source>
+          <target>Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst með birgðaskriftarheimildum, og skriftarheimild á birgðageymsluvörum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Aðgangur að öllum hlutum“ í Bifröst með birgðaskriftarheimildum, og skriftarheimild á birgðageymsluvörum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method AssertCanRun - NamedType WriteNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 2230683630 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be true or false.</source>
+          <target>%1 verður að vera true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckBoolean - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 2230683630 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as true or false.</source>
+          <target>Sendu %1 sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckBoolean - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3172553941 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3172553941 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3172553941 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckText - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3172553941 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með í mesta lagi %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með í mesta lagi %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method CheckText - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 680993908 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are %1.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = list of keys, is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit SKU Request ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.</source>
           <target>Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.</target>
