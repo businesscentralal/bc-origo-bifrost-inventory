@@ -81,6 +81,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Reference - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 3217357734 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable reading item substitutions and their on-hand inventory.</source>
+          <target>Virkja lestur vöruskipta og núverandi birgða þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkja lestur vöruskipta og núverandi birgða þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Substitution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 88444387 - Field 3217357734 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Item Substitution - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 392666526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>
           <target>Vörurakning</target>
@@ -4359,6 +4371,210 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 880711966" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Substitution domain is disabled.</source>
+          <target>Slökkt er á vöruskiptasviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vöruskiptasviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3740637095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to enable Item Substitution on Inventory Setup.</source>
+          <target>Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be JSON text.</source>
+          <target>%1 verður að vera JSON-texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter; is-IS=%1 verður að vera JSON-texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType FormatLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 4063910082" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo and variantCode as text, not null, numbers, arrays or objects.</source>
+          <target>Sendu itemNo og variantCode sem texta, ekki null, tölur, fylki eða hluti.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo og variantCode sem texta, ekki null, tölur, fylki eða hluti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType FormatNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 4280004770" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 exceeds %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter, %2 = maximum length; is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType LengthLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1059279187" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use at most 20 characters for itemNo and 10 for variantCode.</source>
+          <target>Notaðu mest 20 stafi fyrir itemNo og 10 fyrir variantCode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu mest 20 stafi fyrir itemNo og 10 fyrir variantCode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType LengthNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is required.</source>
+          <target>itemNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3129818787" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the source item number in data.itemNo.</source>
+          <target>Sendu vörunúmer upprunavörunnar í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmer upprunavörunnar í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType MissingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 704880291" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item or variant does not exist.</source>
+          <target>Varan eða afbrigðið er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan eða afbrigðið er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType NotFoundLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the source and substitute item numbers and variants in Business Central.</source>
+          <target>Athugaðu vörunúmer og afbrigði upprunavörunnar og staðgengilsins í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmer og afbrigði upprunavörunnar og staðgengilsins í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read permission is required for inventory setup, substitutions, items, variants and item ledger entries.</source>
+          <target>Lesheimild þarf fyrir uppsetningu birgða, vöruskipti, vörur, afbrigði og vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesheimild þarf fyrir uppsetningu birgða, vöruskipti, vörur, afbrigði og vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for BIFROST Read and read permission to the native tables used by this type.</source>
+          <target>Biddu stjórnanda um BIFROST Read og lesheimild að stöðluðu töflunum sem þessi tegund notar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um BIFROST Read og lesheimild að stöðluðu töflunum sem þessi tegund notar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown parameter.</source>
+          <target>Beiðnin inniheldur óþekkta færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekkta færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - NamedType 2001379935" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only itemNo and optional variantCode under data.</source>
+          <target>Sendu aðeins itemNo og valkvætt variantCode undir data.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins itemNo og valkvætt variantCode undir data.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType UnknownNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads direct item substitutes and their current on-hand inventory.</source>
+          <target>Les beina staðgengla vöru og núverandi birgðir þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les beina staðgengla vöru og núverandi birgðir þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads substitutions and inventory; does not update cached quantities or create items.</source>
+          <target>Les vöruskipti og birgðir; uppfærir ekki vistuð magn eða stofnar vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les vöruskipti og birgðir; uppfærir ekki vistuð magn eða stofnar vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 2719903620 - NamedType 3871721722" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item in data.itemNo; subject is not used.</source>
+          <target>Sendu vöruna í data.itemNo; subject er ekki notað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vöruna í data.itemNo; subject er ekki notað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetEnvelope - NamedType SubjectLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read substitutes for an item without a variant</source>
+          <target>Lesa staðgengla vöru án afbrigðis</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa staðgengla vöru án afbrigðis</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item substitution, substitute, variant, inventory</source>
+          <target>vöruskipti, staðgengill, afbrigði, birgðir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruskipti, staðgengill, afbrigði, birgðir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads direct substitution records for the item and exact source variant, including blank. Inventory is current on-hand quantity in base units for the exact substitute variant across all locations, not promised availability; reservations and future supply are not included. Catalog substitutes have inventoryKnown=false and inventory=0. No recursive search, cached inventory update or item creation occurs. A valid item with no substitutions returns an empty array.</source>
+          <target>Les beinar vöruskiptafærslur fyrir vöruna og nákvæmt afbrigði upprunavöru, þar með talið tómt gildi. Inventory er núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum, ekki lofað framboð; frátektir og væntanleg aðföng eru ekki innifalin. Staðgenglar úr vörulista hafa inventoryKnown=false og inventory=0. Engin endurkvæm leit, uppfærsla vistaðra birgða eða vörustofnun á sér stað. Gild vara án vöruskipta skilar tómu fylki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les beinar vöruskiptafærslur fyrir vöruna og nákvæmt afbrigði upprunavöru, þar með talið tómt gildi. Inventory er núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum, ekki lofað framboð; frátektir og væntanleg aðföng eru ekki innifalin. Staðgenglar úr vörulista hafa inventoryKnown=false og inventory=0. Engin endurkvæm leit, uppfærsla vistaðra birgða eða vörustofnun á sér stað. Gild vara án vöruskipta skilar tómu fylki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3615801952 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing source item number, at most 20 characters.</source>
+          <target>Vörunúmer fyrirliggjandi upprunavöru, mest 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer fyrirliggjandi upprunavöru, mest 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetParameters - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source variant code, at most 10 characters. Omitted or empty selects only substitutions for the blank variant.</source>
+          <target>Afbrigðiskóði upprunavöru, mest 10 stafir. Ef honum er sleppt eða hann er tómur eru aðeins valin vöruskipti fyrir tómt afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði upprunavöru, mest 10 stafir. Ef honum er sleppt eða hann er tómur eru aðeins valin vöruskipti fyrir tómt afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read availability over periods for an item.</source>
+          <target>Lesa framboð vöru eftir tímabilum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa framboð vöru eftir tímabilum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3193096050" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success; refusals use the standard error envelope.</source>
+          <target>Success; höfnun notar staðlað villusvar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success; höfnun notar staðlað villusvar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType StatusLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Source item number.</source>
+          <target>Vörunúmer upprunavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer upprunavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exact source variant code, including blank.</source>
+          <target>Nákvæmur afbrigðiskóði upprunavöru, þar með talið tómt gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmur afbrigðiskóði upprunavöru, þar með talið tómt gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 885739933" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Direct substitution records; an empty array is a successful result.</source>
+          <target>Beinar vöruskiptafærslur; tómt fylki er árangursrík niðurstaða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beinar vöruskiptafærslur; tómt fylki er árangursrík niðurstaða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType RowsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 961827798" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item or nonstockItem, independent of the session language.</source>
+          <target>item eða nonstockItem, óháð tungumáli setunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=item eða nonstockItem, óháð tungumáli setunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType TypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 1314000525" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Substitute item number or catalog entry number.</source>
+          <target>Vörunúmer staðgengils eða færslunúmer vörulista.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer staðgengils eða færslunúmer vörulista.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType NoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2596667955" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Substitute variant code.</source>
+          <target>Afbrigðiskóði staðgengils.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði staðgengils.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType SubVariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description stored on the substitution.</source>
+          <target>Lýsing vistuð á vöruskiptunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing vistuð á vöruskiptunum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 1543027814" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native interchangeable flag; no reverse relationships are inferred.</source>
+          <target>Staðlað merki um gagnkvæm vöruskipti; öfug tengsl eru ekki ályktuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðlað merki um gagnkvæm vöruskipti; öfug tengsl eru ekki ályktuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType InterchangeableLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 3691251604" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Current on-hand quantity in base units for the exact substitute variant across all locations. Zero for catalog items; not a promise or a deduction of reservations.</source>
+          <target>Núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum. Núll fyrir vörulistavörur; ekki loforð um afhendingu og frátektir eru ekki dregnar frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Núverandi birgðamagn í grunneiningum fyrir nákvæmt afbrigði staðgengils á öllum birgðastöðum. Núll fyrir vörulistavörur; ekki loforð um afhendingu og frátektir eru ekki dregnar frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType InventoryLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2423449542 - Method 4268477247 - NamedType 2781335531" size-unit="char" translate="yes" xml:space="preserve">
+          <source>True for an item with calculated inventory; false for a catalog substitute.</source>
+          <target>True fyrir vöru með reiknaðar birgðir; false fyrir staðgengil úr vörulista.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=True fyrir vöru með reiknaðar birgðir; false fyrir staðgengil úr vörulista.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - Method GetResponse - NamedType KnownLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Reservations domain is turned off for this company.</source>
           <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
@@ -7185,6 +7401,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísanir</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemReference - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 940779590 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shows whether reading item substitutions is enabled for this company.</source>
+          <target>Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemSubstitution - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 940779590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control ItemSubstitution - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3550083798 - Control 2981724990 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether this domain is enabled in this company.</source>
           <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
@@ -7532,6 +7760,12 @@
           <target>Vörutilvísun</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísun</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemReference - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 940779590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Substitution</source>
+          <target>Vöruskipti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vöruskipti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue ItemSubstitution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 2981724990 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Tracking</source>
