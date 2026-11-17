@@ -5686,9 +5686,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType NativeNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1101326463 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Runs native report 699 with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.</source>
-          <target>Keyrir innbyggða skýrslu 699 með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Keyrir innbyggða skýrslu 699 með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</note>
+          <source>Calculates a requisition plan with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.</source>
+          <target>Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1101326463 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">

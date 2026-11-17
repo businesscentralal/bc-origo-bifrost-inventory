@@ -12,7 +12,7 @@ codeunit 10076941 "Requisition Calc Impl ori" implements "Msg Interface ori", "M
         DescriptionLbl: Label 'Calculates a native requisition plan in one worksheet.', Comment = 'is-IS=Reiknar innkaupaáætlun í einu vinnublaði.';
         SelectionLbl: Label 'Use templateName and batchName to select one non-recurring requisition worksheet.', Comment = 'is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.';
         KeywordsLbl: Label 'purchase,requisition,worksheet,planning,orders', Comment = 'is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir';
-        NotesLbl: Label 'Runs native report 699 with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.', Comment = 'is-IS=Keyrir innbyggða skýrslu 699 með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.';
+        NotesLbl: Label 'Calculates a requisition plan with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.', Comment = 'is-IS=Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.';
         NativeNextLbl: Label 'Correct the native worksheet or item setup described by the error and retry; the failed call saved no changes.', Comment = 'is-IS=Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.';
 
     /// <summary>Checks native worksheet and order permissions.</summary>
@@ -160,11 +160,17 @@ codeunit 10076941 "Requisition Calc Impl ori" implements "Msg Interface ori", "M
         exit(false);
     end;
 
-    /// <summary>Uses Foundation defaults.</summary>
+    /// <summary>Explains how to calculate suggestions and create new orders from them.</summary>
     procedure GetWorkflow(var Value: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
         Clear(Value);
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.Calculate', 'Calculate suggestions in the selected worksheet and inspect the returned lines.'));
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions with expectedCount 1.'));
+        Value.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Returns localized discovery text.</summary>

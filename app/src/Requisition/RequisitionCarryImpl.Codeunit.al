@@ -72,11 +72,17 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        LineNumbers: JsonObject;
+        LineNumber: JsonObject;
     begin
         Clear(Parameters);
         Parameters.Add(ContractMgt.Parameter('templateName', 'string', true, 'Existing non-recurring Requisition template; at most 10 characters.'));
         Parameters.Add(ContractMgt.Parameter('batchName', 'string', true, 'Existing worksheet name in that template; at most 10 characters.'));
-        Parameters.Add(ContractMgt.Parameter('lineNos', 'array', false, 'Optional nonempty array of up to 500 distinct existing positive line numbers. Omit to select every worksheet line.'));
+        LineNumbers := ContractMgt.Parameter('lineNos', 'array', false, 'Optional nonempty array of up to 500 distinct existing positive line numbers. Omit to select every worksheet line.');
+        LineNumber.Add('type', 'integer');
+        LineNumber.Add('description', 'An existing positive worksheet line number; each number may appear only once.');
+        LineNumbers.Add('items', LineNumber);
+        Parameters.Add(LineNumbers);
         exit(true);
     end;
 
@@ -157,11 +163,17 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         exit(false);
     end;
 
-    /// <summary>Uses Foundation defaults.</summary>
+    /// <summary>Explains how to calculate suggestions and create new orders from them.</summary>
     procedure GetWorkflow(var Value: JsonObject): Boolean
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Steps: JsonArray;
     begin
         Clear(Value);
-        exit(false);
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.Calculate', 'Calculate suggestions in the selected worksheet and inspect the returned lines.'));
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions with expectedCount 1.'));
+        Value.Add('steps', Steps);
+        exit(true);
     end;
 
     /// <summary>Returns localized discovery text.</summary>
