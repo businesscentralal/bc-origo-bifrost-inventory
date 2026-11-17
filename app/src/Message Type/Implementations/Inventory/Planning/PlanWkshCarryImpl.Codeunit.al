@@ -4,7 +4,7 @@ using Microsoft.Inventory.Requisition;
 using Origo.Bifrost;
 
 /// <summary>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</summary>
-codeunit 10076931 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

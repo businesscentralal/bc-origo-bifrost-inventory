@@ -28,10 +28,10 @@ README "Objects" lists every object with its ID. In short:
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared number is a different object type.
 - Preserve released Purchase Returns codeunit/message value 10076930 and enum extension 10076847.
-  Unreleased Planning uses `Plan Wksh Calc Impl ori` codeunit/message value 10076933,
-  `Plan Wksh Carry Impl ori` 10076931, `Req. Worksheet Engine ori` 10076932 and enum extension 10076848.
-  Codeunits 10076925-10076929 remain allocated (tracking through assembly preview). Next free codeunit: 10076934;
-  check main and open PRs. Next free enum extension: 10076849 (10076860 and 10076906 remain allocated).
+  Unreleased Planning uses `Plan Wksh Calc Impl ori` codeunit/message value 10076938,
+  `Plan Wksh Carry Impl ori` 10076939, `Req. Worksheet Engine ori` 10076946 and enum extension 10076947.
+  Codeunits 10076925-10076929 remain allocated (tracking through assembly preview). Planning allocations were checked against main and open PR bodies (including #224 and #203);
+  check main and open PRs. Do not reuse open-PR allocations; 10076860 and 10076906 remain allocated.
   Page, table and permission-set ranges are unchanged where objects have not been allocated.
 - 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032,
   enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 belong to earlier open PRs;

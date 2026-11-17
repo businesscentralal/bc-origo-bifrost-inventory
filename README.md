@@ -279,7 +279,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
-| 10076848 | `MsgType.PlanWksh.EnumExt ori` | `Inventory.PlanningWorksheet.Calculate`, `Inventory.PlanningWorksheet.CarryOut` |
+| 10076947 | `MsgType.PlanWksh.EnumExt ori` | `Inventory.PlanningWorksheet.Calculate`, `Inventory.PlanningWorksheet.CarryOut` |
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
@@ -314,7 +314,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
-| 10076931–10076933 | Planning worksheet | `Plan Wksh Calc Impl ori`, `Plan Wksh Carry Impl ori`, `Req. Worksheet Engine ori` |
+| 10076938, 10076939, 10076946 | Planning worksheet | `Plan Wksh Calc Impl ori`, `Plan Wksh Carry Impl ori`, `Req. Worksheet Engine ori` |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
