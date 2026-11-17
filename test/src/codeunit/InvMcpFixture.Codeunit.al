@@ -732,6 +732,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 if Contact.Get(ContactNo) then
                     Contact.Delete(true);
         end;
+        // Location deletion does not cascade its posting setup; remove only these owned codes.
         foreach Kind in 'F|D|I'.Split('|') do begin
             PostingSetup.SetRange("Location Code", 'W6I7' + Kind + Suffix);
             PostingSetup.DeleteAll(true);

@@ -7,6 +7,7 @@
 - Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
 - Test-only fixture codeunit 96973 refreshes the owned item and marks its removed ledger data as adjusted before native deletion, so explicit fixture cleanup does not rerun cost adjustment on deleted test entries. It removes the fixture locations' posting setup, linked customer contacts and empty item registers, making seed/cleanup repeatable. A native direct-transfer seed lets the touched posting/preview paths be verified independently of the unchanged Create type.
 - Fixture cleanup removes posted transfer lines one document at a time, retaining each header number until deletion. A repeat cleanup also removes empty posted headers scoped to the fixture's exact source and destination locations.
+- Cleanup removes the owned locations' inventory posting setup, which native location deletion retains, so the same seed/cleanup cycle can be repeated.
 
 ### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
 
