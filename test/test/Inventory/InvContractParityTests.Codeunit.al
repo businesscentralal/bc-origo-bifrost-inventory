@@ -56,7 +56,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
                 Assert.IsTrue(ArrayOf(Contract, 'parameters').Count() > 0, TypeName + ' declares its parameters.');
             TypeCount += 1;
         end;
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
     end;
 
     /// <summary>The envelope states how subject is used, the version and the content type of the answer.</summary>
@@ -316,7 +316,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             TypeCount += 1;
         end;
         GlobalLanguage(OriginalLanguage);
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
     end;
 
     /// <summary>Every help chapter names permissions by their display names and contains no AL object or internal procedure reference.</summary>
@@ -530,6 +530,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     local procedure AssertParameterDescribed(Parameter: JsonObject; TypeName: Text; ParameterName: Text)
     var
         Child: JsonToken;
+        Items: JsonToken;
         JsonType: Text;
     begin
         JsonType := TextOf(Parameter, 'type');
@@ -537,8 +538,12 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.IsTrue(JsonType in ['string', 'number', 'integer', 'decimal', 'boolean', 'object', 'array'], TypeName + ' parameter ' + ParameterName + ' has a JSON type: ' + JsonType);
         Assert.AreNotEqual('', TextOf(Parameter, 'description'), TypeName + ' parameter ' + ParameterName + ' has a description.');
         if JsonType = 'array' then
-            if not ScalarArrayParameters().Contains(TypeName + '|' + ParameterName) then
-                Assert.IsTrue(ArrayOf(Parameter, 'children').Count() > 0, TypeName + ' array parameter ' + ParameterName + ' lists its children.');
+            if Parameter.Get('items', Items) then begin
+                Assert.IsTrue(TextOf(Items.AsObject(), 'type') in ['string', 'number', 'integer', 'decimal', 'boolean'], TypeName + ' scalar array parameter ' + ParameterName + ' declares its item type.');
+                AssertParameterDescribed(Items.AsObject(), TypeName, ParameterName + '[]');
+            end else
+                if not ScalarArrayParameters().Contains(TypeName + '|' + ParameterName) then
+                    Assert.IsTrue(ArrayOf(Parameter, 'children').Count() > 0, TypeName + ' array parameter ' + ParameterName + ' lists its children.');
         foreach Child in ArrayOf(Parameter, 'children') do
             AssertParameterDescribed(Child.AsObject(), TypeName, ParameterName + '.' + TextOf(Child.AsObject(), 'name'));
     end;
@@ -722,6 +727,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     /// <summary>Array parameters whose items are plain values, so they have no children.</summary>
     local procedure ScalarArrayParameters() Names: List of [Text]
     begin
+        Names.Add('Inventory.Tracking.Delete|entryNos');
         Names.Add('Inventory.Attribute.Get|attributeNames');
         Names.Add('Inventory.Attribute.Get|attributeIds');
         Names.Add('Inventory.AttributeDefinition.Create|optionValues');
