@@ -171,15 +171,28 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure SetDirectTransferPosting(PostAsSingleDocument: Boolean; var OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        SetupRef: RecordRef;
+        PostingField: FieldRef;
+        PostingType: Integer;
     begin
         OriginalSetup.Get();
         InventorySetup := OriginalSetup;
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
-        if PostAsSingleDocument then
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Direct Transfer"
-        else
-            InventorySetup."Direct Transfer Posting" := InventorySetup."Direct Transfer Posting"::"Receipt and Shipment";
+        SetupRef.GetTable(InventorySetup);
+        if SetupRef.FieldExist(5857) then begin
+            PostingField := SetupRef.Field(5857);
+            if PostAsSingleDocument then
+                PostingType := 20
+            else
+                PostingType := 10;
+        end else begin
+            PostingField := SetupRef.Field(5855);
+            if PostAsSingleDocument then
+                PostingType := 1;
+        end;
+        PostingField.Value := PostingType;
+        SetupRef.SetTable(InventorySetup);
         InventorySetup.Modify(true);
     end;
 
@@ -189,9 +202,23 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        SetupRef: RecordRef;
+        OriginalRef: RecordRef;
+        PostingField: FieldRef;
+        OriginalField: FieldRef;
     begin
         InventorySetup.Get();
-        InventorySetup."Direct Transfer Posting" := OriginalSetup."Direct Transfer Posting";
+        SetupRef.GetTable(InventorySetup);
+        OriginalRef.GetTable(OriginalSetup);
+        if SetupRef.FieldExist(5857) then begin
+            PostingField := SetupRef.Field(5857);
+            OriginalField := OriginalRef.Field(5857);
+        end else begin
+            PostingField := SetupRef.Field(5855);
+            OriginalField := OriginalRef.Field(5855);
+        end;
+        PostingField.Value := OriginalField.Value;
+        SetupRef.SetTable(InventorySetup);
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;
