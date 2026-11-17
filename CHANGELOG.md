@@ -42,6 +42,11 @@
 - `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
 - `Inventory.Reservation.Create` and the by-line `Inventory.Reservation.Cancel` refuse a sales line whose outstanding quantity is 0 with `PreconditionFailed`.
 - No new objects: codeunits 10076842, 10076892, 10076893 and 10076894 and test codeunit 96946 (7 new tests) change.
+### Added - Standard cost worksheet (#121)
+
+- Add `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement` with native worksheet suggestion and implementation, explicit unposted write effects, selected worksheet/journal responses, bilingual help and coded refusals with next steps. Implementation updates item/SKU costs; posting remains a separate revaluation operation.
+- Add codeunits 10076933–10076937 and 10076938, enum extension 10076850 and test codeunits 96982–96983. Tests cover suggestions, revaluation creation without ledger posting, zero stock, replay, invalid input and bilingual contracts.
+- Main-merge ID collision with Item Create (#130): `Std. Cost Suggest Impl ori` and `Inventory.StandardCost.Suggest` move from 10076932 to the next free codeunit and matching enum value 10076938. Enum extension `MsgType.StdCost.EnumExt ori` moves from 10076848 to the next free enum extension 10076850. `Inventory.StandardCost.Implement` stays on codeunit and value 10076933. Item Create keeps codeunit and enum value 10076932 and enum extension 10076848.
 ### Fixed - merge main into assembly reads (#225)
 
 - Resolve the physical-inventory order ID collision by moving the PR's assembly read codeunits and message-type values from **10076960–10076961** to the next free IDs **10076965–10076966**. The enum extension ID remains **10076960**. Both features and all contract checks are retained; the combined Inventory catalogue has 65 types.
@@ -103,13 +108,12 @@
 
 - New read-only message type `Inventory.TrackingInfo.Get` (effect `read`). Select an item (subject, `itemNo`, item SystemId or `tableView`), the `variantCode` of the card and exactly one of `lotNo`, `serialNo` or `packageNo`. It answers the Lot No. Information (6505), Serial No. Information (6504) or Package No. Information (6515) card: `description`, `testQuality` (lot only), `certificateNumber` (lot and package), `countryRegionCode` (package), `blocked`, `hasComments`, the item tracking `comments`, `inventory` and `expiredInventory` (expiration date before the work date), all in base units.
 - Refusals: `MissingParameter` on `itemNo` or on `lotNo|serialNo|packageNo`; `InvalidParameter` when more than one tracking number is sent; `InvalidParameterFormat` for a value that is too long or not a string; `RecordNotFound` with nextStep "The tracking number has no information card..." when the card does not exist (also when the number has stock); `PermissionDenied` per table. Help and refusals are in en-US and is-IS.
-- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 64 Inventory types.
+- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 72 Inventory types.
 ### Fixed (2026-11-16) - physical inventory coded refusals (#154)
 
 - Wrong-template and recurring-template selections now return `InvalidParameter` and `PreconditionFailed` on `templateName` with fully localized errors and next steps, for Calculate, RecordCount, legacy Record, Check, PreviewPost and Post. Shared batch and count help entries name the runtime codes in both languages; nested unsupported count keys preserve their actual received value.
 - Test fixture codeunit/page 96973 can explicitly seed only the owned issue154 journals and unposted count item for MCP verification; no fixture runs on install and the change log write guard is unchanged.
 - Existing codeunits 10076840, 10076880–10076885 and tests 96921/96944/96975/96978 are extended; no object IDs added. Bilingual native regressions cover malformed counts, selectors, templates, help and unchanged owned journal data. Dispatch tests pass LCID explicitly; confirmation tests enable their own required confirmation setting, and attribute parity includes the Foundation 28.0.13 shared response code descriptor.
-
 
 ### Fixed ([28.3.2.0] development)
 - #114: `Inventory.SKU.Create.created` counts new SKU keys independently of removals when `replaceExisting` changes the SKU set. Added regressions for replacement with no variants and replacement of two location keys by one variant key. Attribute contract tests retain exact app-owned response comparisons while accepting Foundation’s appended error-code descriptor (focused #207 correction).
