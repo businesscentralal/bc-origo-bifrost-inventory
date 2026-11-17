@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Fixed - item tracing review (#107, PR #202)
+
+- Reject `?` in lot, serial, item and variant identifiers before native tracing can match a different identifier. Both locales name the refused wildcard in recovery guidance.
+- Permission and caught native-tracing refusals now include localized `nextStep` guidance. Preserve native coded errors and telemetry. Add bilingual wildcard, restricted-permission and native-error regressions.
+- Merge current main while preserving both planning types and ItemTracing (78 Inventory registrations). Main keeps purchase receipt process codeunit 10077031; unreleased ItemTracing implementation/message value move to 10076994. Its tests move to 96949 to avoid open #201's claim on 96998.
+
+### Fixed - main merge ID reconciliation (PR #233)
+
+- Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
+
+### Fixed - planning worksheet review (#233)
+
+- Preserve Item Substitution domain 15/field 25; move unreleased Planning to domain 17/field 27 and independent wizard slot 18, preserving Purchase Returns 16/26 from main #219. Reconcile the 65-type catalogue and Foundation-composed contracts. Confirmation boundary tests name a subject; planning regression tests verify other worksheets survive calculation. Add explicit owned MCP seed/cleanup actions to the test app. Collect committed native transfer and assembly headers when the resilient report does not share its nested document buffer; new regression cases verify both order types.
+
+### Added
+- #117: `Inventory.PlanningWorksheet.Calculate` (10076949) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076939) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076947, codeunits 10076949, 10076939 and 10076946, enum value 17 Planning, setup field 27 Planning, test codeunit 96965 (96968 was taken by SKU Tests on main, so this PR moved to the next unused test ID). The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+
 ### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 
 - `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
@@ -9,7 +26,7 @@
 - Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
 ### Added (2026-11-16) - Inventory.ItemTracing.Get (#107)
 - `Inventory.ItemTracing.Get` traces a lot or serial number through the item ledger as the Item Tracing page does (Item Tracing Mgt., codeunit 6520). Send `lotNo` and/or `serialNo`, optionally `itemNo` and `variantCode`, and `direction` (`originToUsage`, the default, or `usageToOrigin`). The answer is the trace tree as a flat `nodes` list in tree order with `level`, `entryNo`, `parentEntryNo`, `entryType`, `documentNo`, `postingDate`, `itemNo`, `variantCode`, `lotNo`, `serialNo`, `locationCode`, `quantity`, `remainingQuantity` and `open`. Neither lot nor serial answers `MissingParameter`; filter characters, a bad `direction` or a too long value answer `InvalidParameter`; an unknown number answers `RecordNotFound`; a trace above 1000 nodes answers `LimitExceeded`. Effect: read. It uses the Item Tracking domain.
-- Objects added: codeunit 10077031 `Item Tracing Get Impl ori` (message type value 10077031), enum extension 10077029 `MsgType.ItemTrace.Ext ori`; the codeunit is added to `BIFROST InvRead ori` and `BIFROST InvWrite ori`. Test app: codeunit 96998 `Item Tracing Get Tests`; `Inventory Contract Batch Tests` (96921) now expects 72 types registered by this app. is-IS help and captions are in the Icelandic XLF.
+- Objects added: codeunit 10076994 `Item Tracing Get Impl ori` (message type value 10077031), enum extension 10077029 `MsgType.ItemTrace.Ext ori`; the codeunit is added to `BIFROST InvRead ori` and `BIFROST InvWrite ori`. Test app: codeunit 96998 `Item Tracing Get Tests`; `Inventory Contract Batch Tests` (96921) now expects 72 types registered by this app. is-IS help and captions are in the Icelandic XLF.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 

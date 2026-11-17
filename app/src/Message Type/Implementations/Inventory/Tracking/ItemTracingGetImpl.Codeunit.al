@@ -9,7 +9,7 @@ using Origo.Bifrost;
 /// does: from the origin to where it was used, or from the use back to where it came from. It only reads: the
 /// trace is built in temporary records.
 /// </summary>
-codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076994 "Item Tracing Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
@@ -141,7 +141,6 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
         LimitWhenLbl: Label 'The trace has more nodes than one call returns.', Comment = 'is-IS=Rakningin hefur fleiri hnúta en eitt kall skilar.';
         LimitFixLbl: Label 'Send itemNo, variantCode or a single lotNo or serialNo to narrow the trace.', Comment = 'is-IS=Sendu itemNo, variantCode eða eitt lotNo eða serialNo til að þrengja rakninguna.';
         PermissionWhenLbl: Label 'The caller cannot read item ledger entries.', Comment = 'is-IS=Kallandinn getur ekki lesið birgðafærslur.';
-        PermissionFixLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read item ledger entries.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið birgðafærslur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, MissingFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, InvalidWhenLbl, InvalidFixLbl));
@@ -149,8 +148,8 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::UnknownParameter, UnknownWhenLbl, UnknownFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundWhenLbl, NotFoundFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::LimitExceeded, LimitWhenLbl, LimitFixLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native item tracing error text.', 'Business Central fails while it builds the trace; the answer carries its text.', 'Read the error text and check the lot or serial number it names.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionNextStep()));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The native item tracing error text.', 'Business Central fails while it builds the trace; the answer carries its text.', NativeNextStep()));
         exit(true);
     end;
 
@@ -211,7 +210,7 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'Send lotNo, serialNo or both; itemNo and variantCode narrow the trace. The values are exact: filter characters such as * | & < > = @ ( ) and .. are refused. direction originToUsage (default) follows the number from where it came into stock to where it was used; usageToOrigin follows it back from where it was used. nodes is the trace tree in tree order: level 0 is a ledger entry that carries your number, deeper levels are the entries it led to (or came from), and parentEntryNo names the parent. Item-tracked components of assembly and production are followed. A trace with more than 1000 nodes answers LimitExceeded; narrow it with itemNo or variantCode. A number that no entry carries answers RecordNotFound. The call only reads; the Item Tracking domain must be turned on in Inventory Setup.', Comment = 'is-IS=Sendu lotNo, serialNo eða bæði; itemNo og variantCode þrengja rakninguna. Gildin eru nákvæm: síunarstafir eins og * | & < > = @ ( ) og .. eru ekki leyfðir. direction originToUsage (sjálfgefið) rekur númerið frá því að það kom á lager þangað til það var notað; usageToOrigin rekur það aftur frá notkun. nodes er rakningartréð í trjáröð: level 0 er birgðafærsla sem ber númerið þitt, dýpri stig eru færslurnar sem það leiddi til (eða kom frá), og parentEntryNo nefnir foreldrið. Rakningarskyldir íhlutir samsetningar og framleiðslu eru raktir. Rakning með fleiri en 1000 hnúta svarar LimitExceeded; þrengdu hana með itemNo eða variantCode. Númer sem engin færsla ber svarar RecordNotFound. Kallið les aðeins; rakningarsviðið þarf að vera kveikt í birgðauppsetningu.';
+        NotesLbl: Label 'Send lotNo, serialNo or both; itemNo and variantCode narrow the trace. The values are exact: filter characters such as * ? | & < > = @ ( ) and .. are refused. direction originToUsage (default) follows the number from where it came into stock to where it was used; usageToOrigin follows it back from where it was used. nodes is the trace tree in tree order: level 0 is a ledger entry that carries your number, deeper levels are the entries it led to (or came from), and parentEntryNo names the parent. Item-tracked components of assembly and production are followed. A trace with more than 1000 nodes answers LimitExceeded; narrow it with itemNo or variantCode. A number that no entry carries answers RecordNotFound. The call only reads; the Item Tracking domain must be turned on in Inventory Setup.', Comment = 'is-IS=Sendu lotNo, serialNo eða bæði; itemNo og variantCode þrengja rakninguna. Gildin eru nákvæm: síunarstafir eins og * ? | & < > = @ ( ) og .. eru ekki leyfðir. direction originToUsage (sjálfgefið) rekur númerið frá því að það kom á lager þangað til það var notað; usageToOrigin rekur það aftur frá notkun. nodes er rakningartréð í trjáröð: level 0 er birgðafærsla sem ber númerið þitt, dýpri stig eru færslurnar sem það leiddi til (eða kom frá), og parentEntryNo nefnir foreldrið. Rakningarskyldir íhlutir samsetningar og framleiðslu eru raktir. Rakning með fleiri en 1000 hnúta svarar LimitExceeded; þrengdu hana með itemNo eða variantCode. Númer sem engin færsla ber svarar RecordNotFound. Kallið les aðeins; rakningarsviðið þarf að vera kveikt í birgðauppsetningu.';
     begin
         Notes := NotesLbl;
         exit(true);
@@ -231,8 +230,10 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
         Backward: Boolean;
         TooMany: Boolean;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Item Ledger Entry", false, false) then begin
+            EnsureRecoveryGuidance(Argument, PermissionNextStep());
             exit;
+        end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
@@ -240,6 +241,7 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
             exit;
         if not TryTrace(RequestJson, Backward, Nodes, TooMany) then begin
             Argument.RespondWithLastError();
+            EnsureRecoveryGuidance(Argument, NativeNextStep());
             exit;
         end;
         if TooMany then begin
@@ -259,6 +261,37 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
         ResponseJson.Add('nodes', Nodes);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure EnsureRecoveryGuidance(var Argument: Record "Message Argument ori"; NextStep: Text)
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Response := Argument.GetResponseJson();
+        if Response.Get('nextStep', Token) then
+            if not Token.AsValue().IsNull() then
+                if Token.AsValue().AsText() <> '' then
+                    exit;
+        if Response.Contains('nextStep') then
+            Response.Replace('nextStep', NextStep)
+        else
+            Response.Add('nextStep', NextStep);
+        Argument.SetResponseJson(Response);
+    end;
+
+    local procedure PermissionNextStep(): Text
+    var
+        PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read item ledger entries.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið birgðafærslur.';
+    begin
+        exit(PermissionNextStepLbl);
+    end;
+
+    local procedure NativeNextStep(): Text
+    var
+        NativeNextStepLbl: Label 'Read the error text and check the lot or serial number on the Item Tracing page. Ask an administrator to resolve the Business Central error before retrying.', Comment = 'is-IS=Lestu villutextann og athugaðu lotu- eða raðnúmerið á síðunni Vörurakning. Biddu kerfisstjóra að leysa villuna í Business Central áður en þú reynir aftur.';
+    begin
+        exit(NativeNextStepLbl);
     end;
 
     local procedure MaxNodes(): Integer
@@ -316,7 +349,7 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
         FilterChar: Text;
         LengthErr: Label '%1 is longer than %2 characters.', Comment = '%1 = key name, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.';
         FilterErr: Label '%1 contains filter characters.', Comment = '%1 = key name, is-IS=%1 inniheldur síunarstafi.';
-        ValueNextStepLbl: Label 'Send the exact value, without * | & < > = @ ( ) or ..', Comment = 'is-IS=Sendu nákvæmt gildi, án * | & < > = @ ( ) eða ..';
+        ValueNextStepLbl: Label 'Send the exact value, without * ? | & < > = @ ( ) or ..', Comment = 'is-IS=Sendu nákvæmt gildi, án * ? | & < > = @ ( ) eða ..';
     begin
         Value := ReadText(RequestJson, KeyName);
         if Value = '' then
@@ -336,6 +369,7 @@ codeunit 10077031 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
     local procedure FilterCharacters() Characters: List of [Text]
     begin
         Characters.Add('*');
+        Characters.Add('?');
         Characters.Add('|');
         Characters.Add('&');
         Characters.Add('<');

@@ -13,10 +13,11 @@ using System.TestLibraries.Utilities;
 /// Inventory.ItemTracing.Get: the trace of a lot number through the item ledger in both directions,
 /// read-only behaviour, refusals, the node cap and help.
 /// </summary>
-codeunit 96998 "Item Tracing Get Tests"
+codeunit 96949 "Item Tracing Get Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;
+    EventSubscriberInstance = Manual;
 
     var
         Assert: Codeunit "Library Assert";
@@ -198,6 +199,143 @@ codeunit 96998 "Item Tracing Get Tests"
         Assert.IsTrue(TracingImpl.GetNotes(IcelandicNotes), 'Icelandic notes');
         GlobalLanguage(PreviousLanguage);
         Assert.AreNotEqual(EnglishNotes, IcelandicNotes, 'notes follow LCID 1039');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_QuestionMarkMatchingLot_IsRefusedInBothLanguages()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        KeyName: Text;
+        Keys: List of [Text];
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: WorkDate for posting only | Risk: None
+        // [GIVEN] A real lot that a question-mark wildcard would match.
+        EnableTracking();
+        CreateLotItem(Item);
+        PostLot(Item."No.", 'ITR-LOT1', 1, "Item Ledger Entry Type"::"Positive Adjmt.");
+        Request.Add('lotNo', 'ITR-LOT1');
+        Request.Add('itemNo', Item."No.");
+        Response := CallTrace(Request);
+        Assert.AreEqual('Success', ReadText(Response, 'status'), 'Exact lot exists');
+        Keys.Add('lotNo');
+        Keys.Add('serialNo');
+        Keys.Add('itemNo');
+        Keys.Add('variantCode');
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            foreach KeyName in Keys do begin
+                Clear(Request);
+                Request.Add('lotNo', 'ITR-LOT1');
+                if KeyName = 'lotNo' then
+                    Request.Replace(KeyName, 'ITR-LOT?')
+                else
+                    Request.Add(KeyName, '?');
+                // [WHEN] A wildcard is sent in any identifier.
+                Response := CallTrace(Request);
+                // [THEN] It is refused before native tracing can return another identifier.
+                Assert.AreEqual('InvalidParameter', ReadText(Response, 'code'), KeyName);
+                Assert.AreEqual(KeyName, ReadText(Response, 'parameter'), 'Invalid identifier');
+                Assert.IsTrue(ReadText(Response, 'nextStep').Contains('?'), 'Guidance names the wildcard');
+                Assert.IsFalse(Response.Contains('nodes'), 'No trace returned for a wildcard');
+            end;
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    [Test]
+    procedure Scenario_AC04_NoLedgerRead_HasLocalizedRecoveryGuidance()
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        TracingImpl: Codeunit "Item Tracing Get Impl ori";
+        Response: JsonObject;
+        EnglishNextStep: Text;
+        IcelandicNextStep: Text;
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: No date dependency | Risk: None
+        // [GIVEN] An enabled domain and a caller without ledger-read permission.
+        EnableTracking();
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+            LowerPermissions.AddPermissionSet('Item UoM No ILE Test');
+            Assert.IsFalse(LedgerEntry.ReadPermission(), 'Ledger-read permission is absent');
+            TempArgument.Init();
+            TempArgument.Version := "Message Version ori"::"1.0";
+            // [WHEN] The real message implementation checks its gate.
+            TracingImpl.ExecuteBifrostTask(TempArgument);
+            Response := TempArgument.GetResponseJson();
+            LowerPermissions.SetOutsideO365Scope();
+            // [THEN] The permission refusal carries actionable, localized guidance.
+            Assert.AreEqual('PermissionDenied', ReadText(Response, 'code'), 'Permission code');
+            Assert.AreNotEqual('', ReadText(Response, 'nextStep'), 'Permission recovery');
+            if Language = 1033 then
+                EnglishNextStep := ReadText(Response, 'nextStep')
+            else
+                IcelandicNextStep := ReadText(Response, 'nextStep');
+        end;
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNextStep, IcelandicNextStep, 'Permission guidance is localized');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_NativeFailure_HasLocalizedRecoveryGuidance()
+    var
+        FailureSubscriber: Codeunit "Item Tracing Get Tests";
+        Request: JsonObject;
+        Response: JsonObject;
+        EnglishNextStep: Text;
+        IcelandicNextStep: Text;
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: No date dependency | Risk: None
+        // [GIVEN] A scoped subscriber raises an error from the real native tracing path.
+        EnableTracking();
+        BindSubscription(FailureSubscriber);
+        Request.Add('lotNo', 'ITR-NATIVE-FAIL');
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            // [WHEN] Dispatch runs native FindRecords and catches its error.
+            Response := CallTrace(Request);
+            // [THEN] The native error remains coded and gains localized recovery guidance.
+            Assert.AreEqual('BusinessCentralError', ReadText(Response, 'code'), 'Native code');
+            Assert.AreEqual('Item tracing native test failure.', ReadText(Response, 'error'), 'Native error preserved');
+            Assert.AreNotEqual('', ReadText(Response, 'nextStep'), 'Native recovery');
+            Assert.IsFalse(Response.Contains('nodes'), 'No partial trace');
+            if Language = 1033 then
+                EnglishNextStep := ReadText(Response, 'nextStep')
+            else
+                IcelandicNextStep := ReadText(Response, 'nextStep');
+        end;
+        UnbindSubscription(FailureSubscriber);
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNextStep, IcelandicNextStep, 'Native guidance is localized');
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracing Mgt.", 'OnAfterInitSearchCriteria', '', false, false)]
+    local procedure FailNativeTracing(SerialNoFilter: Text; LotNoFilter: Text; PackageNoFilter: Text; ItemNoFilter: Text; var SearchCriteria: Option)
+    var
+        NativeFailureErr: Label 'Item tracing native test failure.', Locked = true;
+    begin
+        if LotNoFilter = 'ITR-NATIVE-FAIL' then
+            Error(NativeFailureErr);
+    end;
+
+    local procedure TestLanguages() Languages: List of [Integer]
+    begin
+        Languages.Add(1033);
+        Languages.Add(1039);
     end;
 
     local procedure EnableTracking()
