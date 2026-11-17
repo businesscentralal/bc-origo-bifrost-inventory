@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - Confirmation test targets (PR #213)
+
+- Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
+
 ### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
 
 - Source-line cancellation now requires `sourceProdOrderLine` and `sourceSubtype` for production output (5406) and components (5407). Incomplete pointers return `MissingParameter` before writes; complete pointers preserve sibling lines and other production statuses. Native regression coverage and bilingual parameter help cover the required keys.

@@ -153,10 +153,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         CreateStock(Item, 2);
         Request.Add('itemNoFilter', Item."No.");
         Request.Add('postToGL', false);
-        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.AdjustCost.Run", Item."No.", Request, Response);
         Clear(Request);
         Request.Add('itemNoFilter', Item."No.");
-        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.CostToGL.Post", Item."No.", Request, Response);
         Assert.IsTrue(Response.Get('postedValueEntryCount', Token), 'Native G/L posting reports actual entries.');
         Assert.IsTrue(Token.AsValue().AsInteger() > 0, 'The owned pending value entry was posted.');
     end;
@@ -229,7 +229,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Clear(Request);
         Request.Add('journalTemplateName', Batch."Journal Template Name");
         Request.Add('journalBatchName', Batch.Name);
-        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", '', Request, Response);
+        ConfirmAndRun("Message Type ori"::"Inventory.Reclassification.Post", Batch."Journal Template Name" + '|' + Batch.Name, Request, Response);
         Item.SetRange("Location Filter", Location.Code);
         Item.CalcFields(Inventory);
         Assert.AreEqual(2, Item.Inventory, 'Confirmed native reclassification moves the owned stock.');
@@ -365,7 +365,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
-                            // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
+                            // [WHEN] Dispatch a named target without confirmation; Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
                             if AdvertisesConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
@@ -403,7 +403,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        Response := DispatchWithSubject(MessageType, '', Request);
+        // A named target is required: Foundation #1278 sends an unnamed request to normal validation.
+        // Disabled domains guarantee this sentinel never creates, posts or undoes business data.
+        Response := DispatchWithSubject(MessageType, 'XCONFIRM-BOUNDARY', Request);
         AssertText(Response, 'status', 'Error');
     end;
 
