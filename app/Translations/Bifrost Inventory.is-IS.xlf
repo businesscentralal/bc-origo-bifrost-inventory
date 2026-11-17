@@ -105,6 +105,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Phys. Inventory - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 88444387 - Field 4106336951 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning</source>
+          <target>Áætlun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Planning - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 88444387 - Field 1663593181 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Primary Key</source>
           <target>Aðallykill</target>
@@ -7311,6 +7317,336 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu journalTemplateName, journalBatchName og lineNo, eða keyrðu fyrst Inventory.PhysInventory.Calculate.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - Method LegacyLineExists - NamedType LineNotFoundNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Replaces suggestion lines for the selected items on one planning worksheet and returns the new lines.</source>
+          <target>Skiptir út tillögum valinna vara á einni áætlunarkeyrslu og skilar nýju línunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skiptir út tillögum valinna vara á einni áætlunarkeyrslu og skilar nýju línunum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>planning worksheet, calculate plan, regenerative, net change, MRP</source>
+          <target>áætlunarkeyrsla, reikna áætlun, endurnýjun, nettóbreyting, MRP</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=áætlunarkeyrsla, reikna áætlun, endurnýjun, nettóbreyting, MRP</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The call replaces suggestion lines for the selected items on this planning worksheet only. Lines on other worksheets stay as they are, and lines for items outside the filter stay. The calculation commits as it proceeds, so a failure after the first item can leave lines already calculated on this worksheet. Nothing is posted. mode is regenerative or netChange. startingDate and endingDate are required, in YYYY-MM-DD form, and the ending date must not be before the starting date. itemNo, locationCode and variantCode are filter expressions of at most 2048 characters. Identify the worksheet with subject TEMPLATE|NAME or with templateName and worksheetName, and every selector that is sent must agree. The worksheet must already exist and belong to a planning template that is not recurring. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Call Inventory.PlanningWorksheet.CarryOut to create new orders from accepted New lines.</source>
+          <target>Kallið skiptir út tillögum valinna vara á þessari áætlunarkeyrslu eingöngu. Línur á öðrum keyrslum standa og línur vara utan síunnar standa. Útreikningurinn staðfestir eftir því sem hann vindur fram, svo bilun eftir fyrstu vöru getur skilið eftir línur sem þegar hafa verið reiknaðar á þessari keyrslu. Ekkert er bókað. mode er regenerative eða netChange. startingDate og endingDate eru nauðsynleg, á forminu ÁÁÁÁ-MM-DD, og lokadagur má ekki vera á undan upphafsdegi. itemNo, locationCode og variantCode eru síur, mest 2048 stafir. Auðkenndu keyrsluna með subject TEMPLATE|NAME eða með templateName og worksheetName og öll auðkenni sem eru send verða að stemma. Keyrslan verður að vera til og tilheyra áætlunarsniði sem er ekki ítrekunarsnið. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Kallaðu á Inventory.PlanningWorksheet.CarryOut til að búa til nýjar pantanir úr samþykktum New-línum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallið skiptir út tillögum valinna vara á þessari áætlunarkeyrslu eingöngu. Línur á öðrum keyrslum standa og línur vara utan síunnar standa. Útreikningurinn staðfestir eftir því sem hann vindur fram, svo bilun eftir fyrstu vöru getur skilið eftir línur sem þegar hafa verið reiknaðar á þessari keyrslu. Ekkert er bókað. mode er regenerative eða netChange. startingDate og endingDate eru nauðsynleg, á forminu ÁÁÁÁ-MM-DD, og lokadagur má ekki vera á undan upphafsdegi. itemNo, locationCode og variantCode eru síur, mest 2048 stafir. Auðkenndu keyrsluna með subject TEMPLATE|NAME eða með templateName og worksheetName og öll auðkenni sem eru send verða að stemma. Keyrslan verður að vera til og tilheyra áætlunarsniði sem er ekki ítrekunarsnið. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Kallaðu á Inventory.PlanningWorksheet.CarryOut til að búa til nýjar pantanir úr samþykktum New-línum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Replaces suggestion lines for the selected items on one planning worksheet. Nothing is posted. A failure after the first item can leave lines already calculated on that worksheet.</source>
+          <target>Skiptir út tillögum valinna vara á einni áætlunarkeyrslu. Ekkert er bókað. Bilun eftir fyrstu vöru getur skilið eftir línur sem þegar hafa verið reiknaðar á þeirri keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skiptir út tillögum valinna vara á einni áætlunarkeyrslu. Ekkert er bókað. Bilun eftir fyrstu vöru getur skilið eftir línur sem þegar hafa verið reiknaðar á þeirri keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one planning worksheet by subject TEMPLATE|NAME or by templateName and worksheetName.</source>
+          <target>Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No planning worksheet matches the template and name, the template is not a planning template, or a requested selector names a missing worksheet.</source>
+          <target>Engin áætlunarkeyrsla passar við sniðið og heitið, sniðið er ekki áætlunarsnið, eða auðkenni nefnir keyrslu sem er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin áætlunarkeyrsla passar við sniðið og heitið, sniðið er ekki áætlunarsnið, eða auðkenni nefnir keyrslu sem er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the template and name of an existing planning worksheet.</source>
+          <target>Sendu snið og heiti áætlunarkeyrslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu snið og heiti áætlunarkeyrslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>mode, startingDate or endingDate is absent, or the worksheet is not identified.</source>
+          <target>mode, startingDate eða endingDate vantar, eða keyrslan er ekki auðkennd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=mode, startingDate eða endingDate vantar, eða keyrslan er ekki auðkennd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send mode, startingDate and endingDate, and identify one worksheet.</source>
+          <target>Sendu mode, startingDate og endingDate og auðkenndu eina keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu mode, startingDate og endingDate og auðkenndu eina keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A date is not YYYY-MM-DD, a name or filter is not text or is too long, or a filter expression is not valid.</source>
+          <target>Dagsetning er ekki ÁÁÁÁ-MM-DD, heiti eða sía er ekki texti eða er of langt, eða síu er ekki gild.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning er ekki ÁÁÁÁ-MM-DD, heiti eða sía er ekki texti eða er of langt, eða síu er ekki gild.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the value named in the answer.</source>
+          <target>Leiðréttu gildið sem svarið nefnir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu gildið sem svarið nefnir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>mode is not regenerative or netChange, the ending date is before the starting date, the Planning domain is turned off, or an unknown key is sent.</source>
+          <target>mode er hvorki regenerative né netChange, lokadagur er á undan upphafsdegi, slökkt er á sviðinu Áætlun, eða óþekktur lykill er sendur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=mode er hvorki regenerative né netChange, lokadagur er á undan upphafsdegi, slökkt er á sviðinu Áætlun, eða óþekktur lykill er sendur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the value named in the answer, or turn the Planning domain on from Inventory Setup.</source>
+          <target>Leiðréttu gildið sem svarið nefnir, eða kveiktu á sviðinu Áætlun í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu gildið sem svarið nefnir, eða kveiktu á sviðinu Áætlun í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>subject and templateName or worksheetName name different worksheets.</source>
+          <target>subject og templateName eða worksheetName nefna ólíkar keyrslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=subject og templateName eða worksheetName nefna ólíkar keyrslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one worksheet. Every selector that is sent must agree.</source>
+          <target>Sendu eina keyrslu. Öll auðkenni sem eru send verða að stemma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eina keyrslu. Öll auðkenni sem eru send verða að stemma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 1219828246" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The planning template is recurring.</source>
+          <target>Áætlunarsniðið er ítrekunarsnið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlunarsniðið er ítrekunarsnið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType PreconditionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 2557513203" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose a planning worksheet that is not recurring.</source>
+          <target>Veldu áætlunarkeyrslu sem er ekki ítrekunarsnið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu áætlunarkeyrslu sem er ekki ítrekunarsnið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType PreconditionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot write suggestion lines.</source>
+          <target>Kallandinn getur ekki skrifað tillögulínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki skrifað tillögulínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for a permission set that can write the suggestion lines.</source>
+          <target>Biddu kerfisstjóra um heimildasafn sem getur skrifað tillögulínurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um heimildasafn sem getur skrifað tillögulínurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The calculation stops on a native validation error. Lines for items already calculated on this worksheet may remain.</source>
+          <target>Útreikningurinn stöðvast á villu í staðfestingu. Línur vara sem þegar voru reiknaðar á þessari keyrslu geta staðið eftir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Útreikningurinn stöðvast á villu í staðfestingu. Línur vara sem þegar voru reiknaðar á þessari keyrslu geta staðið eftir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the cause and calculate this worksheet again. Other worksheets were not changed.</source>
+          <target>Leiðréttu orsökina og reiknaðu þessa keyrslu aftur. Aðrar keyrslur breyttust ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu orsökina og reiknaðu þessa keyrslu aftur. Aðrar keyrslur breyttust ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name of an existing planning template that is not recurring, at most 10 characters. Send it with worksheetName unless subject identifies the worksheet.</source>
+          <target>Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType TemplateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 1682856384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name of an existing worksheet of that template, at most 10 characters. Every selector that is sent must name the same worksheet.</source>
+          <target>Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType WorksheetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 1311734675" size-unit="char" translate="yes" xml:space="preserve">
+          <source>regenerative replaces the plan for every selected item. netChange plans only items with a net-change planning assignment. Any other value is refused.</source>
+          <target>regenerative skiptir út áætlun hverrar valinnar vöru. netChange áætlar aðeins vörur með úthlutun nettóbreytingar. Öðrum gildum er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=regenerative skiptir út áætlun hverrar valinnar vöru. netChange áætlar aðeins vörur með úthlutun nettóbreytingar. Öðrum gildum er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType ModeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 810539710" size-unit="char" translate="yes" xml:space="preserve">
+          <source>First date of the planning period, YYYY-MM-DD. Required.</source>
+          <target>Fyrsti dagur áætlunartímabilsins, ÁÁÁÁ-MM-DD. Nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsti dagur áætlunartímabilsins, ÁÁÁÁ-MM-DD. Nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType StartingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 668029047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Last date of the planning period, YYYY-MM-DD. Required, and it must not be before startingDate.</source>
+          <target>Síðasti dagur áætlunartímabilsins, ÁÁÁÁ-MM-DD. Nauðsynlegt og má ekki vera á undan startingDate.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasti dagur áætlunartímabilsins, ÁÁÁÁ-MM-DD. Nauðsynlegt og má ekki vera á undan startingDate.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType EndingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 2359003977" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number filter, a filter expression of at most 2048 characters. Omit it to include every inventory item.</source>
+          <target>Sía vörunúmers, síu sem er mest 2048 stafir. Slepptu henni til að taka allar birgðavörur með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sía vörunúmers, síu sem er mest 2048 stafir. Slepptu henni til að taka allar birgðavörur með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType ItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location filter for the calculation, a filter expression of at most 2048 characters.</source>
+          <target>Staðsetningarsía útreikningsins, síu sem er mest 2048 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarsía útreikningsins, síu sem er mest 2048 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType LocationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1796653511 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Variant filter for the calculation, a filter expression of at most 2048 characters.</source>
+          <target>Afbrigðasía útreikningsins, síu sem er mest 2048 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðasía útreikningsins, síu sem er mest 2048 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>planning worksheet, carry out, purchase order, transfer order, assembly order</source>
+          <target>áætlunarkeyrsla, framkvæma, innkaupapöntun, flutningspöntun, samsetningarpöntun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=áætlunarkeyrsla, framkvæma, innkaupapöntun, flutningspöntun, samsetningarpöntun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Unaccepted lines are left as they are unless lineNos names them. expectedCount counts one carry-out invocation of the selected worksheet, not the number of orders or lines. The call is irreversible: created orders stay, and the consumed suggestion lines leave the worksheet. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines that would change or delete an existing document are refused before anything is written.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu breyta eða eyða fyrirliggjandi skjali er hafnað áður en nokkuð er skrifað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu breyta eða eyða fyrirliggjandi skjali er hafnað áður en nokkuð er skrifað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one planning worksheet by subject TEMPLATE|NAME or by templateName and worksheetName.</source>
+          <target>Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No planning worksheet matches the template and name, the template is not a planning template, or a line number in lineNos is not on the worksheet.</source>
+          <target>Engin áætlunarkeyrsla passar við sniðið og heitið, sniðið er ekki áætlunarsnið, eða línunúmer í lineNos er ekki á keyrslunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin áætlunarkeyrsla passar við sniðið og heitið, sniðið er ekki áætlunarsnið, eða línunúmer í lineNos er ekki á keyrslunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an existing planning worksheet and, when used, line numbers from that worksheet.</source>
+          <target>Sendu áætlunarkeyrslu sem er til og, þegar það er notað, línunúmer af þeirri keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu áætlunarkeyrslu sem er til og, þegar það er notað, línunúmer af þeirri keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worksheet is not identified.</source>
+          <target>Keyrslan er ekki auðkennd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Keyrslan er ekki auðkennd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send subject TEMPLATE|NAME or templateName and worksheetName.</source>
+          <target>Sendu subject SNIÐ|HEITI eða templateName og worksheetName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu subject SNIÐ|HEITI eða templateName og worksheetName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A name is not text or is too long, lineNos is not a list of positive JSON integers, or expectedCount is not a whole number.</source>
+          <target>Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum, eða expectedCount er ekki heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum, eða expectedCount er ekki heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the value named in the answer.</source>
+          <target>Leiðréttu gildið sem svarið nefnir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu gildið sem svarið nefnir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 4026014561" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos is empty, an unknown key is sent, or the Planning domain is turned off.</source>
+          <target>lineNos er tómt, óþekktur lykill er sendur, eða slökkt er á sviðinu Áætlun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos er tómt, óþekktur lykill er sendur, eða slökkt er á sviðinu Áætlun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType InvalidWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 2979918728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the value named in the answer, or turn the Planning domain on from Inventory Setup.</source>
+          <target>Leiðréttu gildið sem svarið nefnir, eða kveiktu á sviðinu Áætlun í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu gildið sem svarið nefnir, eða kveiktu á sviðinu Áætlun í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType InvalidFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 3964979788" size-unit="char" translate="yes" xml:space="preserve">
+          <source>subject and templateName or worksheetName name different worksheets.</source>
+          <target>subject og templateName eða worksheetName nefna ólíkar keyrslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=subject og templateName eða worksheetName nefna ólíkar keyrslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType ConflictWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 696430973" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one worksheet. Every selector that is sent must agree.</source>
+          <target>Sendu eina keyrslu. Öll auðkenni sem eru send verða að stemma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eina keyrslu. Öll auðkenni sem eru send verða að stemma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType ConflictFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 1219828246" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The template is recurring, nothing is accepted, or an accepted line would change or delete an existing document or create a production order.</source>
+          <target>Sniðið er ítrekunarsnið, ekkert er samþykkt, eða samþykkt lína myndi breyta eða eyða fyrirliggjandi skjali eða búa til framleiðslupöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sniðið er ítrekunarsnið, ekkert er samþykkt, eða samþykkt lína myndi breyta eða eyða fyrirliggjandi skjali eða búa til framleiðslupöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType PreconditionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 2557513203" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Keep only accepted New lines for a new purchase, transfer or assembly order. A refusal writes nothing.</source>
+          <target>Haltu aðeins samþykktum New-línum fyrir nýja innkaupa-, flutnings- eða samsetningarpöntun. Höfnun skrifar ekkert.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Haltu aðeins samþykktum New-línum fyrir nýja innkaupa-, flutnings- eða samsetningarpöntun. Höfnun skrifar ekkert.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType PreconditionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot write suggestion lines.</source>
+          <target>Kallandinn getur ekki skrifað tillögulínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki skrifað tillögulínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for a permission set that can write the suggestion lines.</source>
+          <target>Biddu kerfisstjóra um heimildasafn sem getur skrifað tillögulínurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um heimildasafn sem getur skrifað tillögulínurnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Order creation stops on a native validation error. Orders created before the failure remain.</source>
+          <target>Gerð pöntunar stöðvast á villu í staðfestingu. Pantanir sem urðu til fyrir bilunina standa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gerð pöntunar stöðvast á villu í staðfestingu. Pantanir sem urðu til fyrir bilunina standa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the orders that were created and the lines still on the worksheet before you try again.</source>
+          <target>Athugaðu pantanirnar sem urðu til og línurnar sem enn eru á keyrslunni áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu pantanirnar sem urðu til og línurnar sem enn eru á keyrslunni áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name of an existing planning template that is not recurring, at most 10 characters. Send it with worksheetName unless subject identifies the worksheet.</source>
+          <target>Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType TemplateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 1682856384" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name of an existing worksheet of that template, at most 10 characters. Every selector that is sent must name the same worksheet.</source>
+          <target>Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType WorksheetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 2427415570" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line numbers to carry out. Omit it to carry out every accepted New line on the worksheet. An empty list is refused.</source>
+          <target>Línunúmer sem á að framkvæma. Slepptu því til að framkvæma hverja samþykkta New-línu á keyrslunni. Tómum lista er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer sem á að framkvæma. Slepptu því til að framkvæma hverja samþykkta New-línu á keyrslunni. Tómum lista er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNosLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Expected invocation count from the confirmation preview: one selected worksheet. Foundation verifies this count before carry-out.</source>
+          <target>Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType ExpectedCountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One line number on the planning worksheet.</source>
+          <target>Eitt línunúmer á áætlunarkeyrslunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eitt línunúmer á áætlunarkeyrslunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNoLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 1721877906" size-unit="char" translate="yes" xml:space="preserve">
           <source>Activates one verified Draft price list and its lines using native status validation; changes subsequent price calculations without posting or deleting.</source>
           <target>Virkjar einn yfirfarinn verðlista í Drögum og línur hans með hefðbundinni stöðusannprófun; breytir síðari verðútreikningum án bókunar eða eyðingar.</target>
@@ -9020,6 +9356,450 @@
           <target>Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method PreviewEntries - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1441066381" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line would change or delete an existing document.</source>
+          <target>Línan myndi breyta eða eyða fyrirliggjandi skjali.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan myndi breyta eða eyða fyrirliggjandi skjali.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ActionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 5554086" size-unit="char" translate="yes" xml:space="preserve">
+          <source>New</source>
+          <target>New</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=New</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ActionExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3247298373" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove that line from the selection. Only an accepted New line can be carried out.</source>
+          <target>Taktu línuna úr valinu. Aðeins samþykkta New-línu er hægt að framkvæma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Taktu línuna úr valinu. Aðeins samþykkta New-línu er hægt að framkvæma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ActionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4058508172" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a completed calculation for the selected items</source>
+          <target>lokinn útreikningur fyrir valdar vörur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lokinn útreikningur fyrir valdar vörur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CalcNativeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2063774043" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lines for items already calculated on this worksheet may remain. Other worksheets were not changed. Correct the cause and calculate this worksheet again.</source>
+          <target>Línur vara sem þegar voru reiknaðar á þessari keyrslu geta staðið eftir. Aðrar keyrslur breyttust ekki. Leiðréttu orsökina og reiknaðu þessa keyrslu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línur vara sem þegar voru reiknaðar á þessari keyrslu geta staðið eftir. Aðrar keyrslur breyttust ekki. Leiðréttu orsökina og reiknaðu þessa keyrslu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CalcNativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3643614244" size-unit="char" translate="yes" xml:space="preserve">
+          <source>templateName, worksheetName, mode, startingDate, endingDate, itemNo, locationCode or variantCode</source>
+          <target>templateName, worksheetName, mode, startingDate, endingDate, itemNo, locationCode eða variantCode</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=templateName, worksheetName, mode, startingDate, endingDate, itemNo, locationCode eða variantCode</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CalculateExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3029259185" size-unit="char" translate="yes" xml:space="preserve">
+          <source>templateName, worksheetName, lineNos or expectedCount</source>
+          <target>templateName, worksheetName, lineNos eða expectedCount</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=templateName, worksheetName, lineNos eða expectedCount</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3256409074" size-unit="char" translate="yes" xml:space="preserve">
+          <source>new purchase, transfer or assembly orders for the accepted New lines</source>
+          <target>nýjar innkaupa-, flutnings- eða samsetningarpantanir fyrir samþykktu New-línurnar</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=nýjar innkaupa-, flutnings- eða samsetningarpantanir fyrir samþykktu New-línurnar</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryNativeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2379038257" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Orders created before the failure remain. Suggestion lines that were already consumed are gone. Check the created orders before you try again.</source>
+          <target>Pantanir sem urðu til fyrir bilunina standa. Tillögulínur sem þegar voru uppurnar eru farnar. Athugaðu pantanirnar sem urðu til áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir sem urðu til fyrir bilunina standa. Tillögulínur sem þegar voru uppurnar eru farnar. Athugaðu pantanirnar sem urðu til áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryNativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3793274669" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The planning worksheet did not return a created order.</source>
+          <target>Áætlunarkeyrslan skilaði ekki nýrri pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlunarkeyrslan skilaði ekki nýrri pöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryNothingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2745396742" size-unit="char" translate="yes" xml:space="preserve">
+          <source>at least one new order</source>
+          <target>að minnsta kosti ein ný pöntun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=að minnsta kosti ein ný pöntun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryNothingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 78947109" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check whether an order was still created, and whether the suggestion lines are still on the worksheet, before you try again.</source>
+          <target>Athugaðu hvort pöntun hafi samt orðið til og hvort tillögulínurnar séu enn á keyrslunni áður en þú reynir aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu hvort pöntun hafi samt orðið til og hvort tillögulínurnar séu enn á keyrslunni áður en þú reynir aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType CarryNothingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1342218725" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The subject and the data keys name different worksheets.</source>
+          <target>subject og data-lyklarnir nefna ólíkar keyrslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=subject og data-lyklarnir nefna ólíkar keyrslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ConflictErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3299433917" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send one worksheet. The subject and templateName and worksheetName must agree.</source>
+          <target>Sendu eina keyrslu. subject og templateName og worksheetName verða að stemma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu eina keyrslu. subject og templateName og worksheetName verða að stemma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ConflictNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1098416156" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a date in YYYY-MM-DD form</source>
+          <target>dagsetning á forminu ÁÁÁÁ-MM-DD</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=dagsetning á forminu ÁÁÁÁ-MM-DD</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4068153118" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a date in YYYY-MM-DD form.</source>
+          <target>%1 verður að vera dagsetning á forminu ÁÁÁÁ-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera dagsetning á forminu ÁÁÁÁ-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4001033607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required.</source>
+          <target>%1 er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1412843979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as YYYY-MM-DD.</source>
+          <target>Sendu %1 sem ÁÁÁÁ-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=Sendu %1 sem ÁÁÁÁ-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4182279705" size-unit="char" translate="yes" xml:space="preserve">
+          <source>endingDate must not be before startingDate.</source>
+          <target>endingDate má ekki vera á undan startingDate.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=endingDate má ekki vera á undan startingDate.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateOrderErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1030307537" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send an endingDate on or after startingDate.</source>
+          <target>Sendu endingDate á eða eftir startingDate.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu endingDate á eða eftir startingDate.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DateOrderNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4122250990" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line names an existing document.</source>
+          <target>Línan nefnir fyrirliggjandi skjal.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan nefnir fyrirliggjandi skjal.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DocumentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 857110853" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a New line that does not name an existing document</source>
+          <target>New-lína sem nefnir ekki fyrirliggjandi skjal</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=New-lína sem nefnir ekki fyrirliggjandi skjal</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DocumentExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1109953366" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Carry out only a new supply line. Existing documents are left unchanged.</source>
+          <target>Framkvæmdu aðeins nýja birgðalínu. Fyrirliggjandi skjöl standa óbreytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framkvæmdu aðeins nýja birgðalínu. Fyrirliggjandi skjöl standa óbreytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType DocumentNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos must list at least one line number.</source>
+          <target>lineNos verður að telja upp að minnsta kosti eitt línunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að telja upp að minnsta kosti eitt línunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3546126617" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing planning worksheet</source>
+          <target>áætlunarkeyrsla sem er til</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=áætlunarkeyrsla sem er til</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExistingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 841609749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a whole number</source>
+          <target>heiltala</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=heiltala</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2848552323" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount must be a whole number.</source>
+          <target>expectedCount verður að vera heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount verður að vera heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3249776646" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send expectedCount as the whole number from the confirmation answer, or omit it when confirmation does not require it.</source>
+          <target>Sendu expectedCount sem heiltöluna úr staðfestingarsvarinu, eða slepptu henni þegar staðfesting krefst hennar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu expectedCount sem heiltöluna úr staðfestingarsvarinu, eða slepptu henni þegar staðfesting krefst hennar ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 199971095" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo, locationCode or variantCode is not a valid filter.</source>
+          <target>itemNo, locationCode eða variantCode er ekki gild sía.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo, locationCode eða variantCode er ekki gild sía.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType FilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 633023824" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a filter expression of at most 2048 characters</source>
+          <target>síu sem er mest 2048 stafir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=síu sem er mest 2048 stafir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType FilterExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3155622607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the filter named in the answer, or omit it to include every item.</source>
+          <target>Leiðréttu síuna sem svarið nefnir, eða slepptu henni til að taka allar vörur með.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu síuna sem svarið nefnir, eða slepptu henni til að taka allar vörur með.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType FilterNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1889479259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = maximum length; is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType LengthErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1552733750" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a line number on the worksheet</source>
+          <target>línunúmer á keyrslunni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=línunúmer á keyrslunni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType LineExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3758292475" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a non-empty list of positive JSON integers</source>
+          <target>listi sem er ekki tómur af jákvæðum JSON-heiltölum</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=listi sem er ekki tómur af jákvæðum JSON-heiltölum</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType LinesExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3940949853" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos must be a list of JSON integers.</source>
+          <target>lineNos verður að vera listi af JSON-heiltölum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að vera listi af JSON-heiltölum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType LinesFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 86950748" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lineNos as a list of line numbers from the worksheet, or omit it to carry out every accepted New line.</source>
+          <target>Sendu lineNos sem lista af línunúmerum af keyrslunni, eða slepptu því til að framkvæma hverja samþykkta New-línu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lineNos sem lista af línunúmerum af keyrslunni, eða slepptu því til að framkvæma hverja samþykkta New-línu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType LinesNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3129818787" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a line number that is on the worksheet, or omit lineNos.</source>
+          <target>Sendu línunúmer sem er á keyrslunni, eða slepptu lineNos.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu línunúmer sem er á keyrslunni, eða slepptu lineNos.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType MissingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1344620449" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worksheet name does not exist on that template.</source>
+          <target>Heiti keyrslunnar er ekki til á því sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti keyrslunnar er ekki til á því sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType MissingWorksheetErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3702260186" size-unit="char" translate="yes" xml:space="preserve">
+          <source>mode must be regenerative or netChange.</source>
+          <target>mode verður að vera regenerative eða netChange.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=mode verður að vera regenerative eða netChange.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ModeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2409040593" size-unit="char" translate="yes" xml:space="preserve">
+          <source>regenerative or netChange</source>
+          <target>regenerative eða netChange</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=regenerative eða netChange</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ModeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2340137486" size-unit="char" translate="yes" xml:space="preserve">
+          <source>mode is required.</source>
+          <target>mode er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=mode er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ModeMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2614116738" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send mode as regenerative or netChange.</source>
+          <target>Sendu mode sem regenerative eða netChange.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu mode sem regenerative eða netChange.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ModeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 609238709" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a worksheet name of at most 10 characters</source>
+          <target>heiti keyrslu sem er mest 10 stafir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=heiti keyrslu sem er mest 10 stafir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType NameExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2884169851" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is not an accepted New suggestion.</source>
+          <target>Línan er ekki samþykkt New-tillaga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki samþykkt New-tillaga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType NotAcceptedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 677715251" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Accept the New line, or omit it from lineNos. Unaccepted lines are left unchanged.</source>
+          <target>Samþykktu New-línuna, eða slepptu henni úr lineNos. Ósamþykktar línur standa óbreyttar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Samþykktu New-línuna, eða slepptu henni úr lineNos. Ósamþykktar línur standa óbreyttar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType NotAcceptedNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No planning worksheet matches the template and name.</source>
+          <target>Engin áætlunarkeyrsla passar við sniðið og heitið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engin áætlunarkeyrsla passar við sniðið og heitið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2824518802" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the template and name of an existing planning worksheet.</source>
+          <target>Sendu snið og heiti áætlunarkeyrslu sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu snið og heiti áætlunarkeyrslu sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType NotFoundNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2683748503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType OptFormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1018180378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text of at most %2 characters, or omit it.</source>
+          <target>Sendu %1 sem texta sem er mest %2 stafir, eða slepptu því.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = maximum length; is-IS=Sendu %1 sem texta sem er mest %2 stafir, eða slepptu því.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType OptNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 224746370" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Each line number must be a positive JSON integer.</source>
+          <target>Hvert línunúmer verður að vera jákvæð JSON-heiltala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hvert línunúmer verður að vera jákvæð JSON-heiltala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType PositiveErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4078776720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Production orders are not created by this call.</source>
+          <target>Þetta kall býr ekki til framleiðslupantanir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þetta kall býr ekki til framleiðslupantanir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ProdErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 170128408" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the production line from the selection. Only a new purchase, transfer or assembly order can be created.</source>
+          <target>Taktu framleiðslulínuna úr valinu. Aðeins ný innkaupa-, flutnings- eða samsetningarpöntun getur orðið til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Taktu framleiðslulínuna úr valinu. Aðeins ný innkaupa-, flutnings- eða samsetningarpöntun getur orðið til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ProdNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 100303001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase</source>
+          <target>Purchase</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Purchase</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType PurchaseExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2650655406" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is not a new purchase suggestion.</source>
+          <target>Línan er ekki ný innkaupatillaga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki ný innkaupatillaga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType PurchaseOnlyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4116102934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Keep only accepted New lines for a new purchase order.</source>
+          <target>Haltu aðeins samþykktum New-línum fyrir nýja innkaupapöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Haltu aðeins samþykktum New-línum fyrir nýja innkaupapöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType PurchaseOnlyNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2038581688" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The planning worksheet template is recurring.</source>
+          <target>Snið áætlunarkeyrslunnar er ítrekunarsnið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Snið áætlunarkeyrslunnar er ítrekunarsnið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RecurringErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 225686191" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a planning worksheet that is not recurring</source>
+          <target>áætlunarkeyrsla sem er ekki ítrekunarsnið</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=áætlunarkeyrsla sem er ekki ítrekunarsnið</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RecurringExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4016408480" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose a planning worksheet that is not recurring.</source>
+          <target>Veldu áætlunarkeyrslu sem er ekki ítrekunarsnið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu áætlunarkeyrslu sem er ekki ítrekunarsnið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RecurringNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4227890709" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line number is not on this planning worksheet.</source>
+          <target>Línunúmerið er ekki á þessari áætlunarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmerið er ekki á þessari áætlunarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RefuseMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3995359366" size-unit="char" translate="yes" xml:space="preserve">
+          <source>There is nothing to carry out on this planning worksheet.</source>
+          <target>Ekkert er hægt að framkvæma á þessari áætlunarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekkert er hægt að framkvæma á þessari áætlunarkeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RefuseNothingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3629009613" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an accepted New line</source>
+          <target>samþykkt New-lína</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=samþykkt New-lína</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RefuseNothingExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1535156750" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Accept at least one New line, or calculate the worksheet first.</source>
+          <target>Samþykktu að minnsta kosti eina New-línu, eða reiknaðu keyrsluna fyrst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Samþykktu að minnsta kosti eina New-línu, eða reiknaðu keyrsluna fyrst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType RefuseNothingNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1108313423" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line is not a new purchase, transfer or assembly suggestion.</source>
+          <target>Línan er ekki ný innkaupa-, flutnings- eða samsetningartillaga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línan er ekki ný innkaupa-, flutnings- eða samsetningartillaga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ReplenishmentErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 733624167" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Keep only accepted New lines for a new purchase, transfer or assembly order.</source>
+          <target>Haltu aðeins samþykktum New-línum fyrir nýja innkaupa-, flutnings- eða samsetningarpöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Haltu aðeins samþykktum New-línum fyrir nýja innkaupa-, flutnings- eða samsetningarpöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ReplenishmentNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1062892207" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is required when subject does not identify the worksheet.</source>
+          <target>%1 er nauðsynlegt þegar subject auðkennir ekki keyrsluna.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name; is-IS=%1 er nauðsynlegt þegar subject auðkennir ekki keyrsluna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ResolveMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 4036427955" size-unit="char" translate="yes" xml:space="preserve">
+          <source>subject must be TEMPLATE|NAME.</source>
+          <target>subject verður að vera SNIÐ|HEITI.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=subject verður að vera SNIÐ|HEITI.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType SubjectErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1511529756" size-unit="char" translate="yes" xml:space="preserve">
+          <source>TEMPLATE|NAME with each part at most 10 characters</source>
+          <target>SNIÐ|HEITI þar sem hvort um sig er mest 10 stafir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=SNIÐ|HEITI þar sem hvort um sig er mest 10 stafir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType SubjectExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 173229771" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send subject as the template name, a vertical bar and the worksheet name, or send templateName and worksheetName.</source>
+          <target>Sendu subject sem heiti sniðs, lóðrétt strik og heiti keyrslu, eða sendu templateName og worksheetName.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu subject sem heiti sniðs, lóðrétt strik og heiti keyrslu, eða sendu templateName og worksheetName.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType SubjectNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3831638737" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase, Transfer or Assembly</source>
+          <target>Purchase, Transfer eða Assembly</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Purchase, Transfer eða Assembly</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType SupplyExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 1879669363" size-unit="char" translate="yes" xml:space="preserve">
+          <source>text</source>
+          <target>texti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=texti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType TextExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this message type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi skilaboðategund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi skilaboðategund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 2001379935" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the key named in the answer and send only the keys the help lists.</source>
+          <target>Fjarlægðu lykilinn sem svarið nefnir og sendu aðeins lykla sem hjálpin telur upp.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu lykilinn sem svarið nefnir og sendu aðeins lykla sem hjálpin telur upp.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType UnknownNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The worksheet template is not a planning worksheet.</source>
+          <target>Snið keyrslunnar er ekki áætlunarkeyrsla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Snið keyrslunnar er ekki áætlunarkeyrsla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3379146112 - NamedType 946462362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Choose a planning worksheet. This call does not change a requisition worksheet.</source>
+          <target>Veldu áætlunarkeyrslu. Þetta kall breytir ekki innkaupakeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu áætlunarkeyrslu. Þetta kall breytir ekki innkaupakeyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType WrongTypeNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1101326463 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Calculates a native requisition plan in one worksheet.</source>
@@ -12585,6 +13365,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort birgðatalningarskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control PhysInventory - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 4106336951 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether planning worksheet message types are enabled for this company.</source>
+          <target>Tilgreinir hvort skilaboð áætlunarkeyrslu séu virk fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort skilaboð áætlunarkeyrslu séu virk fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control Planning - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Control 3677985854 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether purchase return message types are enabled for this company.</source>
           <target>Tilgreinir hvort skilaboð innkaupaskila séu virk fyrir þetta fyrirtæki.</target>
@@ -12842,6 +13628,18 @@
           <target>Birgðatalning</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control PhysInventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 4106336951 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies whether this domain is enabled in this company.</source>
+          <target>Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Planning - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3550083798 - Control 4106336951 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning</source>
+          <target>Áætlun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup Wizard ori - Control Planning - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3550083798 - Control 3677985854 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies whether this domain is enabled in this company.</source>
@@ -13196,6 +13994,12 @@
           <target>Birgðatalning</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalning</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue PhysInventory - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 3723105090 - EnumValue 4106336951 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Planning</source>
+          <target>Áætlun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum Inventory Domain ori - EnumValue Planning - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3723105090 - EnumValue 3677985854 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purchase Returns</source>

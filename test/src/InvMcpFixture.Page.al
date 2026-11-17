@@ -23,6 +23,33 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreatePlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned117 planning';
+                ToolTip = 'Creates an owned planning worksheet and purchase item for MCP verification.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    SeedState := Planning.SeedMcpFixtures();
+                end;
+            }
+            action(CleanupPlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned117 planning';
+                ToolTip = 'Removes only the owned planning fixtures and their newly created orders.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    Planning.CleanupMcpFixtures();
+                    SeedState := 'Clean owned117 planning completed.';
+                end;
+            }
             action(Create154Fixtures)
             {
                 ApplicationArea = All;
