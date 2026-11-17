@@ -42,3 +42,8 @@ README "Objects" lists every object with its ID. In short:
 - Free: 96960-96961, 96963-96979.
 - #106 (`Inventory.TrackingInfo.Get`): codeunit and enum value 10077010, enum extension 10076915, test codeunit 96992.
   On main 96963 and 96970-96979 are already used, so check `test/` before taking an ID from the free list above.
+
+## Issue 40 additions
+
+- Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
+- Test codeunit 96994 `Item Application 40 Tests ori`.
