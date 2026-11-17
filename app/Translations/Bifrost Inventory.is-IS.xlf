@@ -4641,6 +4641,282 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu purchase eða sales.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method ValidateCommon - NamedType DocumentTypeNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Attributes domain is turned off for this company.</source>
+          <target>Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is longer than %2 characters.</source>
+          <target>%1 er lengra en %2 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=%1 er lengra en %2 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method CheckLength - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3612920174 - NamedType 637595219" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 with at most %2 characters.</source>
+          <target>Sendu %1 með mest %2 stöfum.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, %2 = maximum length, is-IS=Sendu %1 með mest %2 stöfum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method CheckLength - NamedType TooLongNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an item from an item template and answers its number and units of measure.</source>
+          <target>Stofnar vöru út frá vörusniðmáti og svarar númeri hennar og mælieiningum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar vöru út frá vörusniðmáti og svarar númeri hennar og mælieiningum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>templateCode is missing or empty.</source>
+          <target>templateCode vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=templateCode vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type.</source>
+          <target>Lykill er á rangri JSON-gerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send templateCode, description, baseUnitOfMeasure and gtin as text, and unitPrice as a number.</source>
+          <target>Sendu templateCode, description, baseUnitOfMeasure og gtin sem texta, og unitPrice sem tölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu templateCode, description, baseUnitOfMeasure og gtin sem texta, og unitPrice sem tölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item template has the code in templateCode.</source>
+          <target>Ekkert vörusniðmát hefur kóðann í templateCode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekkert vörusniðmát hefur kóðann í templateCode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 2134736204" size-unit="char" translate="yes" xml:space="preserve">
+          <source>baseUnitOfMeasure names a unit of measure that does not exist.</source>
+          <target>baseUnitOfMeasure nefnir mælieiningu sem er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=baseUnitOfMeasure nefnir mælieiningu sem er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType UnitWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 3939208423" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A text is longer than its field, unitPrice is below zero, or the Attributes domain is turned off.</source>
+          <target>Texti er lengri en reiturinn hans, unitPrice er undir núlli, eða eiginleikasviðið er óvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Texti er lengri en reiturinn hans, unitPrice er undir núlli, eða eiginleikasviðið er óvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType ValueWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 851118914" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send templateCode of at most 20 characters, description of at most 100, baseUnitOfMeasure of at most 10, gtin of at most 14 and unitPrice of zero or more, or turn the domain on from the Inventory Setup page.</source>
+          <target>Sendu templateCode sem er mest 20 stafir, description sem er mest 100, baseUnitOfMeasure sem er mest 10, gtin sem er mest 14 og unitPrice sem er núll eða meira, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu templateCode sem er mest 20 stafir, description sem er mest 100, baseUnitOfMeasure sem er mest 10, gtin sem er mest 14 og unitPrice sem er núll eða meira, eða kveiktu á sviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType ValueFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot create items or their units of measure.</source>
+          <target>Kallandinn getur ekki stofnað vörur eða mælieiningar þeirra.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki stofnað vörur eða mælieiningar þeirra.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 3416799273" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central refuses the save itself after the request was checked, for example when no item number series is set up. Nothing is saved.</source>
+          <target>Business Central hafnar vistuninni sjálfri eftir að beiðnin var athuguð, til dæmis þegar engin vörunúmeraröð er uppsett. Ekkert er vistað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar vistuninni sjálfri eftir að beiðnin var athuguð, til dæmis þegar engin vörunúmeraröð er uppsett. Ekkert er vistað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the cause in Business Central and send the call again.</source>
+          <target>Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create an item from a template with a description and a price</source>
+          <target>Stofna vöru út frá sniðmáti með lýsingu og verði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna vöru út frá sniðmáti með lýsingu og verði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item, create, template, unit of measure, GTIN</source>
+          <target>vara, stofna, sniðmát, mælieining, GTIN</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vara, stofna, sniðmát, mælieining, GTIN</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Each successful call creates a new item, so sending the same request twice gives two items. A refusal creates nothing. The call never changes or deletes an existing item and does not post. The Attributes domain on the Inventory Setup page turns this call on or off. In a chained Omit Commit call, the write remains in the caller transaction and a native failure propagates so the whole chain can roll back.</source>
+          <target>Hvert kall sem tekst stofnar nýja vöru, svo sama beiðni send tvisvar gefur tvær vörur. Höfnun stofnar ekkert. Kallið breytir aldrei né eyðir vöru sem er til og bókar ekki. Eiginleikasviðið á síðunni Uppsetning birgða kveikir og slekkur á þessu kalli. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hvert kall sem tekst stofnar nýja vöru, svo sama beiðni send tvisvar gefur tvær vörur. Höfnun stofnar ekkert. Kallið breytir aldrei né eyðir vöru sem er til og bókar ekki. Eiginleikasviðið á síðunni Uppsetning birgða kveikir og slekkur á þessu kalli. Í keðjuðu Omit Commit kalli helst skrifunin í færslu kallandans og innbyggð villa berst áfram svo hægt sé að afturkalla alla keðjuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates one item from an item template, the same way the New action on the Items page does with a template. The item gets the template values, such as base unit of measure, posting groups and costing method, and then the description, base unit of measure, unit price and GTIN that were sent. The answer is the new item number with its units of measure.</source>
+          <target>Stofnar eina vöru út frá vörusniðmáti, á sama hátt og aðgerðin Nýtt á síðunni Vörur gerir með sniðmáti. Varan fær gildi sniðmátsins, svo sem grunnmælieiningu, bókunarflokka og kostnaðaraðferð, og síðan lýsingu, grunnmælieiningu, einingarverð og GTIN sem voru send. Svarið er númer nýju vörunnar með mælieiningum hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eina vöru út frá vörusniðmáti, á sama hátt og aðgerðin Nýtt á síðunni Vörur gerir með sniðmáti. Varan fær gildi sniðmátsins, svo sem grunnmælieiningu, bókunarflokka og kostnaðaraðferð, og síðan lýsingu, grunnmælieiningu, einingarverð og GTIN sem voru send. Svarið er númer nýju vörunnar með mælieiningum hennar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3615801952 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code of an existing item template, at most 20 characters. The template gives the base unit of measure, posting groups, costing method and number series.</source>
+          <target>Kóði vörusniðmáts sem er til, mest 20 stafir. Sniðmátið gefur grunnmælieiningu, bókunarflokka, kostnaðaraðferð og númeraröð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði vörusniðmáts sem er til, mest 20 stafir. Sniðmátið gefur grunnmælieiningu, bókunarflokka, kostnaðaraðferð og númeraröð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetParameters - NamedType TemplateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3615801952 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description of the item, at most 100 characters.</source>
+          <target>Lýsing vörunnar, mest 100 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing vörunnar, mest 100 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetParameters - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3615801952 - NamedType 464491971" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code of an existing unit of measure, at most 10 characters. Replaces the base unit of measure of the template.</source>
+          <target>Kóði mælieiningar sem er til, mest 10 stafir. Kemur í stað grunnmælieiningar sniðmátsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kóði mælieiningar sem er til, mest 10 stafir. Kemur í stað grunnmælieiningar sniðmátsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetParameters - NamedType BaseUnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3615801952 - NamedType 2786556803" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unit price as a number, zero or more.</source>
+          <target>Einingarverð sem tala, núll eða meira.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Einingarverð sem tala, núll eða meira.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetParameters - NamedType UnitPriceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3615801952 - NamedType 1232008314" size-unit="char" translate="yes" xml:space="preserve">
+          <source>GTIN (barcode) of the item, at most 14 characters.</source>
+          <target>GTIN (strikamerki) vörunnar, mest 14 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=GTIN (strikamerki) vörunnar, mest 14 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetParameters - NamedType GtinLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1033708611 - NamedType 3790346625" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Change the unit price of an item that already exists.</source>
+          <target>Breyta einingarverði vöru sem er þegar til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Breyta einingarverði vöru sem er þegar til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetRelated - NamedType PriceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1033708611 - NamedType 106786954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Give the new item its attribute values.</source>
+          <target>Gefa nýju vörunni eiginleikagildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gefa nýju vörunni eiginleikagildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetRelated - NamedType AttributeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new item from an item template, with its description, base unit of measure, unit price and GTIN.</source>
+          <target>Stofnaðu nýja vöru út frá vörusniðmáti, með lýsingu, grunnmælieiningu, einingarverði og GTIN.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu nýja vöru út frá vörusniðmáti, með lýsingu, grunnmælieiningu, einingarverði og GTIN.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item template the new item is created from.</source>
+          <target>Vörusniðmátið sem nýja varan er stofnuð út frá.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörusniðmátið sem nýja varan er stofnuð út frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can create items.</source>
+          <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method PermissionNextStep - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains an unknown key.</source>
+          <target>Beiðnin inniheldur óþekktan lykil.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur óþekktan lykil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 404762370 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be a number.</source>
+          <target>%1 verður að vera tala.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method RequireDecimal - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 404762370 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as a number, for example 129.5.</source>
+          <target>Sendu %1 sem tölu, til dæmis 129.5.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem tölu, til dæmis 129.5.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method RequireDecimal - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 2434615052 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 must be text.</source>
+          <target>%1 verður að vera texti.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=%1 verður að vera texti.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method RequireText - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 2434615052 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send %1 as text.</source>
+          <target>Sendu %1 sem texta.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = key, is-IS=Sendu %1 sem texta.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method RequireText - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 4151915371 - NamedType 3452083885" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send templateCode with the code of an item template. The Item Templates page lists them.</source>
+          <target>Sendu templateCode með kóða vörusniðmáts. Síðan Vörusniðmát sýnir þau.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu templateCode með kóða vörusniðmáts. Síðan Vörusniðmát sýnir þau.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method TemplateMissingNextStep - NamedType TemplateMissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3835455378 - NamedType 222574296" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the template code on the Item Templates page, or create the template there first.</source>
+          <target>Athugaðu kóða sniðmátsins á síðunni Vörusniðmát, eða stofnaðu sniðmátið þar fyrst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu kóða sniðmátsins á síðunni Vörusniðmát, eða stofnaðu sniðmátið þar fyrst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method TemplateNotFoundNextStep - NamedType TemplateNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 4154166716 - NamedType 1820540022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the code of an existing unit of measure from the Units of Measure page, or leave baseUnitOfMeasure out to keep the template unit.</source>
+          <target>Sendu kóða mælieiningar sem er til á síðunni Mælieiningar, eða slepptu baseUnitOfMeasure til að halda einingu sniðmátsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu kóða mælieiningar sem er til á síðunni Mælieiningar, eða slepptu baseUnitOfMeasure til að halda einingu sniðmátsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method UnitNotFoundNextStep - NamedType UnitNotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 3132612207 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are templateCode, description, baseUnitOfMeasure, unitPrice and gtin.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru templateCode, description, baseUnitOfMeasure, unitPrice og gtin.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru templateCode, description, baseUnitOfMeasure, unitPrice og gtin.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method UnknownNextStep - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1380282473 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>templateCode is required.</source>
+          <target>templateCode er áskilið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=templateCode er áskilið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method ValidateRequest - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1380282473 - NamedType 1069379362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item template does not exist.</source>
+          <target>Vörusniðmátið er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörusniðmátið er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method ValidateRequest - NamedType TemplateNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1380282473 - NamedType 1415325532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The unit of measure does not exist.</source>
+          <target>Mælieiningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Mælieiningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method ValidateRequest - NamedType UnitNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1380282473 - NamedType 257595117" size-unit="char" translate="yes" xml:space="preserve">
+          <source>unitPrice is below zero.</source>
+          <target>unitPrice er undir núlli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=unitPrice er undir núlli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method ValidateRequest - NamedType NegativePriceErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3298073719 - Method 1380282473 - NamedType 2412022675" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send unitPrice as zero or more.</source>
+          <target>Sendu unitPrice sem núll eða meira.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu unitPrice sem núll eða meira.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method ValidateRequest - NamedType NegativePriceNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1037220909 - Method 343156278 - NamedType 662785972" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central did not create an item from template %1.</source>
+          <target>Business Central stofnaði ekki vöru út frá sniðmáti %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template code, is-IS=Business Central stofnaði ekki vöru út frá sniðmáti %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Proc ori - Method CreateFromTemplate - NamedType NotCreatedErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 720166676 - NamedType 4148992451" size-unit="char" translate="yes" xml:space="preserve">
           <source>Several items match this reference.</source>
           <target>Nokkrar vörur passa við þessa tilvísun.</target>
