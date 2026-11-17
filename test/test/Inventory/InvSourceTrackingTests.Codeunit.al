@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
@@ -147,9 +149,9 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Assert.AreEqual(3, ReservationEntry."Quantity (Base)", 'Other lot remains unchanged.');
     end;
 
-    /// <summary>A missing entryNo is refused rather than deleting every source entry.</summary>
+    /// <summary>Omitting entry numbers removes all unposted tracking belonging to the selected source.</summary>
     [Test]
-    procedure EmptyDeleteSelectionPreservesTracking()
+    procedure Scenario_AC03_OmittedEntryNumbersRemovesSourceTracking()
     var
         PurchaseLine: Record "Purchase Line";
         ReservationEntry: Record "Reservation Entry";
@@ -164,9 +166,9 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
 
         ExecuteTracking(Request, true, Response);
 
-        AssertStatus(Response, 'Error');
+        AssertStatus(Response, 'Success');
         FilterSourceEntries(PurchaseLine, ReservationEntry);
-        Assert.AreEqual(1, ReservationEntry.Count(), 'An empty selection does not remove tracking.');
+        Assert.IsTrue(ReservationEntry.IsEmpty(), 'Omitting entry numbers removes the selected source tracking.');
     end;
 
     /// <summary>Sales tracking uses a self-posted lot and deletes only pending demand tracking.</summary>
@@ -368,6 +370,8 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
     var
         Entry: Record "Reservation Entry";
         Specification: Record "Tracking Specification";
+        TempArgument: Record "Message Argument ori" temporary;
+        TrackingRead: Codeunit "Inventory Tracking Read ori";
         Request: JsonObject;
         DeleteRequest: JsonObject;
         Tracking: JsonObject;
@@ -392,6 +396,12 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Entry.FindFirst();
         Assert.AreEqual(2, Abs(Entry."Quantity (Base)"), 'Tracking has the requested base quantity.');
         Assert.AreEqual(BeforeSpecifications, Specification.Count(), 'Assignment did not create persistent tracking specification rows.');
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        TrackingRead.ReadTracking(TempArgument);
+        AssertStatus(TempArgument.GetResponseJson(), 'Success');
         DeleteRequest.Add('source', Source);
         DeleteRequest.Add('entryNo', Entry."Entry No.");
 
@@ -399,6 +409,252 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
 
         AssertStatus(Response, 'Success');
         Assert.IsTrue(Entry.IsEmpty(), 'Pending tracking was removed on the selected source.');
+    end;
+
+    /// <summary>Native output tracking on an assembly header keeps the complete source pointer.</summary>
+    [Test]
+    procedure Scenario_AC01_AssemblyOutputTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Assembly Header";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native source date | Risk: None
+        // [GIVEN] An independently created tracked item and assembly order.
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), PurchaseLine."No.", '', 10, '');
+        // [WHEN] Tracking is assigned and removed through the native adapters.
+        // [THEN] Only tracking for this assembly source changes.
+        AssertTrackingRoundTrip(GenericSource('AssemblyHeader', Header.SystemId), Database::"Assembly Header", Header."No.", 0, true);
+    end;
+
+    /// <summary>Assembly consumption tracking uses its component line rather than the output header.</summary>
+    [Test]
+    procedure Scenario_AC01_AssemblyComponentTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        ParentItem: Record Item;
+        Header: Record "Assembly Header";
+        Line: Record "Assembly Line";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native source date | Risk: None
+        // [GIVEN] Self-posted lot stock and a separate assembly component source.
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibraryInventory.CreateItem(ParentItem);
+        LibraryAssembly.CreateAssemblyHeader(Header, WorkDate(), ParentItem."No.", '', 10, '');
+        LibraryAssembly.CreateAssemblyLine(Header, Line, Line.Type::Item, PurchaseLine."No.", PurchaseLine."Unit of Measure Code", 10, 1, '');
+        // [WHEN] Component tracking is assigned and removed.
+        // [THEN] Only the selected native component source changes.
+        AssertTrackingRoundTrip(GenericSource('AssemblyLine', Line.SystemId), Database::"Assembly Line", Header."No.", Line."Line No.", false);
+    end;
+
+    /// <summary>Native item journal tracking preserves template, batch and line identity.</summary>
+    [Test]
+    procedure Scenario_AC01_ItemJournalTrackingRoundTrips()
+    var
+        PurchaseLine: Record "Purchase Line";
+        ItemJournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+    begin
+        // Story #37, AC01 | Time: WorkDate for native journal date | Risk: None
+        // [GIVEN] A self-created positive adjustment journal and tracked item.
+        CreatePurchaseLine(PurchaseLine, false);
+        LibraryInventory.CreateItemJournalTemplate(ItemJournalTemplate);
+        LibraryInventory.CreateItemJournalBatch(Batch, ItemJournalTemplate.Name);
+        LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::"Positive Adjmt.", PurchaseLine."No.", 10);
+        // [WHEN] Tracking is assigned and removed through the native adapters.
+        // [THEN] The selected journal source alone is affected.
+        AssertTrackingRoundTrip(GenericSource('ItemJournalLine', Line.SystemId), Database::"Item Journal Line", ItemJournalTemplate.Name, Line."Line No.", true);
+    end;
+
+    /// <summary>A bulk selection validates every source entry before any removal.</summary>
+    [Test]
+    procedure Scenario_AC03_ForeignSecondEntryLeavesBothSourcesUnchanged()
+    var
+        Line: Record "Purchase Line";
+        OtherLine: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryNumbers: JsonArray;
+    begin
+        // Story #37, AC03 | Time: WorkDate through fixture | Risk: None
+        // [GIVEN] Tracking on two independent source lines.
+        CreatePurchaseLine(Line, false);
+        CreatePurchaseLine(OtherLine, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-A', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        ExecuteTracking(AssignmentRequest(OtherLine, 'LOT-B', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(OtherLine, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+        // [WHEN] The second entry belongs to another source.
+        ExecuteTracking(Request, true, Response);
+        // [THEN] The whole request fails before removal.
+        AssertStatus(Response, 'Error');
+        Assert.AreEqual(1, Entry.Count(), 'Foreign tracking remains.');
+        FilterSourceEntries(Line, Entry);
+        Assert.AreEqual(1, Entry.Count(), 'Earlier valid selection remains.');
+    end;
+
+    /// <summary>A duplicate entry selection is removed once and an empty explicit array is refused.</summary>
+    [Test]
+    procedure Scenario_AC03_DuplicateSelectionCountsOnce()
+    var
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        EntryNumbers: JsonArray;
+        Token: JsonToken;
+    begin
+        // Story #37, AC03 | Time: WorkDate through fixture | Risk: None
+        // [GIVEN] One tracked source and an explicitly empty selection.
+        CreatePurchaseLine(Line, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-A', '', 2), false, Response);
+        AssertStatus(Response, 'Success');
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+        // [WHEN] An empty explicit array is sent.
+        ExecuteTracking(Request, true, Response);
+        // [THEN] It is refused and tracking remains.
+        AssertStatus(Response, 'Error');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        EntryNumbers.Add(Entry."Entry No.");
+        EntryNumbers.Add(Entry."Entry No.");
+        Request.Replace('entryNos', EntryNumbers);
+        ExecuteTracking(Request, true, Response);
+        AssertStatus(Response, 'Success');
+        Response.Get('entriesDeleted', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Duplicates count once.');
+        Assert.IsTrue(Entry.IsEmpty(), 'Selected tracking removed.');
+    end;
+
+    /// <summary>A fractional number cannot round to an existing entry and remove it.</summary>
+    [Test]
+    procedure Scenario_AC03_FractionalEntryNumber_PreservesTracking()
+    var
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        EntryNumbers: JsonArray;
+        FractionalEntryNo: Decimal;
+    begin
+        // Story #37, AC03 | Time: no date dependency | Risk: independently created purchase source only.
+        // [GIVEN] An existing source entry that an integer conversion could round to.
+        CreatePurchaseLine(Line, false);
+        ExecuteTracking(AssignmentRequest(Line, 'LOT-FRACTION', '', 1), false, Response);
+        AssertStatus(Response, 'Success');
+        FilterSourceEntries(Line, Entry);
+        Entry.FindFirst();
+        FractionalEntryNo := Entry."Entry No." + 0.1;
+        EntryNumbers.Add(FractionalEntryNo);
+        Request.Add('source', SourceObject(Line));
+        Request.Add('entryNos', EntryNumbers);
+
+        // [WHEN] The API helper validates the selected entries before deleting any tracking.
+        ExecuteTracking(Request, true, Response);
+
+        // [THEN] The fractional selection is refused rather than rounded to the owned entry.
+        AssertStatus(Response, 'Error');
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameterFormat', Token.AsValue().AsText(), 'Entry numbers must be positive whole numbers.');
+        Assert.AreEqual(1, Entry.Count(), 'Fractional input must preserve the existing tracking row.');
+    end;
+
+    /// <summary>Disabled tracking writes return the corrected setup precondition in English.</summary>
+    [Test]
+    procedure Scenario_AC01_DisabledTracking_In1033()
+    begin
+        // Story #37, AC01 | Time: no date dependency | Risk: own test-company setup only.
+        AssertDisabledTracking(1033);
+    end;
+
+    /// <summary>Disabled tracking writes return the corrected setup precondition in Icelandic.</summary>
+    [Test]
+    procedure Scenario_AC01_DisabledTracking_In1039()
+    begin
+        // Story #37, AC01 | Time: no date dependency | Risk: own test-company setup only.
+        AssertDisabledTracking(1039);
+    end;
+
+    local procedure AssertDisabledTracking(LanguageId: Integer)
+    var
+        Setup: Record "Inventory Setup ori";
+        ReservationEntry: Record "Reservation Entry";
+        TrackingSpecification: Record "Tracking Specification";
+        AssignImpl: Codeunit "Tracking Assign Impl ori";
+        DeleteImpl: Codeunit "Tracking Delete Impl ori";
+        PreviousLanguage: Integer;
+        ReservationCount: Integer;
+        SpecificationCount: Integer;
+    begin
+        // [GIVEN] The company switch is off, independently of source permissions and request validity.
+        Setup.InsertIfNotExists();
+        Setup."Item Tracking" := false;
+        Setup.Modify();
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        ReservationCount := ReservationEntry.Count();
+        SpecificationCount := TrackingSpecification.Count();
+        Assert.IsFalse(AssignImpl.IsEnabled(), 'Assignment discovery must honor the company switch.');
+        Assert.IsFalse(DeleteImpl.IsEnabled(), 'Deletion discovery must honor the company switch.');
+
+        // [WHEN] Each message implementation is called directly: this API has no page action.
+        // [THEN] Setup refusal precedes parsing, licensing and every tracking write.
+        AssertDisabledResponse(false, LanguageId);
+        AssertDisabledResponse(true, LanguageId);
+        Assert.AreEqual(ReservationCount, ReservationEntry.Count(), 'Disabled calls create or remove no reservation rows.');
+        Assert.AreEqual(SpecificationCount, TrackingSpecification.Count(), 'Disabled calls change no specifications.');
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure AssertDisabledResponse(DeleteMode: Boolean; LanguageId: Integer)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        AssignImpl: Codeunit "Tracking Assign Impl ori";
+        DeleteImpl: Codeunit "Tracking Delete Impl ori";
+        Response: JsonObject;
+        Request: JsonObject;
+        Token: JsonToken;
+        SetupName: Text;
+    begin
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        TempArgument.SetRequestJson(Request);
+        if DeleteMode then
+            DeleteImpl.ExecuteBifrostTask(TempArgument)
+        else
+            AssignImpl.ExecuteBifrostTask(TempArgument);
+        Response := TempArgument.GetResponseJson();
+        AssertStatus(Response, 'Error');
+        Assert.IsTrue(Response.Get('code', Token), 'Coded setup refusal is required.');
+        Assert.AreEqual('PreconditionFailed', Token.AsValue().AsText(), 'Well-formed operations cannot run while company setup is off.');
+        if LanguageId = 1039 then
+            SetupName := 'uppsetning'
+        else
+            SetupName := 'inventory setup';
+        Assert.IsTrue(Response.Get('error', Token), 'Setup refusal must explain the error.');
+        Assert.IsTrue(StrPos(LowerCase(Token.AsValue().AsText()), SetupName) > 0, 'Error names the company setup in the requested language.');
+        Assert.IsTrue(Response.Get('nextStep', Token), 'Setup refusal must explain recovery.');
+        Assert.IsTrue(StrPos(LowerCase(Token.AsValue().AsText()), SetupName) > 0, 'Recovery names the setup in the requested language.');
+        if LanguageId = 1039 then
+            Assert.IsTrue(StrPos(Token.AsValue().AsText(), 'kveikja') > 0, 'Icelandic recovery explains how to enable the domain.')
+        else
+            Assert.IsTrue(StrPos(Token.AsValue().AsText(), 'turn the domain on') > 0, 'English recovery explains how to enable the domain.');
     end;
 
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
