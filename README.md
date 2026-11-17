@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 60 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 62 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -24,7 +24,7 @@ and `Data.Records.Set`.
 
 ### Message types
 
-The active roster is implemented by the `Message Type ori` enum extensions under `app/src/Message Type/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
+The active roster is implemented by the `Message Type ori` enum extensions under `app/src/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
 and `Help.Implementation.Get` return the same list and each type's contract at runtime.
 
 | Type | Direction | Purpose |
