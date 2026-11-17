@@ -23,6 +23,60 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreateUndo39)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned undo39', Comment = 'is-IS=Stofna eigin afturköllun39';
+                ToolTip = 'Seeds independent owned shipment and assembly documents for bilingual issue39 MCP checks.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    SeedState := Seed.SeedUndo39();
+                end;
+            }
+            action(CleanupUndo39)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned undo39', Comment = 'is-IS=Hreinsa eigin afturköllun39';
+                ToolTip = 'Removes only the explicit W6U39 test documents, entries, items and locations.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupUndo39();
+                    SeedState := 'Owned undo39 cleanup completed.';
+                end;
+            }
+            action(CreatePlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned117 planning';
+                ToolTip = 'Creates an owned planning worksheet and purchase item for MCP verification.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    SeedState := Planning.SeedMcpFixtures();
+                end;
+            }
+            action(CleanupPlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned117 planning';
+                ToolTip = 'Removes only the owned planning fixtures and their newly created orders.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    Planning.CleanupMcpFixtures();
+                    SeedState := 'Clean owned117 planning completed.';
+                end;
+            }
             action(Create154Fixtures)
             {
                 ApplicationArea = All;

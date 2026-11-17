@@ -289,9 +289,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(75, CheckedCount - ItemJournalNames.Count(), 'This app registers 75 Inventory types.');
+        LibraryAssert.AreEqual(81, CheckedCount - ItemJournalNames.Count(), 'This app registers 81 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(75, AppTypes.Count(), 'The registered Inventory type list for this app has 75 names.');
+        LibraryAssert.AreEqual(81, AppTypes.Count(), 'The registered Inventory type list for this app has 81 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -444,6 +444,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.AssemblyOrder.Statistics');
         Types.Add('Inventory.AdjustCost.Run');
         Types.Add('Inventory.Cost.Get');
+        Types.Add('Inventory.Valuation.Get');
         Types.Add('Inventory.CostToGL.Post');
         Types.Add('Inventory.CostToGL.Test');
         Types.Add('Inventory.Tracking.Assign');
@@ -468,6 +469,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Reservation.Create');
         Types.Add('Inventory.Reservation.Cancel');
         Types.Add('Inventory.PhysInventory.Calculate');
+        Types.Add('Inventory.CycleCount.Calculate');
         Types.Add('Inventory.PhysInventory.Record');
         Types.Add('Inventory.PhysInventory.Post');
         Types.Add('Inventory.ItemReference.Resolve');
@@ -475,11 +477,15 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.ItemCharge.Get');
         Types.Add('Inventory.ItemCategory.Get');
         Types.Add('Inventory.ItemCategory.Set');
+        Types.Add('Inventory.ItemVariant.Get');
+        Types.Add('Inventory.ItemVariant.Create');
         Types.Add('Inventory.Item.Create');
         Types.Add('Inventory.ItemUnitOfMeasure.Get');
         Types.Add('Inventory.ItemUnitOfMeasure.Create');
         Types.Add('Inventory.Reservation.AutoReserve');
         Types.Add('Inventory.OrderTracking.Get');
+        Types.Add('Inventory.PlanningWorksheet.Calculate');
+        Types.Add('Inventory.PlanningWorksheet.CarryOut');
         Types.Add('Inventory.AssemblyToOrder.Get');
         Types.Add('Inventory.AssemblyBOM.Get');
         Types.Add('Inventory.SKU.Create');

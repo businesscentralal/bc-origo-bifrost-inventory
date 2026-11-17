@@ -572,6 +572,17 @@ codeunit 96930 "Inventory Item Refusal Tests"
         MissingBatchRefusal(3, 1039);
     end;
 
+    local procedure EnableAttributeFixture()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        // Earlier domain-off scenarios must not determine which refusal an attribute test reaches.
+        Setup.InsertIfNotExists();
+        Setup.Get();
+        Setup.Attributes := true;
+        Setup.Modify();
+    end;
+
     local procedure AttributeRefusal(Scenario: Integer; Updating: Boolean; LanguageId: Integer)
     var
         Item: Record Item;
@@ -600,6 +611,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         Item.Init();
         Item."No." := CopyStr('W8148' + DelChr(Format(CreateGuid()), '=', '{}-'), 1, MaxStrLen(Item."No."));
         Item.Insert(true);
+        EnableAttributeFixture();
         Library.CreateOptionAttribute('W8148', Attribute, ValueA, ValueB);
         Entry.Add('name', Attribute.Name);
         Entry.Add('value', 'Blue');
@@ -767,6 +779,7 @@ codeunit 96930 "Inventory Item Refusal Tests"
         OldLanguage: Integer;
         BeforeCount: Integer;
     begin
+        EnableAttributeFixture();
         Library.CreateOptionAttribute('DEF-W8148', Attribute, ValueA, ValueB);
         ErrorCode := 'MissingParameter';
         ParameterName := 'name';

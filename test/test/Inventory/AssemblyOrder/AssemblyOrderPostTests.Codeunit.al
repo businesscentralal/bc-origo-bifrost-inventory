@@ -169,6 +169,141 @@ codeunit 96909 "Assembly Order Post Tests"
         Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'Status should be Error');
     end;
 
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure Scenario_AC03_RecreateTrue_RestoresOrder_EN()
+    begin
+        // Issue #39 AC03 | Time: WorkDate for posting | Risk: None.
+        VerifyRecreateOrder(true, 1033);
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure Scenario_AC03_RecreateTrue_RestoresOrder_IS()
+    begin
+        // Issue #39 AC03 | Time: WorkDate for posting | Risk: None.
+        VerifyRecreateOrder(true, 1039);
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure Scenario_AC03_RecreateFalse_LeavesOrderAbsent()
+    begin
+        // Issue #39 AC03 | Time: WorkDate for posting | Risk: None.
+        VerifyRecreateOrder(false, 1033);
+    end;
+
+    local procedure VerifyRecreateOrder(RecreateOrder: Boolean; LanguageId: Integer)
+    var
+        ParentItem: Record Item;
+        ComponentItem: Record Item;
+        Header: Record "Assembly Header";
+        PostedHeader: Record "Posted Assembly Header";
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        OrderNo: Code[20];
+        BeforeCount: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // [GIVEN] A posted assembly whose original order has been deleted by standard posting.
+        Helper.CreateAssemblyItemWithBOM(ParentItem, ComponentItem);
+        Helper.CreateAssemblyOrder(Header, ParentItem."No.", 1);
+        Helper.CreatePositiveAdjustment(ComponentItem."No.", 10);
+        OrderNo := Header."No.";
+        Request.Add('documentNo', OrderNo);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.Post", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Fixture posted.');
+        PostedHeader.SetRange("Order No.", OrderNo);
+        PostedHeader.FindFirst();
+        Assert.IsFalse(Header.Get(Header."Document Type"::Order, OrderNo), 'Native full posting removes original order.');
+        BeforeCount := Entries.Count();
+        Clear(Request);
+        Clear(Response);
+        Request.Add('documentNo', PostedHeader."No.");
+        Request.Add('recreateOrder', RecreateOrder);
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        // [WHEN] The public undo dispatch receives an explicit recreation preference.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Assembly.UndoPost", Request, Response);
+        GlobalLanguage(PreviousLanguage);
+        // [THEN] Native undo posts corrective entries and applies the preference.
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Undo succeeds.');
+        PostedHeader.Get(PostedHeader."No.");
+        Assert.IsTrue(PostedHeader.Reversed, 'Posted document remains and is reversed.');
+        Assert.IsTrue(Entries.Count() > BeforeCount, 'Corrective item entries posted.');
+        Assert.AreEqual(RecreateOrder, Header.Get(Header."Document Type"::Order, OrderNo), 'Original order recreation matches request.');
+        if RecreateOrder then begin
+            Assert.AreEqual(1, Header.Quantity, 'Recreated quantity.');
+            Assert.AreEqual(0, Header."Assembled Quantity", 'Recreated order is not posted.');
+        end;
+    end;
+
+    [Test]
+    procedure Scenario_AC04_InvalidRecreate_RefusedBeforeLookup()
+    var
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // Issue #39 AC04 | Time: no date dependency | Risk: None.
+        // [GIVEN] A correctly typed document number and a string instead of a boolean.
+        Request.Add('documentNo', 'OWN39-NOT-FOUND');
+        Request.Add('recreateOrder', 'true');
+        // [WHEN] The public message validates its input.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Assembly.UndoPost", Request, Response);
+        // [THEN] Invalid input is refused before the document lookup or native undo.
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameterFormat', Token.AsValue().AsText(), 'Boolean strings must not be accepted.');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('recreateOrder', Token.AsValue().AsText(), 'Error identifies the invalid option.');
+    end;
+
+    [Test]
+    [HandlerFunctions('MessageHandler')]
+    procedure Scenario_AC05_ConsumedOutput_UndoRefused()
+    var
+        Parent: Record Item;
+        Component: Record Item;
+        Header: Record "Assembly Header";
+        Posted: Record "Posted Assembly Header";
+        Entries: Record "Item Ledger Entry";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        BeforeCount: Integer;
+    begin
+        // Issue #39 AC05 | Time: WorkDate for native posting | Risk: None.
+        // [GIVEN] A real assembly output consumed by a subsequent native item journal posting.
+        Helper.CreateAssemblyItemWithBOM(Parent, Component);
+        Helper.CreateAssemblyOrder(Header, Parent."No.", 1);
+        Helper.CreatePositiveAdjustment(Component."No.", 10);
+        Request.Add('documentNo', Header."No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AssemblyOrder.Post", Request, Response);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Fixture assembly posted.');
+        Posted.SetRange("Order No.", Header."No.");
+        Posted.FindFirst();
+        Helper.CreatePositiveAdjustment(Parent."No.", -1);
+        BeforeCount := Entries.Count();
+        Clear(Request);
+        Clear(Response);
+        Request.Add('documentNo', Posted."No.");
+        Request.Add('recreateOrder', true);
+        // [WHEN] The public message asks native undo to reverse consumed output.
+        Helper.ProcessMessage("Message Type ori"::"Inventory.Assembly.UndoPost", Request, Response);
+        // [THEN] Native constraints refuse the operation and no partial correction is retained.
+        Response.Get('code', Token);
+        Assert.AreEqual('BusinessCentralError', Token.AsValue().AsText(), 'Native consumed-output constraint remains active.');
+        Posted.Get(Posted."No.");
+        Assert.IsFalse(Posted.Reversed, 'Consumed assembly is not reversed.');
+        Assert.AreEqual(BeforeCount, Entries.Count(), 'Refusal creates no reversing entries.');
+        Assert.IsFalse(Header.Get(Header."Document Type"::Order, Header."No."), 'Refusal recreates no order.');
+    end;
+
     [MessageHandler]
     procedure MessageHandler(Message: Text[1024])
     begin
