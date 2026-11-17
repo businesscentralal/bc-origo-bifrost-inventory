@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Foundation.NoSeries;
 using Microsoft.Foundation.UOM;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Catalog;
@@ -164,6 +165,87 @@ codeunit 96998 "Nonstock Item Create Tests"
     end;
 
     [Test]
+    procedure Create_NumberSeriesWithoutLine_ReturnsBusinessCentralErrorAndWritesNothing()
+    var
+        NonstockItem: Record "Nonstock Item";
+        Item: Record Item;
+        ItemTempl: Record "Item Templ.";
+        NoSeries: Record "No. Series";
+        UnitOfMeasure: Record "Unit of Measure";
+        Vendor: Record Vendor;
+        NonstockItemSetup: Record "Nonstock Item Setup";
+        SavedSetup: Record "Nonstock Item Setup";
+        ResponseJson: JsonObject;
+        EntryNo: Code[20];
+        SeriesCode: Code[20];
+        VendorNo: Code[20];
+        UnitCode: Code[10];
+        TemplateCode: Code[20];
+        CodeText: Text;
+        NextStep: Text;
+        Parameter: Text;
+        ItemNo: Code[20];
+        ItemCountBefore: Integer;
+        ItemCountAfter: Integer;
+    begin
+        // [SCENARIO AC04] A number series with no line passes the preflight and fails in native creation.
+        // The refusal names a recovery step and leaves the catalog item and the item table unchanged.
+        EntryNo := CreateCatalogItem(true);
+        NonstockItem.Get(EntryNo);
+        ItemTempl.Get(NonstockItem."Item Templ. Code");
+        SeriesCode := CopyStr('S' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(SeriesCode));
+        NoSeries.Init();
+        NoSeries.Code := SeriesCode;
+        NoSeries.Description := 'Catalog series without a line';
+        NoSeries."Default Nos." := true;
+        NoSeries."Manual Nos." := false;
+        NoSeries.Insert(false);
+        ItemTempl."No. Series" := SeriesCode;
+        ItemTempl.Modify(false);
+        NonstockItemSetup.Get();
+        SavedSetup := NonstockItemSetup;
+        NonstockItemSetup."No. Format" := NonstockItemSetup."No. Format"::"Item No. Series";
+        NonstockItemSetup.Modify(false);
+        Item.SetRange("Vendor Item No.", 'V' + EntryNo);
+        ItemCountBefore := Item.Count();
+        ResponseJson := CallRequest(EntryRequest(EntryNo), false);
+        CodeText := ReadText(ResponseJson, 'code');
+        NextStep := ReadText(ResponseJson, 'nextStep');
+        Parameter := ReadText(ResponseJson, 'parameter');
+        NonstockItem.Get(EntryNo);
+        ItemNo := NonstockItem."Item No.";
+        ItemCountAfter := Item.Count();
+        VendorNo := NonstockItem."Vendor No.";
+        UnitCode := NonstockItem."Unit of Measure";
+        TemplateCode := NonstockItem."Item Templ. Code";
+        // Message Task commits before the handler, so restore the shared setup and delete this test's
+        // own rows before later tests in the codeunit see them. Codeunit isolation still rolls that
+        // commit back when the codeunit ends.
+        NonstockItemSetup.Get();
+        NonstockItemSetup."No. Format" := SavedSetup."No. Format";
+        NonstockItemSetup.Modify(false);
+        if ItemNo <> '' then
+            if Item.Get(ItemNo) then
+                Item.Delete(true);
+        NonstockItem.Delete(true);
+        if ItemTempl.Get(TemplateCode) then
+            ItemTempl.Delete(true);
+        if Vendor.Get(VendorNo) then
+            Vendor.Delete(true);
+        if UnitOfMeasure.Get(UnitCode) then
+            UnitOfMeasure.Delete(true);
+        if NoSeries.Get(SeriesCode) then
+            NoSeries.Delete(true);
+        Commit();
+        Assert.AreEqual('BusinessCentralError', CodeText, 'code');
+        Assert.AreEqual('Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.', NextStep, 'nextStep');
+        Assert.AreNotEqual('', NextStep, 'recovery step is not blank');
+        Assert.AreEqual('entryNo', Parameter, 'parameter');
+        Assert.AreEqual('', ItemNo, 'the catalog item is unchanged');
+        Assert.AreEqual(ItemCountBefore, ItemCountAfter, 'no item was created');
+    end;
+
+    [Test]
     procedure Create_DomainOff_ReturnsInvalidParameter()
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -284,10 +366,15 @@ codeunit 96998 "Nonstock Item Create Tests"
     end;
 
     local procedure CallRequest(RequestJson: JsonObject) ResponseJson: JsonObject
+    begin
+        ResponseJson := CallRequest(RequestJson, true);
+    end;
+
+    local procedure CallRequest(RequestJson: JsonObject; OmitCommit: Boolean) ResponseJson: JsonObject
     var
         Library: Codeunit "Inventory Test Library ori";
     begin
-        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.NonstockItem.Create", '', RequestJson, true);
+        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.NonstockItem.Create", '', RequestJson, OmitCommit);
     end;
 
     local procedure ReadText(ResponseJson: JsonObject; KeyName: Text): Text

@@ -4911,12 +4911,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Business Central hafnar sjálfri stofnun vörunnar eftir að beiðnin var yfirfarin. Ekkert er vistað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType NativeWhenLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3401488166 - Method 1158096087 - NamedType 3750629744" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.</source>
-          <target>Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3401488166 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
           <source>Create an item from a catalog item</source>
           <target>Stofna vöru úr vörulistavöru</target>
@@ -4982,6 +4976,18 @@
           <target>Lestu vörulistavöruna aftur og staðfestu að vörunúmer passi við itemNo í svarinu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu vörulistavöruna aftur og staðfestu að vörunúmer passi við itemNo í svarinu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method GetWorkflow - NamedType VerifyLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 633227753 - NamedType 1954137527" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a catalog item Business Central can turn into an item</source>
+          <target>vörulistavara sem Business Central getur breytt í vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörulistavara sem Business Central getur breytt í vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method NativeExpected - NamedType NativeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3401488166 - Method 77833744 - NamedType 1346508330" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.</source>
+          <target>Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method NativeNextStep - NamedType NativeNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3401488166 - Method 726736690 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
           <source>Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can create items and change catalog items.</source>

@@ -145,7 +145,6 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
         SetupWhenLbl: Label 'The catalog item has no vendor, vendor item number, unit of measure or item template, its item template does not exist, the Catalog Item Setup or the item number series is missing, or an item with the number the catalog item would get already exists.', Comment = 'is-IS=Vörulistavöruna vantar lánardrottin, vörunúmer lánardrottins, mælieiningu eða vörusniðmát, vörusniðmát hennar er ekki til, uppsetningu vörulistavara eða númeraröð vöru vantar, eða vara með númerið sem vörulistavaran fengi er þegar til.';
         PermissionWhenLbl: Label 'The caller cannot create items from catalog items.', Comment = 'is-IS=Kallandinn getur ekki stofnað vörur úr vörulistavörum.';
         NativeWhenLbl: Label 'Business Central refuses the item creation itself, after the request was checked. Nothing is saved.', Comment = 'is-IS=Business Central hafnar sjálfri stofnun vörunnar eftir að beiðnin var yfirfarin. Ekkert er vistað.';
-        NativeFixLbl: Label 'Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.', Comment = 'is-IS=Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.';
     begin
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingWhenLbl, EntryNoNextStep()));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatWhenLbl, FormatFixLbl));
@@ -155,7 +154,7 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, ConvertedWhenLbl, ConvertedNextStep()));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, SetupWhenLbl, CatalogCardNextStep()));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionNextStep()));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, NativeWhenLbl, NativeFixLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, NativeWhenLbl, NativeNextStep()));
         exit(true);
     end;
 
@@ -278,11 +277,19 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
             exit;
         if not CheckCatalogItem(Argument, NonstockItem) then
             exit;
+        // A number series with no usable line passes the checks above and fails inside CreateItemFromNonstock.
+        // The context is set before that run so RespondWithLastError, and the Omit Commit boundary, return the
+        // documented recovery step. Omit Commit still calls Codeunit.Run without its return value, so the
+        // native error propagates and the caller's transaction can roll back.
+        Argument.SetErrorContext(EntryNoKeyTok, NativeExpected(), NativeNextStep());
         if Argument."Omit Commit" then
             Codeunit.Run(Codeunit::"Nonstock Item Create Proc ori", Argument)
         else
-            if not Codeunit.Run(Codeunit::"Nonstock Item Create Proc ori", Argument) then
+            if not Codeunit.Run(Codeunit::"Nonstock Item Create Proc ori", Argument) then begin
                 Argument.RespondWithLastError();
+                exit;
+            end;
+        Argument.ClearErrorContext();
     end;
 
     local procedure CanWriteTables(): Boolean
@@ -475,5 +482,19 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
         PermissionNextStepLbl: Label 'Assign the Bifrost "Full Access" permission set with Inventory write permissions and a Business Central permission set that can create items and change catalog items.', Comment = 'is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur stofnað vörur og breytt vörulistavörum.';
     begin
         exit(PermissionNextStepLbl);
+    end;
+
+    local procedure NativeExpected(): Text
+    var
+        NativeExpectedLbl: Label 'a catalog item Business Central can turn into an item', Comment = 'is-IS=vörulistavara sem Business Central getur breytt í vöru';
+    begin
+        exit(NativeExpectedLbl);
+    end;
+
+    local procedure NativeNextStep(): Text
+    var
+        NativeNextStepLbl: Label 'Read the error text, correct the cause on the Catalog Item Card in Business Central and send the call again.', Comment = 'is-IS=Lestu villutextann, lagaðu orsökina á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.';
+    begin
+        exit(NativeNextStepLbl);
     end;
 }
