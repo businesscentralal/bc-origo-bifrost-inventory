@@ -5,9 +5,9 @@ Issue #228 keeps the supported BC 28.5 build and the BC 29 build warning-free wi
 | Symbols | Product and test compiler arguments | Inventory Setup field | Shipment/receipt member |
 | --- | --- | --- | --- |
 | BC 28.5 | No additional symbol | 5855 `Direct Transfer Posting` (option) | `Receipt and Shipment` |
-| BC 29 | `/define:BC29` | 5857 `Direct Transfer Posting Type` (enum) | `Shipment and Receipt` |
+| BC 29 | No additional symbol | 5857 `Direct Transfer Posting Type` (enum) | `Shipment and Receipt` |
 
-The replacement field and enum do not exist in BC 28.5. `BC29` is an explicit build symbol, not an automatically detected application version. Always compile the product and tests with the same symbol and matching Microsoft packages. The existing BC 28.5 CI configuration needs no change. When the build target moves to BC 29, its compiler invocation must define `BC29`; once BC 28.5 support ends, remove the conditional branches.
+The replacement field and enum do not exist in BC 28.5. After merging the runtime compatibility fix from PR #213, both targets detect field 5857 through RecordRef and otherwise use field 5855. BC 28 option values 0/1 map to BC 29 enum values 10/20. No compiler define is required; an existing `/define:BC29` is harmless. Compile the product and tests against matching Microsoft packages.
 
 The change affects the setup reads in `Inventory.TransferOrder.Post` and `Inventory.TransferOrder.PreviewPost`, plus the matching setup writes/restoration in the test helper. It preserves the two existing choices: shipment plus receipt, or one direct-transfer document. No public procedure, message contract, permission, page, label, or translation changes.
 
