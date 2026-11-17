@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - Item substitutions (#118)
+
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
 ### Changed (2026-11-16) - native filter contract for Adjust Cost and Cost to G/L (#35, partial)
 - `Inventory.AdjustCost.Run` (codeunit 10076858 / 10076859) refuses both filters together and invalid filters before report 795 runs, without writes. `postingDate`, `inventoryPostingGroup` and `itemByItem` are not parameters and are refused as `UnknownParameter` (`itemByItem` stays a documented gap: code cannot set that request-page option on this build). The answer now carries `itemsProcessed` (items the filters select) and an `errors` array (empty on success).
 - `Inventory.CostToGL.Post` (codeunit 10076863, `Inventory Write Process ori`) no longer binds `documentNoFilter`: the document number of report 1002 is an output option, not a selection filter, so it is refused as `UnknownParameter`. A real `postingDateFilter` on the pending entries replaces it, in the request and the answer. The response field `documentNoFilter` is replaced by `postingDateFilter`.
@@ -10,6 +14,7 @@
 ### Fixed (2026-11-16) - PR #214 review amendments
 - AdjustCost help distinguishes scalar-format refusals from the `InvalidParameter` selection refusals raised before report 795. Both costing types explain in English and Icelandic that confirmation of a named subject counts one run, not selected items or value entries, and disclose Foundation's unnamed-request behavior.
 - Contract tests retain exact app response descriptors while validating Foundation's shared conditional error-code descriptor. Confirmation tests exercise both unnamed handler validation and named-subject preview/mismatch/success, matching Foundation #1278. Regenerated the Icelandic translation file from the compiler output, including the CostToGL `UnknownParameter` wording. No runtime execution, message contract or object ID changed.
+
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
