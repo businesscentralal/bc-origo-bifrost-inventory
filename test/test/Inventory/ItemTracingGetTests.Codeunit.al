@@ -271,6 +271,8 @@ codeunit 96949 "Item Tracing Get Tests"
             Assert.IsFalse(LedgerEntry.ReadPermission(), 'Ledger-read permission is absent');
             TempArgument.Init();
             TempArgument.Version := "Message Version ori"::"1.0";
+            TempArgument.ID := CreateGuid();
+            TempArgument.Insert(true);
             // [WHEN] The real message implementation checks its gate.
             TracingImpl.ExecuteBifrostTask(TempArgument);
             Response := TempArgument.GetResponseJson();
@@ -372,9 +374,22 @@ codeunit 96949 "Item Tracing Get Tests"
 
     local procedure CallTrace(RequestJson: JsonObject) ResponseJson: JsonObject
     var
-        Library: Codeunit "Inventory Test Library ori";
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        RequestText: Text;
+        ResponseText: Text;
+        ResponseContentType: Text[100];
+        TaskId: Guid;
+        MessageId: Guid;
+        ResponseTime: Duration;
     begin
-        ResponseJson := Library.ExecuteType("Message Type ori"::"Inventory.ItemTracing.Get", '', RequestJson, false);
+        RequestJson.WriteTo(RequestText);
+        RequestContent.AddText(RequestText);
+        // Execute uses the setup default language; explicitly dispatch the locale under test.
+        Dispatcher.EnqueueAndProcess("Message Type ori"::"Inventory.ItemTracing.Get", "Message Version ori"::"1.0", '', '', 'application/json', RequestContent, TaskId, GlobalLanguage(), MessageId, ResponseContent, ResponseContentType, ResponseTime);
+        ResponseContent.GetSubText(ResponseText, 1);
+        ResponseJson.ReadFrom(ResponseText);
     end;
 
     local procedure FindNode(ResponseJson: JsonObject; EntryType: Text; var Found: JsonObject): Boolean
