@@ -564,6 +564,18 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Item.Validate(Reserve, Item.Reserve::Optional);
         Item.Modify(true);
         Helper.CreatePositiveAdjustment(Item."No.", FromLocation.Code, 10);
+        CreateInv7DirectTransfer(Item."No.", FromLocation.Code, ToLocation.Code, InTransit.Code);
+    end;
+
+    local procedure CreateInv7DirectTransfer(ItemNo: Code[20]; FromCode: Code[10]; ToCode: Code[10]; TransitCode: Code[10])
+    var
+        Header: Record "Transfer Header";
+        Helper: Codeunit "Transfer Order Test Helper";
+    begin
+        Helper.CreateTransferHeader(Header, FromCode, ToCode, TransitCode);
+        Header.Validate("Direct Transfer", true);
+        Helper.CreateTransferLine(Header, ItemNo, 2);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
     end;
 
     local procedure PostInv7Stock(Item: Record Item; LocationCode: Code[10]; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50])
