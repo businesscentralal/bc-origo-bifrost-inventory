@@ -61,11 +61,11 @@ README "Objects" lists every object with its ID. In short:
   Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847; 10076906 is `MsgType.SalesRetOrd.Ext ori`; 10077019 is `MsgType.Nonstock.EnumExt ori`).
   Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
 - 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is free at the top of the range.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 PurchaseReturns and 17 CatalogItems; `Inventory Setup ori`
-  fields 21-27 (`Item Substitution` is field 25, `Purchase Returns` is field 26, `Catalog Items` is field 27). New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 PurchaseReturns, 17 Planning and 18 CatalogItems; `Inventory Setup ori`
+  fields 21-28 (`Item Substitution` is field 25, `Purchase Returns` is field 26, `Planning` is field 27, `Catalog Items` is field 28). New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
 - Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
-  10076947 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, so Catalog Items uses value 17, field 27 and setup-guide slot 18.
+  10076947 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, Planning keeps value 17, field 27 and setup-guide slot 18, so Catalog Items uses value 18, field 28 and setup-guide slot 19.
 - Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077028-10077029 (`Sales Get Shipment Impl/Proc ori`,
   `Sales.SalesInvoice.GetShipmentLines`, enum extension 10076900, test codeunit 96995) and 10077032-10077033. Next free codeunit: 10076931
   (10076925-10076929 and 10076931-10077027 are free except as taken by open PRs; 10077034 is free at the top of the range).
