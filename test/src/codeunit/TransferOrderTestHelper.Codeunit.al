@@ -7,6 +7,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 
 /// <summary>
 /// Shared test helper for Transfer Order tests.
@@ -176,7 +177,7 @@ codeunit 96904 "Transfer Order Test Helper"
         InventorySetup := OriginalSetup;
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
-        SetDirectTransferPostingValue(InventorySetup, PostAsSingleDocument);
+        SetPostingMode(InventorySetup, PostAsSingleDocument);
         InventorySetup.Modify(true);
     end;
 
@@ -186,50 +187,32 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        PostingSetup: Codeunit "Transfer Posting Setup ori";
     begin
         InventorySetup.Get();
-        RestoreDirectTransferPostingValue(InventorySetup, OriginalSetup);
+        SetPostingMode(InventorySetup, PostingSetup.PostAsSingleDocument(OriginalSetup));
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;
-
-    local procedure SetDirectTransferPostingValue(var InventorySetup: Record "Inventory Setup"; PostAsSingleDocument: Boolean)
+    local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; SingleDocument: Boolean)
     var
-        SetupRef: RecordRef;
+        SetupReference: RecordRef;
         PostingField: FieldRef;
     begin
-        SetupRef.GetTable(InventorySetup);
-        if SetupRef.FieldExist(5857) then begin
-            PostingField := SetupRef.Field(5857);
-            if PostAsSingleDocument then
+        SetupReference.GetTable(InventorySetup);
+        if SetupReference.FieldExist(5857) then begin
+            PostingField := SetupReference.Field(5857);
+            if SingleDocument then
                 PostingField.Value := 20
             else
                 PostingField.Value := 10;
         end else begin
-            PostingField := SetupRef.Field(5855);
-            if PostAsSingleDocument then
+            PostingField := SetupReference.Field(5855);
+            if SingleDocument then
                 PostingField.Value := 1
             else
                 PostingField.Value := 0;
         end;
-        SetupRef.SetTable(InventorySetup);
-    end;
-
-    local procedure RestoreDirectTransferPostingValue(var InventorySetup: Record "Inventory Setup"; OriginalSetup: Record "Inventory Setup")
-    var
-        SetupRef: RecordRef;
-        OriginalRef: RecordRef;
-        PostingField: FieldRef;
-        FieldNumber: Integer;
-    begin
-        SetupRef.GetTable(InventorySetup);
-        OriginalRef.GetTable(OriginalSetup);
-        if SetupRef.FieldExist(5857) then
-            FieldNumber := 5857
-        else
-            FieldNumber := 5855;
-        PostingField := SetupRef.Field(FieldNumber);
-        PostingField.Value := OriginalRef.Field(FieldNumber).Value;
-        SetupRef.SetTable(InventorySetup);
+        SetupReference.SetTable(InventorySetup);
     end;
 }

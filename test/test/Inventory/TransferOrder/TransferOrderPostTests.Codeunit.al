@@ -374,41 +374,44 @@ codeunit 96914 "Transfer Order Post Tests"
     end;
 
     [Test]
-    [HandlerFunctions('DirectTransferPostedMessage')]
-    procedure Post_DirectTransfer_SingleDocument_PostsNativeDocument()
+    [HandlerFunctions('DirectTransferPostedMessageHandler')]
+    procedure Post_DirectTransfer_SingleDocument_CreatesDirectTransfer()
     var
-        TransferHeader: Record "Transfer Header";
-        DirectTransferHeader: Record "Direct Trans. Header";
         OriginalSetup: Record "Inventory Setup";
+        DirectTransHeader: Record "Direct Trans. Header";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        TransferHeader: Record "Transfer Header";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        StatusToken: JsonToken;
+        Token: JsonToken;
         DocumentNo: Code[20];
     begin
-        // [SCENARIO] The native single-document setting selects direct posting on BC 28 and BC 29.
+        // [SCENARIO] #228 The selected single-document mode posts a direct transfer, not a shipment and receipt.
         Initialize();
-        // [GIVEN] An owned direct transfer with stock and the native single-document mode.
         Helper.SetDirectTransferPosting(true, OriginalSetup);
-        Helper.CreateReleasedDirectTransfer(TransferHeader, 2);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
         DocumentNo := TransferHeader."No.";
-        // [WHEN] The caller confirms and posts that transfer.
         Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
+
         Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
         Helper.RestoreDirectTransferPosting(OriginalSetup);
-        // [THEN] A native direct-transfer document exists and the fully posted order is gone.
-        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
-        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), JsonText(ResponseJson));
-        DirectTransferHeader.SetRange("Transfer Order No.", DocumentNo);
-        Assert.AreEqual(1, DirectTransferHeader.Count(), 'Exactly one native direct-transfer document is posted.');
-        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Fully posted direct transfer is removed by native posting.');
-    end;
 
-    /// <summary>Accepts the native success notice produced in an interactive AL test session.</summary>
-    [MessageHandler]
-    procedure DirectTransferPostedMessage(MessageText: Text[1024])
-    begin
-        Assert.IsTrue(MessageText.Contains('successfully posted'), 'The native message confirms successful posting.');
-        Assert.IsTrue(MessageText.Contains('deleted'), 'The native message confirms the completed order was removed.');
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Direct transfer should succeed. ' + JsonText(ResponseJson));
+        DirectTransHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.AreEqual(1, DirectTransHeader.Count(), 'Exactly one posted direct transfer exists for the order');
+        DirectTransHeader.FindFirst();
+        // The public response uses both number fields for the same posted direct transfer.
+        Assert.IsTrue(ResponseJson.Get('postedShipmentNo', Token), 'postedShipmentNo missing');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Shipment response identifies the posted direct transfer');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', Token), 'postedReceiptNo missing');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Receipt response identifies the same posted direct transfer');
+        TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferShipmentHeader.IsEmpty(), 'Single-document posting creates no shipment header');
+        TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferReceiptHeader.IsEmpty(), 'Single-document posting creates no receipt header');
+        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Full direct transfer removes the order');
     end;
 
     [Test]
@@ -501,6 +504,14 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.IsTrue(TransferHeader.Get(DocumentNo), 'A partial receive keeps the transfer order');
         Assert.IsTrue(ResponseJson.Get('orderDeleted', StatusToken), 'orderDeleted missing');
         Assert.IsFalse(StatusToken.AsValue().AsBoolean(), 'orderDeleted must be false after a partial receive');
+    end;
+
+    /// <summary>Handles the native confirmation message after a direct transfer is fully posted.</summary>
+    [MessageHandler]
+    procedure DirectTransferPostedMessageHandler(Message: Text[1024])
+    begin
+        // The test verifies the resulting posted document and order deletion independently of the localized message.
+        Assert.AreNotEqual('', Message, 'Native posting message should be populated');
     end;
 
     local procedure Confirm(MessageType: Enum "Message Type ori"; var Request: JsonObject)

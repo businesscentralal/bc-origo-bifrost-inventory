@@ -34,6 +34,7 @@ def digest(data):
 
 
 CHUNK_BYTES = 1024 * 1024
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()  # state before any compiler output (Assert-AppSourceBuild.ps1 init)
 PACKAGE_BYTES = 128 * 1024 * 1024
 MANIFEST_BYTES = 16 * 1024 * 1024
 PACKAGE_ENTRIES = 4096
@@ -973,7 +974,14 @@ def reconcile(root, context, stage, signature=None, product_reuse=None):
         else:
             require(False, "Skipped/missing/unexpected compile hook")
     require(receipts == expected, "Skipped/missing/unexpected compile hook")
-    require(file_hash(root / "BuildOutput.txt") == state["logPrefixSha256"], "Unreceipted later compiler output")
+    build_output = root / "BuildOutput.txt"
+    if reuse_app and not build_output.exists():
+        # 16.11.2026 (inventory#207): with the product reused and no compile in this job, AL-Go writes no
+        # BuildOutput.txt. Accept that only when the gate also saw no compiler output (empty-log state).
+        require(state["logPrefixSha256"] == EMPTY_SHA256 and not state["receipts"],
+                "BuildOutput.txt missing although compiler output was receipted")
+    else:
+        require(file_hash(build_output) == state["logPrefixSha256"], "Unreceipted later compiler output")
     for relative, sha in state["hookHashes"].items():
         require(file_hash(root / relative) == sha, "Hook/tool displaced during pipeline")
     outputs = []

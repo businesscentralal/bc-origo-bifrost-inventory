@@ -14,6 +14,8 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
     Permissions =
         table "Inventory Valuation Buffer ori" = X,
         codeunit "Valuation Get Impl ori" = X,
+        codeunit "Transfer Posting Setup ori" = X,
+        codeunit "Price List Restrict ori" = X,
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
@@ -36,6 +38,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inventory Tracking Read ori" = X,
         codeunit "Tracking Get Impl ori" = X,
         codeunit "Tracking Avail. Get Impl ori" = X,
+        codeunit "Tracking Info Get Impl ori" = X,
         codeunit "Inventory Domain Gate ori" = X,
         codeunit "Inventory Native Journal ori" = X,
         codeunit "Reclass Check Impl ori" = X,
@@ -46,10 +49,15 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Item Ref. Resolve Impl ori" = X,
         codeunit "Item Subst. Get Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Asm. To Order Get Impl ori" = X,
+        codeunit "Assembly BOM Get Impl ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
         codeunit "Item Charge Restrict ori" = X,
         codeunit "Item Category Get Impl ori" = X,
         codeunit "Item Category Restrict ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
-        codeunit "Order Tracking Transfer ori" = X;
+        codeunit "Order Tracking Transfer ori" = X,
+        codeunit "SKU Get Impl ori" = X,
+        codeunit "SKU Request ori" = X,
+        codeunit "SKU Restrict ori" = X;
 }
