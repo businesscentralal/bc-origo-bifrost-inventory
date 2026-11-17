@@ -66,6 +66,8 @@ codeunit 10076842 "Inventory Write Process ori"
                 Journal.Post(Rec, JournalType);
             'Calculate':
                 Journal.Calculate(Rec);
+            'CycleCount':
+                Journal.CalculateCycleCount(Rec);
             'RecordCount':
                 Journal.RecordCount(Rec);
             'RevaluationPost':

@@ -37,6 +37,11 @@
 - Invoice line types and status values use English enum names in both locales, matching the shared response convention.
 - Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
 - `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
+### Added (2026-11-16) - Inventory.CycleCount.Calculate (#120)
+- New message type `Inventory.CycleCount.Calculate` (enum value and codeunit 10076970 `Cycle Count Calc Impl ori`, enum extension 10076870 `MsgType.CycleCount.EnumExt ori`; logic in `Inventory Native Journal ori` 10076840 and operation `CycleCount` of `Inventory Write Process ori`). It fills one empty Phys. Inventory batch with the items (and stockkeeping units with their own counting period) whose Next Counting Start Date is on or before `postingDate`, using native report 790, then advances their counting dates with the native `Phys. Invt. Count.-Management`, so a repeat call does not select them again. Effect `write`; nothing is posted (posting stays with `Inventory.PhysInventory.Post`).
+- Refusals carry a code, `expected` and `nextStep` in en-US and is-IS: `PreconditionFailed` for an `itemNo` item without a counting period or for a batch that already has lines, `RecordNotFound` for an `itemNo` filter that matches no item, `MissingParameter`/`InvalidParameterFormat` for `postingDate` and `documentNo`, `InvalidParameter` or `UnknownParameter` for undeclared keys. Help (description, keywords, selection, overview) in en-US and is-IS; XLF entries added.
+- Report 790 runs in native cycle mode (`InitializePhysInvtCount`): lines carry `Phys Invt Counting Period Code`/`Type` into the physical inventory ledger; an item period skips only SKU-backed stock combinations, and an SKU period calculates exactly the SKU's location and variant (blank values included).
+- Tests: codeunit 96985 `Inv. Cycle Count Calc Tests` (happy path, repeat call, not yet due, no counting period 1033/1039, missing postingDate, unknown key, blank-variant SKU, due item with a not yet due SKU, SKU combination skipped). No public procedure or field changed.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
@@ -197,6 +202,13 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
+### Added (2026-11-16) - Inventory.ItemVariant.Create and Inventory.ItemVariant.Get (#99)
+
+- `Inventory.ItemVariant.Create` (enum value and codeunit 10076991 `Item Variant Create Impl ori`, isolated write 10076992 `Item Variant Create Proc ori`) creates one new variant on an existing item from `itemNo`, `code`, `description`, `description2` and `blocked`, and answers the saved variant. Effect `write` (not irreversible, not idempotent): a second call with the same code is refused with `PreconditionFailed`, an unknown item with `RecordNotFound`; every refusal carries a `nextStep` and saves nothing.
+- `Inventory.ItemVariant.Get` (enum value and codeunit 10076990 `Item Variant Get Impl ori`) answers every variant of an item in code order, or one variant with `code`. Effect `read`. An item without variants answers an empty `variants` array.
+- `Item Variant Restrict ori` (10076993) refuses generic `Data.Records.Set` writes to table 5401 `Item Variant` and names the dedicated types; reads stay allowed.
+- Enum extension 10076890 `MsgType.ItemVar.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch was added: the types follow the caller's item and item variant permissions.
+- Tests: `Item Variant Tests` (96988). `Inventory Contract Batch Tests` (96921) counts 79 Inventory types after merging main (the two Item Variant types plus the types already registered on main, including the two Item unit of measure types and the two Planning Worksheet types).
 ### Fixed (2026-11-16) - selected transfer shipment undo and assembly recreation (#39)
 
 - `Inventory.Transfer.UndoShipment` accepts optional `lineNos` (1–100 distinct positive posted line numbers). It validates the complete selection before native undo, refuses missing or already-corrected lines, and preserves unselected lines. Omission retains all non-correction lines.
