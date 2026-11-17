@@ -21,6 +21,23 @@
 - `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
 - Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
 - Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
+### Fixed (2026-11-17) - Catalogue census after main merges (PR #203)
+
+- Reconciled codeunit 96921's expected census with the merged registrations: 48 scoped localization entries and 71 Inventory message types, including Item.Create from main. The explicit rosters, bidirectional membership checks and English/Icelandic assertions remain intact.
+
+### Added (2026-11-16) - Sales.SalesInvoice.GetShipmentLines (#132)
+
+- New message type `Sales.SalesInvoice.GetShipmentLines` (enum value 10077028 in enum extension 10076900 `MsgType.SalesGetShpt.Ext ori`; codeunits 10077028 `Sales Get Shipment Impl ori` and 10077029 `Sales Get Shipment Proc ori`; renumbered from 10077020-10077021 when merging main, because #118 took codeunit and enum value 10077020 and open PRs claim 10077021-10077027). It pulls posted, not invoiced sales shipment lines into an open sales invoice through native codeunit 64 `Sales-Get Shipment` (`SetSalesHeader`, `CreateInvLines`), the same routine as the Get Shipment Lines action, so remaining-quantity checks, item charge copying and the invoice-to-shipment link stay native.
+- Request: `documentNo` or `systemId` of the open invoice, and `shipmentNos` (array) or `allShipments` (true). A shipment of another bill-to customer or currency is refused with `InvalidLine` and nothing is added; already invoiced lines, and lines already on an open sales invoice, are skipped and listed in `skippedLines` (`invoiced` / `onOpenInvoice`), so sending the same request again adds nothing. Released invoices answer `PreconditionFailed` pointing to `Sales.Document.Reopen`. Every refusal has a Bifröst code and `nextStep`.
+- Effect `write` (not irreversible; nothing is posted and added lines can be deleted), `posts: false`, `idempotent: true` (core#1365 D1). Help, refusals and examples in en-US and is-IS; is-IS.xlf regenerated with `tools/Update-IcelandicXlf.ps1`.
+- Invoice line types and status values use English enum names in both locales, matching the shared response convention.
+- Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
+- `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
+### Added (2026-11-16) - Inventory.CycleCount.Calculate (#120)
+- New message type `Inventory.CycleCount.Calculate` (enum value and codeunit 10076970 `Cycle Count Calc Impl ori`, enum extension 10076870 `MsgType.CycleCount.EnumExt ori`; logic in `Inventory Native Journal ori` 10076840 and operation `CycleCount` of `Inventory Write Process ori`). It fills one empty Phys. Inventory batch with the items (and stockkeeping units with their own counting period) whose Next Counting Start Date is on or before `postingDate`, using native report 790, then advances their counting dates with the native `Phys. Invt. Count.-Management`, so a repeat call does not select them again. Effect `write`; nothing is posted (posting stays with `Inventory.PhysInventory.Post`).
+- Refusals carry a code, `expected` and `nextStep` in en-US and is-IS: `PreconditionFailed` for an `itemNo` item without a counting period or for a batch that already has lines, `RecordNotFound` for an `itemNo` filter that matches no item, `MissingParameter`/`InvalidParameterFormat` for `postingDate` and `documentNo`, `InvalidParameter` or `UnknownParameter` for undeclared keys. Help (description, keywords, selection, overview) in en-US and is-IS; XLF entries added.
+- Report 790 runs in native cycle mode (`InitializePhysInvtCount`): lines carry `Phys Invt Counting Period Code`/`Type` into the physical inventory ledger; an item period skips only SKU-backed stock combinations, and an SKU period calculates exactly the SKU's location and variant (blank values included).
+- Tests: codeunit 96985 `Inv. Cycle Count Calc Tests` (happy path, repeat call, not yet due, no counting period 1033/1039, missing postingDate, unknown key, blank-variant SKU, due item with a not yet due SKU, SKU combination skipped). No public procedure or field changed.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
@@ -49,6 +66,15 @@
 - `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
 - `Inventory.Reservation.Create` and the by-line `Inventory.Reservation.Cancel` refuse a sales line whose outstanding quantity is 0 with `PreconditionFailed`.
 - No new objects: codeunits 10076842, 10076892, 10076893 and 10076894 and test codeunit 96946 (7 new tests) change.
+
+### Added (2026-11-16) - Inventory valuation at a date (#109)
+
+- `Inventory.Valuation.Get` returns quantity, actual cost, expected cost and total cost in LCY by item, location and variant, with posting-date cutoff, native filters and deterministic take/skip paging. Reads Value Entry amounts as report 1001 does; does not adjust costs or persist valuation rows.
+- Adds temporary table 10077020 `Inventory Valuation Buffer ori`, codeunit 10077027 `Valuation Get Impl ori` and message enum value 10077027 (same ID as the codeunit), read/full role execution grants, localized help/refusals and test codeunit 96989. No product UI changes. The codeunit and enum value moved from 10077020 to 10077021 for #118, then to the next free ID 10077027 because main uses 10077021 for partial transfer receipt (#115). The temporary table stays 10077020; that ID is free for tables.
+- Transfer posting/preview and their tests select the native direct-transfer setting at runtime: option field 5855 (0/1) on BC 28 or enum field 5857 (10/20) on BC 29. Both builds remain supported without referencing the deprecated field at compile time.
+- Full-suite fixtures explicitly enable the attribute domain, and contract assertions include Foundation's common error-code response field from 28.0.13 while preserving exact application payload comparisons on earlier releases. Confirmation-boundary fixtures name a subject, as required by Foundation's current preview contract.
+
+
 ### Added - Standard cost worksheet (#121)
 
 - Add `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement` with native worksheet suggestion and implementation, explicit unposted write effects, selected worksheet/journal responses, bilingual help and coded refusals with next steps. Implementation updates item/SKU costs; posting remains a separate revaluation operation.
@@ -77,7 +103,6 @@
 
 - `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
 - Added implementation codeunits **10076960–10076962**, process **10076963**, contract **10076964**, enum extension **10076860** and test codeunit **96986**. Existing Full-role execute grants and Physical Inventory domain are reused. Bilingual discovery/help labels, Icelandic XLF, user documentation and the 62-type catalogue census are synchronized. Tests cover native success, zero count, bad input, repeat finish and rollback after a later recording failure.
-
 
 ### Fixed (2026-11-16) - physical inventory order regression checks (#113)
 
@@ -169,6 +194,13 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
+### Added (2026-11-16) - Inventory.ItemVariant.Create and Inventory.ItemVariant.Get (#99)
+
+- `Inventory.ItemVariant.Create` (enum value and codeunit 10076991 `Item Variant Create Impl ori`, isolated write 10076992 `Item Variant Create Proc ori`) creates one new variant on an existing item from `itemNo`, `code`, `description`, `description2` and `blocked`, and answers the saved variant. Effect `write` (not irreversible, not idempotent): a second call with the same code is refused with `PreconditionFailed`, an unknown item with `RecordNotFound`; every refusal carries a `nextStep` and saves nothing.
+- `Inventory.ItemVariant.Get` (enum value and codeunit 10076990 `Item Variant Get Impl ori`) answers every variant of an item in code order, or one variant with `code`. Effect `read`. An item without variants answers an empty `variants` array.
+- `Item Variant Restrict ori` (10076993) refuses generic `Data.Records.Set` writes to table 5401 `Item Variant` and names the dedicated types; reads stay allowed.
+- Enum extension 10076890 `MsgType.ItemVar.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch was added: the types follow the caller's item and item variant permissions.
+- Tests: `Item Variant Tests` (96988). `Inventory Contract Batch Tests` (96921) counts 79 Inventory types after merging main (the two Item Variant types plus the types already registered on main, including the two Item unit of measure types and the two Planning Worksheet types).
 ### Fixed (2026-11-16) - selected transfer shipment undo and assembly recreation (#39)
 
 - `Inventory.Transfer.UndoShipment` accepts optional `lineNos` (1–100 distinct positive posted line numbers). It validates the complete selection before native undo, refuses missing or already-corrected lines, and preserves unselected lines. Omission retains all non-correction lines.
