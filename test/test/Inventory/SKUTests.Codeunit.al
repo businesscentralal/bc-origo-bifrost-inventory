@@ -74,8 +74,55 @@ codeunit 96968 "SKU Tests"
         ResponseJson := CallCreate(CreateRequest(true, ''));
         AssertStatus(ResponseJson, 'Success');
         Assert.AreEqual(2, ReadInteger(ResponseJson, 'skuCount'), 'skuCount');
+        Assert.AreEqual(0, ReadInteger(ResponseJson, 'created'), 'Replacing the same keys adds no keys.');
         StockkeepingUnit.Get(LocationATok, ItemNoTok, '');
         Assert.AreEqual(0, StockkeepingUnit."Reorder Point", 'reorder point reset');
+        Cleanup();
+    end;
+
+    [Test]
+    procedure Scenario_AC01_ReplaceWithNoVariants_CreatedIsZero()
+    var
+        ResponseJson: JsonObject;
+    begin
+        // Story #114, AC01 | Time: independent of Today and WorkDate | Risk: None
+        // [GIVEN] Two per-location SKUs for an item with no variants.
+        Seed();
+        AssertStatus(CallCreate(CreateRequest(false, 'Location')), 'Success');
+        // [WHEN] Replacement creates per variant and removes the old locations.
+        ResponseJson := CallCreate(CreateRequest(true, 'Variant'));
+        // [THEN] No keys were added, even though two were removed.
+        AssertStatus(ResponseJson, 'Success');
+        Assert.AreEqual(0, ReadInteger(ResponseJson, 'created'), 'Removals must not make created negative.');
+        Assert.AreEqual(0, ReadInteger(ResponseJson, 'skuCount'), 'No variants means no remaining SKUs.');
+        Assert.IsFalse(SkuExists(LocationATok), 'Old A key removed.');
+        Assert.IsFalse(SkuExists(LocationBTok), 'Old B key removed.');
+        Cleanup();
+    end;
+
+    [Test]
+    procedure Scenario_AC01_ReplaceLocationsWithVariant_CountsNewKey()
+    var
+        ItemVariant: Record "Item Variant";
+        StockkeepingUnit: Record "Stockkeeping Unit";
+        ResponseJson: JsonObject;
+    begin
+        // Story #114, AC01 | Time: independent of Today and WorkDate | Risk: None
+        // [GIVEN] Two per-location SKUs and one variant.
+        Seed();
+        AssertStatus(CallCreate(CreateRequest(false, 'Location')), 'Success');
+        ItemVariant."Item No." := ItemNoTok;
+        ItemVariant.Code := 'XVARIANT';
+        ItemVariant.Insert();
+        // [WHEN] Replacement changes two location keys into one variant key.
+        ResponseJson := CallCreate(CreateRequest(true, 'Variant'));
+        // [THEN] One new key is counted even though the total decreases.
+        AssertStatus(ResponseJson, 'Success');
+        Assert.AreEqual(1, ReadInteger(ResponseJson, 'created'), 'Count the new key independently of deleted keys.');
+        Assert.AreEqual(1, ReadInteger(ResponseJson, 'skuCount'), 'Only the variant key remains.');
+        Assert.IsTrue(StockkeepingUnit.Get('', ItemNoTok, 'XVARIANT'), 'New variant key exists.');
+        Assert.IsFalse(SkuExists(LocationATok), 'Old A key removed.');
+        Assert.IsFalse(SkuExists(LocationBTok), 'Old B key removed.');
         Cleanup();
     end;
 
@@ -296,11 +343,14 @@ codeunit 96968 "SKU Tests"
     local procedure Cleanup()
     var
         Item: Record Item;
+        ItemVariant: Record "Item Variant";
         Location: Record Location;
         StockkeepingUnit: Record "Stockkeeping Unit";
     begin
         StockkeepingUnit.SetRange("Item No.", ItemNoTok);
         StockkeepingUnit.DeleteAll();
+        ItemVariant.SetRange("Item No.", ItemNoTok);
+        ItemVariant.DeleteAll();
         if Item.Get(ItemNoTok) then
             Item.Delete();
         Location.SetFilter(Code, LocationFilterTok);

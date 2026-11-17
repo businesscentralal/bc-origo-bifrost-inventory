@@ -17,13 +17,13 @@ codeunit 10076997 "SKU Create Proc ori"
     trigger OnRun()
     var
         Item: Record Item;
+        TempExistingSKU: Record "Stockkeeping Unit" temporary;
         CreateSKUReport: Report "Create Stockkeeping Unit";
         SKURequest: Codeunit "SKU Request ori";
         SKUCreationMethod: Enum "SKU Creation Method";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
         ItemsMatched: Integer;
-        Before: Integer;
         After: Integer;
         ReplaceExisting: Boolean;
     begin
@@ -33,7 +33,7 @@ codeunit 10076997 "SKU Create Proc ori"
             SKURequest.TryParseCreationMethod(SKURequest.ReadText(RequestJson, 'createPer'), SKUCreationMethod);
         ApplyItemFilters(Item, RequestJson);
         ItemsMatched := Item.Count();
-        Before := CountSkus(Item);
+        SnapshotSkuKeys(Item, TempExistingSKU);
         CreateSKUReport.SetParameters(SKUCreationMethod, SKURequest.ReadBoolean(RequestJson, 'itemInInventoryOnly', true), ReplaceExisting);
         CreateSKUReport.UseRequestPage(false);
         CreateSKUReport.SetTableView(Item);
@@ -41,7 +41,7 @@ codeunit 10076997 "SKU Create Proc ori"
         After := CountSkus(Item);
         ResponseJson.Add('status', 'Success');
         ResponseJson.Add('itemsMatched', ItemsMatched);
-        ResponseJson.Add('created', After - Before);
+        ResponseJson.Add('created', CountNewSkuKeys(Item, TempExistingSKU));
         ResponseJson.Add('skuCount', After);
         ResponseJson.Add('replaceExisting', ReplaceExisting);
         Rec.SetResponseJson(ResponseJson);
@@ -69,6 +69,37 @@ codeunit 10076997 "SKU Create Proc ori"
     procedure TryApplyItemFilters(var Item: Record Item; RequestJson: JsonObject)
     begin
         ApplyItemFilters(Item, RequestJson);
+    end;
+
+    local procedure SnapshotSkuKeys(var Item: Record Item; var TempExistingSKU: Record "Stockkeeping Unit" temporary)
+    var
+        StockkeepingUnit: Record "Stockkeeping Unit";
+    begin
+        StockkeepingUnit.ReadIsolation := IsolationLevel::RepeatableRead;
+        StockkeepingUnit.SetLoadFields("Location Code", "Item No.", "Variant Code");
+        StockkeepingUnit.SetFilter("Item No.", Item.GetFilter("No."));
+        if StockkeepingUnit.FindSet() then
+            repeat
+                TempExistingSKU.Init();
+                TempExistingSKU."Location Code" := StockkeepingUnit."Location Code";
+                TempExistingSKU."Item No." := StockkeepingUnit."Item No.";
+                TempExistingSKU."Variant Code" := StockkeepingUnit."Variant Code";
+                TempExistingSKU.Insert();
+            until StockkeepingUnit.Next() = 0;
+    end;
+
+    local procedure CountNewSkuKeys(var Item: Record Item; var TempExistingSKU: Record "Stockkeeping Unit" temporary) Created: Integer
+    var
+        StockkeepingUnit: Record "Stockkeeping Unit";
+    begin
+        StockkeepingUnit.ReadIsolation := IsolationLevel::ReadCommitted;
+        StockkeepingUnit.SetLoadFields("Location Code", "Item No.", "Variant Code");
+        StockkeepingUnit.SetFilter("Item No.", Item.GetFilter("No."));
+        if StockkeepingUnit.FindSet() then
+            repeat
+                if not TempExistingSKU.Get(StockkeepingUnit."Location Code", StockkeepingUnit."Item No.", StockkeepingUnit."Variant Code") then
+                    Created += 1;
+            until StockkeepingUnit.Next() = 0;
     end;
 
     local procedure CountSkus(var Item: Record Item) Total: Integer
