@@ -4,7 +4,7 @@
 
 ### Fixed (2026-11-17) - item-reference merge reconciliation (#199)
 
-- Preserve all main message types and permissions alongside ItemReference.Set; the exact Inventory catalogue census is 76. Move this PR's new codeunits and Set enum value to 10076954–10076956; regenerate translations from the merged source.
+- Preserve all main message types and permissions alongside ItemReference.Set; the exact Inventory catalogue census is 76. Move this PR's new codeunits to 10076954–10076956 and Set enum value to 10076954; regenerate translations from the merged source. The README roster and local help list Set and its save/read-back workflow.
 - Reuse main's transfer compatibility helper 10077025. Posting and preview use the existing BC 29 order's mode even if Inventory Setup changes; BC 28 continues to use setup. Test fixtures restore the exact native posting value, including BC 29's blank value.
 
 ### Added (2026-11-16) - Item reference writes (#102)
