@@ -391,7 +391,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
-                            // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
+                            // [WHEN] Dispatch a named target without confirmation; Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
                             if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
@@ -473,8 +473,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
-        // Name a synthetic subject so Foundation previews one operation; disabled domains prevent writes.
-        Response := DispatchWithSubject(MessageType, 'XCONFIRM', Request);
+        // A named target is required: Foundation #1278 sends an unnamed request to normal validation.
+        // Disabled domains guarantee this sentinel never creates, posts or undoes business data.
+        Response := DispatchWithSubject(MessageType, 'XCONFIRM-BOUNDARY', Request);
         AssertText(Response, 'status', 'Error');
     end;
 
