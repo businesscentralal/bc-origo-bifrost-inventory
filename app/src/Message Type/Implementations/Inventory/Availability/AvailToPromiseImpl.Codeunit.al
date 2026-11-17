@@ -286,6 +286,9 @@ codeunit 10077000 "Avail. To Promise Impl ori" implements "Msg Interface ori", "
         AtpDate := AvailableToPromise.CalcEarliestAvailabilityDate(
             Item, Quantity, RequestedDate, 0, 0D, AvailableAtEarliest,
             CompanyInformation."Check-Avail. Time Bucket", CompanyInformation."Check-Avail. Period Calc.");
+        // Native ATP can return an earlier receipt; the promise starts at the requested date.
+        if (AtpDate <> 0D) and (AtpDate < RequestedDate) then
+            AtpDate := RequestedDate;
         EarliestDate := AtpDate;
         if AtpDate <> 0D then
             Basis := AvailableBasisTok;

@@ -80,6 +80,69 @@ codeunit 96964 "Avail. To Promise Tests"
         AssertText(ResponseJson, 'availableToPromiseDate', Format(ReceiptDate, 0, 9));
     end;
 
+    /// <summary>
+    /// A receipt before the request promises the requested date.
+    /// </summary>
+    [Test]
+    procedure Scenario_AC01_EarlierReceipt_PromisesRequestedDate()
+    begin
+        // Story #105, AC01 | Time: receipt WorkDate + 10D, request + 20D | Risk: None
+        Initialize();
+        AssertReceiptPromisesRequestedDate(CalcDate('<+10D>', WorkDate()), CalcDate('<+20D>', WorkDate()), false);
+    end;
+
+    /// <summary>
+    /// A receipt on the requested date remains promiseable that day.
+    /// </summary>
+    [Test]
+    procedure Scenario_AC01_ReceiptOnRequestedDate_PromisesRequestedDate()
+    begin
+        // Story #105, AC01 | Time: receipt and request WorkDate + 10D | Risk: None
+        Initialize();
+        AssertReceiptPromisesRequestedDate(CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()), false);
+    end;
+
+    /// <summary>
+    /// Enabling CTP preserves the requested-date lower bound for an earlier ATP receipt.
+    /// </summary>
+    [Test]
+    procedure Scenario_AC02_EarlierReceiptWithCapable_PromisesRequestedDate()
+    begin
+        // Story #105, AC01/AC02 | Time: receipt WorkDate + 10D, request + 20D | Risk: None
+        Initialize();
+        EnsureOrderPromisingSetup();
+        AssertReceiptPromisesRequestedDate(CalcDate('<+10D>', WorkDate()), CalcDate('<+20D>', WorkDate()), true);
+    end;
+
+    local procedure AssertReceiptPromisesRequestedDate(ReceiptDate: Date; RequestedDate: Date; UseCapable: Boolean)
+    var
+        Item: Record Item;
+        PurchaseHeader: Record "Purchase Header";
+        PurchaseLine: Record "Purchase Line";
+        ResponseJson: JsonObject;
+    begin
+        // [SCENARIO] A receipt on or before the request covers the promised quantity.
+        // [GIVEN] No stock on hand and an open purchase receipt of ten.
+        CreateItem(Item, Item.Type::Inventory);
+        Item.Rename(CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Item."No.")));
+        LibraryPurchase.CreatePurchHeader(PurchaseHeader, PurchaseHeader."Document Type"::Order, '');
+        LibraryPurchase.CreatePurchaseLine(PurchaseLine, PurchaseHeader, PurchaseLine.Type::Item, Item."No.", 10);
+        PurchaseLine.Validate("Expected Receipt Date", ReceiptDate);
+        PurchaseLine.Modify(true);
+
+        // [WHEN] The message asks for five on or after that receipt.
+        ResponseJson := Call(Item."No.", 5, RequestedDate, UseCapable);
+
+        // [THEN] Both ATP dates respect the request lower bound, including when CTP also runs.
+        Library.AssertStatus(ResponseJson, 'Success');
+        AssertDecimal(ResponseJson, 'availableOnRequestedDate', 10);
+        AssertBoolean(ResponseJson, 'canPromiseOnRequestedDate', true);
+        AssertText(ResponseJson, 'earliestDate', Format(RequestedDate, 0, 9));
+        AssertText(ResponseJson, 'availableToPromiseDate', Format(RequestedDate, 0, 9));
+        AssertText(ResponseJson, 'basis', 'availableToPromise');
+        AssertBoolean(ResponseJson, 'capableToPromise', UseCapable);
+    end;
+
     [Test]
     procedure NoSupply_EarliestDateIsEmpty()
     var

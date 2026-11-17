@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed — available-to-promise requested date (#105, PR #211)
+
+- A purchase receipt before the requested date now promises the requested date instead of returning the earlier receipt date and incorrectly refusing the request. Normalize nonempty ATP dates before comparing with capable-to-promise; cover earlier and same-day receipts, including CTP enabled, with regression tests.
+
+
 ### Added (2026-11-16) - Inventory.AvailableToPromise.Get answers when a quantity can be promised (#105)
 - New message type `Inventory.AvailableToPromise.Get` (enum value 10077000 in enum extension 10077000 `MsgType.AvailToPromise.Ext ori`; codeunit 10077000 `Avail. To Promise Impl ori`). It takes `itemNo`, `quantity` and `requestedDate` plus the optional `variant`, `location` and `capableToPromise`, and answers `availableOnRequestedDate`, `canPromiseOnRequestedDate`, `earliestDate` and `basis`, as the Order Promising page does (codeunit 5790 `Available to Promise` with the Check-Avail. fields on Company Information).
 - Capable to promise (codeunit 99000886) runs only with `capableToPromise: true` (off by default). It uses a private order promising id, so no number series is used, and the requisition lines it builds are deleted before the answer. No order promising lines or reservations are kept.
