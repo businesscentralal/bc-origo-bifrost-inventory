@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 76 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 75 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -40,6 +40,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
 | `Inventory.SKU.Get` | Outbound | Read stockkeeping units with their planning and cost fields |
 | `Inventory.SKU.Create` | Inbound | Create stockkeeping units per location and variant (report 5706), optionally replacing existing ones |
+| `Inventory.ItemUnitOfMeasure.Get` | Outbound | Read the units of measure of an item with the base unit flagged |
+| `Inventory.ItemUnitOfMeasure.Create` | Inbound | Create a unit of measure on an existing item |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
@@ -286,11 +288,14 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
 | 10076848 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
+| 10076850 | `MsgType.StdCost.EnumExt ori` | `Inventory.StandardCost.Suggest` (10076938), `Inventory.StandardCost.Implement` (10076933) |
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
+| 10077015 | `MsgType.ItemUoM.EnumExt ori` | `Inventory.ItemUnitOfMeasure.Get` (10077011), `Inventory.ItemUnitOfMeasure.Create` (10077012) |
+| 10077030 | `MsgType.PurchGetRcpt.Ext ori` | `Purchase.PurchaseInvoice.GetReceiptLines` (value 10077018) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -321,17 +326,20 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076887–10076889 | Reclassification | Check, Post, Preview |
 | 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
 | 10077030 | Selected reservation supply | `Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound |
+| 10077018, 10077031 | Purchase receipt lines | `Purch Get Receipt Impl ori` (`Purchase.PurchaseInvoice.GetReceiptLines`, value 10077018), `Purch Get Receipt Proc ori`; enum extension 10077030 |
 | 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
+| 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
-| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
+| 10077011–10077013 | Item units of measure | Get, Create, Create process |
 | 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
 | 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |
 | 10077023 | `Partial Transfer Process ori` | Atomic native posting |
 | 10077024 | `Partial Transfer Contract ori` | English and Icelandic partial-transfer contracts |
 | 10077025 | `Transfer Posting Setup ori` | BC 28/29 direct-transfer setup compatibility |
+| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
@@ -463,6 +471,33 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+## Add posted receipt lines to a purchase invoice
+
+```json
+{"type":"Purchase.PurchaseInvoice.GetReceiptLines","data":{"documentNo":"108001","receiptNos":["107001","107002"]}}
+```
+
+Adds the remaining uninvoiced receipt quantities through the native Get Receipt Lines routine. The invoice must be open. Use `systemId` instead of `documentNo`, or `allReceipts: true` instead of `receiptNos` to select receipts for the invoice's pay-to vendor and currency.
+
+| Response field | Meaning |
+|---|---|
+| `documentNo`, `systemId` | The target purchase invoice |
+| `addedCount`, `addedLines` | Added invoice lines, including native heading text lines; each carries `lineNo`, `type`, `no`, `description`, `quantity`, `receiptNo`, `receiptLineNo` |
+| `skippedCount`, `skippedLines` | Receipt lines already `invoiced` or `onOpenInvoice`; the latter includes `invoiceNo` |
+
+An explicitly selected receipt of another pay-to vendor or currency returns `InvalidLine` with `nextStep`, without adding lines. Native validation failures roll back the call. The effect is `write`; this operation does not post. Review the invoice, then use `Purchase.Document.Post`.
+
+Objects: implementation and message value 10077018, process 10077031, enum extension 10077030, tests 96996. Main assigns codeunit 10077030 to `Reserv. Supply Filter ori`, so the receipt implementation moved to 10077018. Execution extends Foundation's Full role; standard purchase document permissions still apply. No Inventory domain switch is added for this purchase-document operation.
+### Standard cost worksheet
+
+`Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.
+
+`Inventory.StandardCost.Implement` takes `worksheetName`, `journalTemplateName`, `journalBatchName`, `postingDate` (`yyyy-mm-dd`) and `documentNo`. The batch must exist under a Revaluation template and be empty. Every worksheet row must be an unimplemented, unblocked Standard-cost Inventory item. Native implementation updates item and SKU costs/cost shares according to Business Central setup, marks worksheet rows implemented and creates revaluation journal lines. Zero-stock items may produce no journal lines. Both types return `status`, `worksheetName`, `lineCount`, `lines` and `posted: false`.
+
+Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
+
+Objects: codeunits 10076938 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076850 `MsgType.StdCost.EnumExt ori` (values 10076938 and 10076933); test codeunits 96982–96983 `Standard Cost Tests ori`.
 
 ### Requisition worksheet planning (#131)
 
