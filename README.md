@@ -35,6 +35,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
+| `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -89,6 +90,9 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.PhysInventory.Check` | Outbound | Check a physical inventory batch and list errors and warnings without posting |
 | `Inventory.PhysInventory.PreviewPost` | Inbound | Preview posting a physical inventory batch; nothing is kept |
 | `Inventory.PhysInventory.Post` | Inbound | Post a physical inventory journal batch and return the item register and ledger entry ranges. An empty batch is `PreconditionFailed` |
+| `Inventory.PhysInventoryOrder.Create` | Inbound | Create a native physical inventory order with calculated expected quantities and one recording; requires an explicit `itemNoFilter` |
+| `Inventory.PhysInventoryOrder.Finish` | Inbound | Write recording counts, finish all open recordings and finish the order to calculate differences; nothing is posted |
+| `Inventory.PhysInventoryOrder.Post` | Inbound | Post one finished native physical inventory order and return its posted number; `expectedCount` counts one order, not lines or units |
 
 Update this table in the same change as any new or renamed message type. Foundation itself
 registers `Inventory.ItemJournal.Check`, `.Create`, `.Post` and `.PreviewPost`; this app does not
@@ -169,7 +173,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge, Item Category and Item Substitution.
+   Item Reference, Availability, Item Charge, Item Category, Item Substitution and Purchase Returns.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
@@ -197,6 +201,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
    | Item Category | Item Category or an Item with a category code |
+   | Purchase Returns | Purchase Header whose document type is Return Order or Credit Memo |
 
    Usage checks only read company data. A source the caller cannot read supplies no signal; no
    extra business-data permission is granted. Administrators can still enable any domain manually.
@@ -209,6 +214,8 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
      need the caller's own Business Central permissions on the tables they touch (Item, Item
      Variant, Item Reference, Location, Item Category, Item Charge Assignment, Reservation Entry and
      the documents involved); they answer `PermissionDenied` when one is missing.
+     `Purchase.ReturnOrder.CreateFromPosted` needs the caller's own permission to create purchase
+     documents and to read posted purchase receipts, invoices and item entries.
    - Assign **`BIFROST InvPost ori`** (*Inv. Posting Gate*) to users or service principals that may
      post, run cost adjustment or post to G/L. It also grants the Inventory Setup page and table.
 5. The underlying Business Central setup still applies: locations and transfer routes, assembly
@@ -252,7 +259,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | ID | Name | Purpose |
 | --- | --- | --- |
-| 10076835 | `Inventory Domain ori` | The fifteen domains |
+| 10076835 | `Inventory Domain ori` | The seventeen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
@@ -265,6 +272,8 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
+| 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
@@ -272,6 +281,8 @@ Each message type value is the ID of its implementation codeunit. The exception 
 `Inventory.PhysInventory.Record` (10076882).
 
 ### Codeunits
+
+Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Order Create Impl ori`, `Phys Order Finish Impl ori`, `Phys Order Post Impl ori`, `Phys Order Process ori` and `Phys Order Contract ori`; test codeunit **96986** `Phys Order Tests ori`.
 
 | IDs | Area | Codeunits |
 | --- | --- | --- |
@@ -294,6 +305,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
@@ -425,6 +437,26 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Create, finish and post physical inventory orders / Stofna, ljúka og bóka birgðatalningarpantanir
+
+```json
+{"type":"Inventory.PhysInventoryOrder.Create","data":{"itemNoFilter":"1000"}}
+{"type":"Inventory.PhysInventoryOrder.Finish","data":{"documentNo":"PI0001","counts":[{"recordingNo":1,"lineNo":10000,"quantity":8}]}}
+{"type":"Inventory.PhysInventoryOrder.Post","data":{"documentNo":"PI0001","expectedCount":1}}
+```
+
+`Inventory.PhysInventoryOrder.Create` requires an explicit `itemNoFilter` (native Item No. filter, maximum 250 characters). Optional `locationCode` selects one exact location; otherwise native calculation includes all locations. `postingDate` defaults to WorkDate. `includeZero` includes zero expected quantities; `includeUntransacted` also includes items without transactions and requires `includeZero: true`. The response lists the native `documentNo`, `systemId`, `lineCount`, and `recordings` containing `recordingNo` and their `lines` with `lineNo`, item, variant, location, bin, quantity and recorded state. An empty calculation leaves no order behind.
+
+`Inventory.PhysInventoryOrder.Finish` takes `documentNo` (or the same number in `subject`) and optional `counts`, for example `[{"recordingNo":1,"lineNo":10000,"quantity":8}]`. Quantities use the recording line unit of measure. Zero means counted zero. Serial, lot and package numbers can be supplied as `serialNo`, `lotNo`, `packageNo`; native tracking validation applies. Additional or split tracking lines must first be prepared in the native client. Every nonempty recording line must already be recorded or receive a count in this call. Finishing open recordings and the order computes differences without posting. A later refusal rolls back earlier quantities and finishing in the same call.
+
+`Inventory.PhysInventoryOrder.Post` posts the finished order through native posting and returns `postedDocumentNo`, verified against the created posted header. It declares `irreversible`. **expectedCount counts physical inventory order headers: exactly one order, not lines, recordings or units.** Foundation's confirmation policy applies. Post needs native item posting permission as well as native physical inventory permissions. A completed Finish or Post cannot be repeated. Create and Finish declare `write`; all three respect the existing Physical Inventory domain switch and execute grants in `BIFROST Full ori`. No new product page or action is added.
+
+`Create` stofnar birgðatalningarpöntun með stöðluðum útreikningi og skráningu. `itemNoFilter` er nauðsynleg sía á vörunúmer; `locationCode` velur eina birgðageymslu. `includeZero` tekur með núllmagn og `includeUntransacted` vörur án færslna og krefst `includeZero: true`. Svarið tilgreinir pöntunar-, skráningar- og línunúmer.
+
+`Finish` tekur `documentNo` eða sama númer í `subject` og valfrjálsar `counts` með `recordingNo`, `lineNo` og `quantity`. Magn er í mælieiningu línunnar; núll er gild talning. Hægt er að senda `serialNo`, `lotNo` og `packageNo`; stöðluð rakningarprófun gildir. Undirbúið viðbótarlínur eða skiptingu rakningar í staðlaða biðlaranum. Allar línur verða að vera taldar áður en skráningum og pöntun er lokið. Mismunur er reiknaður án bókunar. Höfnun afturkallar allar breytingar kallsins.
+
+`Post` bókar eina lokna pöntun og skilar `postedDocumentNo`. **expectedCount telur hausa birgðatalningarpantana: eina pöntun, ekki línur, skráningar eða einingar.** Staðfestingarreglur Foundation gilda. Bókun er varanleg og krefst staðlaðrar vörubókunarheimildar. Ekki er hægt að endurtaka lokna eða bókaða aðgerð. Svið Birgðatalningar og staðlaðar heimildir gilda fyrir allar þrjár aðgerðir.
 
 ### Item application selectors and quantity objects (#40)
 

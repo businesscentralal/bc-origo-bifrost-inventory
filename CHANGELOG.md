@@ -2,11 +2,27 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - native physical inventory orders (#113)
+
+- `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
+- Added implementation codeunits **10076960–10076962**, process **10076963**, contract **10076964**, enum extension **10076860** and test codeunit **96986**. Existing Full-role execute grants and Physical Inventory domain are reused. Bilingual discovery/help labels, Icelandic XLF, user documentation and the 62-type catalogue census are synchronized. Tests cover native success, zero count, bad input, repeat finish and rollback after a later recording failure.
+
+
+### Fixed (2026-11-16) - physical inventory order regression checks (#113)
+
+- Refusal tests assert the dispatcher's top-level code and nextStep fields. The irreversible-type boundary includes physical inventory order posting and distinguishes its optional handler count from Foundation's mandatory confirmation gate; both locale checks retain preview, mismatch and domain-refusal assertions. Product behavior and message contracts are unchanged.
+- Owned-tenant regression checks use a unique separate posting series on every run, explicitly enable and restore Foundation's confirmation setting, and verify both raw attribute responses and Foundation's added shared response code. No object IDs added.
+
 ### Changed - Item application selectors and quantities (#40)
 
 - Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
 - Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
 - Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
+### Added (2026-11-16) - purchase return from posted lines (#137)
+
+- `Purchase.ReturnOrder.CreateFromPosted` (codeunit 10076930 `Purch. Return Create Impl ori`, enum extension 10076847) creates an open purchase return order or credit memo, or adds lines to an existing open one, from posted receipt or invoice item lines. The copy uses the same exact-cost path as Posted Purchase Document Lines. Each new item line keeps Appl.-to Item Entry. A partial quantity is stored when the posted line applies to one item entry. Nothing is posted. A quantity above the quantity left to reverse, a line of another vendor, a non-item line, a duplicate posted line, and a partial quantity on a line split across several item entries answer `InvalidLine` with a next step before any write. Missing, unknown and badly typed keys, a missing vendor or posted line, a vendor that does not match an existing document, a document that is not open, and more than 200 lines answer the matching coded refusal.
+- Purchase Returns is domain value 16 and Inventory Setup field 26. The main-merge conflict with Item Substitution keeps its value 15 and field 25; Purchase Returns takes the next free IDs and wizard slot 17. A purchase header whose document type is Return Order or Credit Memo turns it on for a new setup row and for the existing usage upgrade. The setup page and the setup wizard show the switch. Execute permission is on `BIFROST InvWrite ori`. The effect is write, not irreversible, so the call does not ask for a confirmation count.
+- Tests: `Purch. Return Create Tests` (96980) covers the full receipt return, the quantity refusal, the other-vendor refusal, a partial credit memo from a posted invoice, appending to an existing return order, zero and duplicate lines without writes, typed input refusals, bilingual help and next steps, and the three-part type name. `Inventory Domain Usage Tests` (96963) covers the new usage signal and clears purchase headers in that fixture. Bilingual refusal tests pass the LCID explicitly through the dispatcher so the configured default language cannot mask the Icelandic assertion.
 ### Fixed (2026-11-16) - physical inventory blank-row parity (#186)
 
 - Check and PreviewPost now use Post's existing empty-row filter in `Inventory Native Journal ori` (10076840). Rows without an item and with all three quantity fields zero are ignored after applying the requested selection; nonempty missing-item rows keep the native typed refusal.

@@ -284,9 +284,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(60, CheckedCount - ItemJournalNames.Count(), 'This app registers 60 Inventory types.');
+        LibraryAssert.AreEqual(63, CheckedCount - ItemJournalNames.Count(), 'This app registers 63 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(60, AppTypes.Count(), 'The registered Inventory type list for this app has 60 names.');
+        LibraryAssert.AreEqual(63, AppTypes.Count(), 'The registered Inventory type list for this app has 63 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -400,6 +400,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AppRegisteredInventoryTypes() Types: List of [Text]
     begin
+        Types.Add('Inventory.PhysInventoryOrder.Create');
+        Types.Add('Inventory.PhysInventoryOrder.Finish');
+        Types.Add('Inventory.PhysInventoryOrder.Post');
+
         Types.Add('Inventory.ItemSubstitution.Get');
         Types.Add('Inventory.Cost.Update');
         Types.Add('Inventory.Revaluation.Post');
@@ -712,7 +716,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
-        AssertChapterJson(Contract, 'response', Parts.GetResponse(Legacy).AsToken());
+        AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedErrors(TypeName, Contract, Parts.GetErrors(Legacy));
         AssertChapterJson(Contract, 'effect', Parts.GetEffect(Legacy).AsToken());
         AssertChapterJson(Contract, 'related', Parts.GetRelated(Legacy).AsToken());
@@ -721,6 +725,32 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+    local procedure AssertComposedAttributeResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Implementation: Interface "Msg Contract ori";
+        Info: ModuleInfo;
+        RawResponse: JsonObject;
+        RawContract: JsonObject;
+        Token: JsonToken;
+        Fields: JsonArray;
+    begin
+        // The implementation must still match the legacy payload exactly.
+        Implementation := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+        LibraryAssert.IsTrue(Implementation.GetResponse(RawResponse), 'Raw attribute response exists.');
+        RawContract.Add('response', RawResponse);
+        AssertChapterJson(RawContract, 'response', Expected.AsToken());
+        // Foundation 28.0.13 adds its shared error code to composed JSON responses.
+        LibraryAssert.IsTrue(NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info), 'Foundation is installed.');
+        if Info.AppVersion >= Version.Create(28, 0, 13, 0) then begin
+            Expected.Get('fields', Token);
+            Fields := Token.AsArray();
+            Fields.Add(ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
+            Expected.Replace('fields', Fields);
+        end;
+        AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
@@ -779,9 +809,49 @@ codeunit 96921 "Inventory Contract Batch Tests"
         ExpectedJson: Text;
     begin
         LibraryAssert.IsTrue(Contract.Get(Chapter, Actual), 'Missing chapter ' + Chapter + '.');
+        if Chapter = 'response' then
+            StripFoundationResponseCode(Actual, Expected);
         Actual.WriteTo(ActualJson);
         Expected.WriteTo(ExpectedJson);
         LibraryAssert.AreEqual(ExpectedJson, ActualJson, 'Inventory and legacy Item helper chapter payloads match: ' + Chapter + '.');
+    end;
+
+    /// <summary>Foundation 28.0.13 adds a response field named code. The legacy helper does not declare it.</summary>
+    local procedure StripFoundationResponseCode(var Actual: JsonToken; Expected: JsonToken)
+    var
+        ActualFields: JsonArray;
+        ExpectedFields: JsonArray;
+        Filtered: JsonArray;
+        ActualObject: JsonObject;
+        ExpectedObject: JsonObject;
+        Entry: JsonToken;
+        FieldsToken: JsonToken;
+        NameToken: JsonToken;
+    begin
+        if not (Actual.IsObject() and Expected.IsObject()) then
+            exit;
+        ActualObject := Actual.AsObject();
+        ExpectedObject := Expected.AsObject();
+        if not (ActualObject.Get('fields', FieldsToken) and FieldsToken.IsArray()) then
+            exit;
+        ActualFields := FieldsToken.AsArray();
+        if ExpectedObject.Get('fields', FieldsToken) and FieldsToken.IsArray() then
+            ExpectedFields := FieldsToken.AsArray();
+        foreach Entry in ExpectedFields do
+            if Entry.IsObject() then
+                if Entry.AsObject().Get('name', NameToken) then
+                    if NameToken.AsValue().AsText() = 'code' then
+                        exit;
+        foreach Entry in ActualFields do
+            if Entry.IsObject() then begin
+                if Entry.AsObject().Get('name', NameToken) then
+                    if NameToken.AsValue().AsText() = 'code' then
+                        continue;
+                Filtered.Add(Entry);
+            end else
+                Filtered.Add(Entry);
+        ActualObject.Replace('fields', Filtered);
+        Actual := ActualObject.AsToken();
     end;
 
     /// <summary>Checks published costing parameter defaults through the contract reader.</summary>
