@@ -47,6 +47,7 @@ codeunit 10076842 "Inventory Write Process ori"
         CostJournalTemplate: Code[10];
         CostJournalBatch: Code[10];
         PostedAssemblyNo: Code[20];
+        RecreateAssemblyOrder: Boolean;
         CancelEntryNos: List of [Integer];
         ApplicationEntryNo: Integer;
         ApplyToEntryNo: Integer;
@@ -80,7 +81,7 @@ codeunit 10076842 "Inventory Write Process ori"
             'ReservationCancel':
                 CancelReservation();
             'AssemblyUndo':
-                UndoAssembly();
+                UndoAssembly(Rec);
             'ItemApplicationUnapply':
                 UnapplyItemEntry();
             'ItemApplicationReapply':
@@ -349,14 +350,28 @@ codeunit 10076842 "Inventory Write Process ori"
         PostedAssemblyNo := DocumentNo;
     end;
 
-    local procedure UndoAssembly()
+    /// <summary>Controls native recreation when the original assembly order no longer exists.</summary>
+    /// <param name="RecreateOrder">True to recreate the original order after undo.</param>
+    procedure SetRecreateAssemblyOrder(RecreateOrder: Boolean)
+    begin
+        RecreateAssemblyOrder := RecreateOrder;
+    end;
+
+    local procedure UndoAssembly(var Argument: Record "Message Argument ori")
     var
         PostedAssembly: Record "Posted Assembly Header";
         AssemblyPost: Codeunit "Assembly-Post";
+        Request: JsonObject;
+        Token: JsonToken;
+        RecreateOrder: Boolean;
     begin
+        RecreateOrder := RecreateAssemblyOrder;
+        Request := Argument.GetRequestJson();
+        if Request.Get('recreateOrder', Token) then
+            RecreateOrder := Token.AsValue().AsBoolean();
         PostedAssembly.Get(PostedAssemblyNo);
         AssemblyPost.SetSuppressCommit(true);
-        AssemblyPost.Undo(PostedAssembly, false);
+        AssemblyPost.Undo(PostedAssembly, RecreateOrder);
     end;
 
     local procedure Reserve()
