@@ -10,7 +10,7 @@ using Origo.Bifrost;
 /// optional description, base unit of measure, unit price and GTIN. Refusals are answered before the
 /// write process runs, so nothing is saved.
 /// </summary>
-codeunit 10076930 "Item Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076932 "Item Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
