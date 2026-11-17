@@ -9,7 +9,10 @@
 ### Added (2026-11-17) - setup mode for Inventory Setup (#235)
 
 - While Foundation setup mode is active for the running message, `Inventory Setup Restrict ori` (10076923) no longer restricts `Inventory Setup ori` (10076836), the only setup/configuration table this app restricts. It reads the public read-only facade `Bifrost Setup Mode ori` (`IsActive`). Every other restricted table (Item cost/price fields, Item Category, Item Attribute tables, Item Variant, Stockkeeping Unit, Price List Header/Line, Reservation Entry, Tracking Specification, Item Charge Assignment) is business data routed through validated message types and stays restricted. Foundation already logs each successful Data.Records.Set write made in setup mode, so this subscriber (which only decides restriction and also runs for probes that write nothing) does not call `LogWrite` a second time.
-- The Inventory Setup page shows a Setup mode help text (en-US, is-IS, XLF regenerated) naming the one table setup mode opens. New test codeunit 96997 `Inv Setup Mode Tests`. No new objects besides the test codeunit. Foundation dependency floor raised in app and test manifests to 28.0.13.0 (the line containing the facade, core#1408/#1410).
+- The Inventory Setup page shows a Setup mode help text (en-US, is-IS, XLF regenerated) naming the one table setup mode opens. New test codeunit 96929 `Inv Setup Mode Tests` (moved from 96997 on the PR #238 main merge; main retains `Posted Undo MCP Fixture ori` at 96997). No new objects besides the test codeunit. Foundation dependency floor raised in app and test manifests to 28.0.13.0 (the line containing the facade, core#1408/#1410).
+
+### Fixed
+- #234: `Purchase.Requisition.CarryOut` (10076942) and `Inventory.PlanningWorksheet.CarryOut` (10076939) state what `expectedCount` counts. effect.changes and the expectedCount parameter say `expectedCount counts worksheet selections: always 1` (Icelandic: `expectedCount telur val á vinnublaði: alltaf 1`), not the number of lines or orders. Requisition carry-out now declares the expectedCount parameter itself so Foundation keeps that sentence. New test codeunit 96948 `CarryOut Count Help ori` (96964 is `Inv. 186 Blank Line Tests ori` on main). No new product object IDs.
 
 ### Fixed - main merge ID reconciliation (PR #233)
 

@@ -17,7 +17,7 @@ using System.TestLibraries.Utilities;
 /// read-only, so the open-versus-closed decision is tested through the decision procedure with the setup-mode flag
 /// supplied, and the real Foundation predicate is tested with setup mode off.
 /// </summary>
-codeunit 96997 "Inv Setup Mode Tests"
+codeunit 96929 "Inv Setup Mode Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

@@ -119,3 +119,7 @@ README "Objects" lists every object with its ID. In short:
 - Main-merge ID collision: codeunit 10077030 stays `Reserv. Supply Filter ori`. `Purch Get Receipt Impl ori` and message value `Purchase.PurchaseInvoice.GetReceiptLines` are 10077018 (formerly 10077030). 10077027 is claimed by open pull requests #206 and #215; 10077028–10077029 are claimed by #203. Process codeunit 10077031 and enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori` stay. These taken IDs supersede the free-ID notes preserved above.
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
+
+## PR #238 setup-mode test ID reconciliation
+
+- `Inv Setup Mode Tests` uses codeunit 96929 (moved from 96997); main keeps `Posted Undo MCP Fixture ori` at 96997. Checked merged main and every open Inventory PR head on 17.11.2026. IDs 96924-96926, 96928, 96949, 96981 and 96990 remain reserved by other open PRs.
