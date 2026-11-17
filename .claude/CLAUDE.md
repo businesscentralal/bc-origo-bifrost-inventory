@@ -30,11 +30,11 @@ README "Objects" lists every object with its ID. In short:
 - Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
   the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
   tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 CatalogItems; `Inventory Setup ori`
-  fields 21-25. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 CatalogItems; `Inventory Setup ori`
+  fields 21-26. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
 - Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
-  10077020 (process), enum extension 10077019; taken from the top of the free range to avoid clashes with parallel work.
+  10077021 (process), enum extension 10077019; taken from the top of the free range to avoid clashes with parallel work.
 
 ## Test object IDs (unchanged by the renumbering)
 

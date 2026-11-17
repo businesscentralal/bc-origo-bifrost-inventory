@@ -8,7 +8,7 @@ using Origo.Bifrost;
 /// Isolated write for Inventory.NonstockItem.Create, run through Codeunit.Run so a failure rolls back and
 /// answers a clean error. The Impl has already refused bad requests.
 /// </summary>
-codeunit 10077020 "Nonstock Item Create Proc ori"
+codeunit 10077021 "Nonstock Item Create Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

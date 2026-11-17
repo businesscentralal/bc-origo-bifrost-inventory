@@ -9,6 +9,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 ## Message types
 
 - Inventory.Attribute.Get, Create, Update, and AttributeDefinition.Create
+- Inventory.ItemSubstitution.Get
 - Inventory.ItemReference.Resolve
 - Inventory.AvailabilityByPeriod.Get
 - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get

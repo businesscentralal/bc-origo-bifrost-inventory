@@ -7,6 +7,7 @@ using Microsoft.Inventory.Counting.Recording;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -952,6 +953,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Inventory Period");
         ClearTable(Database::"Price List Line");
         ClearTable(Database::"Item Reference");
+        ClearTable(Database::"Item Substitution");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
         ClearTable(Database::"Nonstock Item");
