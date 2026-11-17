@@ -172,6 +172,9 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure SetDirectTransferPosting(PostAsSingleDocument: Boolean; var OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        SetupRef: RecordRef;
+        PostingField: FieldRef;
+        PostingType: Integer;
     begin
         OriginalSetup.Get();
         InventorySetup := OriginalSetup;
