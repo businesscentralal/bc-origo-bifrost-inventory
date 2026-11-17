@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - native physical inventory orders (#113)
+
+- `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
+- Added implementation codeunits **10076960–10076962**, process **10076963**, contract **10076964**, enum extension **10076860** and test codeunit **96986**. Existing Full-role execute grants and Physical Inventory domain are reused. Bilingual discovery/help labels, Icelandic XLF, user documentation and the 62-type catalogue census are synchronized. Tests cover native success, zero count, bad input, repeat finish and rollback after a later recording failure.
+
+
+### Fixed (2026-11-16) - physical inventory order regression checks (#113)
+
+- Refusal tests assert the dispatcher's top-level code and nextStep fields. The irreversible-type boundary includes physical inventory order posting and distinguishes its optional handler count from Foundation's mandatory confirmation gate; both locale checks retain preview, mismatch and domain-refusal assertions. Product behavior and message contracts are unchanged.
+- Owned-tenant regression checks use a unique separate posting series on every run, explicitly enable and restore Foundation's confirmation setting, and verify both raw attribute responses and Foundation's added shared response code. No object IDs added.
+
 ### Changed - Item application selectors and quantities (#40)
 
 - Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
@@ -16,7 +27,7 @@
 
 - New read-only message type `Inventory.TrackingInfo.Get` (effect `read`). Select an item (subject, `itemNo`, item SystemId or `tableView`), the `variantCode` of the card and exactly one of `lotNo`, `serialNo` or `packageNo`. It answers the Lot No. Information (6505), Serial No. Information (6504) or Package No. Information (6515) card: `description`, `testQuality` (lot only), `certificateNumber` (lot and package), `countryRegionCode` (package), `blocked`, `hasComments`, the item tracking `comments`, `inventory` and `expiredInventory` (expiration date before the work date), all in base units.
 - Refusals: `MissingParameter` on `itemNo` or on `lotNo|serialNo|packageNo`; `InvalidParameter` when more than one tracking number is sent; `InvalidParameterFormat` for a value that is too long or not a string; `RecordNotFound` with nextStep "The tracking number has no information card..." when the card does not exist (also when the number has stock); `PermissionDenied` per table. Help and refusals are in en-US and is-IS.
-- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 61 Inventory types.
+- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 64 Inventory types.
 
 
 ### Fixed ([28.3.2.0] development)
