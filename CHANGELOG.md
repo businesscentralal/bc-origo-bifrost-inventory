@@ -9,6 +9,12 @@
 - Transfer posting/preview and their tests select the native direct-transfer setting at runtime: option field 5855 (0/1) on BC 28 or enum field 5857 (10/20) on BC 29. Both builds remain supported without referencing the deprecated field at compile time.
 - Full-suite fixtures explicitly enable the attribute domain, and contract assertions include Foundation's common error-code response field from 28.0.13 while preserving exact application payload comparisons on earlier releases. Confirmation-boundary fixtures name a subject, as required by Foundation's current preview contract.
 
+### Changed - Item application selectors and quantities (#40)
+
+- Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
+- Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
+- Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
+
 ### Added (2026-11-16) - Item substitutions (#118)
 
 - `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
