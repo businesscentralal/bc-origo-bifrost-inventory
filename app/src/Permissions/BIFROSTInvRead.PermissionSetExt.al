@@ -55,6 +55,8 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Item Category Get Impl ori" = X,
         codeunit "Item Category Restrict ori" = X,
         codeunit "Item UoM Get Impl ori" = X,
+        codeunit "Item Variant Get Impl ori" = X,
+        codeunit "Item Variant Restrict ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
         codeunit "Order Tracking Transfer ori" = X,
         codeunit "SKU Get Impl ori" = X,
