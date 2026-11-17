@@ -85,7 +85,7 @@ codeunit 10076931 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
-    /// <summary>Returns the parameters chapter. expectedCount is added by the composed contract.</summary>
+    /// <summary>Returns the parameters chapter, including the confirmation count checked by Foundation.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -94,6 +94,7 @@ codeunit 10076931 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         TemplateLbl: Label 'Name of an existing planning template that is not recurring, at most 10 characters. Send it with worksheetName unless subject identifies the worksheet.', Comment = 'is-IS=Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.';
         WorksheetLbl: Label 'Name of an existing worksheet of that template, at most 10 characters. Every selector that is sent must name the same worksheet.', Comment = 'is-IS=Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.';
         LineNosLbl: Label 'Line numbers to carry out. Omit it to carry out every accepted New line on the worksheet. An empty list is refused.', Comment = 'is-IS=Línunúmer sem á að framkvæma. Slepptu því til að framkvæma hverja samþykkta New-línu á keyrslunni. Tómum lista er hafnað.';
+        ExpectedCountLbl: Label 'Expected invocation count from the confirmation preview: one selected worksheet. Foundation verifies this count before carry-out.', Comment = 'is-IS=Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.';
         LineNoLbl: Label 'One line number on the planning worksheet.', Comment = 'is-IS=Eitt línunúmer á áætlunarkeyrslunni.';
     begin
         Clear(Parameters);
@@ -103,6 +104,7 @@ codeunit 10076931 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         LineNosParameter := ContractMgt.Parameter('lineNos', 'array', false, LineNosLbl);
         LineNosParameter.Add('children', Children);
         Parameters.Add(LineNosParameter);
+        Parameters.Add(ContractMgt.Parameter('expectedCount', 'integer', false, ExpectedCountLbl));
         exit(true);
     end;
 

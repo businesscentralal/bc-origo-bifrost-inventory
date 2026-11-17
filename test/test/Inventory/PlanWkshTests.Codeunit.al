@@ -1,6 +1,10 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Assembly.Document;
+using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Transfer;
 using Microsoft.Inventory.Planning;
 using Microsoft.Inventory.Requisition;
 using Microsoft.Purchases.Document;
@@ -17,12 +21,14 @@ codeunit 96980 "Plan Wksh Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;
+    EventSubscriberInstance = Manual;
 
     var
         Assert: Codeunit "Library Assert";
         Library: Codeunit "Inventory Test Library ori";
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryPurchase: Codeunit "Library - Purchase";
+        NativeFailure: Text;
 
     [Test]
     procedure Calculate_Regenerative_ThenCarryOut_CreatesPurchaseOrder()
@@ -110,6 +116,150 @@ codeunit 96980 "Plan Wksh Tests ori"
         Assert.AreEqual(Item."No.", OtherLine."No.", 'Other worksheet still names the same item.');
         CleanupFixtures();
         Commit();
+    end;
+
+    [Test]
+    procedure Scenario_AC02_CarryOut_CreatesTransferOrder()
+    var
+        Item: Record Item;
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Route: Record "Transfer Route";
+        ReqLine: Record "Requisition Line";
+        Header: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        Warehouse: Codeunit "Library - Warehouse";
+        Observer: Codeunit "Plan Wksh Tests ori";
+        Response: JsonObject;
+        Request: JsonObject;
+    begin
+        // Issue #117 AC02 | Time: work date | Risk: owned unposted transfer only.
+        BindSubscription(Observer);
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        Warehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
+        Warehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
+        FromLocation.Name := 'XP117 transfer source';
+        FromLocation.Modify();
+        ToLocation.Name := 'XP117 transfer destination';
+        ToLocation.Modify();
+        Warehouse.CreateInTransitLocation(InTransitLocation);
+        InTransitLocation.Name := 'XP117 transfer in transit';
+        InTransitLocation.Modify();
+        Warehouse.CreateTransferRoute(Route, FromLocation.Code, ToLocation.Code);
+        Route.Validate("In-Transit Code", InTransitLocation.Code);
+        Route.Modify(true);
+        CreateNewSuggestion(ReqLine, Item);
+        ReqLine.Validate("Location Code", ToLocation.Code);
+        ReqLine.Validate("Replenishment System", ReqLine."Replenishment System"::Transfer);
+        ReqLine."Ref. Order Type" := ReqLine."Ref. Order Type"::Transfer;
+        ReqLine.Validate("Transfer-from Code", FromLocation.Code);
+        ReqLine."Transfer Shipment Date" := HorizonStart();
+        ReqLine.Modify(true);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, false);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'Native transfer carry-out succeeds: ' + TextValue(Response, 'error') + ' ' + Observer.GetNativeFailure());
+        Assert.AreEqual(1, IntegerValue(Response, 'linesConsumed'), 'One suggestion is consumed.');
+        Header.Get(CreatedOrderNo(Response, 'Transfer'));
+        Assert.AreEqual(FromLocation.Code, Header."Transfer-from Code", 'Native source location.');
+        Assert.AreEqual(ToLocation.Code, Header."Transfer-to Code", 'Native destination location.');
+        TransferLine.SetRange("Document No.", Header."No.");
+        Assert.IsTrue(TransferLine.FindFirst(), 'Native transfer line exists.');
+        Assert.AreEqual(Item."No.", TransferLine."Item No.", 'Transfer carries the requested item.');
+        Assert.AreEqual(2, TransferLine.Quantity, 'Transfer carries the requested quantity.');
+        Header.Delete(true);
+        Route.Delete(true);
+        InTransitLocation.Delete(true);
+        FromLocation.Delete(true);
+        ToLocation.Delete(true);
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
+    procedure Scenario_AC02_CarryOut_CreatesAssemblyOrder()
+    var
+        Item: Record Item;
+        Component: Record Item;
+        ReqLine: Record "Requisition Line";
+        Header: Record "Assembly Header";
+        PlanningError: Record "Planning Error Log";
+        Helper: Codeunit "Assembly Order Test Helper";
+        FailureDetail: Text;
+        Request: JsonObject;
+        Response: JsonObject;
+    begin
+        // Issue #117 AC02 | Time: work date | Risk: owned unposted assembly only.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        Helper.CreateAssemblyItemWithBOM(Item, Component);
+        Item.Description := 'XP117 assembly';
+        Item.Modify();
+        Component.Description := 'XP117 component';
+        Component.Modify();
+        CreatePlanningWorksheet();
+        CreateNewSuggestion(ReqLine, Item);
+        ReqLine.Validate("Replenishment System", ReqLine."Replenishment System"::Assembly);
+        ReqLine."Ref. Order Type" := ReqLine."Ref. Order Type"::Assembly;
+        ReqLine.Modify(true);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, false);
+        if PlanningError.FindLast() then
+            FailureDetail := PlanningError."Error Description";
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'Native assembly carry-out succeeds: ' + TextValue(Response, 'error') + ' ' + FailureDetail);
+        Assert.AreEqual(1, IntegerValue(Response, 'linesConsumed'), 'One suggestion is consumed.');
+        Header.Get(Header."Document Type"::Order, CreatedOrderNo(Response, 'Assembly'));
+        Assert.AreEqual(Item."No.", Header."Item No.", 'Native assembly uses the requested item.');
+        Assert.AreEqual(2, Header.Quantity, 'Native assembly quantity.');
+        Header.Delete(true);
+        CleanupFixtures();
+        Commit();
+    end;
+
+    /// <summary>Returns the native failure captured for this test worksheet.</summary>
+    procedure GetNativeFailure(): Text
+    begin
+        exit(NativeFailure);
+    end;
+
+    [EventSubscriber(ObjectType::Report, Report::"Carry Out Action Msg. - Plan.", OnCarryOutActionsOnAfterUpdateCounterFailed, '', false, false)]
+    local procedure RecordNativeFailure(var RequisitionLine: Record "Requisition Line"; WkshTempl: Code[10]; WkshName: Code[10])
+    begin
+        if RequisitionLine."Worksheet Template Name" = 'XP117T' then
+            NativeFailure := GetLastErrorText();
+    end;
+
+    local procedure CreateNewSuggestion(var ReqLine: Record "Requisition Line"; Item: Record Item)
+    begin
+        ReqLine.Init();
+        ReqLine."Worksheet Template Name" := 'XP117T';
+        ReqLine."Journal Batch Name" := 'XP117W';
+        ReqLine."Line No." := 10000;
+        ReqLine.Insert(true);
+        ReqLine.Validate(Type, ReqLine.Type::Item);
+        ReqLine.Validate("No.", Item."No.");
+        ReqLine.Validate(Quantity, 2);
+        ReqLine.Validate("Due Date", HorizonStart());
+        ReqLine."Starting Date" := HorizonStart();
+        ReqLine."Ending Date" := HorizonStart();
+        ReqLine."Action Message" := ReqLine."Action Message"::New;
+        ReqLine."Accept Action Message" := true;
+        ReqLine.Modify(true);
+    end;
+
+    local procedure CreatedOrderNo(Response: JsonObject; ExpectedType: Text): Code[20]
+    var
+        Orders: JsonToken;
+        Order: JsonToken;
+    begin
+        Assert.IsTrue(Response.Get('orders', Orders), 'Created order list exists.');
+        Assert.AreEqual(1, Orders.AsArray().Count(), 'Exactly one new order.');
+        Orders.AsArray().Get(0, Order);
+        Assert.AreEqual(ExpectedType, TextValue(Order.AsObject(), 'documentType'), 'Native document type.');
+        exit(CopyStr(TextValue(Order.AsObject(), 'documentNo'), 1, 20));
     end;
 
     /// <summary>Creates a fresh owned worksheet and purchase item for explicit MCP verification.</summary>
@@ -400,6 +550,12 @@ codeunit 96980 "Plan Wksh Tests ori"
         Vendor: Record Vendor;
         PurchHeader: Record "Purchase Header";
         PurchLine: Record "Purchase Line";
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        AssemblyHeader: Record "Assembly Header";
+        BOMComponent: Record "BOM Component";
+        Location: Record Location;
+        Route: Record "Transfer Route";
         ReqLine: Record "Requisition Line";
         Worksheet: Record "Requisition Wksh. Name";
         WkshTemplate: Record "Req. Wksh. Template";
@@ -414,6 +570,17 @@ codeunit 96980 "Plan Wksh Tests ori"
                 ItemNos.Add(Item."No.");
             until Item.Next() = 0;
         foreach ItemNo in ItemNos do begin
+            TransferLine.Reset();
+            TransferLine.SetRange("Item No.", ItemNo);
+            while TransferLine.FindFirst() do begin
+                TransferHeader.Get(TransferLine."Document No.");
+                TransferHeader.Delete(true);
+            end;
+            AssemblyHeader.Reset();
+            AssemblyHeader.SetRange("Document Type", AssemblyHeader."Document Type"::Order);
+            AssemblyHeader.SetRange("Item No.", ItemNo);
+            while AssemblyHeader.FindFirst() do
+                AssemblyHeader.Delete(true);
             PurchLine.Reset();
             PurchLine.SetRange(Type, PurchLine.Type::Item);
             PurchLine.SetRange("No.", ItemNo);
@@ -435,9 +602,25 @@ codeunit 96980 "Plan Wksh Tests ori"
         ReqLine.SetFilter("Worksheet Template Name", 'XP117*');
         if not ReqLine.IsEmpty() then
             ReqLine.DeleteAll(true);
+        foreach ItemNo in ItemNos do begin
+            BOMComponent.SetRange("Parent Item No.", ItemNo);
+            BOMComponent.DeleteAll(true);
+        end;
         foreach ItemNo in ItemNos do
             if Item.Get(ItemNo) then
                 Item.Delete(true);
+        Location.SetFilter(Name, 'XP117 transfer*');
+        if Location.FindSet() then
+            repeat
+                Route.SetRange("Transfer-from Code", Location.Code);
+                Route.DeleteAll(true);
+                Route.SetRange("Transfer-from Code");
+                Route.SetRange("Transfer-to Code", Location.Code);
+                Route.DeleteAll(true);
+                Route.SetRange("Transfer-to Code");
+            until Location.Next() = 0;
+        while Location.FindFirst() do
+            Location.Delete(true);
         Vendor.SetFilter(Name, 'XP117*');
         if Vendor.FindSet() then
             repeat

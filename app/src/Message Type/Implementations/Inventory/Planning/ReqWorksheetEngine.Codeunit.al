@@ -24,6 +24,8 @@ codeunit 10076932 "Req. Worksheet Engine ori"
         ContractParts: Codeunit "Inventory Contract Parts ori";
         DeleteScopeActive: Boolean;
         CarryInProgress: Boolean;
+        CreatedTransfers: List of [Code[20]];
+        CreatedAssemblies: List of [Code[20]];
         ModeMissingErr: Label 'mode is required.', Comment = 'is-IS=mode er nauðsynlegt.';
         ModeExpectedLbl: Label 'regenerative or netChange', Comment = 'is-IS=regenerative eða netChange';
         ModeNextLbl: Label 'Send mode as regenerative or netChange.', Comment = 'is-IS=Sendu mode sem regenerative eða netChange.';
@@ -120,7 +122,7 @@ codeunit 10076932 "Req. Worksheet Engine ori"
         LineCount: Integer;
     begin
         Request := Argument.GetRequestJson();
-        if not KeysAreKnown(Request, 'templateName,worksheetName,mode,startingDate,endingDate,itemNo,locationCode,variantCode', Argument) then
+        if not KeysAreKnown('templateName,worksheetName,mode,startingDate,endingDate,itemNo,locationCode,variantCode', Request, Argument) then
             exit;
         if not ResolvePlanningWorksheet(Argument, Request, TemplateName, WorksheetName) then
             exit;
@@ -233,7 +235,7 @@ codeunit 10076932 "Req. Worksheet Engine ori"
         LinesConsumed: Integer;
     begin
         Request := Argument.GetRequestJson();
-        if not KeysAreKnown(Request, 'templateName,worksheetName,lineNos,expectedCount', Argument) then
+        if not KeysAreKnown('templateName,worksheetName,lineNos,expectedCount', Request, Argument) then
             exit;
         if not AcceptExpectedCount(Request, Argument) then
             exit;
@@ -249,14 +251,19 @@ codeunit 10076932 "Req. Worksheet Engine ori"
             LineNoFilter := LineNoListFilter(RequestedLineNos);
         BeforeCount := CountAcceptedLines(TemplateName, WorksheetName, LineNoFilter);
 
+        Clear(CreatedTransfers);
+        Clear(CreatedAssemblies);
         CarryInProgress := true;
         if not TryCarryOutReport(TemplateName, WorksheetName, LineNoFilter, TempDocumentEntry) then begin
             CarryInProgress := false;
+            Clear(CreatedTransfers);
+            Clear(CreatedAssemblies);
             ContractParts.RespondWithNativeContext(Argument, 'worksheet', TemplateName + '|' + WorksheetName, CarryNativeExpectedLbl, CarryNativeNextLbl);
             exit;
         end;
         CarryInProgress := false;
 
+        CollectCreatedNativeOrders(TempDocumentEntry);
         AppendCreatedOrders(TempDocumentEntry, Orders);
         if Orders.Count() = 0 then begin
             Answer(Argument, "Bifrost Error Code ori"::BusinessCentralError, CarryNothingErr, 'worksheet', TemplateName + '|' + WorksheetName, CarryNothingExpectedLbl, CarryNothingNextLbl);
@@ -447,6 +454,70 @@ codeunit 10076932 "Req. Worksheet Engine ori"
         IsHandled := true;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Carry Out Action", OnAfterInsertTransLine, '', false, false)]
+    local procedure TrackCreatedTransfer(var TransHeader: Record "Transfer Header"; var ReqLine: Record "Requisition Line"; var TransLine: Record "Transfer Line"; var NextLineNo: Integer)
+    begin
+        if not CarryInProgress then
+            exit;
+        if ReqLine."Action Message" <> ReqLine."Action Message"::New then
+            exit;
+        if not CreatedTransfers.Contains(TransHeader."No.") then
+            CreatedTransfers.Add(TransHeader."No.");
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Asm. Carry Out Action", OnAfterInsertAsmHeader, '', false, false)]
+    local procedure TrackCreatedAssembly(var ReqLine: Record "Requisition Line"; var AsmHeader: Record "Assembly Header")
+    begin
+        if not CarryInProgress then
+            exit;
+        if ReqLine."Action Message" <> ReqLine."Action Message"::New then
+            exit;
+        if not CreatedAssemblies.Contains(AsmHeader."No.") then
+            CreatedAssemblies.Add(AsmHeader."No.");
+    end;
+
+    local procedure CollectCreatedNativeOrders(var TempDocumentEntry: Record "Document Entry" temporary)
+    var
+        TransferHeader: Record "Transfer Header";
+        AssemblyHeader: Record "Assembly Header";
+        DocumentNo: Code[20];
+    begin
+        // The resilient native runner creates transfer/assembly orders in a nested codeunit whose
+        // temporary document buffer is not shared with the report. Keep only committed headers:
+        // an event can fire before the native transaction subsequently rolls back.
+        TransferHeader.ReadIsolation := IsolationLevel::ReadCommitted;
+        AssemblyHeader.ReadIsolation := IsolationLevel::ReadCommitted;
+        foreach DocumentNo in CreatedTransfers do
+            if TransferHeader.Get(DocumentNo) then
+                AddCreatedOrder(TempDocumentEntry, Database::"Transfer Header", DocumentNo);
+        foreach DocumentNo in CreatedAssemblies do
+            if AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, DocumentNo) then
+                AddCreatedOrder(TempDocumentEntry, Database::"Assembly Header", DocumentNo);
+        Clear(CreatedTransfers);
+        Clear(CreatedAssemblies);
+    end;
+
+    local procedure AddCreatedOrder(var TempDocumentEntry: Record "Document Entry" temporary; TableId: Integer; DocumentNo: Code[20])
+    var
+        EntryNo: Integer;
+    begin
+        TempDocumentEntry.Reset();
+        TempDocumentEntry.SetRange("Table ID", TableId);
+        TempDocumentEntry.SetRange("Document No.", DocumentNo);
+        if not TempDocumentEntry.IsEmpty() then begin
+            TempDocumentEntry.Reset();
+            exit;
+        end;
+        TempDocumentEntry.Reset();
+        if TempDocumentEntry.FindLast() then
+            EntryNo := TempDocumentEntry."Entry No.";
+        TempDocumentEntry.Init();
+        TempDocumentEntry."Entry No." := EntryNo + 1;
+        TempDocumentEntry."Table ID" := TableId;
+        TempDocumentEntry."Document No." := DocumentNo;
+        TempDocumentEntry.Insert();
+    end;
+
     local procedure ResolvePlanningWorksheet(var Argument: Record "Message Argument ori"; Request: JsonObject; var TemplateName: Code[10]; var WorksheetName: Code[10]): Boolean
     var
         TemplateText: Text;
@@ -589,7 +660,7 @@ codeunit 10076932 "Req. Worksheet Engine ori"
         exit(false);
     end;
 
-    local procedure KeysAreKnown(Request: JsonObject; AllowedCsv: Text; var Argument: Record "Message Argument ori"): Boolean
+    local procedure KeysAreKnown(AllowedCsv: Text; Request: JsonObject; var Argument: Record "Message Argument ori"): Boolean
     var
         Allowed: List of [Text];
         KeyName: Text;
