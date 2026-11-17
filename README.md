@@ -74,8 +74,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
 | `Inventory.TrackingInfo.Get` | Outbound | Read one lot, serial or package information card: description, test quality, certificate, blocked, comments, inventory and expired inventory |
-| `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
-| `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
+| `Inventory.Transfer.UndoShipment` | Inbound | Undo all or selected posted shipment lines (`lineNos`) |
+| `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly, optionally recreating its order (`recreateOrder`) |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
 | `Inventory.ItemApplication.Unapply` | Inbound | Unapply applications linked to itemLedgerEntryNo through Item Jnl.-Post Line; legacy entryNo selects one application |
 | `Inventory.ItemApplication.Reapply` | Inbound | Reapply outboundEntryNo to inboundEntryNo for an exact positive base quantity; legacy selectors remain supported |
@@ -508,6 +508,24 @@ Objects: codeunit 10077027 `Valuation Get Impl ori`, temporary table 10077020
 `Inventory Valuation Buffer ori`, message enum value 10077027, test codeunit 96989
 `Inventory Valuation Tests ori`. The codeunit and enum value moved to the next free ID 10077027 because main
 uses 10077021 for partial transfer receipt. The temporary table stays 10077020.
+
+### Undo selected shipment lines or recreate an assembly order
+
+```json
+{"type":"Inventory.Transfer.UndoShipment","data":{"documentNo":"108001","lineNos":[10000],"expectedCount":1}}
+```
+
+`lineNos` contains 1–100 distinct positive line numbers from that posted shipment. All requested lines are validated before undo. Missing lines and correction lines are refused; unselected lines are preserved. Omit `lineNos` to select all non-correction lines.
+
+```json
+{"type":"Inventory.Assembly.UndoPost","data":{"documentNo":"132001","recreateOrder":true,"expectedCount":1}}
+```
+
+`recreateOrder` is a JSON boolean, default false. Native undo recreates a missing original order when true, and updates an existing order regardless of the flag. Native reservation, consumption and output-bin checks still apply. Both types post corrective item ledger entries and retain the posted document. `expectedCount` counts one posted document, always 1, including when only selected shipment lines are undone. When Bifrost Setup requires irreversible confirmation, omit `expectedCount` to read the count without changing data. When that setting is off, omission executes the operation.
+
+The native APIs were checked against [StefanMaron w1-28 transfer source](https://github.com/StefanMaron/MSDyn365BC.Code.History/tree/w1-28/BaseApp/Source/Base%20Application/Inventory/Transfer) and assembly posting source, and the owned BC 29 symbols. Shipment undo is codeunit 9030, and assembly undo is `Assembly-Post.Undo(PostedAssemblyHeader, RecreateAsmOrder)`. Neither version has an `Undo Transfer Receipt` codeunit. Issue #39 remains partial until that receipt requirement and the requested `DomainDisabled` code (absent from the current Foundation enum) receive a disposition.
+
+Foundation currently builds contract chapters in English for every LCID. The three changed irreversible count definitions include both English and Icelandic wording so the is-IS count unit is available even through that Foundation version.
 
 ## Add posted receipt lines to a purchase invoice
 
