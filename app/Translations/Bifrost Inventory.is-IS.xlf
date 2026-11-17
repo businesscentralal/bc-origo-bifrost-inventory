@@ -9093,6 +9093,198 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Get Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the lot, serial or package information card of an item, with its comments and inventory.</source>
+          <target>Les upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru, með athugasemdum og birgðum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru, með athugasemdum og birgðum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 1904377414" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A non-empty item number in data.itemNo.</source>
+          <target>Ótómt vörunúmer í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ótómt vörunúmer í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType ItemNoExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 3446012131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item number in data.itemNo.</source>
+          <target>Sendu vörunúmerið í data.itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið í data.itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType ItemNoNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lot information,serial information,package information,lot card,serial card,package card,test quality,certificate number,blocked lot</source>
+          <target>lotuupplýsingar,raðnúmeraupplýsingar,pakkaupplýsingar,lotuspjald,raðnúmeraspjald,pakkaspjald,gæðaprófun,vottorðsnúmer,lokuð lota</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lotuupplýsingar,raðnúmeraupplýsingar,pakkaupplýsingar,lotuspjald,raðnúmeraspjald,pakkaspjald,gæðaprófun,vottorðsnúmer,lokuð lota</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 2506256571" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only one of lotNo, serialNo or packageNo.</source>
+          <target>Sendu aðeins eitt af lotNo, serialNo eða packageNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins eitt af lotNo, serialNo eða packageNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType ManyTrackingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 4243124488" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo must be specified.</source>
+          <target>itemNo verður að vera tilgreint.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo verður að vera tilgreint.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType MissingItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 1694500194" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send lotNo, serialNo or packageNo.</source>
+          <target>Sendu lotNo, serialNo eða packageNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotNo, serialNo eða packageNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType MissingTrackingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 1360836268" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The tracking number has no information card.</source>
+          <target>Rakningarnúmerið hefur ekkert upplýsingaspjald.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmerið hefur ekkert upplýsingaspjald.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType NoCardErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 882839805" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing %1 for item %2, variant '%3' and number %4.</source>
+          <target>Fyrirliggjandi %1 fyrir vöru %2, afbrigði '%3' og númer %4.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = card table caption, %2 = item no., %3 = variant code, %4 = tracking no. is-IS=Fyrirliggjandi %1 fyrir vöru %2, afbrigði '%3' og númer %4.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType NoCardExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 831433020" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The tracking number has no information card. Check the item, variantCode and number, or create the card in Business Central first.</source>
+          <target>Rakningarnúmerið hefur ekkert upplýsingaspjald. Athugaðu vöru, variantCode og númer, eða stofnaðu spjaldið fyrst í Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmerið hefur ekkert upplýsingaspjald. Athugaðu vöru, variantCode og númer, eða stofnaðu spjaldið fyrst í Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType NoCardNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Send exactly one of lotNo, serialNo or packageNo; variantCode selects the card of that variant and is blank when not sent. A tracking number that has stock but no information card is refused with RecordNotFound. testQuality is answered for lot cards only and certificateNumber for lot and package cards; countryRegionCode for package cards only; the other card types answer them blank. inventory is the remaining quantity of the item ledger entries of the card in the base unit of measure; expiredInventory is the part of it whose expiration date is before the work date. comments lists the item tracking comments of the card in line order.</source>
+          <target>Aðeins lestur. Sendu nákvæmlega eitt af lotNo, serialNo eða packageNo; variantCode velur spjald þess afbrigðis og er autt ef það er ekki sent. Rakningarnúmeri sem á birgðir en ekkert upplýsingaspjald er hafnað með RecordNotFound. testQuality er aðeins skilað fyrir lotuspjöld og certificateNumber fyrir lotu- og pakkaspjöld; countryRegionCode aðeins fyrir pakkaspjöld; aðrar spjaldtegundir skila þeim auðum. inventory er eftirstandandi magn vörufærslna spjaldsins í grunnmælieiningu; expiredInventory er sá hluti þess sem rennur út fyrir vinnudagsetningu. comments telur upp rakningarathugasemdir spjaldsins í línuröð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins lestur. Sendu nákvæmlega eitt af lotNo, serialNo eða packageNo; variantCode velur spjald þess afbrigðis og er autt ef það er ekki sent. Rakningarnúmeri sem á birgðir en ekkert upplýsingaspjald er hafnað með RecordNotFound. testQuality er aðeins skilað fyrir lotuspjöld og certificateNumber fyrir lotu- og pakkaspjöld; countryRegionCode aðeins fyrir pakkaspjöld; aðrar spjaldtegundir skila þeim auðum. inventory er eftirstandandi magn vörufærslna spjaldsins í grunnmælieiningu; expiredInventory er sá hluti þess sem rennur út fyrir vinnudagsetningu. comments telur upp rakningarathugasemdir spjaldsins í línuröð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads one lot, serial or package information card of an item: description, test quality, certificate number, blocked, comments, inventory and expired inventory.</source>
+          <target>Les eitt upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru: lýsingu, gæðaprófun, vottorðsnúmer, lokun, athugasemdir, birgðir og útrunnar birgðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les eitt upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru: lýsingu, gæðaprófun, vottorðsnúmer, lokun, athugasemdir, birgðir og útrunnar birgðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for the requested tracking information.</source>
+          <target>Heimild hafnað fyrir umbeðnar rakningarupplýsingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir umbeðnar rakningarupplýsingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 870608751" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read permission on the information card, item tracking comment and item ledger entry tables.</source>
+          <target>Lesheimild á töflum upplýsingaspjalds, rakningarathugasemda og vörufærslna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesheimild á töflum upplýsingaspjalds, rakningarathugasemda og vörufærslna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType PermissionExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 42286050" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for read permission on the named table.</source>
+          <target>Biddu kerfisstjóra um lesheimild á tilgreindri töflu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um lesheimild á tilgreindri töflu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType PermissionNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select an item using subject or item identifiers, then exactly one of lotNo, serialNo or packageNo, and the variantCode of the card.</source>
+          <target>Veldu vöru með subject eða vöruauðkennum, síðan nákvæmlega eitt af lotNo, serialNo eða packageNo, og variantCode spjaldsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vöru með subject eða vöruauðkennum, síðan nákvæmlega eitt af lotNo, serialNo eða packageNo, og variantCode spjaldsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A tracking number or variant code is too long.</source>
+          <target>Rakningarnúmer eða afbrigðiskóði er of langur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmer eða afbrigðiskóði er of langur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType TooLongErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 122645532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>variantCode: at most 10 characters; lotNo, serialNo and packageNo: at most 50 characters.</source>
+          <target>variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=variantCode: að hámarki 10 stafir; lotNo, serialNo og packageNo: að hámarki 50 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType TooLongExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 3363460077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shorten the value to the length of the Business Central field.</source>
+          <target>Styttu gildið að lengd Business Central reitsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Styttu gildið að lengd Business Central reitsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType TooLongNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 700893003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exactly one non-blank tracking number: lotNo, serialNo or packageNo.</source>
+          <target>Nákvæmlega eitt rakningarnúmer sem er ekki autt: lotNo, serialNo eða packageNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nákvæmlega eitt rakningarnúmer sem er ekki autt: lotNo, serialNo eða packageNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType TrackingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - NamedType 984320782" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the lot, serial or package number of the card in one of lotNo, serialNo or packageNo.</source>
+          <target>Sendu lotu-, raðnúmer eða pakkanúmer spjaldsins í einu af lotNo, serialNo eða packageNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu lotu-, raðnúmer eða pakkanúmer spjaldsins í einu af lotNo, serialNo eða packageNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - NamedType TrackingNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 1701121324" size-unit="char" translate="yes" xml:space="preserve">
+          <source>data.itemNo is not sent or blank and no other item selection is sent, or none of lotNo, serialNo and packageNo is sent.</source>
+          <target>data.itemNo er ekki sent eða autt og ekkert annað vöruval er sent, eða ekkert af lotNo, serialNo og packageNo er sent.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=data.itemNo er ekki sent eða autt og ekkert annað vöruval er sent, eða ekkert af lotNo, serialNo og packageNo er sent.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType MissingWhenTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 4200801003" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the item number in data.itemNo and one of lotNo, serialNo or packageNo.</source>
+          <target>Sendu vörunúmerið í data.itemNo og eitt af lotNo, serialNo eða packageNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu vörunúmerið í data.itemNo og eitt af lotNo, serialNo eða packageNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType MissingNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 1658008174" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A tracking number, variant code or item identifier has the wrong JSON type or is too long.</source>
+          <target>Rakningarnúmer, afbrigðiskóði eða vöruauðkenni hefur rangt JSON-tag eða er of langt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Rakningarnúmer, afbrigðiskóði eða vöruauðkenni hefur rangt JSON-tag eða er of langt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType FormatMsgTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 2220186858" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send JSON strings: variantCode at most 10 characters, lotNo, serialNo and packageNo at most 50.</source>
+          <target>Sendu JSON-strengi: variantCode að hámarki 10 stafir, lotNo, serialNo og packageNo að hámarki 50.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu JSON-strengi: variantCode að hámarki 10 stafir, lotNo, serialNo og packageNo að hámarki 50.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType FormatNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 878275372" size-unit="char" translate="yes" xml:space="preserve">
+          <source>More than one of lotNo, serialNo and packageNo is sent, or the Item Tracking domain is turned off.</source>
+          <target>Fleiri en eitt af lotNo, serialNo og packageNo er sent, eða slökkt er á vörurakningarsviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fleiri en eitt af lotNo, serialNo og packageNo er sent, eða slökkt er á vörurakningarsviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType InvalidMsgTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 2426344728" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only one tracking number; turn the domain on from Inventory Setup.</source>
+          <target>Sendu aðeins eitt rakningarnúmer; kveiktu á sviðinu í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins eitt rakningarnúmer; kveiktu á sviðinu í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType InvalidNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 487864190" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item cannot be found, or the tracking number has no information card for the item and variant.</source>
+          <target>Varan finnst ekki, eða rakningarnúmerið hefur ekkert upplýsingaspjald fyrir vöruna og afbrigðið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan finnst ekki, eða rakningarnúmerið hefur ekkert upplýsingaspjald fyrir vöruna og afbrigðið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType NotFoundMsgTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 621982998" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read the item, the information card, item tracking comments or item ledger entries.</source>
+          <target>Kallandi getur ekki lesið vöruna, upplýsingaspjaldið, rakningarathugasemdir eða vörufærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandi getur ekki lesið vöruna, upplýsingaspjaldið, rakningarathugasemdir eða vörufærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType PermissionMsgTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 2099440052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native item selection or table view error.</source>
+          <target>Villa í vöruvali eða töflusýn Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Villa í vöruvali eða töflusýn Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType NativeMsgTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 2506910607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Foundation rejects the item selector or the table view cannot be evaluated.</source>
+          <target>Foundation hafnar vöruvalinu eða ekki er hægt að meta töflusýnina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Foundation hafnar vöruvalinu eða ekki er hægt að meta töflusýnina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType NativeWhenTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3955217581 - Method 1158096087 - NamedType 3447332720" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the item selection and the Business Central table view syntax.</source>
+          <target>Leiðréttu vöruvalið og setningafræði töflusýnar Business Central.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu vöruvalið og setningafræði töflusýnar Business Central.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Info Get Impl ori - Method GetErrors - NamedType NativeNextStepTxt</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3641853097 - Method 4231479414 - NamedType 1415300960" size-unit="char" translate="yes" xml:space="preserve">
           <source>Transfer Order %1 (%2 -&gt; %3) %4 preview produced %5 entries. %6</source>
           <target>Forskoðun flutningspöntunar %1 (%2 -&gt; %3), %4, myndaði %5 færslur. %6</target>
