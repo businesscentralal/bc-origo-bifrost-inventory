@@ -5,7 +5,7 @@ using Origo.Bifrost;
 /// <summary>Costing message types: cost read, guarded card-cost writes and native revaluation posting and preview.</summary>
 enumextension 10076836 "MsgType.CostGet.EnumExt ori" extends "Message Type ori"
 {
-    value(10077020; "Inventory.Valuation.Get")
+    value(10077021; "Inventory.Valuation.Get")
     {
         Caption = 'Inventory.Valuation.Get', Locked = true;
         Implementation = "Msg Interface ori" = "Valuation Get Impl ori", "Msg Discovery ori" = "Valuation Get Impl ori", "Msg Contract ori" = "Valuation Get Impl ori";

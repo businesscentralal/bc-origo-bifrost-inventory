@@ -5,9 +5,14 @@
 ### Added (2026-11-16) - Inventory valuation at a date (#109)
 
 - `Inventory.Valuation.Get` returns quantity, actual cost, expected cost and total cost in LCY by item, location and variant, with posting-date cutoff, native filters and deterministic take/skip paging. Reads Value Entry amounts as report 1001 does; does not adjust costs or persist valuation rows.
-- Adds codeunit and temporary table 10077020, the message enum value 10077020, read/full role execution grants, localized help/refusals and test codeunit 96989. No product UI changes.
+- Adds temporary table 10077020 `Inventory Valuation Buffer ori`, codeunit 10077021 `Valuation Get Impl ori` and message enum value 10077021 (same ID as the codeunit), read/full role execution grants, localized help/refusals and test codeunit 96989. No product UI changes. The codeunit and enum value moved from 10077020 to the next free ID 10077021 because #118 already owns codeunit and enum value 10077020. The temporary table stays 10077020; that ID is free for tables.
 - Transfer posting/preview and their tests select the native direct-transfer setting at runtime: option field 5855 (0/1) on BC 28 or enum field 5857 (10/20) on BC 29. Both builds remain supported without referencing the deprecated field at compile time.
 - Full-suite fixtures explicitly enable the attribute domain, and contract assertions include Foundation's common error-code response field from 28.0.13 while preserving exact application payload comparisons on earlier releases. Confirmation-boundary fixtures name a subject, as required by Foundation's current preview contract.
+
+### Added (2026-11-16) - Item substitutions (#118)
+
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).

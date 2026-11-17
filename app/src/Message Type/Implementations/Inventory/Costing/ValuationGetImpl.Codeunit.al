@@ -5,7 +5,7 @@ using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 
 /// <summary>Reads inventory valuation from value entries up to a posting date, as report 1001 does.</summary>
-codeunit 10077020 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077021 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

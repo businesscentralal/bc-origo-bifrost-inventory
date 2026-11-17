@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 44 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 60 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -30,6 +30,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | Type | Direction | Purpose |
 |------|-----------|---------|
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
+| `Inventory.ItemSubstitution.Get` | Outbound | Read direct item substitutes and exact-variant on-hand inventory |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
@@ -168,7 +169,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge and Item Category.
+   Item Reference, Availability, Item Charge, Item Category and Item Substitution.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
@@ -191,6 +192,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Item Application | Item Application Entry |
    | Inventory Period | Inventory Period |
    | Item Price | Price List Line with Asset Type Item |
+   | Item Substitution | Item Substitution |
    | Item Reference | Item Reference |
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
@@ -256,7 +258,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
-| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
+| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
@@ -442,5 +444,16 @@ matching entries produce no row. Paging reflects current entries, so postings be
 can change results. Costing must be enabled and the caller must have Item and Value Entry
 read permission. The message declares `effect: read` and only uses a temporary buffer.
 
-Objects: codeunit 10077020 `Valuation Get Impl ori`, temporary table 10077020
-`Inventory Valuation Buffer ori`, test codeunit 96989 `Inventory Valuation Tests ori`.
+Objects: codeunit 10077021 `Valuation Get Impl ori`, temporary table 10077020
+`Inventory Valuation Buffer ori`, message enum value 10077021, test codeunit 96989
+`Inventory Valuation Tests ori`. The codeunit and enum value are 10077021, the next free
+ID after #118 took codeunit and enum value 10077020. The temporary table stays 10077020.
+
+### Item substitution objects (#118)
+
+| ID | Kind | Object |
+|---|---|---|
+| 10077020 | Codeunit | `Item Subst. Get Impl ori` |
+| 96993 | Test codeunit | `Item Substitution Tests ori` |
+
+See [the substitution request and response](docs/contracts.md#inventoryitemsubstitutionget).
