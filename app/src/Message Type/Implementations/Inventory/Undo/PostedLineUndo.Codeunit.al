@@ -7,7 +7,7 @@ using Microsoft.Sales.History;
 using Origo.Bifrost;
 
 /// <summary>Shares validation and help while retaining the distinct native undo routines and their transaction boundary.</summary>
-codeunit 10077027 "Posted Line Undo ori"
+codeunit 10077014 "Posted Line Undo ori"
 {
     Access = Internal;
 

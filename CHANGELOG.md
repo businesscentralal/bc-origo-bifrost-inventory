@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed — issue 134 ID clash with merged Get Shipment Lines (#215)
+
+- Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
+- Move the shared helper `Posted Line Undo ori` from 10077027 to 10077014. Open pull request #206 claims codeunit and message value 10077027 for `Inventory.Valuation.Get`. 10077014, 10077016 and 10077017 are free on main and are not claimed by an open pull request. The enum extension stays 10077025.
+
 ### Fixed - main merge ID reconciliation (PR #233)
 
 - Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
@@ -22,7 +27,7 @@
 
 - Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
 - Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.
-- App objects: codeunits / enum values 10077028–10077029, shared codeunit 10077027, enum extension 10077025. Test objects: codeunit 96998; explicit owned fixture codeunit / page 96997.
+- App objects: codeunits / enum values 10077016–10077017, shared codeunit 10077014, enum extension 10077025. Test objects: codeunit 96998; explicit owned fixture codeunit / page 96997.
 
 ### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 

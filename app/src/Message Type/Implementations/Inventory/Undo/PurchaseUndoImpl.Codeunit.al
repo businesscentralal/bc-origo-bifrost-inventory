@@ -4,7 +4,7 @@ using Microsoft.Purchases.History;
 using Origo.Bifrost;
 
 /// <summary>Undoes selected posted purchase receipt lines through Undo Purchase Receipt Line.</summary>
-codeunit 10077029 "Purchase Undo Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077017 "Purchase Undo Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

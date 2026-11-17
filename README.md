@@ -510,7 +510,7 @@ Foundation currently builds contract chapters in English for every LCID. The thr
 
 Both operations declare `irreversible`: corrective entries are posted and a standalone call commits. `expectedCount: 1` confirms the one posted document, not its line count. Missing confirmation previews without posting when Foundation confirmation is enabled. Omit Commit retains the caller transaction. Native posted document permissions, Bifrost Full Access and Inv. Posting Gate are required. No Inventory domain switch is added for these Sales/Purchase types.
 
-Objects: implementations 10077028 / 10077029; shared validator/help 10077027; enum extension 10077025; tests 96998 (moved from 96996, which main uses for receipt-line tests).
+Objects: implementations 10077016 / 10077017; shared validator/help 10077014; enum extension 10077025; tests 96998 (moved from 96996, which main uses for receipt-line tests).
 
 ## Add posted receipt lines to a purchase invoice
 
