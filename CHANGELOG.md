@@ -11,6 +11,17 @@
 - Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
 - `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
 
+### Added (2026-11-16) - native physical inventory orders (#113)
+
+- `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
+- Added implementation codeunits **10076960–10076962**, process **10076963**, contract **10076964**, enum extension **10076860** and test codeunit **96986**. Existing Full-role execute grants and Physical Inventory domain are reused. Bilingual discovery/help labels, Icelandic XLF, user documentation and the 62-type catalogue census are synchronized. Tests cover native success, zero count, bad input, repeat finish and rollback after a later recording failure.
+
+
+### Fixed (2026-11-16) - physical inventory order regression checks (#113)
+
+- Refusal tests assert the dispatcher's top-level code and nextStep fields. The irreversible-type boundary includes physical inventory order posting and distinguishes its optional handler count from Foundation's mandatory confirmation gate; both locale checks retain preview, mismatch and domain-refusal assertions. Product behavior and message contracts are unchanged.
+- Owned-tenant regression checks use a unique separate posting series on every run, explicitly enable and restore Foundation's confirmation setting, and verify both raw attribute responses and Foundation's added shared response code. No object IDs added.
+
 ### Changed - Item application selectors and quantities (#40)
 
 - Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
