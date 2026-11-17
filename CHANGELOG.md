@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - native physical inventory orders (#113)
+
+- `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
+- Added implementation codeunits **10076960–10076962**, process **10076963**, contract **10076964**, enum extension **10076860** and test codeunit **96986**. Existing Full-role execute grants and Physical Inventory domain are reused. Bilingual discovery/help labels, Icelandic XLF, user documentation and the 62-type catalogue census are synchronized. Tests cover native success, zero count, bad input, repeat finish and rollback after a later recording failure.
+
+
+### Fixed (2026-11-16) - physical inventory order regression checks (#113)
+
+- Refusal tests assert the dispatcher's top-level code and nextStep fields. The irreversible-type boundary includes physical inventory order posting and distinguishes its optional handler count from Foundation's mandatory confirmation gate; both locale checks retain preview, mismatch and domain-refusal assertions. Product behavior and message contracts are unchanged.
+- Owned-tenant regression checks use a unique separate posting series on every run, explicitly enable and restore Foundation's confirmation setting, and verify both raw attribute responses and Foundation's added shared response code. No object IDs added.
+
+### Changed - Item application selectors and quantities (#40)
+
+- Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
+- Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
+- Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
+
 ### Added (2026-11-16) - Item substitutions (#118)
 
 - `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
@@ -15,6 +32,18 @@
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
+### Added (2026-11-16) - Sales.ReturnOrder.CreateFromPosted (#136)
+
+- New message type `Sales.ReturnOrder.CreateFromPosted` (enum value 10077032 in enum extension 10076906 `MsgType.SalesRetOrd.Ext ori`; codeunits 10077032 `Sales Ret. Ord. Post. Impl ori` and 10077033 `Sales Ret. Ord. Post. Proc ori`). It creates a sales return order or credit memo, or fills an open one, from posted sales invoice or shipment lines with quantities, through native codeunit 6620 `Copy Document Mgt.` (`SetProperties` with exact cost reversal, `CopySalesInvLinesToDoc`, `CopySalesShptLinesToDoc`), the same routine as Get Posted Document Lines to Reverse, so item lines get Appl.-from Item Entry.
+- Request: `documentType` (`ReturnOrder` or `CreditMemo`), `customerNo` for a new document or `documentNo`/`systemId` for an existing open one, and `lines` of `{source (Invoice|Shipment), documentNo, lineNo, quantity}`. The answer gives the document no., `created`, and the added lines with `applFromItemEntryNo`. A quantity above what is left to reverse (shipped quantity not yet returned for item lines) and a line of another customer are refused with `InvalidLine`, a released document with `PreconditionFailed` (pointing to `Sales.Document.Reopen`); every refusal has a Bifröst code and `nextStep` and nothing is created.
+- Effect `write` (not irreversible; nothing is posted and the document can be deleted while open), `posts: false`, `idempotent: false` (core#1365 D1). Help, refusals and examples in en-US and is-IS; is-IS.xlf regenerated with `tools/Update-IcelandicXlf.ps1`.
+- `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96991 `Sales Ret. Ord. Post. Tests` (new return order from an invoice line with item entry link, credit memo from a shipment line, quantity above remaining, same line twice, other customer, released document, coded invalid input, bilingual help).
+
+### Fixed (2026-11-16) - Sales.ReturnOrder.CreateFromPosted build and write order (#136)
+
+- Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
+- The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
+- The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
 
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
