@@ -43,6 +43,8 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+- #106 (`Inventory.TrackingInfo.Get`): codeunit and enum value 10077010, enum extension 10076915, test codeunit 96992.
+  On main 96963 and 96970-96979 are already used, so check `test/` before taking an ID from the free list above.
 
 ## Issue 40 additions
 

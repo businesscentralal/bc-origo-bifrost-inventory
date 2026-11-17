@@ -64,6 +64,11 @@
 
 - `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
 - Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
+### Added (2026-11-16) - Inventory.TrackingInfo.Get reads lot, serial and package information cards (#106)
+
+- New read-only message type `Inventory.TrackingInfo.Get` (effect `read`). Select an item (subject, `itemNo`, item SystemId or `tableView`), the `variantCode` of the card and exactly one of `lotNo`, `serialNo` or `packageNo`. It answers the Lot No. Information (6505), Serial No. Information (6504) or Package No. Information (6515) card: `description`, `testQuality` (lot only), `certificateNumber` (lot and package), `countryRegionCode` (package), `blocked`, `hasComments`, the item tracking `comments`, `inventory` and `expiredInventory` (expiration date before the work date), all in base units.
+- Refusals: `MissingParameter` on `itemNo` or on `lotNo|serialNo|packageNo`; `InvalidParameter` when more than one tracking number is sent; `InvalidParameterFormat` for a value that is too long or not a string; `RecordNotFound` with nextStep "The tracking number has no information card..." when the card does not exist (also when the number has stock); `PermissionDenied` per table. Help and refusals are in en-US and is-IS.
+- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 64 Inventory types.
 
 
 ### Fixed ([28.3.2.0] development)
