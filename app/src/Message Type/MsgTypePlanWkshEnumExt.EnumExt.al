@@ -4,7 +4,7 @@ using Origo.Bifrost;
 
 enumextension 10076947 "MsgType.PlanWksh.EnumExt ori" extends "Message Type ori"
 {
-    value(10076938; "Inventory.PlanningWorksheet.Calculate")
+    value(10076949; "Inventory.PlanningWorksheet.Calculate")
     {
         Caption = 'Inventory.PlanningWorksheet.Calculate', Locked = true;
         Implementation = "Msg Interface ori" = "Plan Wksh Calc Impl ori", "Msg Discovery ori" = "Plan Wksh Calc Impl ori", "Msg Contract ori" = "Plan Wksh Calc Impl ori";
