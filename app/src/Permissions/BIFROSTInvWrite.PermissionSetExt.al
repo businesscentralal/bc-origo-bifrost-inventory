@@ -14,6 +14,12 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     Permissions =
         table "Inventory Valuation Buffer ori" = X,
         codeunit "Valuation Get Impl ori" = X,
+        codeunit "Std. Cost Suggest Impl ori" = X,
+        codeunit "Std. Cost Implement Impl ori" = X,
+        codeunit "Std. Cost Management ori" = X,
+        codeunit "Std. Cost Process ori" = X,
+        codeunit "Std. Cost Suggest Proc ori" = X,
+        codeunit "Std. Cost Contract ori" = X,
         codeunit "Transfer Posting Setup ori" = X,
         codeunit "Transfer Ship Impl ori" = X,
         codeunit "Transfer Receive Impl ori" = X,
