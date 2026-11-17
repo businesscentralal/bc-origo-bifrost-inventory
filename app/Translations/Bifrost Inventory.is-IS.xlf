@@ -13107,6 +13107,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sama aðgerð og Afturkalla afhendingu á bókaðri millifærsluafhendingu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>lineNos must contain 1 to 100 distinct positive JSON integers.</source>
+          <target>lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing non-correction line numbers from this posted transfer shipment.</source>
+          <target>Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType ExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 3268343153" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the posted shipment lines and send their line numbers in lineNos, or omit lineNos to select all non-correction lines.</source>
+          <target>Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType NextTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment line %1 was not found on document %2.</source>
+          <target>Afhendingarlína %1 fannst ekki á skjali %2.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number, %2 = document number; is-IS=Afhendingarlína %1 fannst ekki á skjali %2.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2984501490" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Shipment line %1 is already undone or is a correction line.</source>
+          <target>Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 3458237341" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send asOfDate as a nonzero ISO date in YYYY-MM-DD format.</source>
           <target>Sendu asOfDate sem ISO-dagsetningu aðra en núlldagsetningu á sniðinu YYYY-MM-DD.</target>
@@ -13352,36 +13382,6 @@
           <target>Birgðavörur valdar með valfrjálsri vörusíu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Birgðavörur valdar með valfrjálsri vörusíu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetTarget - NamedType TargetLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
-          <source>lineNos must contain 1 to 100 distinct positive JSON integers.</source>
-          <target>lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=lineNos verður að innihalda 1 til 100 ólíkar jákvæðar JSON-heiltölur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType FormatErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2918804866" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Existing non-correction line numbers from this posted transfer shipment.</source>
-          <target>Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer fyrirliggjandi lína úr þessari bókuðu flutningsafhendingu sem eru ekki leiðréttingarlínur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType ExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 3268343153" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read the posted shipment lines and send their line numbers in lineNos, or omit lineNos to select all non-correction lines.</source>
-          <target>Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lestu línur bókuðu afhendingarinnar og sendu línunúmer þeirra í lineNos eða slepptu lineNos til að velja allar línur sem eru ekki leiðréttingarlínur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType NextTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Shipment line %1 was not found on document %2.</source>
-          <target>Afhendingarlína %1 fannst ekki á skjali %2.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = line number, %2 = document number; is-IS=Afhendingarlína %1 fannst ekki á skjali %2.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType MissingErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 2984501490" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Shipment line %1 is already undone or is a correction line.</source>
-          <target>Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
         </trans-unit>
         <trans-unit id="Page 88444387 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory Setup</source>
