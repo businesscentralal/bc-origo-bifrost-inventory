@@ -286,6 +286,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
 | 10076848 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
+| 10076850 | `MsgType.StdCost.EnumExt ori` | `Inventory.StandardCost.Suggest` (10076938), `Inventory.StandardCost.Implement` (10076933) |
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
@@ -325,6 +326,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
+| 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
 | 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
@@ -481,6 +483,16 @@ app-owned errors and follow the shared retry guidance; an irreversible call is n
 The native APIs were checked against [StefanMaron w1-28 transfer source](https://github.com/StefanMaron/MSDyn365BC.Code.History/tree/w1-28/BaseApp/Source/Base%20Application/Inventory/Transfer) and assembly posting source, and the owned BC 29 symbols. Shipment undo is codeunit 9030, and assembly undo is `Assembly-Post.Undo(PostedAssemblyHeader, RecreateAsmOrder)`. Neither version has an `Undo Transfer Receipt` codeunit. Issue #39 remains partial until that receipt requirement and the requested `DomainDisabled` code (absent from the current Foundation enum) receive a disposition.
 
 Foundation currently builds contract chapters in English for every LCID. The three changed irreversible count definitions include both English and Icelandic wording so the is-IS count unit is available even through that Foundation version.
+
+### Standard cost worksheet
+
+`Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.
+
+`Inventory.StandardCost.Implement` takes `worksheetName`, `journalTemplateName`, `journalBatchName`, `postingDate` (`yyyy-mm-dd`) and `documentNo`. The batch must exist under a Revaluation template and be empty. Every worksheet row must be an unimplemented, unblocked Standard-cost Inventory item. Native implementation updates item and SKU costs/cost shares according to Business Central setup, marks worksheet rows implemented and creates revaluation journal lines. Zero-stock items may produce no journal lines. Both types return `status`, `worksheetName`, `lineCount`, `lines` and `posted: false`.
+
+Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
+
+Objects: codeunits 10076938 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076850 `MsgType.StdCost.EnumExt ori` (values 10076938 and 10076933); test codeunits 96982–96983 `Standard Cost Tests ori`.
 
 ### Requisition worksheet planning (#131)
 
