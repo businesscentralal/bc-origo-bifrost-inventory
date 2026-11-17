@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed — issue 134 ID clash with merged Get Shipment Lines (#215)
+
+- Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
+- Move the shared helper `Posted Line Undo ori` from 10077027 to 10077014. Open pull request #206 claims codeunit and message value 10077027 for `Inventory.Valuation.Get`. 10077014, 10077016 and 10077017 are free on main and are not claimed by an open pull request. The enum extension stays 10077025.
 ### Fixed
 - #234: `Purchase.Requisition.CarryOut` (10076942) and `Inventory.PlanningWorksheet.CarryOut` (10076939) state what `expectedCount` counts. effect.changes and the expectedCount parameter say `expectedCount counts worksheet selections: always 1` (Icelandic: `expectedCount telur val á vinnublaði: alltaf 1`), not the number of lines or orders. Requisition carry-out now declares the expectedCount parameter itself so Foundation keeps that sentence. New test codeunit 96948 `CarryOut Count Help ori` (96964 is `Inv. 186 Blank Line Tests ori` on main). No new product object IDs.
 
@@ -15,6 +19,17 @@
 
 ### Added
 - #117: `Inventory.PlanningWorksheet.Calculate` (10076949) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076939) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076947, codeunits 10076949, 10076939 and 10076946, enum value 17 Planning, setup field 27 Planning, test codeunit 96965 (96968 was taken by SKU Tests on main, so this PR moved to the next unused test ID). The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+### Fixed — issue 134 merge with main
+
+- Move the PR’s `Posted Line Undo Tests ori` test codeunit from 96996 to the next free ID 96998: main uses 96996 for `Purch Get Receipt Tests`. Test behavior and the fixture objects at 96997 are unchanged.
+
+- Move the PR’s Sales/Purchase undo implementation codeunits and message values from 10077025–10077026 to the next free IDs 10077028–10077029: main uses 10077025 for Transfer Posting Setup and 10077026 for Transfer Ship. The shared helper stays 10077027 and the enum extension stays 10077025. Both features retain their behavior.
+
+### Added ([28.3.2.0] development) — issue 134
+
+- Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
+- Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.
+- App objects: codeunits / enum values 10077016–10077017, shared codeunit 10077014, enum extension 10077025. Test objects: codeunit 96998; explicit owned fixture codeunit / page 96997.
 
 ### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 
