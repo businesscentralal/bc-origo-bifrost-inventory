@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 82 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 83 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -296,6 +296,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
 | 10077015 | `MsgType.ItemUoM.EnumExt ori` | `Inventory.ItemUnitOfMeasure.Get` (10077011), `Inventory.ItemUnitOfMeasure.Create` (10077012) |
+| 10077030 | `MsgType.PurchGetRcpt.Ext ori` | `Purchase.PurchaseInvoice.GetReceiptLines` (value 10077018) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -326,6 +327,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076887–10076889 | Reclassification | Check, Post, Preview |
 | 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
 | 10077030 | Selected reservation supply | `Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound |
+| 10077018, 10077031 | Purchase receipt lines | `Purch Get Receipt Impl ori` (`Purchase.PurchaseInvoice.GetReceiptLines`, value 10077018), `Purch Get Receipt Proc ori`; enum extension 10077030 |
 | 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
@@ -495,6 +497,24 @@ Objects: codeunit 10077027 `Valuation Get Impl ori`, temporary table 10077020
 `Inventory Valuation Buffer ori`, message enum value 10077027, test codeunit 96989
 `Inventory Valuation Tests ori`. The codeunit and enum value moved to the next free ID 10077027 because main
 uses 10077021 for partial transfer receipt. The temporary table stays 10077020.
+
+## Add posted receipt lines to a purchase invoice
+
+```json
+{"type":"Purchase.PurchaseInvoice.GetReceiptLines","data":{"documentNo":"108001","receiptNos":["107001","107002"]}}
+```
+
+Adds the remaining uninvoiced receipt quantities through the native Get Receipt Lines routine. The invoice must be open. Use `systemId` instead of `documentNo`, or `allReceipts: true` instead of `receiptNos` to select receipts for the invoice's pay-to vendor and currency.
+
+| Response field | Meaning |
+|---|---|
+| `documentNo`, `systemId` | The target purchase invoice |
+| `addedCount`, `addedLines` | Added invoice lines, including native heading text lines; each carries `lineNo`, `type`, `no`, `description`, `quantity`, `receiptNo`, `receiptLineNo` |
+| `skippedCount`, `skippedLines` | Receipt lines already `invoiced` or `onOpenInvoice`; the latter includes `invoiceNo` |
+
+An explicitly selected receipt of another pay-to vendor or currency returns `InvalidLine` with `nextStep`, without adding lines. Native validation failures roll back the call. The effect is `write`; this operation does not post. Review the invoice, then use `Purchase.Document.Post`.
+
+Objects: implementation and message value 10077018, process 10077031, enum extension 10077030, tests 96996. Main assigns codeunit 10077030 to `Reserv. Supply Filter ori`, so the receipt implementation moved to 10077018. Execution extends Foundation's Full role; standard purchase document permissions still apply. No Inventory domain switch is added for this purchase-document operation.
 
 ### Standard cost worksheet
 
