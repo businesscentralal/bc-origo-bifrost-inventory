@@ -616,6 +616,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Contact: Record Contact;
         ContactRelation: Record "Contact Business Relation";
         ReservationManagement: Codeunit "Reservation Management";
+        ReleaseTransfer: Codeunit "Release Transfer Document";
         RegisterNos: List of [Integer];
         ContactNos: List of [Code[20]];
         RegisterNo: Integer;
@@ -635,6 +636,8 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 TransferLine.SetRange("Item No.", ItemNo);
                 while TransferLine.FindFirst() do begin
                     TransferHeader.Get(TransferLine."Document No.");
+                    if TransferHeader.Status = TransferHeader.Status::Released then
+                        ReleaseTransfer.Reopen(TransferHeader);
                     TransferHeader.Delete(true);
                 end;
                 ShipmentLine.SetRange("Item No.", ItemNo);

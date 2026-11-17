@@ -1815,12 +1815,6 @@
           <note from="Developer" annotates="general" priority="2">%1 = entry number; is-IS=Frátekning %1 inniheldur ekki lengur samræmt frátekningarpar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method CancelReservation - NamedType InconsistentPairErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1466067084 - Method 1099151897 - NamedType 4036553560" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The selected item ledger entry does not have enough matching, unreserved inventory for this source line.</source>
-          <target>Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method ReserveSupplyEntry - NamedType SupplyUnavailableErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1466067084 - Method 3976827454 - NamedType 3339915146" size-unit="char" translate="yes" xml:space="preserve">
           <source>Select a negative outbound and positive inbound entry of the same item, variant and location.</source>
           <target>Veldu neikvæða útleiðandi og jákvæða innleiðandi færslu fyrir sömu vöru, afbrigði og birgðageymslu.</target>
@@ -1832,6 +1826,12 @@
           <target>Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method ReapplyItemEntry - NamedType QuantityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1466067084 - Method 1099151897 - NamedType 4036553560" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selected item ledger entry does not have enough matching, unreserved inventory for this source line.</source>
+          <target>Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valin vörufærsla hefur ekki nægar samsvarandi ófráteknar birgðir fyrir þessa upprunalínu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Write Process ori - Method ReserveSupplyEntry - NamedType SupplyUnavailableErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 886104080 - Method 3571782927 - NamedType 2247369567" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemLedgerEntryNo is required.</source>
