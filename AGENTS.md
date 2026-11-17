@@ -2,7 +2,7 @@
 
 - Namespace: `Origo.Bifrost.Inventory` / `Origo.Bifrost.Inventory.Test`
 - Follow OrigoSoftwareSolutions/bc-dev-standards
-- Scope: 44 `Inventory.*` message types across eleven domains (attributes, transfer orders,
+- Scope: 45 `Inventory.*` message types across eleven domains (attributes, transfer orders,
   assembly, reservations, item tracking, physical inventory, costing, reclassification, item
   application, inventory periods, item price). Costing and price types ship:
   `Inventory.Cost.Get`, `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`/`.Test`,

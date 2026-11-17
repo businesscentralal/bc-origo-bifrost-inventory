@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 75 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 78 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -101,6 +101,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |
 | `Inventory.PlanningWorksheet.Calculate` | Inbound | Replace suggestion lines for the selected items on one planning worksheet (`regenerative` or `netChange`) and return the lines |
 | `Inventory.PlanningWorksheet.CarryOut` | Inbound | Create new purchase, transfer and assembly orders from accepted New lines. Refuses lines that would change an existing document |
+| `Inventory.CycleCount.Calculate` | Inbound | Calculate a cycle counting journal: fills an empty physical inventory journal batch with the items and stockkeeping units that are due by their counting period (native report 790, native counting dates advanced). `postingDate` and `documentNo` are required; `itemNo`, `locationCode`, `variantCode` and `itemsNotOnInventory` are optional; an item without a counting period is refused with `PreconditionFailed`. Effect: write; posting stays with `Inventory.PhysInventory.Post` |
 | `Inventory.PhysInventory.Calculate` | Inbound | Calculate on-hand quantity into an empty physical inventory journal batch with report 790. `postingDate` and `documentNo` are required; `itemNo`, `locationCode` and `variantCode` filter the items |
 | `Inventory.PhysInventory.RecordCount` | Inbound | Record counted quantities for several journal lines; an omitted `qtyCounted` leaves the line uncounted, an explicit 0 records zero |
 | `Inventory.PhysInventory.Record` | Inbound | Record a counted quantity on one physical inventory line (single-line form of RecordCount) |
@@ -290,6 +291,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
 | 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
+| 10076870 | `MsgType.CycleCount.EnumExt ori` | `Inventory.CycleCount.Calculate` (value 10076970) |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |

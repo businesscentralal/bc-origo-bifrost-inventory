@@ -1371,6 +1371,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Farðu yfir valda vöru; notaðu lastDirectCost ef unitCost er hafnað fyrir vöru með færslum eða Inventory.Revaluation.Post fyrir staðalkostnað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Update Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 532008358 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Calculates a cycle counting journal: fills an empty physical inventory journal with the items and stockkeeping units that are due by their counting period.</source>
+          <target>Reiknar talningarbók fyrir viðvarandi talningu: fyllir tóma talningarbók með vörum og birgðageymslueiningum sem eru á tíma samkvæmt talningartímabili.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Reiknar talningarbók fyrir viðvarandi talningu: fyllir tóma talningarbók með vörum og birgðageymslueiningum sem eru á tíma samkvæmt talningartímabili.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cycle Count Calc Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 532008358 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>cycle count, counting period, calculate counting period, continuous stocktaking, count journal</source>
+          <target>viðvarandi talning, talningartímabil, reikna talningartímabil, rúllandi talning, talningarbók</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=viðvarandi talning, talningartímabil, reikna talningartímabil, rúllandi talning, talningarbók</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cycle Count Calc Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 532008358 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fills an empty Phys. Inventory journal batch with one line per item or stockkeeping unit that is due for counting by its counting period, using the Calculate Counting Period logic; nothing is posted. postingDate and documentNo are required.</source>
+          <target>Fyllir tóma bókarkeyrslu af gerðinni Phys. Inventory (talningarbók) með línum fyrir hverja vöru eða birgðageymslueiningu sem er á tíma samkvæmt talningartímabili með rökfræði aðgerðarinnar Reikna talningartímabil; ekkert er bókað. postingDate og documentNo eru nauðsynleg.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyllir tóma bókarkeyrslu af gerðinni Phys. Inventory (talningarbók) með línum fyrir hverja vöru eða birgðageymslueiningu sem er á tíma samkvæmt talningartímabili með rökfræði aðgerðarinnar Reikna talningartímabil; ekkert er bókað. postingDate og documentNo eru nauðsynleg.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cycle Count Calc Impl ori - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 532008358 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.</source>
+          <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cycle Count Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1635400680 - Method 3527532202 - NamedType 842664886" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: missing '%1' permission set.</source>
           <target>Bókun hafnað: vantar '%1' heimildasett.</target>
@@ -1832,6 +1856,42 @@
           <target>counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CountsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2658544723" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No item matches the itemNo filter %1.</source>
+          <target>Engin vara samsvarar itemNo síunni %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item filter; is-IS=Engin vara samsvarar itemNo síunni %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 2493838490" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing item number or a filter that matches at least one item.</source>
+          <target>Fyrirliggjandi vörunúmer eða sía sem samsvarar að minnsta kosti einni vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrirliggjandi vörunúmer eða sía sem samsvarar að minnsta kosti einni vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 1241359531" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the itemNo filter or omit it to calculate every item that is due.</source>
+          <target>Athugaðu itemNo síuna eða slepptu henni til að reikna allar vörur sem eru á tíma.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu itemNo síuna eða slepptu henni til að reikna allar vörur sem eru á tíma.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoItemNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 618483979" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item %1 has no counting period.</source>
+          <target>Vara %1 hefur ekkert talningartímabil.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item number; is-IS=Vara %1 hefur ekkert talningartímabil.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoPeriodErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 4211922258" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An item or stockkeeping unit with a Phys. Invt. Counting Period code.</source>
+          <target>Vara eða birgðageymslueining með kóða talningartímabils.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vara eða birgðageymslueining með kóða talningartímabils.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoPeriodLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 40274530 - NamedType 3312953091" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a counting period to the item (Item card, Physical Inventory) or remove it from the itemNo filter, then retry.</source>
+          <target>Úthlutaðu talningartímabili á vöruna (vörukort, birgðatalning) eða fjarlægðu hana úr itemNo síunni og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu talningartímabili á vöruna (vörukort, birgðatalning) eða fjarlægðu hana úr itemNo síunni og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Native Journal ori - NamedType CycleNoPeriodNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 40274530 - NamedType 2361715141" size-unit="char" translate="yes" xml:space="preserve">
           <source>An empty physical inventory journal batch.</source>
