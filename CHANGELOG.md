@@ -8,7 +8,13 @@
 - `Inventory.ItemUnitOfMeasure.Get` (enum value and codeunit 10077011 `Item UoM Get Impl ori`) answers every unit of an item in code order, or one unit with `code`, with `isBaseUnit`, dimensions, cubage, weight and `hasLedgerEntries`, plus the item's `baseUnitOfMeasure`. Effect `read`.
 - Enum extension 10077015 `MsgType.ItemUoM.EnumExt ori`. Both types are granted through `BIFROST InvRead ori` / `BIFROST InvWrite ori`; help in en-US and is-IS (is-IS.xlf regenerated). No Inventory Setup domain switch and no Data.Records write restriction were added, so existing generic writes keep working.
 - Permissions: both types also require read access to Item Ledger Entry, so `hasLedgerEntries` and the ledger-entry refusal are never reported as absent for a caller who cannot read ledger entries; such a caller gets `PermissionDenied` with a next step. Create's help no longer claims generic writes are refused.
-- Tests: `Item UoM Tests` (96984). `Inventory Contract Batch Tests` (96921) now counts 61 Inventory types.
+- Tests: `Item UoM Tests` (96984). `Inventory Contract Batch Tests` (96921) now counts 62 Inventory types (61 after this PR plus Item Substitution Get from #118).
+
+### Added (2026-11-16) - Item substitutions (#118)
+
+- `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
+- Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
+
 
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
