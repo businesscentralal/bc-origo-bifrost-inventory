@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 60 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 67 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -24,11 +24,13 @@ and `Data.Records.Set`.
 
 ### Message types
 
-The active roster is implemented by the `Message Type ori` enum extensions under `app/src/Message Type/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
+The active roster is implemented by the `Message Type ori` enum extensions under `app/src/`; disabled compatibility identifiers are excluded below. `Help.Bifrost.Get`
 and `Help.Implementation.Get` return the same list and each type's contract at runtime.
 
 | Type | Direction | Purpose |
 |------|-----------|---------|
+| `Purchase.Requisition.Calculate` | Inbound | Calculate a bounded native requisition worksheet plan (report 699) |
+| `Purchase.Requisition.CarryOut` | Inbound | Consume selected new suggestions to create purchase or transfer orders |
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemSubstitution.Get` | Outbound | Read direct item substitutes and exact-variant on-hand inventory |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
@@ -36,6 +38,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.NonstockItem.Create` | Inbound | Create an item from a catalog item with the catalog item's item template |
+| `Inventory.SKU.Get` | Outbound | Read stockkeeping units with their planning and cost fields |
+| `Inventory.SKU.Create` | Inbound | Create stockkeeping units per location and variant (report 5706), optionally replacing existing ones |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
@@ -43,6 +47,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.TransferOrder.Create` | Inbound | Create a transfer order |
 | `Inventory.TransferOrder.Release` | Inbound | Release a transfer order |
 | `Inventory.TransferOrder.Reopen` | Inbound | Reopen a transfer order |
+| `Inventory.TransferOrder.Ship` | Inbound | Ship specified `qtyToShip` values on selected transfer lines; returns `postedShipmentNo` |
+| `Inventory.TransferOrder.Receive` | Inbound | Receive specified `qtyToReceive` values on selected transfer lines; returns `postedReceiptNo` |
 | `Inventory.TransferOrder.Post` | Inbound | Post a transfer order (Ship or Receive). A Receive that completes the order returns Success with `postedReceiptNo` and `orderDeleted: true` |
 | `Inventory.TransferOrder.PreviewPost` | Inbound | Preview posting a transfer order |
 | `Inventory.TransferOrder.Statistics` | Inbound | Read transfer order statistics |
@@ -53,6 +59,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AssemblyOrder.Post` | Inbound | Post an assembly order |
 | `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
 | `Inventory.AssemblyOrder.Statistics` | Inbound | Read assembly order statistics |
+| `Inventory.AssemblyToOrder.Get` | Outbound | Read the assemble-to-order assembly order linked to a sales line, with its lines |
+| `Inventory.AssemblyBOM.Get` | Outbound | Read the assembly BOM components of an item, optionally exploded through all levels |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
@@ -62,6 +70,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
+| `Inventory.TrackingInfo.Get` | Outbound | Read one lot, serial or package information card: description, test quality, certificate, blocked, comments, inventory and expired inventory |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
@@ -74,6 +83,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Price.List.Set` | Inbound | Create or update a Draft sales/purchase price list and numbered lines |
+| `Price.List.Activate` | Inbound | Verify native price lines, refuse duplicate prices and activate the list |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
@@ -150,7 +161,7 @@ own them.
 | Field restrictions | `Inventory Cost Data Guard ori` (10076838) | Subscribes to `OnAfterIsFieldWriteRestrictedForDataRecords` and closes Item Unit Cost, Standard Cost, Last Direct Cost and Unit Price to `Data.Records.Set`; the refusal names `Inventory.Cost.Update` or `Inventory.Price.Update`. |
 | Write process | `Inventory Write Process ori` (10076842) | One `Codeunit.Run` boundary for the journal, card-cost, price and reservation writes, so a native error rolls the whole write back. |
 
-Types that need the posting permission: `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
+Types that need the posting permission: `Inventory.TransferOrder.Ship`, `Inventory.TransferOrder.Receive`, `Inventory.TransferOrder.Post`, `Inventory.AssemblyOrder.Post`,
 `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`, `Inventory.CostToGL.Test`,
 `Inventory.PhysInventory.Post`, `Inventory.Reclassification.Post`,
 `Inventory.Reclassification.PreviewPost`, `Inventory.Revaluation.Post` and `Inventory.Revaluation.PreviewPost`.
@@ -264,8 +275,9 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076835 | `Inventory Domain ori` | The seventeen domains |
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
-| 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
+| 10076837 | `MsgType.EnumExt ori` | 36 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
+| 10076995 | `MsgType.SKU.EnumExt ori` | `Inventory.SKU.Create`, `Inventory.SKU.Get` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
 | 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
@@ -278,6 +290,8 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10077019 | `MsgType.Nonstock.EnumExt ori` | `Inventory.NonstockItem.Create` |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
+| 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
+| 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -292,9 +306,11 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076835, 10076836, 10076845 | Lifecycle | `Inventory Install ori`, `Inventory Upgrade ori`, `Inventory Registration ori` |
 | 10076837–10076843 | Shared reads and writes | `Inventory Card Write ori`, `Inventory Cost Data Guard ori`, `Inventory Cost Read ori`, `Inventory Native Journal ori` (physical inventory and revaluation), `Inventory Tracking Read ori`, `Inventory Write Process ori`, `Reservation WriteGuard ori` |
 | 10076846–10076848 | Write restrictions | `Item Attr. Data Restrict ori`, `Item Category Restrict ori`, `Item Charge Restrict ori` |
+| 10076995–10076999 | Stockkeeping units | `SKU Create Impl ori`, `SKU Get Impl ori`, `SKU Create Proc ori`, `SKU Request ori`, `SKU Restrict ori` (blocks Data.Records.Set on table 5700) |
 | 10076919–10076923 | Shared | Contract parts, tracking write restriction, posting gate, domain gate, setup write restriction |
 | 10076844, 10076912–10076918 | Item attributes | `Item Attribute Resolve ori`, `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits |
 | 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
+| 10076965–10076966 | Assembly reads | `Asm. To Order Get Impl ori`, `Assembly BOM Get Impl ori` |
 | 10076857 | Availability | `Avail. By Period Impl ori` |
 | 10076858–10076866 | Costing | Adjust Cost Run (+ process), Cost Get, Cost To GL Post/Test, Cost Update, Reval Preview, Revaluation Calc, Revaluation Post |
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
@@ -306,11 +322,17 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076887–10076889 | Reclassification | Check, Post, Preview |
 | 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
 | 10077030 | Selected reservation supply | `Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound |
-| 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
+| 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077019, 10077021 | Catalog items | `Nonstock Item Create Impl ori` (+ process) |
+| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
+| 10077021 | `Transfer Receive Impl ori` | Partial transfer receipt |
+| 10077022 | `Partial Transfer Mgt ori` | Validates selected transfer quantities |
+| 10077023 | `Partial Transfer Process ori` | Atomic native posting |
+| 10077024 | `Partial Transfer Contract ori` | English and Icelandic partial-transfer contracts |
+| 10077025 | `Transfer Posting Setup ori` | BC 28/29 direct-transfer setup compatibility |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
@@ -442,6 +464,44 @@ the deployed help contract before sending confirmation controls to that version.
 
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
+
+### Requisition worksheet planning (#131)
+
+`Purchase.Requisition.Calculate` accepts `templateName`, `batchName`, ISO `startingDate` and
+`endingDate`, plus optional native `itemFilter`, `locationFilter` and `variantFilter`. It returns
+`lines` (lineNo, itemNo, quantity, vendorNo, locationCode, variantCode, dueDate, actionMessage,
+replenishmentSystem) and `noOfLines`. Matching lines are replaced only in that worksheet;
+other worksheets are preserved. Templates must be non-recurring Requisition templates without
+automatic batch renaming. Unknown worksheets return `RecordNotFound`.
+
+`Purchase.Requisition.CarryOut` accepts the same worksheet selector and optional `lineNos`
+(a nonempty array of up to 500 distinct positive existing line numbers). Omission selects every
+line, including unaccepted suggestions; a successful call accepts and consumes the selection.
+It returns `linesCarriedOut`, `purchaseOrders` and `transferOrders`, each order as `{ "orderNo": "…" }`.
+Every selected line is validated before writes. Only positive item suggestions with New or blank
+action and Purchase or Transfer replenishment are accepted. Existing-document references,
+drop shipments, special orders, Cancel, Change Qty. and rescheduling are refused. Unselected
+lines remain. Native failures return `BusinessCentralError` and roll back the whole call.
+
+Calculate is `write`; CarryOut is `irreversible`, without posting or printing. `expectedCount`
+confirms **one worksheet selection**, always 1, rather than lines or created orders. The types
+require Full Access plus native worksheet/order permissions. No additional setup domain switch
+or posting permission is introduced because order creation does not post. Native report 699 is
+the purchase/transfer requisition mode; #117 owns the separate regenerative/net-change planning
+reports. Both facades can reuse the internal worksheet and native event helpers added here.
+
+New objects: codeunits 10076941 Calculate, 10076942 CarryOut, 10076943 atomic process,
+10076944 worksheet validation/serialization, 10076945 scoped native subscribers;
+enum extension 10076849; tests 96947.
+### Price-list objects (#135)
+
+| IDs | Kind | Objects |
+|---|---|---|
+| 10076980–10076984 | Codeunits | Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori |
+| 10076980 | Enum extension | MsgType.PriceList.Ext ori, values 10076980 and 10076981 |
+| 96987 | Test codeunit | Price List Tests ori |
+
+See [price-list maintenance](docs/price-lists.md) for native sales/purchase field mapping and activation refusals.
 
 ### Create, finish and post physical inventory orders / Stofna, ljúka og bóka birgðatalningarpantanir
 
