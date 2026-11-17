@@ -144,6 +144,13 @@ page 10076836 "Inventory Setup Wizard ori"
                     ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
                     Editable = false;
                 }
+                field(ItemSubstitution; DomainEnabled[16])
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
+                    ToolTip = 'Shows whether reading item substitutions is enabled for this company.', Comment = 'is-IS=Sýnir hvort lestur vöruskipta er virkur fyrir þetta fyrirtæki.';
+                    Editable = false;
+                }
                 field(ItemCategory; DomainEnabled[15])
                 {
                     Caption = 'Item categories', Comment = 'is-IS=Vöruflokkar';
@@ -317,7 +324,7 @@ page 10076836 "Inventory Setup Wizard ori"
     var
         WizardMgt: Codeunit "Inventory Wizard Mgt ori";
         CurrentStep: Integer;
-        DomainEnabled: array[15] of Boolean;
+        DomainEnabled: array[16] of Boolean;
         CanChangeHttp: Boolean;
         HttpStatusText: Text;
         HttpSummaryText: Text;
@@ -367,6 +374,7 @@ page 10076836 "Inventory Setup Wizard ori"
         DomainEnabled[12] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemReference);
         DomainEnabled[13] := WizardMgt.ReadDomain("Inventory Domain ori"::Availability);
         DomainEnabled[14] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemCharge);
+        DomainEnabled[16] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemSubstitution);
         DomainEnabled[15] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemCategory);
     end;
 }
