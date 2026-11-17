@@ -8121,6 +8121,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðasía útreikningsins, síu sem er mest 2048 stafir.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType VariantLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates new purchase, transfer and assembly orders from the accepted New lines and removes those lines from the worksheet. Lines that would cancel, change or reschedule an existing document are refused before anything is written. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Created orders stay.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Búnar pantanir standa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Búnar pantanir standa.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType ChangesLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
           <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
@@ -8134,9 +8140,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Unaccepted lines are left as they are unless lineNos names them. expectedCount counts one carry-out invocation of the selected worksheet, not the number of orders or lines. The call is irreversible: created orders stay, and the consumed suggestion lines leave the worksheet. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.</source>
-          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</note>
+          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Unaccepted lines are left as they are unless lineNos names them. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. The call is irreversible: created orders stay, and the consumed suggestion lines leave the worksheet. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -8266,9 +8272,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNosLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Expected invocation count from the confirmation preview: one selected worksheet. Foundation verifies this count before carry-out.</source>
-          <target>Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
+          <source>expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Foundation verifies this count before carry-out.</source>
+          <target>expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType ExpectedCountLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
@@ -8276,6 +8282,90 @@
           <target>Eitt línunúmer á áætlunarkeyrslunni.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Eitt línunúmer á áætlunarkeyrslunni.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 3071622107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one posted document, always 1, not its selected lines or ledger entries. Always checked when sent; required when irreversible confirmation is enabled in Bifrost Setup. When enabled, omit it to preview without posting.</source>
+          <target>expectedCount telur eina bókaða skjalið, alltaf 1, ekki valdar línur þess eða fjárhagsfærslur. Alltaf athugað þegar sent; nauðsynlegt þegar staðfesting óafturkræfra aðgerða er virk í Bifröst uppsetningu. Þegar hún er virk má sleppa því til að forskoða án bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða skjalið, alltaf 1, ekki valdar línur þess eða fjárhagsfærslur. Alltaf athugað þegar sent; nauðsynlegt þegar staðfesting óafturkræfra aðgerða er virk í Bifröst uppsetningu. Þegar hún er virk má sleppa því til að forskoða án bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType CountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 3889639164" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a credit memo instead for invoiced or applied entries. Read the posted document and correct the native restriction before retrying.</source>
+          <target>Notaðu kreditreikning í staðinn fyrir reikningsfærðar eða jafnaðar færslur. Lestu bókaða skjalið og leiðréttu innbyggðu takmörkunina áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu kreditreikning í staðinn fyrir reikningsfærðar eða jafnaðar færslur. Lestu bókaða skjalið og leiðréttu innbyggðu takmörkunina áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType CreditNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 4058751071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of the posted document, at most 20 characters. Subject is not used.</source>
+          <target>Númer bókaða skjalsins, að hámarki 20 stafir. Subject er ekki notað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer bókaða skjalsins, að hámarki 20 stafir. Subject er ekki notað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType DocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 1113862135" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Irreversible: posts corrective entries for the selected lines, without deleting the posted document. expectedCount counts one posted document, always 1, not the selected lines or ledger entries. Standalone undo commits its native transaction. Omit Commit keeps the operation in the caller transaction and propagates native errors.</source>
+          <target>Óafturkræft: bókar leiðréttingarfærslur fyrir valdar línur án þess að eyða bókaða skjalinu. expectedCount telur eitt bókað skjal, alltaf 1, ekki valdar línur eða fjárhagsfærslur. Sjálfstæð afturköllun staðfestir innbyggðu færsluna. Omit Commit heldur aðgerðinni í færslu kallandans og lætur innbyggðar villur berast áfram.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Óafturkræft: bókar leiðréttingarfærslur fyrir valdar línur án þess að eyða bókaða skjalinu. expectedCount telur eitt bókað skjal, alltaf 1, ekki valdar línur eða fjárhagsfærslur. Sjálfstæð afturköllun staðfestir innbyggðu færsluna. Omit Commit heldur aðgerðinni í færslu kallandans og lætur innbyggðar villur berast áfram.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType EffectLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 3616618409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Unique positive posted line numbers to undo, 1 to 200 entries. Only these lines are selected; omitted lines are unchanged.</source>
+          <target>Einstök jákvæð númer bókaðra lína sem á að afturkalla, 1 til 200 færslur. Aðeins þessar línur eru valdar; öðrum línum er ekki breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Einstök jákvæð númer bókaðra lína sem á að afturkalla, 1 til 200 færslur. Aðeins þessar línur eru valdar; öðrum línum er ekki breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType LinesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the native Undo Shipment or Undo Receipt restrictions. All selected lines are checked before reversal. Invoiced, already corrected, zero quantity or invalid lines are refused; native application and warehouse checks remain in force. A refusal leaves the whole selected set unchanged. expectedCount counts the one posted document (1), not its lines. Missing confirmation previews without posting when Foundation confirmation is enabled. Bifrost Full Access, Inv. Posting Gate and native posted document permissions are required. Return shipment and return receipt undo are separate operations.</source>
+          <target>Innbyggðar takmarkanir Afturkalla afhendingu eða Afturkalla móttöku gilda. Allar valdar línur eru athugaðar fyrir afturköllun. Reikningsfærðum, þegar leiðréttum, ógildum línum eða línum án magns er hafnað; innbyggðar jafningar- og vöruhúsaathuganir gilda áfram. Höfnun skilur allar valdar línur óbreyttar. expectedCount telur eina bókaða skjalið (1), ekki línur þess. Vanti staðfestingu fæst forskoðun án bókunar þegar staðfesting Foundation er virk. Fullur Bifröst aðgangur, Bókunarhlið birgða og innbyggðar heimildir á bókaða skjalið eru nauðsynlegar. Afturköllun skilaafhendingar og skilamóttöku eru aðrar aðgerðir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Innbyggðar takmarkanir Afturkalla afhendingu eða Afturkalla móttöku gilda. Allar valdar línur eru athugaðar fyrir afturköllun. Reikningsfærðum, þegar leiðréttum, ógildum línum eða línum án magns er hafnað; innbyggðar jafningar- og vöruhúsaathuganir gilda áfram. Höfnun skilur allar valdar línur óbreyttar. expectedCount telur eina bókaða skjalið (1), ekki línur þess. Vanti staðfestingu fæst forskoðun án bókunar þegar staðfesting Foundation er virk. Fullur Bifröst aðgangur, Bókunarhlið birgða og innbyggðar heimildir á bókaða skjalið eru nauðsynlegar. Afturköllun skilaafhendingar og skilamóttöku eru aðrar aðgerðir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - NamedType 1086292895" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo and a nonempty lineNos array of unique positive line numbers from that posted document (maximum 200).</source>
+          <target>Sendu documentNo og lineNos fylki með einstökum jákvæðum línunúmerum úr sama bókaða skjali (að hámarki 200).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og lineNos fylki með einstökum jákvæðum línunúmerum úr sama bókaða skjali (að hámarki 200).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - NamedType SelectNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 1561766673 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undo requires native posted document write permission and Inv. Posting Gate.</source>
+          <target>Afturköllun krefst innbyggðrar skrifheimildar á bókaða skjalið og Bókunarhlið birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturköllun krefst innbyggðrar skrifheimildar á bókaða skjalið og Bókunarhlið birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method Execute - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 1561766673 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to assign Bifrost Full Access, Inv. Posting Gate and the native posted document permissions.</source>
+          <target>Biddu kerfisstjóra um að úthluta fullum Bifröst aðgangi, Bókunarhlið birgða og innbyggðum heimildum á bókaða skjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um að úthluta fullum Bifröst aðgangi, Bókunarhlið birgða og innbyggðum heimildum á bókaða skjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method Execute - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 2833243753 - NamedType 1066607173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted line %1 is invoiced, already corrected or has no quantity to undo.</source>
+          <target>Bókuð lína %1 er reikningsfærð, þegar leiðrétt eða hefur ekkert magn til afturköllunar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = line number, is-IS=Bókuð lína %1 er reikningsfærð, þegar leiðrétt eða hefur ekkert magn til afturköllunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method InvalidLine - NamedType InvalidLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 3133017589 - NamedType 704880291" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The posted document or selected line was not found.</source>
+          <target>Bókaða skjalið eða valin lína fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókaða skjalið eða valin lína fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method NotFound - NamedType NotFoundLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 4275948382 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required undo parameter is missing.</source>
+          <target>Nauðsynlega færibreytu afturköllunar vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlega færibreytu afturköllunar vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ReadSelection - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 4275948382 - NamedType 1066607173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The undo selection is invalid.</source>
+          <target>Val fyrir afturköllun er ógilt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Val fyrir afturköllun er ógilt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ReadSelection - NamedType InvalidLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 4275948382 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The undo request contains an unknown parameter.</source>
+          <target>Beiðni um afturköllun inniheldur óþekkta færibreytu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðni um afturköllun inniheldur óþekkta færibreytu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ReadSelection - NamedType UnknownLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 1721877906" size-unit="char" translate="yes" xml:space="preserve">
           <source>Activates one verified Draft price list and its lines using native status validation; changes subsequent price calculations without posting or deleting.</source>
@@ -9537,6 +9627,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númer lánardrottins.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method VendorNextStep - NamedType VendorNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3227135473 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undoes selected posted purchase receipt lines with native corrective entries.</source>
+          <target>Afturkallar valdar línur í bókaðri innkaupamóttöku með innbyggðum leiðréttingarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar valdar línur í bókaðri innkaupamóttöku með innbyggðum leiðréttingarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purchase Undo Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3227135473 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>undo posted purchase receipt reverse lines</source>
+          <target>afturkalla bókaða innkaupamóttöku leiðrétta línur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla bókaða innkaupamóttöku leiðrétta línur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purchase Undo Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3227135473 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use sales shipment undo when correcting goods shipped to a customer.</source>
+          <target>Notaðu afturköllun söluafhendingar þegar leiðrétta á vörur afhentar viðskiptamanni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu afturköllun söluafhendingar þegar leiðrétta á vörur afhentar viðskiptamanni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purchase Undo Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 3571782927 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send templateName and batchName for an existing Transfer journal template.</source>
           <target>Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.</target>
@@ -10467,6 +10575,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts worksheet selections: always 1, not the number of lines or orders. Send 1 before carry-out when confirmation is enabled.</source>
+          <target>expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType ExpectedCountLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>purchase,requisition,worksheet,planning,orders</source>
           <target>innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir</target>
@@ -10480,9 +10594,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NativeNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount is always 1: the single worksheet selection, not the number of lines or orders. No printing or posting.</source>
-          <target>Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount er alltaf 1: eitt val úr vinnublaði, ekki fjöldi lína eða pantana. Hvorki prentar né bókar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount er alltaf 1: eitt val úr vinnublaði, ekki fjöldi lína eða pantana. Hvorki prentar né bókar.</note>
+          <source>Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount counts worksheet selections: always 1, not the number of lines or orders. No printing or posting.</source>
+          <target>Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
@@ -12668,6 +12782,24 @@
           <target>Sendu documentType sem ReturnOrder eða CreditMemo.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType sem ReturnOrder eða CreditMemo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Ret. Ord. Post. Impl ori - Method ValidateShape - NamedType TypeValueNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 230986472 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undoes selected posted sales shipment lines with native corrective entries.</source>
+          <target>Afturkallar valdar línur í bókaðri söluafhendingu með innbyggðum leiðréttingarfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar valdar línur í bókaðri söluafhendingu með innbyggðum leiðréttingarfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Undo Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 230986472 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>undo posted sales shipment reverse lines</source>
+          <target>afturkalla bókaða söluafhendingu leiðrétta línur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=afturkalla bókaða söluafhendingu leiðrétta línur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Undo Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 230986472 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use purchase receipt undo when correcting goods received from a vendor.</source>
+          <target>Notaðu afturköllun innkaupamóttöku þegar leiðrétta á vörur mótteknar frá lánardrottni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu afturköllun innkaupamóttöku þegar leiðrétta á vörur mótteknar frá lánardrottni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Sales Undo Impl ori - Method GetRelated - NamedType RelatedLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1197651071 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates stockkeeping units per location and variant for the selected items.</source>
