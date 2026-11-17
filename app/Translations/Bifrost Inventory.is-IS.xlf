@@ -279,6 +279,402 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Les magn, línufjölda og kostnaðarsundurgreiningu samsetningar án breytinga; notaðu PreviewPost til að spá fyrir um bókun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. Order Statistics Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - NamedType 3940670077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quote, Order or Blanket Order</source>
+          <target>Quote, Order eða Blanket Order</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Quote, Order eða Blanket Order</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - NamedType DocumentTypeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3571782927 - NamedType 4151985274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The assembly order linked to the sales line does not exist.</source>
+          <target>Samsetningarpöntunin sem er tengd sölulínunni er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Samsetningarpöntunin sem er tengd sölulínunni er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method ExecuteBifrostTask - NamedType LinkNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3571782927 - NamedType 3622118089" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open the sales line in Business Central and check its assemble-to-order link.</source>
+          <target>Opnaðu sölulínuna í Business Central og athugaðu tengingu hennar við samsetningu eftir pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Opnaðu sölulínuna í Business Central og athugaðu tengingu hennar við samsetningu eftir pöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method ExecuteBifrostTask - NamedType LinkNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers the assemble-to-order assembly order linked to a sales line, with its lines.</source>
+          <target>Svarar samsetningarpöntuninni sem er tengd sölulínu með samsetningu eftir pöntun, ásamt línum hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar samsetningarpöntuninni sem er tengd sölulínu með samsetningu eftir pöntun, ásamt línum hennar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo or lineNo is missing or empty.</source>
+          <target>documentNo eða lineNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo eða lineNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo and lineNo.</source>
+          <target>Sendu documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type, lineNo is not a whole number, or documentType is not Quote, Order or Blanket Order.</source>
+          <target>Lykill er á rangri JSON-gerð, lineNo er ekki heil tala, eða documentType er ekki Quote, Order eða Blanket Order.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð, lineNo er ekki heil tala, eða documentType er ekki Quote, Order eða Blanket Order.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType and documentNo as text, documentType as Quote, Order or Blanket Order, and lineNo as a whole number.</source>
+          <target>Sendu documentType og documentNo sem texta, documentType sem Quote, Order eða Blanket Order, og lineNo sem heila tölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType og documentNo sem texta, documentType sem Quote, Order eða Blanket Order, og lineNo sem heila tölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo and lineNo.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales line does not exist, or the linked assembly order is missing.</source>
+          <target>Sölulínan er ekki til, eða tengda samsetningarpöntunin vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sölulínan er ekki til, eða tengda samsetningarpöntunin vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentType, documentNo and lineNo.</source>
+          <target>Athugaðu documentType, documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentType, documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 1644145578" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Assembly domain is turned off in Inventory Setup.</source>
+          <target>Slökkt er á samsetningarsviðinu í Uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á samsetningarsviðinu í Uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType DomainWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 4186819751" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to turn the Assembly domain on from the Inventory Setup page.</source>
+          <target>Biddu kerfisstjóra að kveikja á samsetningarsviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra að kveikja á samsetningarsviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType DomainFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read sales lines, assemble-to-order links, assembly headers or assembly lines.</source>
+          <target>Kallandinn getur ekki lesið sölulínur, tengingar samsetningar eftir pöntun, samsetningarhausa eða samsetningarlínur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið sölulínur, tengingar samsetningar eftir pöntun, samsetningarhausa eða samsetningarlínur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the assembly order of sales order line 10000</source>
+          <target>Lesa samsetningarpöntun sölupöntunarlínu 10000</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa samsetningarpöntun sölupöntunarlínu 10000</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>assemble to order, ATO, assembly order, sales line, kit</source>
+          <target>samsetning eftir pöntun, ATO, samsetningarpöntun, sölulína, samsett vara</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=samsetning eftir pöntun, ATO, samsetningarpöntun, sölulína, samsett vara</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentType, type and orderStatus are fixed English names, not captions. Quantities on the lines are in their unit of measure; quantityBase is in the base unit of the component. Project (job) planning lines are not read by this type.</source>
+          <target>documentType, type og orderStatus eru föst ensk heiti, ekki skjátextar. Magn á línum er í mælieiningu þeirra; quantityBase er í grunnmælieiningu íhlutarins. Áætlunarlínur verka eru ekki lesnar af þessari tegund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentType, type og orderStatus eru föst ensk heiti, ekki skjátextar. Magn á línum er í mælieiningu þeirra; quantityBase er í grunnmælieiningu íhlutarins. Áætlunarlínur verka eru ekki lesnar af þessari tegund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers which assembly order is linked to a sales quote, order or blanket order line through assemble to order, with the assembly header and its lines. A sales line without a link answers linked false. Nothing is changed.</source>
+          <target>Svarar hvaða samsetningarpöntun er tengd línu í sölutilboði, sölupöntun eða standandi pöntun með samsetningu eftir pöntun, ásamt samsetningarhausnum og línum hans. Sölulína án tengingar svarar linked false. Engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar hvaða samsetningarpöntun er tengd línu í sölutilboði, sölupöntun eða standandi pöntun með samsetningu eftir pöntun, ásamt samsetningarhausnum og línum hans. Sölulína án tengingar svarar linked false. Engu er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3615801952 - NamedType 2636616999" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales document type: Quote, Order or Blanket Order. Leave it out for Order.</source>
+          <target>Tegund sölugagns: Quote, Order eða Blanket Order. Slepptu henni fyrir Order.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tegund sölugagns: Quote, Order eða Blanket Order. Slepptu henni fyrir Order.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetParameters - NamedType DocumentTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3615801952 - NamedType 1721277456" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales document number.</source>
+          <target>Númer sölugagnsins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer sölugagnsins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetParameters - NamedType DocumentNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The line number of the sales line, as a whole number.</source>
+          <target>Línunúmer sölulínunnar, sem heil tala.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer sölulínunnar, sem heil tala.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetParameters - NamedType LineNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads which assembly order belongs to a sales line and the components on it, without changing anything.</source>
+          <target>Les hvaða samsetningarpöntun tilheyrir sölulínu og íhlutina á henni, án þess að breyta neinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les hvaða samsetningarpöntun tilheyrir sölulínu og íhlutina á henni, án þess að breyta neinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales line whose assemble-to-order link is read.</source>
+          <target>Sölulínan sem tenging samsetningar eftir pöntun er lesin fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sölulínan sem tenging samsetningar eftir pöntun er lesin fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 77887092 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The sales line does not exist.</source>
+          <target>Sölulínan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sölulínan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method LoadSalesLine - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 77887092 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check documentType, documentNo and lineNo.</source>
+          <target>Athugaðu documentType, documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu documentType, documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method LoadSalesLine - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are documentType, documentNo and lineNo.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru documentType, documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3632409166 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The value has the wrong format.</source>
+          <target>Gildið er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 3632409166 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentType and documentNo as text, documentType as Quote, Order or Blanket Order, and lineNo as a whole number.</source>
+          <target>Sendu documentType og documentNo sem texta, documentType sem Quote, Order eða Blanket Order, og lineNo sem heila tölu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentType og documentNo sem texta, documentType sem Quote, Order eða Blanket Order, og lineNo sem heila tölu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondFormat - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 223548439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required key is missing.</source>
+          <target>Nauðsynlegur lykill vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegur lykill vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondMissing - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 223548439 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send documentNo and lineNo.</source>
+          <target>Sendu documentNo og lineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu documentNo og lineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondMissing - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1117187318 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondPermission - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1701502490 - Method 1117187318 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Asm. To Order Get Impl ori - Method RespondPermission - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item does not exist.</source>
+          <target>Varan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3571782927 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no.</source>
+          <target>Athugaðu vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method ExecuteBifrostTask - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers the assembly BOM components of an item, optionally exploded through every sub-assembly level.</source>
+          <target>Svarar íhlutum samsetningaruppskriftar vöru, valfrjálst sundurliðað í gegnum öll stig undirsamsetninga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar íhlutum samsetningaruppskriftar vöru, valfrjálst sundurliðað í gegnum öll stig undirsamsetninga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is missing or empty.</source>
+          <target>itemNo vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo.</source>
+          <target>Sendu itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo is not text, or explode is not true or false.</source>
+          <target>itemNo er ekki texti, eða explode er ekki true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo er ekki texti, eða explode er ekki true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo as text and explode as true or false.</source>
+          <target>Sendu itemNo sem texta og explode sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem texta og explode sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo and explode.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og explode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og explode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item does not exist.</source>
+          <target>Varan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no.</source>
+          <target>Athugaðu vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 1644145578" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Assembly domain is turned off in Inventory Setup.</source>
+          <target>Slökkt er á samsetningarsviðinu í Uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á samsetningarsviðinu í Uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType DomainWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 4186819751" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to turn the Assembly domain on from the Inventory Setup page.</source>
+          <target>Biddu kerfisstjóra að kveikja á samsetningarsviðinu á síðunni Uppsetning birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra að kveikja á samsetningarsviðinu á síðunni Uppsetning birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType DomainFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items, BOM components or item units of measure.</source>
+          <target>Kallandinn getur ekki lesið vörur, uppskriftaríhluti eða mælieiningar vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur, uppskriftaríhluti eða mælieiningar vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the exploded assembly BOM of an item</source>
+          <target>Lesa sundurliðaða samsetningaruppskrift vöru</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa sundurliðaða samsetningaruppskrift vöru</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>assembly BOM, bill of materials, components, kit, explode BOM</source>
+          <target>samsetningaruppskrift, uppskrift, íhlutir, samsett vara, sundurliða uppskrift</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=samsetningaruppskrift, uppskrift, íhlutir, samsett vara, sundurliða uppskrift</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>components are in tree order: each sub-assembly is followed by its own components. quantityPer is in unitOfMeasureCode per unit of parentItemNo. totalQuantityPer is in unitOfMeasureCode per one base unit of itemNo, multiplied through the levels; for a resource with resourceUsageType Fixed it is not multiplied by the quantity of the order. type and resourceUsageType are fixed English names, not captions. An item without components answers assemblyBOM false and an empty list. A component that already appears higher on its own branch is not exploded again.</source>
+          <target>components eru í trjáröð: hverri undirsamsetningu fylgja hennar eigin íhlutir. quantityPer er í unitOfMeasureCode á hverja einingu af parentItemNo. totalQuantityPer er í unitOfMeasureCode á hverja grunneiningu af itemNo, margfaldað gegnum stigin; fyrir forða með resourceUsageType Fixed margfaldast það ekki með magni pöntunar. type og resourceUsageType eru föst ensk heiti, ekki skjátextar. Vara án íhluta svarar assemblyBOM false og tómum lista. Íhlutur sem kemur þegar fyrir ofar á eigin grein er ekki sundurliðaður aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=components eru í trjáröð: hverri undirsamsetningu fylgja hennar eigin íhlutir. quantityPer er í unitOfMeasureCode á hverja einingu af parentItemNo. totalQuantityPer er í unitOfMeasureCode á hverja grunneiningu af itemNo, margfaldað gegnum stigin; fyrir forða með resourceUsageType Fixed margfaldast það ekki með magni pöntunar. type og resourceUsageType eru föst ensk heiti, ekki skjátextar. Vara án íhluta svarar assemblyBOM false og tómum lista. Íhlutur sem kemur þegar fyrir ofar á eigin grein er ekki sundurliðaður aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers the assembly BOM of an item: its components with quantity per unit. With explode true, components that are assemblies themselves are followed down through every level, and totalQuantityPer says how much is needed for one unit of the parent item. Nothing is changed.</source>
+          <target>Svarar samsetningaruppskrift vöru: íhlutum hennar með magni á einingu. Með explode true er íhlutum sem eru sjálfir samsetningar fylgt niður öll stig og totalQuantityPer segir hve mikið þarf í eina einingu yfirvörunnar. Engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar samsetningaruppskrift vöru: íhlutum hennar með magni á einingu. Með explode true er íhlutum sem eru sjálfir samsetningar fylgt niður öll stig og totalQuantityPer segir hve mikið þarf í eina einingu yfirvörunnar. Engu er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number of the parent item.</source>
+          <target>Vörunúmer yfirvörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer yfirvörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3615801952 - NamedType 3057682583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true also lists the components of every component that has its own assembly BOM, down through all levels. Off (false) by default: only the first level is listed.</source>
+          <target>true listar einnig íhluti allra íhluta sem hafa eigin samsetningaruppskrift, niður öll stig. Slökkt (false) sjálfgefið: aðeins fyrsta stigið er listað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true listar einnig íhluti allra íhluta sem hafa eigin samsetningaruppskrift, niður öll stig. Slökkt (false) sjálfgefið: aðeins fyrsta stigið er listað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetParameters - NamedType ExplodeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads the components of an assembly BOM, one level or exploded, without changing anything.</source>
+          <target>Les íhluti samsetningaruppskriftar, eitt stig eða sundurliðað, án þess að breyta neinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les íhluti samsetningaruppskriftar, eitt stig eða sundurliðað, án þess að breyta neinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parent item whose assembly BOM is read.</source>
+          <target>Yfirvaran sem samsetningaruppskriftin er lesin fyrir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Yfirvaran sem samsetningaruppskriftin er lesin fyrir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo and explode.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og explode.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo og explode.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3632409166 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The value has the wrong format.</source>
+          <target>Gildið er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 3632409166 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo as text and explode as true or false.</source>
+          <target>Sendu itemNo sem texta og explode sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo sem texta og explode sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondFormat - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 223548439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required key is missing.</source>
+          <target>Nauðsynlegur lykill vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegur lykill vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondMissing - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 223548439 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo.</source>
+          <target>Sendu itemNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondMissing - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1117187318 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondPermission - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2782631400 - Method 1117187318 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly BOM Get Impl ori - Method RespondPermission - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3669049620 - Method 3571782927 - NamedType 1018346614" size-unit="char" translate="yes" xml:space="preserve">
           <source>quantity must be specified and greater than 0 in the request JSON.</source>
           <target>Magn verður að vera tilgreint og stærra en 0 í JSON-beiðninni.</target>

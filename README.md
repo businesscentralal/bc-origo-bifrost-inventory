@@ -56,6 +56,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AssemblyOrder.Post` | Inbound | Post an assembly order |
 | `Inventory.AssemblyOrder.PreviewPost` | Inbound | Preview posting an assembly order |
 | `Inventory.AssemblyOrder.Statistics` | Inbound | Read assembly order statistics |
+| `Inventory.AssemblyToOrder.Get` | Outbound | Read the assemble-to-order assembly order linked to a sales line, with its lines |
+| `Inventory.AssemblyBOM.Get` | Outbound | Read the assembly BOM components of an item, optionally exploded through all levels |
 | `Inventory.AdjustCost.Run` | Inbound | Run report 795 with an item or category filter and an explicit optional postToGL setting |
 | `Inventory.Cost.Get` | Outbound | Read unit cost, last direct cost, standard cost, and inventory |
 | `Inventory.Cost.Update` | Inbound | Change unit cost, last direct cost or standard cost on one item card through native validation. Standard-costed items are refused and pointed to `Inventory.Revaluation.Post` |
@@ -283,6 +285,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
+| 10076960 | `MsgType.AsmRead.Ext ori` | `Inventory.AssemblyToOrder.Get`, `Inventory.AssemblyBOM.Get` |
 | 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
@@ -302,6 +305,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076919–10076923 | Shared | Contract parts, tracking write restriction, posting gate, domain gate, setup write restriction |
 | 10076844, 10076912–10076918 | Item attributes | `Item Attribute Resolve ori`, `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits |
 | 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
+| 10076965–10076966 | Assembly reads | `Asm. To Order Get Impl ori`, `Assembly BOM Get Impl ori` |
 | 10076857 | Availability | `Avail. By Period Impl ori` |
 | 10076858–10076866 | Costing | Adjust Cost Run (+ process), Cost Get, Cost To GL Post/Test, Cost Update, Reval Preview, Revaluation Calc, Revaluation Post |
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
