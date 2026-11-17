@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed - Item application selectors and quantities (#40)
+
+- Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
+- Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
+- Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
 ### Fixed (2026-11-16) - assembly read CI regressions (#225)
 - Assembly read discovery returns disabled when the caller cannot read Inventory Setup, matching execution's coded permission refusal.
 - Assembly tests use a future shipment date for ATO fixtures and the normal dispatcher for the Icelandic unknown-key refusal. Restrictive permission assertions remain unchanged.
@@ -12,6 +17,7 @@
 - Both are in enum extension 10076960 `MsgType.AsmRead.Ext ori`, are gated by the existing Assembly domain, and declare their real effect: `read`, nothing changed, idempotent (core#1365 D1). `BIFROST InvRead ori` and `BIFROST InvWrite ori` execute both codeunits.
 - Refusals: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `RecordNotFound`, `InvalidParameter` (Assembly domain off), `PermissionDenied`, each with a `nextStep`; help and refusals in en-US and is-IS (XLF regenerated).
 - Tests: `Assembly Read Tests` (96966) and `Assembly Read Perm` (96967); `Inventory Contract Batch Tests` counts 61 app types (45 in the scoped census).
+
 ### Added (2026-11-16) - Item substitutions (#118)
 
 - `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
