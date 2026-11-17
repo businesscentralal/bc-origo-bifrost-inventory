@@ -6,6 +6,8 @@
 
 - Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
 - Move the shared helper `Posted Line Undo ori` from 10077027 to 10077014. Open pull request #206 claims codeunit and message value 10077027 for `Inventory.Valuation.Get`. 10077014, 10077016 and 10077017 are free on main and are not claimed by an open pull request. The enum extension stays 10077025.
+### Fixed
+- #234: `Purchase.Requisition.CarryOut` (10076942) and `Inventory.PlanningWorksheet.CarryOut` (10076939) state what `expectedCount` counts. effect.changes and the expectedCount parameter say `expectedCount counts worksheet selections: always 1` (Icelandic: `expectedCount telur val á vinnublaði: alltaf 1`), not the number of lines or orders. Requisition carry-out now declares the expectedCount parameter itself so Foundation keeps that sentence. New test codeunit 96948 `CarryOut Count Help ori` (96964 is `Inv. 186 Blank Line Tests ori` on main). No new product object IDs.
 
 ### Fixed - main merge ID reconciliation (PR #233)
 
