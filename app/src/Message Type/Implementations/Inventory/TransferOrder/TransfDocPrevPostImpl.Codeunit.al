@@ -336,15 +336,29 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
     local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
         InventorySetup: Record "Inventory Setup";
+        SetupRef: RecordRef;
+        PostingField: FieldRef;
+        PostingType: Integer;
     begin
         InventorySetup.Get();
-        case InventorySetup."Direct Transfer Posting" of
-            InventorySetup."Direct Transfer Posting"::"Receipt and Shipment":
+        SetupRef.GetTable(InventorySetup);
+        // BC 29 replaces option field 5855 with enum field 5857 (values 10 and 20).
+        // Read by field id to retain the released BC 28 application floor.
+        if SetupRef.FieldExist(5857) then begin
+            PostingField := SetupRef.Field(5857);
+            PostingType := PostingField.Value;
+        end else begin
+            PostingField := SetupRef.Field(5855);
+            PostingType := PostingField.Value;
+            PostingType := (PostingType + 1) * 10;
+        end;
+        case PostingType of
+            10:
                 begin
                     PostShipment := true;
                     PostReceipt := true;
                 end;
-            InventorySetup."Direct Transfer Posting"::"Direct Transfer":
+            20:
                 PostTransfer := true;
         end;
     end;
