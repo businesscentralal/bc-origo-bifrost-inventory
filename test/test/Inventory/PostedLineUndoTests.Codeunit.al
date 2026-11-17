@@ -11,7 +11,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Exercises the real shipment and receipt undo routines, complete-selection validation and bilingual contracts for issue 134.</summary>
-codeunit 96996 "Posted Line Undo Tests ori"
+codeunit 96998 "Posted Line Undo Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;

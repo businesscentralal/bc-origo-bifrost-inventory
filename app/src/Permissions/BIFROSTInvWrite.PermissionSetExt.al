@@ -15,6 +15,8 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Sales Undo Impl ori" = X,
         codeunit "Purchase Undo Impl ori" = X,
         codeunit "Posted Line Undo ori" = X,
+        codeunit "Purch Get Receipt Impl ori" = X,
+        codeunit "Purch Get Receipt Proc ori" = X,
         codeunit "Std. Cost Suggest Impl ori" = X,
         codeunit "Std. Cost Implement Impl ori" = X,
         codeunit "Std. Cost Management ori" = X,

@@ -4,13 +4,21 @@
 
 ### Fixed — issue 134 merge with main
 
+- Move the PR’s `Posted Line Undo Tests ori` test codeunit from 96996 to the next free ID 96998: main uses 96996 for `Purch Get Receipt Tests`. Test behavior and the fixture objects at 96997 are unchanged.
+
 - Move the PR’s Sales/Purchase undo implementation codeunits and message values from 10077025–10077026 to the next free IDs 10077028–10077029: main uses 10077025 for Transfer Posting Setup and 10077026 for Transfer Ship. The shared helper stays 10077027 and the enum extension stays 10077025. Both features retain their behavior.
 
 ### Added ([28.3.2.0] development) — issue 134
 
 - Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
 - Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.
-- App objects: codeunits / enum values 10077028–10077029, shared codeunit 10077027, enum extension 10077025. Test objects: codeunit 96996; explicit owned fixture codeunit / page 96997.
+- App objects: codeunits / enum values 10077028–10077029, shared codeunit 10077027, enum extension 10077025. Test objects: codeunit 96998; explicit owned fixture codeunit / page 96997.
+
+### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
+
+- `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
+- Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
+- Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
@@ -155,7 +163,6 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
-
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
