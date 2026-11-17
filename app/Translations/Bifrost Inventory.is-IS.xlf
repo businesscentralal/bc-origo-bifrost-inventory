@@ -6178,9 +6178,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method CancelSourceLine - NamedType MissingErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 996019247 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send entryNo, or sourceType, sourceNo and sourceLineNo (with sourceBatchName for an item journal line and sourceProdOrderLine for a production order component).</source>
-          <target>Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine fyrir framleiðsluíhlut).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine fyrir framleiðsluíhlut).</note>
+          <source>Send entryNo, or sourceType, sourceNo and sourceLineNo (with sourceBatchName for an item journal line and sourceProdOrderLine and sourceSubtype for production output and components).</source>
+          <target>Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine og sourceSubtype fyrir framleiðsluafurðir og íhluti).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine og sourceSubtype fyrir framleiðsluafurðir og íhluti).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method CancelSourceLine - NamedType MissingNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 996019247 - NamedType 3966791644" size-unit="char" translate="yes" xml:space="preserve">
@@ -6250,9 +6250,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 2182983805" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source subtype: the document type ordinal (1 = Order) or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly lines; for other sources every subtype of the line is cancelled when it is left out.</source>
-          <target>Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.</note>
+          <source>Source subtype: the document type ordinal (1 = Order) or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly lines; required for production output and components (5406/5407) to identify the production status. For other sources every subtype of the line is cancelled when it is left out.</source>
+          <target>Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; nauðsynlegt fyrir framleiðsluafurðir og íhluti (5406/5407) til að tilgreina framleiðslustöðu. Fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; nauðsynlegt fyrir framleiðsluafurðir og íhluti (5406/5407) til að tilgreina framleiðslustöðu. Fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceSubtypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 1598139322" size-unit="char" translate="yes" xml:space="preserve">
@@ -6274,9 +6274,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceBatchLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 1035146980" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Production order line number; required for a production order component (sourceType 5407).</source>
-          <target>Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluíhlut (sourceType 5407).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluíhlut (sourceType 5407).</note>
+          <source>Production order line number; required for production output and components (sourceType 5406/5407).</source>
+          <target>Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluafurðir og íhluti (sourceType 5406/5407).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluafurðir og íhluti (sourceType 5406/5407).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceProdLineLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">

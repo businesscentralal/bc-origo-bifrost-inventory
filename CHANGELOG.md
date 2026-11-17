@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
+
+- Source-line cancellation now requires `sourceProdOrderLine` and `sourceSubtype` for production output (5406) and components (5407). Incomplete pointers return `MissingParameter` before writes; complete pointers preserve sibling lines and other production statuses. Native regression coverage and bilingual parameter help cover the required keys.
+
+
 ### Added (2026-11-16) - reserve tracked or selected inventory supply (#7)
 - `Inventory.Reservation.Create` accepts optional `lotNo`, `serialNo` and `packageNo` filters. `itemLedgerEntryNo` reserves only the named open, positive supply entry after checking item, variant, location, tracking and unreserved quantity inside the native write transaction. An unavailable or conflicting selected supply leaves no reservation.
 - Create now binds service lines, production order output and component lines, native-eligible transfer journal lines (including batch), and assembly headers through native source-specific reservation handling. Production pointers include the parent line. Serial requests require exactly one base unit.

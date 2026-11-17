@@ -61,7 +61,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Target.Add(ContractMgt.TargetEntry('data.entryNo', 'reservation entry no.', 'The Entry No. of a reservation entry with status Reservation, as returned by Inventory.Reservation.Create or read with Inventory.Reservation.Get. Both entries of the reservation pair share the number and both are cancelled.'));
-        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo + data.sourceBatchName + data.sourceProdOrderLine', 'table no., subtype, document no., line no., batch and production order line', 'Used when entryNo is not sent: every reservation (status Reservation) of that source line is cancelled, for any source the Reserve action supports. sourceBatchName is required for an item journal line (83) and sourceProdOrderLine for a production order component (5407).'));
+        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo + data.sourceBatchName + data.sourceProdOrderLine', 'table no., subtype, document no., line no., batch and production order line', 'Used when entryNo is not sent: every reservation (status Reservation) of that source line is cancelled, for any source the Reserve action supports. sourceBatchName is required for an item journal line (83) and sourceProdOrderLine and sourceSubtype for production output (5406) and components (5407).'));
         exit(true);
     end;
 
@@ -69,11 +69,11 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         SourceTypeLbl: Label 'Source table number of the line whose reservations are cancelled when entryNo is not sent, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component or 83 Item Journal Line.', Comment = 'is-IS=Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur eða 83 vörubókarlína.';
-        SourceSubtypeLbl: Label 'Source subtype: the document type ordinal (1 = Order) or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly lines; for other sources every subtype of the line is cancelled when it is left out.', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.';
+        SourceSubtypeLbl: Label 'Source subtype: the document type ordinal (1 = Order) or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly lines; required for production output and components (5406/5407) to identify the production status. For other sources every subtype of the line is cancelled when it is left out.', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; nauðsynlegt fyrir framleiðsluafurðir og íhluti (5406/5407) til að tilgreina framleiðslustöðu. Fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.';
         SourceNoLbl: Label 'Source document number (for an item journal line, the journal template name).', Comment = 'is-IS=Númer upprunaskjals (fyrir vörubókarlínu, heiti bókarsniðmátsins).';
         SourceLineNoLbl: Label 'Source line number (Source Ref. No.).', Comment = 'is-IS=Línunúmer uppruna (Source Ref. No.).';
         SourceBatchLbl: Label 'Journal batch name; required for an item journal line (sourceType 83).', Comment = 'is-IS=Heiti bókarkeyrslu; nauðsynlegt fyrir vörubókarlínu (sourceType 83).';
-        SourceProdLineLbl: Label 'Production order line number; required for a production order component (sourceType 5407).', Comment = 'is-IS=Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluíhlut (sourceType 5407).';
+        SourceProdLineLbl: Label 'Production order line number; required for production output and components (sourceType 5406/5407).', Comment = 'is-IS=Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluafurðir og íhluti (sourceType 5406/5407).';
     begin
         Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'Send entryNo or the source line. The reservation entry number, a positive whole number up to 2147483647. Both entries of the pair share it. Both demand and supply entries must have status Reservation, matching item, variant and location, and equal opposite base quantities.'));
         Parameters.Add(ContractMgt.Parameter('sourceType', 'integer', false, SourceTypeLbl));
@@ -303,7 +303,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         HasProdOrderLine: Boolean;
         ReadOk: Boolean;
         MissingErr: Label '%1 is required to cancel the reservations of a source line.', Comment = '%1 = parameter name; is-IS=%1 er nauðsynlegt til að afturkalla frátekningar upprunalínu.';
-        MissingNextStepLbl: Label 'Send entryNo, or sourceType, sourceNo and sourceLineNo (with sourceBatchName for an item journal line and sourceProdOrderLine for a production order component).', Comment = 'is-IS=Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine fyrir framleiðsluíhlut).';
+        MissingNextStepLbl: Label 'Send entryNo, or sourceType, sourceNo and sourceLineNo (with sourceBatchName for an item journal line and sourceProdOrderLine and sourceSubtype for production output and components).', Comment = 'is-IS=Sendu entryNo, eða sourceType, sourceNo og sourceLineNo (með sourceBatchName fyrir vörubókarlínu og sourceProdOrderLine og sourceSubtype fyrir framleiðsluafurðir og íhluti).';
         InconsistentPairErr: Label 'Reservation %1 does not contain a consistent reservation pair.', Comment = '%1 = entry number; is-IS=Frátekning %1 inniheldur ekki samræmt frátekningarpar.';
         InspectPairLbl: Label 'Inspect both reservation entries and correct their native reservation state before retrying.', Comment = 'is-IS=Skoðaðu báðar frátekningarfærslur og leiðréttu stöðu þeirra í kerfinu áður en reynt er aftur.';
     begin
@@ -334,8 +334,12 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             RespondMissing(Argument, MissingErr, 'sourceBatchName', MissingNextStepLbl);
             exit;
         end;
-        if (SourceType = 5407) and not HasProdOrderLine then begin
+        if (SourceType in [5406, 5407]) and not HasProdOrderLine then begin
             RespondMissing(Argument, MissingErr, 'sourceProdOrderLine', MissingNextStepLbl);
+            exit;
+        end;
+        if (SourceType in [5406, 5407]) and not HasSubtype then begin
+            RespondMissing(Argument, MissingErr, 'sourceSubtype', MissingNextStepLbl);
             exit;
         end;
         if not HasSubtype and (SourceType in [37, 39, 901]) then begin

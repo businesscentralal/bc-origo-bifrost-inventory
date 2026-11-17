@@ -609,6 +609,20 @@ codeunit 96946 "Reservation Create Tests"
     end;
 
     [Test]
+    procedure Scenario_AC08_ProductionStatus_CancelPreservesOtherStatus()
+    begin
+        // Story #7: equal production pointers in different statuses must not share cancellation.
+        VerifyAdditionalSource('productionStatus');
+    end;
+
+    [Test]
+    procedure Scenario_AC08_ComponentStatus_CancelPreservesOtherStatus()
+    begin
+        // Story #7: component cancellation also requires the complete production status key.
+        VerifyAdditionalSource('componentStatus');
+    end;
+
+    [Test]
     procedure Scenario_AC04_ItemJournalLine_ReservesAndCancels()
     begin
         // Story #7, Oct06 source scope | Time: WorkDate for availability | Risk: None
@@ -735,6 +749,7 @@ codeunit 96946 "Reservation Create Tests"
         OtherBatch: Record "Item Journal Batch";
         OtherJournal: Record "Item Journal Line";
         OtherProdLine: Record "Prod. Order Line";
+        OtherProductionOrder: Record "Production Order";
         OtherComponent: Record "Prod. Order Component";
         Entry: Record "Reservation Entry";
         LibraryAssembly: Codeunit "Library - Assembly";
@@ -744,6 +759,7 @@ codeunit 96946 "Reservation Create Tests"
         Request: JsonObject;
         Response: JsonObject;
         CancelRequest: JsonObject;
+        IncompleteRequest: JsonObject;
         OtherRequest: JsonObject;
         ReadResponse: JsonObject;
         Token: JsonToken;
@@ -753,7 +769,13 @@ codeunit 96946 "Reservation Create Tests"
         ParentLineNo: Integer;
         SourceNo: Code[20];
         BatchName: Code[10];
+        DifferentStatus: Boolean;
     begin
+        DifferentStatus := CaseName in ['productionStatus', 'componentStatus'];
+        if CaseName = 'productionStatus' then
+            CaseName := 'production';
+        if CaseName = 'componentStatus' then
+            CaseName := 'component';
         // [GIVEN] Real stock and native source records, independently seeded by the test.
         DomainSetup.EnableReservations();
         CreateOpenSalesLine(Item, SalesHeader, SalesLine, 10, 5);
@@ -856,7 +878,7 @@ codeunit 96946 "Reservation Create Tests"
         Response.Get('quantity', Token);
         Assert.AreEqual(2, Token.AsValue().AsDecimal(), 'Reserved for the native source.');
         // [GIVEN] A second native source with the same template/order and line number but a different batch/parent.
-        if CaseName in ['journal', 'component'] then begin
+        if CaseName in ['journal', 'production', 'component'] then begin
             OtherRequest := CancelRequest.Clone().AsObject();
             if CaseName = 'journal' then begin
                 LibraryInventory.CreateItemJournalBatch(OtherBatch, JournalLine."Journal Template Name");
@@ -870,11 +892,24 @@ codeunit 96946 "Reservation Create Tests"
                 OtherRequest.Replace('sourceLineNo', OtherJournal."Line No.");
                 Assert.AreEqual(SourceLineNo, OtherJournal."Line No.", 'Equal line numbers exercise batch isolation.');
             end else begin
-                LibraryManufacturing.CreateProdOrderLine(OtherProdLine, ProductionOrder.Status, ProductionOrder."No.",
+                OtherProductionOrder := ProductionOrder;
+                if DifferentStatus then begin
+                    OtherProductionOrder.Status := OtherProductionOrder.Status::"Firm Planned";
+                    OtherProductionOrder.Insert(true);
+                end;
+                LibraryManufacturing.CreateProdOrderLine(OtherProdLine, OtherProductionOrder.Status, OtherProductionOrder."No.",
                     ParentItem."No.", '', SalesLine."Location Code", 3);
-                OtherComponent := Component;
-                OtherComponent."Prod. Order Line No." := OtherProdLine."Line No.";
-                OtherComponent.Insert(true);
+                OtherProdLine.Validate("Due Date", WorkDate());
+                OtherProdLine.Modify(true);
+                if DifferentStatus then
+                    Assert.AreEqual(ParentLineNo, OtherProdLine."Line No.", 'Equal line numbers exercise status isolation.');
+                if CaseName = 'component' then begin
+                    OtherComponent := Component;
+                    OtherComponent.Status := OtherProductionOrder.Status;
+                    OtherComponent."Prod. Order Line No." := OtherProdLine."Line No.";
+                    OtherComponent.Insert(true);
+                end;
+                OtherRequest.Replace('sourceSubtype', OtherProductionOrder.Status.AsInteger());
                 OtherRequest.Replace('sourceProdOrderLine', OtherProdLine."Line No.");
             end;
             OtherRequest.Add('quantity', 1);
@@ -896,6 +931,28 @@ codeunit 96946 "Reservation Create Tests"
         Entry.SetRange("Source Batch Name", BatchName);
         Entry.SetRange("Reservation Status", Entry."Reservation Status"::Reservation);
         Assert.IsFalse(Entry.IsEmpty(), 'A native source reservation exists.');
+        if CaseName in ['production', 'component'] then begin
+            // [WHEN] A destructive call omits a production key part.
+            IncompleteRequest := CancelRequest.Clone().AsObject();
+            IncompleteRequest.Remove('sourceProdOrderLine');
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", IncompleteRequest, Response);
+            AssertStatus(Response, 'Error');
+            Response.Get('code', Token);
+            Assert.AreEqual('MissingParameter', Token.AsValue().AsText(), 'A production parent key is mandatory.');
+            Response.Get('parameter', Token);
+            Assert.AreEqual('sourceProdOrderLine', Token.AsValue().AsText(), 'Missing production parent is identified.');
+            Assert.AreEqual(1, Entry.Count(), 'Missing parent leaves the requested reservation intact.');
+            IncompleteRequest := CancelRequest.Clone().AsObject();
+            IncompleteRequest.Remove('sourceSubtype');
+            Clear(Response);
+            Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", IncompleteRequest, Response);
+            AssertStatus(Response, 'Error');
+            Response.Get('code', Token);
+            Assert.AreEqual('MissingParameter', Token.AsValue().AsText(), 'A production status is mandatory.');
+            Response.Get('parameter', Token);
+            Assert.AreEqual('sourceSubtype', Token.AsValue().AsText(), 'Missing production status is identified.');
+            Assert.AreEqual(1, Entry.Count(), 'Missing status leaves the requested reservation intact.');
+        end;
         Clear(Response);
         Helper.ProcessMessage("Message Type ori"::"Inventory.Reservation.Cancel", CancelRequest, Response);
         AssertStatus(Response, 'Success');
