@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 44 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 60 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -30,6 +30,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | Type | Direction | Purpose |
 |------|-----------|---------|
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
+| `Inventory.ItemSubstitution.Get` | Outbound | Read direct item substitutes and exact-variant on-hand inventory |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
@@ -73,6 +74,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
+| `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
 | `Inventory.Revaluation.Calculate` | Inbound | Calculate remaining quantity and inventory value |
 | `Inventory.Revaluation.PreviewPost` | Inbound | Preview posting a revaluation journal batch; nothing is kept |
 | `Inventory.Revaluation.Post` | Inbound | Post a revaluation journal batch through Item Jnl.-Post Batch |
@@ -167,7 +169,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge and Item Category.
+   Item Reference, Availability, Item Charge, Item Category and Item Substitution.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
@@ -190,6 +192,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Item Application | Item Application Entry |
    | Inventory Period | Inventory Period |
    | Item Price | Price List Line with Asset Type Item |
+   | Item Substitution | Item Substitution |
    | Item Reference | Item Reference |
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
@@ -255,13 +258,14 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
-| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve` |
+| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -290,6 +294,7 @@ Each message type value is the ID of its implementation codeunit. The exception 
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 
 ### Permission sets
 
@@ -431,3 +436,12 @@ app-owned errors and follow the shared retry guidance; an irreversible call is n
 Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
 
 Objects: codeunits 10076932 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076848 `MsgType.StdCost.EnumExt ori`; test codeunits 96982–96983 `Standard Cost Tests ori`.
+
+### Item substitution objects (#118)
+
+| ID | Kind | Object |
+|---|---|---|
+| 10077020 | Codeunit | `Item Subst. Get Impl ori` |
+| 96993 | Test codeunit | `Item Substitution Tests ori` |
+
+See [the substitution request and response](docs/contracts.md#inventoryitemsubstitutionget).
