@@ -86,6 +86,14 @@ README "Objects" lists every object with its ID. In short:
 - 96995 `Sales Get Shipment Tests`. (Open PRs claim 96980 (#193), 96981 (#195), 96988 (#197).)
 - Free (16.11.2026, any test object type): 96924-96926, 96928-96929, 96947-96949, 96960-96961, 96964-96969, 96982-96987, 96989-96994, 96996-96999. Check main and open PRs first.
 - Free: 96960-96961, 96963-96979.
+
+## Issue 134 allocation (Alvíss, 16.11.2026)
+
+- Codeunits / message values 10077028 Sales Undo Impl ori, 10077029 Purchase Undo Impl ori.
+- Shared codeunit 10077027 Posted Line Undo ori; enum extension 10077025 MsgType.PostedUndo.Ext ori.
+- Tests 96998 Posted Line Undo Tests ori (moved from 96996 on merging #133; main keeps 96996 Purch Get Receipt Tests); test fixture codeunit and page 96997 Posted Undo MCP Fixture ori.
+- These IDs are within the declared ranges and avoid the allocations visible in open Inventory PRs at implementation time.
+
 - #106 (`Inventory.TrackingInfo.Get`): codeunit and enum value 10077010, enum extension 10076915, test codeunit 96992.
   On main 96963 and 96970-96979 are already used, so check `test/` before taking an ID from the free list above.
 
