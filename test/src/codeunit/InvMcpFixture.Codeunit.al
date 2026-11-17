@@ -585,6 +585,7 @@ codeunit 96973 "Inv. MCP Fixture ori"
         Customer: Record Customer;
         Item: Record Item;
         Location: Record Location;
+        InventoryPostingSetup: Record "Inventory Posting Setup";
         TransferLine: Record "Transfer Line";
         TransferHeader: Record "Transfer Header";
         ShipmentLine: Record "Transfer Shipment Line";
@@ -688,6 +689,11 @@ codeunit 96973 "Inv. MCP Fixture ori"
             until ReceiptHeader.Next() = 0;
         if Customer.Get('W6I7C' + Suffix) then
             Customer.Delete(true);
+        // Location deletion does not cascade its posting setup; remove only these owned codes.
+        foreach Kind in 'F|D|I'.Split('|') do begin
+            InventoryPostingSetup.SetRange("Location Code", 'W6I7' + Kind + Suffix);
+            InventoryPostingSetup.DeleteAll();
+        end;
         if Location.Get('W6I7F' + Suffix) then
             Location.Delete(true);
         if Location.Get('W6I7D' + Suffix) then
