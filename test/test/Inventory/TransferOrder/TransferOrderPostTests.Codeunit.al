@@ -379,6 +379,8 @@ codeunit 96914 "Transfer Order Post Tests"
     var
         OriginalSetup: Record "Inventory Setup";
         DirectTransHeader: Record "Direct Trans. Header";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
         TransferHeader: Record "Transfer Header";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
@@ -399,10 +401,16 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual('Success', Token.AsValue().AsText(), 'Direct transfer should succeed. ' + JsonText(ResponseJson));
         DirectTransHeader.SetRange("Transfer Order No.", DocumentNo);
         Assert.AreEqual(1, DirectTransHeader.Count(), 'Exactly one posted direct transfer exists for the order');
+        DirectTransHeader.FindFirst();
+        // The public response uses both number fields for the same posted direct transfer.
         Assert.IsTrue(ResponseJson.Get('postedShipmentNo', Token), 'postedShipmentNo missing');
-        Assert.AreEqual('', Token.AsValue().AsText(), 'Single-document posting creates no shipment');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Shipment response identifies the posted direct transfer');
         Assert.IsTrue(ResponseJson.Get('postedReceiptNo', Token), 'postedReceiptNo missing');
-        Assert.AreEqual('', Token.AsValue().AsText(), 'Single-document posting creates no receipt');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Receipt response identifies the same posted direct transfer');
+        TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferShipmentHeader.IsEmpty(), 'Single-document posting creates no shipment header');
+        TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferReceiptHeader.IsEmpty(), 'Single-document posting creates no receipt header');
         Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Full direct transfer removes the order');
     end;
 
