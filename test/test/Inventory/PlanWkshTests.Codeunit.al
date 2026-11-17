@@ -1,12 +1,16 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.VAT.Setup;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Inventory.Planning;
 using Microsoft.Inventory.Requisition;
+using Microsoft.Inventory.Setup;
 using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Vendor;
 using Origo.Bifrost;
@@ -187,7 +191,6 @@ codeunit 96965 "Plan Wksh Tests ori"
         ReqLine: Record "Requisition Line";
         Header: Record "Assembly Header";
         PlanningError: Record "Planning Error Log";
-        Helper: Codeunit "Assembly Order Test Helper";
         FailureDetail: Text;
         Request: JsonObject;
         Response: JsonObject;
@@ -196,9 +199,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         CleanupFixtures();
         Commit();
         EnablePlanning();
-        Helper.CreateAssemblyItemWithBOM(Item, Component);
-        RenameOwnedItem(Item);
-        RenameOwnedItem(Component);
+        CreateAssemblyFixture(Item, Component, 'XP117', 'XP117');
         Item.Description := 'XP117 assembly';
         Item.Modify();
         Component.Description := 'XP117 component';
@@ -504,10 +505,9 @@ codeunit 96965 "Plan Wksh Tests ori"
         Parent: Record Item;
         Component: Record Item;
         BOMComponent: Record "BOM Component";
-        Helper: Codeunit "Assembly Order Test Helper";
     begin
         // Issue #205 amend | Time: no date dependency | Risk: only newly created test records.
-        Helper.CreateAssemblyItemWithBOM(Parent, Component);
+        CreateAssemblyFixture(Parent, Component, 'XOTHER', 'XP117');
         Component.Description := 'XP117 component';
         Component.Modify();
         CleanupFixtures();
@@ -517,7 +517,9 @@ codeunit 96965 "Plan Wksh Tests ori"
         BOMComponent.SetRange("No.", Component."No.");
         Assert.AreEqual(1, BOMComponent.Count(), 'The unrelated BOM still references its component.');
         BOMComponent.DeleteAll(true);
+        Parent.Get(Parent."No.");
         Parent.Delete(true);
+        Component.Get(Component."No.");
         Component.Delete(true);
     end;
 
@@ -528,8 +530,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         LibraryPurchase.CreateVendor(Vendor);
         Vendor.Validate(Name, CopyStr('XP117 ' + Vendor."No.", 1, MaxStrLen(Vendor.Name)));
         Vendor.Modify(true);
-        LibraryInventory.CreateItem(Item);
-        RenameOwnedItem(Item);
+        CreateFixtureItem(Item, 'XP117');
         Item.Validate(Description, CopyStr('XP117 ' + Item."No.", 1, MaxStrLen(Item.Description)));
         Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
         Item.Validate("Vendor No.", Vendor."No.");
@@ -539,9 +540,43 @@ codeunit 96965 "Plan Wksh Tests ori"
         Item.Modify(true);
     end;
 
-    local procedure RenameOwnedItem(var Item: Record Item)
+    local procedure CreateFixtureItem(var Item: Record Item; Prefix: Text)
+    var
+        ItemUnit: Record "Item Unit of Measure";
+        GeneralPostingSetup: Record "General Posting Setup";
+        InventoryPostingGroup: Record "Inventory Posting Group";
+        VATPostingSetup: Record "VAT Posting Setup";
+        LibraryERM: Codeunit "Library - ERM";
     begin
-        Item.Rename(CopyStr('XP117' + DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, MaxStrLen(Item."No.")));
+        // Set the final number before insertion: renaming a recycled library number can adopt orphan BOM references.
+        Item.Init();
+        Item."No." := CopyStr(Prefix + DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, MaxStrLen(Item."No."));
+        Item.Insert(true);
+        LibraryInventory.CreateItemUnitOfMeasure(ItemUnit, Item."No.", '', 1);
+        LibraryERM.FindGeneralPostingSetupInvtFull(GeneralPostingSetup);
+        InventoryPostingGroup.FindFirst();
+        LibraryERM.FindVATPostingSetupInvt(VATPostingSetup);
+        Item.Validate("Base Unit of Measure", ItemUnit.Code);
+        Item.Validate("Gen. Prod. Posting Group", GeneralPostingSetup."Gen. Prod. Posting Group");
+        Item.Validate("Inventory Posting Group", InventoryPostingGroup.Code);
+        Item.Validate("VAT Prod. Posting Group", VATPostingSetup."VAT Prod. Posting Group");
+        Item.Modify(true);
+    end;
+
+    local procedure CreateAssemblyFixture(var Parent: Record Item; var Component: Record Item; ParentPrefix: Text; ComponentPrefix: Text)
+    var
+        BOMComponent: Record "BOM Component";
+        LibraryAssembly: Codeunit "Library - Assembly";
+    begin
+        CreateFixtureItem(Component, ComponentPrefix);
+        CreateFixtureItem(Parent, ParentPrefix);
+        Parent.Validate("Replenishment System", Parent."Replenishment System"::Assembly);
+        Parent.Validate("Assembly Policy", Parent."Assembly Policy"::"Assemble-to-Stock");
+        Parent.Modify(true);
+        LibraryAssembly.CreateAssemblyListComponent(
+            BOMComponent.Type::Item, Component."No.", Parent."No.", '', BOMComponent."Resource Usage Type", 1, true);
+        Parent.Get(Parent."No.");
+        Component.Get(Component."No.");
     end;
 
     local procedure CreatePlanningWorksheet()
@@ -599,7 +634,8 @@ codeunit 96965 "Plan Wksh Tests ori"
         Item.SetFilter("No.", 'XP117*');
         if Item.FindSet() then
             repeat
-                ItemNos.Add(Item."No.");
+                if not HasForeignBomParent(Item."No.") then
+                    ItemNos.Add(Item."No.");
             until Item.Next() = 0;
         foreach ItemNo in ItemNos do begin
             TransferLine.Reset();
@@ -670,6 +706,16 @@ codeunit 96965 "Plan Wksh Tests ori"
             WkshTemplate.Delete(true);
         if WkshTemplate.Get('XP117R') then
             WkshTemplate.Delete(true);
+    end;
+
+    local procedure HasForeignBomParent(ItemNo: Code[20]): Boolean
+    var
+        BOMComponent: Record "BOM Component";
+    begin
+        BOMComponent.SetRange(Type, BOMComponent.Type::Item);
+        BOMComponent.SetRange("No.", ItemNo);
+        BOMComponent.SetFilter("Parent Item No.", '<>XP117*');
+        exit(not BOMComponent.IsEmpty());
     end;
 
     local procedure HorizonStart(): Date
