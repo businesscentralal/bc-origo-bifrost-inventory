@@ -405,7 +405,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                 exit;
             end;
 
-        ReservationEntry.Reset();
+        // Native reservation can replace the last tracking entry read above. Discard its partial record buffer.
+        Clear(ReservationEntry);
         ReservationEntry.SetFilter("Entry No.", '>%1', LastEntryNo);
         ReservationEntry.SetRange("Source Type", SourceType);
         ReservationEntry.SetRange("Source Subtype", SourceSubtype);
