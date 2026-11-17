@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed - Item application selectors and quantities (#40)
+
+- Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
+- Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
+- Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
 ### Fixed (2026-11-16) - BC 29 Direct Transfer compatibility (#228)
 
 - Codeunits 10076901 and 10076903 use the replacement Inventory Setup `Direct Transfer Posting Type` enum when compiled with `BC29`. The default branch retains the BC 28.5 option field because that version has no replacement enum. Posting choices and message contracts are unchanged; no warnings are suppressed.
