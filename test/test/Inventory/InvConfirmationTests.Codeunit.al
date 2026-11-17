@@ -63,9 +63,13 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
+        FoundationSetup: RecordRef;
+        PreviousConfirmation: Boolean;
+        ChangedConfirmation: Boolean;
         PreviousLanguage: Integer;
     begin
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
+        ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         Setup.InsertIfNotExists();
         Setup."Transfer Orders" := true;
         Setup.Assembly := true;
@@ -89,6 +93,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyCosting();
         VerifyJournals();
         GlobalLanguage(PreviousLanguage);
+        RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
     end;
 
     local procedure VerifyTransfer()
@@ -315,6 +320,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         PreviousSetup: Record "Inventory Setup ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        FoundationSetup: RecordRef;
         Implementation: Interface "Msg Contract ori";
         MessageType: Enum "Message Type ori";
         TypeName: Text;
@@ -328,9 +334,15 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Parameter: JsonToken;
         Name: JsonToken;
         AdvertisesConfirmation: Boolean;
+        SupportsConfirmation: Boolean;
+        DeclaresConfirmation: Boolean;
+        DeclaredParameters: JsonArray;
+        PreviousConfirmation: Boolean;
+        ChangedConfirmation: Boolean;
         HadSetup: Boolean;
     begin
         // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
+        ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         // No business document or ledger entry is created, posted or undone by this boundary test.
         HadSetup := PreviousSetup.Get();
         Setup.InsertIfNotExists();
@@ -342,6 +354,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup.Modify();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
+        SupportsConfirmation := Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired');
         foreach TypeName in MessageType.Names() do
             if TypeName.StartsWith('Inventory.') and not TypeName.StartsWith('Inventory.ItemJournal.') then begin
                 MessageType := Enum::"Message Type ori".FromInteger(MessageType.Ordinals().Get(MessageType.Names().IndexOf(TypeName)));
@@ -351,6 +364,18 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                     if Effect.Get('effect', Token) then
                         if Token.AsValue().AsText() = 'irreversible' then begin
                             Checked += 1;
+                            // An implementation can accept an optional count even before Foundation adds its gate.
+                            DeclaresConfirmation := false;
+                            Clear(DeclaredParameters);
+                            if Implementation.GetParameters(DeclaredParameters) then
+                                foreach Parameter in DeclaredParameters do
+                                    if Parameter.AsObject().Get('name', Name) then
+                                        if Name.AsValue().AsText() = 'expectedCount' then begin
+                                            DeclaresConfirmation := true;
+                                            AssertText(Parameter.AsObject(), 'type', 'integer');
+                                            Assert.IsTrue(Parameter.AsObject().Get('required', Token), 'Explicit count declares whether it is required.');
+                                            Assert.IsFalse(Token.AsValue().AsBoolean(), 'Handler count is optional; Foundation owns mandatory confirmation.');
+                                        end;
                             Clear(Contract);
                             ContractMgt.GetContract(MessageType, Contract);
                             AdvertisesConfirmation := false;
@@ -363,14 +388,13 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
                             if TypeName in ['Inventory.TransferOrder.Ship', 'Inventory.TransferOrder.Receive'] then
-                                Assert.IsTrue(AdvertisesConfirmation, TypeName + ' always documents its own optional count validation.')
-                            else
-                                Assert.AreEqual(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), AdvertisesConfirmation,
-                                    TypeName + ' exposes the deployed Foundation protocol.');
+                                Assert.IsTrue(AdvertisesConfirmation, TypeName + ' always documents its own optional count validation.');
+                            Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
+                                TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
                             // [WHEN] Dispatch without confirmation; newer Foundation must refuse before the handler.
                             Response := Dispatch(MessageType, Request);
-                            if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then begin
+                            if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');
                                 AssertText(Response, 'parameter', 'expectedCount');
                                 AssertText(Response, 'expected', '1');
@@ -401,7 +425,50 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(11, Checked, 'All eleven app-owned irreversible types must be exercised.');
+        Assert.AreEqual(12, Checked, 'All twelve app-owned irreversible types must be exercised.');
+        RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
+    end;
+
+    local procedure EnableRequiredConfirmation(var FoundationSetup: RecordRef; var PreviousConfirmation: Boolean): Boolean
+    var
+        ConfirmationField: FieldRef;
+        FieldIndex: Integer;
+    begin
+        if not Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
+            exit(false);
+        FoundationSetup.Open(Database::"Setup ori");
+        Assert.IsTrue(FoundationSetup.FindFirst(), 'Confirmation tests require existing Foundation setup.');
+        for FieldIndex := 1 to FoundationSetup.FieldCount() do begin
+            ConfirmationField := FoundationSetup.FieldIndex(FieldIndex);
+            if ConfirmationField.Name() = 'Require Irreversible Confirm' then begin
+                PreviousConfirmation := ConfirmationField.Value();
+                ConfirmationField.Value := true;
+                FoundationSetup.Modify();
+                exit(true);
+            end;
+        end;
+        // Earlier confirmation-capable Foundation versions always require confirmation.
+        FoundationSetup.Close();
+        exit(false);
+    end;
+
+    local procedure RestoreConfirmation(var FoundationSetup: RecordRef; ChangedConfirmation: Boolean; PreviousConfirmation: Boolean)
+    var
+        ConfirmationField: FieldRef;
+        FieldIndex: Integer;
+    begin
+        if not ChangedConfirmation then
+            exit;
+        FoundationSetup.FindFirst();
+        for FieldIndex := 1 to FoundationSetup.FieldCount() do begin
+            ConfirmationField := FoundationSetup.FieldIndex(FieldIndex);
+            if ConfirmationField.Name() = 'Require Irreversible Confirm' then begin
+                ConfirmationField.Value := PreviousConfirmation;
+                FoundationSetup.Modify();
+                FoundationSetup.Close();
+                exit;
+            end;
+        end;
     end;
 
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
