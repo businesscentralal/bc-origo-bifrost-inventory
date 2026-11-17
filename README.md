@@ -36,6 +36,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.NonstockItem.Create` | Inbound | Create an item from a catalog item with the catalog item's item template |
+| `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
 | `Inventory.AttributeDefinition.Create` | Inbound | Create an attribute definition and options |
@@ -173,7 +174,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
 3. Open **Inventory Setup** (search for *Inventory Setup*, or open it from Bifröst Setup) and switch
    the domains on or off: Attributes, Transfer Orders, Assembly, Reservations, Item Tracking,
    Physical Inventory, Costing, Reclassification, Item Application, Inventory Period, Item Price,
-   Item Reference, Availability, Item Charge, Item Category, Item Substitution and Catalog Items.
+   Item Reference, Availability, Item Charge, Item Category, Item Substitution, Purchase Returns and Catalog Items.
    Domain defaults now follow the company's inventory usage. New rows start off and enable the
    domains for which usage exists. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
@@ -201,6 +202,7 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    | Availability | Item or Item Ledger Entry; valid demand/supply lines already reference an Item |
    | Item Charge | Item Charge |
    | Item Category | Item Category or an Item with a category code |
+   | Purchase Returns | Purchase Header whose document type is Return Order or Credit Memo |
    | Catalog Items | Nonstock Item (catalog item); existing rows get it once from their own tagged upgrade, which raises no other switch |
 
    Usage checks only read company data. A source the caller cannot read supplies no signal; no
@@ -214,6 +216,8 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
      need the caller's own Business Central permissions on the tables they touch (Item, Item
      Variant, Item Reference, Location, Item Category, Item Charge Assignment, Reservation Entry and
      the documents involved); they answer `PermissionDenied` when one is missing.
+     `Purchase.ReturnOrder.CreateFromPosted` needs the caller's own permission to create purchase
+     documents and to read posted purchase receipts, invoices and item entries.
    - Assign **`BIFROST InvPost ori`** (*Inv. Posting Gate*) to users or service principals that may
      post, run cost adjustment or post to G/L. It also grants the Inventory Setup page and table.
 5. The underlying Business Central setup still applies: locations and transfer routes, assembly
@@ -270,6 +274,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10076847 | `MsgType.PurchRet.EnumExt ori` | `Purchase.ReturnOrder.CreateFromPosted` |
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10077019 | `MsgType.Nonstock.EnumExt ori` | `Inventory.NonstockItem.Create` |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
@@ -303,6 +308,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
+| 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
 | 10077019, 10077021 | Catalog items | `Nonstock Item Create Impl ori` (+ process) |
 | 10077032–10077033 | Sales returns | `Sales Ret. Ord. Post. Impl ori` (`Sales.ReturnOrder.CreateFromPosted`), `Sales Ret. Ord. Post. Proc ori` (isolated write) |
 

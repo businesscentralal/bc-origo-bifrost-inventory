@@ -26,16 +26,18 @@ README "Objects" lists every object with its ID. In short:
   shared gates and contract parts 10076919-10076923.
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
-  (10076882) with `Inventory.PhysInventory.Record`.
-- Next free codeunit: 10076925 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
-  the convention). Free: 10076925-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
-  tables, 10076847-10077034 for enum extensions, 10076838-10077034 for permission sets.
+  (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared
+  number is a different object type.
+- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077019 and 10077021 (catalog items) and 10077032-10077033. Next free codeunit: 10076931
+  (10076925-10076929 and 10076931-10077018, 10077022-10077031 are free except as taken by open PRs; 10077034 is free at the top of the range).
+  Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847; 10076906 is `MsgType.SalesRetOrd.Ext ori`; 10077019 is `MsgType.Nonstock.EnumExt ori`).
+  Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
 - 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is free at the top of the range.
-- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 CatalogItems; `Inventory Setup ori`
-  fields 21-26. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 PurchaseReturns and 17 CatalogItems; `Inventory Setup ori`
+  fields 21-27 (`Item Substitution` is field 25, `Purchase Returns` is field 26, `Catalog Items` is field 27). New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
 - Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
-  10077021 (process), enum extension 10077019; taken from the top of the free range to avoid clashes with parallel work.
+  10077021 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, so Catalog Items uses value 17, field 27 and setup-guide slot 18.
 
 ## Test object IDs (unchanged by the renumbering)
 
@@ -48,5 +50,6 @@ README "Objects" lists every object with its ID. In short:
 
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
 - Test codeunit 96994 `Item Application 40 Tests ori`.
+- 96980 `Purch. Return Create Tests` (#137).
 - 96998 `Nonstock Item Create Tests` (#119).
-- Free: 96960-96961, 96964-96969, 96980-96997, 96999.
+- Next free test codeunit: 96981, except 96998 and other IDs already used on main or by open PRs. 96960-96961 stay free. 96963-96980 are in use.
