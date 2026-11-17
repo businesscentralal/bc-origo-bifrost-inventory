@@ -46,3 +46,8 @@ README "Objects" lists every object with its ID. In short:
 - Codeunits 10076980–10076984: Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori.
 - Enum extension 10076980 MsgType.PriceList.Ext ori; values 10076980 Price.List.Set and 10076981 Price.List.Activate.
 - Test codeunit 96987 Price List Tests ori. Checked against main and open Inventory PR claims.
+
+## Issue 40 additions
+
+- Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
+- Test codeunit 96994 `Item Application 40 Tests ori`.
