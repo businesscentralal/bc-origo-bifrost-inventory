@@ -4,8 +4,9 @@ using Microsoft.Assembly.Document;
 using Microsoft.Assembly.History;
 using Microsoft.Assembly.Posting;
 using Microsoft.Foundation.Enums;
-using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Costing;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
@@ -44,6 +45,8 @@ codeunit 10076842 "Inventory Write Process ori"
         CancelEntryNo: Integer;
         ApplicationEntryNo: Integer;
         ApplyToEntryNo: Integer;
+        ApplicationLedgerEntryNo: Integer;
+        ApplicationQuantity: Decimal;
         FullAutoReservation: Boolean;
         UnknownOperationErr: Label 'Unknown inventory write operation.', Comment = 'is-IS=Óþekkt birgðaskrifaðgerð.';
 
@@ -147,6 +150,20 @@ codeunit 10076842 "Inventory Write Process ori"
     begin
         ApplicationEntryNo := EntryNo;
         ApplyToEntryNo := ApplyWith;
+        ApplicationLedgerEntryNo := 0;
+        ApplicationQuantity := 0;
+    end;
+
+    /// <summary>Selects all real applications linked to one ledger entry for atomic unapplication.</summary>
+    procedure SetApplicationLedger(EntryNo: Integer)
+    begin
+        ApplicationLedgerEntryNo := EntryNo;
+    end;
+
+    /// <summary>Limits the native reapplication to an exact positive quantity in base units.</summary>
+    procedure SetApplicationQuantity(Quantity: Decimal)
+    begin
+        ApplicationQuantity := Quantity;
     end;
 
     local procedure UnapplyItemEntry()
@@ -154,17 +171,87 @@ codeunit 10076842 "Inventory Write Process ori"
         ApplicationEntry: Record "Item Application Entry";
         NativePost: Codeunit "Item Jnl.-Post Line";
     begin
-        ApplicationEntry.Get(ApplicationEntryNo);
-        NativePost.UnApply(ApplicationEntry);
+        ApplicationEntry.LockTable();
+        if ApplicationLedgerEntryNo = 0 then begin
+            ApplicationEntry.Get(ApplicationEntryNo);
+            NativePost.UnApply(ApplicationEntry);
+            MarkApplicationForAdjustment(ApplicationEntry);
+            exit;
+        end;
+        ApplicationEntry.FilterGroup(-1);
+        ApplicationEntry.SetRange("Inbound Item Entry No.", ApplicationLedgerEntryNo);
+        ApplicationEntry.SetRange("Outbound Item Entry No.", ApplicationLedgerEntryNo);
+        ApplicationEntry.FilterGroup(0);
+        ApplicationEntry.SetFilter("Outbound Item Entry No.", '<>0');
+        ApplicationEntry.FindFirst();
+        repeat
+            NativePost.UnApply(ApplicationEntry);
+            MarkApplicationForAdjustment(ApplicationEntry);
+        until not ApplicationEntry.FindFirst();
     end;
 
     local procedure ReapplyItemEntry()
     var
         LedgerEntry: Record "Item Ledger Entry";
+        InboundEntry: Record "Item Ledger Entry";
         NativePost: Codeunit "Item Jnl.-Post Line";
+        QuantityLimit: Codeunit "Item Appl. Quantity ori";
+        BeforeOutbound: Decimal;
+        BeforeInbound: Decimal;
+        InvalidPairErr: Label 'Select a negative outbound and positive inbound entry of the same item, variant and location.', Comment = 'is-IS=Veldu neikvæða útleiðandi og jákvæða innleiðandi færslu fyrir sömu vöru, afbrigði og birgðageymslu.';
+        QuantityErr: Label 'The requested base quantity must be available on both entries and must be applied exactly.', Comment = 'is-IS=Umbeðið magn í grunneiningum verður að vera tiltækt á báðum færslum og jafnað nákvæmlega.';
     begin
+        LedgerEntry.LockTable();
         LedgerEntry.Get(ApplicationEntryNo);
+        if ApplicationQuantity = 0 then begin
+            NativePost.ReApply(LedgerEntry, ApplyToEntryNo);
+            exit;
+        end;
+        InboundEntry.Get(ApplyToEntryNo);
+        if LedgerEntry.Positive or (LedgerEntry.Quantity >= 0) or not InboundEntry.Positive or (InboundEntry.Quantity <= 0) or
+           (LedgerEntry."Item No." <> InboundEntry."Item No.") or (LedgerEntry."Variant Code" <> InboundEntry."Variant Code") or
+           (LedgerEntry."Location Code" <> InboundEntry."Location Code")
+        then
+            Error(InvalidPairErr);
+        LedgerEntry.CalcFields("Reserved Quantity");
+        InboundEntry.CalcFields("Reserved Quantity");
+        if (ApplicationQuantity > -(LedgerEntry."Remaining Quantity" - LedgerEntry."Reserved Quantity")) or
+           (ApplicationQuantity > InboundEntry."Remaining Quantity" - InboundEntry."Reserved Quantity")
+        then
+            Error(QuantityErr);
+        BeforeOutbound := LedgerEntry."Remaining Quantity";
+        BeforeInbound := InboundEntry."Remaining Quantity";
+        QuantityLimit.SetSelection(ApplicationEntryNo, ApplyToEntryNo, ApplicationQuantity);
+        BindSubscription(QuantityLimit);
         NativePost.ReApply(LedgerEntry, ApplyToEntryNo);
+        UnbindSubscription(QuantityLimit);
+        LedgerEntry.Get(ApplicationEntryNo);
+        InboundEntry.Get(ApplyToEntryNo);
+        if (LedgerEntry."Remaining Quantity" - BeforeOutbound <> ApplicationQuantity) or
+           (BeforeInbound - InboundEntry."Remaining Quantity" <> ApplicationQuantity)
+        then
+            Error(QuantityErr);
+    end;
+
+    local procedure MarkApplicationForAdjustment(ApplicationEntry: Record "Item Application Entry")
+    begin
+        MarkEntryForAdjustment(ApplicationEntry."Inbound Item Entry No.");
+        MarkEntryForAdjustment(ApplicationEntry."Outbound Item Entry No.");
+    end;
+
+    local procedure MarkEntryForAdjustment(EntryNo: Integer)
+    var
+        Ledger: Record "Item Ledger Entry";
+        Item: Record Item;
+    begin
+        Ledger.Get(EntryNo);
+        Ledger."Applied Entry to Adjust" := true;
+        Ledger.Modify();
+        Item.Get(Ledger."Item No.");
+        if Item."Cost is Adjusted" then begin
+            Item."Cost is Adjusted" := false;
+            Item.Modify();
+        end;
     end;
 
     local procedure PostCostToGL(var Argument: Record "Message Argument ori")
