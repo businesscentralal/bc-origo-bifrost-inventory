@@ -13,7 +13,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Unit tests for Inventory.AvailableToPromise.Get (#105).
 /// </summary>
-codeunit 96964 "Avail. To Promise Tests"
+codeunit 96926 "Avail. To Promise Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

@@ -116,3 +116,4 @@ README "Objects" lists every object with its ID. In short:
 ## PR #211 main-merge test ID reconciliation
 
 - Planning keeps test codeunit 96965 from main. `Avail. To Promise Perm` moves from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs; ATP tests remain 96964. This supersedes the older ATP permission-test ID above.
+- Later main owns 96964 as `Inv. 186 Blank Line Tests ori`. `Avail. To Promise Tests` moves from 96964 to 96926, the first free codeunit ID in 96900–96999 after checking main at `53f1e56e` and every open Inventory pull request on 2026-11-17 (96925 is `Reclass Journal Tests ori` on #221; 96948 and above are claimed by other open PRs). `Avail. To Promise Perm` stays 96924. This supersedes "ATP tests remain 96964" and the older free-list bullets that still name 96964 as free or as the ATP tests.
