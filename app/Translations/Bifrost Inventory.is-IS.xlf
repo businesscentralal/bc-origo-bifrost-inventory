@@ -5895,6 +5895,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer sem á að framkvæma. Slepptu því til að framkvæma hverja samþykkta New-línu á keyrslunni. Tómum lista er hafnað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNosLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Expected invocation count from the confirmation preview: one selected worksheet. Foundation verifies this count before carry-out.</source>
+          <target>Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType ExpectedCountLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
           <source>One line number on the planning worksheet.</source>
           <target>Eitt línunúmer á áætlunarkeyrslunni.</target>
@@ -9508,12 +9514,6 @@
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet BIFROST InvPost ori - Property Caption</note>
         </trans-unit>
       </group>
-        <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Expected invocation count from the confirmation preview: one selected worksheet. Foundation verifies this count before carry-out.</source>
-          <target state="translated">Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Væntur fjöldi kalla úr forskoðun staðfestingar: ein valin áætlunarkeyrsla. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType ExpectedCountLbl</note>
-        </trans-unit>
     </body>
   </file>
 </xliff>
