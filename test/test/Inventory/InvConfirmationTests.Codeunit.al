@@ -351,6 +351,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup.Costing := false;
         Setup."Phys. Inventory" := false;
         Setup.Reclassification := false;
+        Setup.Planning := false;
         Setup.Modify();
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
@@ -422,10 +423,11 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Costing := PreviousSetup.Costing;
             Setup."Phys. Inventory" := PreviousSetup."Phys. Inventory";
             Setup.Reclassification := PreviousSetup.Reclassification;
+            Setup.Planning := PreviousSetup.Planning;
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(12, Checked, 'All twelve app-owned irreversible types must be exercised.');
+        Assert.AreEqual(13, Checked, 'All thirteen app-owned irreversible types must be exercised.');
         RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
     end;
 
@@ -502,8 +504,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
     local procedure AssertText(Value: JsonObject; KeyName: Text; Expected: Text)
     var
         Token: JsonToken;
+        Payload: Text;
     begin
-        Assert.IsTrue(Value.Get(KeyName, Token), 'Missing ' + KeyName);
+        Value.WriteTo(Payload);
+        Assert.IsTrue(Value.Get(KeyName, Token), 'Missing ' + KeyName + ': ' + Payload);
         Assert.AreEqual(Expected, Token.AsValue().AsText(), 'Exact ' + KeyName);
     end;
 }
