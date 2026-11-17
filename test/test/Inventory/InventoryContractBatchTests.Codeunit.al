@@ -810,9 +810,49 @@ codeunit 96921 "Inventory Contract Batch Tests"
         ExpectedJson: Text;
     begin
         LibraryAssert.IsTrue(Contract.Get(Chapter, Actual), 'Missing chapter ' + Chapter + '.');
+        if Chapter = 'response' then
+            StripFoundationResponseCode(Actual, Expected);
         Actual.WriteTo(ActualJson);
         Expected.WriteTo(ExpectedJson);
         LibraryAssert.AreEqual(ExpectedJson, ActualJson, 'Inventory and legacy Item helper chapter payloads match: ' + Chapter + '.');
+    end;
+
+    /// <summary>Foundation 28.0.13 adds a response field named code. The legacy helper does not declare it.</summary>
+    local procedure StripFoundationResponseCode(var Actual: JsonToken; Expected: JsonToken)
+    var
+        ActualFields: JsonArray;
+        ExpectedFields: JsonArray;
+        Filtered: JsonArray;
+        ActualObject: JsonObject;
+        ExpectedObject: JsonObject;
+        Entry: JsonToken;
+        FieldsToken: JsonToken;
+        NameToken: JsonToken;
+    begin
+        if not (Actual.IsObject() and Expected.IsObject()) then
+            exit;
+        ActualObject := Actual.AsObject();
+        ExpectedObject := Expected.AsObject();
+        if not (ActualObject.Get('fields', FieldsToken) and FieldsToken.IsArray()) then
+            exit;
+        ActualFields := FieldsToken.AsArray();
+        if ExpectedObject.Get('fields', FieldsToken) and FieldsToken.IsArray() then
+            ExpectedFields := FieldsToken.AsArray();
+        foreach Entry in ExpectedFields do
+            if Entry.IsObject() then
+                if Entry.AsObject().Get('name', NameToken) then
+                    if NameToken.AsValue().AsText() = 'code' then
+                        exit;
+        foreach Entry in ActualFields do
+            if Entry.IsObject() then begin
+                if Entry.AsObject().Get('name', NameToken) then
+                    if NameToken.AsValue().AsText() = 'code' then
+                        continue;
+                Filtered.Add(Entry);
+            end else
+                Filtered.Add(Entry);
+        ActualObject.Replace('fields', Filtered);
+        Actual := ActualObject.AsToken();
     end;
 
     /// <summary>Checks published costing parameter defaults through the contract reader.</summary>

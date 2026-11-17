@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - Confirmation test targets (PR #213)
+
+- Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
+- Test-only fixture codeunit 96973 refreshes the owned item and marks its removed ledger data as adjusted before native deletion, so explicit fixture cleanup does not rerun cost adjustment on deleted test entries. It removes the fixture locations' posting setup, linked customer contacts and empty item registers, making seed/cleanup repeatable. Unposted owned transfers are reopened through the native codeunit before deletion. A native direct-transfer seed lets the touched posting/preview paths be verified independently of the unchanged Create type.
+- Fixture cleanup removes posted transfer lines one document at a time, retaining each header number until deletion. A repeat cleanup also removes empty posted headers scoped to the fixture's exact source and destination locations.
+- Cleanup removes the owned locations' inventory posting setup, which native location deletion retains, so the same seed/cleanup cycle can be repeated.
+
+### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
+
+- Recreating a selected tracked reservation after cancellation clears the old partial reservation record before reading the result. Native tracking conversion can replace that record; the response now reports the created pair instead of failing a JIT field load after creation.
+
+- Source-line cancellation now requires `sourceProdOrderLine` and `sourceSubtype` for production output (5406) and components (5407). Incomplete pointers return `MissingParameter` before writes; complete pointers preserve sibling lines and other production statuses. Native regression coverage and bilingual parameter help cover the required keys.
+
+
+### Added (2026-11-16) - reserve tracked or selected inventory supply (#7)
+- `Inventory.Reservation.Create` accepts optional `lotNo`, `serialNo` and `packageNo` filters. `itemLedgerEntryNo` reserves only the named open, positive supply entry after checking item, variant, location, tracking and unreserved quantity inside the native write transaction. An unavailable or conflicting selected supply leaves no reservation.
+- Create now binds service lines, production order output and component lines, native-eligible transfer journal lines (including batch), and assembly headers through native source-specific reservation handling. Production pointers include the parent line. Serial requests require exactly one base unit.
+- Get accepts the complete optional `sourceBatchName` and `sourceProdOrderLine` keys so identical journal/component line numbers in different batches/parent lines stay isolated.
+- Existing general-supply partial-success responses remain compatible while the AC-6 contract decision is pending.
+- BC 28/29 transfer posting reads the appropriate setup field without obsolete field references; test setup restores the same field.
+- Added codeunit 10077030 `Reserv. Supply Filter ori`, bound only during selected-supply reservation; native BC retains its availability, warehouse and source-quantity checks. The table 337 write refusal now names the dedicated Create/Cancel types through Foundation's hint event. Changed codeunits 10076842, 10076843, 10076893, 10076901, 10076903 and test codeunits 96904, 96946 (17 additional tests), plus explicit test-only bilingual seed/cleanup actions in page/codeunit 96973.
+
+### Added (2026-11-16) - read and cancel reservations by source line or entry (#7)
+- `Inventory.Reservation.Get` reads by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`, besides the item. Every source the Reserve action supports can be read. An unknown `entryNo` is refused as `RecordNotFound`. Each entry now also answers `variantCode`, `quantityBase`, `positive`, `sourceType`, `sourceSubtype`, `sourceBatchName`, `sourceProdOrderLine`, `sourceRefNo`, `lotNo`, `serialNo`, `packageNo`, `expectedReceiptDate`, `shipmentDate` and `creationDate`. The existing keys are unchanged.
+- `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
+- `Inventory.Reservation.Create` and the by-line `Inventory.Reservation.Cancel` refuse a sales line whose outstanding quantity is 0 with `PreconditionFailed`.
+- No new objects: codeunits 10076842, 10076892, 10076893 and 10076894 and test codeunit 96946 (7 new tests) change.
 ### Added (2026-11-16) - native physical inventory orders (#113)
 
 - `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
@@ -18,6 +45,11 @@
 - Item application reads accept item, location and variant selectors and include both joined ledger entries. Unapply accepts a ledger entry and atomically uses the native worksheet path for its real applications. Reapply accepts outbound/inbound entries and an exact positive base quantity, with native checks and rollback on a mismatch. Existing parameter forms remain supported.
 - Items and affected entries remain marked for cost adjustment after unapplication; adjustment stays a separate operation.
 - Added codeunit **10077034** (`Item Appl. Quantity ori`) and test codeunit **96994** (`Item Application 40 Tests ori`). Added bilingual help, synchronized is-IS translations and regression tests. The requested `DomainDisabled` error is pending Foundation support; current domain refusals retain `InvalidParameter`.
+### Added (2026-11-16) - purchase return from posted lines (#137)
+
+- `Purchase.ReturnOrder.CreateFromPosted` (codeunit 10076930 `Purch. Return Create Impl ori`, enum extension 10076847) creates an open purchase return order or credit memo, or adds lines to an existing open one, from posted receipt or invoice item lines. The copy uses the same exact-cost path as Posted Purchase Document Lines. Each new item line keeps Appl.-to Item Entry. A partial quantity is stored when the posted line applies to one item entry. Nothing is posted. A quantity above the quantity left to reverse, a line of another vendor, a non-item line, a duplicate posted line, and a partial quantity on a line split across several item entries answer `InvalidLine` with a next step before any write. Missing, unknown and badly typed keys, a missing vendor or posted line, a vendor that does not match an existing document, a document that is not open, and more than 200 lines answer the matching coded refusal.
+- Purchase Returns is domain value 16 and Inventory Setup field 26. The main-merge conflict with Item Substitution keeps its value 15 and field 25; Purchase Returns takes the next free IDs and wizard slot 17. A purchase header whose document type is Return Order or Credit Memo turns it on for a new setup row and for the existing usage upgrade. The setup page and the setup wizard show the switch. Execute permission is on `BIFROST InvWrite ori`. The effect is write, not irreversible, so the call does not ask for a confirmation count.
+- Tests: `Purch. Return Create Tests` (96980) covers the full receipt return, the quantity refusal, the other-vendor refusal, a partial credit memo from a posted invoice, appending to an existing return order, zero and duplicate lines without writes, typed input refusals, bilingual help and next steps, and the three-part type name. `Inventory Domain Usage Tests` (96963) covers the new usage signal and clears purchase headers in that fixture. Bilingual refusal tests pass the LCID explicitly through the dispatcher so the configured default language cannot mask the Icelandic assertion.
 
 ### Added (2026-11-16) - Item substitutions (#118)
 
