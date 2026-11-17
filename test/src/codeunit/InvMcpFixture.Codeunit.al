@@ -619,16 +619,20 @@ codeunit 96973 "Inv. MCP Fixture ori"
                 ShipmentLine.SetRange("Item No.", ItemNo);
                 while ShipmentLine.FindFirst() do begin
                     DocumentNo := ShipmentLine."Document No.";
+                    ShipmentLine.SetRange("Document No.", DocumentNo);
                     ShipmentLine.DeleteAll();
                     if ShipmentHeader.Get(DocumentNo) then
                         ShipmentHeader.Delete();
+                    ShipmentLine.SetRange("Document No.");
                 end;
                 ReceiptLine.SetRange("Item No.", ItemNo);
                 while ReceiptLine.FindFirst() do begin
                     DocumentNo := ReceiptLine."Document No.";
+                    ReceiptLine.SetRange("Document No.", DocumentNo);
                     ReceiptLine.DeleteAll();
                     if ReceiptHeader.Get(DocumentNo) then
                         ReceiptHeader.Delete();
+                    ReceiptLine.SetRange("Document No.");
                 end;
                 Ledger.SetRange("Item No.", ItemNo);
                 if Ledger.FindSet() then
@@ -663,6 +667,25 @@ codeunit 96973 "Inv. MCP Fixture ori"
                     TrackingCode.Delete(true);
             end;
         end;
+        // Also finish an interrupted older cleanup that removed lines before their headers.
+        ShipmentHeader.SetRange("Transfer-from Code", 'W6I7F' + Suffix);
+        ShipmentHeader.SetRange("Transfer-to Code", 'W6I7D' + Suffix);
+        if ShipmentHeader.FindSet() then
+            repeat
+                ShipmentLine.Reset();
+                ShipmentLine.SetRange("Document No.", ShipmentHeader."No.");
+                if ShipmentLine.IsEmpty() then
+                    ShipmentHeader.Delete();
+            until ShipmentHeader.Next() = 0;
+        ReceiptHeader.SetRange("Transfer-from Code", 'W6I7F' + Suffix);
+        ReceiptHeader.SetRange("Transfer-to Code", 'W6I7D' + Suffix);
+        if ReceiptHeader.FindSet() then
+            repeat
+                ReceiptLine.Reset();
+                ReceiptLine.SetRange("Document No.", ReceiptHeader."No.");
+                if ReceiptLine.IsEmpty() then
+                    ReceiptHeader.Delete();
+            until ReceiptHeader.Next() = 0;
         if Customer.Get('W6I7C' + Suffix) then
             Customer.Delete(true);
         if Location.Get('W6I7F' + Suffix) then
