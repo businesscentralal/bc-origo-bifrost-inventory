@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 60 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 64 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -61,6 +61,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Tracking.Delete` | Inbound | Remove one unreserved tracking entry from an explicit source line |
 | `Inventory.Tracking.Get` | Outbound | Read the lot, serial and package tracking of a document line or the open item ledger entries of an item |
 | `Inventory.TrackingAvailability.Get` | Outbound | Read remaining quantity by lot, serial, and package |
+| `Inventory.TrackingInfo.Get` | Outbound | Read one lot, serial or package information card: description, test quality, certificate, blocked, comments, inventory and expired inventory |
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
@@ -284,6 +285,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 | 10076860 | `MsgType.PhysOrder.Ext ori` | Physical inventory order lifecycle |
 | 10076906 | `MsgType.SalesRetOrd.Ext ori` | `Sales.ReturnOrder.CreateFromPosted` |
+| 10076915 | `MsgType.TrackInfo.EnumExt ori` | `Inventory.TrackingInfo.Get` (value 10077010) |
 
 Each message type value is the ID of its implementation codeunit. The exception is
 `Inventory.PhysInventory.RecordCount` (10076924), which shares `Phys. Invt. Record Impl ori` with
@@ -312,7 +314,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076887–10076889 | Reclassification | Check, Post, Preview |
 | 10076890–10076896 | Reservations | Order Tracking Get, `Order Tracking Transfer ori`, Reservation Cancel/Create/Get, Auto Reserve (+ process) |
 | 10077030 | Selected reservation supply | `Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound |
-| 10076897–10076900 | Item tracking | Assign, Availability Get, Delete, Get |
+| 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076938, 10076939, 10076946 | Planning worksheet | `Plan Wksh Calc Impl ori`, `Plan Wksh Carry Impl ori`, `Req. Worksheet Engine ori` |
