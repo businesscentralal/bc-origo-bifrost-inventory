@@ -4,7 +4,7 @@ using Microsoft.Sales.History;
 using Origo.Bifrost;
 
 /// <summary>Undoes selected posted sales shipment lines through Undo Sales Shipment Line.</summary>
-codeunit 10077025 "Sales Undo Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10077028 "Sales Undo Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
