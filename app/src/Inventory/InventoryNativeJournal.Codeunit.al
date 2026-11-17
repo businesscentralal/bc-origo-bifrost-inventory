@@ -23,6 +23,12 @@ codeunit 10076840 "Inventory Native Journal ori"
         EmptyBatchLbl: Label 'An empty physical inventory journal batch.', Comment = 'is-IS=Tóm talningarbókarkeyrsla.';
         RegisterExpectedLbl: Label 'A native item register for the selected journal.', Comment = 'is-IS=Innbyggð vöruskrá fyrir valda bók.';
         RequestNextStepLbl: Label 'Correct the named parameter or selected journal line using the expected value, then retry.', Comment = 'is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.';
+        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
+        MissingBatchNextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
+        PhysicalTemplateErr: Label 'The selected batch must use a physical inventory journal template.', Comment = 'is-IS=Valin keyrsla verður að nota sniðmát fyrir talningarbók.';
+        NonrecurringTemplateErr: Label 'The selected physical inventory journal template must not be recurring.', Comment = 'is-IS=Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.';
+        PhysicalTemplateExpectedLbl: Label 'A nonrecurring physical inventory journal template.', Comment = 'is-IS=Sniðmát fyrir talningarbók sem er ekki ítrekunarsniðmát.';
+        PhysicalTemplateNextStepLbl: Label 'Select an existing batch of a nonrecurring physical inventory journal template, then retry.', Comment = 'is-IS=Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.';
         BatchErr: Label 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', Comment = 'is-IS=Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.';
         EmptyErr: Label 'The selected journal contains no lines.', Comment = 'is-IS=Valin bók inniheldur engar línur.';
         ParameterErr: Label 'Unsupported journal parameter %1.', Comment = '%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.';
@@ -314,7 +320,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             Count := Entry.AsObject();
             foreach ParameterName in Count.Keys() do
                 if not (ParameterName in ['lineNo', 'systemId', 'qtyCounted']) then
-                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Count, ParameterName), AllowedParameterLbl);
             Clear(LineId);
             if Count.Contains('systemId') then begin
                 if not Evaluate(LineId, ReadText(Count, 'systemId', Argument, 50)) or IsNullGuid(LineId) then
@@ -507,11 +513,14 @@ codeunit 10076840 "Inventory Native Journal ori"
         end else
             if not Batch.Get(TemplateName, BatchName) then
                 exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
-        JournalTemplate.Get(Batch."Journal Template Name");
+        if not JournalTemplate.Get(Batch."Journal Template Name") then
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'templateName', Batch."Journal Template Name", PhysicalTemplateExpectedLbl);
         if (JournalType = JournalType::Transfer) and (JournalTemplate.Type <> JournalType) then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferTemplateErr, JournalTemplate.Name), TemplateParameterName(Request), JournalTemplate.Name, 'Transfer');
-        JournalTemplate.TestField(Type, JournalType);
-        JournalTemplate.TestField(Recurring, false);
+        if JournalTemplate.Type <> JournalType then
+            RaiseTemplateRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, JournalTemplate.Name);
+        if JournalTemplate.Recurring then
+            RaiseTemplateRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, NonrecurringTemplateErr, JournalTemplate.Name);
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
         Line.SetRange("Journal Batch Name", Batch.Name);
         exit(true);
@@ -521,9 +530,7 @@ codeunit 10076840 "Inventory Native Journal ori"
     var
         ParameterName: Text;
         Identifier: Text;
-        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
         ExpectedLbl: Label 'an existing physical inventory journal batch', Comment = 'is-IS=fyrirliggjandi birgðatalningarbókarkeyrsla';
-        NextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
     begin
         ParameterName := 'batchName';
         Identifier := TemplateName + '|' + BatchName;
@@ -531,7 +538,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             ParameterName := 'subject';
             Identifier := Argument.Subject;
         end;
-        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, NextLbl);
+        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, MissingBatchNextLbl);
         exit(false);
     end;
 
@@ -944,6 +951,34 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Line.TestField("Item No.");
         Line.TestField("Value Entry Type", Line."Value Entry Type"::Revaluation);
+    end;
+
+    local procedure RaiseTemplateRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; TemplateName: Code[10])
+    begin
+        Argument.AddError(Code, MessageText, 'templateName', TemplateName, PhysicalTemplateExpectedLbl, PhysicalTemplateNextStepLbl);
+        Argument.RaiseCollectedErrors(Code, MessageText);
+    end;
+
+    /// <summary>Documents the shared physical inventory batch refusals with the same localized text and codes used at runtime.</summary>
+    procedure AddPhysicalBatchErrors(var Errors: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextExpectedLbl, 10), RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, AllowedParameterLbl, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, BatchErr, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, MissingBatchErr, MissingBatchNextLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, PhysicalTemplateNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NonrecurringTemplateErr, PhysicalTemplateNextStepLbl));
+    end;
+
+    /// <summary>Documents count shape and scalar format refusals using the localized runtime label.</summary>
+    procedure AddPhysicalCountErrors(var Errors: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, CountsErr, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, RequestNextStepLbl));
     end;
 
     local procedure RaiseRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; Parameter: Text; Received: Text; Expected: Text)

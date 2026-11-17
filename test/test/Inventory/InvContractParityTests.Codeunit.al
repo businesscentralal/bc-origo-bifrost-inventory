@@ -530,6 +530,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     local procedure AssertParameterDescribed(Parameter: JsonObject; TypeName: Text; ParameterName: Text)
     var
         Child: JsonToken;
+        Items: JsonToken;
         JsonType: Text;
     begin
         JsonType := TextOf(Parameter, 'type');
@@ -537,8 +538,12 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Assert.IsTrue(JsonType in ['string', 'number', 'integer', 'decimal', 'boolean', 'object', 'array'], TypeName + ' parameter ' + ParameterName + ' has a JSON type: ' + JsonType);
         Assert.AreNotEqual('', TextOf(Parameter, 'description'), TypeName + ' parameter ' + ParameterName + ' has a description.');
         if JsonType = 'array' then
-            if not ScalarArrayParameters().Contains(TypeName + '|' + ParameterName) then
-                Assert.IsTrue(ArrayOf(Parameter, 'children').Count() > 0, TypeName + ' array parameter ' + ParameterName + ' lists its children.');
+            if Parameter.Get('items', Items) then begin
+                Assert.IsTrue(TextOf(Items.AsObject(), 'type') in ['string', 'number', 'integer', 'decimal', 'boolean'], TypeName + ' scalar array parameter ' + ParameterName + ' declares its item type.');
+                AssertParameterDescribed(Items.AsObject(), TypeName, ParameterName + '[]');
+            end else
+                if not ScalarArrayParameters().Contains(TypeName + '|' + ParameterName) then
+                    Assert.IsTrue(ArrayOf(Parameter, 'children').Count() > 0, TypeName + ' array parameter ' + ParameterName + ' lists its children.');
         foreach Child in ArrayOf(Parameter, 'children') do
             AssertParameterDescribed(Child.AsObject(), TypeName, ParameterName + '.' + TextOf(Child.AsObject(), 'name'));
     end;
