@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed - main merge reconciliation (PR #211)
+
+- Preserve main's Planning test codeunit 96965. Move the unreleased `Avail. To Promise Perm` test codeunit from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs. Test behavior is unchanged. The combined catalogue census retains all 78 Inventory types.
+
 ### Fixed — available-to-promise requested date (#105, PR #211)
 
 - A purchase receipt before the requested date now promises the requested date instead of returning the earlier receipt date and incorrectly refusing the request. Normalize nonempty ATP dates before comparing with capable-to-promise; cover earlier and same-day receipts, including CTP enabled, with regression tests.
@@ -13,6 +17,23 @@
 - Refusals: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `RecordNotFound` (item, variant, location), `InvalidParameter` (quantity 0 or below, Availability domain off), `PreconditionFailed` (service or non-inventory item; capable to promise without an order promising template and worksheet), `PermissionDenied`. Each carries a `nextStep`; help and refusals are in en-US and is-IS (XLF regenerated).
 - The contract declares its real effect: `read`, nothing kept, idempotent (core#1365 D1). Gated by the existing Availability domain; no new setup field. `BIFROST InvRead ori` and `BIFROST InvWrite ori` execute the codeunit.
 - Tests: `Avail. To Promise Tests` (96964) and `Avail. To Promise Perm` (96965); `Inventory Contract Batch Tests` counts 60 app types; after the main merge (PR #211) the census is 72 app types and 49 scoped types.
+### Fixed - main merge ID reconciliation (PR #233)
+
+- Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
+
+### Fixed - planning worksheet review (#233)
+
+- Preserve Item Substitution domain 15/field 25; move unreleased Planning to domain 17/field 27 and independent wizard slot 18, preserving Purchase Returns 16/26 from main #219. Reconcile the 65-type catalogue and Foundation-composed contracts. Confirmation boundary tests name a subject; planning regression tests verify other worksheets survive calculation. Add explicit owned MCP seed/cleanup actions to the test app. Collect committed native transfer and assembly headers when the resilient report does not share its nested document buffer; new regression cases verify both order types.
+
+### Added
+- #117: `Inventory.PlanningWorksheet.Calculate` (10076949) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076939) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076947, codeunits 10076949, 10076939 and 10076946, enum value 17 Planning, setup field 27 Planning, test codeunit 96965 (96968 was taken by SKU Tests on main, so this PR moved to the next unused test ID). The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+
+### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
+
+- `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
+- Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
+- Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
+
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
 - Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
@@ -156,7 +177,6 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
-
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.

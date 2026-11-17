@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Purchases.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
@@ -11,12 +12,12 @@ using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.ProductionBOM;
 using Microsoft.Pricing.PriceList;
-using Microsoft.Purchases.Document;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 
@@ -547,6 +548,40 @@ codeunit 96963 "Inventory Domain Usage Tests"
     end;
 
     [Test]
+    procedure Scenario_AC05_PlanningUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        WkshTemplate: Record "Req. Wksh. Template";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: isolated company data, rolled back by the runner.
+        // [GIVEN] No usage signals, then one planning worksheet template.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Req. Wksh. Template");
+        WkshTemplate.Type := WkshTemplate.Type::Planning;
+        SetField(UsageRecord, 'Type', WkshTemplate.Type);
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] The planning template enables Planning and leaves the other new switch testable on its own.
+        AssertDomain(InventorySetup, 27, true);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PlanningNoUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: isolated company data, rolled back by the runner.
+        // [GIVEN] All source tables, including planning worksheet templates, are empty in this transaction.
+        ClearUsage();
+        // [WHEN] A setup row is created without usage.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Planning stays off.
+        AssertDomain(InventorySetup, 27, false);
+    end;
+
+    [Test]
     procedure Scenario_AC03_AlreadyOnWithoutUsage_StaysOn()
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -734,7 +769,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 26 do begin
+        for FieldNo := 10 to 27 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -799,7 +834,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 26 do begin
+        for FieldNo := 10 to 27 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -924,6 +959,9 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
         ClearTable(Database::"Purchase Header");
+        ClearTable(Database::"Requisition Line");
+        ClearTable(Database::"Requisition Wksh. Name");
+        ClearTable(Database::"Req. Wksh. Template");
     end;
 
     local procedure ClearTable(TableNo: Integer)

@@ -7,7 +7,7 @@ using System.TestLibraries.Utilities;
 /// <summary>
 /// Inventory.AvailableToPromise.Get denies a caller who cannot read items (#105).
 /// </summary>
-codeunit 96965 "Avail. To Promise Perm"
+codeunit 96924 "Avail. To Promise Perm"
 {
     Subtype = Test;
     TestPermissions = Restrictive;
