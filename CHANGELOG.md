@@ -4,13 +4,14 @@
 
 ### Fixed (2026-11-17) - item-reference merge reconciliation (#199)
 
-- Preserve all main message types and permissions alongside ItemReference.Set; the exact Inventory catalogue census is 76. Move this PR's new codeunits to 10076954–10076956 and Set enum value to 10076954; regenerate translations from the merged source. The README roster and local help list Set and its save/read-back workflow.
+- Preserve all main message types and permissions alongside ItemReference.Set; the exact Inventory catalogue census is 78. Move this PR's new codeunits to 10076954–10076956 and Set enum value to 10076954; regenerate translations from the merged source. The README roster and local help list Set and its save/read-back workflow.
 - Reuse main's transfer compatibility helper 10077025. Posting and preview use the existing BC 29 order's mode even if Inventory Setup changes; BC 28 continues to use setup. Test fixtures restore the exact native posting value, including BC 29's blank value.
+- Align English/Icelandic transfer posting notes with the order-based BC 29 behavior and BC 28 setup fallback. Move the unreleased Item Reference Set test codeunit from 96989 to 96948 to avoid PR #206's valuation tests.
 
 ### Added (2026-11-16) - Item reference writes (#102)
 
 - `Inventory.ItemReference.Set` creates or updates references using item, variant, unit, type, type number and reference number. Description and ISO validity dates can be changed; omitted optional values are preserved. Conflicting references on another item return `ConflictingIdentifiers` with recovery guidance. Generic writes to table 5777 are blocked and name the dedicated type.
-- Added codeunits 10076954 `Item Ref. Set Impl ori`, 10076955 `Item Ref. Set Proc ori`, 10076956 `Item Ref. Restrict ori`, and tests 96989 `Item Ref. Set Tests ori`. English/Icelandic help and error labels are included; the effect is `write`.
+- Added codeunits 10076954 `Item Ref. Set Impl ori`, 10076955 `Item Ref. Set Proc ori`, 10076956 `Item Ref. Restrict ori`, and tests 96948 `Item Ref. Set Tests ori`. English/Icelandic help and error labels are included; the effect is `write`.
 - Extended main's compatibility helper 10077025 `Transfer Posting Setup ori`: transfer posting and preview read the posting mode on the BC 29 order, with the BC 28 setup option as a fallback. Native test setup maps BC 29 enum values 10/20 to the existing shipment/direct choices. Existing transfer tests configure and restore the matching native field, removing BC 29 obsolete-field warnings without raising the supported BC version.
 
 ### Fixed - main merge ID reconciliation (PR #233)
