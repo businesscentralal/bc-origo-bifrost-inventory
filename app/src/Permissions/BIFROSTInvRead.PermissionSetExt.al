@@ -34,6 +34,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inventory Tracking Read ori" = X,
         codeunit "Tracking Get Impl ori" = X,
         codeunit "Tracking Avail. Get Impl ori" = X,
+        codeunit "Tracking Info Get Impl ori" = X,
         codeunit "Inventory Domain Gate ori" = X,
         codeunit "Inventory Native Journal ori" = X,
         codeunit "Reclass Check Impl ori" = X,

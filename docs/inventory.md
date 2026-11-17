@@ -18,7 +18,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.Transfer.UndoShipment
 - Inventory.Transfer.UndoReceipt is not an active type. The released identifier stays for compatibility and is excluded from discovery, because this platform has no native undo of a posted transfer receipt. Return the goods with a new transfer order.
 - Inventory.Assembly.UndoPost
-- Inventory.Tracking.Get, Assign, Delete, and TrackingAvailability.Get
+- Inventory.Tracking.Get, Assign, Delete, TrackingAvailability.Get, and TrackingInfo.Get
 - Inventory.Reservation.Get, Create, Cancel, and AutoReserve
 - Inventory.OrderTracking.Get
 - Inventory.ItemApplication.Get, Unapply, and Reapply
@@ -36,6 +36,22 @@ The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product 
 the Inventory Setup page).
 
 Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. SourceGuards.yaml is not enabled for HelpLinks, IcelandicXlfInSync, or MixedLanguageLabels in this change. Those jobs stay unwired until the guards pass and infrastructure review approves them.
+
+## Reservations
+
+- `Inventory.Reservation.Get` reads by item (`subject` or `itemNo`), by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`. Filters sent together all apply. Quantities keep the sign Business Central stores. An unknown `entryNo` is `RecordNotFound`.
+- `Inventory.Reservation.Create` reserves for one source line through Reservation Management. A closed sales line (outstanding quantity 0) is `PreconditionFailed`. Optional `lotNo`, `serialNo` and `packageNo` select matching supply. To pin one positive, open inventory entry, send `itemLedgerEntryNo`; conflicting tracking or insufficient unreserved quantity refuses the whole selected-entry request.
+
+```json
+{"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceNo":"SO-1001","sourceLineNo":10000,"quantity":2,"itemLedgerEntryNo":8842,"lotNo":"LOT-A"}}
+```
+
+Create supports Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), and Item Journal Line (83). For journals, send `sourceNo` as the template and `sourceBatchName` as the batch, with the entry type in `sourceSubtype`. For production, send the status ordinal in `sourceSubtype` and the parent line in `sourceProdOrderLine`; `sourceLineNo` is 0 for an output line and the component line number for a component. Assembly headers also use `sourceLineNo:0`. Use the same source pointer for Get or Cancel, omitting blank optional parts. BC permits reservation pairs for transfer journal entries; other journal entry types still receive BC's native refusal.
+
+A `serialNo` request must represent exactly one base unit, including conversion from the source unit of measure.
+
+Without `itemLedgerEntryNo`, the existing general-supply path may return a partial quantity as `Success` with `fullAutoReservation:false`. Read `quantity` and `requestedQuantity` before treating a reservation as complete.
+- `Inventory.Reservation.Cancel` cancels one reservation pair by `entryNo`, or every reservation of a source line in one transaction. A line without reservations answers Success with `entriesCancelled` 0.
 
 ## Enabling a domain
 

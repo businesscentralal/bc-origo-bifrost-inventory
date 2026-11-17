@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - Confirmation test targets (PR #213)
+
+- Test codeunit 96978 names an explicit target for confirmation-boundary dispatches and passes the owned item or journal batch to native-success checks. This preserves missing-count, wrong-count and no-write assertions with Foundation's unnamed-request validation behavior (#1278); product contracts are unchanged.
+- Test-only fixture codeunit 96973 refreshes the owned item and marks its removed ledger data as adjusted before native deletion, so explicit fixture cleanup does not rerun cost adjustment on deleted test entries. It removes the fixture locations' posting setup, linked customer contacts and empty item registers, making seed/cleanup repeatable. Unposted owned transfers are reopened through the native codeunit before deletion. A native direct-transfer seed lets the touched posting/preview paths be verified independently of the unchanged Create type.
+- Fixture cleanup removes posted transfer lines one document at a time, retaining each header number until deletion. A repeat cleanup also removes empty posted headers scoped to the fixture's exact source and destination locations.
+- Cleanup removes the owned locations' inventory posting setup, which native location deletion retains, so the same seed/cleanup cycle can be repeated.
+
+### Fixed (2026-11-17) - Production reservation cancellation (#7, PR #213)
+
+- Recreating a selected tracked reservation after cancellation clears the old partial reservation record before reading the result. Native tracking conversion can replace that record; the response now reports the created pair instead of failing a JIT field load after creation.
+
+- Source-line cancellation now requires `sourceProdOrderLine` and `sourceSubtype` for production output (5406) and components (5407). Incomplete pointers return `MissingParameter` before writes; complete pointers preserve sibling lines and other production statuses. Native regression coverage and bilingual parameter help cover the required keys.
+
+
+### Added (2026-11-16) - reserve tracked or selected inventory supply (#7)
+- `Inventory.Reservation.Create` accepts optional `lotNo`, `serialNo` and `packageNo` filters. `itemLedgerEntryNo` reserves only the named open, positive supply entry after checking item, variant, location, tracking and unreserved quantity inside the native write transaction. An unavailable or conflicting selected supply leaves no reservation.
+- Create now binds service lines, production order output and component lines, native-eligible transfer journal lines (including batch), and assembly headers through native source-specific reservation handling. Production pointers include the parent line. Serial requests require exactly one base unit.
+- Get accepts the complete optional `sourceBatchName` and `sourceProdOrderLine` keys so identical journal/component line numbers in different batches/parent lines stay isolated.
+- Existing general-supply partial-success responses remain compatible while the AC-6 contract decision is pending.
+- BC 28/29 transfer posting reads the appropriate setup field without obsolete field references; test setup restores the same field.
+- Added codeunit 10077030 `Reserv. Supply Filter ori`, bound only during selected-supply reservation; native BC retains its availability, warehouse and source-quantity checks. The table 337 write refusal now names the dedicated Create/Cancel types through Foundation's hint event. Changed codeunits 10076842, 10076843, 10076893, 10076901, 10076903 and test codeunits 96904, 96946 (17 additional tests), plus explicit test-only bilingual seed/cleanup actions in page/codeunit 96973.
+
+### Added (2026-11-16) - read and cancel reservations by source line or entry (#7)
+- `Inventory.Reservation.Get` reads by source line (`sourceType` + `sourceNo`, optionally `sourceSubtype` and `sourceLineNo`) or by `entryNo`, besides the item. Every source the Reserve action supports can be read. An unknown `entryNo` is refused as `RecordNotFound`. Each entry now also answers `variantCode`, `quantityBase`, `positive`, `sourceType`, `sourceSubtype`, `sourceBatchName`, `sourceProdOrderLine`, `sourceRefNo`, `lotNo`, `serialNo`, `packageNo`, `expectedReceiptDate`, `shipmentDate` and `creationDate`. The existing keys are unchanged.
+- `Inventory.Reservation.Cancel` can cancel every reservation of one source line in one transaction (`sourceType`, `sourceNo`, `sourceLineNo`, plus `sourceBatchName` for an item journal line and `sourceProdOrderLine` for a production order component). A line without reservations answers Success with `entriesCancelled` 0. Both modes now answer `entryNos` and `entriesCancelled`. Cancelling by `entryNo` works as before.
+- `Inventory.Reservation.Create` and the by-line `Inventory.Reservation.Cancel` refuse a sales line whose outstanding quantity is 0 with `PreconditionFailed`.
+- No new objects: codeunits 10076842, 10076892, 10076893 and 10076894 and test codeunit 96946 (7 new tests) change.
 ### Added (2026-11-16) - native physical inventory orders (#113)
 
 - `Inventory.PhysInventoryOrder.Create`, `.Finish` and `.Post` expose native calculation, recording creation, recorded quantities, finishing/differences and posting. Each call is atomic; Post returns the actual posted order number. Post declares `irreversible` and defines expectedCount as one order header in en-US/is-IS; Create/Finish declare `write`.
@@ -34,6 +61,11 @@
 
 - `Inventory.ItemSubstitution.Get` reads direct native substitutions for an item and exact variant, with current on-hand inventory in base units. Catalog substitutes report unknown inventory explicitly; the call never updates cached quantities or creates items. Includes coded refusals, bilingual discovery/help labels, and an Item Substitution switch on Inventory Setup and its read-only guide.
 - Added codeunit **10077020** `Item Subst. Get Impl ori` and test codeunit **96993** `Item Substitution Tests ori`. Extended enum 10076840, domain enum 10076835 (value 15), setup table 10076836 (field 25), setup pages and read permission extension. No existing contract was changed.
+### Added (2026-11-16) - Inventory.TrackingInfo.Get reads lot, serial and package information cards (#106)
+
+- New read-only message type `Inventory.TrackingInfo.Get` (effect `read`). Select an item (subject, `itemNo`, item SystemId or `tableView`), the `variantCode` of the card and exactly one of `lotNo`, `serialNo` or `packageNo`. It answers the Lot No. Information (6505), Serial No. Information (6504) or Package No. Information (6515) card: `description`, `testQuality` (lot only), `certificateNumber` (lot and package), `countryRegionCode` (package), `blocked`, `hasComments`, the item tracking `comments`, `inventory` and `expiredInventory` (expiration date before the work date), all in base units.
+- Refusals: `MissingParameter` on `itemNo` or on `lotNo|serialNo|packageNo`; `InvalidParameter` when more than one tracking number is sent; `InvalidParameterFormat` for a value that is too long or not a string; `RecordNotFound` with nextStep "The tracking number has no information card..." when the card does not exist (also when the number has stock); `PermissionDenied` per table. Help and refusals are in en-US and is-IS.
+- Objects added: enum extension 10076915 `MsgType.TrackInfo.EnumExt ori` (value 10077010), codeunit 10077010 `Tracking Info Get Impl ori` (granted X in `BIFROST InvRead ori`). Test app: codeunit 96992 `Tracking Info Get Tests` (8 tests); 96921 registers 64 Inventory types.
 
 
 ### Fixed ([28.3.2.0] development)
