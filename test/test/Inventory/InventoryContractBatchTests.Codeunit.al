@@ -401,6 +401,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AppRegisteredInventoryTypes() Types: List of [Text]
     begin
+        Types.Add('Inventory.ItemSubstitution.Get');
         Types.Add('Inventory.Cost.Update');
         Types.Add('Inventory.Revaluation.Post');
         Types.Add('Inventory.Revaluation.PreviewPost');
