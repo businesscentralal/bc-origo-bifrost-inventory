@@ -42,4 +42,10 @@ README "Objects" lists every object with its ID. In short:
 - 96950-96959 (Item Ref. Resolve Tests/Perm, Avail. By Period Tests/Perm, Item Charge Tests/Perm,
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
+- Free: 96960-96961, 96963-96979.
+
+## Issue 40 additions
+
+- Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
+- Test codeunit 96994 `Item Application 40 Tests ori`.
 - 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.
