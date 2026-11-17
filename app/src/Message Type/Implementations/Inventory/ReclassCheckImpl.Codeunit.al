@@ -24,7 +24,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Checks that a journal template is a reclassification template and counts the transfer lines of the batch. It does not validate the lines or post.', Comment = 'is-IS=Athugar hvort bókarsniðmát sé endurflokkunarsniðmát og telur millifærslulínur keyrslunnar. Sannreynir ekki línurnar og bókar ekki.';
+        DescriptionLbl: Label 'Validates the selected lines of an existing Transfer journal batch with the standard item journal line check. Nothing is posted.', Comment = 'is-IS=Sannreynir valdar línur fyrirliggjandi millifærslubókarkeyrslu með hefðbundinni athugun vörubókarlínu. Ekkert er bókað.';
     begin
         exit(DescriptionLbl);
     end;
@@ -38,7 +38,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetSelectionDescription(): Text
     var
-        SelectionLbl: Label 'Confirms the template type and counts transfer lines. Posting is a separate type.', Comment = 'is-IS=Staðfestir gerð sniðmáts og telur millifærslulínur. Bókun er sérstök tegund.';
+        SelectionLbl: Label 'Checks the Transfer template and validates the selected journal lines. Posting is a separate type.', Comment = 'is-IS=Athugar millifærslusniðmátið og sannreynir valdar bókarlínur. Bókun er sérstök tegund.';
     begin
         exit(SelectionLbl);
     end;
@@ -51,26 +51,22 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         ItemJournalTemplate: Record "Item Journal Template";
-        ItemJournalLine: Record "Item Journal Line";
+        FailureJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
+        Process: Codeunit "Inventory Read Process ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
         TemplateName: Code[10];
-        BatchName: Code[10];
-        LineCount: Integer;
         NextLbl: Label 'Send templateName and batchName for an existing Transfer journal template.', Comment = 'is-IS=Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.';
-
         TemplateNotFoundErr: Label 'Item journal template %1 was not found.', Comment = '%1 = template name, is-IS=Vörubókarsniðmát %1 fannst ekki.';
         NotTransferErr: Label 'Template %1 is not a reclassification template.', Comment = '%1 = template name, is-IS=Sniðmát %1 er ekki endurflokkunarsniðmát.';
     begin
-        if not DomainGate.AssertEnabled(Argument, Enum::"Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, false) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
             exit;
         end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         RequestJson := Argument.GetRequestJson();
         if RequestJson.Contains('templateName') then
             TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'templateName', Argument, true, 10), 1, 10)
@@ -82,12 +78,12 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         if Parts.RespondToProblems(Argument) then
             exit;
         if RequestJson.Contains('batchName') then
-            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10)
+            Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10)
         else
             if RequestJson.Contains('journalBatchName') then
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
+                Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10)
             else
-                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10), 1, 10);
+                Parts.ReadRequestText(RequestJson, 'batchName', Argument, true, 10);
         if Parts.RespondToProblems(Argument) then
             exit;
 
@@ -100,17 +96,30 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
             exit;
         end;
 
-        ItemJournalLine.SetRange("Journal Template Name", TemplateName);
-        ItemJournalLine.SetRange("Journal Batch Name", BatchName);
-        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::Transfer);
-        LineCount := ItemJournalLine.Count();
-        ResponseJson.Add('status', 'Success');
-        ResponseJson.Add('messageType', 'Inventory.Reclassification.Check');
-        ResponseJson.Add('templateName', TemplateName);
-        ResponseJson.Add('batchName', BatchName);
-        ResponseJson.Add('postedLineCount', LineCount);
-        Argument.SetResponseJson(ResponseJson);
-        Argument."Content Type" := Argument.GetContentTypeJson();
+        Process.SetOperation('ReclassCheck');
+        if Argument."Omit Commit" then
+            Process.Run(Argument)
+        else
+            if not Process.Run(Argument) then begin
+                FailureJournal.RespondWithFailure(Argument);
+                exit;
+            end;
+        AddCheckCompat(Argument);
+    end;
+
+    local procedure AddCheckCompat(var Argument: Record "Message Argument ori")
+    var
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Response := Argument.GetResponseJson();
+        if not Response.Get('lineCount', Token) then
+            exit;
+        if not Response.Contains('messageType') then
+            Response.Add('messageType', 'Inventory.Reclassification.Check');
+        if not Response.Contains('postedLineCount') then
+            Response.Add('postedLineCount', Token.AsValue().AsInteger());
+        Argument.SetResponseJson(Response);
     end;
 
     procedure GetEnvelope(var Envelope: JsonObject): Boolean
@@ -138,6 +147,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'Alias of templateName, read only when templateName is absent.'));
         Parameters.Add(ContractMgt.Parameter('batchName', 'string', false, 'Name of the journal batch, at most 10 characters; read as an upper-case code. Required unless journalBatchName is sent; batchName wins when both are sent.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'Alias of batchName, read only when batchName is absent.'));
+        Parameters.Add(ContractMgt.Parameter('lineSystemIds', 'array', false, 'Optional nonempty array of distinct SystemIds of lines in the identified batch; only those lines are checked. Without it every line of the batch is used.'));
         exit(true);
     end;
 
@@ -152,7 +162,13 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Fields.Add(ContractMgt.ResponseField('messageType', 'string', 'Always Inventory.Reclassification.Check.'));
         Fields.Add(ContractMgt.ResponseField('templateName', 'string', 'The template that was checked.'));
         Fields.Add(ContractMgt.ResponseField('batchName', 'string', 'The batch that was checked.'));
-        Fields.Add(ContractMgt.ResponseField('postedLineCount', 'integer', 'Number of lines of the batch whose entry type is Transfer. Despite the name nothing is posted; 0 when the batch has no such lines or does not exist.'));
+        Fields.Add(ContractMgt.ResponseField('validationResult', 'string', 'Ready, ReadyWithWarnings or NotReady. Every line is validated with the standard item journal line check for a Transfer entry (locations, bins, tracking, dimensions).'));
+        Fields.Add(ContractMgt.ResponseField('lineCount', 'integer', 'Number of lines checked.'));
+        Fields.Add(ContractMgt.ResponseField('errorCount', 'integer', 'Number of problems that block posting.'));
+        Fields.Add(ContractMgt.ResponseField('warningCount', 'integer', 'Number of warnings.'));
+        Fields.Add(ContractMgt.ResponseField('errors', 'array', 'Blocking problems with the line number.'));
+        Fields.Add(ContractMgt.ResponseField('warnings', 'array', 'Warnings with the line number.'));
+        Fields.Add(ContractMgt.ResponseField('postedLineCount', 'integer', 'Same as lineCount, kept for compatibility. Despite the name nothing is posted.'));
         Response.Add('fields', Fields);
         exit(true);
     end;
@@ -193,7 +209,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     begin
         Clear(Effect);
         Effect.Add('effect', 'read');
-        Effect.Add('changes', 'Nothing is written or posted. The template is looked up and the lines of the batch whose entry type is Transfer are counted.');
+        Effect.Add('changes', 'Nothing is written or posted. The selected Transfer journal lines are validated with the standard item journal line check.');
         Effect.Add('idempotent', true);
         Effect.Add('permissionSet', 'BIFROST Read ori');
         Effect.Add('writes', false);
@@ -211,7 +227,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
         Clear(Related);
-        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.PreviewPost', 'Use it to list the lines of the batch that the posting would process.'));
+        Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.PreviewPost', 'Use it to simulate native posting and inspect the captured ledger entries.'));
         Related.Add(ContractMgt.RelatedEntry('Inventory.Reclassification.Post', 'Use it to post the reclassification batch.'));
         exit(true);
     end;
@@ -222,7 +238,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Steps: JsonArray;
     begin
         Clear(Workflow);
-        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Confirm that the template is a reclassification template and see how many transfer lines the batch has.'));
+        Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Check', 'Validate the selected lines in an existing Transfer journal batch.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.PreviewPost', 'Simulate native posting and inspect the rolled-back ledger entries.'));
         Steps.Add(ContractMgt.WorkflowStep('Inventory.Reclassification.Post', 'Post the batch; the lines are written to the item ledger.'));
         Workflow.Add('steps', Steps);
@@ -237,20 +253,20 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Examples.Add(ContractMgt.Example(
             'Check the reclassification batch DEFAULT',
             '{"type":"Inventory.Reclassification.Check","data":{"templateName":"RECLASS","batchName":"DEFAULT"}}',
-            '{"status":"Success","messageType":"Inventory.Reclassification.Check","templateName":"RECLASS","batchName":"DEFAULT","postedLineCount":2}'));
+            '{"status":"Success","messageType":"Inventory.Reclassification.Check","templateName":"RECLASS","batchName":"DEFAULT","validationResult":"Ready","lineCount":2,"errorCount":0,"warningCount":0,"errors":[],"warnings":[],"postedLineCount":2}'));
         exit(true);
     end;
 
     procedure GetOverview(var Overview: Text): Boolean
     begin
-        Overview := 'Confirms that the named item journal template is a reclassification template and counts the transfer lines of the batch. It does not validate the lines and posts nothing.';
+        Overview := 'Validates the selected lines of an existing Transfer journal batch with the standard item journal line check and returns readiness, errors and warnings. Nothing is posted.';
         exit(true);
     end;
 
     procedure GetNotes(var Notes: Text): Boolean
     begin
-        Notes := 'Read only: nothing is written or posted. The answer confirms that the template exists and is of type Transfer, and returns the number of lines of the batch with entry type Transfer as postedLineCount; the name is misleading, nothing is posted. ' +
-            'The check does not look up the batch, validate the lines or predict posting errors, so an unknown batch is answered Success with postedLineCount 0. templateName and batchName win over the aliases journalTemplateName and journalBatchName when both are sent. ' +
+        Notes := 'Read only: nothing is written or posted. The answer confirms that the template exists and is of type Transfer, and returns the number of selected lines checked as lineCount and the compatibility alias postedLineCount; nothing is posted. ' +
+            'The batch must exist. Every selected line is validated with the standard item journal line check; readiness, errors and warnings are returned. An empty batch is NotReady. lineSystemIds optionally selects distinct lines from that batch. templateName and batchName win over the aliases journalTemplateName and journalBatchName when both are sent. ' +
             'A missing name returns MissingParameter, an unknown template RecordNotFound and a non-Transfer template PreconditionFailed; each refusal includes nextStep. ' +
             'The type requires read permission on the Item Journal Line table, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
             'Use Inventory.Reclassification.PreviewPost to simulate posting and inspect captured ledger entries and Inventory.Reclassification.Post to post.';

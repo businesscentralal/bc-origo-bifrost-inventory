@@ -12,6 +12,8 @@ permissionset 96971 "Inv Reclass Read"
     Permissions =
         table "Item Journal Template" = X,
         tabledata "Item Journal Template" = R,
+        table "Item Journal Batch" = X,
+        tabledata "Item Journal Batch" = R,
         table "Item Journal Line" = X,
         tabledata "Item Journal Line" = R,
         table "Inventory Setup ori" = X,
