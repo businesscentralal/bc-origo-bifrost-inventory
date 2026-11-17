@@ -30,6 +30,21 @@ README "Objects" lists every object with its ID. In short:
   shared gates and contract parts 10076919-10076923, item variants 10076990-10076993 (#99; enum extension 10076890).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
+  (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared number is a different object type.
+- Preserve released Purchase Returns codeunit/message value 10076930 and enum extension 10076847.
+  Unreleased Planning uses `Plan Wksh Calc Impl ori` codeunit/message value 10076949,
+  `Plan Wksh Carry Impl ori` 10076939, `Req. Worksheet Engine ori` 10076946 and enum extension 10076947.
+  Codeunits 10076925-10076929 remain allocated (tracking through assembly preview). Planning allocations were checked against main and open PR bodies (including #224 and #203);
+  check main and open PRs. Do not reuse open-PR allocations; 10076860 and 10076906 remain allocated.
+  Page, table and permission-set ranges are unchanged where objects have not been allocated.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032,
+  enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 belong to earlier open PRs;
+  10077034 is the Item Application quantity helper. Check source and open PRs before choosing an ID.
+- `Inventory Domain ori`: 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution,
+  16 PurchaseReturns and 17 Planning. Setup fields 21-27 correspond to these domains; preserve released fields
+  25 Item Substitution and 26 Purchase Returns. Planning is unreleased field 27, wizard slot 18.
+  New setup rows and the tagged issue147 upgrade enable domains from company usage; existing switches are never turned off.
+  Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
   (10076882) with `Inventory.PhysInventory.Record`.
 - Next free codeunit: 10076932 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
   the convention). Taken above that: 10077020 `Item Subst. Get Impl ori` (#118) and 10077032-10077033
