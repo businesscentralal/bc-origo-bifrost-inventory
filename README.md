@@ -593,7 +593,7 @@ drop shipments, special orders, Cancel, Change Qty. and rescheduling are refused
 lines remain. Native failures return `BusinessCentralError` and roll back the whole call.
 
 Calculate is `write`; CarryOut is `irreversible`, without posting or printing. `expectedCount`
-confirms **one worksheet selection**, always 1, rather than lines or created orders. The types
+counts worksheet selections: always 1, rather than lines or created orders. The types
 require Full Access plus native worksheet/order permissions. No additional setup domain switch
 or posting permission is introduced because order creation does not post. Native report 699 is
 the purchase/transfer requisition mode; #117 owns the separate regenerative/net-change planning
