@@ -63,8 +63,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
-| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
-| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply applications linked to itemLedgerEntryNo through Item Jnl.-Post Line; legacy entryNo selects one application |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply outboundEntryNo to inboundEntryNo for an exact positive base quantity; legacy selectors remain supported |
 | `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
 | `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
 | `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
@@ -426,7 +426,6 @@ the deployed help contract before sending confirmation controls to that version.
 Write-type error chapters may include Foundation's shared `Retryable` entry. Preserve the
 app-owned errors and follow the shared retry guidance; an irreversible call is not a safe retry.
 
-
 ### Standard cost worksheet
 
 `Inventory.StandardCost.Suggest` writes native worksheet proposals for Standard-cost Inventory items selected by `itemFilter`. Supply an existing `worksheetName` (10 characters maximum) and a positive numeric `adjustmentFactor`. The factor multiplies item card standard cost; indirect cost and overhead keep factor 1. Repeating a suggestion refreshes selected worksheet rows from current card costs.
@@ -436,6 +435,17 @@ app-owned errors and follow the shared retry guidance; an irreversible call is n
 Review the generated journal, then call `Inventory.Revaluation.PreviewPost` or `Inventory.Revaluation.Post` separately. These new operations declare `write`; they do not post ledger entries. Callers require Bifrost Full, Costing enabled, and native permissions for the affected records and reports. Invalid selections and unknown parameters are refused with a Bifrost code and `nextStep`.
 
 Objects: codeunits 10076932 `Std. Cost Suggest Impl ori`, 10076933 `Std. Cost Implement Impl ori`, 10076934 `Std. Cost Management ori`, 10076935 `Std. Cost Process ori`, 10076936 `Std. Cost Contract ori`, 10076937 `Std. Cost Suggest Proc ori`; enum extension 10076848 `MsgType.StdCost.EnumExt ori`; test codeunits 96982–96983 `Standard Cost Tests ori`.
+
+### Item application selectors and quantity objects (#40)
+
+| ID | Kind | Object |
+|---|---|---|
+| 10077034 | Codeunit | `Item Appl. Quantity ori` (scoped native quantity event) |
+| 96994 | Test codeunit | `Item Application 40 Tests ori` |
+
+`Inventory.ItemApplication.Get` accepts `itemNo` or `itemLedgerEntryNo`, plus exact `locationCode` and `variantCode`, and returns each application once with `inboundEntry` and `outboundEntry` projections.
+
+See [the item application selectors and quantities](docs/contracts.md#item-application-selectors-and-quantities-40).
 
 ### Item substitution objects (#118)
 
