@@ -51,6 +51,11 @@ README "Objects" lists every object with its ID. In short:
 - Codeunits 10076941–10076945, enum extension 10076849, message values 10076941–10076942, test codeunit 96947.
 - Bounded option A (Gunnar 16.11.2026): report 699 may replace only the selected worksheet's working lines; native carry-out may consume selected lines to create new purchase/transfer orders, never change existing documents. Shared helpers are intended for coordinated #117.
 - Names are Purchase.Requisition.Calculate (write) and Purchase.Requisition.CarryOut (irreversible; expectedCount counts one worksheet selection). Native table permissions apply; no additional setup domain or posting gate.
+## Issue 135 object claims (2026-11-16)
+
+- Codeunits 10076980–10076984: Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori.
+- Enum extension 10076980 MsgType.PriceList.Ext ori; values 10076980 Price.List.Set and 10076981 Price.List.Activate.
+- Test codeunit 96987 Price List Tests ori. Checked against main and open Inventory PR claims.
 
 ## Issue 40 additions
 

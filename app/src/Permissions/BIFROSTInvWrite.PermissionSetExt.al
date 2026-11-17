@@ -17,12 +17,16 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Requisition Process ori" = X,
         codeunit "Requisition Worksheet ori" = X,
         codeunit "Requisition Native Scope ori" = X,
+        codeunit "Price List Set Impl ori" = X,
+        codeunit "Price List Activate Impl ori" = X,
+        codeunit "Price List Contract ori" = X,
+        codeunit "Price List Process ori" = X,
+        codeunit "Price List Restrict ori" = X,
         codeunit "Phys Order Create Impl ori" = X,
         codeunit "Phys Order Finish Impl ori" = X,
         codeunit "Phys Order Post Impl ori" = X,
         codeunit "Phys Order Process ori" = X,
         codeunit "Phys Order Contract ori" = X,
-
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
@@ -105,5 +109,10 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Reserv. AutoReserve Proc ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
         codeunit "Purch. Return Create Impl ori" = X,
-        codeunit "Order Tracking Transfer ori" = X;
+        codeunit "Order Tracking Transfer ori" = X,
+        codeunit "SKU Create Impl ori" = X,
+        codeunit "SKU Create Proc ori" = X,
+        codeunit "SKU Get Impl ori" = X,
+        codeunit "SKU Request ori" = X,
+        codeunit "SKU Restrict ori" = X;
 }

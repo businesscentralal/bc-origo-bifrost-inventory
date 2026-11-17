@@ -37,6 +37,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
+| `Inventory.SKU.Get` | Outbound | Read stockkeeping units with their planning and cost fields |
+| `Inventory.SKU.Create` | Inbound | Create stockkeeping units per location and variant (report 5706), optionally replacing existing ones |
 | `Purchase.ReturnOrder.CreateFromPosted` | Inbound | Create an open purchase return order or credit memo from posted receipt or invoice item lines. Nothing is posted |
 | `Inventory.Attribute.Create` | Inbound | Assign an attribute value to an item |
 | `Inventory.Attribute.Update` | Inbound | Change an existing item attribute mapping |
@@ -76,6 +78,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Period.Close` | Inbound | Close inventory periods through an ending date |
 | `Inventory.Period.Reopen` | Inbound | Reopen a closed inventory period |
 | `Inventory.Price.Update` | Inbound | Update an item unit price |
+| `Price.List.Set` | Inbound | Create or update a Draft sales/purchase price list and numbered lines |
+| `Price.List.Activate` | Inbound | Verify native price lines, refuse duplicate prices and activate the list |
 | `Inventory.ItemCharge.Assign` | Inbound | Assign an item charge over purchase or sales item lines |
 | `Inventory.ItemCharge.Get` | Outbound | Read item charge assignment rows and the unassigned quantity |
 | `Sales.ReturnOrder.CreateFromPosted` | Inbound | Create a sales return order or credit memo, or fill an open one, from posted invoice or shipment lines with quantities, as Get Posted Document Lines to Reverse does; item lines get Appl.-from Item Entry; refuses too large a quantity and lines of another customer with `InvalidLine` |
@@ -267,6 +271,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 34 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
+| 10076995 | `MsgType.SKU.EnumExt ori` | `Inventory.SKU.Create`, `Inventory.SKU.Get` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
 | 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
@@ -293,6 +298,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076835, 10076836, 10076845 | Lifecycle | `Inventory Install ori`, `Inventory Upgrade ori`, `Inventory Registration ori` |
 | 10076837–10076843 | Shared reads and writes | `Inventory Card Write ori`, `Inventory Cost Data Guard ori`, `Inventory Cost Read ori`, `Inventory Native Journal ori` (physical inventory and revaluation), `Inventory Tracking Read ori`, `Inventory Write Process ori`, `Reservation WriteGuard ori` |
 | 10076846–10076848 | Write restrictions | `Item Attr. Data Restrict ori`, `Item Category Restrict ori`, `Item Charge Restrict ori` |
+| 10076995–10076999 | Stockkeeping units | `SKU Create Impl ori`, `SKU Get Impl ori`, `SKU Create Proc ori`, `SKU Request ori`, `SKU Restrict ori` (blocks Data.Records.Set on table 5700) |
 | 10076919–10076923 | Shared | Contract parts, tracking write restriction, posting gate, domain gate, setup write restriction |
 | 10076844, 10076912–10076918 | Item attributes | `Item Attribute Resolve ori`, `Item Attribute Get/Create/Update Impl ori`, `Item AttrDef Create Impl ori`, their process codeunits |
 | 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
@@ -471,6 +477,15 @@ reports. Both facades can reuse the internal worksheet and native event helpers 
 New objects: codeunits 10076941 Calculate, 10076942 CarryOut, 10076943 atomic process,
 10076944 worksheet validation/serialization, 10076945 scoped native subscribers;
 enum extension 10076849; tests 96947.
+### Price-list objects (#135)
+
+| IDs | Kind | Objects |
+|---|---|---|
+| 10076980–10076984 | Codeunits | Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori |
+| 10076980 | Enum extension | MsgType.PriceList.Ext ori, values 10076980 and 10076981 |
+| 96987 | Test codeunit | Price List Tests ori |
+
+See [price-list maintenance](docs/price-lists.md) for native sales/purchase field mapping and activation refusals.
 
 ### Create, finish and post physical inventory orders / Stofna, ljúka og bóka birgðatalningarpantanir
 
