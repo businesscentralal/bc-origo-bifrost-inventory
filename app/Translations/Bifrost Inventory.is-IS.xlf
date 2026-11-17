@@ -7581,12 +7581,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Forskoðar færslur einnar millifærslubókarkeyrslu án þess að vista bókunarbreytingar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2678178361 - Method 2319321116 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Correct the reclassification journal posting errors and run the preview again.</source>
-          <target>Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu bókunarvillur endurflokkunarbókar og keyrðu forskoðun aftur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method PreviewEntries - NamedType NextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1101326463 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Calculates a native requisition plan in one worksheet.</source>
           <target>Reiknar innkaupaáætlun í einu vinnublaði.</target>
