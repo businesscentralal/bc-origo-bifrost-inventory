@@ -66,6 +66,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Inventory Contract Parts ori" = X,
         codeunit "Inventory Native Journal ori" = X,
         codeunit "Inventory Write Process ori" = X,
+        codeunit "Item Appl. Quantity ori" = X,
         codeunit "Reclass Check Impl ori" = X,
         codeunit "Reclass Preview Impl ori" = X,
         codeunit "Reclass Post Impl ori" = X,

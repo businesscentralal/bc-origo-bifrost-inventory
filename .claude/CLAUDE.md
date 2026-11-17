@@ -46,3 +46,8 @@ README "Objects" lists every object with its ID. In short:
 - Codeunits 10076941–10076945, enum extension 10076849, message values 10076941–10076942, test codeunit 96947.
 - Bounded option A (Gunnar 16.11.2026): report 699 may replace only the selected worksheet's working lines; native carry-out may consume selected lines to create new purchase/transfer orders, never change existing documents. Shared helpers are intended for coordinated #117.
 - Names are Purchase.Requisition.Calculate (write) and Purchase.Requisition.CarryOut (irreversible; expectedCount counts one worksheet selection). Native table permissions apply; no additional setup domain or posting gate.
+
+## Issue 40 additions
+
+- Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
+- Test codeunit 96994 `Item Application 40 Tests ori`.

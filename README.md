@@ -65,8 +65,8 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Transfer.UndoShipment` | Inbound | Undo a posted transfer shipment |
 | `Inventory.Assembly.UndoPost` | Inbound | Undo a posted assembly |
 | `Inventory.ItemApplication.Get` | Outbound | Read item application entries and the joined item ledger entries |
-| `Inventory.ItemApplication.Unapply` | Inbound | Unapply an item application through Item Jnl.-Post Line |
-| `Inventory.ItemApplication.Reapply` | Inbound | Reapply an item ledger entry through Item Jnl.-Post Line |
+| `Inventory.ItemApplication.Unapply` | Inbound | Unapply applications linked to itemLedgerEntryNo through Item Jnl.-Post Line; legacy entryNo selects one application |
+| `Inventory.ItemApplication.Reapply` | Inbound | Reapply outboundEntryNo to inboundEntryNo for an exact positive base quantity; legacy selectors remain supported |
 | `Inventory.Reclassification.Check` | Outbound | Check a reclassification journal batch |
 | `Inventory.Reclassification.PreviewPost` | Inbound | Preview a reclassification journal batch without posting |
 | `Inventory.Reclassification.Post` | Inbound | Post a reclassification journal batch |
@@ -456,6 +456,17 @@ reports. Both facades can reuse the internal worksheet and native event helpers 
 New objects: codeunits 10076941 Calculate, 10076942 CarryOut, 10076943 atomic process,
 10076944 worksheet validation/serialization, 10076945 scoped native subscribers;
 enum extension 10076849; tests 96947.
+
+### Item application selectors and quantity objects (#40)
+
+| ID | Kind | Object |
+|---|---|---|
+| 10077034 | Codeunit | `Item Appl. Quantity ori` (scoped native quantity event) |
+| 96994 | Test codeunit | `Item Application 40 Tests ori` |
+
+`Inventory.ItemApplication.Get` accepts `itemNo` or `itemLedgerEntryNo`, plus exact `locationCode` and `variantCode`, and returns each application once with `inboundEntry` and `outboundEntry` projections.
+
+See [the item application selectors and quantities](docs/contracts.md#item-application-selectors-and-quantities-40).
 
 ### Item substitution objects (#118)
 
