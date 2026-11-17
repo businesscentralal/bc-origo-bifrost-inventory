@@ -23,7 +23,8 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
-  shared gates and contract parts 10076919-10076923.
+  shared gates and contract parts 10076919-10076923, assembly reads 10076965-10076966 (`Inventory.AssemblyToOrder.Get`,
+  `Inventory.AssemblyBOM.Get`, #116; enum values 10076965-10076966 in enum extension 10076960).
 - Message type enum values = the impl codeunit id (e.g. `Inventory.Cost.Get` 10076860 = `Cost Get Impl ori`).
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared number is a different object type.
@@ -51,8 +52,20 @@ README "Objects" lists every object with its ID. In short:
 - #106 (`Inventory.TrackingInfo.Get`): codeunit and enum value 10077010, enum extension 10076915, test codeunit 96992.
   On main 96963 and 96970-96979 are already used, so check `test/` before taking an ID from the free list above.
 
+## Requisition worksheet operations (#131)
+
+- Codeunits 10076941–10076945, enum extension 10076849, message values 10076941–10076942, test codeunit 96947.
+- Bounded option A (Gunnar 16.11.2026): report 699 may replace only the selected worksheet's working lines; native carry-out may consume selected lines to create new purchase/transfer orders, never change existing documents. Shared helpers are intended for coordinated #117.
+- Names are Purchase.Requisition.Calculate (write) and Purchase.Requisition.CarryOut (irreversible; expectedCount counts one worksheet selection). Native table permissions apply; no additional setup domain or posting gate.
+## Issue 135 object claims (2026-11-16)
+
+- Codeunits 10076980–10076984: Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori.
+- Enum extension 10076980 MsgType.PriceList.Ext ori; values 10076980 Price.List.Set and 10076981 Price.List.Activate.
+- Test codeunit 96987 Price List Tests ori. Checked against main and open Inventory PR claims.
+
 ## Issue 40 additions
 
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
 - Test codeunit 96994 `Item Application 40 Tests ori`.
 - 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.
+- 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
