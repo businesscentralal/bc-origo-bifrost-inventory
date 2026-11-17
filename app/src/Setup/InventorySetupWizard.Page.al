@@ -163,9 +163,15 @@ page 10076836 "Inventory Setup Wizard ori"
                     ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
                     Editable = false;
                 }
-                field(CatalogItems; DomainEnabled[18])
+                field(CatalogItems; DomainEnabled[19])
                 {
                     Caption = 'Catalog items', Comment = 'is-IS=Vörulistavörur';
+                    ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
+                    Editable = false;
+                }
+                field(Planning; DomainEnabled[18])
+                {
+                    Caption = 'Planning', Comment = 'is-IS=Áætlun';
                     ToolTip = 'Specifies whether this domain is enabled in this company.', Comment = 'is-IS=Tilgreinir hvort þetta svið sé virkt í þessu fyrirtæki.';
                     Editable = false;
                 }
@@ -336,7 +342,7 @@ page 10076836 "Inventory Setup Wizard ori"
     var
         WizardMgt: Codeunit "Inventory Wizard Mgt ori";
         CurrentStep: Integer;
-        DomainEnabled: array[18] of Boolean;
+        DomainEnabled: array[19] of Boolean;
         CanChangeHttp: Boolean;
         HttpStatusText: Text;
         HttpSummaryText: Text;
@@ -389,6 +395,7 @@ page 10076836 "Inventory Setup Wizard ori"
         DomainEnabled[16] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemSubstitution);
         DomainEnabled[15] := WizardMgt.ReadDomain("Inventory Domain ori"::ItemCategory);
         DomainEnabled[17] := WizardMgt.ReadDomain("Inventory Domain ori"::PurchaseReturns);
-        DomainEnabled[18] := WizardMgt.ReadDomain("Inventory Domain ori"::CatalogItems);
+        DomainEnabled[19] := WizardMgt.ReadDomain("Inventory Domain ori"::CatalogItems);
+        DomainEnabled[18] := WizardMgt.ReadDomain("Inventory Domain ori"::Planning);
     end;
 }

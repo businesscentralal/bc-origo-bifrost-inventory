@@ -17,6 +17,7 @@ codeunit 10076835 "Inventory Install ori"
         SetUpgradeTags();
         InsertSetup();
         InventoryUpgrade.EnableUsedDomains();
+        InventoryUpgrade.EnablePlanningDomain();
     end;
 
     local procedure InsertSetup()
@@ -47,5 +48,6 @@ codeunit 10076835 "Inventory Install ori"
         PerCompanyUpgradeTags.Add(GetInitialReleaseTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetDomainUsageTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetCatalogItemsUsageTag());
+        PerCompanyUpgradeTags.Add(InventoryUpgrade.GetPlanningDomainTag());
     end;
 }
