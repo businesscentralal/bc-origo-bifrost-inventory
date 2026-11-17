@@ -122,6 +122,10 @@
 - Test helper 96904 sets and restores the matching field for each target. Existing preview tests 96912 cover both posting modes; tests 96914 retain partial shipment/receipt coverage and add single-document direct-transfer posting coverage. No new object IDs or user-facing text.
 - For BC 29 symbol builds, pass `/define:BC29` to **both** the product and test compiler invocations. For BC 28.5 builds, omit it. See `docs/development/direct-transfer-compatibility.md`.
 - Merge resolution (2026-11-17): main’s PR #213 runtime field detection supersedes the compile-time branches above while preserving both posting choices and the single-document regression test. Neither target now requires a compiler define. The build guide reflects this resolution.
+### Fixed (2026-11-16) - physical inventory blank-row parity (#186)
+
+- Check and PreviewPost now use Post's existing empty-row filter in `Inventory Native Journal ori` (10076840). Rows without an item and with all three quantity fields zero are ignored after applying the requested selection; nonempty missing-item rows keep the native typed refusal.
+- Added test codeunit 96964 `Inv. 186 Blank Line Tests ori`: eight bilingual dispatcher tests cover mixed batches, explicit subsets, blank-only selections, all three nonzero quantity fields, preview rollback and actual posting parity. No new product objects or user-facing text.
 
 ### Added (2026-11-16) - Item substitutions (#118)
 
