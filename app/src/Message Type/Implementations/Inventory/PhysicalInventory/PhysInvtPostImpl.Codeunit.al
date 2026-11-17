@@ -9,6 +9,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     var
+        CountDefinitionLbl: Label 'expectedCount counts the one physical inventory journal batch this call posts, even when lineSystemIds selects only some lines. The value is 1.', Comment = 'is-IS=expectedCount telur eina talningarbókarkeyrslu sem kallið bókar, jafnvel þótt lineSystemIds velji aðeins sumar línur. Gildið er 1.';
         DescriptionLbl: Label 'Posts the lines of a physical inventory journal and returns the item register and the entry number ranges.', Comment = 'is-IS=Bókar línur talningarbókar og skilar vörubókarskrá og númeraröðum færslna.';
         SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
         KeywordsLbl: Label 'post physical count, post count journal, book stock take, post inventory count', Comment = 'is-IS=bóka birgðatalningu, bóka talningarbók, færa vörutalningu, bóka talin birgðamagn';
@@ -155,15 +156,15 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     procedure GetErrors(var Errors: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Journal: Codeunit "Inventory Native Journal ori";
     begin
         Clear(Errors);
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'The selected journal batch does not exist.', 'Check templateName and batchName or send the SystemId of an existing physical inventory batch.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, 'The selected journal contains no lines.', 'Select a batch with lines or a valid line subset.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks the item posting permission (Item Posting Gate) or write permission on the item journal.', 'Ask an administrator for Item Posting Gate.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Physical Inventory domain is turned off for this company in Inventory Setup.', 'Turn the domain on from the Inventory Setup page.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'Business Central posting error text', 'The posting fails, for example because a line fails the item journal checks, or a selected line is not a valid physical inventory line. Nothing is posted.', 'Run Inventory.PhysInventory.Check, correct the lines named in its answer and retry.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Unsupported journal parameter %1.', 'A key is sent that this type does not read.', 'Remove the key; only the batch selectors and the declared parameters are accepted.'));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', 'No batch is identified, the selectors name different batches, the subject is neither TEMPLATE|BATCH nor a SystemId, its template is not a Phys. Inventory template or is recurring.', 'Identify one existing batch of a non-recurring Phys. Inventory template with consistent selectors.'));
+        Journal.AddPhysicalBatchErrors(Errors);
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'lineSystemIds must be a nonempty array of distinct SystemIds belonging to the identified journal batch.', 'lineSystemIds is not an array, is empty, repeats an id, or names a line outside the selected batch.', 'Send distinct SystemIds of lines in the selected batch, or omit lineSystemIds.'));
         exit(true);
     end;
@@ -173,7 +174,7 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Effect);
         Effect.Add('effect', 'irreversible');
-        Effect.Add('changes', 'Posts the selected lines of the Phys. Inventory journal batch through the standard item journal batch posting: item ledger entries, physical inventory ledger entries, value entries and an item register are created and the posted lines leave the journal. The posting commits with the answer; under Omit Commit the caller''s transaction commits instead. It cannot be undone by a message type of this app.');
+        Effect.Add('changes', 'Posts the selected lines of the Phys. Inventory journal batch through the standard item journal batch posting: item ledger entries, physical inventory ledger entries, value entries and an item register are created and the posted lines leave the journal. The posting commits with the answer; under Omit Commit the caller''s transaction commits instead. It cannot be undone by a message type of this app.' + ' ' + CountDefinitionLbl);
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('writes', true);

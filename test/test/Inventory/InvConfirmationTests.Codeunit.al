@@ -387,6 +387,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                             AssertText(Parameter.AsObject(), 'type', 'integer');
                                             Assert.IsTrue(Parameter.AsObject().Contains('description'), TypeName + ' documents confirmation.');
                                         end;
+                            if TypeName in ['Inventory.TransferOrder.Ship', 'Inventory.TransferOrder.Receive'] then
+                                Assert.IsTrue(AdvertisesConfirmation, TypeName + ' always documents its own optional count validation.');
                             Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
@@ -423,7 +425,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(10, Checked, 'All ten app-owned irreversible types must be exercised.');
+        Assert.AreEqual(12, Checked, 'All twelve app-owned irreversible types must be exercised.');
         RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
     end;
 
