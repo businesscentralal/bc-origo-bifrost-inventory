@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
+
+- `Purchase.PurchaseInvoice.GetReceiptLines` adds posted, not invoiced receipt lines to an open purchase invoice through native codeunit 74 `Purch.-Get Receipt`. Select `receiptNos` or `allReceipts`; identify the invoice by `documentNo` or `systemId`. The response lists added invoice lines, receipt linkage and skipped invoiced/already-selected lines. Another pay-to vendor or currency is refused atomically with `InvalidLine` and `nextStep`.
+- Declares `effect: write`, `posts: false`; en-US/is-IS discovery, help and XLF entries are included. New objects: codeunit 10077018 `Purch Get Receipt Impl ori`, codeunit 10077031 `Purch Get Receipt Proc ori`, enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori`, message value 10077018, test codeunit 96996 `Purch Get Receipt Tests`. Foundation document APIs remain unchanged.
+- Main-merge (2026-11-17): codeunit 10077030 is `Reserv. Supply Filter ori` on main. The receipt implementation and its message value moved from 10077030 to 10077018, the next ID free on main and not claimed by an open pull request (10077027 is claimed by #206 and #215; 10077028–10077029 by #203). Enum extension 10077030 and process codeunit 10077031 stay. The message name is unchanged.
 ### Added (2026-11-16) - Inventory.AgedInventory.Get (#110)
 - New read-only message type `Inventory.AgedInventory.Get` (codeunit 10076948 `Aged Inventory Get Impl ori`, enum extension 10076851 `MsgType.AgedInv.EnumExt ori`, enum value 10076948). It mirrors the Item Age Composition - Qty. and - Value reports: remaining quantity and value of open positive item ledger entries in five age buckets counted back from `endingDate` (default work date) in steps of `periodLengthDays` (default 30), per item. Items are selected with `itemNo`/subject, a SystemId key or `tableView` (none = every item) and filtered with `locationFilter`, `variantCode` and `itemCategoryFilter`. Paged with `skip` and `take` (`noOfLines`, `totalNoOfLines`). Declares `effect: read`; Costing domain; granted through `BIFROST InvRead ori`.
 - Refusals carry a Bifröst error code with `nextStep` (`InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `PermissionDenied`, `ConflictingIdentifiers`). Help in en-US and is-IS, `Bifrost Inventory.is-IS.xlf` regenerated.
@@ -151,7 +156,6 @@
 - Line paths passed to `StrSubstNo` are Locked labels, so AppSourceCop AA0217 no longer warns on the implementation.
 - The posted lines are collected again before any header is created. A refusal on that pass leaves the coded error and creates nothing.
 - The implementation, process codeunit and message-type value are 10077032 / 10077033 / 10077032, and the test codeunit is 96991, clear of the ids taken by earlier open pull requests. Enum extension 10076906 is unchanged.
-
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.
