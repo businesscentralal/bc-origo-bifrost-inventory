@@ -28,9 +28,11 @@ README "Objects" lists every object with its ID. In short:
   Exception: `Inventory.PhysInventory.RecordCount` = 10076924, because it shares `Phys. Invt. Record Impl ori`
   (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared
   number is a different object type.
-- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`). Next free codeunit: 10076931.
-  Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847).
+- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`) and 10077032-10077033. Next free codeunit: 10076931
+  (10076925-10076929 and 10076931-10077031 are free except as taken by open PRs; 10077034 is free at the top of the range).
+  Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847; 10076906 is `MsgType.SalesRetOrd.Ext ori`).
   Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID.
 - `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory,
   15 ItemSubstitution and 16 PurchaseReturns; `Inventory Setup ori` fields 21-26 (`Item Substitution` is field 25; `Purchase Returns` is field 26). New setup rows and the
   tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
