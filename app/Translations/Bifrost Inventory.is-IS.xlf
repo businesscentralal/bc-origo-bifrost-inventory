@@ -7159,7 +7159,8 @@
           <source>Send allReceipts as true, or send receiptNos instead.</source>
           <target>Sendu allReceipts sem true, eða sendu receiptNos í staðinn.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu allReceipts sem true, eða sendu receiptNos í staðinn.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch Get Receipt Impl ori - Method ValidateShape - NamedType FalseNextLbl</note>        </trans-unit>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch Get Receipt Impl ori - Method ValidateShape - NamedType FalseNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
           <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
@@ -7764,7 +7765,8 @@
           <source>Check the vendor number.</source>
           <target>Athugaðu númer lánardrottins.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu númer lánardrottins.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method VendorNextStep - NamedType VendorNextStepLbl</note>        </trans-unit>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method VendorNextStep - NamedType VendorNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 3571782927 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send templateName and batchName for an existing Transfer journal template.</source>
           <target>Sendu templateName og batchName fyrir fyrirliggjandi millifærslubókarsniðmát.</target>
