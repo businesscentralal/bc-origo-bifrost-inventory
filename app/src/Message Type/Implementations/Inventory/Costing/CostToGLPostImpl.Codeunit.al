@@ -31,6 +31,8 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
+        if not CheckUnsupportedParameters(Argument, RequestJson) then
+            exit;
         Process.SetOperation('CostToGLPost');
         Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'postingDateFilter'),
             CopyStr(ReadText(RequestJson, 'journalTemplateName'), 1, 10), CopyStr(ReadText(RequestJson, 'journalBatchName'), 1, 10));
@@ -60,6 +62,21 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         KeywordsLbl: Label 'post inventory cost,general ledger,cost posting', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,kostnaðarbókun';
     begin
         exit(KeywordsLbl);
+    end;
+
+    local procedure CheckUnsupportedParameters(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    var
+        ParameterName: Text;
+        UnknownErr: Label 'The parameter is not supported by this operation.', Comment = 'is-IS=Færibreytan er ekki studd af þessari aðgerð.';
+        ExpectedLbl: Label 'Only parameters listed in this message contract.', Comment = 'is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.';
+        NextStepLbl: Label 'Remove the unsupported parameter and send the request again. Nothing was run.', Comment = 'is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.';
+    begin
+        foreach ParameterName in RequestJson.Keys() do
+            if ParameterName in ['documentNoFilter'] then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownErr, CopyStr(ParameterName, 1, 250), '', ExpectedLbl, NextStepLbl);
+                exit(false);
+            end;
+        exit(true);
     end;
 
     local procedure ReadText(RequestJson: JsonObject; Name: Text): Text

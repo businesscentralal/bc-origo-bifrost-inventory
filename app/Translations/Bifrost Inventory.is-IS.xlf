@@ -189,6 +189,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterNextStepTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 1668614503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter is not supported by this operation.</source>
+          <target>Færibreytan er ekki studd af þessari aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er ekki studd af þessari aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType UnknownErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only parameters listed in this message contract.</source>
+          <target>Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unsupported parameter and send the request again. Nothing was run.</source>
+          <target>Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType NextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
           <source>Valid costing setup and one item or category filter.</source>
           <target>Gild kostnaðaruppsetning og ein vöru- eða flokkasía.</target>
@@ -890,6 +908,24 @@
           <target>Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur; ólík vörunúmer í subject og itemNo er hafnað. Nauðsynlegt nema SystemId eða tableView velji vörurnar.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur; ólík vörunúmer í subject og itemNo er hafnað. Nauðsynlegt nema SystemId eða tableView velji vörurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 1668614503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter is not supported by this operation.</source>
+          <target>Færibreytan er ekki studd af þessari aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er ekki studd af þessari aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType UnknownErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only parameters listed in this message contract.</source>
+          <target>Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unsupported parameter and send the request again. Nothing was run.</source>
+          <target>Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType NextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>

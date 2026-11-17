@@ -27,6 +27,8 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         NativeNextStepTxt: Label 'Correct the reported costing or filter problem and inspect ledger state before retrying.', Comment = 'is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.';
     begin
         RequestJson := Argument.GetRequestJson();
+        if not CheckUnsupportedParameters(Argument, RequestJson) then
+            exit;
         ReadOk := TryReadText(Argument, RequestJson, 'itemNoFilter', ItemNoFilter);
         if not TryReadText(Argument, RequestJson, 'itemCategoryFilter', ItemCategoryFilter) then
             ReadOk := false;
@@ -48,6 +50,21 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ResponseJson.Add('errors', ErrorsJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure CheckUnsupportedParameters(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    var
+        ParameterName: Text;
+        UnknownErr: Label 'The parameter is not supported by this operation.', Comment = 'is-IS=Færibreytan er ekki studd af þessari aðgerð.';
+        ExpectedLbl: Label 'Only parameters listed in this message contract.', Comment = 'is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.';
+        NextStepLbl: Label 'Remove the unsupported parameter and send the request again. Nothing was run.', Comment = 'is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.';
+    begin
+        foreach ParameterName in RequestJson.Keys() do
+            if ParameterName in ['postingDate', 'inventoryPostingGroup', 'itemByItem'] then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownErr, CopyStr(ParameterName, 1, 250), '', ExpectedLbl, NextStepLbl);
+                exit(false);
+            end;
+        exit(true);
     end;
 
     local procedure CheckSelection(var Argument: Record "Message Argument ori"; ItemNoFilter: Text; ItemCategoryFilter: Text; var ItemsProcessed: Integer): Boolean

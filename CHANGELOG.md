@@ -12,6 +12,7 @@
 - Not done yet: `Inventory.CostToGL.Test` still counts items and does not run report 1003; `perPostingGroup` and the 1003 mandatory-template path stay pending. No object IDs added; tests added to codeunit 96960 range files (no new test objects). is-IS translations added.
 
 ### Fixed (2026-11-16) - PR #214 review amendments
+- Follow-up: handlers reject unsupported costing controls before native execution even with the pinned legacy Foundation. Contract regression expectations include the full confirmation-count help and the current scheduled-versus-synchronous error distinction.
 - AdjustCost help distinguishes scalar-format refusals from the `InvalidParameter` selection refusals raised before report 795. Both costing types explain in English and Icelandic that confirmation of a named subject counts one run, not selected items or value entries, and disclose Foundation's unnamed-request behavior.
 - Contract tests retain exact app response descriptors while validating Foundation's shared conditional error-code descriptor. Confirmation tests exercise both unnamed handler validation and named-subject preview/mismatch/success, matching Foundation #1278. Regenerated the Icelandic translation file from the compiler output, including the CostToGL `UnknownParameter` wording. No runtime execution, message contract or object ID changed.
 

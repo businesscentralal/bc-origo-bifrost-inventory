@@ -960,8 +960,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Request scalar conversions are validated before the report') > 0, 'Native report failures are distinguished from preflight format errors.');
-        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead'), 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('after request formats and filter selection have passed validation'), 'Native report failures are distinguished from preflight format errors.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('returned with code BusinessCentralError'), 'Caught report errors have an explicit response code.');
         GetNamedMember(Contract, 'errors', 'code', 'InvalidParameterFormat', Error);
         Error.Get('when', ValueToken);
         LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('postToGL'), 'The Boolean format refusal is explicitly documented.');
@@ -973,7 +973,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
             Error.Get('code', ValueToken);
             if ValueToken.AsValue().AsText() = 'BusinessCentralError' then begin
                 Error.Get('when', ValueToken);
-                DispatcherDistinctionFound := DispatcherDistinctionFound or ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead');
+                DispatcherDistinctionFound := DispatcherDistinctionFound or (ValueToken.AsValue().AsText().Contains('normal Foundation scheduled-task error-handler path') and
+                    ValueToken.AsValue().AsText().Contains('Synchronous dispatcher execution does not itself invoke that scheduled failure handler'));
             end;
         end;
         LibraryAssert.IsTrue(DispatcherDistinctionFound, 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
@@ -1008,7 +1009,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         RawChanges: JsonToken;
         Expected: Text;
     begin
-        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.';
+        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome. For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.';
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
