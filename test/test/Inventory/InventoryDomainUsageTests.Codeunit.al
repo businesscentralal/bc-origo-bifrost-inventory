@@ -584,7 +584,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [WHEN] A user creates the setup row.
         InventorySetup.InsertIfNotExists();
         // [THEN] The Catalog Items domain is on.
-        AssertDomain(InventorySetup, 25, true);
+        AssertDomain(InventorySetup, 26, true);
     end;
 
     [Test]
@@ -595,7 +595,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [SCENARIO] Issue119 | Time: none | Risk: isolated company data, rolled back by runner.
         ClearUsage();
         InventorySetup.InsertIfNotExists();
-        AssertDomain(InventorySetup, 25, false);
+        AssertDomain(InventorySetup, 26, false);
     end;
 
     [Test]
@@ -767,7 +767,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 25 do begin
+        for FieldNo := 10 to 26 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -832,7 +832,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 25 do begin
+        for FieldNo := 10 to 26 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
