@@ -4,7 +4,7 @@ using Microsoft.Manufacturing.StandardCost;
 using Origo.Bifrost;
 
 /// <summary>Inventory.StandardCost.Suggest: native standard cost worksheet operation.</summary>
-codeunit 10076932 "Std. Cost Suggest Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076938 "Std. Cost Suggest Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 
