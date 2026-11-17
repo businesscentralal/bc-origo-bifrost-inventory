@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Setup;
+using Microsoft.CRM.Contact;
+using Microsoft.CRM.BusinessRelation;
 using Microsoft.Sales.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
@@ -67,6 +69,52 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateScenario(FixtureCode('PRV-FAIL'), 'FAIL', StockBatch, Location.Code);
         CreateScenario(FixtureCode('PRV-OTHER'), 'OTHER', StockBatch, Location.Code);
         CreateEmptyBatch();
+    end;
+
+    /// <summary>Creates only the owned issue154 journals and unposted count item, on explicit UI invocation.</summary>
+    procedure Create154Fixtures()
+    var
+        JournalTemplate: Record "Item Journal Template";
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Item: Record Item;
+        FeatureSetup: Record "Inventory Setup ori";
+        LibraryInventory: Codeunit "Library - Inventory";
+        TemplateName: Code[10];
+        TemplateNames: List of [Code[10]];
+    begin
+        if not IsOwnedCompany() then
+            Error('Owned CRONUS verification company required.');
+        TemplateNames.Add('X154I');
+        TemplateNames.Add('X154P');
+        TemplateNames.Add('X154R');
+        foreach TemplateName in TemplateNames do
+            if JournalTemplate.Get(TemplateName) then
+                Error('Owned issue154 fixture exists; inspect and clean it before seeding.');
+        if Item.Get('X154-COUNT') then
+            Error('Owned issue154 count item exists; inspect it before seeding.');
+        FeatureSetup.InsertIfNotExists();
+        FeatureSetup."Phys. Inventory" := true;
+        FeatureSetup.Modify();
+        foreach TemplateName in TemplateNames do begin
+            Clear(JournalTemplate);
+            if TemplateName = 'X154I' then
+                LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::Item)
+            else
+                LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalTemplate.Type::"Phys. Inventory");
+            JournalTemplate.Rename(TemplateName);
+            JournalTemplate.Recurring := TemplateName = 'X154R';
+            JournalTemplate.Modify();
+            LibraryInventory.CreateItemJournalBatch(Batch, TemplateName);
+            Batch.Rename(TemplateName, 'OWN');
+        end;
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('X154-COUNT');
+        LibraryInventory.CreateItemJournalLine(Line, 'X154P', 'OWN', Line."Entry Type"::"Positive Adjmt.", Item."No.", 0);
+        Line.Validate("Phys. Inventory", true);
+        Line.Validate("Qty. (Calculated)", 5);
+        Line.Validate("Qty. (Phys. Inventory)", 5);
+        Line.Modify(true);
     end;
 
     /// <summary>Explicitly seeds independent physical-count batches and periods for issue151 in the owned evaluation company.</summary>
@@ -151,6 +199,72 @@ codeunit 96973 "Inv. MCP Fixture ori"
         CreateTrackingLine('W8I150-S-EN', true);
         CreateTrackingLine('W8I150-L-IS', false);
         CreateTrackingLine('W8I150-S-IS', true);
+    end;
+
+    /// <summary>Creates four explicitly owned issue 37 tracking fixtures through the existing native library adapters.</summary>
+    procedure CreateTracking37Fixtures()
+    var
+        Item: Record Item;
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned evaluation company required.');
+        Item.SetFilter("No.", 'XW4I37-*');
+        if not Item.IsEmpty() then
+            Error('Owned issue 37 fixtures already exist; inspect them before retrying.');
+        CreateTrackingLine('XW4I37-L-EN', false);
+        CreateTrackingLine('XW4I37-S-EN', true);
+        CreateTrackingLine('XW4I37-L-IS', false);
+        CreateTrackingLine('XW4I37-S-IS', true);
+    end;
+
+    /// <summary>Deletes only owned issue 37 fixtures after the message API has removed their unposted tracking.</summary>
+    procedure CleanupTracking37Fixtures()
+    var
+        Item: Record Item;
+        TrackingCode: Record "Item Tracking Code";
+        Header: Record "Purchase Header";
+        Line: Record "Purchase Line";
+        Entry: Record "Reservation Entry";
+        Vendor: Record Vendor;
+        Contact: Record Contact;
+        ContactRelation: Record "Contact Business Relation";
+        ContactNumbers: List of [Code[20]];
+        ContactNo: Code[20];
+    begin
+        if CompanyName() <> 'CRONUS International Ltd.' then
+            Error('Owned evaluation company required.');
+        Item.SetFilter("No.", 'XW4I37-*');
+        if Item.FindSet() then
+            repeat
+                Entry.SetRange("Item No.", Item."No.");
+                if not Entry.IsEmpty() then
+                    Error('Remove owned item tracking through Inventory.Tracking.Delete before cleanup.');
+                Line.SetRange(Type, Line.Type::Item);
+                Line.SetRange("No.", Item."No.");
+                while Line.FindFirst() do begin
+                    Header.Get(Line."Document Type", Line."Document No.");
+                    Vendor.Get(Header."Buy-from Vendor No.");
+                    ContactRelation.SetRange("Link to Table", ContactRelation."Link to Table"::Vendor);
+                    ContactRelation.SetRange("No.", Vendor."No.");
+                    Clear(ContactNumbers);
+                    if ContactRelation.FindSet() then
+                        repeat
+                            ContactNumbers.Add(ContactRelation."Contact No.");
+                        until ContactRelation.Next() = 0;
+                    Header.Delete(true);
+                    Vendor.Delete(true);
+                    foreach ContactNo in ContactNumbers do
+                        if Contact.Get(ContactNo) then
+                            Contact.Delete(true);
+                end;
+                if Item."Item Tracking Code" <> '' then
+                    TrackingCode.Get(Item."Item Tracking Code");
+                Item.Delete(true);
+                if TrackingCode.Code <> '' then begin
+                    TrackingCode.Delete(true);
+                    Clear(TrackingCode);
+                end;
+            until Item.Next() = 0;
     end;
 
     local procedure CreateTrackingLine(ItemNo: Code[20]; Serial: Boolean)
@@ -449,4 +563,241 @@ codeunit 96973 "Inv. MCP Fixture ori"
             exit(CopyStr('R8' + Suffix, 1, 20));
         exit(CopyStr('W8' + Suffix, 1, 20));
     end;
+    /// <summary>Creates owned, tracked inventory and a customer for issue 7 MCP probes through an explicit test page action.</summary>
+    procedure CreateInv7Fixtures(Suffix: Code[2])
+    var
+        Item: Record Item;
+        Customer: Record Customer;
+        TrackingCode: Record "Item Tracking Code";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransit: Record Location;
+        FeatureSetup: Record "Inventory Setup ori";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibrarySales: Codeunit "Library - Sales";
+        LibraryWarehouse: Codeunit "Library - Warehouse";
+        Helper: Codeunit "Transfer Order Test Helper";
+    begin
+        AssertInv7Suffix(Suffix);
+        if Item.Get('W6I7T' + Suffix) or Item.Get('W6I7U' + Suffix) or Customer.Get('W6I7C' + Suffix) then
+            Error('Issue 7 fixtures already exist; inspect them before retrying.');
+        FeatureSetup.InsertIfNotExists();
+        FeatureSetup.Reservations := true;
+        FeatureSetup."Transfer Orders" := true;
+        FeatureSetup.Modify(true);
+        LibrarySales.CreateCustomer(Customer);
+        Customer.Rename('W6I7C' + Suffix);
+        LibraryInventory.CreateItemTrackingCode(TrackingCode);
+        TrackingCode."Lot Specific Tracking" := true;
+        TrackingCode."SN Specific Tracking" := true;
+        TrackingCode."Package Specific Tracking" := true;
+        TrackingCode.Modify(true);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('W6I7T' + Suffix);
+        Item.Validate("Item Tracking Code", TrackingCode.Code);
+        Item.Validate(Reserve, Item.Reserve::Optional);
+        Item.Modify(true);
+        PostInv7Stock(Item, '', 'LOT-A', 'SER-A', 'PKG-A');
+        PostInv7Stock(Item, '', 'LOT-B', 'SER-B', 'PKG-B');
+        LibraryWarehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
+        FromLocation.Rename('W6I7F' + Suffix);
+        LibraryWarehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
+        ToLocation.Rename('W6I7D' + Suffix);
+        LibraryWarehouse.CreateInTransitLocation(InTransit);
+        InTransit.Rename('W6I7I' + Suffix);
+        LibraryInventory.CreateItem(Item);
+        Item.Rename('W6I7U' + Suffix);
+        Item.Validate(Reserve, Item.Reserve::Optional);
+        Item.Modify(true);
+        Helper.CreatePositiveAdjustment(Item."No.", FromLocation.Code, 10);
+        CreateInv7DirectTransfer(Item."No.", FromLocation.Code, ToLocation.Code, InTransit.Code);
+    end;
+
+    local procedure CreateInv7DirectTransfer(ItemNo: Code[20]; FromCode: Code[10]; ToCode: Code[10]; TransitCode: Code[10])
+    var
+        Header: Record "Transfer Header";
+        Helper: Codeunit "Transfer Order Test Helper";
+    begin
+        Helper.CreateTransferHeader(Header, FromCode, ToCode, TransitCode);
+        Header.Validate("Direct Transfer", true);
+        Helper.CreateTransferLine(Header, ItemNo, 2);
+        Codeunit.Run(Codeunit::"Release Transfer Document", Header);
+    end;
+
+    local procedure PostInv7Stock(Item: Record Item; LocationCode: Code[10]; LotNo: Code[50]; SerialNo: Code[50]; PackageNo: Code[50])
+    var
+        Line: Record "Item Journal Line";
+        Entry: Record "Reservation Entry";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryTracking: Codeunit "Library - Item Tracking";
+    begin
+        LibraryInventory.CreateItemJnlLine(Line, Line."Entry Type"::"Positive Adjmt.", WorkDate(), Item."No.", 1, LocationCode);
+        LibraryTracking.CreateItemJournalLineItemTracking(Entry, Line, SerialNo, LotNo, PackageNo, 1);
+        LibraryInventory.PostItemJournalLine(Line."Journal Template Name", Line."Journal Batch Name");
+    end;
+
+    /// <summary>Removes only this test page's issue 7 documents and owned inventory fixtures after explicit MCP cancellation.</summary>
+    procedure CleanupInv7Fixtures(Suffix: Code[2])
+    var
+        SalesHeader: Record "Sales Header";
+        Customer: Record Customer;
+        Item: Record Item;
+        Location: Record Location;
+        TransferLine: Record "Transfer Line";
+        TransferHeader: Record "Transfer Header";
+        ShipmentLine: Record "Transfer Shipment Line";
+        ShipmentHeader: Record "Transfer Shipment Header";
+        ReceiptLine: Record "Transfer Receipt Line";
+        ReceiptHeader: Record "Transfer Receipt Header";
+        EntryRelation: Record "Item Entry Relation";
+        ItemApplication: Record "Item Application Entry";
+        Ledger: Record "Item Ledger Entry";
+        RemainingLedger: Record "Item Ledger Entry";
+        ItemRegister: Record "Item Register";
+        ValueEntry: Record "Value Entry";
+        Pending: Record "Post Value Entry to G/L";
+        Reservation: Record "Reservation Entry";
+        TrackingCode: Record "Item Tracking Code";
+        PostingSetup: Record "Inventory Posting Setup";
+        Contact: Record Contact;
+        ContactRelation: Record "Contact Business Relation";
+        ReservationManagement: Codeunit "Reservation Management";
+        ReleaseTransfer: Codeunit "Release Transfer Document";
+        RegisterNos: List of [Integer];
+        ContactNos: List of [Code[20]];
+        RegisterNo: Integer;
+        ContactNo: Code[20];
+        DocumentNo: Code[20];
+        ItemNo: Code[20];
+        TrackingCodeName: Code[10];
+        Kind: Text;
+    begin
+        AssertInv7Suffix(Suffix);
+        SalesHeader.SetRange("Sell-to Customer No.", 'W6I7C' + Suffix);
+        SalesHeader.DeleteAll(true);
+        foreach Kind in 'T|U'.Split('|') do begin
+            ItemNo := 'W6I7' + Kind + Suffix;
+            if Item.Get(ItemNo) then begin
+                TrackingCodeName := Item."Item Tracking Code";
+                TransferLine.SetRange("Item No.", ItemNo);
+                while TransferLine.FindFirst() do begin
+                    TransferHeader.Get(TransferLine."Document No.");
+                    if TransferHeader.Status = TransferHeader.Status::Released then
+                        ReleaseTransfer.Reopen(TransferHeader);
+                    TransferHeader.Delete(true);
+                end;
+                ShipmentLine.SetRange("Item No.", ItemNo);
+                while ShipmentLine.FindFirst() do begin
+                    DocumentNo := ShipmentLine."Document No.";
+                    ShipmentLine.SetRange("Document No.", DocumentNo);
+                    ShipmentLine.DeleteAll();
+                    if ShipmentHeader.Get(DocumentNo) then
+                        ShipmentHeader.Delete();
+                    ShipmentLine.SetRange("Document No.");
+                end;
+                ReceiptLine.SetRange("Item No.", ItemNo);
+                while ReceiptLine.FindFirst() do begin
+                    DocumentNo := ReceiptLine."Document No.";
+                    ReceiptLine.SetRange("Document No.", DocumentNo);
+                    ReceiptLine.DeleteAll();
+                    if ReceiptHeader.Get(DocumentNo) then
+                        ReceiptHeader.Delete();
+                    ReceiptLine.SetRange("Document No.");
+                end;
+                Ledger.SetRange("Item No.", ItemNo);
+                if Ledger.FindSet() then
+                    repeat
+                        ItemRegister.SetFilter("From Entry No.", '<=%1', Ledger."Entry No.");
+                        ItemRegister.SetFilter("To Entry No.", '>=%1', Ledger."Entry No.");
+                        if ItemRegister.FindFirst() then
+                            if not RegisterNos.Contains(ItemRegister."No.") then
+                                RegisterNos.Add(ItemRegister."No.");
+                        ReservationManagement.SetReservSource(Ledger);
+                        ReservationManagement.DeleteReservEntries(true, 0);
+                        EntryRelation.SetRange("Item Entry No.", Ledger."Entry No.");
+                        EntryRelation.DeleteAll();
+                        ItemApplication.SetRange("Inbound Item Entry No.", Ledger."Entry No.");
+                        ItemApplication.DeleteAll();
+                        ItemApplication.SetRange("Inbound Item Entry No.");
+                        ItemApplication.SetRange("Outbound Item Entry No.", Ledger."Entry No.");
+                        ItemApplication.DeleteAll();
+                        ItemApplication.SetRange("Outbound Item Entry No.");
+                    until Ledger.Next() = 0;
+                Reservation.SetRange("Item No.", ItemNo);
+                if not Reservation.IsEmpty() then
+                    Error('Cancel every owned reservation through Inventory.Reservation.Cancel before cleanup.');
+                Pending.SetRange("Item No.", ItemNo);
+                Pending.DeleteAll();
+                ValueEntry.SetRange("Item No.", ItemNo);
+                ValueEntry.DeleteAll();
+                Ledger.DeleteAll();
+                foreach RegisterNo in RegisterNos do begin
+                    ItemRegister.Reset();
+                    if ItemRegister.Get(RegisterNo) then begin
+                        RemainingLedger.SetRange("Entry No.", ItemRegister."From Entry No.", ItemRegister."To Entry No.");
+                        if RemainingLedger.IsEmpty() then
+                            ItemRegister.Delete(true);
+                    end;
+                end;
+                // Native source/tracking cleanup can update the item; delete the current record version.
+                Clear(Item);
+                Item.Get(ItemNo);
+                // All owned ledger data is gone; native deletion must not adjust the removed test entries.
+                Item."Cost is Adjusted" := true;
+                Item.Modify();
+                Item.Delete(true);
+                if (TrackingCodeName <> '') and TrackingCode.Get(TrackingCodeName) then
+                    TrackingCode.Delete(true);
+            end;
+        end;
+        // Also finish an interrupted older cleanup that removed lines before their headers.
+        ShipmentHeader.SetRange("Transfer-from Code", 'W6I7F' + Suffix);
+        ShipmentHeader.SetRange("Transfer-to Code", 'W6I7D' + Suffix);
+        if ShipmentHeader.FindSet() then
+            repeat
+                ShipmentLine.Reset();
+                ShipmentLine.SetRange("Document No.", ShipmentHeader."No.");
+                if ShipmentLine.IsEmpty() then
+                    ShipmentHeader.Delete();
+            until ShipmentHeader.Next() = 0;
+        ReceiptHeader.SetRange("Transfer-from Code", 'W6I7F' + Suffix);
+        ReceiptHeader.SetRange("Transfer-to Code", 'W6I7D' + Suffix);
+        if ReceiptHeader.FindSet() then
+            repeat
+                ReceiptLine.Reset();
+                ReceiptLine.SetRange("Document No.", ReceiptHeader."No.");
+                if ReceiptLine.IsEmpty() then
+                    ReceiptHeader.Delete();
+            until ReceiptHeader.Next() = 0;
+        if Customer.Get('W6I7C' + Suffix) then begin
+            ContactRelation.SetRange("Link to Table", ContactRelation."Link to Table"::Customer);
+            ContactRelation.SetRange("No.", Customer."No.");
+            if ContactRelation.FindSet() then
+                repeat
+                    ContactNos.Add(ContactRelation."Contact No.");
+                until ContactRelation.Next() = 0;
+            Customer.Delete(true);
+            foreach ContactNo in ContactNos do
+                if Contact.Get(ContactNo) then
+                    Contact.Delete(true);
+        end;
+        // Location deletion does not cascade its posting setup; remove only these owned codes.
+        foreach Kind in 'F|D|I'.Split('|') do begin
+            PostingSetup.SetRange("Location Code", 'W6I7' + Kind + Suffix);
+            PostingSetup.DeleteAll(true);
+        end;
+        if Location.Get('W6I7F' + Suffix) then
+            Location.Delete(true);
+        if Location.Get('W6I7D' + Suffix) then
+            Location.Delete(true);
+        if Location.Get('W6I7I' + Suffix) then
+            Location.Delete(true);
+    end;
+
+    local procedure AssertInv7Suffix(Suffix: Code[2])
+    begin
+        if not IsOwnedCompany() or not (Suffix in ['EN', 'IS']) then
+            Error('Owned issue 7 fixtures require the evaluation company and suffix EN or IS.');
+    end;
+
 }
