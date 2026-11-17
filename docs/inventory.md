@@ -29,6 +29,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.Price.Update
 - Inventory.Cost.Get, Cost.Update, AdjustCost.Run, CostToGL.Post, and CostToGL.Test
 - Inventory.Revaluation.Calculate, PreviewPost, and Post
+- Inventory.CycleCount.Calculate (cycle counting journal by counting period; posting stays with Inventory.PhysInventory.Post)
 - Inventory.PhysInventory.Calculate, RecordCount, Record, Check, PreviewPost, and Post
 - Inventory.PlanningWorksheet.Calculate and Inventory.PlanningWorksheet.CarryOut
 
