@@ -56,7 +56,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
                 Assert.IsTrue(ArrayOf(Contract, 'parameters').Count() > 0, TypeName + ' declares its parameters.');
             TypeCount += 1;
         end;
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
     end;
 
     /// <summary>The envelope states how subject is used, the version and the content type of the answer.</summary>
@@ -316,7 +316,7 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             TypeCount += 1;
         end;
         GlobalLanguage(OriginalLanguage);
-        Assert.IsTrue(TypeCount >= 59, 'Every Inventory type is checked.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
     end;
 
     /// <summary>Every help chapter names permissions by their display names and contains no AL object or internal procedure reference.</summary>

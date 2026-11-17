@@ -17,6 +17,11 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Requisition Process ori" = X,
         codeunit "Requisition Worksheet ori" = X,
         codeunit "Requisition Native Scope ori" = X,
+        codeunit "Phys Order Create Impl ori" = X,
+        codeunit "Phys Order Finish Impl ori" = X,
+        codeunit "Phys Order Post Impl ori" = X,
+        codeunit "Phys Order Process ori" = X,
+        codeunit "Phys Order Contract ori" = X,
 
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
