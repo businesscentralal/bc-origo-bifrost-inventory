@@ -12,6 +12,12 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
     IncludedPermissionSets = "BIFROST InvAttrWrite ori";
 
     Permissions =
+        codeunit "Requisition Calc Impl ori" = X,
+        codeunit "Requisition Carry Impl ori" = X,
+        codeunit "Requisition Process ori" = X,
+        codeunit "Requisition Worksheet ori" = X,
+        codeunit "Requisition Native Scope ori" = X,
+
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,

@@ -39,3 +39,9 @@ README "Objects" lists every object with its ID. In short:
   Item Category Tests/Perm, Reserv. AutoReserve Tests/Perm) and 96962 `Order Tracking Get Tests`.
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - Free: 96960-96961, 96963-96979.
+
+## Requisition worksheet operations (#131)
+
+- Codeunits 10076941–10076945, enum extension 10076849, message values 10076941–10076942, test codeunit 96947.
+- Bounded option A (Gunnar 16.11.2026): report 699 may replace only the selected worksheet's working lines; native carry-out may consume selected lines to create new purchase/transfer orders, never change existing documents. Shared helpers are intended for coordinated #117.
+- Names are Purchase.Requisition.Calculate (write) and Purchase.Requisition.CarryOut (irreversible; expectedCount counts one worksheet selection). Native table permissions apply; no additional setup domain or posting gate.

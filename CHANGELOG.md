@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added — bounded requisition worksheets (#131)
+
+- `Purchase.Requisition.Calculate` runs native report 699 with worksheet, item/location/variant filters and dates, replacing working lines only within the selected worksheet. `Purchase.Requisition.CarryOut` creates native purchase or transfer orders from all lines or an explicit selection and returns the actual order numbers.
+- Implements Gunnar’s 16 November option A: reject Cancel, changes, rescheduling and existing-document links before any write; no printing, posting or existing-order edits. Calculate declares `write`; CarryOut declares `irreversible`, with bilingual help defining expectedCount as one worksheet selection. Native intermediate commits are suppressed and failures roll back.
+- Added codeunits **10076941–10076945**, enum extension **10076849** (message values **10076941–10076942**), test codeunit **96947**; Full Access execute permissions and synchronized Icelandic XLF. Shared worksheet validation/serialization and the native event boundary are available for coordinated #117; its planning reports and API remain a separate implementation.
+
 ### Fixed ([28.3.2.0] development)
 - #37: native tracking supports assembly output/components and item journal lines; Delete accepts source-bound entry numbers or all unreserved source tracking, validates the entire selection before removal, and counts duplicate entry numbers once. Fractional deletion entry numbers are refused before AL can round them to an existing entry. Discovery and execution share the tracking permission gate. Updated objects: codeunits 10076841, 10076897-10076899, 10076925; tests 96970 and 96974; explicit owned MCP seed/cleanup actions in test objects 96973; domain gate 10076922. No new object IDs. Disabled tracking writes return PreconditionFailed with bilingual setup recovery guidance, per the corrected #37 acceptance criterion (Claude Code, 16.11.2026).
 
