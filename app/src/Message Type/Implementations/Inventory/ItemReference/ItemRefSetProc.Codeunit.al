@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item.Catalog;
 using Origo.Bifrost;
 
 /// <summary>Saves a fully validated item reference in the caller or isolated transaction.</summary>
-codeunit 10076951 "Item Ref. Set Proc ori"
+codeunit 10076955 "Item Ref. Set Proc ori"
 {
     Access = Internal;
     TableNo = "Message Argument ori";

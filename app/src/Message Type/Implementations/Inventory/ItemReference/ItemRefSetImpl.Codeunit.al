@@ -7,7 +7,7 @@ using Microsoft.Sales.Customer;
 using Origo.Bifrost;
 
 /// <summary>Creates or updates an item reference through validated, atomic writes.</summary>
-codeunit 10076950 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
+codeunit 10076954 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
 

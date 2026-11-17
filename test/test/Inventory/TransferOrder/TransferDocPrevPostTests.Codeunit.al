@@ -170,4 +170,82 @@ codeunit 96912 "Transfer Doc Prev. Post Tests"
         Assert.IsTrue(Predicted.Get('postedDirectTransferNo', Token), 'postedDirectTransferNo missing');
         Assert.AreNotEqual('', Token.AsValue().AsText(), 'postedDirectTransferNo');
     end;
+
+
+    [Test]
+    procedure PreviewPost_ExistingOrder_SetupChanged_ShipmentReceipt()
+    var
+        TransferHeader: Record "Transfer Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [SCENARIO] Receipt and Shipment preview of a direct transfer returns the shipment-and-receipt entry count.
+        Initialize();
+        Helper.SetDirectTransferPosting(false, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        // [WHEN] Setup changes after the order captured its posting mode.
+        Helper.ChangeSetupAfterOrder(TransferHeader, true);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        AssertDirectTransferPreview(ResponseJson, 8);
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
+    end;
+
+    [Test]
+    procedure PreviewPost_ExistingOrder_SetupChanged_SingleDocument()
+    var
+        TransferHeader: Record "Transfer Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [SCENARIO] Direct Transfer posting preview predicts one direct transfer and fewer entries than shipment and receipt.
+        Initialize();
+        Helper.SetDirectTransferPosting(true, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        // [WHEN] Setup changes after the order captured its posting mode.
+        Helper.ChangeSetupAfterOrder(TransferHeader, false);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.PreviewPost", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        AssertDirectTransferPreview(ResponseJson, 4);
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'Preview should leave the transfer order');
+    end;
+
+    [Test]
+    procedure RestoreDirectTransferPosting_PreservesExactNativeValue()
+    var
+        OriginalSetup: Record "Inventory Setup";
+        ExpectedSetup: Record "Inventory Setup";
+        ChangedSetup: Record "Inventory Setup";
+        ActualSetup: Record "Inventory Setup";
+        SetupReference: RecordRef;
+        PostingField: FieldRef;
+        PostingFieldNo: Integer;
+        ExpectedMode: Integer;
+        ActualMode: Integer;
+    begin
+        // [SCENARIO] Fixture restoration preserves the native value, including BC 29's blank mode.
+        Initialize();
+        OriginalSetup.Get();
+        SetupReference.GetTable(OriginalSetup);
+        PostingFieldNo := 5855;
+        if SetupReference.FieldExist(5857) then
+            PostingFieldNo := 5857;
+        PostingField := SetupReference.Field(PostingFieldNo);
+        ExpectedMode := 0;
+        PostingField.Value := ExpectedMode;
+        SetupReference.SetTable(ExpectedSetup);
+        Helper.SetDirectTransferPosting(true, ChangedSetup);
+
+        Helper.RestoreDirectTransferPosting(ExpectedSetup);
+        ActualSetup.Get();
+        SetupReference.GetTable(ActualSetup);
+        PostingField := SetupReference.Field(PostingFieldNo);
+        ActualMode := PostingField.Value();
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+
+        Assert.AreEqual(ExpectedMode, ActualMode, 'Restore the exact native posting mode, not a Boolean conversion.');
+        Assert.AreEqual(OriginalSetup."Posted Direct Trans. Nos.", ActualSetup."Posted Direct Trans. Nos.", 'Restore the original number series.');
+    end;
 }

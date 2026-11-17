@@ -172,16 +172,12 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure SetDirectTransferPosting(PostAsSingleDocument: Boolean; var OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
-        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
     begin
         OriginalSetup.Get();
         InventorySetup := OriginalSetup;
         if InventorySetup."Posted Direct Trans. Nos." = '' then
             InventorySetup."Posted Direct Trans. Nos." := InventorySetup."Posted Transfer Shpt. Nos.";
-        if PostAsSingleDocument then
-            DirectTransferSetup.SetPostingChoice(InventorySetup, 1)
-        else
-            DirectTransferSetup.SetPostingChoice(InventorySetup, 0);
+        SetPostingMode(InventorySetup, PostAsSingleDocument);
         InventorySetup.Modify(true);
     end;
 
@@ -191,11 +187,58 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
-        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
+        SetupReference: RecordRef;
+        OriginalReference: RecordRef;
+        PostingField: FieldRef;
+        OriginalField: FieldRef;
+        PostingFieldNo: Integer;
     begin
         InventorySetup.Get();
-        DirectTransferSetup.SetPostingChoice(InventorySetup, DirectTransferSetup.GetPostingChoice(OriginalSetup));
+        SetupReference.GetTable(InventorySetup);
+        OriginalReference.GetTable(OriginalSetup);
+        PostingFieldNo := 5855;
+        if SetupReference.FieldExist(5857) then
+            PostingFieldNo := 5857;
+        PostingField := SetupReference.Field(PostingFieldNo);
+        OriginalField := OriginalReference.Field(PostingFieldNo);
+        PostingField.Value := OriginalField.Value();
+        SetupReference.SetTable(InventorySetup);
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
+    end;
+    /// <summary>Changes only setup after a BC 29 order has captured its own mode. BC 28 keeps its setup-based behavior.</summary>
+    internal procedure ChangeSetupAfterOrder(TransferHeader: Record "Transfer Header"; SingleDocument: Boolean)
+    var
+        InventorySetup: Record "Inventory Setup";
+        HeaderReference: RecordRef;
+    begin
+        HeaderReference.GetTable(TransferHeader);
+        if not HeaderReference.FieldExist(5858) then
+            exit;
+        InventorySetup.Get();
+        SetPostingMode(InventorySetup, SingleDocument);
+        InventorySetup.Modify(true);
+    end;
+
+    local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; SingleDocument: Boolean)
+    var
+        SetupReference: RecordRef;
+        PostingField: FieldRef;
+    begin
+        SetupReference.GetTable(InventorySetup);
+        if SetupReference.FieldExist(5857) then begin
+            PostingField := SetupReference.Field(5857);
+            if SingleDocument then
+                PostingField.Value := 20
+            else
+                PostingField.Value := 10;
+        end else begin
+            PostingField := SetupReference.Field(5855);
+            if SingleDocument then
+                PostingField.Value := 1
+            else
+                PostingField.Value := 0;
+        end;
+        SetupReference.SetTable(InventorySetup);
     end;
 }

@@ -230,9 +230,9 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     local procedure ResolveDirectTransferOptions(TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
-        DirectTransferSetup: Codeunit "Direct Transfer Setup ori";
+        PostingSetup: Codeunit "Transfer Posting Setup ori";
     begin
-        if DirectTransferSetup.PostsSingleDocument(TransferHeader) then
+        if PostingSetup.PostAsSingleDocument(TransferHeader) then
             PostTransfer := true
         else begin
             PostShipment := true;
