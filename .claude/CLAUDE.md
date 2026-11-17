@@ -46,6 +46,12 @@ README "Objects" lists every object with its ID. In short:
 - #106 (`Inventory.TrackingInfo.Get`): codeunit and enum value 10077010, enum extension 10076915, test codeunit 96992.
   On main 96963 and 96970-96979 are already used, so check `test/` before taking an ID from the free list above.
 
+## Issue 135 object claims (2026-11-16)
+
+- Codeunits 10076980–10076984: Price List Set Impl ori, Price List Activate Impl ori, Price List Process ori, Price List Contract ori, Price List Restrict ori.
+- Enum extension 10076980 MsgType.PriceList.Ext ori; values 10076980 Price.List.Set and 10076981 Price.List.Activate.
+- Test codeunit 96987 Price List Tests ori. Checked against main and open Inventory PR claims.
+
 ## Issue 40 additions
 
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
