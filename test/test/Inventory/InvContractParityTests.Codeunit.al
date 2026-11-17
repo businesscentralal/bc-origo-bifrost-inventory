@@ -739,6 +739,9 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.PhysInventory.Check|lineSystemIds');
         Names.Add('Inventory.PhysInventory.PreviewPost|lineSystemIds');
         Names.Add('Inventory.PhysInventory.Post|lineSystemIds');
+        Names.Add('Inventory.Reclassification.Check|lineSystemIds');
+        Names.Add('Inventory.Reclassification.PreviewPost|lineSystemIds');
+        Names.Add('Inventory.Reclassification.Post|lineSystemIds');
         Names.Add('Sales.SalesInvoice.GetShipmentLines|shipmentNos');
     end;
 
