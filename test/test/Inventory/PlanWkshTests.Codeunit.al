@@ -197,6 +197,8 @@ codeunit 96965 "Plan Wksh Tests ori"
         Commit();
         EnablePlanning();
         Helper.CreateAssemblyItemWithBOM(Item, Component);
+        RenameOwnedItem(Item);
+        RenameOwnedItem(Component);
         Item.Description := 'XP117 assembly';
         Item.Modify();
         Component.Description := 'XP117 component';
@@ -495,6 +497,30 @@ codeunit 96965 "Plan Wksh Tests ori"
         Setup.Modify(true);
     end;
 
+    /// <summary>Fixture cleanup preserves an unrelated assembly component even when its description matches an older fixture label.</summary>
+    [Test]
+    procedure Cleanup_PreservesUnownedBomComponent()
+    var
+        Parent: Record Item;
+        Component: Record Item;
+        BOMComponent: Record "BOM Component";
+        Helper: Codeunit "Assembly Order Test Helper";
+    begin
+        // Issue #205 amend | Time: no date dependency | Risk: only newly created test records.
+        Helper.CreateAssemblyItemWithBOM(Parent, Component);
+        Component.Description := 'XP117 component';
+        Component.Modify();
+        CleanupFixtures();
+        Assert.IsTrue(Component.Get(Component."No."), 'A description alone does not grant fixture ownership.');
+        BOMComponent.SetRange("Parent Item No.", Parent."No.");
+        BOMComponent.SetRange(Type, BOMComponent.Type::Item);
+        BOMComponent.SetRange("No.", Component."No.");
+        Assert.AreEqual(1, BOMComponent.Count(), 'The unrelated BOM still references its component.');
+        BOMComponent.DeleteAll(true);
+        Parent.Delete(true);
+        Component.Delete(true);
+    end;
+
     local procedure CreatePurchaseItem(var Item: Record Item)
     var
         Vendor: Record Vendor;
@@ -503,6 +529,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         Vendor.Validate(Name, CopyStr('XP117 ' + Vendor."No.", 1, MaxStrLen(Vendor.Name)));
         Vendor.Modify(true);
         LibraryInventory.CreateItem(Item);
+        RenameOwnedItem(Item);
         Item.Validate(Description, CopyStr('XP117 ' + Item."No.", 1, MaxStrLen(Item.Description)));
         Item.Validate("Replenishment System", Item."Replenishment System"::Purchase);
         Item.Validate("Vendor No.", Vendor."No.");
@@ -510,6 +537,11 @@ codeunit 96965 "Plan Wksh Tests ori"
         Item.Validate("Reorder Point", 10);
         Item.Validate("Reorder Quantity", 25);
         Item.Modify(true);
+    end;
+
+    local procedure RenameOwnedItem(var Item: Record Item)
+    begin
+        Item.Rename(CopyStr('XP117' + DelChr(Format(CreateGuid(), 0, 4), '=', '{}-'), 1, MaxStrLen(Item."No.")));
     end;
 
     local procedure CreatePlanningWorksheet()
@@ -564,7 +596,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         ItemNo: Code[20];
         DocumentNo: Code[20];
     begin
-        Item.SetFilter(Description, 'XP117*');
+        Item.SetFilter("No.", 'XP117*');
         if Item.FindSet() then
             repeat
                 ItemNos.Add(Item."No.");

@@ -427,6 +427,7 @@ codeunit 96985 "Inv. Cycle Count Calc Tests"
         JournalBatch: Record "Item Journal Batch";
         JournalLine: Record "Item Journal Line";
     begin
+        InventoryTestLibrary.PrepareLibraryGLAccountNumbers();
         GLSetup.Get();
         GLSetup."Journal Templ. Name Mandatory" := false;
         GLSetup."Allow Posting From" := 0D;

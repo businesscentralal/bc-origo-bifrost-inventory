@@ -1,5 +1,11 @@
 # Changelog
 
+### Fixed (2026-11-17) - Reused test-company fixtures (PR #207 amend)
+
+- Transfer posting, confirmation and cycle-count fixtures advance the Microsoft test-library number sequence beyond existing padded G/L accounts, preserving existing accounts and all behavior assertions.
+- Planning fixtures use unique XP117 item numbers. Cleanup selects those owned numbers instead of descriptions, so unrelated BOM components with an older fixture description survive; a regression test covers that boundary.
+
+
 ## [Unreleased]
 
 ### Fixed - main merge ID reconciliation (PR #233)

@@ -63,11 +63,13 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         FoundationSetup: RecordRef;
         PreviousConfirmation: Boolean;
         ChangedConfirmation: Boolean;
         PreviousLanguage: Integer;
     begin
+        InventoryLibrary.PrepareLibraryGLAccountNumbers();
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
         ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         Setup.InsertIfNotExists();
