@@ -141,6 +141,42 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Flutningspantanir</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Setup ori - Field Transfer Orders - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 4060719359 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Actual Cost</source>
+          <target>Raunverulegur kostnaður</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Raunverulegur kostnaður</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Actual Cost - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 3276221047 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Expected Cost</source>
+          <target>Áætlaður kostnaður</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áætlaður kostnaður</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Expected Cost - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 568743302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item No.</source>
+          <target>Vörunúmer</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Item No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 2161572060 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location Code</source>
+          <target>Birgðageymslukóti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Location Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quantity</source>
+          <target>Magn</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magn</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3539786927 - Field 3450651614 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Variant Code</source>
+          <target>Afbrigðiskóti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Variant Code - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4011415181 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
           <source>For a named request subject, expectedCount counts the one cost adjustment run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
           <target>Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
@@ -14090,6 +14126,252 @@
           <target>Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</target>
           <note from="Developer" annotates="general" priority="2">%1 = line number; is-IS=Afhendingarlína %1 hefur þegar verið afturkölluð eða er leiðréttingarlína.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method SelectLines - NamedType UndoneErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 3458237341" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send asOfDate as a nonzero ISO date in YYYY-MM-DD format.</source>
+          <target>Sendu asOfDate sem ISO-dagsetningu aðra en núlldagsetningu á sniðinu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu asOfDate sem ISO-dagsetningu aðra en núlldagsetningu á sniðinu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DateNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reads inventory quantity and expected and actual value at a date.</source>
+          <target>Les birgðamagn og áætlað og raunverulegt virði á tilteknum degi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les birgðamagn og áætlað og raunverulegt virði á tilteknum degi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 998505471" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Costing domain is disabled.</source>
+          <target>Slökkt er á kostnaðarsviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á kostnaðarsviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DomainErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to enable Costing in Inventory Setup.</source>
+          <target>Biddu kerfisstjóra að virkja kostnaðarsviðið í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra að virkja kostnaðarsviðið í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 2510853505" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invalid value for %1.</source>
+          <target>Ógilt gildi fyrir %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter; is-IS=Ógilt gildi fyrir %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType InvalidValueErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>inventory valuation, expected cost, actual cost</source>
+          <target>birgðamat, áætlaður kostnaður, raunverulegur kostnaður</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=birgðamat, áætlaður kostnaður, raunverulegur kostnaður</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read only. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
+          <target>Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 3872630915" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send take as a JSON integer from 1 to 1000 and skip as a JSON integer from 0 to 2147483647.</source>
+          <target>Sendu take sem JSON-heiltölu frá 1 til 1000 og skip sem JSON-heiltölu frá 0 til 2147483647.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu take sem JSON-heiltölu frá 1 til 1000 og skip sem JSON-heiltölu frá 0 til 2147483647.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType PagingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read permission is required for Item and Value Entry.</source>
+          <target>Lesheimild þarf á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesheimild þarf á vörur og virðisfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for read permission on Item and Value Entry.</source>
+          <target>Biddu kerfisstjóra um lesheimild á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um lesheimild á vörur og virðisfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Returns valuation by item, location and variant with filters and paging.</source>
+          <target>Skilar birgðavirði eftir vöru, birgðageymslu og afbrigði með síum og síðuskiptingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skilar birgðavirði eftir vöru, birgðageymslu og afbrigði með síum og síðuskiptingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - NamedType 2431576598" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the filter as JSON text using valid Business Central filter syntax.</source>
+          <target>Sendu síuna sem JSON-texta með gildri Business Central-síusetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu síuna sem JSON-texta með gildri Business Central-síusetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType TextNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>None. Reads inventory items and value entries only.</source>
+          <target>Engar. Les aðeins birgðavörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Engar. Les aðeins birgðavörur og virðisfærslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1158096087 - NamedType 1128910002" size-unit="char" translate="yes" xml:space="preserve">
+          <source>asOfDate is required.</source>
+          <target>asOfDate er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=asOfDate er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetErrors - NamedType MissingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1158096087 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The date or a filter has an invalid format.</source>
+          <target>Dagsetning eða sía er á ógildu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetning eða sía er á ógildu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetErrors - NamedType FormatLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1158096087 - NamedType 1066607173" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Paging is invalid or Costing is disabled.</source>
+          <target>Síðuskipting er ógild eða slökkt er á kostnaðarsviði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðuskipting er ógild eða slökkt er á kostnaðarsviði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetErrors - NamedType InvalidLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1158096087 - NamedType 4139432870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A native filter cannot be applied.</source>
+          <target>Ekki er hægt að nota innbyggða síu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að nota innbyggða síu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetErrors - NamedType FilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3255554567 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read inventory valuation for one item at a date.</source>
+          <target>Lesa birgðamat einnar vöru á tilteknum degi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa birgðamat einnar vöru á tilteknum degi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetExamples - NamedType ExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 52036183" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inclusive posting date cutoff, YYYY-MM-DD.</source>
+          <target>Síðasti bókunardagur, að honum meðtöldum, YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasti bókunardagur, að honum meðtöldum, YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2430905912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on Item No.; omitted means all inventory items.</source>
+          <target>Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2484602009" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on the value entry location code.</source>
+          <target>Business Central-sía á birgðageymslukóta virðisfærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á birgðageymslukóta virðisfærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 1289661690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on the value entry variant code.</source>
+          <target>Business Central-sía á afbrigðiskóta virðisfærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á afbrigðiskóta virðisfærslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 1185033371" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Business Central filter on the current item inventory posting group.</source>
+          <target>Business Central-sía á núverandi birgðabókunarflokk vöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á núverandi birgðabókunarflokk vöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 4285060348" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of grouped rows, 1..1000; default 100.</source>
+          <target>Fjöldi samantekinna lína, 1..1000; sjálfgefið 100.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi samantekinna lína, 1..1000; sjálfgefið 100.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2896441949" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of grouped rows to skip, 0..2147483647; default 0.</source>
+          <target>Fjöldi samantekinna lína sem sleppt er, 0..2147483647; sjálfgefið 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi samantekinna lína sem sleppt er, 0..2147483647; sjálfgefið 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 1033708611 - NamedType 210434479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read current item card costs instead of historical ledger valuation.</source>
+          <target>Lesa núverandi kostnað á vöruspjaldi í stað sögulegs birgðamats úr færslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa núverandi kostnað á vöruspjaldi í stað sögulegs birgðamats úr færslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetRelated - NamedType RelatedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2023404820" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success when the valuation is read.</source>
+          <target>Success þegar birgðamat hefur verið lesið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success þegar birgðamat hefur verið lesið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1433743987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inclusive posting date cutoff.</source>
+          <target>Síðasti bókunardagur, að honum meðtöldum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasti bókunardagur, að honum meðtöldum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 855393302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requested page size.</source>
+          <target>Umbeðin síðustærð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Umbeðin síðustærð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 3123979189" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of skipped rows.</source>
+          <target>Fjöldi lína sem sleppt er.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi lína sem sleppt er.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 890407632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Number of groups before paging.</source>
+          <target>Fjöldi hópa fyrir síðuskiptingu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjöldi hópa fyrir síðuskiptingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1021904047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>More groups remain after this page.</source>
+          <target>Fleiri hópar eru eftir þessa síðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fleiri hópar eru eftir þessa síðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 443553362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Groups ordered by item, location and variant.</source>
+          <target>Hópar raðaðir eftir vöru, birgðageymslu og afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hópar raðaðir eftir vöru, birgðageymslu og afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Field6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2594986548" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item number.</source>
+          <target>Vörunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2726482963" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location code; may be blank.</source>
+          <target>Birgðageymslukóti; má vera auður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóti; má vera auður.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2848886198" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Variant code; may be blank.</source>
+          <target>Afbrigðiskóti; má vera auður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóti; má vera auður.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1585238741" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Net item ledger entry quantity in the base unit.</source>
+          <target>Nettómagn vörufærslna í grunneiningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nettómagn vörufærslna í grunneiningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2183146608" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sum of actual costs in LCY.</source>
+          <target>Samtala raunverulegs kostnaðar í staðbundnum gjaldmiðli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Samtala raunverulegs kostnaðar í staðbundnum gjaldmiðli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1593485775" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Net expected costs in LCY, including reversals.</source>
+          <target>Nettóáætlaður kostnaður í staðbundnum gjaldmiðli með bakfærslum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nettóáætlaður kostnaður í staðbundnum gjaldmiðli með bakfærslum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1757465714" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Actual plus expected cost in LCY.</source>
+          <target>Raunverulegur og áætlaður kostnaður í staðbundnum gjaldmiðli.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Raunverulegur og áætlaður kostnaður í staðbundnum gjaldmiðli.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 650354099 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory items selected by the optional item filter.</source>
+          <target>Birgðavörur valdar með valfrjálsri vörusíu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðavörur valdar með valfrjálsri vörusíu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetTarget - NamedType TargetLbl</note>
         </trans-unit>
         <trans-unit id="Page 88444387 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Inventory Setup</source>
