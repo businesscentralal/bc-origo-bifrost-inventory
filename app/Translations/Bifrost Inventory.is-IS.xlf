@@ -5193,6 +5193,270 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Opnar lokað birgðatímabil aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Reopen Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3416681821" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates one order with calculated lines and a recording; no posting.</source>
+          <target>Stofnar eina pöntun með útreiknuðum línum og skráningu; engin bókun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eina pöntun með útreiknuðum línum og skráningu; engin bókun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ChangesCreateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2782579392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Writes recording quantities and finishes recordings and the order, calculating differences without posting.</source>
+          <target>Skrifar talið magn og lýkur skráningum og pöntun og reiknar mismun án bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar talið magn og lýkur skráningum og pöntun og reiknar mismun án bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ChangesFinishLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 627621257" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permanently posts one physical inventory order with native inventory adjustments. expectedCount counts order headers: exactly one order, not lines, recordings or units.</source>
+          <target>Bókar varanlega eina birgðatalningarpöntun með stöðluðum birgðaleiðréttingum. expectedCount telur pöntunarhausa: nákvæmlega eina pöntun, ekki línur, skráningar eða einingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar varanlega eina birgðatalningarpöntun með stöðluðum birgðaleiðréttingum. expectedCount telur pöntunarhausa: nákvæmlega eina pöntun, ekki línur, skráningar eða einingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ChangesPostLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3875440734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional array of at most 1000 distinct recording lines. Omitted or empty: finish already recorded quantities. Unrecorded lines refuse the whole operation.</source>
+          <target>Valfrjálst fylki með að hámarki 1000 aðgreindum skráningarlínum. Ef því er sleppt eða það er tómt er lokið með þegar skráðu magni. Ótaldar línur valda höfnun allrar aðgerðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst fylki með að hámarki 1000 aðgreindum skráningarlínum. Ef því er sleppt eða það er tómt er lokið með þegar skráðu magni. Ótaldar línur valda höfnun allrar aðgerðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType CountsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 470820532" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a physical inventory order, calculates expected inventory with native Business Central logic and creates a recording.</source>
+          <target>Stofnar birgðatalningarpöntun, reiknar væntar birgðir með staðlaðri Business Central virkni og stofnar skráningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar birgðatalningarpöntun, reiknar væntar birgðir með staðlaðri Business Central virkni og stofnar skráningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType CreateDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2373008783" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select items explicitly with itemNoFilter. The standard calculation groups inventory by item, variant, location and bin. One recording contains the calculated lines. No inventory is posted. An empty selection refuses atomically.</source>
+          <target>Veldu vörur sérstaklega með itemNoFilter. Staðlaður útreikningur flokkar birgðir eftir vöru, afbrigði, birgðageymslu og hólfi. Ein skráning inniheldur útreiknaðar línur. Engar birgðir eru bókaðar. Tómu vali er hafnað án breytinga.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu vörur sérstaklega með itemNoFilter. Staðlaður útreikningur flokkar birgðir eftir vöru, afbrigði, birgðageymslu og hólfi. Ein skráning inniheldur útreiknaðar línur. Engar birgðir eru bókaðar. Tómu vali er hafnað án breytinga.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType CreateOverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 1542941690" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posting date in YYYY-MM-DD format. Defaults to WorkDate.</source>
+          <target>Bókunardagsetning á sniðinu YYYY-MM-DD. Sjálfgefið er vinnudagsetning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókunardagsetning á sniðinu YYYY-MM-DD. Sjálfgefið er vinnudagsetning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType DateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional order description, at most 100 characters.</source>
+          <target>Valfrjáls lýsing pöntunar, að hámarki 100 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls lýsing pöntunar, að hámarki 100 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 4058751071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One existing physical inventory order number, at most 20 characters. Subject may supply it; both selectors must agree.</source>
+          <target>Eitt fyrirliggjandi númer birgðatalningarpöntunar, að hámarki 20 stafir. Subject má tilgreina það; bæði auðkenni verða að vísa í sömu pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eitt fyrirliggjandi númer birgðatalningarpöntunar, að hámarki 20 stafir. Subject má tilgreina það; bæði auðkenni verða að vísa í sömu pöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType DocumentLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 149864479" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the request or native order, recording and inventory setup. Read nextStep in the refusal. No partial changes are kept.</source>
+          <target>Leiðréttu beiðnina eða staðlaða pöntun, skráningu og birgðauppsetningu. Lestu nextStep í höfnuninni. Engar hlutabreytingar eru vistaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu beiðnina eða staðlaða pöntun, skráningu og birgðauppsetningu. Lestu nextStep í höfnuninni. Engar hlutabreytingar eru vistaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ErrorFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3506241634" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invalid input, missing order, wrong status, restricted fields, missing permissions or native calculation, tracking, recording or posting validation.</source>
+          <target>Ógilt inntak, pöntun vantar, röng staða, takmarkaðir reitir, heimildir vantar eða stöðluð prófun útreiknings, rakningar, skráningar eða bókunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ógilt inntak, pöntun vantar, röng staða, takmarkaðir reitir, heimildir vantar eða stöðluð prófun útreiknings, rakningar, skráningar eða bókunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ErrorWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 36270934" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select one item, finish its recording with the counted quantity and post one order.</source>
+          <target>Veldu eina vöru, ljúktu skráningu hennar með töldu magni og bókaðu eina pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina vöru, ljúktu skráningu hennar með töldu magni og bókaðu eina pöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ExampleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts physical inventory order headers. This operation posts one order, so send 1; it does not count lines, recordings or units. Foundation confirmation policy applies.</source>
+          <target>expectedCount telur hausa birgðatalningarpantana. Aðgerðin bókar eina pöntun, sendu því 1; hún telur ekki línur, skráningar eða einingar. Staðfestingarreglur Foundation gilda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur hausa birgðatalningarpantana. Aðgerðin bókar eina pöntun, sendu því 1; hún telur ekki línur, skráningar eða einingar. Staðfestingarreglur Foundation gilda.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ExpectedCountLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 576208465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Writes recorded quantities, finishes open recordings and finishes the physical inventory order to calculate differences.</source>
+          <target>Skrifar taldar birgðir, lýkur opnum skráningum og lýkur birgðatalningarpöntun til að reikna mismun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar taldar birgðir, lýkur opnum skráningum og lýkur birgðatalningarpöntun til að reikna mismun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType FinishDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3289466590" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send counts for the recordingNo and lineNo returned by Create. Quantities use the recording line unit of measure. Zero is a recorded count. All recording lines must be recorded, either in this request or earlier in Business Central. Native finishing computes differences and tracking. Nothing is posted.</source>
+          <target>Sendu talningar fyrir recordingNo og lineNo sem Create skilar. Magn er í mælieiningu skráningarlínunnar. Núll telst skráð talning. Allar skráningarlínur verða að vera taldar, annaðhvort í þessari beiðni eða áður í Business Central. Stöðluð lokun reiknar mismun og rakningu. Ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu talningar fyrir recordingNo og lineNo sem Create skilar. Magn er í mælieiningu skráningarlínunnar. Núll telst skráð talning. Allar skráningarlínur verða að vera taldar, annaðhvort í þessari beiðni eða áður í Business Central. Stöðluð lokun reiknar mismun og rakningu. Ekkert er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType FinishOverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 220381409" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required Business Central Item No. filter, at most 250 characters. Only matching items are calculated.</source>
+          <target>Nauðsynleg Business Central sía á vörunúmer, að hámarki 250 stafir. Aðeins vörur sem passa við síuna eru reiknaðar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynleg Business Central sía á vörunúmer, að hámarki 250 stafir. Aðeins vörur sem passa við síuna eru reiknaðar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ItemFilterLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 1864742080" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Positive native recording line number belonging to recordingNo.</source>
+          <target>Jákvætt staðlað skráningarlínunúmer sem tilheyrir recordingNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Jákvætt staðlað skráningarlínunúmer sem tilheyrir recordingNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType LineLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional exact location code, at most 10 characters. Omitted: native calculation includes all locations.</source>
+          <target>Valfrjáls nákvæmur birgðageymslukóði, að hámarki 10 stafir. Ef honum er sleppt nær staðlaður útreikningur yfir allar birgðageymslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls nákvæmur birgðageymslukóði, að hámarki 10 stafir. Ef honum er sleppt nær staðlaður útreikningur yfir allar birgðageymslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType LocationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2729720791" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional lot number, at most 50 characters; native tracking validation applies.</source>
+          <target>Valfrjálst lotunúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst lotunúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType LotLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Requires the Physical Inventory domain and native order/recording write permissions. Post additionally requires native item posting permission. Each call is atomic, including recording updates and native posting. A native refusal rolls back that call. A finished or posted operation cannot be repeated. Use the Business Central client to prepare additional or split tracked recording lines.</source>
+          <target>Krefst sviðsins Birgðatalning og staðlaðra skrifheimilda fyrir pantanir og skráningar. Post krefst einnig staðlaðrar vörubókunarheimildar. Hvert kall er óskipt, þar með taldar skráningarbreytingar og stöðluð bókun. Stöðluð höfnun afturkallar breytingar kallsins. Ekki er hægt að endurtaka aðgerð sem er lokið eða bókuð. Notaðu Business Central biðlarann til að undirbúa viðbótarlínur eða skipta skráningarlínum með rakningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst sviðsins Birgðatalning og staðlaðra skrifheimilda fyrir pantanir og skráningar. Post krefst einnig staðlaðrar vörubókunarheimildar. Hvert kall er óskipt, þar með taldar skráningarbreytingar og stöðluð bókun. Stöðluð höfnun afturkallar breytingar kallsins. Ekki er hægt að endurtaka aðgerð sem er lokið eða bókuð. Notaðu Business Central biðlarann til að undirbúa viðbótarlínur eða skipta skráningarlínum með rakningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 665111636" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional package number, at most 50 characters; native tracking validation applies.</source>
+          <target>Valfrjálst pakkanúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst pakkanúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType PackageLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3890410368" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts one finished physical inventory order and returns its posted order number. expectedCount counts orders, always one, not lines or quantity.</source>
+          <target>Bókar eina lokna birgðatalningarpöntun og skilar númeri bókaðrar pöntunar. expectedCount telur pantanir, alltaf eina, en ekki línur eða magn.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar eina lokna birgðatalningarpöntun og skilar númeri bókaðrar pöntunar. expectedCount telur pantanir, alltaf eina, en ekki línur eða magn.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType PostDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3532086595" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posts exactly one finished physical inventory order through native posting. expectedCount counts physical inventory order headers: one order, not its lines, recordings or units. Inventory and financial entries are permanent.</source>
+          <target>Bókar nákvæmlega eina lokna birgðatalningarpöntun með staðlaðri bókun. expectedCount telur hausa birgðatalningarpantana: eina pöntun, ekki línur hennar, skráningar eða einingar. Birgða- og fjárhagsfærslur eru varanlegar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókar nákvæmlega eina lokna birgðatalningarpöntun með staðlaðri bókun. expectedCount telur hausa birgðatalningarpantana: eina pöntun, ekki línur hennar, skráningar eða einingar. Birgða- og fjárhagsfærslur eru varanlegar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType PostOverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required nonnegative counted quantity in the recording line unit of measure. Zero is valid.</source>
+          <target>Nauðsynlegt talið magn, ekki neikvætt, í mælieiningu skráningarlínunnar. Núll er gilt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt talið magn, ekki neikvætt, í mælieiningu skráningarlínunnar. Núll er gilt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 3810171129" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Positive recording number belonging to the selected order.</source>
+          <target>Jákvætt skráningarnúmer sem tilheyrir valinni pöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Jákvætt skráningarnúmer sem tilheyrir valinni pöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType RecordingLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2676460995" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success returns documentNo, systemId, finished, lineCount and recordings with recordingNo and lines (lineNo, itemNo, variantCode, locationCode, binCode, quantity, recorded). Post returns documentNo, postedDocumentNo and posted=true.</source>
+          <target>Við árangur er skilað documentNo, systemId, finished, lineCount og recordings með recordingNo og lines (lineNo, itemNo, variantCode, locationCode, binCode, quantity, recorded). Post skilar documentNo, postedDocumentNo og posted=true.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Við árangur er skilað documentNo, systemId, finished, lineCount og recordings með recordingNo og lines (lineNo, itemNo, variantCode, locationCode, binCode, quantity, recorded). Post skilar documentNo, postedDocumentNo og posted=true.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ResponseLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 887360494" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional serial number, at most 50 characters; native tracking validation applies.</source>
+          <target>Valfrjálst raðnúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst raðnúmer, að hámarki 50 stafir; stöðluð rakningarprófun gildir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType SerialLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The native physical inventory order number.</source>
+          <target>Staðlað númer birgðatalningarpöntunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðlað númer birgðatalningarpöntunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2252600704" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Include items without ledger transactions. Requires includeZero=true. Default false.</source>
+          <target>Taka með vörur án bókaðra færslna. Krefst includeZero=true. Sjálfgefið false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Taka með vörur án bókaðra færslna. Krefst includeZero=true. Sjálfgefið false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType UntransactedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - NamedType 2358598204" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Include zero expected quantities. Default false.</source>
+          <target>Taka með núll í væntu magni. Sjálfgefið false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Taka með núll í væntu magni. Sjálfgefið false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ZeroLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 4167889448 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the physical inventory order, recording or inventory setup in Business Central, then retry the same operation.</source>
+          <target>Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Create Impl ori - Method ExecuteBifrostTask - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1094419269 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the physical inventory order, recording or inventory setup in Business Central, then retry the same operation.</source>
+          <target>Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Finish Impl ori - Method ExecuteBifrostTask - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1121207548 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the physical inventory order, recording or inventory setup in Business Central, then retry the same operation.</source>
+          <target>Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Post Impl ori - Method ExecuteBifrostTask - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The selection contains no physical inventory order lines.</source>
+          <target>Valið inniheldur engar línur birgðatalningarpöntunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valið inniheldur engar línur birgðatalningarpöntunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType EmptyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 1523932907" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use the documented JSON types and lengths. Create needs itemNoFilter; Finish and Post need documentNo. Each count needs recordingNo, lineNo and a nonnegative quantity.</source>
+          <target>Notaðu skjalfestar JSON-gerðir og lengdir. Create þarf itemNoFilter; Finish og Post þurfa documentNo. Hver talning þarf recordingNo, lineNo og magn sem er ekki neikvætt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu skjalfestar JSON-gerðir og lengdir. Create þarf itemNoFilter; Finish og Post þurfa documentNo. Hver talning þarf recordingNo, lineNo og magn sem er ekki neikvætt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType InputNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 3393092903" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The physical inventory order request contains an invalid value.</source>
+          <target>Beiðnin um birgðatalningarpöntun inniheldur ógilt gildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin um birgðatalningarpöntun inniheldur ógilt gildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType InvalidInputLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 666514337" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A count names an unknown, finished or duplicate recording line.</source>
+          <target>Talning vísar í óþekkta eða lokna skráningarlínu eða sömu línu oftar en einu sinni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Talning vísar í óþekkta eða lokna skráningarlínu eða sömu línu oftar en einu sinni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType MissingLineErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 3304850081" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Physical inventory order %1 was not found.</source>
+          <target>Birgðatalningarpöntun %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = order number; is-IS=Birgðatalningarpöntun %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType MissingOrderErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 2158032645" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The physical inventory order or recording changed. Nothing was changed by this request.</source>
+          <target>Birgðatalningarpöntunin eða skráningin hefur breyst. Þessi beiðni breytti engu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalningarpöntunin eða skráningin hefur breyst. Þessi beiðni breytti engu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType NativeStateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 4135566356" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A physical inventory field required by this operation is restricted for writing.</source>
+          <target>Skrif í birgðatalningarreit sem aðgerðin krefst eru takmörkuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrif í birgðatalningarreit sem aðgerðin krefst eru takmörkuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType RestrictedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 2146373006" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The physical inventory order or recording is not in the required state.</source>
+          <target>Birgðatalningarpöntunin eða skráningin er ekki í réttri stöðu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðatalningarpöntunin eða skráningin er ekki í réttri stöðu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType StateErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - NamedType 241221380" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the order and its recordings in Business Central. Finish every recording and the order before posting; do not repeat a completed operation.</source>
+          <target>Skoðaðu pöntunina og skráningar hennar í Business Central. Ljúktu öllum skráningum og pöntuninni fyrir bókun; ekki endurtaka aðgerð sem er lokið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skoðaðu pöntunina og skráningar hennar í Business Central. Ljúktu öllum skráningum og pöntuninni fyrir bókun; ekki endurtaka aðgerð sem er lokið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - NamedType StateNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - Method 1325208923 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Native physical inventory permissions are required.</source>
+          <target>Staðlaðar heimildir fyrir birgðatalningu eru nauðsynlegar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðlaðar heimildir fyrir birgðatalningu eru nauðsynlegar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - Method AssertPermission - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 483258861 - Method 1325208923 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator for native physical inventory order and recording permissions, and item posting permission for Post.</source>
+          <target>Biðjið kerfisstjóra um staðlaðar heimildir fyrir birgðatalningarpantanir og skráningar og vörubókunarheimild fyrir Post.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra um staðlaðar heimildir fyrir birgðatalningarpantanir og skráningar og vörubókunarheimild fyrir Post.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - Method AssertPermission - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.</source>
           <target>Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.</target>
