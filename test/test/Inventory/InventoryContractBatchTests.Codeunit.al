@@ -743,34 +743,15 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Implementation.GetResponse(RawResponse), 'Raw attribute response exists.');
         RawContract.Add('response', RawResponse);
         AssertChapterJson(RawContract, 'response', Expected.AsToken());
-        // Foundation 28.0.13 may add its shared error code to the composed response.
-        // Expect that field only when this Foundation build actually composed it in.
+        // Foundation 28.0.13 adds its shared error code to composed JSON responses.
         LibraryAssert.IsTrue(NavApp.GetModuleInfo('7505e808-6e52-4b96-a328-82573391297a', Info), 'Foundation is installed.');
-        if (Info.AppVersion >= Version.Create(28, 0, 13, 0)) and ComposedResponseDeclaresCode(Contract) then begin
+        if Info.AppVersion >= Version.Create(28, 0, 13, 0) then begin
             Expected.Get('fields', Token);
             Fields := Token.AsArray();
             Fields.Add(ContractMgt.ResponseField('code', 'string', 'Present on errors only. The application error code, or BusinessCentralError when no code was supplied.'));
             Expected.Replace('fields', Fields);
         end;
         AssertChapterJson(Contract, 'response', Expected.AsToken());
-    end;
-
-    local procedure ComposedResponseDeclaresCode(Contract: JsonObject): Boolean
-    var
-        Response: JsonToken;
-        Fields: JsonToken;
-        Field: JsonToken;
-        Name: JsonToken;
-    begin
-        if not Contract.Get('response', Response) then
-            exit(false);
-        if not Response.AsObject().Get('fields', Fields) then
-            exit(false);
-        foreach Field in Fields.AsArray() do
-            if Field.AsObject().Get('name', Name) then
-                if Name.AsValue().AsText() = 'code' then
-                    exit(true);
-        exit(false);
     end;
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
