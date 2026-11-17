@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-17) - Catalogue census after main merges (PR #203)
+
+- Reconciled codeunit 96921's expected census with the merged registrations: 47 scoped localization entries and 70 Inventory message types. The explicit rosters, bidirectional membership checks and English/Icelandic assertions remain intact.
+
 ### Added (2026-11-16) - Sales.SalesInvoice.GetShipmentLines (#132)
 
 - New message type `Sales.SalesInvoice.GetShipmentLines` (enum value 10077028 in enum extension 10076900 `MsgType.SalesGetShpt.Ext ori`; codeunits 10077028 `Sales Get Shipment Impl ori` and 10077029 `Sales Get Shipment Proc ori`; renumbered from 10077020-10077021 when merging main, because #118 took codeunit and enum value 10077020 and open PRs claim 10077021-10077027). It pulls posted, not invoiced sales shipment lines into an open sales invoice through native codeunit 64 `Sales-Get Shipment` (`SetSalesHeader`, `CreateInvLines`), the same routine as the Get Shipment Lines action, so remaining-quantity checks, item charge copying and the invoice-to-shipment link stay native.
