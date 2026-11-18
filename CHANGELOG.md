@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed - aged inventory amendment after item-reference merge (#195)
+
+- Reconcile both exact Inventory census assertions to 83 after merging `Inventory.ItemReference.Set` alongside `Inventory.AgedInventory.Get`. Preserve the explicit roster and every membership assertion. Document safe affected-suite reruns on reused local tenants without deleting existing fixture data.
+
 ### Fixed - reclassification test ID collision (PR #221)
 
 - PR #221 build repair: move `Reclass Journal Tests ori` from codeunit 96964 to unused test codeunit 96925; main keeps blank-line tests at 96964. No tests, assertions or product behavior changed.
