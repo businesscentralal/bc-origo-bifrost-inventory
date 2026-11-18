@@ -4,6 +4,9 @@
 
 ### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
+### Fixed - Icelandic release wording (#244)
+
+- Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
 
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
 - `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
