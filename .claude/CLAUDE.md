@@ -23,6 +23,7 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
+  shared gates and contract parts 10076919-10076923, available to promise 10077000 (`Inventory.AvailableToPromise.Get`, #105; enum value and enum extension 10077000 too).
   shared gates and contract parts 10076919-10076923, item create 10076931-10076932 (`Inventory.Item.Create`, #130; 10076925-10076929 are already used by shared codeunits),
   sales return from posted documents 10077032-10077033 (`Sales.ReturnOrder.CreateFromPosted`, #136).
   shared gates and contract parts 10076919-10076923, assembly reads 10076965-10076966 (`Inventory.AssemblyToOrder.Get`,
@@ -88,6 +89,7 @@ README "Objects" lists every object with its ID. In short:
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - 96995 `Sales Get Shipment Tests`. (Open PRs claim 96980 (#193), 96981 (#195), 96988 (#197).)
 - Free (16.11.2026, any test object type): 96924-96926, 96928-96929, 96947-96949, 96960-96961, 96964-96969, 96982-96987, 96989-96994, 96996-96999. Check main and open PRs first.
+- 96964 `Avail. To Promise Tests`, 96965 `Avail. To Promise Perm` (#105). Free: 96960-96961, 96963, 96966-96979 (open PRs claim some of these; check before use).
 - Free: 96960-96961, 96963-96979.
 
 ## Issue 134 allocation (Alvíss, 16.11.2026)
@@ -150,6 +152,10 @@ README "Objects" lists every object with its ID. In short:
 ## PR #199 amendment object claim
 
 - Test codeunit 96928 `Item Ref. Set Tests ori` replaces the unreleased 96948 allocation, which belongs to earlier PR #236 `CarryOut Count Help ori`; the original 96989 belongs to #206 valuation tests. Checked before the ID-fix push against main `7bd237e4` and all 12 other open PR heads, including #236 and #221. Rechecked after #236 merged: main `7f9cdb67` and all 11 remaining open PR heads on 2026-11-17. The test app range stays 96900–96999. Recheck main and every open PR head immediately before pushing any new test ID.
+## PR #211 main-merge test ID reconciliation
+
+- Planning keeps test codeunit 96965 from main. `Avail. To Promise Perm` moves from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs; ATP tests remain 96964. This supersedes the older ATP permission-test ID above.
+- Later main owns 96964 as `Inv. 186 Blank Line Tests ori`. `Avail. To Promise Tests` moves from 96964 to 96926, the first free codeunit ID in 96900–96999 after checking main at `53f1e56e` and every open Inventory pull request on 2026-11-17 (96925 is `Reclass Journal Tests ori` on #221; 96948 and above are claimed by other open PRs). `Avail. To Promise Perm` stays 96924. This supersedes "ATP tests remain 96964" and the older free-list bullets that still name 96964 as free or as the ATP tests.
 ## PR #195 main-merge ID reconciliation
 
 - `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.

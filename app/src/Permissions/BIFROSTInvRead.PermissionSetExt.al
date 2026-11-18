@@ -50,6 +50,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Item Ref. Restrict ori" = X,
         codeunit "Item Subst. Get Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Avail. To Promise Impl ori" = X,
         codeunit "Aged Inventory Get Impl ori" = X,
         codeunit "Avail. By Event Impl ori" = X,
         codeunit "Asm. To Order Get Impl ori" = X,
