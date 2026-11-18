@@ -10,7 +10,7 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 89 Bifröst message
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 90 Bifröst message
 types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
@@ -34,7 +34,9 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Attribute.Get` | Outbound | Read attributes and values for items |
 | `Inventory.ItemSubstitution.Get` | Outbound | Read direct item substitutes and exact-variant on-hand inventory |
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
+| `Inventory.ItemReference.Set` | Inbound | Create or update an item reference; preserve omitted descriptions/dates and refuse references assigned to another item |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AvailabilityByEvent.Get` | Outbound | Read dated supply/demand events, source documents and running projected inventory |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
@@ -265,6 +267,20 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 
 ---
 
+## Event availability
+
+`Inventory.AvailabilityByEvent.Get` takes `itemNo`, `from` and `to` (inclusive ISO dates), plus optional exact `variant` and `location` codes. It returns `openingInventory` and an `events` array containing `date`, `type`, `sourceDocument`, signed base `quantity`, `projectedInventory`, `variant` and `location`.
+
+The calculation follows Item Availability by Event. Current stock and events before `from` contribute to the opening balance. Supply precedes demand on the same date, and reservations affect projected inventory as on the standard page. Drop shipments, blanket orders, forecasts and planning suggestions are excluded. Only sources readable by the caller are included. This operation has effect `read` and does not change business records.
+
+```json
+{"type":"Inventory.AvailabilityByEvent.Get","data":{"itemNo":"ITEM","from":"2026-11-01","to":"2026-11-30"}}
+```
+
+Framboð eftir atburði: `Inventory.AvailabilityByEvent.Get` tekur vörunúmer, dagsetningabilið `from`–`to` og valfrjálsa afbrigðis- og staðsetningarkóða. Svarið sýnir upphafsbirgðir, dagsetta framboðs- og eftirspurnaratburði, upprunaskjöl, magn í grunneiningum og hlaupandi áætlaðar birgðir. Aðgerðin les aðeins og breytir engum viðskiptafærslum.
+
+New objects: codeunit **10076940** `Avail. By Event Impl ori`, message enum value **10076940**, and test codeunit **96990** `Avail. By Event Tests ori`.
+
 ## Objects
 
 ### Tables
@@ -292,7 +308,7 @@ A warehouse system moves stock from `MAIN` to `EAST`:
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
 | 10076995 | `MsgType.SKU.EnumExt ori` | `Inventory.SKU.Create`, `Inventory.SKU.Get` |
 | 10076839 | `MsgType.ItemChg.EnumExt ori` | `Inventory.ItemCharge.Assign`, `Inventory.ItemCharge.Get` |
-| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemSubstitution.Get` |
+| 10076840 | `MsgType.ItemRef.EnumExt ori` | `Inventory.ItemReference.Resolve`, `Inventory.ItemReference.Set`, `Inventory.ItemSubstitution.Get` |
 | 10076841 | `MsgType.PhysInvt.EnumExt ori` | Physical inventory types |
 | 10076870 | `MsgType.CycleCount.EnumExt ori` | `Inventory.CycleCount.Calculate` (value 10076970) |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
@@ -337,7 +353,8 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
 | 10076870–10076872 | Item categories | Get, Set (+ process) |
 | 10076873–10076875 | Item charges | Assign (+ process), Get |
-| 10076876 | Item references | `Item Ref. Resolve Impl ori` |
+| 10076876, 10076954–10076956 | Item references | `Item Ref. Resolve Impl ori`, `Item Ref. Set Impl ori`, `Item Ref. Set Proc ori`, `Item Ref. Restrict ori` |
+| 10077025 | Transfer setup compatibility (BC 28 setup / BC 29 order mode) | `Transfer Posting Setup ori` |
 | 10076877–10076879, 10076886 | Periods and price | Period Close/Get/Reopen, Price Update |
 | 10076880–10076885 | Physical inventory | Calculate (journal and count), Post, Record/RecordCount, Check, Preview Post |
 | 10076887–10076889 | Reclassification | Check, Post, Preview |

@@ -10,7 +10,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 
 - Inventory.Attribute.Get, Create, Update, and AttributeDefinition.Create
 - Inventory.ItemSubstitution.Get
-- Inventory.ItemReference.Resolve
+- Inventory.ItemReference.Resolve and Inventory.ItemReference.Set
 - Inventory.AvailabilityByPeriod.Get
 - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
 - Inventory.TransferOrder.Create, Release, Reopen, Post, Ship, Receive, PreviewPost, Statistics
@@ -38,6 +38,16 @@ The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product 
 the Inventory Setup page).
 
 Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. SourceGuards.yaml is not enabled for HelpLinks, IcelandicXlfInSync, or MixedLanguageLabels in this change. Those jobs stay unwired until the guards pass and infrastructure review approves them.
+
+## Save an item reference
+
+```json
+{"type":"Inventory.ItemReference.Set","data":{"itemNo":"1000","referenceType":"barCode","referenceNo":"5901234123457","description":"Case barcode"}}
+```
+
+Enable the Item Reference domain and use `BIFROST Full ori`. The item must exist. Supply `variantCode` and `unitOfMeasure` when needed; an omitted unit uses the item's base unit. `referenceType` accepts `barCode`, `customer`, `vendor` or `blank`. Customer and vendor references require the matching `referenceTypeNo`.
+
+Omitted descriptions and validity dates retain their saved values. Send `startingDate` and `endingDate` as `yyyy-mm-dd`, or an empty string to clear them. A reference already assigned to another item returns `ConflictingIdentifiers` and a `nextStep`. Generic writes to Item Reference (table 5777) are refused and name this dedicated type. Use `Inventory.ItemReference.Resolve` to read back the saved reference. Runtime catalogue descriptions and errors are available in English and Icelandic.
 
 ## Reservations
 

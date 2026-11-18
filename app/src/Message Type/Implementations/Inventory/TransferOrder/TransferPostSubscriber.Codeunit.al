@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory;
 
+using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 
 /// <summary>
@@ -31,6 +32,35 @@ codeunit 10076906 "Transfer Post Subscriber ori"
         ChosenPostShipment := PostShipment;
         ChosenPostReceipt := PostReceipt;
         ChosenPostTransfer := PostTransfer;
+    end;
+
+    /// <summary>Uses the BC 29 per-order posting mode, or the BC 28 setup option on older schemas.</summary>
+    internal procedure ResolveDirectTransferOptions(TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
+    var
+        InventorySetup: Record "Inventory Setup";
+        HeaderRef: RecordRef;
+        SetupRef: RecordRef;
+        PostingField: FieldRef;
+        PostingMode: Integer;
+    begin
+        HeaderRef.GetTable(TransferHeader);
+        if HeaderRef.FieldExist(5858) then begin
+            // BC 29: enum Direct Transfer Posting Type, 10 = shipment/receipt, 20 = direct.
+            PostingField := HeaderRef.Field(5858);
+            PostingMode := PostingField.Value();
+            PostTransfer := PostingMode = 20;
+            PostShipment := PostingMode = 10;
+            PostReceipt := PostShipment;
+        end else begin
+            // BC 28: Inventory Setup option 5855, 0 = shipment/receipt, 1 = direct.
+            InventorySetup.Get();
+            SetupRef.GetTable(InventorySetup);
+            PostingField := SetupRef.Field(5855);
+            PostingMode := PostingField.Value();
+            PostTransfer := PostingMode = 1;
+            PostShipment := PostingMode = 0;
+            PostReceipt := PostShipment;
+        end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post (Yes/No)", 'OnBeforeGetPostingOptions', '', false, false)]
