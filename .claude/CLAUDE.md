@@ -120,6 +120,9 @@ README "Objects" lists every object with its ID. In short:
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
 
+## PR #221 test ID reconciliation
+
+- Main keeps codeunit 96964 `Inv. 186 Blank Line Tests ori`. Reclassification uses codeunit 96925 `Reclass Journal Tests ori` (formerly 96964), within the existing 96900–96999 test range. Checked main and every open Inventory PR head on 2026-11-17; 96925 was unused. Test bodies and assertions are unchanged.
 ## PR #199 amendment object claim
 
 - Test codeunit 96928 `Item Ref. Set Tests ori` replaces the unreleased 96948 allocation, which belongs to earlier PR #236 `CarryOut Count Help ori`; the original 96989 belongs to #206 valuation tests. Checked before the ID-fix push against main `7bd237e4` and all 12 other open PR heads, including #236 and #221. Rechecked after #236 merged: main `7f9cdb67` and all 11 remaining open PR heads on 2026-11-17. The test app range stays 96900–96999. Recheck main and every open PR head immediately before pushing any new test ID.
