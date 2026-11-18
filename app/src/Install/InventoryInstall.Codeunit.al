@@ -47,6 +47,7 @@ codeunit 10076835 "Inventory Install ori"
     begin
         PerCompanyUpgradeTags.Add(GetInitialReleaseTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetDomainUsageTag());
+        PerCompanyUpgradeTags.Add(InventoryUpgrade.GetCatalogItemsUsageTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetPlanningDomainTag());
     end;
 }

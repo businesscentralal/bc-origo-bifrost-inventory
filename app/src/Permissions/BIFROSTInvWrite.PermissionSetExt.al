@@ -132,6 +132,8 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Item Category Get Impl ori" = X,
         codeunit "Item Category Set Impl ori" = X,
         codeunit "Item Category Set Proc ori" = X,
+        codeunit "Nonstock Item Create Impl ori" = X,
+        codeunit "Nonstock Item Create Proc ori" = X,
         codeunit "Item Category Restrict ori" = X,
         codeunit "Item UoM Get Impl ori" = X,
         codeunit "Item UoM Create Impl ori" = X,

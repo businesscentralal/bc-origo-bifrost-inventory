@@ -87,6 +87,10 @@ page 10076835 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether purchase return message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð innkaupaskila séu virk fyrir þetta fyrirtæki.';
                 }
+                field(CatalogItems; Rec."Catalog Items")
+                {
+                    ToolTip = 'Specifies whether catalog item message types, such as creating an item from a catalog item, are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð vörulistavara, svo sem að stofna vöru úr vörulistavöru, séu virk fyrir þetta fyrirtæki.';
+                }
                 field(Planning; Rec.Planning)
                 {
                     ToolTip = 'Specifies whether planning worksheet message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð áætlunarkeyrslu séu virk fyrir þetta fyrirtæki.';
