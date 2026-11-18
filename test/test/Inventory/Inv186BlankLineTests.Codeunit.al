@@ -292,6 +292,7 @@ codeunit 96964 "Inv. 186 Blank Line Tests ori"
         CalculateInventory: Report "Calculate Inventory";
     begin
         ContractLibrary.EnablePhysicalInventory();
+        ContractLibrary.RemoveOrphanedPostValueEntries();
         GLSetup.Get();
         GLSetup."Journal Templ. Name Mandatory" := false;
         GLSetup."Allow Posting From" := 0D;
