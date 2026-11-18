@@ -129,6 +129,36 @@ codeunit 96979 "Inv. Period Close Tests"
         Assert.IsTrue(PeriodEntry.IsEmpty(), 'The idempotent reopen must not write an inventory period entry.');
     end;
 
+    [Test]
+    procedure CreateOpenPeriod_LeftoverPeriodEntry_PicksFreeEndingDate()
+    var
+        InventoryPeriod: Record "Inventory Period";
+        LeftoverEntry: Record "Inventory Period Entry";
+        PeriodEntry: Record "Inventory Period Entry";
+        OccupiedDate: Date;
+    begin
+        // [SCENARIO] #249 A reused company holds a committed period entry on the year-end the fixture would take first.
+        OccupiedDate := DMY2Date(31, 12, 2090);
+        InventoryPeriod.Reset();
+        if InventoryPeriod.FindLast() then
+            if InventoryPeriod."Ending Date" >= OccupiedDate then
+                OccupiedDate := CalcDate('<+1Y>', InventoryPeriod."Ending Date");
+        LeftoverEntry.Reset();
+        if LeftoverEntry.FindLast() then;
+        LeftoverEntry.Init();
+        LeftoverEntry."Entry No." += 1;
+        LeftoverEntry."Ending Date" := OccupiedDate;
+        LeftoverEntry."Entry Type" := LeftoverEntry."Entry Type"::Close;
+        LeftoverEntry.Insert();
+
+        CreateOpenPeriod(InventoryPeriod);
+
+        Assert.AreNotEqual(OccupiedDate, InventoryPeriod."Ending Date", 'The fixture must not reuse an ending date that already has period entries.');
+        PeriodEntry.SetRange("Ending Date", InventoryPeriod."Ending Date");
+        Assert.IsTrue(PeriodEntry.IsEmpty(), 'The fixture period must start without inventory period entries.');
+        Assert.IsFalse(InventoryPeriod.Closed, 'The fixture period is open.');
+    end;
+
     local procedure EnablePeriodDomain()
     var
         Setup: Record "Inventory Setup ori";
@@ -140,13 +170,24 @@ codeunit 96979 "Inv. Period Close Tests"
 
     local procedure CreateOpenPeriod(var InventoryPeriod: Record "Inventory Period")
     var
+        PeriodEntry: Record "Inventory Period Entry";
         Candidate: Date;
+        Attempts: Integer;
     begin
+        // A reused company can hold committed periods and period entries from earlier runs or fixtures.
+        // Take the first year-end after every existing period that has neither a period nor a period entry.
         Candidate := DMY2Date(31, 12, 2090);
         InventoryPeriod.Reset();
         if InventoryPeriod.FindLast() then
             if InventoryPeriod."Ending Date" >= Candidate then
                 Candidate := CalcDate('<+1Y>', InventoryPeriod."Ending Date");
+        PeriodEntry.SetRange("Ending Date", Candidate);
+        while (not PeriodEntry.IsEmpty()) or InventoryPeriod.Get(Candidate) do begin
+            Attempts += 1;
+            Assert.IsTrue(Attempts < 100, 'No free inventory period ending date was found for the test fixture.');
+            Candidate := CalcDate('<+1Y>', Candidate);
+            PeriodEntry.SetRange("Ending Date", Candidate);
+        end;
         InventoryPeriod.Init();
         InventoryPeriod.Validate("Ending Date", Candidate);
         InventoryPeriod.Insert(true);
