@@ -122,6 +122,10 @@ README "Objects" lists every object with its ID. In short:
 - Main-merge ID collision: codeunit 10077030 stays `Reserv. Supply Filter ori`. `Purch Get Receipt Impl ori` and message value `Purchase.PurchaseInvoice.GetReceiptLines` are 10077018 (formerly 10077030). 10077027 is claimed by open pull requests #206 and #215; 10077028–10077029 are claimed by #203. Process codeunit 10077031 and enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori` stay. These taken IDs supersede the free-ID notes preserved above.
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
+
+## PR #221 test ID reconciliation
+
+- Main keeps codeunit 96964 `Inv. 186 Blank Line Tests ori`. Reclassification uses codeunit 96925 `Reclass Journal Tests ori` (formerly 96964), within the existing 96900–96999 test range. Checked main and every open Inventory PR head on 2026-11-17; 96925 was unused. Test bodies and assertions are unchanged.
 ## PR #195 main-merge ID reconciliation
 
 - `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
