@@ -2,7 +2,7 @@
 
 - Namespace: `Origo.Bifrost.Inventory` / `Origo.Bifrost.Inventory.Test`
 - Follow OrigoSoftwareSolutions/bc-dev-standards
-- Scope: 44 `Inventory.*` message types across eleven domains (attributes, transfer orders,
+- Scope: 45 `Inventory.*` message types across eleven domains (attributes, transfer orders,
   assembly, reservations, item tracking, physical inventory, costing, reclassification, item
   application, inventory periods, item price). Costing and price types ship:
   `Inventory.Cost.Get`, `Inventory.AdjustCost.Run`, `Inventory.CostToGL.Post`/`.Test`,
@@ -15,7 +15,8 @@
   Inventory Setup page/table. It must stay assignable: nothing else grants posting, and the
   permission-coverage guard needs an assignable set for the setup page. No Foundation `Setup ori`
   tabledata grants.
-- Foundation floor 28.0.8.617 (release `28.0.8`, probed by `.AL-Go/settings.json`);
+- Foundation floor 28.0.8.617 (`app/app.json`, `test/app.json`); CI probes released Foundation `28.0.13`
+  (package 28.0.13.741, `.AL-Go/settings.json`, pinned in `tools/appsource_gate.py`);
   `application` floor 28.3.0.0. CodeCop, UICop and AppSourceCop run on app and test app with
   `failOn: warning`.
 - Context-sensitive help: `contextSensitiveHelpUrl` `https://docs.bifrost.origo.is/{0}/help/inventory/`;

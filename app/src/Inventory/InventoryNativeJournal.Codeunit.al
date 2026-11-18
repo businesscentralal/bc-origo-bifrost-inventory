@@ -7,12 +7,13 @@ using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using System.Utilities;
 
-/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory and revaluation).</summary>
+/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory, reclassification and revaluation).</summary>
 codeunit 10076840 "Inventory Native Journal ori"
 {
     Access = Internal;
@@ -23,6 +24,12 @@ codeunit 10076840 "Inventory Native Journal ori"
         EmptyBatchLbl: Label 'An empty physical inventory journal batch.', Comment = 'is-IS=Tóm talningarbókarkeyrsla.';
         RegisterExpectedLbl: Label 'A native item register for the selected journal.', Comment = 'is-IS=Innbyggð vöruskrá fyrir valda bók.';
         RequestNextStepLbl: Label 'Correct the named parameter or selected journal line using the expected value, then retry.', Comment = 'is-IS=Leiðréttu tilgreinda færibreytu eða valda bókarlínu samkvæmt væntu gildi og reyndu aftur.';
+        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
+        MissingBatchNextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
+        PhysicalTemplateErr: Label 'The selected batch must use a physical inventory journal template.', Comment = 'is-IS=Valin keyrsla verður að nota sniðmát fyrir talningarbók.';
+        NonrecurringTemplateErr: Label 'The selected physical inventory journal template must not be recurring.', Comment = 'is-IS=Valið sniðmát fyrir talningarbók má ekki vera ítrekunarsniðmát.';
+        PhysicalTemplateExpectedLbl: Label 'A nonrecurring physical inventory journal template.', Comment = 'is-IS=Sniðmát fyrir talningarbók sem er ekki ítrekunarsniðmát.';
+        PhysicalTemplateNextStepLbl: Label 'Select an existing batch of a nonrecurring physical inventory journal template, then retry.', Comment = 'is-IS=Veldu fyrirliggjandi keyrslu með sniðmáti fyrir talningarbók sem er ekki ítrekunarsniðmát og reyndu aftur.';
         BatchErr: Label 'Identify one existing journal batch using templateName and batchName or subject TEMPLATE|BATCH or SystemId.', Comment = 'is-IS=Auðkenndu eina fyrirliggjandi bókarkeyrslu með templateName og batchName eða subject TEMPLATE|BATCH eða SystemId.';
         EmptyErr: Label 'The selected journal contains no lines.', Comment = 'is-IS=Valin bók inniheldur engar línur.';
         ParameterErr: Label 'Unsupported journal parameter %1.', Comment = '%1 = parameter name; is-IS=Bókafæribreytan %1 er ekki studd.';
@@ -31,8 +38,15 @@ codeunit 10076840 "Inventory Native Journal ori"
         NothingPostedErr: Label 'No native item register was produced.', Comment = 'is-IS=Engin innbyggð vöruskrá var mynduð.';
         NextStepLbl: Label 'Correct the selected journal lines before posting.', Comment = 'is-IS=Leiðréttu valdar bókarlínur áður en bókað er.';
         FutureDateLbl: Label 'Line %1 has a future posting date.', Comment = '%1 = line number; is-IS=Lína %1 hefur bókunardagsetningu í framtíðinni.';
+        CycleNoPeriodErr: Label 'Item %1 has no counting period.', Comment = '%1 = item number; is-IS=Vara %1 hefur ekkert talningartímabil.';
+        CycleNoPeriodLbl: Label 'An item or stockkeeping unit with a Phys. Invt. Counting Period code.', Comment = 'is-IS=Vara eða birgðageymslueining með kóða talningartímabils.';
+        CycleNoPeriodNextLbl: Label 'Assign a counting period to the item (Item card, Physical Inventory) or remove it from the itemNo filter, then retry.', Comment = 'is-IS=Úthlutaðu talningartímabili á vöruna (vörukort, birgðatalning) eða fjarlægðu hana úr itemNo síunni og reyndu aftur.';
+        CycleNoItemErr: Label 'No item matches the itemNo filter %1.', Comment = '%1 = item filter; is-IS=Engin vara samsvarar itemNo síunni %1.';
+        CycleNoItemLbl: Label 'An existing item number or a filter that matches at least one item.', Comment = 'is-IS=Fyrirliggjandi vörunúmer eða sía sem samsvarar að minnsta kosti einni vöru.';
+        CycleNoItemNextLbl: Label 'Check the itemNo filter or omit it to calculate every item that is due.', Comment = 'is-IS=Athugaðu itemNo síuna eða slepptu henni til að reikna allar vörur sem eru á tíma.';
         NonemptyErr: Label 'Calculate requires an empty physical inventory batch.', Comment = 'is-IS=Útreikningur krefst tómrar talningarbókarkeyrslu.';
         CountsErr: Label 'counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', Comment = 'is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.';
+        NotTransferTemplateErr: Label 'Journal template %1 is not a reclassification (Transfer) template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).';
         LineParameterTok: Label 'line %1', Locked = true;
         EmptyExpectedLbl: Label 'at least one journal line', Comment = 'is-IS=a.m.k. ein bókarlína';
         RevalBatchErr: Label 'Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.', Comment = 'is-IS=Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.';
@@ -97,6 +111,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
+        if JournalType = JournalType::"Phys. Inventory" then
+            ExcludeEmptyPhysicalLines(Line);
         LineCount := Line.Count();
         ErrorManagement.Activate(ErrorHandler);
         ErrorManagement.PushContext(ErrorContext, Database::"Item Journal Batch", 0, '');
@@ -191,6 +207,8 @@ codeunit 10076840 "Inventory Native Journal ori"
         CheckParameters(Argument, Argument.GetRequestJson(), '', false);
         if not ResolveSelection(Argument, JournalType, Batch, Line) then
             exit;
+        if JournalType = JournalType::"Phys. Inventory" then
+            ExcludeEmptyPhysicalLines(Line);
         if Line.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
             exit;
@@ -272,6 +290,169 @@ codeunit 10076840 "Inventory Native Journal ori"
         SetResponse(Argument, Response);
     end;
 
+    /// <summary>Calculates a cycle counting journal: the items and stockkeeping units that are due by their counting period are filled into one empty physical-inventory batch with native report 790, then their counting dates are advanced natively.</summary>
+    procedure CalculateCycleCount(var Argument: Record "Message Argument ori")
+    var
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        Item: Record Item;
+        Sku: Record "Stockkeeping Unit";
+        Reader: Codeunit "Request Value Reader ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        PostingDate: Date;
+        DocumentNo: Code[20];
+        IncludeZero: Boolean;
+        ItemFilter: Text;
+        LocationFilter: Text;
+        VariantFilter: Text;
+        Counted: Integer;
+    begin
+        Request := Argument.GetRequestJson();
+        CheckParameters(Argument, Request, 'CycleCount', false);
+        Line.LockTable();
+        if not Resolve(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then
+            exit;
+        if not Line.IsEmpty() then
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, NonemptyErr, 'batchName', Batch.Name, EmptyBatchLbl);
+        if not Reader.TryReadDate(Argument, Request, 'postingDate', true, PostingDate) then
+            exit;
+        DocumentNo := CopyStr(ReadText(Request, 'documentNo', Argument, 20), 1, 20);
+        if not Reader.TryReadBoolean(Argument, Request, 'itemsNotOnInventory', Request.Contains('itemsNotOnInventory'), IncludeZero) then
+            exit;
+        if Request.Contains('itemNo') then
+            ItemFilter := ReadText(Request, 'itemNo', Argument, 2048);
+        if Request.Contains('locationCode') then
+            LocationFilter := ReadText(Request, 'locationCode', Argument, 2048);
+        if Request.Contains('variantCode') then
+            VariantFilter := ReadText(Request, 'variantCode', Argument, 2048);
+        if ItemFilter <> '' then begin
+            Item.SetFilter("No.", ItemFilter);
+            if Item.IsEmpty() then
+                RaiseCycleRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, StrSubstNo(CycleNoItemErr, ItemFilter), 'itemNo', ItemFilter, CycleNoItemLbl, CycleNoItemNextLbl);
+            if Item.FindSet() then
+                repeat
+                    if not HasCountingPeriod(Item) then
+                        RaiseCycleRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(CycleNoPeriodErr, Item."No."), 'itemNo', Item."No.", CycleNoPeriodLbl, CycleNoPeriodNextLbl);
+                until Item.Next() = 0;
+        end;
+        Clear(Item);
+        if ItemFilter <> '' then
+            Item.SetFilter("No.", ItemFilter);
+        Item.SetFilter("Phys Invt Counting Period Code", '<>%1', '');
+        Item.SetFilter("Next Counting Start Date", '<>%1&<=%2', 0D, PostingDate);
+        if Item.FindSet() then
+            repeat
+                CalculateCountedItem(Line, Batch, Item."No.", LocationFilter, VariantFilter, PostingDate, DocumentNo, IncludeZero, Item."Phys Invt Counting Period Code");
+                UpdateItemCountingDates(Item."No.");
+                Counted += 1;
+            until Item.Next() = 0;
+        if ItemFilter <> '' then
+            Sku.SetFilter("Item No.", ItemFilter);
+        if LocationFilter <> '' then
+            Sku.SetFilter("Location Code", LocationFilter);
+        if VariantFilter <> '' then
+            Sku.SetFilter("Variant Code", VariantFilter);
+        Sku.SetFilter("Phys Invt Counting Period Code", '<>%1', '');
+        Sku.SetFilter("Next Counting Start Date", '<>%1&<=%2', 0D, PostingDate);
+        if Sku.FindSet() then
+            repeat
+                CalculateCountedSku(Line, Batch, Sku, PostingDate, DocumentNo, IncludeZero);
+                UpdateSkuCountingDates(Sku."Item No.", Sku."Location Code", Sku."Variant Code");
+                Counted += 1;
+            until Sku.Next() = 0;
+        Clear(Line);
+        Line.SetRange("Journal Template Name", Batch."Journal Template Name");
+        Line.SetRange("Journal Batch Name", Batch.Name);
+        AddBatch(Response, Batch);
+        Response.Add('itemsCalculated', Counted);
+        Response.Add('linesCreated', Line.Count());
+        Response.Add('posted', false);
+        SetResponse(Argument, Response);
+    end;
+
+    local procedure HasCountingPeriod(Item: Record Item): Boolean
+    begin
+        exit((Item."Phys Invt Counting Period Code" <> '') or HasSkuPeriod(Item."No."));
+    end;
+
+    local procedure HasSkuPeriod(ItemNo: Code[20]): Boolean
+    var
+        Sku: Record "Stockkeeping Unit";
+    begin
+        Sku.SetRange("Item No.", ItemNo);
+        Sku.SetFilter("Phys Invt Counting Period Code", '<>%1', '');
+        exit(not Sku.IsEmpty());
+    end;
+
+    /// <summary>Item counting period: report 790 in item cycle mode skips every stock combination that has its own stockkeeping unit, as the native cycle count does.</summary>
+    local procedure CalculateCountedItem(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; ItemNo: Code[20]; LocationFilter: Text; VariantFilter: Text; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean; PeriodCode: Code[10])
+    var
+        Item: Record Item;
+        CycleSourceType: Option " ",Item,SKU;
+    begin
+        Item.SetRange("No.", ItemNo);
+        if LocationFilter <> '' then
+            Item.SetFilter("Location Filter", LocationFilter);
+        if VariantFilter <> '' then
+            Item.SetFilter("Variant Filter", VariantFilter);
+        RunCalculateInventory(Line, Batch, Item, PostingDate, DocumentNo, IncludeZero, PeriodCode, CycleSourceType::Item);
+    end;
+
+    /// <summary>Stockkeeping unit counting period: exactly the unit's location and variant, blank values included.</summary>
+    local procedure CalculateCountedSku(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; Sku: Record "Stockkeeping Unit"; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean)
+    var
+        Item: Record Item;
+        CycleSourceType: Option " ",Item,SKU;
+    begin
+        Item.SetRange("No.", Sku."Item No.");
+        Item.SetRange("Location Filter", Sku."Location Code");
+        Item.SetRange("Variant Filter", Sku."Variant Code");
+        RunCalculateInventory(Line, Batch, Item, PostingDate, DocumentNo, IncludeZero, Sku."Phys Invt Counting Period Code", CycleSourceType::SKU);
+    end;
+
+    local procedure RunCalculateInventory(var Line: Record "Item Journal Line"; Batch: Record "Item Journal Batch"; var Item: Record Item; PostingDate: Date; DocumentNo: Code[20]; IncludeZero: Boolean; PeriodCode: Code[10]; CycleSourceType: Option " ",Item,SKU)
+    var
+        CalculateInventory: Report "Calculate Inventory";
+    begin
+        Clear(Line);
+        Line."Journal Template Name" := Batch."Journal Template Name";
+        Line."Journal Batch Name" := Batch.Name;
+        CalculateInventory.SetItemJnlLine(Line);
+        CalculateInventory.InitializeRequest(PostingDate, DocumentNo, IncludeZero, false);
+        CalculateInventory.InitializePhysInvtCount(PeriodCode, CycleSourceType);
+        CalculateInventory.SetHideValidationDialog(true);
+        CalculateInventory.SetTableView(Item);
+        CalculateInventory.UseRequestPage(false);
+        CalculateInventory.Run();
+    end;
+
+    local procedure UpdateItemCountingDates(ItemNo: Code[20])
+    var
+        Item: Record Item;
+        CountManagement: Codeunit "Phys. Invt. Count.-Management";
+    begin
+        Item.Get(ItemNo);
+        CountManagement.SetHideValidationDialog(true);
+        CountManagement.UpdateItemPhysInvtCount(Item);
+    end;
+
+    local procedure UpdateSkuCountingDates(ItemNo: Code[20]; LocationCode: Code[10]; VariantCode: Code[10])
+    var
+        Sku: Record "Stockkeeping Unit";
+        CountManagement: Codeunit "Phys. Invt. Count.-Management";
+    begin
+        Sku.Get(LocationCode, ItemNo, VariantCode);
+        CountManagement.SetHideValidationDialog(true);
+        CountManagement.UpdateSKUPhysInvtCount(Sku);
+    end;
+
+    local procedure RaiseCycleRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; Parameter: Text; Received: Text; Expected: Text; NextStep: Text)
+    begin
+        Argument.AddError(Code, MessageText, Parameter, Received, Expected, NextStep);
+        Argument.RaiseCollectedErrors(Code, MessageText);
+    end;
+
     /// <summary>Validates each supplied count atomically; omitted quantity leaves that line unchanged, explicit zero is written.</summary>
     procedure RecordCount(var Argument: Record "Message Argument ori")
     var
@@ -313,7 +494,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             Count := Entry.AsObject();
             foreach ParameterName in Count.Keys() do
                 if not (ParameterName in ['lineNo', 'systemId', 'qtyCounted']) then
-                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Count, ParameterName), AllowedParameterLbl);
             Clear(LineId);
             if Count.Contains('systemId') then begin
                 if not Evaluate(LineId, ReadText(Count, 'systemId', Argument, 50)) or IsNullGuid(LineId) then
@@ -443,6 +624,9 @@ codeunit 10076840 "Inventory Native Journal ori"
                     'Calculate':
                         if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory', 'includeItemsWithNoTransactions']) then
                             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
+                    'CycleCount':
+                        if not (ParameterName in ['postingDate', 'documentNo', 'itemNo', 'locationCode', 'variantCode', 'itemsNotOnInventory']) then
+                            RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
                     'RecordCount':
                         if ParameterName <> 'counts' then
                             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(ParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
@@ -461,9 +645,21 @@ codeunit 10076840 "Inventory Native Journal ori"
         BatchId: Guid;
         Parts: List of [Text];
     begin
-        if JournalType <> JournalType::"Phys. Inventory" then
+        if not (JournalType in [JournalType::"Phys. Inventory", JournalType::Transfer]) then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         Request := Argument.GetRequestJson();
+        if JournalType = JournalType::Transfer then
+            if Argument.Type = "Message Type ori"::"Inventory.Reclassification.Check" then begin
+                if Request.Contains('templateName') then
+                    Request.Remove('journalTemplateName');
+                if Request.Contains('batchName') then
+                    Request.Remove('journalBatchName');
+            end else begin
+                if Request.Contains('journalTemplateName') then
+                    Request.Remove('templateName');
+                if Request.Contains('journalBatchName') then
+                    Request.Remove('batchName');
+            end;
         NormalizeAlias(Argument, Request, 'journalTemplateName', 'templateName');
         NormalizeAlias(Argument, Request, 'journalBatchName', 'batchName');
         if Request.Contains('templateName') or Request.Contains('batchName') then begin
@@ -494,9 +690,14 @@ codeunit 10076840 "Inventory Native Journal ori"
         end else
             if not Batch.Get(TemplateName, BatchName) then
                 exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
-        JournalTemplate.Get(Batch."Journal Template Name");
-        JournalTemplate.TestField(Type, JournalType);
-        JournalTemplate.TestField(Recurring, false);
+        if not JournalTemplate.Get(Batch."Journal Template Name") then
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'templateName', Batch."Journal Template Name", PhysicalTemplateExpectedLbl);
+        if (JournalType = JournalType::Transfer) and (JournalTemplate.Type <> JournalType) then
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferTemplateErr, JournalTemplate.Name), TemplateParameterName(Request), JournalTemplate.Name, 'Transfer');
+        if JournalTemplate.Type <> JournalType then
+            RaiseTemplateRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, JournalTemplate.Name);
+        if JournalTemplate.Recurring then
+            RaiseTemplateRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, NonrecurringTemplateErr, JournalTemplate.Name);
         Line.SetRange("Journal Template Name", Batch."Journal Template Name");
         Line.SetRange("Journal Batch Name", Batch.Name);
         exit(true);
@@ -506,9 +707,7 @@ codeunit 10076840 "Inventory Native Journal ori"
     var
         ParameterName: Text;
         Identifier: Text;
-        MissingBatchErr: Label 'Journal batch %1 was not found.', Comment = '%1 = selected batch; is-IS=Bókarkeyrslan %1 fannst ekki.';
         ExpectedLbl: Label 'an existing physical inventory journal batch', Comment = 'is-IS=fyrirliggjandi birgðatalningarbókarkeyrsla';
-        NextLbl: Label 'Check the template and batch names or send the SystemId of an existing physical inventory batch.', Comment = 'is-IS=Athugaðu heiti sniðmáts og keyrslu eða sendu SystemId fyrirliggjandi birgðatalningarkeyrslu.';
     begin
         ParameterName := 'batchName';
         Identifier := TemplateName + '|' + BatchName;
@@ -516,7 +715,7 @@ codeunit 10076840 "Inventory Native Journal ori"
             ParameterName := 'subject';
             Identifier := Argument.Subject;
         end;
-        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, NextLbl);
+        Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingBatchErr, Identifier), ParameterName, Identifier, ExpectedLbl, MissingBatchNextLbl);
         exit(false);
     end;
 
@@ -545,6 +744,13 @@ codeunit 10076840 "Inventory Native Journal ori"
             exit(false);
         SelectLines(Argument, Argument.GetRequestJson(), Batch, Line);
         exit(true);
+    end;
+
+    local procedure TemplateParameterName(Request: JsonObject): Text
+    begin
+        if Request.Contains('journalTemplateName') then
+            exit('journalTemplateName');
+        exit('templateName');
     end;
 
     local procedure NormalizeAlias(var Argument: Record "Message Argument ori"; var Request: JsonObject; AliasName: Text; Name: Text)
@@ -635,8 +841,12 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not Line.FindSet() then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            if not TryCheckLine(Line, JournalType) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
+            // Dedicated reclassification must never post adjustment entries hidden in a Transfer template.
+            if JournalType = JournalType::Transfer then
+                Line.TestField("Entry Type", Line."Entry Type"::Transfer)
+            else
+                if not TryCheckLine(Line, JournalType) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             Clear(Result);
             Result.Add('systemId', Line.SystemId);
             Result.Add('lineNo', Line."Line No.");
@@ -714,8 +924,15 @@ codeunit 10076840 "Inventory Native Journal ori"
     var
         Item: Record Item;
     begin
-        if JournalType <> JournalType::"Phys. Inventory" then
+        if not (JournalType in [JournalType::"Phys. Inventory", JournalType::Transfer]) then
             Error(BatchErr);
+        if JournalType = JournalType::Transfer then begin
+            Line.TestField("Item No.");
+            Item.Get(Line."Item No.");
+            Item.TestField(Blocked, false);
+            Line.TestField("Entry Type", Line."Entry Type"::Transfer);
+            exit;
+        end;
         Line.TestField("Item No.");
         Item.Get(Line."Item No.");
         Item.TestField(Blocked, false);
@@ -911,6 +1128,34 @@ codeunit 10076840 "Inventory Native Journal ori"
     begin
         Line.TestField("Item No.");
         Line.TestField("Value Entry Type", Line."Value Entry Type"::Revaluation);
+    end;
+
+    local procedure RaiseTemplateRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; TemplateName: Code[10])
+    begin
+        Argument.AddError(Code, MessageText, 'templateName', TemplateName, PhysicalTemplateExpectedLbl, PhysicalTemplateNextStepLbl);
+        Argument.RaiseCollectedErrors(Code, MessageText);
+    end;
+
+    /// <summary>Documents the shared physical inventory batch refusals with the same localized text and codes used at runtime.</summary>
+    procedure AddPhysicalBatchErrors(var Errors: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, StrSubstNo(TextExpectedLbl, 10), RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, AllowedParameterLbl, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, BatchErr, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, MissingBatchErr, MissingBatchNextLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, PhysicalTemplateNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NonrecurringTemplateErr, PhysicalTemplateNextStepLbl));
+    end;
+
+    /// <summary>Documents count shape and scalar format refusals using the localized runtime label.</summary>
+    procedure AddPhysicalCountErrors(var Errors: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+    begin
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, CountsErr, RequestNextStepLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, CountsErr, RequestNextStepLbl));
     end;
 
     local procedure RaiseRefusal(var Argument: Record "Message Argument ori"; Code: Enum "Bifrost Error Code ori"; MessageText: Text; Parameter: Text; Received: Text; Expected: Text)

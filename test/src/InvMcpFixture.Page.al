@@ -23,6 +23,130 @@ page 96973 "Inv. MCP Fixture ori"
     {
         area(Processing)
         {
+            action(CreateUndo39)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned undo39', Comment = 'is-IS=Stofna eigin afturköllun39';
+                ToolTip = 'Seeds independent owned shipment and assembly documents for bilingual issue39 MCP checks.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    SeedState := Seed.SeedUndo39();
+                end;
+            }
+            action(CleanupUndo39)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned undo39', Comment = 'is-IS=Hreinsa eigin afturköllun39';
+                ToolTip = 'Removes only the explicit W6U39 test documents, entries, items and locations.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupUndo39();
+                    SeedState := 'Owned undo39 cleanup completed.';
+                end;
+            }
+            action(CreatePlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned117 planning';
+                ToolTip = 'Creates an owned planning worksheet and purchase item for MCP verification.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    SeedState := Planning.SeedMcpFixtures();
+                end;
+            }
+            action(CleanupPlanning117)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned117 planning';
+                ToolTip = 'Removes only the owned planning fixtures and their newly created orders.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Planning: Codeunit "Plan Wksh Tests ori";
+                begin
+                    Planning.CleanupMcpFixtures();
+                    SeedState := 'Clean owned117 planning completed.';
+                end;
+            }
+            action(Create154Fixtures)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned154 fixtures', Comment = 'is-IS=Stofna eigin prófunargögn 154';
+                ToolTip = 'Creates only the owned issue154 journals and unposted count item; refuses existing fixtures.', Comment = 'is-IS=Stofnar eingöngu eigin prófunarbækur fyrir mál 154 og óbókaða talningarvöru; hafnar fyrirliggjandi prófunargögnum.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.Create154Fixtures();
+                    SeedState := 'Create owned154 fixtures completed.';
+                end;
+            }
+            action(CreateInv7EN)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned7 EN';
+                ToolTip = 'Runs the explicit owned issue 7 fixture action for EN.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateInv7Fixtures('EN');
+                    SeedState := 'Create owned7 EN completed.';
+                end;
+            }
+            action(CreateInv7IS)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned7 IS';
+                ToolTip = 'Runs the explicit owned issue 7 fixture action for IS.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateInv7Fixtures('IS');
+                    SeedState := 'Create owned7 IS completed.';
+                end;
+            }
+            action(CleanupInv7EN)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned7 EN';
+                ToolTip = 'Runs the explicit owned issue 7 fixture action for EN.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupInv7Fixtures('EN');
+                    SeedState := 'Clean owned7 EN completed.';
+                end;
+            }
+            action(CleanupInv7IS)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned7 IS';
+                ToolTip = 'Runs the explicit owned issue 7 fixture action for IS.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupInv7Fixtures('IS');
+                    SeedState := 'Clean owned7 IS completed.';
+                end;
+            }
             action(CreateRefusals)
             {
                 ApplicationArea = All;
@@ -35,6 +159,34 @@ page 96973 "Inv. MCP Fixture ori"
                 begin
                     Seed.CreateRefusalFixtures();
                     SeedState := 'Create owned151 fixtures completed.';
+                end;
+            }
+            action(CreateTracking37)
+            {
+                ApplicationArea = All;
+                Caption = 'Create owned37 tracking';
+                ToolTip = 'Creates four new XW4I37 source lines for explicit bilingual MCP verification.';
+                Image = New;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CreateTracking37Fixtures();
+                    SeedState := 'Create owned37 tracking completed.';
+                end;
+            }
+            action(CleanupTracking37)
+            {
+                ApplicationArea = All;
+                Caption = 'Clean owned37 tracking';
+                ToolTip = 'Removes only XW4I37 fixture documents, items and tracking codes after native tracking removal.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    Seed: Codeunit "Inv. MCP Fixture ori";
+                begin
+                    Seed.CleanupTracking37Fixtures();
+                    SeedState := 'Clean owned37 tracking completed.';
                 end;
             }
             action(CreateTracking)

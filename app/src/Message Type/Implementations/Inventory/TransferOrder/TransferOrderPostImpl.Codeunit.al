@@ -87,9 +87,21 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
+        Changes: JsonToken;
     begin
         Effect := Parts.GetEffect('Inventory.TransferOrder.Post');
+        if Effect.Get('changes', Changes) then
+            Effect.Replace('changes', CountUnit() + ' ' + Changes.AsValue().AsText());
+        Effect.Add('writes', true);
+        Effect.Add('posts', true);
         exit(true);
+    end;
+
+    local procedure CountUnit(): Text
+    var
+        CountLbl: Label 'expectedCount counts the one transfer order being posted, always 1, not its lines, resulting documents or ledger entries. is-IS: expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.', Comment = 'is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.';
+    begin
+        exit(CountLbl);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -185,7 +197,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         RequestJson := Argument.GetRequestJson();
 
         if DirectTransfer then begin
-            ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
+            ResolveDirectTransferOptions(TransferHeader, PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
             if PostingTypeText <> '' then begin
@@ -228,19 +240,15 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
+    local procedure ResolveDirectTransferOptions(TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
-        InventorySetup: Record "Inventory Setup";
+        PostingSetup: Codeunit "Transfer Posting Setup ori";
     begin
-        InventorySetup.Get();
-        case InventorySetup."Direct Transfer Posting" of
-            InventorySetup."Direct Transfer Posting"::"Receipt and Shipment":
-                begin
-                    PostShipment := true;
-                    PostReceipt := true;
-                end;
-            InventorySetup."Direct Transfer Posting"::"Direct Transfer":
-                PostTransfer := true;
+        if PostingSetup.PostAsSingleDocument(TransferHeader) then
+            PostTransfer := true
+        else begin
+            PostShipment := true;
+            PostReceipt := true;
         end;
     end;
 

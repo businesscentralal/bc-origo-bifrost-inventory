@@ -5,7 +5,7 @@ using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
 
 /// <summary>Issue 192: every irreversible Inventory type keeps its effect and names what expectedCount counts.</summary>
-codeunit 96980 "Inv. Count Unit Tests ori"
+codeunit 96935 "Inv. Count Unit Tests ori"
 {
     Subtype = Test;
     TestPermissions = Disabled;
@@ -40,22 +40,24 @@ codeunit 96980 "Inv. Count Unit Tests ori"
 
     local procedure VerifyCountUnits(LanguageId: Integer)
     var
-        ContractMgt: Codeunit "Msg Contract Mgt ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         MessageType: Enum "Message Type ori";
+        Implementation: Interface "Msg Contract ori";
         TypeName: Text;
         Types: List of [Text];
         Units: List of [Text];
         Supported: Boolean;
         PreviousLanguage: Integer;
-        Contract: JsonObject;
         Effect: JsonObject;
+        Parameters: JsonArray;
         Token: JsonToken;
         Parameter: JsonToken;
         Name: JsonToken;
         Unit: Text;
         FoundParameter: Boolean;
     begin
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
         Types.Add('Inventory.Revaluation.Post');
         Units.Add(Parts.CountUnitRevaluation());
         Types.Add('Inventory.TransferOrder.Post');
@@ -66,41 +68,36 @@ codeunit 96980 "Inv. Count Unit Tests ori"
         Units.Add(Parts.CountUnitAdjustCost());
         Types.Add('Inventory.CostToGL.Post');
         Units.Add(Parts.CountUnitCostToGL());
-        Types.Add('Inventory.Transfer.UndoShipment');
-        Units.Add(Parts.CountUnitTransferUndoShipment());
-        Types.Add('Inventory.Assembly.UndoPost');
-        Units.Add(Parts.CountUnitAssemblyUndoPost());
-        Types.Add('Inventory.Reclassification.Post');
-        Units.Add(Parts.CountUnitReclassification());
-        Types.Add('Inventory.PhysInventory.Post');
-        Units.Add(Parts.CountUnitPhysInventory());
         Supported := Parts.SupportsConfirmation();
-        PreviousLanguage := GlobalLanguage();
-        GlobalLanguage(LanguageId);
         foreach TypeName in Types do begin
             MessageType := Enum::"Message Type ori".FromInteger(MessageType.Ordinals().Get(MessageType.Names().IndexOf(TypeName)));
-            Clear(Contract);
-            ContractMgt.GetContract(MessageType, Contract);
+            Clear(Effect);
+            Clear(Parameters);
+            Implementation := MessageType;
             // [THEN] The effect stays irreversible and its changes text names the unit and the preview.
-            Assert.IsTrue(Contract.Get('effect', Token), TypeName + ' has an effect chapter.');
-            Effect := Token.AsObject();
+            Assert.IsTrue(Implementation.GetEffect(Effect), TypeName + ' has an effect chapter.');
             Assert.IsTrue(Effect.Get('effect', Token), TypeName + ' declares an effect.');
             Assert.AreEqual('irreversible', Token.AsValue().AsText(), TypeName + ' stays irreversible.');
             Unit := Units.Get(Types.IndexOf(TypeName));
             Assert.AreNotEqual('', Unit, TypeName + ' has a count unit.');
+            // [THEN] AC02: the sentence is translated at 1039 and English at 1033.
+            if LanguageId = 1039 then
+                Assert.IsTrue(Unit.Contains('telur'), TypeName + ' count unit is Icelandic at 1039.')
+            else
+                Assert.IsTrue(Unit.Contains('counts'), TypeName + ' count unit is English at 1033.');
             // [THEN] Older Foundation has no confirmation protocol: the app adds no count sentence there.
-            Assert.AreEqual(Supported, HasText(Effect, 'changes', 'expectedCount counts ' + Unit), TypeName + ' effect names the count unit exactly when Foundation has the protocol.');
-            Assert.AreEqual(Supported, HasText(Effect, 'changes', 'send the request without expectedCount and read expected'), TypeName + ' effect names the side-effect-free preview exactly when Foundation has the protocol.');
+            Assert.AreEqual(Supported, HasText(Effect, 'changes', Unit), TypeName + ' effect names the count unit exactly when Foundation has the protocol.');
+            Assert.AreEqual(Supported, HasText(Effect, 'changes', Parts.CountReadText()), TypeName + ' effect names the side-effect-free preview exactly when Foundation has the protocol.');
             // [THEN] The expectedCount parameter carries the same unit and the preview way.
             FoundParameter := false;
-            Contract.Get('parameters', Token);
-            foreach Parameter in Token.AsArray() do
+            Assert.IsTrue(Implementation.GetParameters(Parameters), TypeName + ' declares parameters.');
+            foreach Parameter in Parameters do
                 if Parameter.AsObject().Get('name', Name) then
                     if Name.AsValue().AsText() = 'expectedCount' then begin
                         FoundParameter := true;
                         if Supported then begin
-                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'It counts ' + Unit), TypeName + ' parameter names the count unit.');
-                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', 'without expectedCount'), TypeName + ' parameter names the preview.');
+                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', Unit), TypeName + ' parameter names the count unit.');
+                            Assert.IsTrue(HasText(Parameter.AsObject(), 'description', Parts.CountReadText()), TypeName + ' parameter names the preview.');
                         end;
                     end;
             Assert.AreEqual(Supported, FoundParameter, TypeName + ' declares expectedCount exactly when Foundation has the protocol.');

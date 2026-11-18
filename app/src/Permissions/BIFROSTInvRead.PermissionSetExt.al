@@ -12,6 +12,10 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
     IncludedPermissionSets = "BIFROST InvAttrRead ori";
 
     Permissions =
+        table "Inventory Valuation Buffer ori" = X,
+        codeunit "Valuation Get Impl ori" = X,
+        codeunit "Transfer Posting Setup ori" = X,
+        codeunit "Price List Restrict ori" = X,
         page "Inventory Setup Wizard ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
@@ -34,6 +38,7 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Inventory Tracking Read ori" = X,
         codeunit "Tracking Get Impl ori" = X,
         codeunit "Tracking Avail. Get Impl ori" = X,
+        codeunit "Tracking Info Get Impl ori" = X,
         codeunit "Inventory Domain Gate ori" = X,
         codeunit "Inventory Native Journal ori" = X,
         codeunit "Reclass Check Impl ori" = X,
@@ -42,11 +47,25 @@ permissionsetextension 10076835 "BIFROST InvRead ori" extends "BIFROST Read ori"
         codeunit "Phys. Inv. Preview Impl ori" = X,
         codeunit "Inv. Posting Gate ori" = X,
         codeunit "Item Ref. Resolve Impl ori" = X,
+        codeunit "Item Ref. Restrict ori" = X,
+        codeunit "Item Subst. Get Impl ori" = X,
         codeunit "Avail. By Period Impl ori" = X,
+        codeunit "Avail. To Promise Impl ori" = X,
+        codeunit "Aged Inventory Get Impl ori" = X,
+        codeunit "Avail. By Event Impl ori" = X,
+        codeunit "Asm. To Order Get Impl ori" = X,
+        codeunit "Assembly BOM Get Impl ori" = X,
         codeunit "Item Charge Get Impl ori" = X,
         codeunit "Item Charge Restrict ori" = X,
         codeunit "Item Category Get Impl ori" = X,
         codeunit "Item Category Restrict ori" = X,
+        codeunit "Item UoM Get Impl ori" = X,
+        codeunit "Item Variant Get Impl ori" = X,
+        codeunit "Item Variant Restrict ori" = X,
         codeunit "Order Tracking Get Impl ori" = X,
-        codeunit "Order Tracking Transfer ori" = X;
+        codeunit "Order Tracking Transfer ori" = X,
+        codeunit "Item Tracing Get Impl ori" = X,
+        codeunit "SKU Get Impl ori" = X,
+        codeunit "SKU Request ori" = X,
+        codeunit "SKU Restrict ori" = X;
 }

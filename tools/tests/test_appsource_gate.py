@@ -7,6 +7,7 @@ import json
 import os
 import shutil
 import struct
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -617,14 +618,14 @@ class GenuinePackages(unittest.TestCase):
         self.state()
         folder = self.root / "compiler-symbols"
         shutil.copy2(self.foundation_candidate, folder / "Foundation.app")
-        shutil.copy2(self.foundation_candidate, folder / "Foundation_28.0.8.617.app")
+        shutil.copy2(self.foundation_candidate, folder / "Foundation_28.0.13.741.app")
         snapshot = G.before_compile(self.root, self.rejection_request())
         foundation_id = "7505e808-6e52-4b96-a328-82573391297a"
         compiler = [s for s in snapshot["compilerSymbols"] if s["identity"]["id"] == foundation_id]
         self.assertEqual(1, len(compiler))
         self.assertEqual(1, len(list(folder.glob("*.app"))))
         self.assertEqual(1, len(snapshot["compilerAliasRemovals"]))
-        self.assertTrue((folder / "Foundation_28.0.8.617.app").is_file())
+        self.assertTrue((folder / "Foundation_28.0.13.741.app").is_file())
         self.assertFalse((folder / "Foundation.app").is_file())
 
     def test_conflicting_compiler_versions_preserve_both_disk_hashes(self):
@@ -895,6 +896,144 @@ class ProductReuse(unittest.TestCase):
             snapshot = G._before_compile(self.root, request)
         self.assertEqual("testApp", snapshot["appType"])
         self.assertTrue((directory / "before.json").is_file())
+
+    def _state(self, mode="Default"):
+        return json.loads((self.root / f".buildartifacts/AppSourceGate/{mode}/state.json").read_text())
+
+    def _recorded_reuse(self):
+        """What Assert-AppSourceBuild.ps1 -Stage Pipeline sends: the record Finalize stored, no env/Apps scan."""
+        return self.reuse(**self._state()["productReuse"])
+
+    def test_pipeline_validates_against_reuse_record_finalize_accepted(self):
+        """#237: Finalize persists the accepted reuse; Pipeline passes from that record alone."""
+        with patch.object(G, "package_info", return_value=self._product_info()):
+            G.reconcile(self.root, self.context, "finalize", product_reuse=self.reuse())
+            self.assertEqual({"baselineWorkflowRunId": self.BASELINE_RUN, "baselineWorkflowSHA": self.BASELINE_SHA,
+                              "packageFile": ".buildartifacts/Apps/product.app", "packageSha256": self.package_sha},
+                             self._state()["productReuse"])
+            directory = self.root / ".buildartifacts/AppSourceGate/Default"
+            finalized = json.loads((directory / "finalize.json").read_text())
+            self.assertEqual(G.file_hash(directory / "state.json"), finalized["stateSha256"])
+            result = G.reconcile(self.root, self.context, "pipeline", product_reuse=self._recorded_reuse())
+        self.assertTrue(result["outputs"][0]["productReuse"])
+
+    def test_pipeline_fails_closed_without_receipt_or_accepted_reuse_record(self):
+        """#237: no product receipt and no reuse Finalize accepted is never a pass."""
+        directory = self.root / ".buildartifacts/AppSourceGate/Default"
+        (directory / "finalize.json").write_text(json.dumps(
+            {"context": self.context, "stateSha256": G.file_hash(directory / "state.json")}))
+        with patch.object(G, "package_info", return_value=self._product_info()):
+            with self.assertRaisesRegex(G.GateError, "Skipped/missing/unexpected compile hook"):
+                G.reconcile(self.root, self.context, "pipeline")
+            with self.assertRaisesRegex(G.GateError, "Finalize accepted no baseline product reuse"):
+                G.reconcile(self.root, self.context, "pipeline", product_reuse=self.reuse())
+
+    def test_pipeline_rejects_package_hash_differing_from_record(self):
+        """#237: a package that changed after Finalize, or a request off the record, fails closed."""
+        with patch.object(G, "package_info", return_value=self._product_info()):
+            G.reconcile(self.root, self.context, "finalize", product_reuse=self.reuse())
+            recorded = self._recorded_reuse()
+            self.package.write_bytes(b"replaced-after-finalize")
+            with self.assertRaisesRegex(G.GateError, "hash mismatch"):
+                G.reconcile(self.root, self.context, "pipeline", product_reuse=recorded)
+            with self.assertRaisesRegex(G.GateError, "does not match the record Finalize accepted"):
+                G.reconcile(self.root, self.context, "pipeline",
+                            product_reuse=self.reuse(packageSha256=G.file_hash(self.package)))
+
+    def test_pipeline_never_reuses_when_app_changed(self):
+        """#237: an app/ change is not reused in Pipeline, even with a stored Finalize record."""
+        with patch.object(G, "package_info", return_value=self._product_info()):
+            G.reconcile(self.root, self.context, "finalize", product_reuse=self.reuse())
+            with self.assertRaises(G.GateError):
+                G.reconcile(self.root, self.context, "pipeline",
+                            product_reuse=dict(self._recorded_reuse(), appFolderUntouched=False))
+            with self.assertRaisesRegex(G.GateError, "Skipped/missing/unexpected compile hook"):
+                G.reconcile(self.root, self.context, "pipeline")
+
+
+PWSH = shutil.which("pwsh")
+REUSE_DRIVER = r"""
+param([string] $Gate, [string] $Root, [string] $StatePath, [string] $Changed, [string] $Mode)
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+$ast = [System.Management.Automation.Language.Parser]::ParseFile($Gate, [ref]$null, [ref]$null)
+foreach ($name in 'Test-AppFolderUntouched', 'Get-BaselineProductReuseEvidence', 'Get-AcceptedProductReuseRecord', 'Get-ProductReuseRequest') {
+    $definition = $ast.Find({ param($node) $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -ceq $name }, $true)
+    if ($null -eq $definition) { throw "Function $name not found in the gate script." }
+    . ([scriptblock]::Create($definition.Extent.Text))
+}
+function Get-PullRequestChangedPaths { param([string] $RepositoryRoot) return @($Changed -split ',' | Where-Object { $_ }) }
+$state = Get-Content -LiteralPath $StatePath -Raw -Encoding UTF8 | ConvertFrom-Json
+try {
+    $request = Get-ProductReuseRequest -RepositoryRoot $Root -State $state -FromAcceptedRecord:($Mode -eq 'record') 6>$null
+    @{ result = $request } | ConvertTo-Json -Depth 5 -Compress
+}
+catch {
+    @{ error = $_.Exception.Message } | ConvertTo-Json -Compress
+}
+"""
+
+
+@unittest.skipUnless(PWSH, "pwsh is required to exercise the Assert-AppSourceBuild.ps1 reuse functions")
+class AssertScriptProductReuse(unittest.TestCase):
+    """#237: Assert-AppSourceBuild.ps1 reads baseline env/Apps only in Finalize; later stages use the stored record."""
+
+    GATE = Path(__file__).parents[1] / "Assert-AppSourceBuild.ps1"
+    RECORD = {"baselineWorkflowRunId": "44178222993", "baselineWorkflowSHA": "e" * 40,
+              "packageFile": ".buildartifacts/Apps/product.app", "packageSha256": "a" * 64}
+    BASELINE_ENV = ("_baselineWorkflowRunId", "baselineWorkflowRunId", "_baselineWorkflowSHA", "baselineWorkflowSHA")
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.root = Path(self.tmp).resolve()  # long path: PowerShell expands 8.3 temp names
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        (self.root / "driver.ps1").write_text(REUSE_DRIVER, encoding="utf-8")
+        (self.root / ".buildartifacts/Apps").mkdir(parents=True)
+
+    def run_gate(self, state, changed, mode, env=None):
+        (self.root / "state.json").write_text(json.dumps(state), encoding="utf-8")
+        environment = {key: value for key, value in os.environ.items() if key not in self.BASELINE_ENV}
+        environment.update(env or {})
+        completed = subprocess.run(
+            [PWSH, "-NoProfile", "-NonInteractive", "-File", str(self.root / "driver.ps1"),
+             "-Gate", str(self.GATE), "-Root", str(self.root), "-StatePath", str(self.root / "state.json"),
+             "-Changed", ",".join(changed), "-Mode", mode],
+            capture_output=True, text=True, env=environment, timeout=120)
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        return json.loads(completed.stdout.strip().splitlines()[-1])
+
+    def test_pipeline_uses_stored_record_without_baseline_env_or_apps(self):
+        outcome = self.run_gate({"receipts": {}, "productReuse": self.RECORD}, ["test/x.al"], "record")
+        self.assertNotIn("error", outcome)
+        request = outcome["result"]
+        self.assertTrue(request["allowed"] and request["appFolderUntouched"])
+        self.assertEqual(self.RECORD, {key: request[key] for key in self.RECORD})
+
+    def test_pipeline_without_stored_record_fails_closed(self):
+        outcome = self.run_gate({"receipts": {}}, ["test/x.al"], "record")
+        self.assertIn("accepted no baseline product reuse", outcome["error"])
+
+    def test_app_change_never_reuses(self):
+        (self.root / ".buildartifacts/Apps/product.app").write_bytes(b"baseline")
+        env = {"_baselineWorkflowRunId": "44178222993", "_baselineWorkflowSHA": "e" * 40}
+        for mode in ("record", "env"):
+            outcome = self.run_gate({"receipts": {}, "productReuse": self.RECORD},
+                                    ["app/src/x.al", "test/x.al"], mode, env)
+            self.assertEqual({"result": None}, outcome, mode)
+
+    def test_finalize_still_reads_baseline_env_and_apps(self):
+        package = self.root / ".buildartifacts/Apps/product.app"
+        package.write_bytes(b"baseline")
+        env = {"_baselineWorkflowRunId": "44178222993", "_baselineWorkflowSHA": "E" * 40}
+        outcome = self.run_gate({"receipts": {}}, ["test/x.al"], "env", env)
+        self.assertEqual("e" * 40, outcome["result"]["baselineWorkflowSHA"])
+        self.assertEqual(".buildartifacts/Apps/product.app", outcome["result"]["packageFile"])
+        self.assertEqual(G.file_hash(package), outcome["result"]["packageSha256"])
+        self.assertIn("could not be verified", self.run_gate({"receipts": {}}, ["test/x.al"], "env")["error"])
+
+    def test_app_receipt_means_no_reuse(self):
+        outcome = self.run_gate({"receipts": {"app": {}}, "productReuse": self.RECORD}, ["test/x.al"], "record")
+        self.assertEqual({"result": None}, outcome)
 
 if __name__ == "__main__":
     unittest.main()

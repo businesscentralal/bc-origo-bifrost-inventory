@@ -68,4 +68,20 @@ enum 10076835 "Inventory Domain ori"
     {
         Caption = 'Item Category', Comment = 'is-IS=Vöruflokkur';
     }
+    value(15; ItemSubstitution)
+    {
+        Caption = 'Item Substitution', Comment = 'is-IS=Vöruskipti';
+    }
+    value(16; PurchaseReturns)
+    {
+        Caption = 'Purchase Returns', Comment = 'is-IS=Innkaupaskil';
+    }
+    value(17; Planning)
+    {
+        Caption = 'Planning', Comment = 'is-IS=Áætlun';
+    }
+    value(18; CatalogItems)
+    {
+        Caption = 'Catalog Items', Comment = 'is-IS=Vörulistavörur';
+    }
 }

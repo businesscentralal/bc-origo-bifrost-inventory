@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Purchases.Document;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Costing;
@@ -7,9 +8,11 @@ using Microsoft.Inventory.Counting.Recording;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Inventory.Item.Catalog;
+using Microsoft.Inventory.Item.Substitution;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Requisition;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
@@ -513,6 +516,72 @@ codeunit 96963 "Inventory Domain Usage Tests"
     end;
 
     [Test]
+    procedure Scenario_AC05_PurchaseReturnUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] No usage signals, then one purchase return order header.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Purchase Header");
+        SetField(UsageRecord, 'Document Type', "Purchase Document Type"::"Return Order");
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row; the table trigger must run.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] A return order is enough to turn Purchase Returns on.
+        AssertDomain(InventorySetup, 26, true);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PurchaseReturnNoUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue137 | Time: no date selection | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] Purchase documents, including ordinary orders, are cleared in this transaction.
+        ClearUsage();
+        // [WHEN] A setup row is created without a return order or credit memo.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Purchase Returns stays off. A purchase order is not a signal.
+        AssertDomain(InventorySetup, 26, false);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PlanningUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        WkshTemplate: Record "Req. Wksh. Template";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: isolated company data, rolled back by the runner.
+        // [GIVEN] No usage signals, then one planning worksheet template.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Req. Wksh. Template");
+        WkshTemplate.Type := WkshTemplate.Type::Planning;
+        SetField(UsageRecord, 'Type', WkshTemplate.Type);
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] The planning template enables Planning and leaves the other new switch testable on its own.
+        AssertDomain(InventorySetup, 27, true);
+    end;
+
+    [Test]
+    procedure Scenario_AC05_PlanningNoUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue117 | Time: none | Risk: isolated company data, rolled back by the runner.
+        // [GIVEN] All source tables, including planning worksheet templates, are empty in this transaction.
+        ClearUsage();
+        // [WHEN] A setup row is created without usage.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] Planning stays off.
+        AssertDomain(InventorySetup, 27, false);
+    end;
+
+    [Test]
     procedure Scenario_AC03_AlreadyOnWithoutUsage_StaysOn()
     var
         InventorySetup: Record "Inventory Setup ori";
@@ -567,6 +636,72 @@ codeunit 96963 "Inventory Domain Usage Tests"
         InventoryUpgrade.EnableUsedDomains();
         InventorySetup.Get();
         Assert.IsFalse(InventorySetup."Item Reference", 'The tag preserves manual changes after migration.');
+    end;
+
+    [Test]
+    procedure Scenario_Issue119_CatalogUsage_EnablesDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        UsageRecord: RecordRef;
+    begin
+        // [SCENARIO] Issue119 | Time: none | Risk: isolated company data, rolled back by runner.
+        // [GIVEN] No usage signals, then one self-created catalog item.
+        ClearUsage();
+        PrepareUsage(UsageRecord, Database::"Nonstock Item");
+        UsageRecord.Insert(false);
+        // [WHEN] A user creates the setup row.
+        InventorySetup.InsertIfNotExists();
+        // [THEN] The Catalog Items domain is on.
+        AssertDomain(InventorySetup, 28, true);
+    end;
+
+    [Test]
+    procedure Scenario_Issue119_NoCatalogUsage_PreservesOff()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        // [SCENARIO] Issue119 | Time: none | Risk: isolated company data, rolled back by runner.
+        ClearUsage();
+        InventorySetup.InsertIfNotExists();
+        AssertDomain(InventorySetup, 28, false);
+    end;
+
+    [Test]
+    procedure Scenario_Issue119_CatalogUpgrade_RaisesOnlyCatalogItemsOnce()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        InventoryUpgrade: Codeunit "Inventory Upgrade ori";
+        UpgradeTag: Codeunit "Upgrade Tag";
+        UpgradeTagLibrary: Codeunit "Upgrade Tag Library";
+        UsageRecord: RecordRef;
+        PerCompanyUpgradeTags: List of [Code[250]];
+    begin
+        // [SCENARIO] Issue119 | Time: none | Risk: the catalog migration must not undo an earlier opt-out of another domain.
+        // [GIVEN] An existing row with every switch off, catalog items and item references in use.
+        ClearUsage();
+        InventorySetup.Init();
+        InventorySetup.Insert(false);
+        PrepareUsage(UsageRecord, Database::"Nonstock Item");
+        UsageRecord.Insert(false);
+        UsageRecord.Close();
+        PrepareUsage(UsageRecord, Database::"Item Reference");
+        UsageRecord.Insert(false);
+        if UpgradeTag.HasUpgradeTag(InventoryUpgrade.GetCatalogItemsUsageTag()) then
+            UpgradeTagLibrary.DeleteUpgradeTag(InventoryUpgrade.GetCatalogItemsUsageTag(), CopyStr(CompanyName(), 1, 30));
+        // [WHEN] The catalog items migration runs.
+        InventoryUpgrade.EnableUsedCatalogItems();
+        // [THEN] Only Catalog Items is raised; Item Reference stays off as the administrator left it.
+        InventorySetup.Get();
+        Assert.IsTrue(InventorySetup."Catalog Items", 'Catalog items in use raise the new domain.');
+        Assert.IsFalse(InventorySetup."Item Reference", 'Other switches are not touched by the catalog migration.');
+        // [THEN] The tag makes the migration run once and is registered for new companies.
+        InventorySetup."Catalog Items" := false;
+        InventorySetup.Modify(true);
+        InventoryUpgrade.EnableUsedCatalogItems();
+        InventorySetup.Get();
+        Assert.IsFalse(InventorySetup."Catalog Items", 'The tag preserves a later opt-out.');
+        UpgradeTag.GetPerCompanyUpgradeTags(PerCompanyUpgradeTags);
+        Assert.IsTrue(PerCompanyUpgradeTags.Contains(InventoryUpgrade.GetCatalogItemsUsageTag()), 'New companies register the catalog migration tag.');
     end;
 
     [Test]
@@ -700,7 +835,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', 'XDOMAIN');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 28 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -765,7 +900,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         for EntryNo := 1 to 1000 do
             InsertLedgerLocation(EntryNo, 'XITEM', '');
         SetupRecord.GetTable(InventorySetup);
-        for FieldNo := 10 to 24 do begin
+        for FieldNo := 10 to 28 do begin
             DomainField := SetupRecord.Field(FieldNo);
             DomainField.Value := true;
         end;
@@ -886,8 +1021,14 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearTable(Database::"Inventory Period");
         ClearTable(Database::"Price List Line");
         ClearTable(Database::"Item Reference");
+        ClearTable(Database::"Item Substitution");
         ClearTable(Database::"Item Charge");
         ClearTable(Database::"Item Category");
+        ClearTable(Database::"Purchase Header");
+        ClearTable(Database::"Nonstock Item");
+        ClearTable(Database::"Requisition Line");
+        ClearTable(Database::"Requisition Wksh. Name");
+        ClearTable(Database::"Req. Wksh. Template");
     end;
 
     local procedure ClearTable(TableNo: Integer)

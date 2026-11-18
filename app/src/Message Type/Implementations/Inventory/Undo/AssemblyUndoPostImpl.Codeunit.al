@@ -3,6 +3,7 @@ namespace Origo.Bifrost.Inventory;
 using Microsoft.Assembly.History;
 using Origo.Bifrost;
 
+/// <summary>Undoes one posted assembly with native corrective entries and optional order recreation.</summary>
 codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
@@ -64,11 +65,10 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
-        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters; a longer value is cut to 20.'));
-        Parts.AddExpectedCountParameter(Parts.CountUnitAssemblyUndoPost(), Parameters);
+        Parameters.Add(ContractMgt.Parameter('documentNo', 'string', true, 'No. of the posted assembly to undo, at most 20 characters.'));
+        Parameters.Add(ContractMgt.Parameter('recreateOrder', 'boolean', false, 'Defaults to false. Recreates the original assembly order when it no longer exists, using the standard undo. An existing order is updated by native undo.'));
         exit(true);
     end;
 
@@ -78,7 +78,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Fields: JsonArray;
     begin
         Fields.Add(ContractMgt.ResponseField('status', 'string', 'Success on a successful call; Error responses use the standard error envelope.'));
-        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted assembly No. that was undone, as sent (cut to 20 characters).'));
+        Fields.Add(ContractMgt.ResponseField('documentNo', 'string', 'The posted assembly No. that was undone, as sent.'));
         Response.Add('contentType', 'text/json');
         Response.Add('fields', Fields);
         exit(true);
@@ -92,6 +92,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, 'The caller lacks Inv. Posting Gate or cannot write Posted Assembly Header records.', 'Assign Inv. Posting Gate, the Bifrost "Full Access" permission set (extended by Inventory write permissions) and a Business Central permission set that can change the posted assembly tables.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, 'documentNo is required.', 'documentNo was not sent or is empty.', 'Send documentNo, the number of the posted assembly.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'documentNo is not text.', 'Send a JSON string of at most 20 characters.'));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, 'recreateOrder must be a JSON boolean.', 'Send true or false, or omit recreateOrder.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, 'Posted assembly %1 was not found.', 'No Posted Assembly Header has that number.', 'Check the number. It is the posted assembly number, not the assembly order number.'));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, 'The error text of Business Central', 'Business Central refuses the undo, for example when the posted assembly cannot be undone. The answer carries BusinessCentralError and Business Central''s own error text.', 'Read the text, correct the cause in Business Central and send the call again.'));
         exit(true);
@@ -99,7 +100,6 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
-        Parts: Codeunit "Inventory Contract Parts ori";
         Preconditions: JsonArray;
     begin
         Preconditions.Add('The posted assembly exists.');
@@ -107,12 +107,18 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         Effect.Add('effect', 'irreversible');
         Effect.Add('writes', true);
         Effect.Add('posts', true);
-        Effect.Add('changes', 'Undoes the posted assembly with the standard Business Central undo of a posted assembly, which posts the reversing entries. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
+        Effect.Add('changes', CountUnit() + ' ' + 'Undoes the posted assembly with the standard Business Central undo of a posted assembly, which posts the reversing entries. The undo is committed with the message (the message task commits, or the caller''s transaction under Omit Commit).');
         Effect.Add('idempotent', false);
         Effect.Add('permissionSet', 'BIFROST Full ori');
         Effect.Add('preconditions', Preconditions);
-        Parts.AddCountUnit(Parts.CountUnitAssemblyUndoPost(), Effect);
         exit(true);
+    end;
+
+    local procedure CountUnit(): Text
+    var
+        CountLbl: Label 'expectedCount counts the one posted assembly document, always 1, not its lines or ledger entries. When Bifrost Setup requires confirmation, omit expectedCount to obtain the count without changing data. Otherwise omission executes the operation. is-IS: expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.', Comment = 'is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.';
+    begin
+        exit(CountLbl);
     end;
 
     procedure GetMetering(var Metering: JsonObject): Boolean
@@ -171,12 +177,20 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         PostedAssemblyHeader: Record "Posted Assembly Header";
+        TempProcessArgument: Record "Message Argument ori" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Process: Codeunit "Inventory Write Process ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
+        ProcessRequest: JsonObject;
         DocumentNo: Code[20];
+        RecreateOrder: Boolean;
+        Token: JsonToken;
+        Serialized: Text;
+        BooleanErr: Label 'recreateOrder must be a JSON boolean.', Comment = 'is-IS=recreateOrder verður að vera JSON-rökgildi.';
+        BooleanExpectedTxt: Label 'true or false', Comment = 'is-IS=true eða false';
+        BooleanNextTxt: Label 'Send recreateOrder as true or false, or omit it.', Comment = 'is-IS=Sendu recreateOrder sem true eða false eða slepptu því.';
         DocumentExpectedTxt: Label 'An existing posted assembly document that can be undone.', Comment = 'is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.';
         DocumentNextStepTxt: Label 'Send the posted assembly number in documentNo and resolve its native posting constraints.', Comment = 'is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.';
         NotFoundErr: Label 'Posted assembly %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.';
@@ -192,17 +206,31 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         DocumentNo := CopyStr(Parts.ReadRequestText(RequestJson, 'documentNo', Argument, true, 20), 1, 20);
         if Parts.RespondToProblems(Argument) then
             exit;
+        if RequestJson.Get('recreateOrder', Token) then begin
+            Token.WriteTo(Serialized);
+            if not (Serialized in ['true', 'false']) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, BooleanErr, 'recreateOrder', Serialized, BooleanExpectedTxt, BooleanNextTxt);
+                exit;
+            end;
+            RecreateOrder := Token.AsValue().AsBoolean();
+        end;
         if not PostedAssemblyHeader.Get(DocumentNo) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
             exit;
         end;
 
+        // The isolated writer receives only native undo input, never the caller's request.
+        ProcessRequest.Add('recreateOrder', RecreateOrder);
+        TempProcessArgument.Init();
+        TempProcessArgument.ID := CreateGuid();
+        TempProcessArgument.Insert();
+        TempProcessArgument.SetRequestJson(ProcessRequest);
         Process.SetOperation('AssemblyUndo');
         Process.SetPostedAssemblyNo(DocumentNo);
         if Argument."Omit Commit" then
-            Process.Run(Argument)
+            Process.Run(TempProcessArgument)
         else
-            if not Process.Run(Argument) then begin
+            if not Process.Run(TempProcessArgument) then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
                 exit;
             end;
