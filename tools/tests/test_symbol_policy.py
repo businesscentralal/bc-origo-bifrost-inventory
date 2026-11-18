@@ -258,7 +258,7 @@ class SymbolPolicy(unittest.TestCase):
             with patch.dict(G.MEASURED_PACKAGE_PROFILES, {info['sha256']: profile}):
                 with self.assertRaisesRegex(G.GateError, message): G.package_info(path)
 
-    def test_genuine_foundation617_candidate_and_wrong_hash_source_version_friend_tail(self):
+    def test_genuine_foundation_release_candidate_and_wrong_hash_source_version_friend_tail(self):
         path = Path(os.environ['APPSOURCE_GATE_FOUNDATION_CANDIDATE'])
         info = G.package_info(path)
         receipt = G.check_foundation_candidate(info)

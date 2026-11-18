@@ -12,12 +12,12 @@ $ErrorActionPreference = 'Stop'
 $previousArtifacts = $env:FOUNDATION_STAGING_ARTIFACTS
 $previousFixtures = $env:APPSOURCE_GATE_FIXTURES
 $previousCandidateArtifacts = $env:FOUNDATION_CANDIDATE_ARTIFACTS
-$previousReleaseArtifacts = $env:FOUNDATION_RELEASE617_ARTIFACTS
+$previousReleaseArtifacts = $env:FOUNDATION_RELEASE_ARTIFACTS
 try {
     $env:FOUNDATION_STAGING_ARTIFACTS = (Resolve-Path -LiteralPath $ArtifactFolder).Path
     $env:APPSOURCE_GATE_FIXTURES = (Resolve-Path -LiteralPath $FixtureFolder).Path
     $env:FOUNDATION_CANDIDATE_ARTIFACTS = (Resolve-Path -LiteralPath $CandidateArtifactFolder).Path
-    $env:FOUNDATION_RELEASE617_ARTIFACTS = (Resolve-Path -LiteralPath $ReleaseArtifactFolder).Path
+    $env:FOUNDATION_RELEASE_ARTIFACTS = (Resolve-Path -LiteralPath $ReleaseArtifactFolder).Path
     $python = Get-Command python3 -ErrorAction SilentlyContinue
     if (-not $python) { $python = Get-Command python -ErrorAction Stop }
     & $python.Source -m unittest discover -s (Join-Path $PSScriptRoot 'tests') -p 'test_foundation_staging.py' -v
@@ -27,5 +27,5 @@ finally {
     $env:FOUNDATION_STAGING_ARTIFACTS = $previousArtifacts
     $env:APPSOURCE_GATE_FIXTURES = $previousFixtures
     $env:FOUNDATION_CANDIDATE_ARTIFACTS = $previousCandidateArtifacts
-    $env:FOUNDATION_RELEASE617_ARTIFACTS = $previousReleaseArtifacts
+    $env:FOUNDATION_RELEASE_ARTIFACTS = $previousReleaseArtifacts
 }

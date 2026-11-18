@@ -33,17 +33,28 @@ BUILD_URL = f'https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/ac
 MAX_FILES = 128
 MAX_BYTES = 128 * 1024 * 1024
 
-DEFAULT_PROFILE = 'release617'
+DEFAULT_PROFILE = 'release741'
 PROFILES = {
-    'release617': dict(source=FOUNDATION_CANDIDATE['sourceCommit'], run=39680460724, attempt=1,
+    'release741': dict(source=FOUNDATION_CANDIDATE['sourceCommit'], run=44188373403, attempt=2,
         releaseTag=FOUNDATION_CANDIDATE['releaseTag'],
         artifacts={
             'Apps': (FOUNDATION_CANDIDATE['releaseAssetId'], FOUNDATION_CANDIDATE['archiveSha256']),
-            'TestApps': (663995606, '6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be'),
+            'TestApps': (761125901, '2aefe1b306efc4a62a8886c29a01a9c09f833d62f80400f90860f1d69714cb91'),
         },
         identity=FOUNDATION_CANDIDATE['identity'], pin=FOUNDATION_CANDIDATE['sha256'],
-        testPin='74ac22899743c09e46f2089a95f49d59594200108ee005b634eb9cc08a3e60d1',
+        testPin='549a9665ba6d983e41ad8ec35897d9d2c0c995b9d667228f4f70d870958c7639',
         buildUrl=FOUNDATION_CANDIDATE['buildUrl']),
+    # Historical release 28.0.8 (package 28.0.8.617); explicit input only, never the default.
+    'release617': dict(source='398b62521c043b2b4ba2ee1d626813f3ccb85711', run=39680460724, attempt=1,
+        releaseTag='28.0.8',
+        artifacts={
+            'Apps': (663995787, '55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1'),
+            'TestApps': (663995606, '6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be'),
+        },
+        identity=dict(id=FOUNDATION, publisher='Origo', name='Bifrost Foundation', version='28.0.8.617'),
+        pin='f20806e61c62af9ca80af0d0dd7273835947841b5bcc4b9d389dd2a7907146bc',
+        testPin='74ac22899743c09e46f2089a95f49d59594200108ee005b634eb9cc08a3e60d1',
+        buildUrl='https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/runs/39680460724'),
     'controlled523': dict(source=SOURCE, run=RUN, attempt=2, artifacts=ARTIFACTS,
                           identity=IDENTITY, pin=PIN, testPin=TEST_PIN, buildUrl=BUILD_URL),
     'candidate530': dict(source='8ec074f4ac69ac9bde15807cf16d21bee045332f', run=37679390622, attempt=1,

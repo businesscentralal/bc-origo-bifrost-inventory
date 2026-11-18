@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed - CI probes Foundation 28.0.13
+
+- `.AL-Go/settings.json` probes the published Foundation release `28.0.13` (package 28.0.13.741, source `4458b14`, build 44188373403) instead of `28.0.8`. The AppSource gate candidate (`tools/appsource_gate.py`) and the default collision-restore/staging profile `release741` (`tools/stage_foundation_inputs.py`) pin its exact Apps/TestApps release assets, archive and package hashes, source, build and compiler. `release617` stays an explicit historical profile. The app and test Foundation floors stay 28.0.8.617. No AL objects change.
+
 ### Fixed - reclassification test ID collision (PR #221)
 
 - PR #221 build repair: move `Reclass Journal Tests ori` from codeunit 96964 to unused test codeunit 96925; main keeps blank-line tests at 96964. No tests, assertions or product behavior changed.
