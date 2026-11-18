@@ -53,6 +53,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyNativeSuccess(1039);
     end;
 
+    /// <summary>Verifies English confirmed native posting preserves a pending queue key above the value-entry ledger.</summary>
     [Test]
     [HandlerFunctions('NativeMessageHandler')]
     procedure Scenario_AC01_PendingValueEntry_NativeSuccessIn1033()
@@ -61,6 +62,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyNativeSuccessWithPendingValueEntry(1033);
     end;
 
+    /// <summary>Verifies Icelandic confirmed native posting preserves a pending queue key above the value-entry ledger.</summary>
     [Test]
     [HandlerFunctions('NativeMessageHandler')]
     procedure Scenario_AC01_PendingValueEntry_NativeSuccessIn1039()
