@@ -2583,12 +2583,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitRevaluation - NamedType UnitLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1115573132 - Method 448885324 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one transfer order this call posts, not its lines or the shipment, receipt and ledger entries it creates.</source>
-          <target>expectedCount telur eina flutningspöntun sem kallið bókar, ekki línur hennar eða sendingar-, móttöku- og birgðafærslurnar sem það býr til.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina flutningspöntun sem kallið bókar, ekki línur hennar eða sendingar-, móttöku- og birgðafærslurnar sem það býr til.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitTransferOrder - NamedType UnitLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
           <target>%1 er nauðsynlegt.</target>

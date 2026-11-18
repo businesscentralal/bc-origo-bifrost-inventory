@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
-- `Inventory.Revaluation.Post`, `.TransferOrder.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other four listed types already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
+- `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
 - New test codeunit 96935 `Inv. Count Unit Tests ori` (1033 and 1039). No new app object, page or message type.
 
 ### Fixed - confirmation posting fixture on reused tenants (PR #202)

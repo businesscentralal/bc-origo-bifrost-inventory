@@ -60,8 +60,6 @@ codeunit 96935 "Inv. Count Unit Tests ori"
         GlobalLanguage(LanguageId);
         Types.Add('Inventory.Revaluation.Post');
         Units.Add(Parts.CountUnitRevaluation());
-        Types.Add('Inventory.TransferOrder.Post');
-        Units.Add(Parts.CountUnitTransferOrder());
         Types.Add('Inventory.AssemblyOrder.Post');
         Units.Add(Parts.CountUnitAssemblyOrder());
         Types.Add('Inventory.AdjustCost.Run');

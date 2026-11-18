@@ -141,10 +141,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                     Parameters.Add(Parameter);
                 end;
             'Inventory.TransferOrder.Post':
-                begin
-                    Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer. ShipReceive is refused.'));
-                    AddExpectedCountParameter(CountUnitTransferOrder(), Parameters);
-                end;
+                Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer. ShipReceive is refused.'));
             'Inventory.TransferOrder.PreviewPost':
                 Parameters.Add(ContractMgt.Parameter('postingType', 'string', false, 'Ship or Receive. Required for a non-direct transfer; ignored for a direct transfer.'));
             'Inventory.AssemblyOrder.Create':
@@ -796,7 +793,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.TransferOrder.Post':
                 begin
                     SetEffect(Effect, 'irreversible', 'Posts the Transfer Order as a shipment, a receipt or a direct transfer: creates the posted transfer shipment, receipt or direct transfer document with its item ledger and value entries, and updates or deletes the order. The call commits and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori');
-                    AddCountUnit(CountUnitTransferOrder(), Effect);
                     Preconditions.Add('The Transfer Orders domain is turned on in Inventory Setup.');
                     Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The order has lines and is ready to be shipped or received.');
@@ -910,14 +906,6 @@ codeunit 10076919 "Inventory Contract Parts ori"
     procedure CountUnitRevaluation(): Text
     var
         UnitLbl: Label 'expectedCount counts the one revaluation journal batch this call posts, not its lines or the value entries it creates.', Comment = 'is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.';
-    begin
-        exit(UnitLbl);
-    end;
-
-    /// <summary>Names what expectedCount counts for the TransferOrder type (#192).</summary>
-    procedure CountUnitTransferOrder(): Text
-    var
-        UnitLbl: Label 'expectedCount counts the one transfer order this call posts, not its lines or the shipment, receipt and ledger entries it creates.', Comment = 'is-IS=expectedCount telur eina flutningspöntun sem kallið bókar, ekki línur hennar eða sendingar-, móttöku- og birgðafærslurnar sem það býr til.';
     begin
         exit(UnitLbl);
     end;
