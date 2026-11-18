@@ -12,6 +12,9 @@
 ### Fixed - reclassification test ID collision (PR #221)
 
 - PR #221 build repair: move `Reclass Journal Tests ori` from codeunit 96964 to unused test codeunit 96925; main keeps blank-line tests at 96964. No tests, assertions or product behavior changed.
+### Fixed (2026-11-17) - AppSource gate keeps Finalize's baseline reuse for the Pipeline step (#237)
+
+- AppSource build gate (`tools/Assert-AppSourceBuild.ps1`, `tools/appsource_gate.py`, `tools/AppSourceBuildGate.md`): Finalize stores the baseline-reused product it accepted (baseline run, baseline SHA, package file and SHA-256) as `productReuse` in `state.json`. The Pipeline step validates against that record instead of the baseline env and Apps folder, which are gone by then, so test-only PRs no longer fail there. No receipt and no record, a record mismatch, a changed package hash and `app/` changes still fail closed. New tests in `tools/tests/test_appsource_gate.py`; no AL or workflow change.
 
 ### Fixed — issue 134 ID clash with merged Get Shipment Lines (#215)
 
