@@ -12,6 +12,7 @@ Open **Assisted Setup → Set up Bifrost Inventory**, or **Inventory Setup → S
 - Inventory.ItemSubstitution.Get
 - Inventory.ItemReference.Resolve and Inventory.ItemReference.Set
 - Inventory.AvailabilityByPeriod.Get
+- Inventory.AgedInventory.Get
 - Inventory.ItemCharge.Assign and Inventory.ItemCharge.Get
 - Inventory.TransferOrder.Create, Release, Reopen, Post, Ship, Receive, PreviewPost, Statistics
 - Inventory.AssemblyOrder.Create, RefreshLines, Release, Reopen, Post, PreviewPost, Statistics

@@ -10,8 +10,8 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 94 Bifröst message
-types (84 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 95 Bifröst message
+types (85 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
 unit price updates. An agent or an integration calls them through the same Queue → Task → Data API
@@ -36,6 +36,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.ItemReference.Set` | Inbound | Create or update an item reference; preserve omitted descriptions/dates and refuse references assigned to another item |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AgedInventory.Get` | Outbound | Read stock quantity and value per age bucket and item, paged |
 | `Inventory.AvailabilityByEvent.Get` | Outbound | Read dated supply/demand events, source documents and running projected inventory |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
@@ -304,6 +305,7 @@ New objects: codeunit **10076940** `Avail. By Event Impl ori`, message enum valu
 | 10076835 | `Inventory Domain ori` | The eighteen domains |
 
 | 10076835 | `MsgType.AvailPer.EnumExt ori` | `Inventory.AvailabilityByPeriod.Get` |
+| 10076851 | `MsgType.AgedInv.EnumExt ori` | `Inventory.AgedInventory.Get` (impl codeunit 10076948 `Aged Inventory Get Impl ori`) |
 | 10076836 | `MsgType.CostGet.EnumExt ori` | `Inventory.Cost.Get`, `Inventory.Cost.Update`, `Inventory.Revaluation.Post`, `Inventory.Revaluation.PreviewPost` |
 | 10076837 | `MsgType.EnumExt ori` | 36 message types on Foundation's `Message Type ori` |
 | 10076838 | `MsgType.ItemCat.EnumExt ori` | `Inventory.ItemCategory.Get`, `Inventory.ItemCategory.Set` |
@@ -371,6 +373,8 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076931–10076932 | Items | `Item Create Impl ori`, `Item Create Proc ori` (`Inventory.Item.Create`) |
 | 10076933–10076938 | Standard cost | `Std. Cost Implement Impl ori` (10076933), `Std. Cost Management ori`, `Std. Cost Process ori`, `Std. Cost Contract ori`, `Std. Cost Suggest Proc ori`, `Std. Cost Suggest Impl ori` (10076938) |
 | 10076930 | Purchase returns | `Purch. Return Create Impl ori` |
+| 10076948 | Aged inventory | `Aged Inventory Get Impl ori` (`Inventory.AgedInventory.Get`) |
+| 10077026 | `Transfer Ship Impl ori` | Partial transfer shipment |
 | 10077011–10077013 | Item units of measure | Get, Create, Create process |
 | 10077021 | Partial transfers | `Transfer Receive Impl ori` (partial transfer receipt) |
 | 10077022 | Partial transfers | `Partial Transfer Mgt ori` (validates selected transfer quantities) |
