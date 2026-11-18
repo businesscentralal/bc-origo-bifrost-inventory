@@ -143,6 +143,11 @@ README "Objects" lists every object with its ID. In short:
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
 
+## PR #202 amendment ID reconciliation (17.11.2026)
+
+- Main keeps codeunit 10077031 `Purch Get Receipt Proc ori`. Item tracing implementation and enum value move to 10076994; enum extension 10077029 stays.
+- Item tracing tests move from 96998 (claimed by open #201) to 96949. Checked main and open PR claims before allocation.
+
 ## PR #221 test ID reconciliation
 
 - Main keeps codeunit 96964 `Inv. 186 Blank Line Tests ori`. Reclassification uses codeunit 96925 `Reclass Journal Tests ori` (formerly 96964), within the existing 96900–96999 test range. Checked main and every open Inventory PR head on 2026-11-17; 96925 was unused. Test bodies and assertions are unchanged.

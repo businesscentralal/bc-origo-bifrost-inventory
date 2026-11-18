@@ -10,8 +10,8 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 91 Bifröst message
-types for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 97 Bifröst message
+types (87 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
 unit price updates. An agent or an integration calls them through the same Queue → Task → Data API
@@ -107,6 +107,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.Reservation.Cancel` | Inbound | Cancel the reservation pair with `entryNo` through Reservation Engine Mgt. |
 | `Inventory.Reservation.AutoReserve` | Inbound | Reserve a sales line from available supply |
 | `Inventory.OrderTracking.Get` | Outbound | Read the order tracking chain for a line |
+| `Inventory.ItemTracing.Get` | Outbound | Trace a lot or serial number through the item ledger, from origin to usage or back (`lotNo` and/or `serialNo`, optional `itemNo`, `variantCode`, `direction`); read only, refuses above 1000 nodes with `LimitExceeded` |
 | `Inventory.PlanningWorksheet.Calculate` | Inbound | Replace suggestion lines for the selected items on one planning worksheet (`regenerative` or `netChange`) and return the lines |
 | `Inventory.PlanningWorksheet.CarryOut` | Inbound | Create new purchase, transfer and assembly orders from accepted New lines. Refuses lines that would change an existing document |
 | `Inventory.CycleCount.Calculate` | Inbound | Calculate a cycle counting journal: fills an empty physical inventory journal batch with the items and stockkeeping units that are due by their counting period (native report 790, native counting dates advanced). `postingDate` and `documentNo` are required; `itemNo`, `locationCode`, `variantCode` and `itemsNotOnInventory` are optional; an item without a counting period is refused with `PreconditionFailed`. Effect: write; posting stays with `Inventory.PhysInventory.Post` |
@@ -319,6 +320,7 @@ New objects: codeunit **10076940** `Avail. By Event Impl ori`, message enum valu
 | 10076870 | `MsgType.CycleCount.EnumExt ori` | `Inventory.CycleCount.Calculate` (value 10076970) |
 | 10076842 | `MsgType.PhysRecord.EnumExt ori` | `Inventory.PhysInventory.Record` |
 | 10076843 | `MsgType.ReservAuto.Ext ori` | `Inventory.Reservation.AutoReserve`, `Inventory.OrderTracking.Get` |
+| 10077029 | `MsgType.ItemTrace.Ext ori` | `Inventory.ItemTracing.Get` |
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
@@ -371,6 +373,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10077030 | Selected reservation supply | `Reserv. Supply Filter ori` restricts the native inventory search while explicitly bound |
 | 10077018, 10077031 | Purchase receipt lines | `Purch Get Receipt Impl ori` (`Purchase.PurchaseInvoice.GetReceiptLines`, value 10077018), `Purch Get Receipt Proc ori`; enum extension 10077030 |
 | 10076897–10076900, 10077010 | Item tracking | Assign, Availability Get, Delete, Get; `Tracking Info Get Impl ori` (10077010) |
+| 10076994 | Item tracing | `Item Tracing Get Impl ori` |
 | 10076901–10076908 | Transfer orders | Preview Post, Create, Post, Reopen, Statistics, `Transfer Post Subscriber ori`, Release, Reopen process |
 | 10076909–10076911 | Undo | Assembly, transfer shipment, transfer receipt |
 | 10076949, 10076939, 10076946 | Planning worksheet | `Plan Wksh Calc Impl ori`, `Plan Wksh Carry Impl ori`, `Req. Worksheet Engine ori` |

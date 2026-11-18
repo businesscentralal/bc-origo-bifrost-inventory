@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed - confirmation posting fixture on reused tenants (PR #202)
+
+- Reserve native value-entry numbers above existing posting-queue keys without deleting or replacing tenant data, and clear stale sequence buffers before the confirmation posting fixture runs.
+- Add bilingual regressions with an occupied queue key above the ledger. All native success, confirmation-boundary and exact revaluation-amount assertions remain; the regressions also verify the existing queue row is preserved.
+- Reconcile both exact catalogue counts and README with main's merged catalog-item registration: 97 total types, 87 Inventory types. Preserve the complete explicit roster and both membership checks.
+
 ### Fixed (2026-11-17) - Reused test-company fixtures (PR #207 amend)
 
 - Transfer posting, confirmation and cycle-count fixtures advance the Microsoft test-library number sequence beyond existing padded G/L accounts, preserving existing accounts and all behavior assertions.
@@ -22,6 +28,11 @@
 ### Changed - CI probes Foundation 28.0.13
 
 - `.AL-Go/settings.json` probes the published Foundation release `28.0.13` (package 28.0.13.741, source `4458b14`, build 44188373403) instead of `28.0.8`. The AppSource gate candidate (`tools/appsource_gate.py`) and the default collision-restore/staging profile `release741` (`tools/stage_foundation_inputs.py`) pin its exact Apps/TestApps release assets, archive and package hashes, source, build and compiler. `release617` stays an explicit historical profile. The app and test Foundation floors stay 28.0.8.617. No AL objects change.
+### Fixed - item tracing review (#107, PR #202)
+
+- Reject `?` in lot, serial, item and variant identifiers before native tracing can match a different identifier. Both locales name the refused wildcard in recovery guidance.
+- Permission and caught native-tracing refusals now include localized `nextStep` guidance. Preserve native coded errors and telemetry. Add bilingual wildcard, restricted-permission and native-error regressions.
+- Merge current main while preserving both planning types and ItemTracing (78 Inventory registrations). Main keeps purchase receipt process codeunit 10077031; unreleased ItemTracing implementation/message value move to 10076994. Its tests move to 96949 to avoid open #201's claim on 96998.
 
 ### Fixed - aged inventory amendment after main merges (#195)
 
@@ -126,6 +137,10 @@
 - Invoice line types and status values use English enum names in both locales, matching the shared response convention.
 - Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
 - `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
+### Added (2026-11-16) - Inventory.ItemTracing.Get (#107)
+- `Inventory.ItemTracing.Get` traces a lot or serial number through the item ledger as the Item Tracing page does (Item Tracing Mgt., codeunit 6520). Send `lotNo` and/or `serialNo`, optionally `itemNo` and `variantCode`, and `direction` (`originToUsage`, the default, or `usageToOrigin`). The answer is the trace tree as a flat `nodes` list in tree order with `level`, `entryNo`, `parentEntryNo`, `entryType`, `documentNo`, `postingDate`, `itemNo`, `variantCode`, `lotNo`, `serialNo`, `locationCode`, `quantity`, `remainingQuantity` and `open`. Neither lot nor serial answers `MissingParameter`; filter characters, a bad `direction` or a too long value answer `InvalidParameter`; an unknown number answers `RecordNotFound`; a trace above 1000 nodes answers `LimitExceeded`. Effect: read. It uses the Item Tracking domain.
+- Objects added: codeunit 10076994 `Item Tracing Get Impl ori` (message type value 10077031), enum extension 10077029 `MsgType.ItemTrace.Ext ori`; the codeunit is added to `BIFROST InvRead ori` and `BIFROST InvWrite ori`. Test app: codeunit 96998 `Item Tracing Get Tests`; `Inventory Contract Batch Tests` (96921) now expects 72 types registered by this app. is-IS help and captions are in the Icelandic XLF.
+
 ### Added (2026-11-16) - Inventory.AgedInventory.Get (#110)
 - New read-only message type `Inventory.AgedInventory.Get` (codeunit 10076948 `Aged Inventory Get Impl ori`, enum extension 10076851 `MsgType.AgedInv.EnumExt ori`, enum value 10076948). It mirrors the Item Age Composition - Qty. and - Value reports: remaining quantity and value of open positive item ledger entries in five age buckets counted back from `endingDate` (default work date) in steps of `periodLengthDays` (default 30), per item. Items are selected with `itemNo`/subject, a SystemId key or `tableView` (none = every item) and filtered with `locationFilter`, `variantCode` and `itemCategoryFilter`. Paged with `skip` and `take` (`noOfLines`, `totalNoOfLines`). Declares `effect: read`; Costing domain; granted through `BIFROST InvRead ori`.
 - Refusals carry a Bifröst error code with `nextStep` (`InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `PermissionDenied`, `ConflictingIdentifiers`). Help in en-US and is-IS, `Bifrost Inventory.is-IS.xlf` regenerated.
