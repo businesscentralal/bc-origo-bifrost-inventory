@@ -22,6 +22,10 @@ codeunit 10076926 "Inventory Read Process ori"
                 Journal.Check(Rec, "Item Journal Template Type"::"Phys. Inventory");
             'PhysicalPreview':
                 Journal.Preview(Rec, "Item Journal Template Type"::"Phys. Inventory");
+            'ReclassCheck':
+                Journal.Check(Rec, "Item Journal Template Type"::Transfer);
+            'ReclassPreview':
+                Journal.Preview(Rec, "Item Journal Template Type"::Transfer);
             'RevaluationPreview':
                 Journal.PreviewRevaluation(Rec);
             else
