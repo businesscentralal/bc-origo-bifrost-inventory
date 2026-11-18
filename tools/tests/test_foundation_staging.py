@@ -240,23 +240,23 @@ class Candidate530(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.config = S.PROFILES[self.profile]
-        inputs = Path(os.environ['FOUNDATION_RELEASE617_ARTIFACTS' if self.profile == 'release617' else 'FOUNDATION_CANDIDATE_ARTIFACTS'])
+        inputs = Path(os.environ['FOUNDATION_RELEASE_ARTIFACTS' if self.profile == S.DEFAULT_PROFILE else 'FOUNDATION_CANDIDATE_ARTIFACTS'])
         context = dict(run='1234', attempt='1', sourceCommit='3' * 40, checkoutSha='4' * 40, mode='Default')
         artifacts = {}
         for kind, (artifact, sha) in self.config['artifacts'].items():
-            archive = inputs / (f'{kind}.zip' if self.profile == 'release617' else f'foundation530-{artifact}.zip')
+            archive = inputs / (f'{kind}.zip' if self.profile == S.DEFAULT_PROFILE else f'foundation530-{artifact}.zip')
             self.assertEqual(sha, G.file_hash(archive))
             artifacts[kind] = dict(archive=str(archive), provenance=dict(repository='OrigoSoftwareSolutions/bc-origo-bifrost-core',
                 sourceSha=self.config['source'], run=self.config['run'], attempt=self.config['attempt'],
                 artifactId=artifact, archiveSha256=sha, expired=False, conclusion='success'))
-            if self.profile == 'release617':
+            if self.profile == S.DEFAULT_PROFILE:
                 provenance = artifacts[kind]['provenance']
                 provenance.pop('expired')
                 provenance['releaseTag'] = self.config['releaseTag']
                 provenance['releaseAssetId'] = provenance.pop('artifactId')
         # Historical530 is an explicit fixture, never the production default.
         self.request = dict(profile=self.profile, context=context, artifacts=artifacts)
-        if self.profile == 'release617':
+        if self.profile == S.DEFAULT_PROFILE:
             del self.request['profile']  # Exercise the actual production default.
 
     def test_actual_candidate_staging_retains_signed_apps_and_excludes_only_exact_test_collision(self):
@@ -264,7 +264,7 @@ class Candidate530(unittest.TestCase):
         self.assertEqual(1, len(arrays['installApps']))
         self.assertEqual([], arrays['installTestApps'])
         info = G.package_info(arrays['installApps'][0])
-        if self.profile == 'release617':
+        if self.profile == S.DEFAULT_PROFILE:
             G.check_foundation_candidate(info)
         else:
             with self.assertRaises(G.GateError):
@@ -293,8 +293,8 @@ class Candidate530(unittest.TestCase):
             S.validate(self.root / 'stage/selection.json', self.request['context'], arrays['installApps'], arrays['installTestApps'])
 
 
-class Release617(Candidate530):
-    profile = 'release617'
+class Release741(Candidate530):
+    profile = 'release741'
 
     def test_current_release_and_manifests_agree(self):
         root = Path(__file__).parents[2]
@@ -302,13 +302,17 @@ class Release617(Candidate530):
         dependency = next(p for p in settings['appDependencyProbingPaths'] if 'bc-origo-bifrost-core' in p['repo'])
         self.assertEqual(self.config['releaseTag'], dependency['version'])
         self.assertEqual('release', dependency['release_status'])
+        release = tuple(map(int, self.config['identity']['version'].split('.')))
         for project in ('app', 'test'):
             manifest = json.loads((root / project / 'app.json').read_text())
             foundation = next(d for d in manifest['dependencies'] if d['id'] == S.FOUNDATION)
-            self.assertEqual(self.config['identity'], foundation)
+            # The manifest floor may trail the probed release; it must name the same app and not exceed it.
+            self.assertEqual({k: self.config['identity'][k] for k in ('id', 'publisher', 'name')},
+                             {k: foundation[k] for k in ('id', 'publisher', 'name')})
+            self.assertLessEqual(tuple(map(int, foundation['version'].split('.'))), release)
 
     def test_release_asset_provenance_cannot_be_substituted(self):
-        for key, value in [('releaseTag', '28.0.7'), ('releaseAssetId', 1), ('archiveSha256', '0' * 64)]:
+        for key, value in [('releaseTag', '28.0.8'), ('releaseAssetId', 1), ('archiveSha256', '0' * 64)]:
             request = copy.deepcopy(self.request)
             request['artifacts']['Apps']['provenance'][key] = value
             with self.subTest(key=key), self.assertRaises(G.GateError):
@@ -320,7 +324,7 @@ class Release617(Candidate530):
 
 class ReleaseRestore(unittest.TestCase):
     def test_real_testapps_collision_restores_only_exact_released_apps(self):
-        inputs = Path(os.environ['FOUNDATION_RELEASE617_ARTIFACTS'])
+        inputs = Path(os.environ['FOUNDATION_RELEASE_ARTIFACTS'])
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             dependencies = root / '.dependencies'
