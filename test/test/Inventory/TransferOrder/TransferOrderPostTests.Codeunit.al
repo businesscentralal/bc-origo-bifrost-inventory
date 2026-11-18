@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -70,6 +71,37 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert.AreEqual(SingleDocument, PostTransfer, 'Direct transfer choice.');
         Assert.AreEqual(not SingleDocument, PostShipment, 'Shipment choice.');
         Assert.AreEqual(not SingleDocument, PostReceipt, 'Receipt choice.');
+    end;
+
+    /// <summary>Fixture setup leaves an occupied library-generated account untouched.</summary>
+    [Test]
+    procedure SetupLocationsAndItem_OccupiedAccount_PreservesExistingData()
+    var
+        ExistingAccount: Record "G/L Account";
+        PostingSetup: Record "Inventory Posting Setup";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        LibraryUtility: Codeunit "Library - Utility";
+        ExistingAccountId: Guid;
+    begin
+        // PR #201 amendment | Time: none; no stock posting | Risk: None
+        Initialize();
+        // [GIVEN] The account number the library would allocate after its location code is occupied.
+        repeat
+            ExistingAccount."No." := PadStr('1' + IncStr(IncStr(LibraryUtility.GenerateGUID())), MaxStrLen(ExistingAccount."No."), '0');
+        until not ExistingAccount.Get(ExistingAccount."No.");
+        ExistingAccount.Name := 'X existing account fixture';
+        ExistingAccount.Insert(true);
+        ExistingAccountId := ExistingAccount.SystemId;
+        // [WHEN] Creating a complete set of transfer locations and its item.
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 0);
+        // [THEN] Setup succeeds with separate accounts, preserving the occupied record.
+        PostingSetup.Get(FromLocation.Code, Item."Inventory Posting Group");
+        Assert.AreNotEqual(ExistingAccount."No.", PostingSetup."Inventory Account", 'Fixture has its own account.');
+        ExistingAccount.GetBySystemId(ExistingAccountId);
+        Assert.AreEqual('X existing account fixture', ExistingAccount.Name, 'Existing account is unchanged.');
     end;
 
     local procedure Initialize()

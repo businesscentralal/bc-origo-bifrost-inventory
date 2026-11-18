@@ -1,6 +1,8 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Availability;
+using Microsoft.Inventory.BOM;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
 using Microsoft.Purchases.Document;
@@ -251,10 +253,51 @@ codeunit 96990 "Avail. By Event Tests ori"
     begin
         // Story #104, AC04 | Time: relative to WorkDate | Risk: None
         Initialize();
-        LibraryInventory.CreateItem(Item);
-        Item.Validate(Type, Item.Type::Service);
-        Item.Modify(true);
+        CreateServiceItem(Item);
         AssertRefusal(Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()))), 'PreconditionFailed');
+    end;
+
+    /// <summary>AC04 Service fixture does not reuse a number referenced by an existing BOM.</summary>
+    [Test]
+    procedure Scenario_AC04_BOMReference_ServiceFixturePreservesComponent()
+    var
+        Item: Record Item;
+        ParentItem: Record Item;
+        Component: Record "BOM Component";
+        NoSeries: Codeunit "No. Series";
+        LibraryUtility: Codeunit "Library - Utility";
+        ComponentId: Guid;
+        ReferencedNo: Code[20];
+    begin
+        // Story #104, AC04; PR #201 amendment | Time: WorkDate for the request | Risk: None
+        Initialize();
+        // [GIVEN] A leftover BOM reference to the next number in the library's shared item series.
+        ReferencedNo := NoSeries.PeekNextNo(LibraryUtility.GetGlobalNoSeriesCode());
+        ParentItem."No." := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(ParentItem."No."));
+        ParentItem.Insert(true);
+        Component."Parent Item No." := ParentItem."No.";
+        Component."Line No." := 10000;
+        Component.Type := Component.Type::Item;
+        Component."No." := ReferencedNo;
+        Component.Insert(true);
+        ComponentId := Component.SystemId;
+        // [WHEN] Creating the non-inventory fixture and dispatching the same refusal scenario.
+        CreateServiceItem(Item);
+        AssertRefusal(Execute(Request(Item."No.", CalcDate('<+10D>', WorkDate()), CalcDate('<+10D>', WorkDate()))), 'PreconditionFailed');
+        // [THEN] The fixture is separate and the existing BOM reference remains untouched.
+        Assert.AreNotEqual(ReferencedNo, Item."No.", 'Service fixture avoids the shared number series.');
+        Component.GetBySystemId(ComponentId);
+        Assert.AreEqual(ReferencedNo, Component."No.", 'Existing BOM reference is preserved.');
+    end;
+
+    local procedure CreateServiceItem(var Item: Record Item)
+    begin
+        Clear(Item);
+        repeat
+            Item."No." := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Item."No."));
+        until not Item.Get(Item."No.");
+        Item.Validate(Type, Item.Type::Service);
+        Item.Insert(true);
     end;
 
     /// <summary>AC04 BilingualHelpAndRefusals AreLocalized.</summary>

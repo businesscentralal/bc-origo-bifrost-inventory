@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
@@ -31,12 +32,50 @@ codeunit 96904 "Transfer Order Test Helper"
         var Item: Record Item;
         InitialQty: Decimal)
     begin
-        LibraryWarehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
-        LibraryWarehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
-        LibraryWarehouse.CreateInTransitLocation(InTransitLocation);
+        CreateLocationWithPostingSetup(FromLocation, false);
+        CreateLocationWithPostingSetup(ToLocation, false);
+        CreateLocationWithPostingSetup(InTransitLocation, true);
         LibraryInventory.CreateItem(Item);
         if InitialQty > 0 then
             CreatePositiveAdjustment(Item."No.", FromLocation.Code, InitialQty);
+    end;
+
+    local procedure CreateLocationWithPostingSetup(var Location: Record Location; InTransit: Boolean)
+    var
+        PostingGroup: Record "Inventory Posting Group";
+        PostingSetup: Record "Inventory Posting Setup";
+    begin
+        Clear(Location);
+        repeat
+            Location.Code := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Location.Code));
+        until not Location.Get(Location.Code);
+        Location.Validate(Name, Location.Code);
+        Location.Validate("Use As In-Transit", InTransit);
+        Location.Insert(true);
+        // The library pads a counter-based G/L number without checking persisted accounts.
+        // Own GUID-based keys keep repeated tenant runs independent of that counter.
+        if PostingGroup.FindSet() then
+            repeat
+                LibraryInventory.CreateInventoryPostingSetup(PostingSetup, Location.Code, PostingGroup.Code);
+                PostingSetup.Validate("Inventory Account", CreatePostingAccount());
+                PostingSetup.Validate("Inventory Account (Interim)", CreatePostingAccount());
+                PostingSetup.Validate("WIP Account", CreatePostingAccount());
+                PostingSetup.Validate("Material Variance Account", CreatePostingAccount());
+                PostingSetup.Validate("Capacity Variance Account", CreatePostingAccount());
+                PostingSetup.Modify(true);
+            until PostingGroup.Next() = 0;
+    end;
+
+    local procedure CreatePostingAccount(): Code[20]
+    var
+        Account: Record "G/L Account";
+    begin
+        repeat
+            Account."No." := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Account."No."));
+        until not Account.Get(Account."No.");
+        Account.Validate(Name, Account."No.");
+        Account.Insert(true);
+        exit(Account."No.");
     end;
 
     /// <summary>

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed - repeatable owned-tenant fixtures (PR #201)
+
+- Transfer test locations and posting accounts now use fresh GUID-based keys instead of padded library counter values that can collide with persisted accounts. Existing accounts are preserved.
+- Availability's non-inventory refusal uses a fresh service item instead of the shared item-number sequence, avoiding leftover BOM references. Regression cases preserve an occupied generated account and an existing BOM component; all original assertions and test isolation remain.
+
 ### Fixed - catalog test ID collision (PR #201)
 
 - Move `Nonstock Item Create Tests` from codeunit 96998 to unused codeunit 96934 within the existing test range. Main keeps `Posted Line Undo Tests ori` at 96998. Both test suites, their assertions and product behavior are unchanged.
