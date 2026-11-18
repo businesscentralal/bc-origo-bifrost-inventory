@@ -1,25 +1,30 @@
-## Current Foundation release profile (24 October 2026)
+## Current Foundation release profile (18 November 2026)
 
-Production compilation and collision restoration use **release617**, the published
-Foundation release `28.0.8` (app `28.0.8.617`). Both app manifests and the source
-input floor agree. The exact package/source/build/compiler pins are in
-`appsource_gate.FOUNDATION_CANDIDATE`; staging shares those production pins.
-Apps release asset `663995787` has archive SHA256
-`55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1`;
-TestApps asset `663995606` has SHA256
-`6f262f4e8a11345317319a94a72885ddcd92a7ec9e3b3b84acf24ecbe41e42be`.
-Source is `398b62521c043b2b4ba2ee1d626813f3ccb85711`, build `39680460724`.
+Production compilation and collision restoration use **release741**, the published
+Foundation release `28.0.13` (app `28.0.13.741`), probed by `.AL-Go/settings.json`.
+The app and test manifests keep their Foundation floor `28.0.8.617`; the probed
+release may be newer than that floor, never older. The exact package/source/build/compiler
+pins are in `appsource_gate.FOUNDATION_CANDIDATE`; staging shares those production pins.
+Apps release asset `761125618` has archive SHA256
+`80082508b0cbbc5746b8479281fa467159dbbfb84e58e34f70e03fea81bd03e9`
+(signed package SHA256 `5dfe8df26f725e8185d3583dc9558ef5e87cca4341c9959a58c5a6f7219e0a57`, no friends);
+TestApps asset `761125901` has SHA256
+`2aefe1b306efc4a62a8886c29a01a9c09f833d62f80400f90860f1d69714cb91`
+(collision package SHA256 `549a9665ba6d983e41ad8ec35897d9d2c0c995b9d667228f4f70d870958c7639`,
+with the Foundation test friend).
+Source is `4458b145846907595b32a1866e5d3e262ca7e8b5`, build `44188373403` (attempt 2),
+compiler `18.1.44.47295`. The release asset digests equal the build's Apps/TestApps artifact digests.
 Only the exact known TestApps collision can be replaced, using the immutable
 release asset endpoint and verified archive/package hashes. Unknown inputs fail
 before download or mutation. The compiler still requires zero friend grants and
 signature content; this is not a Windows trust verdict.
 
-`controlled523` and `candidate530` remain explicit historical regression profiles;
-neither can satisfy the current compiler gate. Historical notes below describe
-their original evidence, not the current production default. Set
-`APPSOURCE_GATE_FOUNDATION_CANDIDATE` to the exact released617 Apps package when
-running the compiler-gate regressions. New release-profile tests require
-`FOUNDATION_RELEASE617_ARTIFACTS` with `Apps.zip` and `TestApps.zip`.
+`release617` (Foundation release `28.0.8`), `controlled523` and `candidate530` remain
+explicit historical regression profiles; none can satisfy the current compiler gate.
+Historical notes below describe their original evidence, not the current production
+default. Set `APPSOURCE_GATE_FOUNDATION_CANDIDATE` to the exact release741 Apps package when
+running the compiler-gate regressions. Release-profile tests require
+`FOUNDATION_RELEASE_ARTIFACTS` with the current release `Apps.zip` and `TestApps.zip`.
 
 ---
 

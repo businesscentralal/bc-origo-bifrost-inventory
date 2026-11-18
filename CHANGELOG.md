@@ -7,6 +7,15 @@
 - Move `Nonstock Item Create Tests` from codeunit 96998 to unused codeunit 96934 within the existing test range. Main keeps `Posted Line Undo Tests ori` at 96998. Both test suites, their assertions and product behavior are unchanged.
 - Reconcile both exact Inventory registry counts to 83 after merging main's `Inventory.ItemReference.Set`; retain the explicit roster and both membership checks.
 - Reconcile both exact Inventory registry counts to 84 after merging main's `Inventory.AvailabilityByEvent.Get` (#200); the explicit roster already lists it and both membership checks stay.
+- Reconcile both exact Inventory registry counts to 85 after merging main's `Inventory.AgedInventory.Get` (#195); the explicit roster lists all 85 registered `Inventory.*` types and both membership checks stay.
+
+### Changed - CI probes Foundation 28.0.13
+
+- `.AL-Go/settings.json` probes the published Foundation release `28.0.13` (package 28.0.13.741, source `4458b14`, build 44188373403) instead of `28.0.8`. The AppSource gate candidate (`tools/appsource_gate.py`) and the default collision-restore/staging profile `release741` (`tools/stage_foundation_inputs.py`) pin its exact Apps/TestApps release assets, archive and package hashes, source, build and compiler. `release617` stays an explicit historical profile. The app and test Foundation floors stay 28.0.8.617. No AL objects change.
+
+### Fixed - aged inventory amendment after main merges (#195)
+
+- Reconcile both exact Inventory census assertions to 84 after merging `Inventory.ItemReference.Set` and `Inventory.AvailabilityByEvent.Get` alongside `Inventory.AgedInventory.Get`; the scoped help catalogue contains 50 types. Preserve both read permission grants when merging main. Preserve the explicit roster and every membership assertion. Document safe affected-suite reruns on reused local tenants without deleting existing fixture data.
 
 ### Fixed - reclassification test ID collision (PR #221)
 
@@ -76,6 +85,11 @@
 - Invoice line types and status values use English enum names in both locales, matching the shared response convention.
 - Blank and longer-than-20-character invoice/shipment numbers are rejected with `InvalidParameterFormat` before lookup, so a long identifier cannot silently select a different document by its prefix.
 - `BIFROST InvWrite ori` grants X on the two new codeunits. Tests: new codeunit 96995 `Sales Get Shipment Tests` (happy path for named and all shipments, other bill-to customer, invoiced and already-pulled edge cases, released invoice, coded invalid input, bilingual help).
+### Added (2026-11-16) - Inventory.AgedInventory.Get (#110)
+- New read-only message type `Inventory.AgedInventory.Get` (codeunit 10076948 `Aged Inventory Get Impl ori`, enum extension 10076851 `MsgType.AgedInv.EnumExt ori`, enum value 10076948). It mirrors the Item Age Composition - Qty. and - Value reports: remaining quantity and value of open positive item ledger entries in five age buckets counted back from `endingDate` (default work date) in steps of `periodLengthDays` (default 30), per item. Items are selected with `itemNo`/subject, a SystemId key or `tableView` (none = every item) and filtered with `locationFilter`, `variantCode` and `itemCategoryFilter`. Paged with `skip` and `take` (`noOfLines`, `totalNoOfLines`). Declares `effect: read`; Costing domain; granted through `BIFROST InvRead ori`.
+- Refusals carry a Bifröst error code with `nextStep` (`InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `PermissionDenied`, `ConflictingIdentifiers`). Help in en-US and is-IS, `Bifrost Inventory.is-IS.xlf` regenerated.
+- Tests: codeunit 96981 `Aged Inventory Get Tests` (buckets and value, paging, edge: entries after the ending date, invalid input). After the merge with main, the 96921 census is 49 scoped types and 74 registered Inventory types (the previous 72 plus `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement`).
+- Main-merge ID collision: Aged Inventory keeps its message name and behaviour and takes codeunit and enum value 10076948 (formerly 10076930) and enum extension 10076851 (formerly 10076847). Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 was free on main and on the open inventory pull requests checked with this merge. The read permission grant stays on `BIFROST InvRead ori`.
 
 ### Added (2026-11-16) - Inventory.CycleCount.Calculate (#120)
 - New message type `Inventory.CycleCount.Calculate` (enum value and codeunit 10076970 `Cycle Count Calc Impl ori`, enum extension 10076870 `MsgType.CycleCount.EnumExt ori`; logic in `Inventory Native Journal ori` 10076840 and operation `CycleCount` of `Inventory Write Process ori`). It fills one empty Phys. Inventory batch with the items (and stockkeeping units with their own counting period) whose Next Counting Start Date is on or before `postingDate`, using native report 790, then advances their counting dates with the native `Phys. Invt. Count.-Management`, so a repeat call does not select them again. Effect `write`; nothing is posted (posting stays with `Inventory.PhysInventory.Post`).
