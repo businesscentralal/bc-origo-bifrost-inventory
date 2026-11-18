@@ -99,6 +99,16 @@ consume the exact reused product bytes (`packageSha256`). **Signed** builds stil
 a current-run product compile receipt; baseline reuse is refused there. Diffs that touch
 `app/`, or missing/invalid baseline env or package binding, fail closed.
 
+Only Finalize reads the baseline env and the Apps folder. When it accepts the reused
+package it stores the accepted record (`baselineWorkflowRunId`, `baselineWorkflowSHA`,
+`packageFile`, `packageSha256`) as `productReuse` in `state.json` before `finalize.json`
+hashes that state (#237). The later `Validate final AppSource pipeline evidence` step
+(`-Stage Pipeline`) runs outside RunPipeline, where that env is gone, so it rebuilds the
+reuse request from the stored record only. The gate still re-checks that `app/` is
+untouched, that the request equals the stored record, and that the package under
+`.buildartifacts/Apps` still has the recorded SHA-256. No product receipt and no stored
+record, a record mismatch, or a changed package fail closed.
+
 ## Infrastructure and acceptance holds
 
 The concrete workflow patch is an external review artifact, **not applied here**.
