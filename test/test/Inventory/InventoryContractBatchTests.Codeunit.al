@@ -62,6 +62,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.AssemblyToOrder.Get');
         TypeNames.Add('Inventory.AssemblyBOM.Get');
         TypeNames.Add('Inventory.AvailabilityByPeriod.Get');
+        TypeNames.Add('Inventory.AvailabilityByEvent.Get');
         TypeNames.Add('Inventory.Attribute.Create');
         TypeNames.Add('Inventory.Attribute.Get');
         TypeNames.Add('Inventory.Attribute.Update');
@@ -100,7 +101,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.TransferOrder.Release');
         TypeNames.Add('Inventory.TransferOrder.Reopen');
         TypeNames.Add('Inventory.TransferOrder.Statistics');
-        LibraryAssert.AreEqual(48, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
+        LibraryAssert.AreEqual(49, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
         foreach TypeName in TypeNames do begin
             MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             MessageImpl := MessageType;
@@ -289,9 +290,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(82, CheckedCount - ItemJournalNames.Count(), 'This app registers 82 Inventory types.');
+        LibraryAssert.AreEqual(83, CheckedCount - ItemJournalNames.Count(), 'This app registers 83 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(82, AppTypes.Count(), 'The registered Inventory type list for this app has 82 names.');
+        LibraryAssert.AreEqual(83, AppTypes.Count(), 'The registered Inventory type list for this app has 83 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -428,6 +429,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Attribute.Update');
         Types.Add('Inventory.AttributeDefinition.Create');
         Types.Add('Inventory.AvailabilityByPeriod.Get');
+        Types.Add('Inventory.AvailabilityByEvent.Get');
         Types.Add('Inventory.TransferOrder.Create');
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');

@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed - CI probes Foundation 28.0.13
+
+- `.AL-Go/settings.json` probes the published Foundation release `28.0.13` (package 28.0.13.741, source `4458b14`, build 44188373403) instead of `28.0.8`. The AppSource gate candidate (`tools/appsource_gate.py`) and the default collision-restore/staging profile `release741` (`tools/stage_foundation_inputs.py`) pin its exact Apps/TestApps release assets, archive and package hashes, source, build and compiler. `release617` stays an explicit historical profile. The app and test Foundation floors stay 28.0.8.617. No AL objects change.
 ### Fixed - item tracing review (#107, PR #202)
 
 - Reject `?` in lot, serial, item and variant identifiers before native tracing can match a different identifier. Both locales name the refused wildcard in recovery guidance.
@@ -72,11 +75,18 @@
 ### Added (2026-11-16) - Inventory.ItemTracing.Get (#107)
 - `Inventory.ItemTracing.Get` traces a lot or serial number through the item ledger as the Item Tracing page does (Item Tracing Mgt., codeunit 6520). Send `lotNo` and/or `serialNo`, optionally `itemNo` and `variantCode`, and `direction` (`originToUsage`, the default, or `usageToOrigin`). The answer is the trace tree as a flat `nodes` list in tree order with `level`, `entryNo`, `parentEntryNo`, `entryType`, `documentNo`, `postingDate`, `itemNo`, `variantCode`, `lotNo`, `serialNo`, `locationCode`, `quantity`, `remainingQuantity` and `open`. Neither lot nor serial answers `MissingParameter`; filter characters, a bad `direction` or a too long value answer `InvalidParameter`; an unknown number answers `RecordNotFound`; a trace above 1000 nodes answers `LimitExceeded`. Effect: read. It uses the Item Tracking domain.
 - Objects added: codeunit 10076994 `Item Tracing Get Impl ori` (message type value 10077031), enum extension 10077029 `MsgType.ItemTrace.Ext ori`; the codeunit is added to `BIFROST InvRead ori` and `BIFROST InvWrite ori`. Test app: codeunit 96998 `Item Tracing Get Tests`; `Inventory Contract Batch Tests` (96921) now expects 72 types registered by this app. is-IS help and captions are in the Icelandic XLF.
+
 ### Added (2026-11-16) - Inventory.CycleCount.Calculate (#120)
 - New message type `Inventory.CycleCount.Calculate` (enum value and codeunit 10076970 `Cycle Count Calc Impl ori`, enum extension 10076870 `MsgType.CycleCount.EnumExt ori`; logic in `Inventory Native Journal ori` 10076840 and operation `CycleCount` of `Inventory Write Process ori`). It fills one empty Phys. Inventory batch with the items (and stockkeeping units with their own counting period) whose Next Counting Start Date is on or before `postingDate`, using native report 790, then advances their counting dates with the native `Phys. Invt. Count.-Management`, so a repeat call does not select them again. Effect `write`; nothing is posted (posting stays with `Inventory.PhysInventory.Post`).
 - Refusals carry a code, `expected` and `nextStep` in en-US and is-IS: `PreconditionFailed` for an `itemNo` item without a counting period or for a batch that already has lines, `RecordNotFound` for an `itemNo` filter that matches no item, `MissingParameter`/`InvalidParameterFormat` for `postingDate` and `documentNo`, `InvalidParameter` or `UnknownParameter` for undeclared keys. Help (description, keywords, selection, overview) in en-US and is-IS; XLF entries added.
 - Report 790 runs in native cycle mode (`InitializePhysInvtCount`): lines carry `Phys Invt Counting Period Code`/`Type` into the physical inventory ledger; an item period skips only SKU-backed stock combinations, and an SKU period calculates exactly the SKU's location and variant (blank values included).
 - Tests: codeunit 96985 `Inv. Cycle Count Calc Tests` (happy path, repeat call, not yet due, no counting period 1033/1039, missing postingDate, unknown key, blank-variant SKU, due item with a not yet due SKU, SKU combination skipped). No public procedure or field changed.
+
+### Added (2026-11-16) - Item availability event timeline (#104)
+
+- `Inventory.AvailabilityByEvent.Get` returns dated supply and demand, source documents, signed base quantities and the standard running projected inventory. Exact item/variant/location selectors and inclusive dates use the Item Availability by Event calculation; earlier events contribute to opening inventory. No business records are changed.
+- Adds codeunit **10076940** `Avail. By Event Impl ori`, enum value **10076940** in extension 10076835, read/full execute permissions, Icelandic help and recovery labels, and regression test codeunit **96990** `Avail. By Event Tests ori`.
+- BC 29 build prerequisite: transfer Post/PreviewPost use the native per-order direct-transfer mode through shared codeunit 10076906, with the BC 28 Inventory Setup fallback retained. The test helper selects the active setup schema; two regressions in codeunit 96914 check both modes. No warning suppression or public contract change.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
