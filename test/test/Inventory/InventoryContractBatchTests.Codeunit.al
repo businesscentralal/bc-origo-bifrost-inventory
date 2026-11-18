@@ -292,9 +292,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(86, CheckedCount - ItemJournalNames.Count(), 'This app registers 86 Inventory types.');
+        LibraryAssert.AreEqual(87, CheckedCount - ItemJournalNames.Count(), 'This app registers 87 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(86, AppTypes.Count(), 'The registered Inventory type list for this app has 86 names.');
+        LibraryAssert.AreEqual(87, AppTypes.Count(), 'The registered Inventory type list for this app has 87 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do

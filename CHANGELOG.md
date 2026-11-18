@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed - confirmation posting fixture on reused tenants (PR #202)
+
+- Reserve native value-entry numbers above existing posting-queue keys without deleting or replacing tenant data, and clear stale sequence buffers before the confirmation posting fixture runs.
+- Add bilingual regressions with an occupied queue key above the ledger. All native success, confirmation-boundary and exact revaluation-amount assertions remain; the regressions also verify the existing queue row is preserved.
+- Reconcile both exact catalogue counts and README with main's merged catalog-item registration: 97 total types, 87 Inventory types. Preserve the complete explicit roster and both membership checks.
+
 ### Fixed (2026-11-17) - Reused test-company fixtures (PR #207 amend)
 
 - Transfer posting, confirmation and cycle-count fixtures advance the Microsoft test-library number sequence beyond existing padded G/L accounts, preserving existing accounts and all behavior assertions.

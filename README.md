@@ -10,8 +10,8 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 96 Bifröst message
-types (86 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 97 Bifröst message
+types (87 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
 unit price updates. An agent or an integration calls them through the same Queue → Task → Data API
