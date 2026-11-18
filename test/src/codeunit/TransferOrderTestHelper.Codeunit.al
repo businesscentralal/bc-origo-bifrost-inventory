@@ -21,6 +21,7 @@ codeunit 96904 "Transfer Order Test Helper"
     var
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryWarehouse: Codeunit "Library - Warehouse";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
 
     /// <summary>
     /// Creates three locations (From, To, In-Transit) and an item with positive stock at From.
@@ -40,23 +41,23 @@ codeunit 96904 "Transfer Order Test Helper"
             CreatePositiveAdjustment(Item."No.", FromLocation.Code, InitialQty);
     end;
 
-    local procedure CreateLocationWithPostingSetup(var Location: Record Location; InTransit: Boolean)
+    /// <summary>Creates a native warehouse location with collision-safe library numbers and independent posting accounts.</summary>
+    internal procedure CreateLocationWithPostingSetup(var Location: Record Location; InTransit: Boolean)
     var
         PostingGroup: Record "Inventory Posting Group";
         PostingSetup: Record "Inventory Posting Setup";
     begin
-        Clear(Location);
-        repeat
-            Location.Code := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Location.Code));
-        until not Location.Get(Location.Code);
-        Location.Validate(Name, Location.Code);
-        Location.Validate("Use As In-Transit", InTransit);
-        Location.Insert(true);
-        // The library pads a counter-based G/L number without checking persisted accounts.
-        // Own GUID-based keys keep repeated tenant runs independent of that counter.
+        InventoryLibrary.PrepareLibraryGLAccountNumbers();
+        if InTransit then
+            LibraryWarehouse.CreateInTransitLocation(Location)
+        else
+            LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
+        // Keep the native location setup, then assign independent posting accounts.
+        // Existing library-generated accounts remain untouched.
         if PostingGroup.FindSet() then
             repeat
-                LibraryInventory.CreateInventoryPostingSetup(PostingSetup, Location.Code, PostingGroup.Code);
+                if not PostingSetup.Get(Location.Code, PostingGroup.Code) then
+                    LibraryInventory.CreateInventoryPostingSetup(PostingSetup, Location.Code, PostingGroup.Code);
                 PostingSetup.Validate("Inventory Account", CreatePostingAccount());
                 PostingSetup.Validate("Inventory Account (Interim)", CreatePostingAccount());
                 PostingSetup.Validate("WIP Account", CreatePostingAccount());
@@ -154,7 +155,6 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; WindowsLanguageId: Integer; var ResponseJson: JsonObject)
     var
         Dispatcher: Codeunit "Dispatcher ori";
-        InventoryLibrary: Codeunit "Inventory Test Library ori";
         RequestContent: BigText;
         ResponseContent: BigText;
         ResponseContentType: Text[100];

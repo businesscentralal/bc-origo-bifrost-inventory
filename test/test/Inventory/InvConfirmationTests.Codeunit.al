@@ -63,11 +63,13 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         FoundationSetup: RecordRef;
         PreviousConfirmation: Boolean;
         ChangedConfirmation: Boolean;
         PreviousLanguage: Integer;
     begin
+        InventoryLibrary.PrepareLibraryGLAccountNumbers();
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
         ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         Setup.InsertIfNotExists();
@@ -175,7 +177,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         CalculateValue: Report "Calculate Inventory Value";
         LibraryInventory: Codeunit "Library - Inventory";
-        LibraryWarehouse: Codeunit "Library - Warehouse";
+        Helper: Codeunit "Transfer Order Test Helper";
         Journal: Codeunit "Inventory Native Journal ori";
         Request: JsonObject;
         Response: JsonObject;
@@ -227,7 +229,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Clear(Item);
         CreateStock(Item, 10);
         CreateBatch(Batch, "Item Journal Template Type"::Transfer);
-        LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
+        Helper.CreateLocationWithPostingSetup(Location, false);
         LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 2);
         Line.Validate("New Location Code", Location.Code);
         Line.Modify(true);
