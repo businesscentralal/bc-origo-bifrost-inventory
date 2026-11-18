@@ -4,7 +4,7 @@
 
 ### Fixed - repeatable owned-tenant fixtures (PR #201)
 
-- Transfer test locations and posting accounts now use fresh GUID-based keys instead of padded library counter values that can collide with persisted accounts. Existing accounts are preserved.
+- Transfer test locations and posting accounts now use fresh GUID-based keys instead of padded library counter values that can collide with persisted accounts. Existing accounts are preserved. The collision regression initializes native item-posting prerequisites before occupying the generated number, including on a fresh CI company.
 - Availability's non-inventory refusal uses a fresh service item instead of the shared item-number sequence, avoiding leftover BOM references. Regression cases preserve an occupied generated account and an existing BOM component; all original assertions and test isolation remain.
 
 ### Fixed - catalog test ID collision (PR #201)

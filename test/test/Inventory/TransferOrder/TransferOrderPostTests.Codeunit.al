@@ -83,11 +83,14 @@ codeunit 96914 "Transfer Order Post Tests"
         ToLocation: Record Location;
         InTransitLocation: Record Location;
         Item: Record Item;
+        LibraryInventory: Codeunit "Library - Inventory";
         LibraryUtility: Codeunit "Library - Utility";
         ExistingAccountId: Guid;
     begin
         // PR #201 amendment | Time: none; no stock posting | Risk: None
         Initialize();
+        // Initialize native posting accounts before reserving a counter value for the collision.
+        LibraryInventory.CreateItem(Item);
         // [GIVEN] The account number the library would allocate after its location code is occupied.
         repeat
             ExistingAccount."No." := PadStr('1' + IncStr(IncStr(LibraryUtility.GenerateGUID())), MaxStrLen(ExistingAccount."No."), '0');
