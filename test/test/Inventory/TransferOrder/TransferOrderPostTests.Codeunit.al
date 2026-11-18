@@ -22,6 +22,56 @@ codeunit 96914 "Transfer Order Post Tests"
         Helper: Codeunit "Transfer Order Test Helper";
         IsInitialized: Boolean;
 
+    /// <summary>BC 29 reads the order's single-document mode even when setup differs; BC 28 retains its setup mode.</summary>
+    [Test]
+    procedure PostingChoices_SingleDocument_UsesActiveSchema()
+    begin
+        // Issue #104 prerequisite | Time: none | Risk: BC 28/29 schema compatibility
+        Initialize();
+        VerifyPostingChoices(true);
+    end;
+
+    /// <summary>Shipment/receipt posting selects both legs, using the order mode on BC 29.</summary>
+    [Test]
+    procedure PostingChoices_ShipmentAndReceipt_UsesActiveSchema()
+    begin
+        // Issue #104 prerequisite | Time: none | Risk: BC 28/29 schema compatibility
+        Initialize();
+        VerifyPostingChoices(false);
+    end;
+
+    local procedure VerifyPostingChoices(SingleDocument: Boolean)
+    var
+        OriginalSetup: Record "Inventory Setup";
+        TempHeader: Record "Transfer Header" temporary;
+        Subscriber: Codeunit "Transfer Post Subscriber ori";
+        HeaderRef: RecordRef;
+        PostingField: FieldRef;
+        PostShipment: Boolean;
+        PostReceipt: Boolean;
+        PostTransfer: Boolean;
+    begin
+        // [GIVEN] Conflicting order/setup modes on BC 29, or the legacy setup on BC 28.
+        HeaderRef.GetTable(TempHeader);
+        if HeaderRef.FieldExist(5858) then begin
+            Helper.SetDirectTransferPosting(not SingleDocument, OriginalSetup);
+            PostingField := HeaderRef.Field(5858);
+            if SingleDocument then
+                PostingField.Value := 20
+            else
+                PostingField.Value := 10;
+            HeaderRef.SetTable(TempHeader);
+        end else
+            Helper.SetDirectTransferPosting(SingleDocument, OriginalSetup);
+        // [WHEN] Resolving the native posting selection.
+        Subscriber.ResolveDirectTransferOptions(TempHeader, PostShipment, PostReceipt, PostTransfer);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        // [THEN] BC 29 respects its per-order choice; BC 28 retains setup semantics.
+        Assert.AreEqual(SingleDocument, PostTransfer, 'Direct transfer choice.');
+        Assert.AreEqual(not SingleDocument, PostShipment, 'Shipment choice.');
+        Assert.AreEqual(not SingleDocument, PostReceipt, 'Receipt choice.');
+    end;
+
     local procedure Initialize()
     begin
         if IsInitialized then exit;

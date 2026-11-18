@@ -2,9 +2,9 @@
 
 ## [Unreleased]
 
-### Fixed - aged inventory amendment after item-reference merge (#195)
+### Fixed - aged inventory amendment after main merges (#195)
 
-- Reconcile both exact Inventory census assertions to 83 after merging `Inventory.ItemReference.Set` alongside `Inventory.AgedInventory.Get`. Preserve the explicit roster and every membership assertion. Document safe affected-suite reruns on reused local tenants without deleting existing fixture data.
+- Reconcile both exact Inventory census assertions to 84 after merging `Inventory.ItemReference.Set` and `Inventory.AvailabilityByEvent.Get` alongside `Inventory.AgedInventory.Get`; the scoped help catalogue contains 50 types. Preserve both read permission grants when merging main. Preserve the explicit roster and every membership assertion. Document safe affected-suite reruns on reused local tenants without deleting existing fixture data.
 
 ### Fixed - reclassification test ID collision (PR #221)
 
@@ -72,11 +72,18 @@
 - Refusals carry a Bifröst error code with `nextStep` (`InvalidParameterFormat`, `InvalidParameter`, `RecordNotFound`, `PermissionDenied`, `ConflictingIdentifiers`). Help in en-US and is-IS, `Bifrost Inventory.is-IS.xlf` regenerated.
 - Tests: codeunit 96981 `Aged Inventory Get Tests` (buckets and value, paging, edge: entries after the ending date, invalid input). After the merge with main, the 96921 census is 49 scoped types and 74 registered Inventory types (the previous 72 plus `Inventory.StandardCost.Suggest` and `Inventory.StandardCost.Implement`).
 - Main-merge ID collision: Aged Inventory keeps its message name and behaviour and takes codeunit and enum value 10076948 (formerly 10076930) and enum extension 10076851 (formerly 10076847). Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 was free on main and on the open inventory pull requests checked with this merge. The read permission grant stays on `BIFROST InvRead ori`.
+
 ### Added (2026-11-16) - Inventory.CycleCount.Calculate (#120)
 - New message type `Inventory.CycleCount.Calculate` (enum value and codeunit 10076970 `Cycle Count Calc Impl ori`, enum extension 10076870 `MsgType.CycleCount.EnumExt ori`; logic in `Inventory Native Journal ori` 10076840 and operation `CycleCount` of `Inventory Write Process ori`). It fills one empty Phys. Inventory batch with the items (and stockkeeping units with their own counting period) whose Next Counting Start Date is on or before `postingDate`, using native report 790, then advances their counting dates with the native `Phys. Invt. Count.-Management`, so a repeat call does not select them again. Effect `write`; nothing is posted (posting stays with `Inventory.PhysInventory.Post`).
 - Refusals carry a code, `expected` and `nextStep` in en-US and is-IS: `PreconditionFailed` for an `itemNo` item without a counting period or for a batch that already has lines, `RecordNotFound` for an `itemNo` filter that matches no item, `MissingParameter`/`InvalidParameterFormat` for `postingDate` and `documentNo`, `InvalidParameter` or `UnknownParameter` for undeclared keys. Help (description, keywords, selection, overview) in en-US and is-IS; XLF entries added.
 - Report 790 runs in native cycle mode (`InitializePhysInvtCount`): lines carry `Phys Invt Counting Period Code`/`Type` into the physical inventory ledger; an item period skips only SKU-backed stock combinations, and an SKU period calculates exactly the SKU's location and variant (blank values included).
 - Tests: codeunit 96985 `Inv. Cycle Count Calc Tests` (happy path, repeat call, not yet due, no counting period 1033/1039, missing postingDate, unknown key, blank-variant SKU, due item with a not yet due SKU, SKU combination skipped). No public procedure or field changed.
+
+### Added (2026-11-16) - Item availability event timeline (#104)
+
+- `Inventory.AvailabilityByEvent.Get` returns dated supply and demand, source documents, signed base quantities and the standard running projected inventory. Exact item/variant/location selectors and inclusive dates use the Item Availability by Event calculation; earlier events contribute to opening inventory. No business records are changed.
+- Adds codeunit **10076940** `Avail. By Event Impl ori`, enum value **10076940** in extension 10076835, read/full execute permissions, Icelandic help and recovery labels, and regression test codeunit **96990** `Avail. By Event Tests ori`.
+- BC 29 build prerequisite: transfer Post/PreviewPost use the native per-order direct-transfer mode through shared codeunit 10076906, with the BC 28 Inventory Setup fallback retained. The test helper selects the active setup schema; two regressions in codeunit 96914 check both modes. No warning suppression or public contract change.
 
 ### Fixed (2026-11-17) - Confirmation test targets (PR #213)
 
