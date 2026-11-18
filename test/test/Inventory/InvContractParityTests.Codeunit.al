@@ -727,6 +727,8 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
     /// <summary>Array parameters whose items are plain values, so they have no children.</summary>
     local procedure ScalarArrayParameters() Names: List of [Text]
     begin
+        Names.Add('Sales.Shipment.Undo|lineNos');
+        Names.Add('Purchase.Receipt.Undo|lineNos');
         Names.Add('Purchase.PurchaseInvoice.GetReceiptLines|receiptNos');
         Names.Add('Inventory.Tracking.Delete|entryNos');
         Names.Add('Inventory.Attribute.Get|attributeNames');
@@ -737,6 +739,9 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.PhysInventory.Check|lineSystemIds');
         Names.Add('Inventory.PhysInventory.PreviewPost|lineSystemIds');
         Names.Add('Inventory.PhysInventory.Post|lineSystemIds');
+        Names.Add('Inventory.Reclassification.Check|lineSystemIds');
+        Names.Add('Inventory.Reclassification.PreviewPost|lineSystemIds');
+        Names.Add('Inventory.Reclassification.Post|lineSystemIds');
         Names.Add('Sales.SalesInvoice.GetShipmentLines|shipmentNos');
     end;
 

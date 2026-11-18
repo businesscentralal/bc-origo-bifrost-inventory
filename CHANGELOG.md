@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Fixed - reclassification test ID collision (PR #221)
+
+- PR #221 build repair: move `Reclass Journal Tests ori` from codeunit 96964 to unused test codeunit 96925; main keeps blank-line tests at 96964. No tests, assertions or product behavior changed.
+
+### Fixed — issue 134 ID clash with merged Get Shipment Lines (#215)
+
+- Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
+- Move the shared helper `Posted Line Undo ori` from 10077027 to 10077014. Open pull request #206 claims codeunit and message value 10077027 for `Inventory.Valuation.Get`. 10077014, 10077016 and 10077017 are free on main and are not claimed by an open pull request. The enum extension stays 10077025.
+### Fixed
+- #234: `Purchase.Requisition.CarryOut` (10076942) and `Inventory.PlanningWorksheet.CarryOut` (10076939) state what `expectedCount` counts. effect.changes and the expectedCount parameter say `expectedCount counts worksheet selections: always 1` (Icelandic: `expectedCount telur val á vinnublaði: alltaf 1`), not the number of lines or orders. Requisition carry-out now declares the expectedCount parameter itself so Foundation keeps that sentence. New test codeunit 96948 `CarryOut Count Help ori` (96964 is `Inv. 186 Blank Line Tests ori` on main). No new product object IDs.
 ### Fixed - catalogue census after main merges (PR #211)
 
 - Paired CI at `da644d87` failed `AllInventoryTypes_RelatedNamesExist`: the test still expected 78 Inventory types after main's cycle count landed. Merging main again brought `Inventory.ItemVariant.Get` and `Inventory.ItemVariant.Create`, whose roster expects 80 without available-to-promise. This branch also registers `Inventory.AvailableToPromise.Get`, so the explicit roster and the enum extensions name 81 Inventory types at `e3c6975`. Merging main `84f3c288` (#206) keeps `Inventory.Valuation.Get` as well. The registry now names 82 Inventory types, so codeunit 96921 expects 82. The README overview counts every message type, 90, the same split #206 used (Inventory census versus overview). No message contract changed.
@@ -18,13 +28,13 @@
 
 - A purchase receipt before the requested date now promises the requested date instead of returning the earlier receipt date and incorrectly refusing the request. Normalize nonempty ATP dates before comparing with capable-to-promise; cover earlier and same-day receipts, including CTP enabled, with regression tests.
 
-
 ### Added (2026-11-16) - Inventory.AvailableToPromise.Get answers when a quantity can be promised (#105)
 - New message type `Inventory.AvailableToPromise.Get` (enum value 10077000 in enum extension 10077000 `MsgType.AvailToPromise.Ext ori`; codeunit 10077000 `Avail. To Promise Impl ori`). It takes `itemNo`, `quantity` and `requestedDate` plus the optional `variant`, `location` and `capableToPromise`, and answers `availableOnRequestedDate`, `canPromiseOnRequestedDate`, `earliestDate` and `basis`, as the Order Promising page does (codeunit 5790 `Available to Promise` with the Check-Avail. fields on Company Information).
 - Capable to promise (codeunit 99000886) runs only with `capableToPromise: true` (off by default). It uses a private order promising id, so no number series is used, and the requisition lines it builds are deleted before the answer. No order promising lines or reservations are kept.
 - Refusals: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `RecordNotFound` (item, variant, location), `InvalidParameter` (quantity 0 or below, Availability domain off), `PreconditionFailed` (service or non-inventory item; capable to promise without an order promising template and worksheet), `PermissionDenied`. Each carries a `nextStep`; help and refusals are in en-US and is-IS (XLF regenerated).
 - The contract declares its real effect: `read`, nothing kept, idempotent (core#1365 D1). Gated by the existing Availability domain; no new setup field. `BIFROST InvRead ori` and `BIFROST InvWrite ori` execute the codeunit.
 - Tests: `Avail. To Promise Tests` (96926) and `Avail. To Promise Perm` (96924). `Inventory Contract Batch Tests` counts 81 Inventory types and 49 scoped types after the cycle-count and item-variant merges. The earlier 96964/96965 test IDs and the 60/72/78 census figures were superseded by the ID reconciliations in this unreleased section.
+
 ### Fixed - main merge ID reconciliation (PR #233)
 
 - Preserve main's Standard Cost implementation and message value 10076938. Move the unreleased Planning Calculate codeunit and matching message value to the next unclaimed ID 10076949 (10076939-10076948 are allocated on main or open PRs). Both Planning operations and Standard Cost retain their behavior. The combined registration census retains all 77 Inventory types, including main's two Item Unit of Measure types.
@@ -35,6 +45,17 @@
 
 ### Added
 - #117: `Inventory.PlanningWorksheet.Calculate` (10076949) replaces suggestion lines for the selected items on one planning worksheet and returns those lines. `Inventory.PlanningWorksheet.CarryOut` (10076939) creates new purchase, transfer and assembly orders from accepted New lines. Lines that would cancel, change the quantity of, reschedule, or otherwise change an existing document, and production-order lines, are refused before any write. Carry-out is irreversible: `expectedCount` counts one invocation of the selected worksheet, not the number of orders or lines. Calculate commits as it proceeds and limits the native item-line delete to that worksheet. New objects: enum extension 10076947, codeunits 10076949, 10076939 and 10076946, enum value 17 Planning, setup field 27 Planning, test codeunit 96965 (96968 was taken by SKU Tests on main, so this PR moved to the next unused test ID). The one-time upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
+### Fixed — issue 134 merge with main
+
+- Move the PR’s `Posted Line Undo Tests ori` test codeunit from 96996 to the next free ID 96998: main uses 96996 for `Purch Get Receipt Tests`. Test behavior and the fixture objects at 96997 are unchanged.
+
+- Move the PR’s Sales/Purchase undo implementation codeunits and message values from 10077025–10077026 to the next free IDs 10077028–10077029: main uses 10077025 for Transfer Posting Setup and 10077026 for Transfer Ship. The shared helper stays 10077027 and the enum extension stays 10077025. Both features retain their behavior.
+
+### Added ([28.3.2.0] development) — issue 134
+
+- Add `Sales.Shipment.Undo` and `Purchase.Receipt.Undo` with explicit posted document / unique line selection, native sales and purchase reversal routines, corrective entries and atomic selection checks. Invoiced, corrected and applied-entry restrictions return coded refusals with recovery guidance.
+- Declare irreversible posting, standalone commit semantics and one-document `expectedCount` in English and Icelandic help.
+- App objects: codeunits / enum values 10077016–10077017, shared codeunit 10077014, enum extension 10077025. Test objects: codeunit 96998; explicit owned fixture codeunit / page 96997.
 
 ### Added (2026-11-16) - purchase invoice receipt lines (app [28.3.2.0], #133)
 
@@ -231,6 +252,11 @@
 - BC 28/29 transfer posting and preview read the applicable setup field by ID; BC 29 uses enum field 5857 rather than the obsolete option field 5855. Existing direct-transfer tests cover both posting modes.
 - No object IDs added. Changed product codeunits: 10076842, 10076901, 10076903, 10076909, 10076910. Regression tests extend 96909 and 96914; explicit owned MCP setup and cleanup (including native Inventory Posting Setup rows for the owned locations) extend test codeunit/page 96973 and helper 96904.
 - Regression 96914 checks the bilingual one-document count in effect help and in the examples. It does not require the app to declare `expectedCount`; Foundation owns that parameter.
+### Changed (2026-11-16) - Reclassification journal check, preview and post use the native journal path (#34)
+
+- Corrected selector precedence, native validation/subset help and bilingual confirmation guidance: `expectedCount` confirms one journal batch operation (always 1), independently of selected line and ledger counts. Posting and preview refuse non-Transfer entries inside a Transfer template. Source warnings are fixed. The existing same-repository BC 28/29 direct-transfer setting adapter is retained in 10076901/10076903 to compile against BC 29 without raising the application floor. Tests remain in 96964; no object IDs added.
+
+- `Inventory.Reclassification.Check` (10076887) validates every line of the Transfer batch with the standard Item Jnl.-Check Line and answers `validationResult` (Ready, ReadyWithWarnings, NotReady), `lineCount`, `errorCount`, `warningCount`, `errors` and `warnings`; `postedLineCount` is kept as an alias of `lineCount`. `Inventory.Reclassification.Post` (10076888) and `PreviewPost` (10076889) go through the same native journal helper (10076840 `Inventory Native Journal ori`), accept `templateName`/`batchName` as well as the journal aliases, and take an optional `lineSystemIds` array to work on a subset of the batch. Post returns `itemRegisterNo`, `postedLineCount` and a per-line `result` (from/to location, bin, lot, serial, package, tracking). Non-Transfer templates are refused with `PreconditionFailed`. The earlier response keys (`journalTemplateName`, `journalBatchName`, `lineCount`, `lines`) are kept. No object IDs added; tests in codeunit 96964.
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.

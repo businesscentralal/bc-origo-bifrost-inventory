@@ -539,6 +539,14 @@ The native APIs were checked against [StefanMaron w1-28 transfer source](https:/
 
 Foundation currently builds contract chapters in English for every LCID. The three changed irreversible count definitions include both English and Icelandic wording so the is-IS count unit is available even through that Foundation version.
 
+### Posted sales and purchase undo (#134)
+
+`Sales.Shipment.Undo` and `Purchase.Receipt.Undo` accept `data.documentNo` and `data.lineNos` (1–200 unique positive posted line numbers). They return `reversedLineNos` and `reversedCount`. Only the selected lines are passed together to the corresponding native Undo Sales Shipment Line / Undo Purchase Receipt Line routine. All native invoicing, application and warehouse restrictions remain; invoiced or applied entries require a credit memo instead.
+
+Both operations declare `irreversible`: corrective entries are posted and a standalone call commits. `expectedCount: 1` confirms the one posted document, not its line count. Missing confirmation previews without posting when Foundation confirmation is enabled. Omit Commit retains the caller transaction. Native posted document permissions, Bifrost Full Access and Inv. Posting Gate are required. No Inventory domain switch is added for these Sales/Purchase types.
+
+Objects: implementations 10077016 / 10077017; shared validator/help 10077014; enum extension 10077025; tests 96998 (moved from 96996, which main uses for receipt-line tests).
+
 ## Add posted receipt lines to a purchase invoice
 
 ```json
@@ -586,7 +594,7 @@ drop shipments, special orders, Cancel, Change Qty. and rescheduling are refused
 lines remain. Native failures return `BusinessCentralError` and roll back the whole call.
 
 Calculate is `write`; CarryOut is `irreversible`, without posting or printing. `expectedCount`
-confirms **one worksheet selection**, always 1, rather than lines or created orders. The types
+counts worksheet selections: always 1, rather than lines or created orders. The types
 require Full Access plus native worksheet/order permissions. No additional setup domain switch
 or posting permission is introduced because order creation does not post. Native report 699 is
 the purchase/transfer requisition mode; #117 owns the separate regenerative/net-change planning

@@ -13,7 +13,7 @@ using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using System.Utilities;
 
-/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory and revaluation).</summary>
+/// <summary>Native validation, filtered posting and rollback preview for dedicated inventory journals (physical inventory, reclassification and revaluation).</summary>
 codeunit 10076840 "Inventory Native Journal ori"
 {
     Access = Internal;
@@ -46,6 +46,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         CycleNoItemNextLbl: Label 'Check the itemNo filter or omit it to calculate every item that is due.', Comment = 'is-IS=Athugaðu itemNo síuna eða slepptu henni til að reikna allar vörur sem eru á tíma.';
         NonemptyErr: Label 'Calculate requires an empty physical inventory batch.', Comment = 'is-IS=Útreikningur krefst tómrar talningarbókarkeyrslu.';
         CountsErr: Label 'counts must contain distinct journal lines identified by lineNo or systemId; qtyCounted must be a nonnegative number when present.', Comment = 'is-IS=counts verður að innihalda aðgreindar bókarlínur auðkenndar með lineNo eða systemId; qtyCounted verður að vera tala sem er ekki neikvæð þegar hún er gefin upp.';
+        NotTransferTemplateErr: Label 'Journal template %1 is not a reclassification (Transfer) template.', Comment = '%1 = template name; is-IS=Bókarsniðmátið %1 er ekki endurflokkunarsniðmát (Transfer).';
         LineParameterTok: Label 'line %1', Locked = true;
         EmptyExpectedLbl: Label 'at least one journal line', Comment = 'is-IS=a.m.k. ein bókarlína';
         RevalBatchErr: Label 'Identify a revaluation batch using subject TEMPLATE|BATCH, its SystemId or templateName and batchName.', Comment = 'is-IS=Auðkenndu endurmatskeyrslu með subject TEMPLATE|BATCH, SystemId eða templateName og batchName.';
@@ -644,9 +645,21 @@ codeunit 10076840 "Inventory Native Journal ori"
         BatchId: Guid;
         Parts: List of [Text];
     begin
-        if JournalType <> JournalType::"Phys. Inventory" then
+        if not (JournalType in [JournalType::"Phys. Inventory", JournalType::Transfer]) then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, BatchErr, 'batchName', Argument.Subject, BatchErr);
         Request := Argument.GetRequestJson();
+        if JournalType = JournalType::Transfer then
+            if Argument.Type = "Message Type ori"::"Inventory.Reclassification.Check" then begin
+                if Request.Contains('templateName') then
+                    Request.Remove('journalTemplateName');
+                if Request.Contains('batchName') then
+                    Request.Remove('journalBatchName');
+            end else begin
+                if Request.Contains('journalTemplateName') then
+                    Request.Remove('templateName');
+                if Request.Contains('journalBatchName') then
+                    Request.Remove('batchName');
+            end;
         NormalizeAlias(Argument, Request, 'journalTemplateName', 'templateName');
         NormalizeAlias(Argument, Request, 'journalBatchName', 'batchName');
         if Request.Contains('templateName') or Request.Contains('batchName') then begin
@@ -679,6 +692,8 @@ codeunit 10076840 "Inventory Native Journal ori"
                 exit(RefuseMissingBatch(Argument, TemplateName, BatchName));
         if not JournalTemplate.Get(Batch."Journal Template Name") then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::RecordNotFound, BatchErr, 'templateName', Batch."Journal Template Name", PhysicalTemplateExpectedLbl);
+        if (JournalType = JournalType::Transfer) and (JournalTemplate.Type <> JournalType) then
+            RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotTransferTemplateErr, JournalTemplate.Name), TemplateParameterName(Request), JournalTemplate.Name, 'Transfer');
         if JournalTemplate.Type <> JournalType then
             RaiseTemplateRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, PhysicalTemplateErr, JournalTemplate.Name);
         if JournalTemplate.Recurring then
@@ -729,6 +744,13 @@ codeunit 10076840 "Inventory Native Journal ori"
             exit(false);
         SelectLines(Argument, Argument.GetRequestJson(), Batch, Line);
         exit(true);
+    end;
+
+    local procedure TemplateParameterName(Request: JsonObject): Text
+    begin
+        if Request.Contains('journalTemplateName') then
+            exit('journalTemplateName');
+        exit('templateName');
     end;
 
     local procedure NormalizeAlias(var Argument: Record "Message Argument ori"; var Request: JsonObject; AliasName: Text; Name: Text)
@@ -819,8 +841,12 @@ codeunit 10076840 "Inventory Native Journal ori"
         if not Line.FindSet() then
             RaiseRefusal(Argument, "Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'batchName', Line."Journal Batch Name", EmptyExpectedLbl);
         repeat
-            if not TryCheckLine(Line, JournalType) then
-                RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
+            // Dedicated reclassification must never post adjustment entries hidden in a Transfer template.
+            if JournalType = JournalType::Transfer then
+                Line.TestField("Entry Type", Line."Entry Type"::Transfer)
+            else
+                if not TryCheckLine(Line, JournalType) then
+                    RaiseRefusal(Argument, "Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'lineNo', Format(Line."Line No.", 0, 9), Line."Document No.");
             Clear(Result);
             Result.Add('systemId', Line.SystemId);
             Result.Add('lineNo', Line."Line No.");
@@ -898,8 +924,15 @@ codeunit 10076840 "Inventory Native Journal ori"
     var
         Item: Record Item;
     begin
-        if JournalType <> JournalType::"Phys. Inventory" then
+        if not (JournalType in [JournalType::"Phys. Inventory", JournalType::Transfer]) then
             Error(BatchErr);
+        if JournalType = JournalType::Transfer then begin
+            Line.TestField("Item No.");
+            Item.Get(Line."Item No.");
+            Item.TestField(Blocked, false);
+            Line.TestField("Entry Type", Line."Entry Type"::Transfer);
+            exit;
+        end;
         Line.TestField("Item No.");
         Item.Get(Line."Item No.");
         Item.TestField(Blocked, false);
