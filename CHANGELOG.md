@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-18) - price write restriction test reruns on the same tenant (#250)
+- `UpdatePrice_RestrictedField_PreservesPrice` in test codeunit 96939 reuses an existing Field Access row for the user, Item and Unit Price instead of inserting a duplicate key, so the codeunit passes on a tenant that already ran the suite. No new object; the assertions are unchanged.
+
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
 - `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
 - New test codeunit 96935 `Inv. Count Unit Tests ori` (1033 and 1039). No new app object, page or message type.

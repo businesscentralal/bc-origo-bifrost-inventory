@@ -149,11 +149,16 @@ codeunit 96939 "Inventory Price Write Tests"
         Request: JsonObject;
     begin
         CreateItem(Item);
+        // Reuse a row left by an earlier run (same user, table and field) instead of inserting a duplicate key.
         FieldAccess.OpenEdit();
         FieldAccess.CurrentUserName.SetValue(CurrentUserBufferName());
-        FieldAccess.New();
-        FieldAccess."Table No.".SetValue(Database::Item);
-        FieldAccess."Field No.".SetValue(Item.FieldNo("Unit Price"));
+        FieldAccess.Filter.SetFilter("Table No.", Format(Database::Item));
+        FieldAccess.Filter.SetFilter("Field No.", Format(Item.FieldNo("Unit Price")));
+        if not FieldAccess.First() then begin
+            FieldAccess.New();
+            FieldAccess."Table No.".SetValue(Database::Item);
+            FieldAccess."Field No.".SetValue(Item.FieldNo("Unit Price"));
+        end;
         FieldAccess."Restriction Type".SetValue('Write');
         FieldAccess.Close();
         Request.Add('unitPrice', 99);
