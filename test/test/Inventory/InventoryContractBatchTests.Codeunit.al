@@ -474,6 +474,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.PhysInventory.Record');
         Types.Add('Inventory.PhysInventory.Post');
         Types.Add('Inventory.ItemReference.Resolve');
+        Types.Add('Inventory.ItemReference.Set');
         Types.Add('Inventory.ItemCharge.Assign');
         Types.Add('Inventory.ItemCharge.Get');
         Types.Add('Inventory.ItemCategory.Get');

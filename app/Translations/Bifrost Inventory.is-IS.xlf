@@ -1924,9 +1924,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferCreateOverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 2000881134" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central's own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.</source>
-          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</note>
+          <source>Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType. In BC 29, posting and preview use the order's Direct Transfer Posting Type; later Inventory Setup changes do not change an existing order's posting mode. BC 28 uses the Inventory Setup direct-transfer posting configuration as a fallback. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central's own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.</source>
+          <target>Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType. Í BC 29 nota bókun og forskoðun bókunartegund beins flutnings úr pöntuninni; síðari breytingar á birgðagrunni breyta ekki bókunarham fyrirliggjandi pöntunar. Í BC 28 er bókunarstilling beinna flutninga í birgðagrunni notuð til vara. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType. Í BC 29 nota bókun og forskoðun bókunartegund beins flutnings úr pöntuninni; síðari breytingar á birgðagrunni breyta ekki bókunarham fyrirliggjandi pöntunar. Í BC 28 er bókunarstilling beinna flutninga í birgðagrunni notuð til vara. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType TransferPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 457938070" size-unit="char" translate="yes" xml:space="preserve">
@@ -5636,6 +5636,252 @@
           <target>Sendu annaðhvort referenceNo eða references, ekki bæði.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu annaðhvort referenceNo eða references, ekki bæði.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method ValidateTopLevelShape - NamedType ConflictNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 2612954968" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read the Business Central error, correct the related item, variant, unit, customer or vendor record and retry.</source>
+          <target>Lestu Business Central villuna, leiðréttu tengda vöru, afbrigði, einingu, viðskiptavin eða birgja og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lestu Business Central villuna, leiðréttu tengda vöru, afbrigði, einingu, viðskiptavin eða birgja og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType NativeNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 1954137527" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Valid item reference and related records.</source>
+          <target>Gild vörutilvísun og tengdar færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild vörutilvísun og tengdar færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType NativeExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for item reference writes.</source>
+          <target>Heimild hafnað fyrir skrif í vörutilvísanir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir skrif í vörutilvísanir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign Bifrost Full and Business Central permissions for item references and their related records.</source>
+          <target>Úthlutaðu Bifrost Full og Business Central heimildum fyrir vörutilvísanir og tengdar færslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost Full og Business Central heimildum fyrir vörutilvísanir og tengdar færslur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType PermissionNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 3379277262" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Item Reference domain is turned off.</source>
+          <target>Slökkt er á vörutilvísanasviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörutilvísanasviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType DomainLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 2340038615" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Enable Item Reference from Inventory Setup.</source>
+          <target>Virkjaðu vörutilvísanir í uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Virkjaðu vörutilvísanir í uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType DomainNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4077369804 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates or updates an item reference.</source>
+          <target>Stofnar eða uppfærir vörutilvísun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eða uppfærir vörutilvísun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetDescription - NamedType TextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates an item reference or updates its description and dates. Vendor references may create an item vendor relation. Does not post.</source>
+          <target>Stofnar vörutilvísun eða uppfærir lýsingu hennar og dagsetningar. Birgjatilvísanir geta stofnað tengsl vöru og birgja. Bókar ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar vörutilvísun eða uppfærir lýsingu hennar og dagsetningar. Birgjatilvísanir geta stofnað tengsl vöru og birgja. Bókar ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetEffect - NamedType ChangesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 1158096087 - NamedType 3131523370" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request cannot be saved.</source>
+          <target>Ekki er hægt að vista beiðnina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að vista beiðnina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetErrors - NamedType ReasonLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 1158096087 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the named field using the help and retry.</source>
+          <target>Leiðréttu tilgreindan reit samkvæmt hjálpinni og reyndu aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreindan reit samkvæmt hjálpinni og reyndu aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetErrors - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a barcode reference</source>
+          <target>Stofna strikamerkjatilvísun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna strikamerkjatilvísun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 1027590672 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>item reference, barcode, customer, vendor</source>
+          <target>vörutilvísun, strikamerki, viðskiptavinur, birgir</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vörutilvísun, strikamerki, viðskiptavinur, birgir</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetKeywords - NamedType TextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3650283039 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Omitted description and dates keep existing values. Empty dates clear them. An omitted or empty unit uses the item base unit. Native validation runs before saving. Vendor references may create an item vendor relation. Generic writes to item references are refused.</source>
+          <target>Slepptri lýsingu og dagsetningum er haldið óbreyttum. Tómar dagsetningar hreinsa þær. Eining sem vantar eða er tóm notar grunneiningu vörunnar. Innbyggð sannprófun fer fram áður en vistað er. Birgjatilvísanir geta stofnað tengsl vöru og birgja. Almennum skrifum í vörutilvísanir er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Slepptri lýsingu og dagsetningum er haldið óbreyttum. Tómar dagsetningar hreinsa þær. Eining sem vantar eða er tóm notar grunneiningu vörunnar. Innbyggð sannprófun fer fram áður en vistað er. Birgjatilvísanir geta stofnað tengsl vöru og birgja. Almennum skrifum í vörutilvísanir er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetNotes - NamedType TextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 2340569551 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Creates a reference or updates its description and dates using the full item, variant, unit, reference type, type number and reference number key. A reference assigned to another item is refused.</source>
+          <target>Stofnar tilvísun eða uppfærir lýsingu hennar og dagsetningar með öllum lyklinum: vöru, afbrigði, einingu, tegund tilvísunar, tegundarnúmeri og tilvísunarnúmeri. Tilvísun á aðra vöru er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar tilvísun eða uppfærir lýsingu hennar og dagsetningar með öllum lyklinum: vöru, afbrigði, einingu, tegund tilvísunar, tegundarnúmeri og tilvísunarnúmeri. Tilvísun á aðra vöru er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetOverview - NamedType TextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 2023404820" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing item number, at most 20 characters.</source>
+          <target>Vörunúmer sem er til, mest 20 stafir.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer sem er til, mest 20 stafir.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 1433743987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing variant of the item; empty means no variant.</source>
+          <target>Afbrigði vörunnar sem er til; tómt merkir ekkert afbrigði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigði vörunnar sem er til; tómt merkir ekkert afbrigði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 855393302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing item unit; omitted or empty uses the base unit.</source>
+          <target>Vörueining sem er til; grunneining er notuð ef gildið vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörueining sem er til; grunneining er notuð ef gildið vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 3123979189" size-unit="char" translate="yes" xml:space="preserve">
+          <source>barCode, customer, vendor or blank.</source>
+          <target>barCode, customer, vendor eða blank.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=barCode, customer, vendor eða blank.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 890407632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing customer or vendor number. Required for customer and vendor, otherwise empty.</source>
+          <target>Númer viðskiptavinar eða birgja sem er til. Áskilið fyrir customer og vendor, annars tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer viðskiptavinar eða birgja sem er til. Áskilið fyrir customer og vendor, annars tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 1021904047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reference number, at most 50 characters. Cannot already identify another item in the same type and type number.</source>
+          <target>Tilvísunarnúmer, mest 50 stafir. Má ekki auðkenna aðra vöru með sömu tegund og tegundarnúmeri.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilvísunarnúmer, mest 50 stafir. Má ekki auðkenna aðra vöru með sömu tegund og tegundarnúmeri.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 443553362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description, at most 100 characters; omitted keeps the current value.</source>
+          <target>Lýsing, mest 100 stafir; óbreytt ef gildið vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lýsing, mest 100 stafir; óbreytt ef gildið vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 1990982001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>First valid day as yyyy-mm-dd; empty clears, omitted keeps the current value.</source>
+          <target>Fyrsti gildisdagur á forminu yyyy-mm-dd; tómt hreinsar, óbreytt ef gildið vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrsti gildisdagur á forminu yyyy-mm-dd; tómt hreinsar, óbreytt ef gildið vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3615801952 - NamedType 2463221340" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Last valid day as yyyy-mm-dd, not before startingDate; empty clears, omitted keeps the current value.</source>
+          <target>Síðasti gildisdagur á forminu yyyy-mm-dd, ekki á undan startingDate; tómt hreinsar, óbreytt ef gildið vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Síðasti gildisdagur á forminu yyyy-mm-dd, ekki á undan startingDate; tómt hreinsar, óbreytt ef gildið vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetParameters - NamedType Field8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 1033708611 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolve the saved reference.</source>
+          <target>Finndu vistuðu tilvísunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Finndu vistuðu tilvísunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetRelated - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 2023404820" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Success on a successful call.</source>
+          <target>Success þegar kall tekst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Success þegar kall tekst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field0Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 1433743987" size-unit="char" translate="yes" xml:space="preserve">
+          <source>True when a reference was inserted.</source>
+          <target>True þegar tilvísun var stofnuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=True þegar tilvísun var stofnuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 855393302" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved item number.</source>
+          <target>Vistað vörunúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistað vörunúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field2Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 3123979189" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved variant code.</source>
+          <target>Vistaður afbrigðiskóði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistaður afbrigðiskóði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field3Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 890407632" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved unit of measure.</source>
+          <target>Vistuð mælieining.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistuð mælieining.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field4Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 1021904047" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved reference type.</source>
+          <target>Vistuð tegund tilvísunar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistuð tegund tilvísunar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field5Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 443553362" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved customer or vendor number.</source>
+          <target>Vistað númer viðskiptavinar eða birgja.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistað númer viðskiptavinar eða birgja.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field6Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 1990982001" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved reference number.</source>
+          <target>Vistað tilvísunarnúmer.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistað tilvísunarnúmer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field7Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 2463221340" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved description.</source>
+          <target>Vistuð lýsing.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistuð lýsing.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field8Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 84351611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved starting date as yyyy-mm-dd, or empty.</source>
+          <target>Vistaður upphafsdagur á forminu yyyy-mm-dd, eða tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistaður upphafsdagur á forminu yyyy-mm-dd, eða tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field9Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 4268477247 - NamedType 1721658259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Saved ending date as yyyy-mm-dd, or empty.</source>
+          <target>Vistaður lokadagur á forminu yyyy-mm-dd, eða tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vistaður lokadagur á forminu yyyy-mm-dd, eða tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetResponse - NamedType Field10Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 79446908 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create or change a reference for an existing item.</source>
+          <target>Stofnaðu eða breyttu tilvísun fyrir vöru sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu eða breyttu tilvísun fyrir vöru sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetSelectionDescription - NamedType TextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing item number.</source>
+          <target>Vörunúmer sem er til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer sem er til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3502481479 - NamedType 2095925749" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create or update the item reference.</source>
+          <target>Stofnaðu eða uppfærðu vörutilvísunina.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu eða uppfærðu vörutilvísunina.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetWorkflow - NamedType SaveLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 3502481479 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Resolve the reference to verify its saved item and metadata.</source>
+          <target>Finndu tilvísunina til að staðfesta vistaða vöru og lýsigögn hennar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Finndu tilvísunina til að staðfesta vistaða vöru og lýsigögn hennar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetWorkflow - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 2962684526 - NamedType 3131523370" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item reference request is invalid: %1.</source>
+          <target>Beiðni um vörutilvísun er ógild: %1.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = field, is-IS=Beiðni um vörutilvísun er ógild: %1.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method Refuse - NamedType ReasonLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3640557848 - Method 2962684526 - NamedType 2029447175" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct %1 using Inventory.ItemReference.Set help and retry. For a conflicting reference, choose another reference or the item it already identifies.</source>
+          <target>Leiðréttu %1 samkvæmt hjálp Inventory.ItemReference.Set og reyndu aftur. Fyrir tilvísun sem stangast á skaltu velja aðra tilvísun eða vöruna sem hún auðkennir þegar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = field, is-IS=Leiðréttu %1 samkvæmt hjálp Inventory.ItemReference.Set og reyndu aftur. Fyrir tilvísun sem stangast á skaltu velja aðra tilvísun eða vöruna sem hún auðkennir þegar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method Refuse - NamedType NextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2423449542 - NamedType 880711966" size-unit="char" translate="yes" xml:space="preserve">
           <source>The Item Substitution domain is disabled.</source>
