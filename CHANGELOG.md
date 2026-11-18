@@ -1,5 +1,11 @@
 # Changelog
 
+### Fixed (2026-11-17) - Reused test-company fixtures (PR #207 amend)
+
+- Transfer posting, confirmation and cycle-count fixtures advance the Microsoft test-library number sequence beyond existing padded G/L accounts, preserving existing accounts and all behavior assertions.
+- Planning fixtures use unique XP117 item numbers. Cleanup selects those owned numbers instead of descriptions, so unrelated BOM components with an older fixture description or a foreign BOM parent survive; a regression test covers that boundary.
+
+
 ## [Unreleased]
 
 ### Changed - CI probes Foundation 28.0.13
@@ -305,6 +311,9 @@
 - Corrected selector precedence, native validation/subset help and bilingual confirmation guidance: `expectedCount` confirms one journal batch operation (always 1), independently of selected line and ledger counts. Posting and preview refuse non-Transfer entries inside a Transfer template. Source warnings are fixed. The existing same-repository BC 28/29 direct-transfer setting adapter is retained in 10076901/10076903 to compile against BC 29 without raising the application floor. Tests remain in 96964; no object IDs added.
 
 - `Inventory.Reclassification.Check` (10076887) validates every line of the Transfer batch with the standard Item Jnl.-Check Line and answers `validationResult` (Ready, ReadyWithWarnings, NotReady), `lineCount`, `errorCount`, `warningCount`, `errors` and `warnings`; `postedLineCount` is kept as an alias of `lineCount`. `Inventory.Reclassification.Post` (10076888) and `PreviewPost` (10076889) go through the same native journal helper (10076840 `Inventory Native Journal ori`), accept `templateName`/`batchName` as well as the journal aliases, and take an optional `lineSystemIds` array to work on a subset of the batch. Post returns `itemRegisterNo`, `postedLineCount` and a per-line `result` (from/to location, bin, lot, serial, package, tracking). Non-Transfer templates are refused with `PreconditionFailed`. The earlier response keys (`journalTemplateName`, `journalBatchName`, `lineCount`, `lines`) are kept. No object IDs added; tests in codeunit 96964.
+
+### Fixed (2026-11-16) - Attribute contract tests accept the Foundation error code descriptor (#205)
+- Foundation core #1345 (merged 14.11) appends the conditional error `code` descriptor to every published response chapter. Codeunit 96921 compared the whole response JSON and failed on four Attribute types (Get, Create, Update, AttributeDefinition.Create). The response check now requires every app-owned field to match exactly and in order, and allows only the one trailing Foundation `code` field. No product code and no object IDs changed.
 
 ### Fixed (2026-11-14) - AttributeDefinition.Create keeps the documented optionValues contract (#151)
 - `Inventory.AttributeDefinition.Create` checks `optionValues` only when `type` is Option, as the help says. Plain JSON values (strings, numbers, booleans) are used as text, and entries that are not plain values (objects, arrays, null) are skipped again, as on the released contract. Empty, duplicate (not case-sensitive) or longer than 250 characters values are refused with `InvalidParameter` before anything is created.

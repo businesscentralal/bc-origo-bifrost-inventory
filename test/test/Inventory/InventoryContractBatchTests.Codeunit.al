@@ -750,6 +750,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
+        AssertResponseChapter(Contract, Parts.GetResponse(Legacy));
         // Main compares the composed response before this branch strips the shared code field.
         AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedResponse(TypeName, Contract, Parts.GetResponse(Legacy));
@@ -761,6 +762,42 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+
+    /// <summary>Foundation 28.0.13+ appends the conditional error "code" descriptor to published responses (core #1345). Every app-owned field must still match exactly and in order.</summary>
+    local procedure AssertResponseChapter(Contract: JsonObject; Expected: JsonObject)
+    var
+        Trimmed: JsonObject;
+        Wrapper: JsonObject;
+        ActualFields: JsonArray;
+        OwnFields: JsonArray;
+        Token: JsonToken;
+        Field: JsonToken;
+        Last: JsonToken;
+    begin
+        LibraryAssert.IsTrue(Contract.Get('response', Token), 'Missing chapter response.');
+        Trimmed := Token.AsObject().Clone().AsObject();
+        Trimmed.Get('fields', Token);
+        ActualFields := Token.AsArray();
+        foreach Field in ActualFields do
+            if not IsFoundationErrorCodeField(Field) then
+                OwnFields.Add(Field);
+        LibraryAssert.IsTrue(ActualFields.Count() - OwnFields.Count() <= 1, 'Foundation adds at most one response field.');
+        if ActualFields.Count() > OwnFields.Count() then begin
+            ActualFields.Get(ActualFields.Count() - 1, Last);
+            LibraryAssert.IsTrue(IsFoundationErrorCodeField(Last), 'The Foundation code descriptor is the last response field.');
+        end;
+        Trimmed.Replace('fields', OwnFields);
+        Wrapper.Add('response', Trimmed);
+        AssertChapterJson(Wrapper, 'response', Expected.AsToken());
+    end;
+
+    local procedure IsFoundationErrorCodeField(Field: JsonToken): Boolean
+    var
+        NameToken: JsonToken;
+    begin
+        exit(Field.AsObject().Get('name', NameToken) and (NameToken.AsValue().AsText() = 'code'));
     end;
 
     local procedure AssertComposedResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
@@ -827,6 +864,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
         AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
+
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
     var
