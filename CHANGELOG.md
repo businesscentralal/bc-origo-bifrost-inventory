@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed - Icelandic release wording (#244)
+
+- Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
 ### Fixed (2026-11-18) - Reclass Journal Tests rerun on a used company (#246)
 - Test codeunit 96925 `Reclass Journal Tests ori` removes orphaned `Post Value Entry to G/L` rows (no Value Entry behind them) before seeding stock, so the codeunit passes on a rerun. Test-only; no new object, no product change, no assertion weakened.
 
