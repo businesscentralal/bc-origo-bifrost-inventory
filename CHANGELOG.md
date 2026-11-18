@@ -5,6 +5,7 @@
 ### Fixed - catalog test ID collision (PR #201)
 
 - Move `Nonstock Item Create Tests` from codeunit 96998 to unused codeunit 96934 within the existing test range. Main keeps `Posted Line Undo Tests ori` at 96998. Both test suites, their assertions and product behavior are unchanged.
+- Reconcile both exact Inventory registry counts to 83 after merging main's `Inventory.ItemReference.Set`; retain the explicit roster and both membership checks.
 
 ### Fixed - reclassification test ID collision (PR #221)
 
@@ -14,6 +15,17 @@
 
 - Move `Sales Undo Impl ori` and `Sales.Shipment.Undo` from 10077028 to 10077016, and `Purchase Undo Impl ori` and `Purchase.Receipt.Undo` from 10077029 to 10077017. Main (#203) now uses 10077028–10077029 for `Sales.SalesInvoice.GetShipmentLines`. Message names and behavior are unchanged. Each message value still matches its implementation codeunit.
 - Move the shared helper `Posted Line Undo ori` from 10077027 to 10077014. Open pull request #206 claims codeunit and message value 10077027 for `Inventory.Valuation.Get`. 10077014, 10077016 and 10077017 are free on main and are not claimed by an open pull request. The enum extension stays 10077025.
+### Fixed (2026-11-17) - item-reference merge reconciliation (#199)
+
+- Preserve all main message types and permissions alongside ItemReference.Set; the exact Inventory catalogue census is 82. Move this PR's new codeunits to 10076954–10076956 and Set enum value to 10076954; regenerate translations from the merged source. The README roster and local help list Set and its save/read-back workflow.
+- Reuse main's transfer compatibility helper 10077025. Posting and preview use the existing BC 29 order's mode even if Inventory Setup changes; BC 28 continues to use setup. Test fixtures restore the exact native posting value, including BC 29's blank value.
+- Align English/Icelandic transfer posting notes with the order-based BC 29 behavior and BC 28 setup fallback. Move the unreleased Item Reference Set test codeunit from 96989 to 96928 to avoid PR #206's valuation tests and the earlier PR #236's carry-out help test allocation (96948).
+
+### Added (2026-11-16) - Item reference writes (#102)
+
+- `Inventory.ItemReference.Set` creates or updates references using item, variant, unit, type, type number and reference number. Description and ISO validity dates can be changed; omitted optional values are preserved. Conflicting references on another item return `ConflictingIdentifiers` with recovery guidance. Generic writes to table 5777 are blocked and name the dedicated type.
+- Added codeunits 10076954 `Item Ref. Set Impl ori`, 10076955 `Item Ref. Set Proc ori`, 10076956 `Item Ref. Restrict ori`, and tests 96928 `Item Ref. Set Tests ori`. English/Icelandic help and error labels are included; the effect is `write`.
+- Extended main's compatibility helper 10077025 `Transfer Posting Setup ori`: transfer posting and preview read the posting mode on the BC 29 order, with the BC 28 setup option as a fallback. Native test setup maps BC 29 enum values 10/20 to the existing shipment/direct choices. Existing transfer tests configure and restore the matching native field, removing BC 29 obsolete-field warnings without raising the supported BC version.
 ### Fixed
 - #234: `Purchase.Requisition.CarryOut` (10076942) and `Inventory.PlanningWorksheet.CarryOut` (10076939) state what `expectedCount` counts. effect.changes and the expectedCount parameter say `expectedCount counts worksheet selections: always 1` (Icelandic: `expectedCount telur val á vinnublaði: alltaf 1`), not the number of lines or orders. Requisition carry-out now declares the expectedCount parameter itself so Foundation keeps that sentence. New test codeunit 96948 `CarryOut Count Help ori` (96964 is `Inv. 186 Blank Line Tests ori` on main). No new product object IDs.
 ### Changed (2026-11-17) - Catalog Items and Planning allocation (#119)

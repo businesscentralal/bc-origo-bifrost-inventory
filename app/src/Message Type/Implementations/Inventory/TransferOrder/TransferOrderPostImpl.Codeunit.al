@@ -197,7 +197,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         RequestJson := Argument.GetRequestJson();
 
         if DirectTransfer then begin
-            ResolveDirectTransferOptions(PostShipment, PostReceipt, PostTransfer);
+            ResolveDirectTransferOptions(TransferHeader, PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
             if PostingTypeText <> '' then begin
@@ -240,13 +240,11 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         Argument."Content Type" := Argument.GetContentTypeJson();
     end;
 
-    local procedure ResolveDirectTransferOptions(var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
+    local procedure ResolveDirectTransferOptions(TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
     var
-        InventorySetup: Record "Inventory Setup";
         PostingSetup: Codeunit "Transfer Posting Setup ori";
     begin
-        InventorySetup.Get();
-        if PostingSetup.PostAsSingleDocument(InventorySetup) then
+        if PostingSetup.PostAsSingleDocument(TransferHeader) then
             PostTransfer := true
         else begin
             PostShipment := true;
