@@ -167,8 +167,8 @@
         </trans-unit>
         <trans-unit id="Table 3539786927 - Field 2161572060 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Location Code</source>
-          <target>Birgðageymslukóti</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóti</note>
+          <target>Birgðageymslukóði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóði</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Location Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3539786927 - Field 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -179,8 +179,8 @@
         </trans-unit>
         <trans-unit id="Table 3539786927 - Field 3450651614 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Variant Code</source>
-          <target>Afbrigðiskóti</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóti</note>
+          <target>Afbrigðiskóði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Variant Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 4011415181 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
@@ -209,8 +209,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 1689413328" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.</source>
-          <target>itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</note>
+          <target>Ekki er hægt að nota itemNoFilter og itemCategoryFilter bæði í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ekki er hægt að nota itemNoFilter og itemCategoryFilter bæði í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 865625153" size-unit="char" translate="yes" xml:space="preserve">
@@ -2249,8 +2249,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is not a parameter and is refused as UnknownParameter: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
-          <target>itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
+          <target>itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er ekki færibreyta og er hafnað með UnknownParameter: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er ekki færibreyta og er hafnað með UnknownParameter: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -2441,8 +2441,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 1153550289" size-unit="char" translate="yes" xml:space="preserve">
           <source>Requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.</source>
-          <target>Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.</note>
+          <target>Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist. Notaðu Inventory.AssemblyOrder.PreviewPost fyrst til að sjá færslurnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist. Notaðu Inventory.AssemblyOrder.PreviewPost fyrst til að sjá færslurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - NamedType AssemblyPostNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - NamedType 3670094209" size-unit="char" translate="yes" xml:space="preserve">
@@ -15989,8 +15989,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
           <source>Read only. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
-          <target>Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kótum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóta. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
+          <target>Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 3872630915" size-unit="char" translate="yes" xml:space="preserve">
@@ -16073,14 +16073,14 @@
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2484602009" size-unit="char" translate="yes" xml:space="preserve">
           <source>Business Central filter on the value entry location code.</source>
-          <target>Business Central-sía á birgðageymslukóta virðisfærslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á birgðageymslukóta virðisfærslu.</note>
+          <target>Business Central-sía á birgðageymslukóða virðisfærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á birgðageymslukóða virðisfærslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param2Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 1289661690" size-unit="char" translate="yes" xml:space="preserve">
           <source>Business Central filter on the value entry variant code.</source>
-          <target>Business Central-sía á afbrigðiskóta virðisfærslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á afbrigðiskóta virðisfærslu.</note>
+          <target>Business Central-sía á afbrigðiskóða virðisfærslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á afbrigðiskóða virðisfærslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param3Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 1185033371" size-unit="char" translate="yes" xml:space="preserve">
@@ -16157,14 +16157,14 @@
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2726482963" size-unit="char" translate="yes" xml:space="preserve">
           <source>Location code; may be blank.</source>
-          <target>Birgðageymslukóti; má vera auður.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóti; má vera auður.</note>
+          <target>Birgðageymslukóði; má vera auður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Birgðageymslukóði; má vera auður.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 2848886198" size-unit="char" translate="yes" xml:space="preserve">
           <source>Variant code; may be blank.</source>
-          <target>Afbrigðiskóti; má vera auður.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóti; má vera auður.</note>
+          <target>Afbrigðiskóði; má vera auður.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði; má vera auður.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetResponse - NamedType Child2Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 4268477247 - NamedType 1585238741" size-unit="char" translate="yes" xml:space="preserve">

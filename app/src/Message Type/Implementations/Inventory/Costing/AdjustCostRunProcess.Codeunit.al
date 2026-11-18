@@ -70,7 +70,7 @@ codeunit 10076859 "Adjust Cost Run Process ori"
     local procedure CheckSelection(var Argument: Record "Message Argument ori"; ItemNoFilter: Text; ItemCategoryFilter: Text; var ItemsProcessed: Integer): Boolean
     var
         Item: Record Item;
-        BothErr: Label 'itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.', Comment = 'is-IS=itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.';
+        BothErr: Label 'itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.', Comment = 'is-IS=Ekki er hægt að nota itemNoFilter og itemCategoryFilter bæði í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.';
         BothExpectedTxt: Label 'One of itemNoFilter or itemCategoryFilter, or neither.', Comment = 'is-IS=Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.';
         BothNextStepTxt: Label 'Send only one of the two filters. Nothing was adjusted.', Comment = 'is-IS=Sendu aðeins aðra síuna. Engu var breytt.';
         BadFilterErr: Label '%1 is not a valid Business Central filter: %2', Comment = '%1 = parameter name, %2 = error text; is-IS=%1 er ekki gild Business Central sía: %2';
