@@ -62,6 +62,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.AssemblyToOrder.Get');
         TypeNames.Add('Inventory.AssemblyBOM.Get');
         TypeNames.Add('Inventory.AvailabilityByPeriod.Get');
+        TypeNames.Add('Inventory.AvailabilityByEvent.Get');
         TypeNames.Add('Inventory.Attribute.Create');
         TypeNames.Add('Inventory.Attribute.Get');
         TypeNames.Add('Inventory.Attribute.Update');
@@ -100,7 +101,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.TransferOrder.Release');
         TypeNames.Add('Inventory.TransferOrder.Reopen');
         TypeNames.Add('Inventory.TransferOrder.Statistics');
-        LibraryAssert.AreEqual(48, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
+        LibraryAssert.AreEqual(49, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
         foreach TypeName in TypeNames do begin
             MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             MessageImpl := MessageType;
@@ -427,6 +428,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Attribute.Update');
         Types.Add('Inventory.AttributeDefinition.Create');
         Types.Add('Inventory.AvailabilityByPeriod.Get');
+        Types.Add('Inventory.AvailabilityByEvent.Get');
         Types.Add('Inventory.TransferOrder.Create');
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');

@@ -36,6 +36,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.ItemReference.Set` | Inbound | Create or update an item reference; preserve omitted descriptions/dates and refuse references assigned to another item |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AvailabilityByEvent.Get` | Outbound | Read dated supply/demand events, source documents and running projected inventory |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
 | `Inventory.ItemCategory.Set` | Inbound | Create or update item categories and their default attribute values |
 | `Inventory.Item.Create` | Inbound | Create an item from an item template (description, base unit of measure, unit price, GTIN); answers the item number and its units of measure. Gated by the Attributes domain |
@@ -268,6 +269,20 @@ A warehouse system moves stock from `MAIN` to `EAST`:
    and `Inventory.Period.Close` closes the inventory period.
 
 ---
+
+## Event availability
+
+`Inventory.AvailabilityByEvent.Get` takes `itemNo`, `from` and `to` (inclusive ISO dates), plus optional exact `variant` and `location` codes. It returns `openingInventory` and an `events` array containing `date`, `type`, `sourceDocument`, signed base `quantity`, `projectedInventory`, `variant` and `location`.
+
+The calculation follows Item Availability by Event. Current stock and events before `from` contribute to the opening balance. Supply precedes demand on the same date, and reservations affect projected inventory as on the standard page. Drop shipments, blanket orders, forecasts and planning suggestions are excluded. Only sources readable by the caller are included. This operation has effect `read` and does not change business records.
+
+```json
+{"type":"Inventory.AvailabilityByEvent.Get","data":{"itemNo":"ITEM","from":"2026-11-01","to":"2026-11-30"}}
+```
+
+Framboð eftir atburði: `Inventory.AvailabilityByEvent.Get` tekur vörunúmer, dagsetningabilið `from`–`to` og valfrjálsa afbrigðis- og staðsetningarkóða. Svarið sýnir upphafsbirgðir, dagsetta framboðs- og eftirspurnaratburði, upprunaskjöl, magn í grunneiningum og hlaupandi áætlaðar birgðir. Aðgerðin les aðeins og breytir engum viðskiptafærslum.
+
+New objects: codeunit **10076940** `Avail. By Event Impl ori`, message enum value **10076940**, and test codeunit **96990** `Avail. By Event Tests ori`.
 
 ## Objects
 
