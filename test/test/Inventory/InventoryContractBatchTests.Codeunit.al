@@ -487,6 +487,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.ItemVariant.Get');
         Types.Add('Inventory.ItemVariant.Create');
         Types.Add('Inventory.Item.Create');
+        Types.Add('Inventory.NonstockItem.Create');
         Types.Add('Inventory.ItemUnitOfMeasure.Get');
         Types.Add('Inventory.ItemUnitOfMeasure.Create');
         Types.Add('Inventory.Reservation.AutoReserve');

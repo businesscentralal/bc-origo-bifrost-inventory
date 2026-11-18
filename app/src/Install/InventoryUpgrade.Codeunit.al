@@ -18,6 +18,7 @@ codeunit 10076836 "Inventory Upgrade ori"
         if not UpgradeTag.HasUpgradeTag(InventoryInstall.GetInitialReleaseTag()) then
             UpgradeTag.SetUpgradeTag(InventoryInstall.GetInitialReleaseTag());
         EnableUsedDomains();
+        EnableUsedCatalogItems();
         EnablePlanningDomain();
     end;
 
@@ -34,6 +35,30 @@ codeunit 10076836 "Inventory Upgrade ori"
             if InventorySetup.EnableDomainsInUse() then
                 InventorySetup.Modify(true);
         UpgradeTag.SetUpgradeTag(GetDomainUsageTag());
+    end;
+
+    /// <summary>
+    /// Runs once per company: turns the Catalog Items domain (added after the first usage migration) on when the
+    /// company has catalog items. Other switches are not touched and absent setup rows stay absent.
+    /// </summary>
+    internal procedure EnableUsedCatalogItems()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        UpgradeTag: Codeunit "Upgrade Tag";
+    begin
+        if UpgradeTag.HasUpgradeTag(GetCatalogItemsUsageTag()) then
+            exit;
+        InventorySetup.ReadIsolation := IsolationLevel::UpdLock;
+        if InventorySetup.Get() then
+            if InventorySetup.EnableCatalogItemsInUse() then
+                InventorySetup.Modify(true);
+        UpgradeTag.SetUpgradeTag(GetCatalogItemsUsageTag());
+    end;
+
+    /// <summary>Identifies the one-time Catalog Items usage migration.</summary>
+    internal procedure GetCatalogItemsUsageTag(): Code[250]
+    begin
+        exit('Origo.Bifrost.Inventory-CatalogItemsUsage-20261116');
     end;
 
     /// <summary>Turns on Planning once when a planning worksheet template exists. Other domain switches are not changed.</summary>

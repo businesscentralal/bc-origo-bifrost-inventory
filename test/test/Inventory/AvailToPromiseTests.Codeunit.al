@@ -433,6 +433,15 @@ codeunit 96926 "Avail. To Promise Tests"
 
     local procedure CreateItem(var Item: Record Item; ItemType: Enum "Item Type")
     begin
+        if ItemType = Item.Type::Service then begin
+            Clear(Item);
+            repeat
+                Item."No." := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Item."No."));
+            until not Item.Get(Item."No.");
+            Item.Validate(Type, ItemType);
+            Item.Insert(true);
+            exit;
+        end;
         LibraryInventory.CreateItem(Item);
         if Item.Type = ItemType then
             exit;
