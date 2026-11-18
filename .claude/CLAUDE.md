@@ -46,6 +46,9 @@ README "Objects" lists every object with its ID. In short:
   New setup rows and the tagged issue147 upgrade enable domains from company usage; existing switches are never turned off.
   Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
   (10076882) with `Inventory.PhysInventory.Record`.
+- Next free codeunit: 10076931 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
+  the convention). Free: 10076931-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - Next free codeunit: 10076932 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
   the convention). Taken above that: 10077020 `Item Subst. Get Impl ori` (#118) and 10077032-10077033
   `Sales Ret. Ord. Post. Impl/Proc ori` (#136). Free: 10076932-10077019, 10077021-10077029 and 10077034 for codeunits,
@@ -126,3 +129,6 @@ README "Objects" lists every object with its ID. In short:
 ## PR #199 amendment object claim
 
 - Test codeunit 96928 `Item Ref. Set Tests ori` replaces the unreleased 96948 allocation, which belongs to earlier PR #236 `CarryOut Count Help ori`; the original 96989 belongs to #206 valuation tests. Checked before the ID-fix push against main `7bd237e4` and all 12 other open PR heads, including #236 and #221. Rechecked after #236 merged: main `7f9cdb67` and all 11 remaining open PR heads on 2026-11-17. The test app range stays 96900–96999. Recheck main and every open PR head immediately before pushing any new test ID.
+## PR #195 main-merge ID reconciliation
+
+- `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
