@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed - Icelandic release wording (#244)
+
+- Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
 ### Added (2026-11-18) - domain gate regression for every Inventory type (#36)
 - Test codeunit 96970 `Inv. Contract Parity Tests ori` gains `Scenario_Issue36_EveryTypeWithDomainsOff_RefusesBeforeWork`: with every Inventory Setup switch off, each type stays registered, reports `IsEnabled` false and refuses with `InvalidParameter`/`PreconditionFailed` naming its domain (or stops at the licence check first), and no item or item ledger entry changes. Eleven later types that belong to none of the #36 domains (item units of measure and variants, posted shipment/receipt line copy and undo, return order from posted, requisition worksheet) are pinned by name so a new ungated type fails the test.
 - `Scenario_Issue36_SetupIsPerCompanyBooleanSwitches` pins Inventory Setup as company-scoped with only Boolean domain switches.
