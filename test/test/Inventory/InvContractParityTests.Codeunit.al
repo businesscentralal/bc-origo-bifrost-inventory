@@ -2,8 +2,10 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
+using System.Reflection;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -436,6 +438,62 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         GlobalLanguage(OriginalLanguage);
     end;
 
+    /// <summary>Issue36: with every domain off, every Inventory type stays registered and refuses before it does any work.</summary>
+    [Test]
+    procedure Scenario_Issue36_EveryTypeWithDomainsOff_RefusesBeforeWork()
+    var
+        Item: Record Item;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        MessageType: Enum "Message Type ori";
+        TypeName: Text;
+        Offenders: Text;
+        PinnedCount: Integer;
+        GatedCount: Integer;
+        LicenceFirstCount: Integer;
+        ItemCount: Integer;
+        LedgerCount: Integer;
+        TypeCount: Integer;
+    begin
+        // Issue36 Gate | Time: no date dependency | Risk: setup changes are rolled back by the test runner.
+        DisableEveryDomain();
+        ItemCount := Item.Count();
+        LedgerCount := ItemLedgerEntry.Count();
+        foreach MessageType in InventoryTypes() do begin
+            TypeName := TypeNameOf(MessageType);
+            if NoDomainTypes().Contains(TypeName) then
+                PinnedCount += 1
+            else
+                CheckDomainRefusal(MessageType, TypeName, Offenders, GatedCount, LicenceFirstCount);
+            TypeCount += 1;
+        end;
+        Assert.AreEqual(NoDomainTypes().Count(), PinnedCount, 'Every type pinned as outside the Issue36 domains still exists.');
+        Assert.AreEqual('', Offenders, 'Every type refuses with the domain-disabled code and names its domain.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
+        Assert.IsTrue(GatedCount > LicenceFirstCount, 'Most types answer the domain refusal before the licence check.');
+        Assert.AreEqual(ItemCount, Item.Count(), 'No refused type created or deleted an item.');
+        Assert.AreEqual(LedgerCount, ItemLedgerEntry.Count(), 'No refused type posted an item ledger entry.');
+    end;
+
+    /// <summary>Issue36 Setup: the domain switches are stored per company and every switch is a Boolean.</summary>
+    [Test]
+    procedure Scenario_Issue36_SetupIsPerCompanyBooleanSwitches()
+    var
+        TableMetadata: Record "Table Metadata";
+        Field: Record Field;
+    begin
+        // Issue36 Setup | Time: no date dependency | Risk: read-only metadata check.
+        TableMetadata.Get(Database::"Inventory Setup ori");
+        Assert.IsTrue(TableMetadata.DataPerCompany, 'Inventory Setup is company-scoped.');
+        Field.SetRange(TableNo, Database::"Inventory Setup ori");
+        Field.SetRange("No.", 10, 1999999999);
+        Field.SetFilter(ObsoleteState, '<>%1', Field.ObsoleteState::Removed);
+        Assert.IsTrue(Field.Count() >= 11, 'Every issue domain has a switch.');
+        if Field.FindSet() then
+            repeat
+                Assert.AreEqual(Field.Type::Boolean, Field.Type, Field.FieldName + ' is a domain switch.');
+            until Field.Next() = 0;
+    end;
+
     /// <summary>Issue152 AC2: former text-only missing-parameter responses match their help code.</summary>
     [Test]
     procedure Scenario_AC02_ExplicitMissingParameters_AreCoded()
@@ -768,6 +826,79 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.Attribute.Create');
         Names.Add('Inventory.Attribute.Update');
         Names.Add('Inventory.AttributeDefinition.Create');
+    end;
+
+    local procedure CheckDomainRefusal(MessageType: Enum "Message Type ori"; TypeName: Text; var Offenders: Text; var GatedCount: Integer; var LicenceFirstCount: Integer)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        Implementation: Interface "Msg Interface ori";
+        Request: JsonObject;
+        Response: JsonObject;
+        ErrorCode: Text;
+    begin
+        Implementation := MessageType;
+        if Implementation.IsEnabled() then
+            Offenders += TypeName + ' (IsEnabled while every domain is off); ';
+        Clear(TempArgument);
+        TempArgument.DeleteAll();
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        Clear(Request);
+        TempArgument.SetRequestJson(Request);
+        if not TryExecute(Implementation, TempArgument) then begin
+            // A licence check that precedes the gate also stops before any work; the gate itself is proven licensed through MCP.
+            if not GetLastErrorText().Contains('license') then
+                Offenders += TypeName + ' (error: ' + GetLastErrorText() + '); ';
+            LicenceFirstCount += 1;
+        end else begin
+            Response := TempArgument.GetResponseJson();
+            ErrorCode := TextOf(Response, 'code');
+            if not (ErrorCode in ['InvalidParameter', 'PreconditionFailed']) or not TextOf(Response, 'error').Contains(' domain ') then
+                Offenders += TypeName + ' (' + ErrorCode + ': ' + TextOf(Response, 'error') + '); ';
+            GatedCount += 1;
+        end;
+    end;
+
+    /// <summary>Types added after Issue36 that belong to none of its domains; they are not gated by Inventory Setup. A new type must be gated or added here.</summary>
+    local procedure NoDomainTypes() Names: List of [Text]
+    begin
+        Names.Add('Inventory.ItemUnitOfMeasure.Create');
+        Names.Add('Inventory.ItemUnitOfMeasure.Get');
+        Names.Add('Inventory.ItemVariant.Create');
+        Names.Add('Inventory.ItemVariant.Get');
+        Names.Add('Purchase.PurchaseInvoice.GetReceiptLines');
+        Names.Add('Purchase.Receipt.Undo');
+        Names.Add('Purchase.Requisition.CarryOut');
+        Names.Add('Purchase.Requisition.Calculate');
+        Names.Add('Sales.ReturnOrder.CreateFromPosted');
+        Names.Add('Sales.SalesInvoice.GetShipmentLines');
+        Names.Add('Sales.Shipment.Undo');
+    end;
+
+    [TryFunction]
+    local procedure TryExecute(Implementation: Interface "Msg Interface ori"; var Argument: Record "Message Argument ori" temporary)
+    begin
+        Implementation.ExecuteBifrostTask(Argument);
+    end;
+
+    local procedure DisableEveryDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+        Index: Integer;
+    begin
+        InventorySetup.InsertIfNotExists();
+        RecRef.Open(Database::"Inventory Setup ori");
+        RecRef.FindFirst();
+        for Index := 1 to RecRef.FieldCount() do begin
+            FieldRef := RecRef.FieldIndex(Index);
+            if (FieldRef.Number() >= 10) and (FieldRef.Type() = FieldType::Boolean) then
+                FieldRef.Value := false;
+        end;
+        RecRef.Modify(false);
+        RecRef.Close();
     end;
 
     local procedure TextOf(Source: JsonObject; KeyName: Text): Text

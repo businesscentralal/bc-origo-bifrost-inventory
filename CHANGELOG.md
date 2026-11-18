@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added (2026-11-18) - domain gate regression for every Inventory type (#36)
+- Test codeunit 96970 `Inv. Contract Parity Tests ori` gains `Scenario_Issue36_EveryTypeWithDomainsOff_RefusesBeforeWork`: with every Inventory Setup switch off, each type stays registered, reports `IsEnabled` false and refuses with `InvalidParameter`/`PreconditionFailed` naming its domain (or stops at the licence check first), and no item or item ledger entry changes. Eleven later types that belong to none of the #36 domains (item units of measure and variants, posted shipment/receipt line copy and undo, return order from posted, requisition worksheet) are pinned by name so a new ungated type fails the test.
+- `Scenario_Issue36_SetupIsPerCompanyBooleanSwitches` pins Inventory Setup as company-scoped with only Boolean domain switches.
+- Test-only change: no new app object, page or message type.
+
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
 - `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
 - New test codeunit 96935 `Inv. Count Unit Tests ori` (1033 and 1039). No new app object, page or message type.
