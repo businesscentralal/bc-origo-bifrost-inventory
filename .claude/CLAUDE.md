@@ -153,3 +153,6 @@ README "Objects" lists every object with its ID. In short:
 ## PR #195 main-merge ID reconciliation
 
 - `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
+## PR #238 setup-mode test ID reconciliation
+
+- `Inv Setup Mode Tests` uses codeunit 96929 (moved from 96997); main keeps `Posted Undo MCP Fixture ori` at 96997. Checked merged main and every open Inventory PR head on 17.11.2026. IDs 96924-96926, 96928, 96949, 96981 and 96990 remain reserved by other open PRs.

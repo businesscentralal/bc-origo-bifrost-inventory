@@ -15627,6 +15627,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort flutningspantanaskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control TransferOrders - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Page 88444387 - Control 632791447 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>While Bifrost setup mode is active for a session source, Data.Records.Set can write Inventory Setup, the only table Bifrost Inventory opens. Items, item cost and price fields, item categories, attributes, variants, stockkeeping units, price lists, reservation and tracking entries and item charge assignments stay refused; use the Inventory message types for them. Setup mode does not change permissions, the domain gate or what is protected when it is off.</source>
+          <target>Meðan uppsetningarhamur Bifröst er virkur fyrir uppruna setu getur Data.Records.Set skrifað í Uppsetningu birgða, einu töfluna sem Bifröst birgðir opna. Vörur, kostnaðar- og verðreitir vara, vöruflokkar, eiginleikar, afbrigði, birgðageymsluvörur, verðlistar, frátektar- og rakningarfærslur og úthlutun kostnaðarauka eru áfram lokuð; notaðu skilaboðategundir Birgða fyrir þau. Uppsetningarhamur breytir ekki heimildum, svæðahliðinu né því sem er varið þegar hann er óvirkur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Meðan uppsetningarhamur Bifröst er virkur fyrir uppruna setu getur Data.Records.Set skrifað í Uppsetningu birgða, einu töfluna sem Bifröst birgðir opna. Vörur, kostnaðar- og verðreitir vara, vöruflokkar, eiginleikar, afbrigði, birgðageymsluvörur, verðlistar, frátektar- og rakningarfærslur og úthlutun kostnaðarauka eru áfram lokuð; notaðu skilaboðategundir Birgða fyrir þau. Uppsetningarhamur breytir ekki heimildum, svæðahliðinu né því sem er varið þegar hann er óvirkur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control SetupModeHelp - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 88444387 - Control 632791447 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Setup mode</source>
+          <target>Uppsetningarhamur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppsetningarhamur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control SetupModeHelp - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 88444387 - Action 672734192 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens the guided setup for Bifrost Inventory.</source>
           <target>Opnar leiðsagða uppsetningu Bifröst birgða.</target>
