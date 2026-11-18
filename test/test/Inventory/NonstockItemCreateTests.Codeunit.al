@@ -14,7 +14,7 @@ using System.TestLibraries.Utilities;
 /// invalid input, the incomplete catalog item and taken item number edge cases, the domain switch and the help contract.
 /// Every test seeds its own vendor, unit of measure, item template and catalog item; the test runner rolls them back.
 /// </summary>
-codeunit 96998 "Nonstock Item Create Tests"
+codeunit 96934 "Nonstock Item Create Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

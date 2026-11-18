@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed - catalog test ID collision (PR #201)
+
+- Move `Nonstock Item Create Tests` from codeunit 96998 to unused codeunit 96934 within the existing test range. Main keeps `Posted Line Undo Tests ori` at 96998. Both test suites, their assertions and product behavior are unchanged.
+
 ### Fixed - reclassification test ID collision (PR #221)
 
 - PR #221 build repair: move `Reclass Journal Tests ori` from codeunit 96964 to unused test codeunit 96925; main keeps blank-line tests at 96964. No tests, assertions or product behavior changed.
@@ -194,14 +198,14 @@
 
 ### Fixed (2026-11-17) - Inventory.NonstockItem.Create native refusal recovery (#119)
 
-- A native refusal from catalog item creation (for example an item number series with no usable line) now sets the error context before the write, so `BusinessCentralError` includes the documented `nextStep`. Omit Commit still lets that error propagate. `Nonstock Item Create Tests` (96998) covers the refusal and that nothing is saved.
+- A native refusal from catalog item creation (for example an item number series with no usable line) now sets the error context before the write, so `BusinessCentralError` includes the documented `nextStep`. Omit Commit still lets that error propagate. `Nonstock Item Create Tests` (96934) covers the refusal and that nothing is saved.
 
 ### Added (2026-11-16) - Inventory.NonstockItem.Create (#119)
 - Conflict repair: main keeps Item Substitution domain value 15, setup field 25 and codeunit 10077020. Catalog Items moves to the next free domain value 16, setup field 26 and process codeunit 10077021; its setup guide uses a separate display slot. Both domains and message contracts are preserved. Domain-usage assertions and setup loops follow Catalog Items field 26. Registry assertions expect the combined 61 Inventory types, retaining both features.
 - New message type `Inventory.NonstockItem.Create` (codeunit 10077019 `Nonstock Item Create Impl ori`, process codeunit 10077021 `Nonstock Item Create Proc ori`, enum extension 10077019 `MsgType.Nonstock.EnumExt ori`). It takes `data.entryNo` of a catalog item (table 5718 `Nonstock Item`), creates the item through codeunit 5703 `Catalog Item Management` with the catalog item's own item template, and answers the new `itemNo` and `itemId`. Effect `write` (not idempotent, nothing posted).
 - Refusals answered before anything is written: `MissingParameter`, `InvalidParameterFormat`, `UnknownParameter`, `InvalidParameter` (too long, domain off), `RecordNotFound` (no catalog item), `PreconditionFailed` (already turned into an item; no vendor, vendor item number, unit of measure or existing item template; no Catalog Item Setup; no item number series; the number it would get already belongs to an item), `PermissionDenied`. Each has a `nextStep`, help and refusal texts are in en-US and is-IS (`Bifrost Inventory.is-IS.xlf` regenerated).
 - New domain `Catalog Items` (`Inventory Domain ori` value 17, `Inventory Setup ori` field 27, Inventory Setup page and setup guide slot 18, after purchase returns kept value 16 and field 26). New rows enable it when the company has catalog items; existing rows get it once through the new per-company upgrade tag `Origo.Bifrost.Inventory-CatalogItemsUsage-20261116`, which raises only this switch.
-- Tests: `Nonstock Item Create Tests` (96998) and three Catalog Items cases in `Inventory Domain Usage Tests` (96963).
+- Tests: `Nonstock Item Create Tests` (96934) and three Catalog Items cases in `Inventory Domain Usage Tests` (96963).
 ### Added (2026-11-16) - Inventory.Item.Create creates an item from an item template (#130)
 - Main-merge ID collision: Item Create takes codeunit and message enum value 10076932 (formerly 10076930) and enum extension 10076848 (formerly 10076847), preserving the Purchase Return IDs already on main. Item Create process codeunit 10076931 is unchanged.
 - New message type `Inventory.Item.Create` (enum value 10076932 in enum extension 10076848 `MsgType.ItemCreate.EnumExt ori`; codeunits 10076932 `Item Create Impl ori` and 10076931 `Item Create Proc ori`). It takes `templateCode` plus the optional `description`, `baseUnitOfMeasure`, `unitPrice` and `gtin`, creates the item through Microsoft's `Item Templ. Mgt.` (codeunit 1336) so the template's base unit of measure, posting groups, costing method and number series apply, and answers `itemNo` with the item's `unitsOfMeasure`.

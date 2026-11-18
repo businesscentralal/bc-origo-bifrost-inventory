@@ -113,7 +113,7 @@ README "Objects" lists every object with its ID. In short:
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
 - Test codeunit 96994 `Item Application 40 Tests ori`.
 - 96980 `Purch. Return Create Tests` (#137).
-- 96998 `Nonstock Item Create Tests` (#119).
+- 96934 `Nonstock Item Create Tests` (#119); 96998 stays with main's `Posted Line Undo Tests ori`.
 - Next free test codeunit: 96981, except 96998 and other IDs already used on main or by open PRs. 96960-96961 stay free. 96963-96980 are in use.
 - 96960 `Item Create Tests`, 96961 `Item Create Perm` (#130). 96991 `Sales Ret. Ord. Post. Tests` (#136). Free: 96964-96969 (96963 and 96970-96979 are used; 96990 is used by an earlier open PR).
 - 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.
@@ -128,6 +128,8 @@ README "Objects" lists every object with its ID. In short:
 - 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
 
 ## PR #201 main-merge ID reconciliation
+
+- Catalog tests use codeunit 96934 (formerly 96998); main keeps codeunit 96998 `Posted Line Undo Tests ori`. Codeunit 96934 was unused on main and all 12 open Inventory PR heads on 2026-11-18. Permission set 96934 is a different object type and remains unchanged. Test bodies and assertions are unchanged.
 
 - Catalog Items process codeunit is 10076947 (formerly 10077021); main keeps 10077021 `Transfer Receive Impl ori`. Checked against current main and all 20 other open PR heads. These taken IDs supersede the historical free-ID notes above. The catalog message enum value remains 10077019.
 ## Issue 133 object claims (2026-11-17 main-merge)
