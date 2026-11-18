@@ -2553,6 +2553,36 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um skjalfest birgðahlutverk og heimildir að stöðluðum töflum, þar á meðal Bókunarhlið birgða fyrir bókunarforskoðun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CompleteOlderDomainRefusal - NamedType PermissionNextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 2005385504 - NamedType 1313893332" size-unit="char" translate="yes" xml:space="preserve">
+          <source>It is always 1. Always checked when sent; required only when Require Confirmation for Irreversible Messages is on in Bifrost Setup. To read the count without a side effect, send the same request without expectedCount: the call is refused with ConfirmationRequired and returns expected, and nothing is changed.</source>
+          <target>Gildið er alltaf 1. Alltaf athugað þegar það er sent; krafist aðeins þegar Require Confirmation for Irreversible Messages er virkt í uppsetningu Bifröst. Til að lesa fjöldann án aukaverkana skaltu senda sömu beiðni án expectedCount: kallinu er hafnað með ConfirmationRequired og skilar expected, og engu er breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er alltaf 1. Alltaf athugað þegar það er sent; krafist aðeins þegar Require Confirmation for Irreversible Messages er virkt í uppsetningu Bifröst. Til að lesa fjöldann án aukaverkana skaltu senda sömu beiðni án expectedCount: kallinu er hafnað með ConfirmationRequired og skilar expected, og engu er breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountReadText - NamedType ReadLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 4168809885 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.</source>
+          <target>expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitAdjustCost - NamedType UnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3409385975 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one assembly order this call posts, not its component lines or the ledger entries it creates.</source>
+          <target>expectedCount telur eina samsetningarpöntun sem kallið bókar, ekki efnislínur hennar eða birgðafærslurnar sem það býr til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina samsetningarpöntun sem kallið bókar, ekki efnislínur hennar eða birgðafærslurnar sem það býr til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitAssemblyOrder - NamedType UnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3215367762 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).</source>
+          <target>expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitCostToGL - NamedType UnitLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 1876113691 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
+          <source>expectedCount counts the one revaluation journal batch this call posts, not its lines or the value entries it creates.</source>
+          <target>expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitRevaluation - NamedType UnitLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
           <target>%1 er nauðsynlegt.</target>

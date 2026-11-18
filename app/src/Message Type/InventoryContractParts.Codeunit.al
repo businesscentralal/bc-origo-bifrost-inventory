@@ -164,6 +164,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format; the date on the order is used when omitted.'));
                     Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble before posting; written to the order and committed before posting, used only when greater than zero.'));
+                    AddExpectedCountParameter(CountUnitAssemblyOrder(), Parameters);
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
@@ -835,6 +836,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.Post':
                 begin
                     SetEffect(Effect, 'irreversible', 'Posts the Assembly Order: creates the posted assembly order with the item ledger and value entries for consumption and output. When quantityToAssemble is sent it is first written to the order. The call commits before posting starts and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori');
+                    AddCountUnit(CountUnitAssemblyOrder(), Effect);
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The components are available and the order has a quantity to assemble.');
@@ -853,6 +855,83 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
         end;
         Effect.Add('preconditions', Preconditions);
+    end;
+
+    /// <summary>Tests whether the deployed Foundation has the confirmation protocol (#192).</summary>
+    /// <returns>True when Foundation defines the ConfirmationRequired error code. Older Foundation versions neither read nor document expectedCount.</returns>
+    procedure SupportsConfirmation(): Boolean
+    begin
+        exit(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'));
+    end;
+
+    /// <summary>Adds the expectedCount parameter that names the count unit and the side-effect-free way to read it (#192).</summary>
+    /// <param name="CountUnitText">What the count counts, from one of the CountUnit procedures.</param>
+    /// <param name="Parameters">The parameters chapter to complete.</param>
+    procedure AddExpectedCountParameter(CountUnitText: Text; var Parameters: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ExpectedCountKeyTok: Label 'expectedCount', Locked = true;
+    begin
+        if not SupportsConfirmation() then
+            exit;
+        Parameters.Add(ContractMgt.Parameter(ExpectedCountKeyTok, 'integer', false, CountUnitText + ' ' + CountReadText()));
+    end;
+
+    /// <summary>Appends the count unit sentence to the changes text of an irreversible effect chapter (#192).</summary>
+    /// <param name="CountUnitText">What the count counts, from one of the CountUnit procedures.</param>
+    /// <param name="Effect">The effect chapter to complete.</param>
+    procedure AddCountUnit(CountUnitText: Text; var Effect: JsonObject)
+    var
+        Changes: JsonToken;
+        ChangesText: Text;
+    begin
+        if not SupportsConfirmation() then
+            exit;
+        if Effect.Get('changes', Changes) then begin
+            ChangesText := Changes.AsValue().AsText();
+            Effect.Remove('changes');
+        end;
+        Effect.Add('changes', (ChangesText + ' ' + CountUnitText + ' ' + CountReadText()).Trim());
+    end;
+
+    /// <summary>Returns the shared sentence that says the count is 1 and how to read it without a side effect (#192).</summary>
+    procedure CountReadText(): Text
+    var
+        ReadLbl: Label 'It is always 1. Always checked when sent; required only when Require Confirmation for Irreversible Messages is on in Bifrost Setup. To read the count without a side effect, send the same request without expectedCount: the call is refused with ConfirmationRequired and returns expected, and nothing is changed.', Comment = 'is-IS=Gildið er alltaf 1. Alltaf athugað þegar það er sent; krafist aðeins þegar Require Confirmation for Irreversible Messages er virkt í uppsetningu Bifröst. Til að lesa fjöldann án aukaverkana skaltu senda sömu beiðni án expectedCount: kallinu er hafnað með ConfirmationRequired og skilar expected, og engu er breytt.';
+    begin
+        exit(ReadLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the Revaluation type (#192).</summary>
+    procedure CountUnitRevaluation(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one revaluation journal batch this call posts, not its lines or the value entries it creates.', Comment = 'is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the AssemblyOrder type (#192).</summary>
+    procedure CountUnitAssemblyOrder(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one assembly order this call posts, not its component lines or the ledger entries it creates.', Comment = 'is-IS=expectedCount telur eina samsetningarpöntun sem kallið bókar, ekki efnislínur hennar eða birgðafærslurnar sem það býr til.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the AdjustCost type (#192).</summary>
+    procedure CountUnitAdjustCost(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.', Comment = 'is-IS=expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the CostToGL type (#192).</summary>
+    procedure CountUnitCostToGL(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).', Comment = 'is-IS=expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).';
+    begin
+        exit(UnitLbl);
     end;
 
     local procedure SetEffect(var Effect: JsonObject; EffectKind: Text; Changes: Text; Idempotent: Boolean; PermissionSetName: Text)

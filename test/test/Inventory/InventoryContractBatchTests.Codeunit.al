@@ -1069,6 +1069,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AssertCostingEffectChanges(ComposedChanges: Text)
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Implementation: Interface "Msg Contract ori";
         RawEffect: JsonObject;
         RawChanges: JsonToken;
@@ -1078,7 +1079,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
-        LibraryAssert.AreEqual(Expected, RawChanges.AsValue().AsText(), 'Exact application posting contract.');
+        if Parts.SupportsConfirmation() then
+            LibraryAssert.AreEqual(Expected + ' ' + Parts.CountUnitCostToGL() + ' ' + Parts.CountReadText(), RawChanges.AsValue().AsText(), 'Exact application posting contract with the count unit (#192).')
+        else
+            LibraryAssert.AreEqual(Expected, RawChanges.AsValue().AsText(), 'Exact application posting contract.');
         LibraryAssert.IsTrue(ComposedChanges.StartsWith(Expected), 'Composition preserves the entire application contract.');
         if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
             LibraryAssert.IsTrue(ComposedChanges.Substring(StrLen(Expected) + 1).Contains('expectedCount'), 'Foundation appends its confirmation rule.')
@@ -1158,9 +1162,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetParameters(ArrayChapter), 'Parameters are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Three supported request keys.')
+                    LibraryAssert.AreEqual(3 + ConfirmationParameterCount(), ArrayChapter.Count(), 'Three supported request keys and expectedCount when Foundation has the protocol (#192).')
                 else
-                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Two applied filters and optional native journal template/batch.');
+                    LibraryAssert.AreEqual(4 + ConfirmationParameterCount(), ArrayChapter.Count(), 'Two applied filters, optional native journal template/batch and expectedCount when Foundation has the protocol (#192).');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
@@ -1322,5 +1326,14 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Value.Get(Name, Token), 'Missing response field ' + Name + '.');
         LibraryAssert.IsTrue(Token.IsValue(), Name + ' must be scalar.');
         LibraryAssert.AreEqual(Expected, Token.AsValue().AsText(), Name + ' mismatch.');
+    end;
+
+    local procedure ConfirmationParameterCount(): Integer
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        if Parts.SupportsConfirmation() then
+            exit(1);
+        exit(0);
     end;
 }
