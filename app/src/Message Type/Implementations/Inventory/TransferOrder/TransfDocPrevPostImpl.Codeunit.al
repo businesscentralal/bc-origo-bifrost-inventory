@@ -152,7 +152,6 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         Parts: Codeunit "Inventory Contract Parts ori";
-        TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
         PostingPreviewHelper: Codeunit "Posting Preview Helper ori";
         PostingPreviewEventHandler: Codeunit "Posting Preview Event Handler";
         ResponseJson: JsonObject;
@@ -202,7 +201,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         DirectTransfer := TransferHeader."Direct Transfer";
         RequestJson := Argument.GetRequestJson();
         if DirectTransfer then begin
-            TransferPostSubscriber.ResolveDirectTransferOptions(TransferHeader, PostShipment, PostReceipt, PostTransfer);
+            ResolveDirectTransferOptions(TransferHeader, PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
         end else
             if PostingTypeText <> '' then begin
@@ -334,5 +333,15 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
         exit(true);
     end;
 
-
+    local procedure ResolveDirectTransferOptions(TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean)
+    var
+        PostingSetup: Codeunit "Transfer Posting Setup ori";
+    begin
+        if PostingSetup.PostAsSingleDocument(TransferHeader) then
+            PostTransfer := true
+        else begin
+            PostShipment := true;
+            PostReceipt := true;
+        end;
+    end;
 }

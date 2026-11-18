@@ -7,6 +7,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
 using Microsoft.Inventory.Transfer;
 using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
 
 /// <summary>
 /// Shared test helper for Transfer Order tests.
@@ -186,53 +187,58 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
+        SetupReference: RecordRef;
+        OriginalReference: RecordRef;
+        PostingField: FieldRef;
+        OriginalField: FieldRef;
+        PostingFieldNo: Integer;
     begin
         InventorySetup.Get();
-        RestorePostingMode(InventorySetup, OriginalSetup);
+        SetupReference.GetTable(InventorySetup);
+        OriginalReference.GetTable(OriginalSetup);
+        PostingFieldNo := 5855;
+        if SetupReference.FieldExist(5857) then
+            PostingFieldNo := 5857;
+        PostingField := SetupReference.Field(PostingFieldNo);
+        OriginalField := OriginalReference.Field(PostingFieldNo);
+        PostingField.Value := OriginalField.Value();
+        SetupReference.SetTable(InventorySetup);
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;
-    local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; PostAsSingleDocument: Boolean)
+    /// <summary>Changes only setup after a BC 29 order has captured its own mode. BC 28 keeps its setup-based behavior.</summary>
+    internal procedure ChangeSetupAfterOrder(TransferHeader: Record "Transfer Header"; SingleDocument: Boolean)
     var
-        SetupRef: RecordRef;
-        PostingField: FieldRef;
-        PostingMode: Integer;
+        InventorySetup: Record "Inventory Setup";
+        HeaderReference: RecordRef;
     begin
-        SetupRef.GetTable(InventorySetup);
-        if SetupRef.FieldExist(5857) then begin
-            PostingField := SetupRef.Field(5857);
-            if PostAsSingleDocument then
-                PostingMode := 20
-            else
-                PostingMode := 10;
-        end else begin
-            PostingField := SetupRef.Field(5855);
-            if PostAsSingleDocument then
-                PostingMode := 1
-            else
-                PostingMode := 0;
-        end;
-        PostingField.Value := PostingMode;
-        SetupRef.SetTable(InventorySetup);
+        HeaderReference.GetTable(TransferHeader);
+        if not HeaderReference.FieldExist(5858) then
+            exit;
+        InventorySetup.Get();
+        SetPostingMode(InventorySetup, SingleDocument);
+        InventorySetup.Modify(true);
     end;
 
-    local procedure RestorePostingMode(var InventorySetup: Record "Inventory Setup"; OriginalSetup: Record "Inventory Setup")
+    local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; SingleDocument: Boolean)
     var
-        SetupRef: RecordRef;
-        OriginalRef: RecordRef;
+        SetupReference: RecordRef;
         PostingField: FieldRef;
-        OriginalField: FieldRef;
-        FieldNo: Integer;
     begin
-        SetupRef.GetTable(InventorySetup);
-        OriginalRef.GetTable(OriginalSetup);
-        if SetupRef.FieldExist(5857) then
-            FieldNo := 5857
-        else
-            FieldNo := 5855;
-        PostingField := SetupRef.Field(FieldNo);
-        OriginalField := OriginalRef.Field(FieldNo);
-        PostingField.Value := OriginalField.Value;
-        SetupRef.SetTable(InventorySetup);
+        SetupReference.GetTable(InventorySetup);
+        if SetupReference.FieldExist(5857) then begin
+            PostingField := SetupReference.Field(5857);
+            if SingleDocument then
+                PostingField.Value := 20
+            else
+                PostingField.Value := 10;
+        end else begin
+            PostingField := SetupReference.Field(5855);
+            if SingleDocument then
+                PostingField.Value := 1
+            else
+                PostingField.Value := 0;
+        end;
+        SetupReference.SetTable(InventorySetup);
     end;
 }
