@@ -77,7 +77,7 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         repeat
             NumericValue := 151000000 + Random(10000000);
             NumericItemNo := CopyStr(Format(NumericValue, 0, 9), 1, MaxStrLen(NumericItemNo));
-        until not Item.Get(NumericItemNo);
+        until IsFreeItemNo(NumericItemNo);
         LibraryInventory.CreateItem(Item);
         Item.Rename(NumericItemNo);
         Clear(Request);
@@ -87,6 +87,19 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
             Assert.AreEqual('Success', TextValue(Response, 'status'), 'Owned numeric itemNo remains compatible.');
         end;
         GlobalLanguage(PreviousLanguage);
+    end;
+
+    local procedure IsFreeItemNo(ItemNo: Code[20]): Boolean
+    var
+        Item: Record Item;
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
+    begin
+        // The rename also moves the item's units of measure; a leftover unit row under the number
+        // from an earlier run on the same company would collide (inventory#248).
+        if Item.Get(ItemNo) then
+            exit(false);
+        ItemUnitOfMeasure.SetRange("Item No.", ItemNo);
+        exit(ItemUnitOfMeasure.IsEmpty());
     end;
 
     [Test]

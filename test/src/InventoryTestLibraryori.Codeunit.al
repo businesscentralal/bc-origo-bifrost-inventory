@@ -1,8 +1,12 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Account;
+using Microsoft.Foundation.NoSeries;
+using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Tracking;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -229,5 +233,34 @@ codeunit 96902 "Inventory Test Library ori"
         Keys := Response.Keys();
         foreach ResponseKey in Keys do
             Assert.IsTrue(Names.Contains(ResponseKey), 'Returned key is missing from the public schema: ' + ResponseKey);
+    end;
+
+    /// <summary>
+    /// A reused test company can keep satellite rows (Post Value Entry to G/L, Item Entry Relation)
+    /// above its last value or item ledger entry, so native posting would allocate a key that already
+    /// exists. Reserve a test-owned, zero-value boundary entry above those keys and discard buffered
+    /// sequence state. Never deletes tenant rows (inventory#246, #247, #251).
+    /// </summary>
+    procedure PrepareNativeEntryNumbers()
+    var
+        ValueEntry: Record "Value Entry";
+        PendingValueEntry: Record "Post Value Entry to G/L";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        EntryRelation: Record "Item Entry Relation";
+        SequenceNoMgt: Codeunit "Sequence No. Mgt.";
+    begin
+        if PendingValueEntry.FindLast() then
+            if PendingValueEntry."Value Entry No." > ValueEntry.GetLastEntryNo() then begin
+                ValueEntry.Init();
+                ValueEntry."Entry No." := PendingValueEntry."Value Entry No." + 1;
+                ValueEntry.Insert();
+            end;
+        if EntryRelation.FindLast() then
+            if EntryRelation."Item Entry No." > ItemLedgerEntry.GetLastEntryNo() then begin
+                ItemLedgerEntry.Init();
+                ItemLedgerEntry."Entry No." := EntryRelation."Item Entry No." + 1;
+                ItemLedgerEntry.Insert();
+            end;
+        SequenceNoMgt.ClearState();
     end;
 }

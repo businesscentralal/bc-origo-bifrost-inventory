@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-18) - rerun-safe test fixtures on reused tenants (#246-#252, found by #242)
+
+- New public test helper `Inventory Test Library ori`.`PrepareNativeEntryNumbers()` (codeunit 96902): when `Post Value Entry to G/L` or `Item Entry Relation` keys sit above the last value or item ledger entry, it reserves a zero-value boundary entry above them and clears `Sequence No. Mgt.` state; it never deletes tenant rows. Used by 96925 Reclass Journal Tests ori (#246), 96964 Inv. 186 Blank Line Tests ori (#247) and 96974 Inv. Source Tracking Tests ori (#251).
+- 96975 Inv. Typed Refusal Tests ori: the numeric item number must also be free of leftover `Item Unit of Measure` rows (#248).
+- 96979 Inv. Period Close Tests: the test period skips dates that still carry inventory period entries, and tests that close a period leave it open again, so a committed closed period cannot block later postings (#249).
+- 96939 Inventory Price Write Tests: the restricted-field test reuses the caller's existing `Unit Price` field-access row instead of inserting a duplicate (#250).
+- 96995 Sales Get Shipment Tests: the 20-character invoice and shipment numbers are generated per run instead of fixed (#252).
+- Test code only. No app object, ID, page or message type changes; no assertion was removed or weakened.
+
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
 - `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
 - New test codeunit 96935 `Inv. Count Unit Tests ori` (1033 and 1039). No new app object, page or message type.
