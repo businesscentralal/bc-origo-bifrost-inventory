@@ -120,6 +120,9 @@ README "Objects" lists every object with its ID. In short:
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
 
+## PR #221 test ID reconciliation
+
+- Main keeps codeunit 96964 `Inv. 186 Blank Line Tests ori`. Reclassification uses codeunit 96925 `Reclass Journal Tests ori` (formerly 96964), within the existing 96900–96999 test range. Checked main and every open Inventory PR head on 2026-11-17; 96925 was unused. Test bodies and assertions are unchanged.
 ## PR #238 setup-mode test ID reconciliation
 
 - `Inv Setup Mode Tests` uses codeunit 96929 (moved from 96997); main keeps `Posted Undo MCP Fixture ori` at 96997. Checked merged main and every open Inventory PR head on 17.11.2026. IDs 96924-96926, 96928, 96949, 96981 and 96990 remain reserved by other open PRs.
