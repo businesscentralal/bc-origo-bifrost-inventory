@@ -87,10 +87,19 @@ page 10076835 "Inventory Setup ori"
                 {
                     ToolTip = 'Specifies whether purchase return message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð innkaupaskila séu virk fyrir þetta fyrirtæki.';
                 }
+                field(CatalogItems; Rec."Catalog Items")
+                {
+                    ToolTip = 'Specifies whether catalog item message types, such as creating an item from a catalog item, are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð vörulistavara, svo sem að stofna vöru úr vörulistavöru, séu virk fyrir þetta fyrirtæki.';
+                }
                 field(Planning; Rec.Planning)
                 {
                     ToolTip = 'Specifies whether planning worksheet message types are enabled for this company.', Comment = 'is-IS=Tilgreinir hvort skilaboð áætlunarkeyrslu séu virk fyrir þetta fyrirtæki.';
                 }
+            }
+            group(SetupModeHelp)
+            {
+                Caption = 'Setup mode', Comment = 'is-IS=Uppsetningarhamur';
+                InstructionalText = 'While Bifrost setup mode is active for a session source, Data.Records.Set can write Inventory Setup, the only table Bifrost Inventory opens. Items, item cost and price fields, item categories, attributes, variants, stockkeeping units, price lists, reservation and tracking entries and item charge assignments stay refused; use the Inventory message types for them. Setup mode does not change permissions, the domain gate or what is protected when it is off.', Comment = 'is-IS=Meðan uppsetningarhamur Bifröst er virkur fyrir uppruna setu getur Data.Records.Set skrifað í Uppsetningu birgða, einu töfluna sem Bifröst birgðir opna. Vörur, kostnaðar- og verðreitir vara, vöruflokkar, eiginleikar, afbrigði, birgðageymsluvörur, verðlistar, frátektar- og rakningarfærslur og úthlutun kostnaðarauka eru áfram lokuð; notaðu skilaboðategundir Birgða fyrir þau. Uppsetningarhamur breytir ekki heimildum, svæðahliðinu né því sem er varið þegar hann er óvirkur.';
             }
         }
     }

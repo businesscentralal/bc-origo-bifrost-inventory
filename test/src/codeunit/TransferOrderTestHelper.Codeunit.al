@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Ledger;
@@ -20,6 +21,7 @@ codeunit 96904 "Transfer Order Test Helper"
     var
         LibraryInventory: Codeunit "Library - Inventory";
         LibraryWarehouse: Codeunit "Library - Warehouse";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
 
     /// <summary>
     /// Creates three locations (From, To, In-Transit) and an item with positive stock at From.
@@ -31,12 +33,50 @@ codeunit 96904 "Transfer Order Test Helper"
         var Item: Record Item;
         InitialQty: Decimal)
     begin
-        LibraryWarehouse.CreateLocationWMS(FromLocation, false, false, false, false, false);
-        LibraryWarehouse.CreateLocationWMS(ToLocation, false, false, false, false, false);
-        LibraryWarehouse.CreateInTransitLocation(InTransitLocation);
+        CreateLocationWithPostingSetup(FromLocation, false);
+        CreateLocationWithPostingSetup(ToLocation, false);
+        CreateLocationWithPostingSetup(InTransitLocation, true);
         LibraryInventory.CreateItem(Item);
         if InitialQty > 0 then
             CreatePositiveAdjustment(Item."No.", FromLocation.Code, InitialQty);
+    end;
+
+    /// <summary>Creates a native warehouse location with collision-safe library numbers and independent posting accounts.</summary>
+    internal procedure CreateLocationWithPostingSetup(var Location: Record Location; InTransit: Boolean)
+    var
+        PostingGroup: Record "Inventory Posting Group";
+        PostingSetup: Record "Inventory Posting Setup";
+    begin
+        InventoryLibrary.PrepareLibraryGLAccountNumbers();
+        if InTransit then
+            LibraryWarehouse.CreateInTransitLocation(Location)
+        else
+            LibraryWarehouse.CreateLocationWMS(Location, false, false, false, false, false);
+        // Keep the native location setup, then assign independent posting accounts.
+        // Existing library-generated accounts remain untouched.
+        if PostingGroup.FindSet() then
+            repeat
+                if not PostingSetup.Get(Location.Code, PostingGroup.Code) then
+                    LibraryInventory.CreateInventoryPostingSetup(PostingSetup, Location.Code, PostingGroup.Code);
+                PostingSetup.Validate("Inventory Account", CreatePostingAccount());
+                PostingSetup.Validate("Inventory Account (Interim)", CreatePostingAccount());
+                PostingSetup.Validate("WIP Account", CreatePostingAccount());
+                PostingSetup.Validate("Material Variance Account", CreatePostingAccount());
+                PostingSetup.Validate("Capacity Variance Account", CreatePostingAccount());
+                PostingSetup.Modify(true);
+            until PostingGroup.Next() = 0;
+    end;
+
+    local procedure CreatePostingAccount(): Code[20]
+    var
+        Account: Record "G/L Account";
+    begin
+        repeat
+            Account."No." := CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(Account."No."));
+        until not Account.Get(Account."No.");
+        Account.Validate(Name, Account."No.");
+        Account.Insert(true);
+        exit(Account."No.");
     end;
 
     /// <summary>
@@ -115,7 +155,6 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure ProcessMessage(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; WindowsLanguageId: Integer; var ResponseJson: JsonObject)
     var
         Dispatcher: Codeunit "Dispatcher ori";
-        InventoryLibrary: Codeunit "Inventory Test Library ori";
         RequestContent: BigText;
         ResponseContent: BigText;
         ResponseContentType: Text[100];
@@ -187,13 +226,39 @@ codeunit 96904 "Transfer Order Test Helper"
     internal procedure RestoreDirectTransferPosting(OriginalSetup: Record "Inventory Setup")
     var
         InventorySetup: Record "Inventory Setup";
-        PostingSetup: Codeunit "Transfer Posting Setup ori";
+        SetupReference: RecordRef;
+        OriginalReference: RecordRef;
+        PostingField: FieldRef;
+        OriginalField: FieldRef;
+        PostingFieldNo: Integer;
     begin
         InventorySetup.Get();
-        SetPostingMode(InventorySetup, PostingSetup.PostAsSingleDocument(OriginalSetup));
+        SetupReference.GetTable(InventorySetup);
+        OriginalReference.GetTable(OriginalSetup);
+        PostingFieldNo := 5855;
+        if SetupReference.FieldExist(5857) then
+            PostingFieldNo := 5857;
+        PostingField := SetupReference.Field(PostingFieldNo);
+        OriginalField := OriginalReference.Field(PostingFieldNo);
+        PostingField.Value := OriginalField.Value();
+        SetupReference.SetTable(InventorySetup);
         InventorySetup."Posted Direct Trans. Nos." := OriginalSetup."Posted Direct Trans. Nos.";
         InventorySetup.Modify(true);
     end;
+    /// <summary>Changes only setup after a BC 29 order has captured its own mode. BC 28 keeps its setup-based behavior.</summary>
+    internal procedure ChangeSetupAfterOrder(TransferHeader: Record "Transfer Header"; SingleDocument: Boolean)
+    var
+        InventorySetup: Record "Inventory Setup";
+        HeaderReference: RecordRef;
+    begin
+        HeaderReference.GetTable(TransferHeader);
+        if not HeaderReference.FieldExist(5858) then
+            exit;
+        InventorySetup.Get();
+        SetPostingMode(InventorySetup, SingleDocument);
+        InventorySetup.Modify(true);
+    end;
+
     local procedure SetPostingMode(var InventorySetup: Record "Inventory Setup"; SingleDocument: Boolean)
     var
         SetupReference: RecordRef;

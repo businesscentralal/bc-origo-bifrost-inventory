@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
@@ -21,6 +22,90 @@ codeunit 96914 "Transfer Order Post Tests"
         Assert: Codeunit "Library Assert";
         Helper: Codeunit "Transfer Order Test Helper";
         IsInitialized: Boolean;
+
+    /// <summary>BC 29 reads the order's single-document mode even when setup differs; BC 28 retains its setup mode.</summary>
+    [Test]
+    procedure PostingChoices_SingleDocument_UsesActiveSchema()
+    begin
+        // Issue #104 prerequisite | Time: none | Risk: BC 28/29 schema compatibility
+        Initialize();
+        VerifyPostingChoices(true);
+    end;
+
+    /// <summary>Shipment/receipt posting selects both legs, using the order mode on BC 29.</summary>
+    [Test]
+    procedure PostingChoices_ShipmentAndReceipt_UsesActiveSchema()
+    begin
+        // Issue #104 prerequisite | Time: none | Risk: BC 28/29 schema compatibility
+        Initialize();
+        VerifyPostingChoices(false);
+    end;
+
+    local procedure VerifyPostingChoices(SingleDocument: Boolean)
+    var
+        OriginalSetup: Record "Inventory Setup";
+        TempHeader: Record "Transfer Header" temporary;
+        Subscriber: Codeunit "Transfer Post Subscriber ori";
+        HeaderRef: RecordRef;
+        PostingField: FieldRef;
+        PostShipment: Boolean;
+        PostReceipt: Boolean;
+        PostTransfer: Boolean;
+    begin
+        // [GIVEN] Conflicting order/setup modes on BC 29, or the legacy setup on BC 28.
+        HeaderRef.GetTable(TempHeader);
+        if HeaderRef.FieldExist(5858) then begin
+            Helper.SetDirectTransferPosting(not SingleDocument, OriginalSetup);
+            PostingField := HeaderRef.Field(5858);
+            if SingleDocument then
+                PostingField.Value := 20
+            else
+                PostingField.Value := 10;
+            HeaderRef.SetTable(TempHeader);
+        end else
+            Helper.SetDirectTransferPosting(SingleDocument, OriginalSetup);
+        // [WHEN] Resolving the native posting selection.
+        Subscriber.ResolveDirectTransferOptions(TempHeader, PostShipment, PostReceipt, PostTransfer);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+        // [THEN] BC 29 respects its per-order choice; BC 28 retains setup semantics.
+        Assert.AreEqual(SingleDocument, PostTransfer, 'Direct transfer choice.');
+        Assert.AreEqual(not SingleDocument, PostShipment, 'Shipment choice.');
+        Assert.AreEqual(not SingleDocument, PostReceipt, 'Receipt choice.');
+    end;
+
+    /// <summary>Fixture setup leaves an occupied library-generated account untouched.</summary>
+    [Test]
+    procedure SetupLocationsAndItem_OccupiedAccount_PreservesExistingData()
+    var
+        ExistingAccount: Record "G/L Account";
+        PostingSetup: Record "Inventory Posting Setup";
+        FromLocation: Record Location;
+        ToLocation: Record Location;
+        InTransitLocation: Record Location;
+        Item: Record Item;
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryUtility: Codeunit "Library - Utility";
+        ExistingAccountId: Guid;
+    begin
+        // PR #201 amendment | Time: none; no stock posting | Risk: None
+        Initialize();
+        // Initialize native posting accounts before reserving a counter value for the collision.
+        LibraryInventory.CreateItem(Item);
+        // [GIVEN] The account number the library would allocate after its location code is occupied.
+        repeat
+            ExistingAccount."No." := PadStr('1' + IncStr(IncStr(LibraryUtility.GenerateGUID())), MaxStrLen(ExistingAccount."No."), '0');
+        until not ExistingAccount.Get(ExistingAccount."No.");
+        ExistingAccount.Name := 'X existing account fixture';
+        ExistingAccount.Insert(true);
+        ExistingAccountId := ExistingAccount.SystemId;
+        // [WHEN] Creating a complete set of transfer locations and its item.
+        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransitLocation, Item, 0);
+        // [THEN] Setup succeeds with separate accounts, preserving the occupied record.
+        PostingSetup.Get(FromLocation.Code, Item."Inventory Posting Group");
+        Assert.AreNotEqual(ExistingAccount."No.", PostingSetup."Inventory Account", 'Fixture has its own account.');
+        ExistingAccount.GetBySystemId(ExistingAccountId);
+        Assert.AreEqual('X existing account fixture', ExistingAccount.Name, 'Existing account is unchanged.');
+    end;
 
     local procedure Initialize()
     begin
@@ -698,5 +783,94 @@ codeunit 96914 "Transfer Order Post Tests"
     begin
         ResponseJson.WriteTo(TextValue);
         exit(TextValue);
+    end;
+
+
+    [Test]
+    procedure Post_ExistingOrder_SetupChanged_ShipmentReceipt()
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        OriginalSetup: Record "Inventory Setup";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        StatusToken: JsonToken;
+        ShipmentToken: JsonToken;
+        ReceiptToken: JsonToken;
+        ShipmentNo: Code[20];
+        ReceiptNo: Code[20];
+    begin
+        // [SCENARIO] Receipt and Shipment on a direct transfer posts the shipment and the receipt together.
+        Initialize();
+        Helper.SetDirectTransferPosting(false, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        // [WHEN] Setup changes after the order captured its posting mode.
+        Helper.ChangeSetupAfterOrder(TransferHeader, true);
+        TransferLine.SetRange("Document No.", TransferHeader."No.");
+        TransferLine.FindFirst();
+        TransferLine.Validate("Qty. to Ship", 4);
+        TransferLine.Modify(true);
+
+        // The owned request names one transfer document, even when both posting legs run.
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", TransferHeader."No.", RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+
+        Assert.IsTrue(ResponseJson.Get('status', StatusToken), 'status missing');
+        Assert.AreEqual('Success', StatusToken.AsValue().AsText(), 'Status should be Success. ' + JsonText(ResponseJson));
+        Assert.IsTrue(ResponseJson.Get('postedShipmentNo', ShipmentToken), 'postedShipmentNo missing');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', ReceiptToken), 'postedReceiptNo missing');
+        ShipmentNo := CopyStr(ShipmentToken.AsValue().AsText(), 1, MaxStrLen(ShipmentNo));
+        ReceiptNo := CopyStr(ReceiptToken.AsValue().AsText(), 1, MaxStrLen(ReceiptNo));
+        Assert.AreNotEqual('', ShipmentNo, 'postedShipmentNo should be populated');
+        Assert.AreNotEqual('', ReceiptNo, 'postedReceiptNo should be populated');
+        Assert.IsTrue(TransferShipmentHeader.Get(ShipmentNo), 'Posted transfer shipment should exist');
+        Assert.IsTrue(TransferReceiptHeader.Get(ReceiptNo), 'Posted transfer receipt should exist');
+        Assert.IsTrue(TransferHeader.Get(TransferHeader."No."), 'A partial direct transfer should keep the order');
+    end;
+
+    [Test]
+    [HandlerFunctions('DirectTransferPostedMessageHandler')]
+    procedure Post_ExistingOrder_SetupChanged_SingleDocument()
+    var
+        OriginalSetup: Record "Inventory Setup";
+        DirectTransHeader: Record "Direct Trans. Header";
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferReceiptHeader: Record "Transfer Receipt Header";
+        TransferHeader: Record "Transfer Header";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Token: JsonToken;
+        DocumentNo: Code[20];
+    begin
+        // [SCENARIO] #228 The selected single-document mode posts a direct transfer, not a shipment and receipt.
+        Initialize();
+        Helper.SetDirectTransferPosting(true, OriginalSetup);
+        Helper.CreateReleasedDirectTransfer(TransferHeader, 10);
+        // [WHEN] Setup changes after the order captured its posting mode.
+        Helper.ChangeSetupAfterOrder(TransferHeader, false);
+        DocumentNo := TransferHeader."No.";
+        Confirm("Message Type ori"::"Inventory.TransferOrder.Post", RequestJson);
+
+        Helper.ProcessMessage("Message Type ori"::"Inventory.TransferOrder.Post", DocumentNo, RequestJson, ResponseJson);
+        Helper.RestoreDirectTransferPosting(OriginalSetup);
+
+        Assert.IsTrue(ResponseJson.Get('status', Token), 'status missing');
+        Assert.AreEqual('Success', Token.AsValue().AsText(), 'Direct transfer should succeed. ' + JsonText(ResponseJson));
+        DirectTransHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.AreEqual(1, DirectTransHeader.Count(), 'Exactly one posted direct transfer exists for the order');
+        DirectTransHeader.FindFirst();
+        // The public response uses both number fields for the same posted direct transfer.
+        Assert.IsTrue(ResponseJson.Get('postedShipmentNo', Token), 'postedShipmentNo missing');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Shipment response identifies the posted direct transfer');
+        Assert.IsTrue(ResponseJson.Get('postedReceiptNo', Token), 'postedReceiptNo missing');
+        Assert.AreEqual(DirectTransHeader."No.", Token.AsValue().AsText(), 'Receipt response identifies the same posted direct transfer');
+        TransferShipmentHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferShipmentHeader.IsEmpty(), 'Single-document posting creates no shipment header');
+        TransferReceiptHeader.SetRange("Transfer Order No.", DocumentNo);
+        Assert.IsTrue(TransferReceiptHeader.IsEmpty(), 'Single-document posting creates no receipt header');
+        Assert.IsFalse(TransferHeader.Get(DocumentNo), 'Full direct transfer removes the order');
     end;
 }

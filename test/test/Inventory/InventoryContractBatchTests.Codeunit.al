@@ -62,6 +62,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.AssemblyToOrder.Get');
         TypeNames.Add('Inventory.AssemblyBOM.Get');
         TypeNames.Add('Inventory.AvailabilityByPeriod.Get');
+        TypeNames.Add('Inventory.AvailableToPromise.Get');
+        TypeNames.Add('Inventory.AgedInventory.Get');
+        TypeNames.Add('Inventory.AvailabilityByEvent.Get');
         TypeNames.Add('Inventory.Attribute.Create');
         TypeNames.Add('Inventory.Attribute.Get');
         TypeNames.Add('Inventory.Attribute.Update');
@@ -100,7 +103,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         TypeNames.Add('Inventory.TransferOrder.Release');
         TypeNames.Add('Inventory.TransferOrder.Reopen');
         TypeNames.Add('Inventory.TransferOrder.Statistics');
-        LibraryAssert.AreEqual(48, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
+        LibraryAssert.AreEqual(51, TypeNames.Count(), 'The scoped catalogue census must stay complete.');
         foreach TypeName in TypeNames do begin
             MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
             MessageImpl := MessageType;
@@ -289,9 +292,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Walked.Contains('Inventory.ItemJournal.PreviewPost'), 'Inventory.ItemJournal.PreviewPost is registered.');
         // Foundation owns the Inventory.ItemJournal.* types and may add more, so only the four above are required.
         LibraryAssert.IsTrue(ItemJournalNames.Count() >= 4, 'Foundation registers at least the four Inventory.ItemJournal types above.');
-        LibraryAssert.AreEqual(81, CheckedCount - ItemJournalNames.Count(), 'This app registers 81 Inventory types.');
+        LibraryAssert.AreEqual(87, CheckedCount - ItemJournalNames.Count(), 'This app registers 87 Inventory types.');
         AppTypes := AppRegisteredInventoryTypes();
-        LibraryAssert.AreEqual(81, AppTypes.Count(), 'The registered Inventory type list for this app has 81 names.');
+        LibraryAssert.AreEqual(87, AppTypes.Count(), 'The registered Inventory type list for this app has 87 names.');
         foreach AppType in AppTypes do
             LibraryAssert.IsTrue(Walked.Contains(AppType), AppType + ' is registered in this app but was not walked.');
         foreach TypeName in Walked do
@@ -364,6 +367,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertEffect('Inventory.AssemblyOrder.Post', 'irreversible');
         AssertEffect('Inventory.AssemblyOrder.PreviewPost', 'read');
         AssertEffect('Inventory.AssemblyOrder.Statistics', 'read');
+        AssertEffect('Inventory.ItemTracing.Get', 'read');
         AssertEffect('Inventory.AssemblyToOrder.Get', 'read');
         AssertEffect('Inventory.AssemblyBOM.Get', 'read');
     end;
@@ -427,6 +431,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.Attribute.Update');
         Types.Add('Inventory.AttributeDefinition.Create');
         Types.Add('Inventory.AvailabilityByPeriod.Get');
+        Types.Add('Inventory.AgedInventory.Get');
+        Types.Add('Inventory.AvailabilityByEvent.Get');
         Types.Add('Inventory.TransferOrder.Create');
         Types.Add('Inventory.TransferOrder.Release');
         Types.Add('Inventory.TransferOrder.Reopen');
@@ -473,6 +479,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.PhysInventory.Record');
         Types.Add('Inventory.PhysInventory.Post');
         Types.Add('Inventory.ItemReference.Resolve');
+        Types.Add('Inventory.ItemReference.Set');
         Types.Add('Inventory.ItemCharge.Assign');
         Types.Add('Inventory.ItemCharge.Get');
         Types.Add('Inventory.ItemCategory.Get');
@@ -480,10 +487,13 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Types.Add('Inventory.ItemVariant.Get');
         Types.Add('Inventory.ItemVariant.Create');
         Types.Add('Inventory.Item.Create');
+        Types.Add('Inventory.NonstockItem.Create');
         Types.Add('Inventory.ItemUnitOfMeasure.Get');
         Types.Add('Inventory.ItemUnitOfMeasure.Create');
         Types.Add('Inventory.Reservation.AutoReserve');
         Types.Add('Inventory.OrderTracking.Get');
+        Types.Add('Inventory.ItemTracing.Get');
+        Types.Add('Inventory.AvailableToPromise.Get');
         Types.Add('Inventory.PlanningWorksheet.Calculate');
         Types.Add('Inventory.PlanningWorksheet.CarryOut');
         Types.Add('Inventory.AssemblyToOrder.Get');
@@ -502,11 +512,11 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Chapters.Add('related');
         if TypeName <> 'Inventory.AttributeDefinition.Create' then
             Chapters.Add('target');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyToOrder.Get', 'Inventory.AssemblyBOM.Get', 'Inventory.Item.Create'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.Attribute.Create', 'Inventory.Attribute.Update', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.TransferOrder.Post', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.Post', 'Inventory.AssemblyOrder.PreviewPost', 'Inventory.AssemblyToOrder.Get', 'Inventory.AssemblyBOM.Get', 'Inventory.Item.Create', 'Inventory.AvailableToPromise.Get'] then
             Chapters.Add('parameters');
         if TypeName in ['Inventory.TransferOrder.Create', 'Inventory.TransferOrder.PreviewPost', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyOrder.PreviewPost'] then
             Chapters.Add('workflow');
-        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyToOrder.Get', 'Inventory.AssemblyBOM.Get', 'Inventory.Item.Create'] then
+        if TypeName in ['Inventory.Attribute.Get', 'Inventory.AttributeDefinition.Create', 'Inventory.TransferOrder.Create', 'Inventory.AssemblyOrder.Create', 'Inventory.AssemblyToOrder.Get', 'Inventory.AssemblyBOM.Get', 'Inventory.Item.Create', 'Inventory.AvailableToPromise.Get'] then
             Chapters.Add('examples');
         Chapters.Add('overview');
     end;
@@ -741,6 +751,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Legacy := 'Item.' + TypeName.Substring(11);
         AssertChapterJson(Contract, 'envelope', Parts.GetEnvelope(Legacy).AsToken());
         AssertChapterJson(Contract, 'parameters', Parts.GetParameters(Legacy).AsToken());
+        AssertResponseChapter(Contract, Parts.GetResponse(Legacy));
         // Main compares the composed response before this branch strips the shared code field.
         AssertComposedAttributeResponse(TypeName, Contract, Parts.GetResponse(Legacy));
         AssertComposedResponse(TypeName, Contract, Parts.GetResponse(Legacy));
@@ -752,6 +763,42 @@ codeunit 96921 "Inventory Contract Batch Tests"
         else
             LibraryAssert.IsFalse(Contract.Contains('target'), 'Reader omits the Definition target.');
         AssertChapterJson(Contract, 'examples', Parts.GetExamples(Legacy).AsToken());
+    end;
+
+
+    /// <summary>Foundation 28.0.13+ appends the conditional error "code" descriptor to published responses (core #1345). Every app-owned field must still match exactly and in order.</summary>
+    local procedure AssertResponseChapter(Contract: JsonObject; Expected: JsonObject)
+    var
+        Trimmed: JsonObject;
+        Wrapper: JsonObject;
+        ActualFields: JsonArray;
+        OwnFields: JsonArray;
+        Token: JsonToken;
+        Field: JsonToken;
+        Last: JsonToken;
+    begin
+        LibraryAssert.IsTrue(Contract.Get('response', Token), 'Missing chapter response.');
+        Trimmed := Token.AsObject().Clone().AsObject();
+        Trimmed.Get('fields', Token);
+        ActualFields := Token.AsArray();
+        foreach Field in ActualFields do
+            if not IsFoundationErrorCodeField(Field) then
+                OwnFields.Add(Field);
+        LibraryAssert.IsTrue(ActualFields.Count() - OwnFields.Count() <= 1, 'Foundation adds at most one response field.');
+        if ActualFields.Count() > OwnFields.Count() then begin
+            ActualFields.Get(ActualFields.Count() - 1, Last);
+            LibraryAssert.IsTrue(IsFoundationErrorCodeField(Last), 'The Foundation code descriptor is the last response field.');
+        end;
+        Trimmed.Replace('fields', OwnFields);
+        Wrapper.Add('response', Trimmed);
+        AssertChapterJson(Wrapper, 'response', Expected.AsToken());
+    end;
+
+    local procedure IsFoundationErrorCodeField(Field: JsonToken): Boolean
+    var
+        NameToken: JsonToken;
+    begin
+        exit(Field.AsObject().Get('name', NameToken) and (NameToken.AsValue().AsText() = 'code'));
     end;
 
     local procedure AssertComposedResponse(TypeName: Text; Contract: JsonObject; Expected: JsonObject)
@@ -818,6 +865,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         end;
         AssertChapterJson(Contract, 'response', Expected.AsToken());
     end;
+
 
     local procedure AssertComposedErrors(TypeName: Text; Contract: JsonObject; Expected: JsonArray)
     var
@@ -1103,6 +1151,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
 
     local procedure AssertCostingEffectChanges(ComposedChanges: Text)
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Implementation: Interface "Msg Contract ori";
         RawEffect: JsonObject;
         RawChanges: JsonToken;
@@ -1112,7 +1161,10 @@ codeunit 96921 "Inventory Contract Batch Tests"
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
-        LibraryAssert.AreEqual(Expected, RawChanges.AsValue().AsText(), 'Exact application posting contract.');
+        if Parts.SupportsConfirmation() then
+            LibraryAssert.AreEqual(Expected + ' ' + Parts.CountUnitCostToGL() + ' ' + Parts.CountReadText(), RawChanges.AsValue().AsText(), 'Exact application posting contract with the count unit (#192).')
+        else
+            LibraryAssert.AreEqual(Expected, RawChanges.AsValue().AsText(), 'Exact application posting contract.');
         LibraryAssert.IsTrue(ComposedChanges.StartsWith(Expected), 'Composition preserves the entire application contract.');
         if Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
             LibraryAssert.IsTrue(ComposedChanges.Substring(StrLen(Expected) + 1).Contains('expectedCount'), 'Foundation appends its confirmation rule.')
@@ -1192,9 +1244,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetParameters(ArrayChapter), 'Parameters are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
-                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Three supported request keys.')
+                    LibraryAssert.AreEqual(3 + ConfirmationParameterCount(), ArrayChapter.Count(), 'Three supported request keys and expectedCount when Foundation has the protocol (#192).')
                 else
-                    LibraryAssert.AreEqual(4, ArrayChapter.Count(), 'Two applied filters and optional native journal template/batch.');
+                    LibraryAssert.AreEqual(4 + ConfirmationParameterCount(), ArrayChapter.Count(), 'Two applied filters, optional native journal template/batch and expectedCount when Foundation has the protocol (#192).');
                 ArrayChapter.Add('stale');
                 LibraryAssert.IsTrue(Contract.GetErrors(ArrayChapter), 'Errors are declared.');
                 if TypeName = 'Inventory.AdjustCost.Run' then
@@ -1356,5 +1408,14 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.IsTrue(Value.Get(Name, Token), 'Missing response field ' + Name + '.');
         LibraryAssert.IsTrue(Token.IsValue(), Name + ' must be scalar.');
         LibraryAssert.AreEqual(Expected, Token.AsValue().AsText(), Name + ' mismatch.');
+    end;
+
+    local procedure ConfirmationParameterCount(): Integer
+    var
+        Parts: Codeunit "Inventory Contract Parts ori";
+    begin
+        if Parts.SupportsConfirmation() then
+            exit(1);
+        exit(0);
     end;
 }

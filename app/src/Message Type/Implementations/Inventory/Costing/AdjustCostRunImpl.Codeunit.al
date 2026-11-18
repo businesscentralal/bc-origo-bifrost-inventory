@@ -94,6 +94,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Parameter: JsonObject;
     begin
@@ -109,6 +110,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
         Parameter := ContractMgt.Parameter('postToGL', 'boolean', false, 'true makes the batch job post the cost adjustments to the general ledger in the same run. false leaves the general ledger alone. A missing key defaults to false. A supplied value must be the JSON boolean true or false; other values are refused before the report runs.');
         Parameter.Add('default', false);
         Parameters.Add(Parameter);
+        Parts.AddExpectedCountParameter(Parts.CountUnitAdjustCost(), Parameters);
         exit(true);
     end;
 
@@ -137,12 +139,14 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Changes: JsonToken;
     begin
         Clear(Effect);
         Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Adjusts the cost of the matching item entries by running the Adjust Cost - Item Entries batch job. When postToGL is true the batch job also posts the adjustments to the general ledger in the same run. Business Central commits the result when the call finishes; under Omit Commit the commit is left to the caller. There is no preview, and no rollback is promised if the job fails part way.","idempotent":false,"permissionSet":"BIFROST Full ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution.","Only one of itemNoFilter and itemCategoryFilter may remain nonempty after truncation to 250 characters; the cost adjustment rejects both nonempty."]}');
         Effect.Get('changes', Changes);
         Effect.Replace('changes', Changes.AsValue().AsText() + ' ' + ConfirmationCountNote());
+        Parts.AddCountUnit(Parts.CountUnitAdjustCost(), Effect);
         exit(true);
     end;
 

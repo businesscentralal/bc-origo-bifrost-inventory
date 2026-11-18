@@ -3,6 +3,7 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Assembly.Document;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
@@ -53,10 +54,65 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyNativeSuccess(1039);
     end;
 
+    /// <summary>Verifies English confirmed native posting preserves a pending queue key above the value-entry ledger.</summary>
+    [Test]
+    [HandlerFunctions('NativeMessageHandler')]
+    procedure Scenario_AC01_PendingValueEntry_NativeSuccessIn1033()
+    begin
+        // Issue #176 AC01, PR #202 P1 | Time: WorkDate for native posting | Risk: owned queue fixture under test isolation.
+        VerifyNativeSuccessWithPendingValueEntry(1033);
+    end;
+
+    /// <summary>Verifies Icelandic confirmed native posting preserves a pending queue key above the value-entry ledger.</summary>
+    [Test]
+    [HandlerFunctions('NativeMessageHandler')]
+    procedure Scenario_AC01_PendingValueEntry_NativeSuccessIn1039()
+    begin
+        // Issue #176 AC01, PR #202 P1 | Time: WorkDate for native posting | Risk: owned queue fixture under test isolation.
+        VerifyNativeSuccessWithPendingValueEntry(1039);
+    end;
+
     [MessageHandler]
     procedure NativeMessageHandler(Message: Text[1024])
     begin
         // Native posting may emit informational completion messages in an interactive session.
+    end;
+
+    local procedure VerifyNativeSuccessWithPendingValueEntry(LanguageId: Integer)
+    var
+        ValueEntry: Record "Value Entry";
+        PendingValueEntry: Record "Post Value Entry to G/L";
+        SavedPendingValueEntry: Record "Post Value Entry to G/L";
+        SequenceNoMgt: Codeunit "Sequence No. Mgt.";
+        LastEntryNo: Integer;
+    begin
+        // [GIVEN] A queue row whose ledger key is absent, immediately above both allocation sources.
+        LastEntryNo := ValueEntry.GetLastEntryNo();
+        if PendingValueEntry.FindLast() then
+            if PendingValueEntry."Value Entry No." > LastEntryNo then
+                LastEntryNo := PendingValueEntry."Value Entry No.";
+        if SequenceNoMgt.GetCurrentSeqNo(Database::"Value Entry") > LastEntryNo then
+            LastEntryNo := SequenceNoMgt.GetCurrentSeqNo(Database::"Value Entry");
+        ValueEntry.Init();
+        ValueEntry."Entry No." := LastEntryNo + 100;
+        ValueEntry.Insert();
+        PendingValueEntry.Init();
+        PendingValueEntry."Value Entry No." := ValueEntry."Entry No." + 1;
+        PendingValueEntry."Item No." := 'XCONFIRM-PENDING';
+        PendingValueEntry."Posting Date" := WorkDate();
+        PendingValueEntry.Insert();
+        SavedPendingValueEntry := PendingValueEntry;
+        SequenceNoMgt.ClearState();
+
+        // [WHEN] All confirmed native posting paths run, including revaluation with its exact amount assertion.
+        VerifyNativeSuccess(LanguageId);
+
+        // [THEN] The pre-existing queue row is neither consumed nor replaced by a new posting.
+        PendingValueEntry.Get(SavedPendingValueEntry."Value Entry No.");
+        Assert.AreEqual(SavedPendingValueEntry.SystemId, PendingValueEntry.SystemId, 'Existing queue row identity is preserved.');
+        Assert.AreEqual(SavedPendingValueEntry."Item No.", PendingValueEntry."Item No.", 'Existing queue item is preserved.');
+        Assert.AreEqual(SavedPendingValueEntry."Posting Date", PendingValueEntry."Posting Date", 'Existing queue date is preserved.');
+        Assert.IsFalse(ValueEntry.Get(SavedPendingValueEntry."Value Entry No."), 'Posting must not reuse the existing queue key.');
     end;
 
     local procedure VerifyNativeSuccess(LanguageId: Integer)
@@ -64,11 +120,16 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Setup: Record "Inventory Setup ori";
         GLSetup: Record "General Ledger Setup";
         InventorySetup: Record "Inventory Setup";
+        ValueEntryBoundary: Record "Value Entry";
+        InventoryLibrary: Codeunit "Inventory Test Library ori";
         FoundationSetup: RecordRef;
         PreviousConfirmation: Boolean;
         ChangedConfirmation: Boolean;
         PreviousLanguage: Integer;
+        BoundaryEntryNo: Integer;
     begin
+        InventoryLibrary.PrepareLibraryGLAccountNumbers();
+        BoundaryEntryNo := PrepareNativeValueEntryNumbers();
         // [GIVEN] Normal posting setup, all required domains and newly created native source records.
         ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         Setup.InsertIfNotExists();
@@ -95,6 +156,33 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyJournals();
         GlobalLanguage(PreviousLanguage);
         RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
+        if BoundaryEntryNo <> 0 then begin
+            ValueEntryBoundary.Get(BoundaryEntryNo);
+            ValueEntryBoundary.Delete();
+        end;
+    end;
+
+    local procedure PrepareNativeValueEntryNumbers(): Integer
+    var
+        ValueEntry: Record "Value Entry";
+        PendingValueEntry: Record "Post Value Entry to G/L";
+        SequenceNoMgt: Codeunit "Sequence No. Mgt.";
+        BoundaryEntryNo: Integer;
+    begin
+        // A reused test company can retain queue keys above its last value entry.
+        // Reserve a test-owned, zero-value boundary above those keys so both legacy
+        // and sequence-based native posting allocate safely. Never delete tenant rows.
+        if PendingValueEntry.FindLast() then
+            if PendingValueEntry."Value Entry No." > ValueEntry.GetLastEntryNo() then begin
+                BoundaryEntryNo := PendingValueEntry."Value Entry No." + 1;
+                ValueEntry.Init();
+                ValueEntry."Entry No." := BoundaryEntryNo;
+                ValueEntry.Insert();
+            end;
+        // Discard single-instance buffers left by earlier tests; native validation
+        // will advance the sequence against the ledger boundary without rewinding it.
+        SequenceNoMgt.ClearState();
+        exit(BoundaryEntryNo);
     end;
 
     local procedure VerifyTransfer()

@@ -62,14 +62,14 @@ MEASURED_PACKAGE_PROFILES = {
 }
 FOUNDATION_CANDIDATE = {
     "identity": {"id": "7505e808-6e52-4b96-a328-82573391297a", "publisher": "Origo",
-                 "name": "Bifrost Foundation", "version": "28.0.8.617"},
-    "sha256": "f20806e61c62af9ca80af0d0dd7273835947841b5bcc4b9d389dd2a7907146bc",
-    "sourceCommit": "398b62521c043b2b4ba2ee1d626813f3ccb85711",
-    "buildUrl": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/runs/39680460724",
-    "compilerVersion": "18.1.43.63721",
-    "releaseTag": "28.0.8",
-    "releaseAssetId": 663995787,
-    "archiveSha256": "55548681d91a9644ff9aa3083295c4f4b2819eb5da66b93ac143ad81c4a7c9a1",
+                 "name": "Bifrost Foundation", "version": "28.0.13.741"},
+    "sha256": "5dfe8df26f725e8185d3583dc9558ef5e87cca4341c9959a58c5a6f7219e0a57",
+    "sourceCommit": "4458b145846907595b32a1866e5d3e262ca7e8b5",
+    "buildUrl": "https://github.com/OrigoSoftwareSolutions/bc-origo-bifrost-core/actions/runs/44188373403",
+    "compilerVersion": "18.1.44.47295",
+    "releaseTag": "28.0.13",
+    "releaseAssetId": 761125618,
+    "archiveSha256": "80082508b0cbbc5746b8479281fa467159dbbfb84e58e34f70e03fea81bd03e9",
 }
 SYMBOL_POLICIES = {
     "appCache": {"packages": 128, "bytes": 512 * 1024 * 1024},
@@ -407,7 +407,7 @@ def check_foundation_candidate(info):
         require(info[key] == FOUNDATION_CANDIDATE[key], "Unapproved Foundation candidate " + key)
     require(info["friends"] == [] and info["signatureTailBytes"] > 0,
             "Foundation candidate friend/signature-content mismatch")
-    return {"candidate": "release617", "releaseTag": FOUNDATION_CANDIDATE["releaseTag"],
+    return {"candidate": "release741", "releaseTag": FOUNDATION_CANDIDATE["releaseTag"],
             "releaseAssetId": FOUNDATION_CANDIDATE["releaseAssetId"],
             "archiveSha256": FOUNDATION_CANDIDATE["archiveSha256"], "signatureTrustVerified": False,
             "runnerInputEqualityVerified": False}
@@ -944,6 +944,15 @@ def _product_reuse_allowed(product_reuse):
     return True
 
 
+REUSE_RECORD_KEYS = ("baselineWorkflowRunId", "baselineWorkflowSHA", "packageFile", "packageSha256")
+
+
+def _reuse_record(product_reuse):
+    """The accepted-reuse record Finalize stores in state.json and later stages are bound to (#237)."""
+    return {key: str(product_reuse.get(key) or "").lower() if key in ("baselineWorkflowSHA", "packageSha256")
+            else str(product_reuse.get(key) or "") for key in REUSE_RECORD_KEYS}
+
+
 def reconcile(root, context, stage, signature=None, product_reuse=None):
     """Check expected hooks and actual published artifact paths, also after Sign."""
     root = Path(root)
@@ -955,6 +964,14 @@ def reconcile(root, context, stage, signature=None, product_reuse=None):
     reuse_app = False
     if "app" not in receipts:
         if _product_reuse_allowed(product_reuse):
+            if stage != "finalize":
+                # 17.11.2026 (inventory#237): baseline env/Apps evidence is gone after RunPipeline.
+                # Later stages are bound to the record Finalize accepted and hashed into finalize.json.
+                recorded = state.get("productReuse")
+                require(isinstance(recorded, dict),
+                        "Product compile receipt missing and Finalize accepted no baseline product reuse")
+                require(_reuse_record(product_reuse) == _reuse_record(recorded),
+                        "Product reuse does not match the record Finalize accepted")
             package_path = (root / str(product_reuse["packageFile"])).resolve()
             require(package_path.is_file(), "Baseline-reused product package missing")
             require(file_hash(package_path) == product_reuse["packageSha256"],
@@ -1015,6 +1032,10 @@ def reconcile(root, context, stage, signature=None, product_reuse=None):
         finalized = json.loads((directory / "finalize.json").read_text(encoding="utf-8-sig"))
         require(finalized["context"] == context and finalized["stateSha256"] == file_hash(directory / "state.json"),
                 "Missing/stale/displaced PipelineFinalize")
+    if stage == "finalize" and reuse_app:
+        # Persist before stateSha256 is taken, so Pipeline validates against this exact record.
+        state["productReuse"] = _reuse_record(product_reuse)
+        (directory / "state.json").write_text(json.dumps(state, indent=2) + "\n")
     result = {"context": context, "stage": stage, "stateSha256": file_hash(directory / "state.json"), "outputs": outputs}
     if signature:
         result["signature"] = signature

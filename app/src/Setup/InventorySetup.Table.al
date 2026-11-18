@@ -107,6 +107,10 @@ table 10076836 "Inventory Setup ori"
         {
             Caption = 'Purchase Returns', Comment = 'is-IS=Innkaupaskil';
         }
+        field(28; "Catalog Items"; Boolean)
+        {
+            Caption = 'Catalog Items', Comment = 'is-IS=Vörulistavörur';
+        }
         field(27; Planning; Boolean)
         {
             Caption = 'Planning', Comment = 'is-IS=Áætlun';
@@ -175,6 +179,8 @@ table 10076836 "Inventory Setup ori"
                 exit("Item Substitution");
             Domain::PurchaseReturns:
                 exit("Purchase Returns");
+            Domain::CatalogItems:
+                exit("Catalog Items");
             Domain::Planning:
                 exit(Planning);
         end;
@@ -273,12 +279,28 @@ table 10076836 "Inventory Setup ori"
                 "Purchase Returns" := true;
                 Changed := true;
             end;
+        if EnableCatalogItemsInUse() then
+            Changed := true;
         if not Planning then
             if HasPlanningUsage() then begin
                 Planning := true;
                 Changed := true;
             end;
         exit(Changed);
+    end;
+
+    /// <summary>
+    /// Raises only the Catalog Items switch when the company has catalog items, without writing the row.
+    /// Used by the catalog items upgrade so other switches an administrator turned off stay off.
+    /// </summary>
+    internal procedure EnableCatalogItemsInUse(): Boolean
+    begin
+        if "Catalog Items" then
+            exit(false);
+        if not HasRecords(Database::"Nonstock Item") then
+            exit(false);
+        "Catalog Items" := true;
+        exit(true);
     end;
 
     /// <summary>Turns on Planning only, when a planning worksheet template exists. Other switches stay as they are.</summary>

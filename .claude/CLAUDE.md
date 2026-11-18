@@ -23,6 +23,7 @@ README "Objects" lists every object with its ID. In short:
   item charge 10076873-10076875, item reference 10076876, period 10076877-10076879, physical inventory 10076880-10076885,
   price 10076886, reclassification 10076887-10076889, reservations 10076890-10076896, tracking 10076897-10076900,
   transfer orders 10076901-10076908, undo 10076909-10076911, item attributes 10076844 and 10076912-10076918,
+  shared gates and contract parts 10076919-10076923, available to promise 10077000 (`Inventory.AvailableToPromise.Get`, #105; enum value and enum extension 10077000 too).
   shared gates and contract parts 10076919-10076923, item create 10076931-10076932 (`Inventory.Item.Create`, #130; 10076925-10076929 are already used by shared codeunits),
   sales return from posted documents 10077032-10077033 (`Sales.ReturnOrder.CreateFromPosted`, #136).
   shared gates and contract parts 10076919-10076923, assembly reads 10076965-10076966 (`Inventory.AssemblyToOrder.Get`,
@@ -46,6 +47,9 @@ README "Objects" lists every object with its ID. In short:
   New setup rows and the tagged issue147 upgrade enable domains from company usage; existing switches are never turned off.
   Upgrade tag `Origo.Bifrost.Inventory-PlanningDomain-20261117` turns on Planning only.
   (10076882) with `Inventory.PhysInventory.Record`.
+- Next free codeunit: 10076931 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
+  the convention). Free: 10076931-10077034 for codeunits, 10076836-10077034 for pages/enums, 10076837-10077034 for
+  tables, 10076848-10077034 for enum extensions, 10076838-10077034 for permission sets.
 - Next free codeunit: 10076932 (10076924 stays unused as a codeunit so the RecordCount value does not clash with
   the convention). Taken above that: 10077020 `Item Subst. Get Impl ori` (#118) and 10077032-10077033
   `Sales Ret. Ord. Post. Impl/Proc ori` (#136). Free: 10076932-10077019, 10077021-10077029 and 10077034 for codeunits,
@@ -56,6 +60,16 @@ README "Objects" lists every object with its ID. In short:
   fields 21-24. New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
   (10076882) with `Inventory.PhysInventory.Record`. Codeunit 10076924 is `Inventory Wizard Reg. ori`; the shared
   number is a different object type.
+- Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077019 and 10076947 (catalog items) and 10077032-10077033. Next free codeunit: 10076931
+  (10076925-10076929 and 10076931-10077018, 10077022-10077031 are free except as taken by open PRs; 10077034 is free at the top of the range).
+  Next free enum extension: 10076848 (`MsgType.PurchRet.EnumExt ori` is 10076847; 10076906 is `MsgType.SalesRetOrd.Ext ori`; 10077019 is `MsgType.Nonstock.EnumExt ori`).
+  Next free page, table and permission set are unchanged from the ranges above where those objects were not taken.
+- 10077032-10077033 are `Sales Ret. Ord. Post. Impl/Proc ori` (`Sales.ReturnOrder.CreateFromPosted`, enum value 10077032, enum extension 10076906, test codeunit 96991). 10077030-10077031 and test codeunit 96990 are used by earlier open PRs. Check main and every open PR before picking an ID. 10077034 is free at the top of the range.
+- `Inventory Domain ori` values 11 ItemReference, 12 Availability, 13 ItemCharge, 14 ItemCategory, 15 ItemSubstitution, 16 PurchaseReturns, 17 Planning and 18 CatalogItems; `Inventory Setup ori`
+  fields 21-28 (`Item Substitution` is field 25, `Purchase Returns` is field 26, `Planning` is field 27, `Catalog Items` is field 28). New setup rows and the tagged issue147 upgrade enable domains from company usage; existing enabled switches are never turned off.
+  Catalog Items (#119) has its own upgrade tag `CatalogItemsUsage-20261116` that raises only that switch.
+- Catalog items (#119): codeunits 10077019 `Nonstock Item Create Impl ori` (= `Inventory.NonstockItem.Create`) and
+  10076947 (process), enum extension 10077019; taken from the top of the free range. Purchase returns on main kept domain value 16 and setup field 26, Planning keeps value 17, field 27 and setup-guide slot 18, so Catalog Items uses value 18, field 28 and setup-guide slot 19.
 - Codeunits are used through 10076930 (`Purch. Return Create Impl ori`), 10077028-10077029 (`Sales Get Shipment Impl/Proc ori`,
   `Sales.SalesInvoice.GetShipmentLines`, enum extension 10076900, test codeunit 96995) and 10077032-10077033. Next free codeunit: 10076931
   (10076925-10076929 and 10076931-10077027 are free except as taken by open PRs; 10077034 is free at the top of the range).
@@ -75,6 +89,7 @@ README "Objects" lists every object with its ID. In short:
 - Costing, tracking and physical inventory: codeunits 96927, 96933, 96936-96946; permission sets 96934-96936.
 - 96995 `Sales Get Shipment Tests`. (Open PRs claim 96980 (#193), 96981 (#195), 96988 (#197).)
 - Free (16.11.2026, any test object type): 96924-96926, 96928-96929, 96947-96949, 96960-96961, 96964-96969, 96982-96987, 96989-96994, 96996-96999. Check main and open PRs first.
+- 96964 `Avail. To Promise Tests`, 96965 `Avail. To Promise Perm` (#105). Free: 96960-96961, 96963, 96966-96979 (open PRs claim some of these; check before use).
 - Free: 96960-96961, 96963-96979.
 
 ## Issue 134 allocation (Alvíss, 16.11.2026)
@@ -102,6 +117,9 @@ README "Objects" lists every object with its ID. In short:
 
 - Codeunit 10077034 `Item Appl. Quantity ori`: manually bound native quantity subscriber.
 - Test codeunit 96994 `Item Application 40 Tests ori`.
+- 96980 `Purch. Return Create Tests` (#137).
+- 96934 `Nonstock Item Create Tests` (#119); 96998 stays with main's `Posted Line Undo Tests ori`.
+- Next free test codeunit: 96981, except 96998 and other IDs already used on main or by open PRs. 96960-96961 stay free. 96963-96980 are in use.
 - 96960 `Item Create Tests`, 96961 `Item Create Perm` (#130). 96991 `Sales Ret. Ord. Post. Tests` (#136). Free: 96964-96969 (96963 and 96970-96979 are used; 96990 is used by an earlier open PR).
 - 96980 `Purch. Return Create Tests`. Next free test codeunit: 96981. 96960-96961 stay free; 96963-96979 are in use.
 
@@ -114,12 +132,38 @@ README "Objects" lists every object with its ID. In short:
 - Standard cost collides with Item Create on codeunit 10076932, enum value 10076932 and enum extension 10076848. The PR side moves: `Std. Cost Suggest Impl ori` and `Inventory.StandardCost.Suggest` are 10076938; `MsgType.StdCost.EnumExt ori` is 10076850. `Inventory.StandardCost.Implement` stays 10076933. Item Create keeps 10076932 and enum extension 10076848. Codeunits 10076934–10076937 are unchanged.
 - 96966 `Assembly Read Tests`, 96967 `Assembly Read Perm` (#116). Free: 96960-96961, 96963-96965, 96968-96979 (open PRs claim some of these; check before use).
 
+## PR #201 main-merge ID reconciliation
+
+- Catalog tests use codeunit 96934 (formerly 96998); main keeps codeunit 96998 `Posted Line Undo Tests ori`. Codeunit 96934 was unused on main and all 12 open Inventory PR heads on 2026-11-18. Permission set 96934 is a different object type and remains unchanged. Test bodies and assertions are unchanged.
+
+- Catalog Items process codeunit is 10076947 (formerly 10077021); main keeps 10077021 `Transfer Receive Impl ori`. Checked against current main and all 20 other open PR heads. These taken IDs supersede the historical free-ID notes above. The catalog message enum value remains 10077019.
 ## Issue 133 object claims (2026-11-17 main-merge)
 
 - Main-merge ID collision: codeunit 10077030 stays `Reserv. Supply Filter ori`. `Purch Get Receipt Impl ori` and message value `Purchase.PurchaseInvoice.GetReceiptLines` are 10077018 (formerly 10077030). 10077027 is claimed by open pull requests #206 and #215; 10077028–10077029 are claimed by #203. Process codeunit 10077031 and enum extension 10077030 `MsgType.PurchGetRcpt.Ext ori` stay. These taken IDs supersede the free-ID notes preserved above.
 - Test codeunit 96996 `Purch Get Receipt Tests`.
 - Checked against main `ee7110286259dc00a9a539832a93a4be27a61273` and the open Inventory branches on 2026-11-17. Do not reuse 10077018, 10077030 or 10077031.
 
+## PR #202 amendment ID reconciliation (17.11.2026)
+
+- Main keeps codeunit 10077031 `Purch Get Receipt Proc ori`. Item tracing implementation and enum value move to 10076994; enum extension 10077029 stays.
+- Item tracing tests move from 96998 (claimed by open #201) to 96949. Checked main and open PR claims before allocation.
+
 ## PR #221 test ID reconciliation
 
 - Main keeps codeunit 96964 `Inv. 186 Blank Line Tests ori`. Reclassification uses codeunit 96925 `Reclass Journal Tests ori` (formerly 96964), within the existing 96900–96999 test range. Checked main and every open Inventory PR head on 2026-11-17; 96925 was unused. Test bodies and assertions are unchanged.
+## PR #201 Planning merge reconciliation
+
+- Main-merge 2026-11-17: Planning keeps domain value 17, setup field 27 and wizard slot 18. Catalog Items uses the next free domain value 18, setup field 28 and wizard slot 19; both tagged migrations remain independent.
+## PR #199 amendment object claim
+
+- Test codeunit 96928 `Item Ref. Set Tests ori` replaces the unreleased 96948 allocation, which belongs to earlier PR #236 `CarryOut Count Help ori`; the original 96989 belongs to #206 valuation tests. Checked before the ID-fix push against main `7bd237e4` and all 12 other open PR heads, including #236 and #221. Rechecked after #236 merged: main `7f9cdb67` and all 11 remaining open PR heads on 2026-11-17. The test app range stays 96900–96999. Recheck main and every open PR head immediately before pushing any new test ID.
+## PR #211 main-merge test ID reconciliation
+
+- Planning keeps test codeunit 96965 from main. `Avail. To Promise Perm` moves from 96965 to 96924, the first free codeunit ID in the test range after checking main and open PRs; ATP tests remain 96964. This supersedes the older ATP permission-test ID above.
+- Later main owns 96964 as `Inv. 186 Blank Line Tests ori`. `Avail. To Promise Tests` moves from 96964 to 96926, the first free codeunit ID in 96900–96999 after checking main at `53f1e56e` and every open Inventory pull request on 2026-11-17 (96925 is `Reclass Journal Tests ori` on #221; 96948 and above are claimed by other open PRs). `Avail. To Promise Perm` stays 96924. This supersedes "ATP tests remain 96964" and the older free-list bullets that still name 96964 as free or as the ATP tests.
+## PR #195 main-merge ID reconciliation
+
+- `Inventory.AgedInventory.Get` uses codeunit and enum value 10076948 `Aged Inventory Get Impl ori` and enum extension 10076851 `MsgType.AgedInv.EnumExt ori`. Purchase Return keeps codeunit and enum value 10076930 and enum extension 10076847. 10076948 is the lowest codeunit id that was free on main and on the open inventory pull requests checked for this merge (10076933-10076947 and 10076950-10076953 are claimed). Enum extension 10076850 is Standard Cost on main (`MsgType.StdCost.EnumExt ori`), so this feature takes 10076851. Test codeunit 96981 is unchanged. These taken IDs supersede the free-ID notes preserved above.
+## PR #238 setup-mode test ID reconciliation
+
+- `Inv Setup Mode Tests` uses codeunit 96929 (moved from 96997); main keeps `Posted Undo MCP Fixture ori` at 96997. Checked merged main and every open Inventory PR head on 17.11.2026. IDs 96924-96926, 96928, 96949, 96981 and 96990 remain reserved by other open PRs.

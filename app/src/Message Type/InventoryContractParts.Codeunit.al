@@ -28,7 +28,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
         AttributeCreateNotesLbl: Label 'Attribute values are typed according to the definition. Set createValueIfMissing on an attribute object when an Option value may need to be created. Blocked items require allowBlocked.', Comment = 'is-IS=Eigindagildi fylgja gagnategund skilgreiningarinnar. Stilltu createValueIfMissing á eigindahlut þegar stofna þarf valkostagildi. Lokaðar vörur krefjast allowBlocked.';
         AttributeUpdateNotesLbl: Label 'Update is intentionally limited to mappings that already exist. The operation is isolated through its write process.', Comment = 'is-IS=Uppfærsla nær aðeins til tenginga sem þegar eru til. Aðgerðin fer fram í aðskildu skrifferli.';
         TransferCreateNotesLbl: Label 'The request is all-or-nothing. When lines are supplied, field names are camelCase and the line limit is 200. Dates use YYYY-MM-DD.', Comment = 'is-IS=Beiðnin er framkvæmd í heild eða alls ekki. Þegar línur eru gefnar nota svæðisheiti camelCase og hámarksfjöldi lína er 200. Dagsetningar nota YYYY-MM-DD.';
-        TransferPostNotesLbl: Label 'Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType and use the Inventory Setup direct-transfer posting configuration. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central''s own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType og nota bókunarstillingu beinna flutninga í birgðagrunni. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.';
+        TransferPostNotesLbl: Label 'Non-direct orders require postingType Ship or Receive; ShipReceive is refused. Direct transfers ignore postingType. In BC 29, posting and preview use the order''s Direct Transfer Posting Type; later Inventory Setup changes do not change an existing order''s posting mode. BC 28 uses the Inventory Setup direct-transfer posting configuration as a fallback. A Receive that receives the last quantity deletes the transfer order; the response is still Success with postedReceiptNo and orderDeleted true. The call commits: it commits the transaction before posting starts, Business Central''s own posting commits as well, and Omit Commit is not honoured, so a successful posting cannot be rolled back. It requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Use Inventory.TransferOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Pantanir án beins flutnings krefjast postingType Ship eða Receive; ShipReceive er hafnað. Beinir flutningar hunsa postingType. Í BC 29 nota bókun og forskoðun bókunartegund beins flutnings úr pöntuninni; síðari breytingar á birgðagrunni breyta ekki bókunarham fyrirliggjandi pöntunar. Í BC 28 er bókunarstilling beinna flutninga í birgðagrunni notuð til vara. Móttaka sem tekur við síðasta magninu eyðir millifærslupöntuninni; svarið er samt Success með postedReceiptNo og orderDeleted true. Kallið vistar breytingar: það vistar færslu áður en bókun hefst, bókun Business Central vistar einnig og Omit Commit er ekki virt, svo ekki er hægt að afturkalla heppnaða bókun. Það krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Notaðu Inventory.TransferOrder.PreviewPost fyrst til að sjá færslurnar.';
         TransferPreviewNotesLbl: Label 'A successful preview includes rollback true. Nothing is persisted, including posted document numbers.', Comment = 'is-IS=Heppnuð forskoðun inniheldur rollback true. Ekkert er vistað, þar á meðal númer bókaðra skjala.';
         AssemblyCreateNotesLbl: Label 'refreshLines defaults to true. PostingDate defaults to WorkDate when omitted. Quantity must be positive.', Comment = 'is-IS=refreshLines er sjálfgefið true. postingDate er vinnudagsetning þegar henni er sleppt. quantity verður að vera jákvætt.';
         AssemblyPostNotesLbl: Label 'Requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist.';
@@ -164,6 +164,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 begin
                     Parameters.Add(ContractMgt.Parameter('postingDate', 'string', false, 'Replacement posting date in YYYY-MM-DD format; the date on the order is used when omitted.'));
                     Parameters.Add(ContractMgt.Parameter('quantityToAssemble', 'number', false, 'Optional quantity to assemble before posting; written to the order and committed before posting, used only when greater than zero.'));
+                    AddExpectedCountParameter(CountUnitAssemblyOrder(), Parameters);
                 end;
             'Inventory.AssemblyOrder.PreviewPost':
                 begin
@@ -835,6 +836,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
             'Inventory.AssemblyOrder.Post':
                 begin
                     SetEffect(Effect, 'irreversible', 'Posts the Assembly Order: creates the posted assembly order with the item ledger and value entries for consumption and output. When quantityToAssemble is sent it is first written to the order. The call commits before posting starts and ignores Omit Commit; the posting cannot be rolled back afterwards.', false, 'BIFROST Full ori');
+                    AddCountUnit(CountUnitAssemblyOrder(), Effect);
                     Preconditions.Add('The Assembly domain is turned on in Inventory Setup.');
                     Preconditions.Add('The caller holds Inv. Posting Gate in addition to the Bifrost "Full Access" permission set.');
                     Preconditions.Add('The components are available and the order has a quantity to assemble.');
@@ -853,6 +855,83 @@ codeunit 10076919 "Inventory Contract Parts ori"
                 end;
         end;
         Effect.Add('preconditions', Preconditions);
+    end;
+
+    /// <summary>Tests whether the deployed Foundation has the confirmation protocol (#192).</summary>
+    /// <returns>True when Foundation defines the ConfirmationRequired error code. Older Foundation versions neither read nor document expectedCount.</returns>
+    procedure SupportsConfirmation(): Boolean
+    begin
+        exit(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'));
+    end;
+
+    /// <summary>Adds the expectedCount parameter that names the count unit and the side-effect-free way to read it (#192).</summary>
+    /// <param name="CountUnitText">What the count counts, from one of the CountUnit procedures.</param>
+    /// <param name="Parameters">The parameters chapter to complete.</param>
+    procedure AddExpectedCountParameter(CountUnitText: Text; var Parameters: JsonArray)
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ExpectedCountKeyTok: Label 'expectedCount', Locked = true;
+    begin
+        if not SupportsConfirmation() then
+            exit;
+        Parameters.Add(ContractMgt.Parameter(ExpectedCountKeyTok, 'integer', false, CountUnitText + ' ' + CountReadText()));
+    end;
+
+    /// <summary>Appends the count unit sentence to the changes text of an irreversible effect chapter (#192).</summary>
+    /// <param name="CountUnitText">What the count counts, from one of the CountUnit procedures.</param>
+    /// <param name="Effect">The effect chapter to complete.</param>
+    procedure AddCountUnit(CountUnitText: Text; var Effect: JsonObject)
+    var
+        Changes: JsonToken;
+        ChangesText: Text;
+    begin
+        if not SupportsConfirmation() then
+            exit;
+        if Effect.Get('changes', Changes) then begin
+            ChangesText := Changes.AsValue().AsText();
+            Effect.Remove('changes');
+        end;
+        Effect.Add('changes', (ChangesText + ' ' + CountUnitText + ' ' + CountReadText()).Trim());
+    end;
+
+    /// <summary>Returns the shared sentence that says the count is 1 and how to read it without a side effect (#192).</summary>
+    procedure CountReadText(): Text
+    var
+        ReadLbl: Label 'It is always 1. Always checked when sent; required only when Require Confirmation for Irreversible Messages is on in Bifrost Setup. To read the count without a side effect, send the same request without expectedCount: the call is refused with ConfirmationRequired and returns expected, and nothing is changed.', Comment = 'is-IS=Gildið er alltaf 1. Alltaf athugað þegar það er sent; krafist aðeins þegar Require Confirmation for Irreversible Messages er virkt í uppsetningu Bifröst. Til að lesa fjöldann án aukaverkana skaltu senda sömu beiðni án expectedCount: kallinu er hafnað með ConfirmationRequired og skilar expected, og engu er breytt.';
+    begin
+        exit(ReadLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the Revaluation type (#192).</summary>
+    procedure CountUnitRevaluation(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one revaluation journal batch this call posts, not its lines or the value entries it creates.', Comment = 'is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the AssemblyOrder type (#192).</summary>
+    procedure CountUnitAssemblyOrder(): Text
+    var
+        UnitLbl: Label 'expectedCount counts the one assembly order this call posts, not its component lines or the ledger entries it creates.', Comment = 'is-IS=expectedCount telur eina samsetningarpöntun sem kallið bókar, ekki efnislínur hennar eða birgðafærslurnar sem það býr til.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the AdjustCost type (#192).</summary>
+    procedure CountUnitAdjustCost(): Text
+    var
+        UnitLbl: Label 'For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.', Comment = 'is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.';
+    begin
+        exit(UnitLbl);
+    end;
+
+    /// <summary>Names what expectedCount counts for the CostToGL type (#192).</summary>
+    procedure CountUnitCostToGL(): Text
+    var
+        UnitLbl: Label 'For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).', Comment = 'is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).';
+    begin
+        exit(UnitLbl);
     end;
 
     local procedure SetEffect(var Effect: JsonObject; EffectKind: Text; Changes: Text; Idempotent: Boolean; PermissionSetName: Text)

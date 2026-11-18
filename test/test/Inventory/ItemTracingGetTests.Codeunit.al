@@ -1,0 +1,443 @@
+namespace Origo.Bifrost.Inventory.Test;
+
+using Microsoft.Foundation.Enums;
+using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Tracking;
+using Origo.Bifrost;
+using Origo.Bifrost.Inventory;
+using System.TestLibraries.Utilities;
+
+/// <summary>
+/// Inventory.ItemTracing.Get: the trace of a lot number through the item ledger in both directions,
+/// read-only behaviour, refusals, the node cap and help.
+/// </summary>
+codeunit 96949 "Item Tracing Get Tests"
+{
+    Subtype = Test;
+    TestPermissions = Disabled;
+    EventSubscriberInstance = Manual;
+
+    var
+        Assert: Codeunit "Library Assert";
+        LibraryInventory: Codeunit "Library - Inventory";
+        LibraryItemTracking: Codeunit "Library - Item Tracking";
+
+    [Test]
+    procedure ItemTracing_OriginToUsage_ReturnsTreeAndWritesNothing()
+    var
+        Item: Record Item;
+        LedgerEntry: Record "Item Ledger Entry";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Root: JsonObject;
+        Child: JsonObject;
+        EntriesBefore: Integer;
+    begin
+        // [GIVEN] A lot received with 5 and used with 2.
+        EnableTracking();
+        CreateLotItem(Item);
+        PostLot(Item."No.", 'ITR-LOT-A', 5, "Item Ledger Entry Type"::"Positive Adjmt.");
+        PostLot(Item."No.", 'ITR-LOT-A', -2, "Item Ledger Entry Type"::"Negative Adjmt.");
+        EntriesBefore := LedgerEntry.Count();
+        // [WHEN] The lot is traced from origin to usage.
+        RequestJson.Add('lotNo', 'ITR-LOT-A');
+        RequestJson.Add('itemNo', Item."No.");
+        ResponseJson := CallTrace(RequestJson);
+        // [THEN] The tree has the receipt at level 0 and the use below it, with quantity and entry type.
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('originToUsage', ReadText(ResponseJson, 'direction'), 'direction');
+        Assert.IsTrue(FindNode(ResponseJson, 'Positive Adjmt.', Root), 'receipt node');
+        Assert.IsTrue(FindNode(ResponseJson, 'Negative Adjmt.', Child), 'use node');
+        Assert.AreEqual(0, ReadInteger(Root, 'level'), 'root level');
+        Assert.AreEqual(1, ReadInteger(Child, 'level'), 'child level');
+        Assert.AreEqual(ReadInteger(Root, 'entryNo'), ReadInteger(Child, 'parentEntryNo'), 'parent link');
+        Assert.AreEqual(5, ReadDecimal(Root, 'quantity'), 'receipt quantity');
+        Assert.AreEqual(-2, ReadDecimal(Child, 'quantity'), 'use quantity');
+        Assert.AreEqual('ITR-LOT-A', ReadText(Root, 'lotNo'), 'lotNo');
+        Assert.AreEqual(Item."No.", ReadText(Root, 'itemNo'), 'itemNo');
+        Assert.AreEqual(ReadInteger(ResponseJson, 'nodeCount'), ReadArray(ResponseJson, 'nodes').Count(), 'nodeCount');
+        // [THEN] Nothing was written.
+        Assert.AreEqual(EntriesBefore, LedgerEntry.Count(), 'read only');
+    end;
+
+    [Test]
+    procedure ItemTracing_UsageToOrigin_ReturnsUseAndItsOrigin()
+    var
+        Item: Record Item;
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        Node: JsonObject;
+    begin
+        // [GIVEN] A lot received with 4 and used with 1.
+        EnableTracking();
+        CreateLotItem(Item);
+        PostLot(Item."No.", 'ITR-LOT-B', 4, "Item Ledger Entry Type"::"Positive Adjmt.");
+        PostLot(Item."No.", 'ITR-LOT-B', -1, "Item Ledger Entry Type"::"Negative Adjmt.");
+        // [WHEN] The lot is traced from usage to origin (any case).
+        RequestJson.Add('lotNo', 'ITR-LOT-B');
+        RequestJson.Add('direction', 'UsageToOrigin');
+        ResponseJson := CallTrace(RequestJson);
+        // [THEN] The use is a root and the origin is reached from it.
+        Assert.AreEqual('Success', ReadText(ResponseJson, 'status'), ReadText(ResponseJson, 'error'));
+        Assert.AreEqual('usageToOrigin', ReadText(ResponseJson, 'direction'), 'direction');
+        Assert.IsTrue(FindNode(ResponseJson, 'Negative Adjmt.', Node), 'use node');
+        Assert.IsTrue(FindNode(ResponseJson, 'Positive Adjmt.', Node), 'origin node');
+    end;
+
+    [Test]
+    procedure ItemTracing_NeitherLotNorSerial_RefusedAsMissingParameter()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        RequestJson.Add('direction', 'originToUsage');
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('MissingParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure ItemTracing_InvalidInput_RefusedWithNextStep()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        // [WHEN] The direction is unknown.
+        RequestJson.Add('lotNo', 'X');
+        RequestJson.Add('direction', 'sideways');
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'direction nextStep');
+        // [WHEN] The lot carries filter characters.
+        Clear(RequestJson);
+        RequestJson.Add('lotNo', '*');
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'filter nextStep');
+        // [WHEN] A key is not part of the type.
+        Clear(RequestJson);
+        RequestJson.Add('lotNo', 'X');
+        RequestJson.Add('bogus', 1);
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('UnknownParameter', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        // [WHEN] A key is an object.
+        Clear(RequestJson);
+        RequestJson.Add('lotNo', ResponseJson);
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('InvalidParameterFormat', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+    end;
+
+    [Test]
+    procedure ItemTracing_UnknownLot_RefusedAsRecordNotFound()
+    var
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+    begin
+        RequestJson.Add('lotNo', 'ITR-NO-SUCH-LOT');
+        ResponseJson := CallTrace(RequestJson);
+        Assert.AreEqual('RecordNotFound', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure ItemTracing_AboveNodeCap_RefusedAsLimitExceeded()
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        RequestJson: JsonObject;
+        ResponseJson: JsonObject;
+        FirstEntryNo: Integer;
+        Index: Integer;
+    begin
+        // [GIVEN] 1001 ledger entries that carry one lot (written directly; the test run rolls them back).
+        EnableTracking();
+        if LedgerEntry.FindLast() then
+            FirstEntryNo := LedgerEntry."Entry No.";
+        for Index := 1 to 1001 do begin
+            Clear(LedgerEntry);
+            LedgerEntry."Entry No." := FirstEntryNo + Index;
+            LedgerEntry."Item No." := 'ITR-CAP';
+            LedgerEntry."Lot No." := 'ITR-CAP-LOT';
+            LedgerEntry."Entry Type" := LedgerEntry."Entry Type"::"Positive Adjmt.";
+            LedgerEntry.Quantity := 1;
+            LedgerEntry.Positive := true;
+            LedgerEntry."Posting Date" := WorkDate();
+            LedgerEntry.Insert();
+        end;
+        // [WHEN] The lot is traced.
+        RequestJson.Add('lotNo', 'ITR-CAP-LOT');
+        ResponseJson := CallTrace(RequestJson);
+        // [THEN] The call is refused above the node cap.
+        Assert.AreEqual('LimitExceeded', ReadText(ResponseJson, 'code'), ReadText(ResponseJson, 'error'));
+        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep');
+    end;
+
+    [Test]
+    procedure ItemTracing_Help_CoversRefusalsInBothLanguages()
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        TracingImpl: Codeunit "Item Tracing Get Impl ori";
+        Contract: JsonObject;
+        ContractText: Text;
+        EnglishNotes: Text;
+        IcelandicNotes: Text;
+        PreviousLanguage: Integer;
+    begin
+        Assert.IsTrue(ContractMgt.GetContract("Message Type ori"::"Inventory.ItemTracing.Get", Contract), 'contract');
+        Contract.WriteTo(ContractText);
+        Assert.IsTrue(ContractText.Contains('MissingParameter'), 'MissingParameter');
+        Assert.IsTrue(ContractText.Contains('LimitExceeded'), 'LimitExceeded');
+        Assert.IsTrue(ContractText.Contains('RecordNotFound'), 'RecordNotFound');
+        Assert.IsTrue(ContractText.Contains('PermissionDenied'), 'PermissionDenied');
+        Assert.IsTrue(Contract.Contains('examples'), 'examples');
+        Assert.IsFalse(ContractText.Contains('Item Tracing Mgt'), 'no codeunit names');
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(1033);
+        Assert.IsTrue(TracingImpl.GetNotes(EnglishNotes), 'English notes');
+        GlobalLanguage(1039);
+        Assert.IsTrue(TracingImpl.GetNotes(IcelandicNotes), 'Icelandic notes');
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNotes, IcelandicNotes, 'notes follow LCID 1039');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_QuestionMarkMatchingLot_IsRefusedInBothLanguages()
+    var
+        Item: Record Item;
+        Request: JsonObject;
+        Response: JsonObject;
+        KeyName: Text;
+        Keys: List of [Text];
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: WorkDate for posting only | Risk: None
+        // [GIVEN] A real lot that a question-mark wildcard would match.
+        EnableTracking();
+        CreateLotItem(Item);
+        PostLot(Item."No.", 'ITR-LOT1', 1, "Item Ledger Entry Type"::"Positive Adjmt.");
+        Request.Add('lotNo', 'ITR-LOT1');
+        Request.Add('itemNo', Item."No.");
+        Response := CallTrace(Request);
+        Assert.AreEqual('Success', ReadText(Response, 'status'), 'Exact lot exists');
+        Keys.Add('lotNo');
+        Keys.Add('serialNo');
+        Keys.Add('itemNo');
+        Keys.Add('variantCode');
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            foreach KeyName in Keys do begin
+                Clear(Request);
+                Request.Add('lotNo', 'ITR-LOT1');
+                if KeyName = 'lotNo' then
+                    Request.Replace(KeyName, 'ITR-LOT?')
+                else
+                    Request.Add(KeyName, '?');
+                // [WHEN] A wildcard is sent in any identifier.
+                Response := CallTrace(Request);
+                // [THEN] It is refused before native tracing can return another identifier.
+                Assert.AreEqual('InvalidParameter', ReadText(Response, 'code'), KeyName);
+                Assert.AreEqual(KeyName, ReadText(Response, 'parameter'), 'Invalid identifier');
+                Assert.IsTrue(ReadText(Response, 'nextStep').Contains('?'), 'Guidance names the wildcard');
+                Assert.IsFalse(Response.Contains('nodes'), 'No trace returned for a wildcard');
+            end;
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    [Test]
+    procedure Scenario_AC04_NoLedgerRead_HasLocalizedRecoveryGuidance()
+    var
+        LedgerEntry: Record "Item Ledger Entry";
+        TempArgument: Record "Message Argument ori" temporary;
+        LowerPermissions: Codeunit "Library - Lower Permissions";
+        TracingImpl: Codeunit "Item Tracing Get Impl ori";
+        Response: JsonObject;
+        EnglishNextStep: Text;
+        IcelandicNextStep: Text;
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: No date dependency | Risk: None
+        // [GIVEN] An enabled domain and a caller without ledger-read permission.
+        EnableTracking();
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
+            LowerPermissions.AddPermissionSet('Item UoM No ILE Test');
+            Assert.IsFalse(LedgerEntry.ReadPermission(), 'Ledger-read permission is absent');
+            TempArgument.Init();
+            TempArgument.Version := "Message Version ori"::"1.0";
+            TempArgument.ID := CreateGuid();
+            TempArgument.Insert(true);
+            // [WHEN] The real message implementation checks its gate.
+            TracingImpl.ExecuteBifrostTask(TempArgument);
+            Response := TempArgument.GetResponseJson();
+            LowerPermissions.SetOutsideO365Scope();
+            // [THEN] The permission refusal carries actionable, localized guidance.
+            Assert.AreEqual('PermissionDenied', ReadText(Response, 'code'), 'Permission code');
+            Assert.AreNotEqual('', ReadText(Response, 'nextStep'), 'Permission recovery');
+            if Language = 1033 then
+                EnglishNextStep := ReadText(Response, 'nextStep')
+            else
+                IcelandicNextStep := ReadText(Response, 'nextStep');
+        end;
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNextStep, IcelandicNextStep, 'Permission guidance is localized');
+    end;
+
+    [Test]
+    procedure Scenario_AC04_NativeFailure_HasLocalizedRecoveryGuidance()
+    var
+        FailureSubscriber: Codeunit "Item Tracing Get Tests";
+        Request: JsonObject;
+        Response: JsonObject;
+        EnglishNextStep: Text;
+        IcelandicNextStep: Text;
+        Language: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // Story #107, AC04 | Time: No date dependency | Risk: None
+        // [GIVEN] A scoped subscriber raises an error from the real native tracing path.
+        EnableTracking();
+        BindSubscription(FailureSubscriber);
+        Request.Add('lotNo', 'ITR-NATIVE-FAIL');
+        PreviousLanguage := GlobalLanguage();
+        foreach Language in TestLanguages() do begin
+            GlobalLanguage(Language);
+            // [WHEN] Dispatch runs native FindRecords and catches its error.
+            Response := CallTrace(Request);
+            // [THEN] The native error remains coded and gains localized recovery guidance.
+            Assert.AreEqual('BusinessCentralError', ReadText(Response, 'code'), 'Native code');
+            Assert.AreEqual('Item tracing native test failure.', ReadText(Response, 'error'), 'Native error preserved');
+            Assert.AreNotEqual('', ReadText(Response, 'nextStep'), 'Native recovery');
+            Assert.IsFalse(Response.Contains('nodes'), 'No partial trace');
+            if Language = 1033 then
+                EnglishNextStep := ReadText(Response, 'nextStep')
+            else
+                IcelandicNextStep := ReadText(Response, 'nextStep');
+        end;
+        UnbindSubscription(FailureSubscriber);
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreNotEqual(EnglishNextStep, IcelandicNextStep, 'Native guidance is localized');
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracing Mgt.", 'OnAfterInitSearchCriteria', '', false, false)]
+    local procedure FailNativeTracing(SerialNoFilter: Text; LotNoFilter: Text; PackageNoFilter: Text; ItemNoFilter: Text; var SearchCriteria: Option)
+    var
+        NativeFailureErr: Label 'Item tracing native test failure.', Locked = true;
+    begin
+        if LotNoFilter = 'ITR-NATIVE-FAIL' then
+            Error(NativeFailureErr);
+    end;
+
+    local procedure TestLanguages() Languages: List of [Integer]
+    begin
+        Languages.Add(1033);
+        Languages.Add(1039);
+    end;
+
+    local procedure EnableTracking()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+    begin
+        if not InventorySetup.Get() then
+            InventorySetup.InsertIfNotExists();
+        if InventorySetup."Item Tracking" then
+            exit;
+        InventorySetup.Validate("Item Tracking", true);
+        InventorySetup.Modify(true);
+    end;
+
+    local procedure CreateLotItem(var Item: Record Item)
+    begin
+        LibraryItemTracking.CreateLotItem(Item);
+    end;
+
+    local procedure PostLot(ItemNo: Code[20]; LotNo: Code[50]; Qty: Decimal; EntryType: Enum "Item Ledger Entry Type")
+    var
+        ItemJournalTemplate: Record "Item Journal Template";
+        ItemJournalBatch: Record "Item Journal Batch";
+        ItemJournalLine: Record "Item Journal Line";
+        ReservationEntry: Record "Reservation Entry";
+    begin
+        LibraryInventory.SelectItemJournalTemplateName(ItemJournalTemplate, ItemJournalTemplate.Type::Item);
+        LibraryInventory.SelectItemJournalBatchName(ItemJournalBatch, ItemJournalTemplate.Type::Item, ItemJournalTemplate.Name);
+        LibraryInventory.ClearItemJournal(ItemJournalTemplate, ItemJournalBatch);
+        LibraryInventory.CreateItemJournalLine(ItemJournalLine, ItemJournalTemplate.Name, ItemJournalBatch.Name, EntryType, ItemNo, Abs(Qty));
+        LibraryItemTracking.CreateItemJournalLineItemTracking(ReservationEntry, ItemJournalLine, '', LotNo, Abs(Qty));
+        LibraryInventory.PostItemJournalLine(ItemJournalTemplate.Name, ItemJournalBatch.Name);
+    end;
+
+    local procedure CallTrace(RequestJson: JsonObject) ResponseJson: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        RequestContent: BigText;
+        ResponseContent: BigText;
+        RequestText: Text;
+        ResponseText: Text;
+        ResponseContentType: Text[100];
+        TaskId: Guid;
+        MessageId: Guid;
+        ResponseTime: Duration;
+    begin
+        RequestJson.WriteTo(RequestText);
+        RequestContent.AddText(RequestText);
+        // Execute uses the setup default language; explicitly dispatch the locale under test.
+        Dispatcher.EnqueueAndProcess("Message Type ori"::"Inventory.ItemTracing.Get", "Message Version ori"::"1.0", '', '', 'application/json', RequestContent, TaskId, GlobalLanguage(), MessageId, ResponseContent, ResponseContentType, ResponseTime);
+        ResponseContent.GetSubText(ResponseText, 1);
+        ResponseJson.ReadFrom(ResponseText);
+    end;
+
+    local procedure FindNode(ResponseJson: JsonObject; EntryType: Text; var Found: JsonObject): Boolean
+    var
+        NodeToken: JsonToken;
+    begin
+        foreach NodeToken in ReadArray(ResponseJson, 'nodes') do
+            if ReadText(NodeToken.AsObject(), 'entryType') = EntryType then begin
+                Found := NodeToken.AsObject();
+                exit(true);
+            end;
+        exit(false);
+    end;
+
+    local procedure ReadText(Json: JsonObject; KeyName: Text): Text
+    var
+        Token: JsonToken;
+    begin
+        if not Json.Get(KeyName, Token) then
+            exit('');
+        if not Token.IsValue() then
+            exit('');
+        exit(Token.AsValue().AsText());
+    end;
+
+    local procedure ReadDecimal(Json: JsonObject; KeyName: Text): Decimal
+    var
+        Result: Decimal;
+    begin
+        if Evaluate(Result, ReadText(Json, KeyName), 9) then
+            exit(Result);
+        exit(0);
+    end;
+
+    local procedure ReadInteger(Json: JsonObject; KeyName: Text): Integer
+    begin
+        exit(Round(ReadDecimal(Json, KeyName), 1));
+    end;
+
+    local procedure ReadArray(Json: JsonObject; KeyName: Text): JsonArray
+    var
+        Token: JsonToken;
+        Empty: JsonArray;
+    begin
+        if not Json.Get(KeyName, Token) then
+            exit(Empty);
+        if not Token.IsArray() then
+            exit(Empty);
+        exit(Token.AsArray());
+    end;
+}

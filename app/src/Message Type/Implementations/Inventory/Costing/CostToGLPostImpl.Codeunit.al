@@ -129,6 +129,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         Parameter: JsonObject;
     begin
@@ -142,6 +143,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Parameters.Add(Parameter);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'G/L journal template name required when General Ledger Setup requires a journal template.'));
         Parameters.Add(ContractMgt.Parameter('journalBatchName', 'string', false, 'G/L journal batch with a number series, required with journalTemplateName.'));
+        Parts.AddExpectedCountParameter(Parts.CountUnitCostToGL(), Parameters);
         exit(true);
     end;
 
@@ -170,12 +172,14 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>True when this chapter is supplied.</returns>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         Changes: JsonToken;
     begin
         Clear(Effect);
         Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"BIFROST Full ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
         Effect.Get('changes', Changes);
         Effect.Replace('changes', Changes.AsValue().AsText() + ' ' + ConfirmationCountNote());
+        Parts.AddCountUnit(Parts.CountUnitCostToGL(), Effect);
         exit(true);
     end;
 

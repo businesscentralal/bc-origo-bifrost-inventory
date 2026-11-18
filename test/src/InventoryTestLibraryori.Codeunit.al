@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
@@ -23,6 +24,23 @@ codeunit 96902 "Inventory Test Library ori"
         if IsInitialized then
             exit;
         IsInitialized := true;
+    end;
+
+    /// <summary>Advances the Microsoft test-library sequence beyond existing generated G/L accounts on a reused test company.</summary>
+    procedure PrepareLibraryGLAccountNumbers()
+    var
+        GLAccount: Record "G/L Account";
+        LibraryUtility: Codeunit "Library - Utility";
+        GeneratedNo: Code[20];
+    begin
+        // Library - ERM pads its generated code after Library - Utility checks the unpadded value.
+        // Consume the sequence past the largest existing padded account without deleting tenant data.
+        GLAccount.SetFilter("No.", '1GU????????000000000');
+        if not GLAccount.FindLast() then
+            exit;
+        repeat
+            GeneratedNo := PadStr('1' + LibraryUtility.GenerateGUID(), MaxStrLen(GLAccount."No."), '0');
+        until GeneratedNo > GLAccount."No.";
     end;
 
     /// <summary>Explicitly enables the reservation domain for a test of its independent behavior or permissions.</summary>
