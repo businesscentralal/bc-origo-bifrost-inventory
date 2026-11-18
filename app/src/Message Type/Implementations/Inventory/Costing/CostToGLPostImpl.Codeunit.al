@@ -31,8 +31,10 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
+        if not CheckUnsupportedParameters(Argument, RequestJson) then
+            exit;
         Process.SetOperation('CostToGLPost');
-        Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'documentNoFilter'),
+        Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'postingDateFilter'),
             CopyStr(ReadText(RequestJson, 'journalTemplateName'), 1, 10), CopyStr(ReadText(RequestJson, 'journalBatchName'), 1, 10));
         // Posting is an independent transaction, including when the caller requests Omit Commit.
         Commit();
@@ -60,6 +62,21 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         KeywordsLbl: Label 'post inventory cost,general ledger,cost posting', Comment = 'is-IS=bóka birgðakostnað,fjárhagur,kostnaðarbókun';
     begin
         exit(KeywordsLbl);
+    end;
+
+    local procedure CheckUnsupportedParameters(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean
+    var
+        ParameterName: Text;
+        UnknownErr: Label 'The parameter is not supported by this operation.', Comment = 'is-IS=Færibreytan er ekki studd af þessari aðgerð.';
+        ExpectedLbl: Label 'Only parameters listed in this message contract.', Comment = 'is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.';
+        NextStepLbl: Label 'Remove the unsupported parameter and send the request again. Nothing was run.', Comment = 'is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.';
+    begin
+        foreach ParameterName in RequestJson.Keys() do
+            if ParameterName in ['documentNoFilter'] then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::UnknownParameter, UnknownErr, CopyStr(ParameterName, 1, 250), '', ExpectedLbl, NextStepLbl);
+                exit(false);
+            end;
+        exit(true);
     end;
 
     local procedure ReadText(RequestJson: JsonObject; Name: Text): Text
@@ -121,7 +138,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
         Clear(Parameter);
-        Parameter := ContractMgt.Parameter('documentNoFilter', 'string', false, 'Document number filter in Business Central filter syntax; combined with itemNoFilter before posting.');
+        Parameter := ContractMgt.Parameter('postingDateFilter', 'string', false, 'Posting date filter in Business Central filter syntax, for example 01-01-26..31-01-26; combined with itemNoFilter, only matching pending value entries are selected. documentNoFilter is not a filter and is refused.');
         Parameter.Add('default', '');
         Parameters.Add(Parameter);
         Parameters.Add(ContractMgt.Parameter('journalTemplateName', 'string', false, 'G/L journal template name required when General Ledger Setup requires a journal template.'));
@@ -136,7 +153,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetResponse(var Response: JsonObject): Boolean
     begin
         Clear(Response);
-        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after native posting completes; inspect the counts for entries not posted."},{"name":"itemNoFilter","type":"string","description":"Applied item filter."},{"name":"documentNoFilter","type":"string","description":"Applied document filter."},{"name":"postedValueEntryCount","type":"integer","description":"Selected pending value entries removed by successful native posting."},{"name":"remainingValueEntryCount","type":"integer","description":"Selected pending value entries still not posted; review the native posting setup and entries."},{"name":"posted","type":"boolean","description":"True only when at least one selected pending value entry was posted."}]}');
+        Response.ReadFrom('{"contentType":"text/json","fields":[{"name":"status","type":"string","description":"Success after native posting completes; inspect the counts for entries not posted."},{"name":"itemNoFilter","type":"string","description":"Applied item filter."},{"name":"postingDateFilter","type":"string","description":"Applied posting date filter."},{"name":"postedValueEntryCount","type":"integer","description":"Selected pending value entries removed by successful native posting."},{"name":"remainingValueEntryCount","type":"integer","description":"Selected pending value entries still not posted; review the native posting setup and entries."},{"name":"posted","type":"boolean","description":"True only when at least one selected pending value entry was posted."}]}');
         exit(true);
     end;
 
@@ -156,9 +173,12 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Parts: Codeunit "Inventory Contract Parts ori";
+        Changes: JsonToken;
     begin
         Clear(Effect);
         Effect.ReadFrom('{"effect":"irreversible","writes":true,"posts":true,"changes":"Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.","idempotent":false,"permissionSet":"BIFROST Full ori","preconditions":["The company Costing domain and existing posting gate permit execution.","Standard report setup and caller permissions permit execution."]}');
+        Effect.Get('changes', Changes);
+        Effect.Replace('changes', Changes.AsValue().AsText() + ' ' + ConfirmationCountNote());
         Parts.AddCountUnit(Parts.CountUnitCostToGL(), Effect);
         exit(true);
     end;
@@ -203,8 +223,8 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post pending inventory cost for one item',
-            '{"type":"Inventory.CostToGL.Post","data":{"expectedCount":1,"itemNoFilter":"1000","documentNoFilter":""}}',
-            '{"status":"Success","itemNoFilter":"1000","documentNoFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
+            '{"type":"Inventory.CostToGL.Post","data":{"expectedCount":1,"itemNoFilter":"1000","postingDateFilter":""}}',
+            '{"status":"Success","itemNoFilter":"1000","postingDateFilter":"","posted":true,"postedValueEntryCount":1,"remainingValueEntryCount":0}'));
         exit(true);
     end;
 
@@ -221,10 +241,18 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetNotes(var Notes: Text): Boolean
     var
-        NotesLbl: Label 'itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
+        NotesLbl: Label 'itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is not a parameter and is refused as UnknownParameter: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.', Comment = 'is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.';
     begin
         Notes := NotesLbl;
+        Notes += ' ' + ConfirmationCountNote();
         exit(true);
     end;
 
+
+    local procedure ConfirmationCountNote(): Text
+    var
+        CountNoteLbl: Label 'For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.', Comment = 'is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.';
+    begin
+        exit(CountNoteLbl);
+    end;
 }

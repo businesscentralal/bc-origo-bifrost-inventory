@@ -183,6 +183,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóti</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Variant Code - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Codeunit 4011415181 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
+          <source>For a named request subject, expectedCount counts the one cost adjustment run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
+          <target>Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method ConfirmationCountNote - NamedType CountNoteLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4011415181 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Adjusts item costs with an optional item or category filter and an explicit postToGL option.</source>
           <target>Leiðréttir vörukostnað með valkvæðri vöru- eða flokkssíu og skýru postToGL-vali.</target>
@@ -200,6 +206,60 @@
           <target>Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Keyrir Leiðrétta kostnað - vörufærslur fyrir síað safn vara og getur bókað leiðréttingarnar á fjárhag.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 1689413328" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNoFilter and itemCategoryFilter cannot both be used in the same run, as on the request page of report 795.</source>
+          <target>itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og itemCategoryFilter er ekki bæði notuð í sömu keyrslu, eins og á beiðnisíðu skýrslu 795.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 865625153" size-unit="char" translate="yes" xml:space="preserve">
+          <source>One of itemNoFilter or itemCategoryFilter, or neither.</source>
+          <target>Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Annaðhvort itemNoFilter eða itemCategoryFilter, eða hvorug.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 3018490224" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send only one of the two filters. Nothing was adjusted.</source>
+          <target>Sendu aðeins aðra síuna. Engu var breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu aðeins aðra síuna. Engu var breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BothNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2854723982" size-unit="char" translate="yes" xml:space="preserve">
+          <source>%1 is not a valid Business Central filter: %2</source>
+          <target>%1 er ekki gild Business Central sía: %2</target>
+          <note from="Developer" annotates="general" priority="2">%1 = parameter name, %2 = error text; is-IS=%1 er ekki gild Business Central sía: %2</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType BadFilterErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2084836106" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A valid Business Central filter on the item number or item category code.</source>
+          <target>Gild Business Central sía á vörunúmer eða vöruflokkskóða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gild Business Central sía á vörunúmer eða vöruflokkskóða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 2812565778 - NamedType 2888302359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Correct the filter and send the request again. Nothing was adjusted.</source>
+          <target>Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu síuna og sendu beiðnina aftur. Engu var breytt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckSelection - NamedType FilterNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 1668614503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter is not supported by this operation.</source>
+          <target>Færibreytan er ekki studd af þessari aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er ekki studd af þessari aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType UnknownErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only parameters listed in this message contract.</source>
+          <target>Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2089623868 - Method 3928184963 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unsupported parameter and send the request again. Nothing was run.</source>
+          <target>Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Process ori - Method CheckUnsupportedParameters - NamedType NextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2089623868 - Method 350505121 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
           <source>Valid costing setup and one item or category filter.</source>
@@ -2151,6 +2211,30 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmer. Subject er sama vörunúmer þegar lykillinn er ekki sendur; ólík vörunúmer í subject og itemNo er hafnað. Nauðsynlegt nema SystemId eða tableView velji vörurnar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost Get Impl ori - Method GetParameters - NamedType ItemNoDescriptionTxt</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 1668614503" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The parameter is not supported by this operation.</source>
+          <target>Færibreytan er ekki studd af þessari aðgerð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Færibreytan er ekki studd af þessari aðgerð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType UnknownErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 4120398360" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Only parameters listed in this message contract.</source>
+          <target>Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Aðeins færibreytur sem eru taldar upp í samningi þessara skilaboða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType ExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3928184963 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unsupported parameter and send the request again. Nothing was run.</source>
+          <target>Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óstuddu færibreytuna og sendu beiðnina aftur. Ekkert var keyrt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType NextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1727056033 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
+          <source>For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
+          <target>Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ConfirmationCountNote - NamedType CountNoteLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.</source>
           <target>Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.</target>
@@ -2164,9 +2248,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>itemNoFilter and documentNoFilter are combined before posting; empty filters select all pending entries. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
-          <target>itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og documentNoFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
+          <source>itemNoFilter and postingDateFilter are combined before posting; empty filters select all pending entries. documentNoFilter is not a parameter and is refused as UnknownParameter: the document number is not a selection filter. Native per-entry posting uses each entry document number. If G/L journal templates are mandatory, send journalTemplateName and journalBatchName with a valid number series. This Post call commits before its isolated native posting run even under Omit Commit. Success means the run completed: posted is true only if postedValueEntryCount is positive; remainingValueEntryCount identifies entries still requiring attention. No eligible entries returns posted=false and zero counts.</source>
+          <target>itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNoFilter og postingDateFilter eru sameinaðar áður en bókað er; tómar síur velja allar óbókaðar færslur. documentNoFilter er hafnað: fylgiskjalsnúmer er ekki valsía. Innbyggð bókun fyrir hverja færslu notar fylgiskjalsnúmer færslunnar. Ef fjárhagsbókarsniðmát er skylda skaltu senda journalTemplateName og journalBatchName með gildri númeraröð. Þetta Post kall staðfestir færsluna fyrir einangraða innbyggða bókun, einnig með Omit Commit. Success merkir að keyrslu lauk: posted er aðeins true ef postedValueEntryCount er jákvætt; remainingValueEntryCount sýnir færslur sem enn þarfnast athugunar. Engar gjaldgengar færslur skila posted=false og núllfjölda.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -2560,9 +2644,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountReadText - NamedType ReadLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 4168809885 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.</source>
-          <target>expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</note>
+          <source>For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.</source>
+          <target>Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitAdjustCost - NamedType UnitLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 3409385975 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
@@ -2572,9 +2656,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitAssemblyOrder - NamedType UnitLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 3215367762 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).</source>
-          <target>expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</note>
+          <source>For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).</source>
+          <target>Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitCostToGL - NamedType UnitLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1876113691 - NamedType 984818344" size-unit="char" translate="yes" xml:space="preserve">

@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Assembly.Document;
+using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Inventory.Costing;
@@ -192,11 +193,18 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Item: Record Item;
         Header: Record "Transfer Header";
         Helper: Codeunit "Transfer Order Test Helper";
+        LibraryInventory: Codeunit "Library - Inventory";
         Request: JsonObject;
         Response: JsonObject;
         Token: JsonToken;
     begin
-        Helper.SetupLocationsAndItem(FromLocation, ToLocation, InTransit, Item, 10);
+        LibraryInventory.CreateItem(Item);
+        CreateOwnedLocation(FromLocation, Item."Inventory Posting Group");
+        CreateOwnedLocation(ToLocation, Item."Inventory Posting Group");
+        CreateOwnedLocation(InTransit, Item."Inventory Posting Group");
+        InTransit.Validate("Use As In-Transit", true);
+        InTransit.Modify(true);
+        Helper.CreatePositiveAdjustment(Item."No.", FromLocation.Code, 10);
         Helper.CreateTransferHeader(Header, FromLocation.Code, ToLocation.Code, InTransit.Code);
         Helper.CreateTransferLine(Header, Item."No.", 2);
         Codeunit.Run(Codeunit::"Release Transfer Document", Header);
@@ -263,7 +271,6 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         TempArgument: Record "Message Argument ori" temporary;
         CalculateValue: Report "Calculate Inventory Value";
         LibraryInventory: Codeunit "Library - Inventory";
-        Helper: Codeunit "Transfer Order Test Helper";
         Journal: Codeunit "Inventory Native Journal ori";
         Request: JsonObject;
         Response: JsonObject;
@@ -315,7 +322,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Clear(Item);
         CreateStock(Item, 10);
         CreateBatch(Batch, "Item Journal Template Type"::Transfer);
-        Helper.CreateLocationWithPostingSetup(Location, false);
+        CreateOwnedLocation(Location, Item."Inventory Posting Group");
         LibraryInventory.CreateItemJournalLine(Line, Batch."Journal Template Name", Batch.Name, Line."Entry Type"::Transfer, Item."No.", 2);
         Line.Validate("New Location Code", Location.Code);
         Line.Modify(true);
@@ -326,6 +333,44 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         Item.SetRange("Location Filter", Location.Code);
         Item.CalcFields(Inventory);
         Assert.AreEqual(2, Item.Inventory, 'Confirmed native reclassification moves the owned stock.');
+    end;
+
+    local procedure CreateOwnedLocation(var Location: Record Location; InventoryPostingGroup: Code[20])
+    var
+        PostingSetup: Record "Inventory Posting Setup";
+    begin
+        // Library - ERM pads a sequence into the account number without checking the final key.
+        // Use owned GUID keys instead; existing accounts and their posting setup remain untouched.
+        repeat
+            Clear(Location);
+            Location.Init();
+            Location.Code := CopyStr('X' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(Location.Code));
+        until not Location.Get(Location.Code);
+        Location.Name := Location.Code;
+        Location.Insert(true);
+        PostingSetup.Init();
+        PostingSetup.Validate("Location Code", Location.Code);
+        PostingSetup.Validate("Invt. Posting Group Code", InventoryPostingGroup);
+        PostingSetup.Validate("Inventory Account", CreateOwnedGLAccount());
+        PostingSetup.Validate("Inventory Account (Interim)", CreateOwnedGLAccount());
+        PostingSetup.Validate("WIP Account", CreateOwnedGLAccount());
+        PostingSetup.Validate("Material Variance Account", CreateOwnedGLAccount());
+        PostingSetup.Validate("Capacity Variance Account", CreateOwnedGLAccount());
+        PostingSetup.Insert(true);
+    end;
+
+    local procedure CreateOwnedGLAccount(): Code[20]
+    var
+        Account: Record "G/L Account";
+    begin
+        repeat
+            Clear(Account);
+            Account.Init();
+            Account."No." := CopyStr('X' + DelChr(Format(CreateGuid(), 0, 4), '=', '-'), 1, MaxStrLen(Account."No."));
+        until not Account.Get(Account."No.");
+        Account.Validate(Name, Account."No.");
+        Account.Insert(true);
+        exit(Account."No.");
     end;
 
     local procedure ConfirmAndRun(MessageType: Enum "Message Type ori"; Subject: Text[250]; Request: JsonObject; var Response: JsonObject)
@@ -481,7 +526,10 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
-                            // [WHEN] Dispatch a named target without confirmation; Foundation must refuse before the handler.
+                            // An unnamed request is deliberately left to handler validation by Foundation #1278.
+                            Response := DispatchWithSubject(MessageType, '', Request);
+                            AssertText(Response, 'code', 'InvalidParameter');
+                            // [WHEN] A named subject is previewed before the handler or any record lookup.
                             Response := Dispatch(MessageType, Request);
                             if SupportsConfirmation then begin
                                 AssertText(Response, 'code', 'ConfirmationRequired');

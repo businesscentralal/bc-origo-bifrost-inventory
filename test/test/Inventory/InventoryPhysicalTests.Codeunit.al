@@ -32,9 +32,124 @@ codeunit 96944 "Inventory Physical Tests"
 
     [Test]
     [HandlerFunctions('CostPostMessageHandler')]
-    procedure CostToGL_AppliesDocumentAndItemFilters()
+    procedure CostToGL_AppliesDateAndItemFilters()
     begin
         VerifyCostToGLPosting(true);
+    end;
+
+    [Test]
+    [HandlerFunctions('CostPostMessageHandler')]
+    procedure CostToGL_PostingDateOutsideSelection_PostsNothing()
+    var
+        Item: Record Item;
+        ValueEntry: Record "Value Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        // The posting date filter is a real pending-entry selection: a date range without entries posts nothing.
+        CreateStock(Item);
+        Request.Add('itemNoFilter', Item."No.");
+        Request.Add('postingDateFilter', Format(CalcDate('<+10Y>', WorkDate()), 0, 9));
+        Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
+        Response.Get('posted', Token);
+        Assert.IsFalse(Token.AsValue().AsBoolean(), 'No pending entry has that posting date.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.FindFirst();
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'The entry stays unposted.');
+    end;
+
+    [Test]
+    procedure CostToGL_DocumentNoFilter_RefusedBeforePosting()
+    var
+        Item: Record Item;
+        ValueEntry: Record "Value Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        CreateStock(Item);
+        Request.Add('itemNoFilter', Item."No.");
+        Request.Add('documentNoFilter', 'X');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.CostToGL.Post", Request, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('UnknownParameter', Token.AsValue().AsText(), 'documentNoFilter is not a selection filter.');
+        Response.Get('parameter', Token);
+        Assert.AreEqual('documentNoFilter', Token.AsValue().AsText(), 'The refused parameter is named.');
+        ValueEntry.SetRange("Item No.", Item."No.");
+        ValueEntry.FindFirst();
+        Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Nothing was posted.');
+    end;
+
+    [Test]
+    procedure AdjustCost_UnsupportedControls_RefusedBeforeRun()
+    var
+        Item: Record Item;
+        ValueEntry: Record "Value Entry";
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        Names: List of [Text];
+        Name: Text;
+        EntryCount: Integer;
+    begin
+        CreateStock(Item);
+        EntryCount := ValueEntry.Count();
+        Names.Add('postingDate');
+        Names.Add('inventoryPostingGroup');
+        Names.Add('itemByItem');
+        foreach Name in Names do begin
+            Clear(Request);
+            Clear(Response);
+            Request.Add('itemNoFilter', Item."No.");
+            Request.Add(Name, 'x');
+            Helper.ProcessMessage("Message Type ori"::"Inventory.AdjustCost.Run", Request, Response);
+            Response.Get('code', Token);
+            Assert.AreEqual('UnknownParameter', Token.AsValue().AsText(), Name + ' is refused.');
+            Response.Get('parameter', Token);
+            Assert.AreEqual(Name, Token.AsValue().AsText(), Name + ' is named.');
+        end;
+        Assert.AreEqual(EntryCount, ValueEntry.Count(), 'Refusals before execution write nothing.');
+    end;
+
+    [Test]
+    procedure AdjustCost_BothFilters_RefusedBeforeRun()
+    var
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+    begin
+        Request.Add('itemNoFilter', '1000');
+        Request.Add('itemCategoryFilter', 'X');
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AdjustCost.Run", Request, Response);
+        Response.Get('code', Token);
+        Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Both filters are refused before the report runs.');
+    end;
+
+    [Test]
+    procedure AdjustCost_ReportsItemsProcessed()
+    var
+        Item: Record Item;
+        Helper: Codeunit "Assembly Order Test Helper";
+        Request: JsonObject;
+        Response: JsonObject;
+        Token: JsonToken;
+        ResponseText: Text;
+    begin
+        CreateStock(Item);
+        Request.Add('itemNoFilter', Item."No.");
+        Helper.ProcessMessage("Message Type ori"::"Inventory.AdjustCost.Run", Request, Response);
+        Response.WriteTo(ResponseText);
+        Response.Get('status', Token);
+        Assert.AreEqual('Success', Token.AsValue().AsText(), ResponseText);
+        Response.Get('itemsProcessed', Token);
+        Assert.AreEqual(1, Token.AsValue().AsInteger(), 'Exactly the filtered item is in scope.');
+        Response.Get('errors', Token);
+        Assert.AreEqual(0, Token.AsArray().Count(), 'No report errors.');
     end;
 
     [MessageHandler]
@@ -43,7 +158,7 @@ codeunit 96944 "Inventory Physical Tests"
         // Native report statistics; posting and selection are asserted from actual ledgers below.
     end;
 
-    local procedure VerifyCostToGLPosting(UseDocumentFilter: Boolean)
+    local procedure VerifyCostToGLPosting(UseDateFilter: Boolean)
     var
         Item: Record Item;
         OtherItem: Record Item;
@@ -69,10 +184,10 @@ codeunit 96944 "Inventory Physical Tests"
         OtherEntryNo := OtherValueEntry."Entry No.";
         Assert.AreEqual(0, ValueEntry."Cost Posted to G/L", 'Owned selected cost is unposted.');
         Assert.AreEqual(0, OtherValueEntry."Cost Posted to G/L", 'Owned other cost is unposted.');
-        if UseDocumentFilter then begin
-            Assert.AreNotEqual(ValueEntry."Document No.", OtherValueEntry."Document No.", 'Own fixture documents differ.');
-            Request.Add('itemNoFilter', Item."No." + '|' + OtherItem."No.");
-            Request.Add('documentNoFilter', ValueEntry."Document No.");
+        if UseDateFilter then begin
+            // Date selection: both items carry value entries on the same date, so the item filter alone picks one.
+            Request.Add('itemNoFilter', Item."No.");
+            Request.Add('postingDateFilter', Format(ValueEntry."Posting Date", 0, 9));
         end else
             Request.Add('itemNoFilter', Item."No.");
         BeforeCount := GLEntry.Count();

@@ -930,6 +930,87 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LibraryAssert.AreEqual(ExpectedJson, ActualJson, 'Inventory and legacy Item helper chapter payloads match: ' + Chapter + '.');
     end;
 
+    /// <summary>Checks the pre-report refusal codes advertised by AdjustCost help.</summary>
+    [Test]
+    procedure AdjustCostErrors_DescribePreReportValidation()
+    var
+        Implementation: Codeunit "Adjust Cost Run Impl ori";
+        Errors: JsonArray;
+        Entry: JsonToken;
+        CodeToken: JsonToken;
+        WhenToken: JsonToken;
+        WhenText: Text;
+        PreviousLanguage: Integer;
+        LanguageId: Integer;
+    begin
+        // PR #214 finding 4 | Time: none | Risk: metadata only.
+        PreviousLanguage := GlobalLanguage();
+        for LanguageId := 1033 to 1039 do
+            if LanguageId in [1033, 1039] then begin
+                GlobalLanguage(LanguageId);
+                Implementation.GetErrors(Errors);
+                foreach Entry in Errors do begin
+                    Entry.AsObject().Get('code', CodeToken);
+                    Entry.AsObject().Get('when', WhenToken);
+                    WhenText := WhenToken.AsValue().AsText();
+                    case CodeToken.AsValue().AsText() of
+                        'InvalidParameterFormat':
+                            LibraryAssert.AreEqual('A filter is not text or postToGL is not a JSON boolean.', WhenText, 'Only scalar format failures use InvalidParameterFormat.');
+                        'InvalidParameter':
+                            begin
+                                LibraryAssert.IsTrue(WhenText.Contains('both effective filters'), 'Both-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsTrue(WhenText.Contains('filter is invalid'), 'Invalid-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsTrue(WhenText.Contains('before the report runs'), 'Selection validation precedes report execution.');
+                            end;
+                        'BusinessCentralError':
+                            LibraryAssert.IsFalse(WhenText.Contains('for example when itemNoFilter'), 'Report errors must not claim the pre-report selection refusals.');
+                    end;
+                end;
+            end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
+    /// <summary>Both locales name the confirmation unit and disclose the unnamed-request boundary.</summary>
+    [Test]
+    procedure CostingContracts_NameConfirmationUnitsInBothLocales()
+    var
+        Implementation: Interface "Msg Contract ori";
+        MessageType: Enum "Message Type ori";
+        Effect: JsonObject;
+        Changes: JsonToken;
+        Notes: Text;
+        EnglishNotes: Text;
+        PreviousLanguage: Integer;
+        TypeName: Text;
+        Types: List of [Text];
+    begin
+        // PR #214 finding 5 | Time: none | Risk: metadata only.
+        Types.Add('Inventory.AdjustCost.Run');
+        Types.Add('Inventory.CostToGL.Post');
+        PreviousLanguage := GlobalLanguage();
+        foreach TypeName in Types do begin
+            MessageType := Enum::"Message Type ori".FromInteger(OrdinalOf(TypeName));
+            Implementation := MessageType;
+            GlobalLanguage(1033);
+            Implementation.GetNotes(EnglishNotes);
+            LibraryAssert.IsTrue(EnglishNotes.Contains('expectedCount counts the one'), 'English help names a single run.');
+            LibraryAssert.IsTrue(EnglishNotes.Contains('It does not bound the number of entries changed.'), 'Confirmation is not an entry limit.');
+            LibraryAssert.IsTrue(EnglishNotes.Contains('unnamed run'), 'Help discloses the Foundation no-subject boundary.');
+            Implementation.GetEffect(Effect);
+            Effect.Get('changes', Changes);
+            LibraryAssert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount counts the one'), 'Effect names the count unit.');
+            GlobalLanguage(1039);
+            Implementation.GetNotes(Notes);
+            LibraryAssert.AreNotEqual(EnglishNotes, Notes, 'Icelandic count help is localized.');
+            LibraryAssert.IsTrue(Notes.Contains('expectedCount'), 'Icelandic help names the confirmation key.');
+            LibraryAssert.IsTrue(Notes.Contains('(1)'), 'Icelandic help gives the one-run count.');
+            Implementation.GetEffect(Effect);
+            Effect.Get('changes', Changes);
+            LibraryAssert.IsTrue(Changes.AsValue().AsText().Contains('expectedCount'), 'Icelandic effect names the count unit.');
+        end;
+        GlobalLanguage(PreviousLanguage);
+    end;
+
     /// <summary>Foundation 28.0.13 adds a response field named code. The legacy helper does not declare it.</summary>
     local procedure StripFoundationResponseCode(var Actual: JsonToken; Expected: JsonToken)
     var
@@ -982,7 +1063,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertBooleanDefault(Contract, 'postToGL', false);
         LoadCostingContract('Inventory.CostToGL.Post', Contract);
         AssertStringDefault(Contract, 'itemNoFilter');
-        AssertStringDefault(Contract, 'documentNoFilter');
+        AssertStringDefault(Contract, 'postingDateFilter');
     end;
 
     /// <summary>Checks the report 795 filter constraint and array-shaped preconditions.</summary>
@@ -1026,8 +1107,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
         LoadCostingContract('Inventory.AdjustCost.Run', Contract);
         GetNamedMember(Contract, 'errors', 'code', 'BusinessCentralError', Error);
         Error.Get('when', ValueToken);
-        LibraryAssert.IsTrue(StrPos(ValueToken.AsValue().AsText(), 'Request scalar conversions are validated before the report') > 0, 'Native report failures are distinguished from preflight format errors.');
-        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead'), 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('after request formats and filter selection have passed validation'), 'Native report failures are distinguished from preflight format errors.');
+        LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('returned with code BusinessCentralError'), 'Caught report errors have an explicit response code.');
         GetNamedMember(Contract, 'errors', 'code', 'InvalidParameterFormat', Error);
         Error.Get('when', ValueToken);
         LibraryAssert.IsTrue(ValueToken.AsValue().AsText().Contains('postToGL'), 'The Boolean format refusal is explicitly documented.');
@@ -1039,7 +1120,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
             Error.Get('code', ValueToken);
             if ValueToken.AsValue().AsText() = 'BusinessCentralError' then begin
                 Error.Get('when', ValueToken);
-                DispatcherDistinctionFound := DispatcherDistinctionFound or ValueToken.AsValue().AsText().Contains('Direct invocation may raise instead');
+                DispatcherDistinctionFound := DispatcherDistinctionFound or (ValueToken.AsValue().AsText().Contains('normal Foundation scheduled-task error-handler path') and
+                    ValueToken.AsValue().AsText().Contains('Synchronous dispatcher execution does not itself invoke that scheduled failure handler'));
             end;
         end;
         LibraryAssert.IsTrue(DispatcherDistinctionFound, 'A coded error must retain the distinction between direct invocation and dispatcher responses.');
@@ -1075,7 +1157,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         RawChanges: JsonToken;
         Expected: Text;
     begin
-        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome.';
+        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome. For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.';
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
@@ -1295,7 +1377,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         AssertJsonText(Response, 'contentType', 'text/json');
         Response.Get('fields', Token);
         if TypeName = 'Inventory.AdjustCost.Run' then
-            LibraryAssert.AreEqual(4, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
+            LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Exact AdjustCost response field count.')
         else
             LibraryAssert.AreEqual(6, Token.AsArray().Count(), 'Exact CostToGL response field count.');
         GetNamedMember(Response, 'fields', 'name', 'status', Field);
@@ -1308,7 +1390,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
             GetNamedMember(Response, 'fields', 'name', 'postToGL', Field);
             AssertJsonText(Field, 'type', 'boolean');
         end else begin
-            GetNamedMember(Response, 'fields', 'name', 'documentNoFilter', Field);
+            GetNamedMember(Response, 'fields', 'name', 'postingDateFilter', Field);
             AssertJsonText(Field, 'type', 'string');
             GetNamedMember(Response, 'fields', 'name', 'postedValueEntryCount', Field);
             AssertJsonText(Field, 'type', 'integer');

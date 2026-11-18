@@ -77,6 +77,11 @@ codeunit 96935 "Inv. Count Unit Tests ori"
             Assert.IsTrue(Effect.Get('effect', Token), TypeName + ' declares an effect.');
             Assert.AreEqual('irreversible', Token.AsValue().AsText(), TypeName + ' stays irreversible.');
             Unit := Units.Get(Types.IndexOf(TypeName));
+            if TypeName in ['Inventory.AdjustCost.Run', 'Inventory.CostToGL.Post'] then
+                if LanguageId = 1039 then
+                    Assert.IsTrue(Unit.StartsWith('Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt'), TypeName + ' scopes the preview to named subjects requiring confirmation in Icelandic.')
+                else
+                    Assert.IsTrue(Unit.StartsWith('For named request subjects with Require Confirmation for Irreversible Messages on'), TypeName + ' scopes the preview to named subjects requiring confirmation in English.');
             Assert.AreNotEqual('', Unit, TypeName + ' has a count unit.');
             // [THEN] AC02: the sentence is translated at 1039 and English at 1033.
             if LanguageId = 1039 then

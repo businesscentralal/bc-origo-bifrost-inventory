@@ -921,7 +921,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
     /// <summary>Names what expectedCount counts for the AdjustCost type (#192).</summary>
     procedure CountUnitAdjustCost(): Text
     var
-        UnitLbl: Label 'expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.', Comment = 'is-IS=expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.';
+        UnitLbl: Label 'For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one cost adjustment run this call performs, not the items or entries the filters select.', Comment = 'is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina kostnaðarleiðréttingarkeyrslu sem kallið framkvæmir, ekki vörurnar eða færslurnar sem síurnar velja.';
     begin
         exit(UnitLbl);
     end;
@@ -929,7 +929,7 @@ codeunit 10076919 "Inventory Contract Parts ori"
     /// <summary>Names what expectedCount counts for the CostToGL type (#192).</summary>
     procedure CountUnitCostToGL(): Text
     var
-        UnitLbl: Label 'expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).', Comment = 'is-IS=expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).';
+        UnitLbl: Label 'For named request subjects with Require Confirmation for Irreversible Messages on, the following count and preview guidance applies: expectedCount counts the one posting run this call performs, not the pending value entries it selects (postedValueEntryCount and remainingValueEntryCount in the response report those).', Comment = 'is-IS=Fyrir beiðnir með nafngreindu subject þegar Require Confirmation for Irreversible Messages er virkt gilda eftirfarandi leiðbeiningar um fjölda og forskoðun: expectedCount telur eina bókunarkeyrslu sem kallið framkvæmir, ekki biðfærslurnar sem það velur (postedValueEntryCount og remainingValueEntryCount í svarinu segja til um þær).';
     begin
         exit(UnitLbl);
     end;
