@@ -1785,6 +1785,312 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu periods frá 1 til 53.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method ValidatePeriodCount - NamedType CountNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The Availability domain is turned off for this company.</source>
+          <target>Framboðssviðið er slökkt fyrir þetta fyrirtæki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
+          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1854797735 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Capable to promise needs an order promising template and worksheet.</source>
+          <target>Hægt að lofa þarf sniðmát og vinnublað pöntunarloforða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hægt að lofa þarf sniðmát og vinnublað pöntunarloforða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanUseCapable - NamedType SetupErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1854797735 - NamedType 2444855284" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fill in Order Promising Template and Order Promising Worksheet on the Order Promising Setup page, or send capableToPromise false.</source>
+          <target>Fylltu út Sniðmát pöntunarloforða og Vinnublað pöntunarloforða á síðunni Uppsetning pöntunarloforða, eða sendu capableToPromise false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fylltu út Sniðmát pöntunarloforða og Vinnublað pöntunarloforða á síðunni Uppsetning pöntunarloforða, eða sendu capableToPromise false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanUseCapable - NamedType SetupNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1854797735 - NamedType 315309378" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Capable to promise needs permission to insert and delete requisition lines.</source>
+          <target>Hægt að lofa þarf heimild til að stofna og eyða innkaupatillögulínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Hægt að lofa þarf heimild til að stofna og eyða innkaupatillögulínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanUseCapable - NamedType PermissionErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1854797735 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a Business Central permission set that can insert and delete requisition lines, or send capableToPromise false.</source>
+          <target>Úthlutaðu Business Central heimildasafni sem getur stofnað og eytt innkaupatillögulínum, eða sendu capableToPromise false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Business Central heimildasafni sem getur stofnað og eytt innkaupatillögulínum, eða sendu capableToPromise false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanUseCapable - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers the earliest date a quantity of an item can be promised and the quantity available on the requested date.</source>
+          <target>Svarar fyrstu dagsetningu sem hægt er að lofa magni af vöru og magninu sem er tiltækt á umbeðinni dagsetningu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar fyrstu dagsetningu sem hægt er að lofa magni af vöru og magninu sem er tiltækt á umbeðinni dagsetningu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 2408295350" size-unit="char" translate="yes" xml:space="preserve">
+          <source>itemNo, quantity or requestedDate is missing or empty.</source>
+          <target>itemNo, quantity eða requestedDate vantar eða er tómt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=itemNo, quantity eða requestedDate vantar eða er tómt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType MissingWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 570246867" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, quantity and requestedDate.</source>
+          <target>Sendu itemNo, quantity og requestedDate.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, quantity og requestedDate.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A key has the wrong JSON type, or requestedDate is not a date.</source>
+          <target>Lykill er á rangri JSON-gerð, eða requestedDate er ekki dagsetning.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykill er á rangri JSON-gerð, eða requestedDate er ekki dagsetning.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, variant and location as text, quantity as a number, requestedDate as YYYY-MM-DD and capableToPromise as true or false.</source>
+          <target>Sendu itemNo, variant og location sem texta, quantity sem tölu, requestedDate sem YYYY-MM-DD og capableToPromise sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, variant og location sem texta, quantity sem tölu, requestedDate sem YYYY-MM-DD og capableToPromise sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType FormatFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 2469653682" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The request contains a key this type does not read.</source>
+          <target>Beiðnin inniheldur lykil sem þessi tegund les ekki.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Beiðnin inniheldur lykil sem þessi tegund les ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType UnknownWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 1206737199" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, variant, location, quantity, requestedDate and capableToPromise.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, variant, location, quantity, requestedDate og capableToPromise.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, variant, location, quantity, requestedDate og capableToPromise.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType UnknownFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 1399190847" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number, variant, or location does not exist.</source>
+          <target>Vörunúmerið, afbrigðið eða staðsetningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið, afbrigðið eða staðsetningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType NotFoundWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 3952560250" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no., variant code and location code.</source>
+          <target>Athugaðu vörunúmerið, afbrigðiskóðann og staðsetningarkóðann.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið, afbrigðiskóðann og staðsetningarkóðann.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType NotFoundFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 3369630719" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity is 0 or below, or the Availability domain is turned off in Inventory Setup.</source>
+          <target>quantity er 0 eða lægra, eða slökkt er á framboðssviðinu í Uppsetningu birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity er 0 eða lægra, eða slökkt er á framboðssviðinu í Uppsetningu birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType QuantityWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 3306299578" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a quantity above 0, or turn on the Availability domain.</source>
+          <target>Sendu quantity yfir 0, eða kveiktu á framboðssviðinu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu quantity yfir 0, eða kveiktu á framboðssviðinu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType QuantityFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 3783082890" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item is Service or Non-Inventory, or capableToPromise is true and Order Promising Setup has no template or worksheet.</source>
+          <target>Varan er þjónusta eða ekki birgðavara, eða capableToPromise er true og Uppsetning pöntunarloforða hefur ekkert sniðmát eða vinnublað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er þjónusta eða ekki birgðavara, eða capableToPromise er true og Uppsetning pöntunarloforða hefur ekkert sniðmát eða vinnublað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType StockWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 2643944519" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an inventory item. For capable to promise, fill in Order Promising Template and Order Promising Worksheet on the Order Promising Setup page.</source>
+          <target>Notaðu birgðavöru. Fyrir hægt að lofa skaltu fylla út Sniðmát pöntunarloforða og Vinnublað pöntunarloforða á síðunni Uppsetning pöntunarloforða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu birgðavöru. Fyrir hægt að lofa skaltu fylla út Sniðmát pöntunarloforða og Vinnublað pöntunarloforða á síðunni Uppsetning pöntunarloforða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType StockFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 3806772855" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The caller cannot read items, variants, locations or company information, or cannot use the order promising worksheet when capableToPromise is true.</source>
+          <target>Kallandinn getur ekki lesið vörur, afbrigði, staðsetningar eða fyrirtækjaupplýsingar, eða getur ekki notað vinnublað pöntunarloforða þegar capableToPromise er true.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Kallandinn getur ekki lesið vörur, afbrigði, staðsetningar eða fyrirtækjaupplýsingar, eða getur ekki notað vinnublað pöntunarloforða þegar capableToPromise er true.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType PermissionWhenLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1158096087 - NamedType 4114032018" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set (extended by Inventory read permissions) and a Business Central permission set that can read these tables. Capable to promise also needs a permission set that can insert and delete requisition lines.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur. Hægt að lofa þarf einnig heimildasafn sem getur stofnað og eytt innkaupatillögulínum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst (með viðbótinni lesheimildir birgða) og Business Central heimildasafni sem getur lesið þessar töflur. Hægt að lofa þarf einnig heimildasafn sem getur stofnað og eytt innkaupatillögulínum.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetErrors - NamedType PermissionFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3255554567 - NamedType 1582893390" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask when 5 pieces can be promised</source>
+          <target>Spyrja hvenær hægt er að lofa 5 stykkjum</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Spyrja hvenær hægt er að lofa 5 stykkjum</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetExamples - NamedType TitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
+          <source>available to promise, capable to promise, order promising, delivery date, availability</source>
+          <target>tiltækt til loforðs, hægt að lofa, pöntunarloforð, afhendingardagur, framboð</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=tiltækt til loforðs, hægt að lofa, pöntunarloforð, afhendingardagur, framboð</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetKeywords - NamedType KeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3650283039 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity is in the base unit of measure. availableOnRequestedDate is the projected quantity on that day, without later receipts. earliestDate uses the Check-Avail. Period Calc. and Check-Avail. Time Bucket fields on Company Information, as Order Promising does, and leaves out drop shipments. earliestDate is on or after requestedDate; it is empty when the quantity is not available inside that horizon. With capableToPromise true, capable to promise is also run, and earliestDate is the earlier of the two dates; basis says which one. No order promising lines, reservations or document numbers are created, and the requisition lines capable to promise needs are deleted before the answer, so the call can be repeated freely. variant and location are exact codes, not filter expressions.</source>
+          <target>quantity er í grunnmælieiningu. availableOnRequestedDate er áætlað magn þann dag, án síðari móttöku. earliestDate notar reitina Útreikn. tímabils framboðsathugunar og Tímabil framboðsathugunar í Fyrirtækjaupplýsingum, eins og Pöntunarloforð gerir, og undanskilur beinar sendingar. earliestDate er sama dag eða eftir requestedDate; hún er tóm þegar magnið er ekki tiltækt innan þess tímabils. Með capableToPromise true er hægt að lofa einnig keyrt og earliestDate er fyrri dagsetningin af þeim tveimur; basis segir hvor. Engar pöntunarloforðslínur, fráteknir eða skjalanúmer eru stofnuð og innkaupatillögulínunum sem hægt að lofa þarf er eytt fyrir svarið, svo endurtaka má kallið að vild. variant og location eru nákvæmir kóðar, ekki síutjáningar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity er í grunnmælieiningu. availableOnRequestedDate er áætlað magn þann dag, án síðari móttöku. earliestDate notar reitina Útreikn. tímabils framboðsathugunar og Tímabil framboðsathugunar í Fyrirtækjaupplýsingum, eins og Pöntunarloforð gerir, og undanskilur beinar sendingar. earliestDate er sama dag eða eftir requestedDate; hún er tóm þegar magnið er ekki tiltækt innan þess tímabils. Með capableToPromise true er hægt að lofa einnig keyrt og earliestDate er fyrri dagsetningin af þeim tveimur; basis segir hvor. Engar pöntunarloforðslínur, fráteknir eða skjalanúmer eru stofnuð og innkaupatillögulínunum sem hægt að lofa þarf er eytt fyrir svarið, svo endurtaka má kallið að vild. variant og location eru nákvæmir kóðar, ekki síutjáningar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetNotes - NamedType NotesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2340569551 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers when a quantity of an item can be promised, as the Order Promising page does: the quantity available to promise on the requested date and the earliest date the whole quantity is available. Capable to promise is an option and is off by default. Nothing is kept.</source>
+          <target>Svarar hvenær hægt er að lofa magni af vöru, eins og síðan Pöntunarloforð gerir: magninu sem er tiltækt til loforðs á umbeðinni dagsetningu og fyrstu dagsetningu sem allt magnið er tiltækt. Hægt að lofa er valkostur og er sjálfgefið slökkt. Ekkert er geymt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar hvenær hægt er að lofa magni af vöru, eins og síðan Pöntunarloforð gerir: magninu sem er tiltækt til loforðs á umbeðinni dagsetningu og fyrstu dagsetningu sem allt magnið er tiltækt. Hægt að lofa er valkostur og er sjálfgefið slökkt. Ekkert er geymt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetOverview - NamedType OverviewLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 3938104762" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item number. Service and non-inventory items are refused.</source>
+          <target>Vörunúmerið. Þjónustuvörum og vörum sem eru ekki birgðavörur er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Vörunúmerið. Þjónustuvörum og vörum sem eru ekki birgðavörur er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType ItemNoLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 3631226591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A variant code of the item. Leave it out to include every variant. A variant that does not exist on the item is refused.</source>
+          <target>Afbrigðiskóði vörunnar. Slepptu honum til að taka öll afbrigði með. Afbrigði sem er ekki til á vörunni er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðiskóði vörunnar. Slepptu honum til að taka öll afbrigði með. Afbrigði sem er ekki til á vörunni er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType VariantLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 3629245473" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A location code. Leave it out to include every location. A location that does not exist is refused.</source>
+          <target>Staðsetningarkóði. Slepptu honum til að taka allar staðsetningar með. Staðsetningu sem er ekki til er hafnað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningarkóði. Slepptu honum til að taka allar staðsetningar með. Staðsetningu sem er ekki til er hafnað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType LocationLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 2174691427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The quantity to promise, in the base unit of measure of the item. It must be above 0.</source>
+          <target>Magnið sem á að lofa, í grunnmælieiningu vörunnar. Það verður að vera yfir 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Magnið sem á að lofa, í grunnmælieiningu vörunnar. Það verður að vera yfir 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType QuantityLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 1657806850" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The date the quantity is wanted, as YYYY-MM-DD.</source>
+          <target>Dagsetningin sem magnið er óskað, á forminu YYYY-MM-DD.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Dagsetningin sem magnið er óskað, á forminu YYYY-MM-DD.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType RequestedDateLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3615801952 - NamedType 210667022" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true also runs capable to promise, which looks at what could be supplied by new purchase, transfer or production. Off (false) by default.</source>
+          <target>true keyrir einnig hægt að lofa, sem skoðar hvað mætti útvega með nýjum innkaupum, flutningi eða framleiðslu. Slökkt (false) sjálfgefið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true keyrir einnig hægt að lofa, sem skoðar hvað mætti útvega með nýjum innkaupum, flutningi eða framleiðslu. Slökkt (false) sjálfgefið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetParameters - NamedType CapableLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 79446908 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Answers when a quantity of one item can be promised, like the Order Promising page.</source>
+          <target>Svarar hvenær hægt er að lofa magni af einni vöru, eins og síðan Pöntunarloforð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Svarar hvenær hægt er að lofa magni af einni vöru, eins og síðan Pöntunarloforð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetSelectionDescription - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3897248833 - NamedType 16173077" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item whose quantity is promised.</source>
+          <target>Varan sem magni er lofað af.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan sem magni er lofað af.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method GetTarget - NamedType TargetLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item does not exist.</source>
+          <target>Varan er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Varan er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 330585294" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the item no.</source>
+          <target>Athugaðu vörunúmerið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vörunúmerið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType ItemNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 2025010403" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The variant does not exist on the item.</source>
+          <target>Afbrigðið er ekki til á vörunni.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afbrigðið er ekki til á vörunni.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType VariantNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 2014308324" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the variant code.</source>
+          <target>Athugaðu afbrigðiskóðann.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu afbrigðiskóðann.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType VariantNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 631801445" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The location does not exist.</source>
+          <target>Staðsetningin er ekki til.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Staðsetningin er ekki til.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType LocationNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 1017105382" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the location code.</source>
+          <target>Athugaðu staðsetningarkóðann.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu staðsetningarkóðann.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType LocationNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 1122067359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Service and non-inventory items have no availability.</source>
+          <target>Þjónustuvörur og vörur sem eru ekki birgðavörur hafa ekkert framboð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þjónustuvörur og vörur sem eru ekki birgðavörur hafa ekkert framboð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType StockErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 2251724325 - NamedType 3583173545" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an inventory item.</source>
+          <target>Notaðu birgðavöru.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu birgðavöru.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method LoadItem - NamedType StockNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1296332747 - NamedType 1473162410" size-unit="char" translate="yes" xml:space="preserve">
+          <source>quantity must be above 0.</source>
+          <target>quantity verður að vera yfir 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=quantity verður að vera yfir 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method ReadQuantity - NamedType QuantityErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1296332747 - NamedType 2759986912" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send a quantity above 0, in the base unit of measure of the item.</source>
+          <target>Sendu quantity yfir 0, í grunnmælieiningu vörunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu quantity yfir 0, í grunnmælieiningu vörunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method ReadQuantity - NamedType QuantityNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3512842029 - NamedType 2912406318" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The key is not part of this message type.</source>
+          <target>Lykillinn er ekki hluti af þessari skilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lykillinn er ekki hluti af þessari skilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RejectUnknownKeys - NamedType UnknownKeyErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3512842029 - NamedType 2270216465" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove the unknown key. Allowed keys are itemNo, variant, location, quantity, requestedDate and capableToPromise.</source>
+          <target>Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, variant, location, quantity, requestedDate og capableToPromise.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Leyfðir lyklar eru itemNo, variant, location, quantity, requestedDate og capableToPromise.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3632409166 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The value has the wrong format.</source>
+          <target>Gildið er á röngu sniði.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Gildið er á röngu sniði.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondFormat - NamedType FormatErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 3632409166 - NamedType 26043952" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, variant and location as text, quantity as a number, requestedDate as YYYY-MM-DD and capableToPromise as true or false.</source>
+          <target>Sendu itemNo, variant og location sem texta, quantity sem tölu, requestedDate sem YYYY-MM-DD og capableToPromise sem true eða false.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, variant og location sem texta, quantity sem tölu, requestedDate sem YYYY-MM-DD og capableToPromise sem true eða false.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondFormat - NamedType FormatNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 223548439 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A required key is missing.</source>
+          <target>Nauðsynlegur lykill vantar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegur lykill vantar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondMissing - NamedType MissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 223548439 - NamedType 2259951957" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send itemNo, quantity and requestedDate.</source>
+          <target>Sendu itemNo, quantity og requestedDate.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu itemNo, quantity og requestedDate.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondMissing - NamedType MissingNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1117187318 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Permission denied for this inventory message type.</source>
+          <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondPermission - NamedType PermissionDeniedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2482523039 - Method 1117187318 - NamedType 1202302840" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.</source>
+          <target>Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method RespondPermission - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1869433643 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads item cost fields that are not exposed by the foundation app.</source>
           <target>Les kostnaðarreiti vöru sem grunnforritið birtir ekki.</target>
@@ -15578,6 +15884,18 @@
           <target>Tilgreinir hvort flutningspantanaskilaboð séu virk fyrir þetta fyrirtæki.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Tilgreinir hvort flutningspantanaskilaboð séu virk fyrir þetta fyrirtæki.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control TransferOrders - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 88444387 - Control 632791447 - Property 1968111052" size-unit="char" translate="yes" xml:space="preserve">
+          <source>While Bifrost setup mode is active for a session source, Data.Records.Set can write Inventory Setup, the only table Bifrost Inventory opens. Items, item cost and price fields, item categories, attributes, variants, stockkeeping units, price lists, reservation and tracking entries and item charge assignments stay refused; use the Inventory message types for them. Setup mode does not change permissions, the domain gate or what is protected when it is off.</source>
+          <target>Meðan uppsetningarhamur Bifröst er virkur fyrir uppruna setu getur Data.Records.Set skrifað í Uppsetningu birgða, einu töfluna sem Bifröst birgðir opna. Vörur, kostnaðar- og verðreitir vara, vöruflokkar, eiginleikar, afbrigði, birgðageymsluvörur, verðlistar, frátektar- og rakningarfærslur og úthlutun kostnaðarauka eru áfram lokuð; notaðu skilaboðategundir Birgða fyrir þau. Uppsetningarhamur breytir ekki heimildum, svæðahliðinu né því sem er varið þegar hann er óvirkur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Meðan uppsetningarhamur Bifröst er virkur fyrir uppruna setu getur Data.Records.Set skrifað í Uppsetningu birgða, einu töfluna sem Bifröst birgðir opna. Vörur, kostnaðar- og verðreitir vara, vöruflokkar, eiginleikar, afbrigði, birgðageymsluvörur, verðlistar, frátektar- og rakningarfærslur og úthlutun kostnaðarauka eru áfram lokuð; notaðu skilaboðategundir Birgða fyrir þau. Uppsetningarhamur breytir ekki heimildum, svæðahliðinu né því sem er varið þegar hann er óvirkur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control SetupModeHelp - Property InstructionalText</note>
+        </trans-unit>
+        <trans-unit id="Page 88444387 - Control 632791447 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Setup mode</source>
+          <target>Uppsetningarhamur</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Uppsetningarhamur</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Inventory Setup ori - Control SetupModeHelp - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 88444387 - Action 672734192 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Opens the guided setup for Bifrost Inventory.</source>

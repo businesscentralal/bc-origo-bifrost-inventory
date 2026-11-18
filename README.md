@@ -10,8 +10,8 @@
 
 ## Overview
 
-Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 95 Bifröst message
-types (85 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
+Bifrost Inventory is the inventory module of the Bifröst platform. It publishes 96 Bifröst message
+types (86 in the `Inventory.*` namespace) for inventory work that Bifrost Foundation does not cover: item attributes, transfer orders,
 assembly orders, item tracking, reservations, physical inventory, reclassification journals, item
 application, inventory periods, cost adjustment and posting to G/L, revaluation, item cost reads and
 unit price updates. An agent or an integration calls them through the same Queue → Task → Data API
@@ -36,6 +36,7 @@ and `Help.Implementation.Get` return the same list and each type's contract at r
 | `Inventory.ItemReference.Resolve` | Outbound | Resolve a barcode, customer or vendor item reference, item number, or GTIN |
 | `Inventory.ItemReference.Set` | Inbound | Create or update an item reference; preserve omitted descriptions/dates and refuse references assigned to another item |
 | `Inventory.AvailabilityByPeriod.Get` | Outbound | Read projected availability per day, week, month, quarter or year |
+| `Inventory.AvailableToPromise.Get` | Outbound | Answer the earliest date a quantity can be promised and the quantity on the requested date (Order Promising); capable to promise is optional, nothing is kept |
 | `Inventory.AgedInventory.Get` | Outbound | Read stock quantity and value per age bucket and item, paged |
 | `Inventory.AvailabilityByEvent.Get` | Outbound | Read dated supply/demand events, source documents and running projected inventory |
 | `Inventory.ItemCategory.Get` | Outbound | Read the item category tree, optionally with category attributes |
@@ -320,6 +321,7 @@ New objects: codeunit **10076940** `Avail. By Event Impl ori`, message enum valu
 | 10076844 | `MsgType.Reserv.Create.Ext ori` | Reservation types |
 | 10076845 | `MsgType.Reserv.EnumExt ori` | Reservation types |
 | 10076846 | `MsgType.TrackAvail.EnumExt ori` | `Inventory.TrackingAvailability.Get`, `Inventory.Tracking.Get` |
+| 10077000 | `MsgType.AvailToPromise.Ext ori` | `Inventory.AvailableToPromise.Get` |
 | 10076947 | `MsgType.PlanWksh.EnumExt ori` | `Inventory.PlanningWorksheet.Calculate`, `Inventory.PlanningWorksheet.CarryOut` |
 | 10076848 | `MsgType.ItemCreate.EnumExt ori` | `Inventory.Item.Create` |
 | 10076850 | `MsgType.StdCost.EnumExt ori` | `Inventory.StandardCost.Suggest` (10076938), `Inventory.StandardCost.Implement` (10076933) |
@@ -353,6 +355,7 @@ Physical inventory orders (#113) add codeunits **10076960–10076964**: `Phys Or
 | 10076849–10076856 | Assembly orders | Preview Post, Refresh Lines, Release, Reopen (+ process), Statistics, Create, Post |
 | 10076965–10076966 | Assembly reads | `Asm. To Order Get Impl ori`, `Assembly BOM Get Impl ori` |
 | 10076857 | Availability | `Avail. By Period Impl ori` |
+| 10077000 | Availability | `Avail. To Promise Impl ori` (`Inventory.AvailableToPromise.Get`) |
 | 10076858–10076866 | Costing | Adjust Cost Run (+ process), Cost Get, Cost To GL Post/Test, Cost Update, Reval Preview, Revaluation Calc, Revaluation Post |
 | 10076867–10076869 | Item application | Get, Reapply, Unapply |
 | 10076870–10076872 | Item categories | Get, Set (+ process) |

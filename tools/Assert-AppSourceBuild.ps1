@@ -169,8 +169,23 @@ function Get-BaselineProductReuseEvidence {
     }
 }
 
+function Get-AcceptedProductReuseRecord {
+    param($State)
+    # Finalize stores the reuse record it accepted in state.json (#237). After
+    # RunPipeline the baseline env and Apps evidence are not available.
+    if ($null -eq $State -or $null -eq $State.PSObject.Properties['productReuse'] -or $null -eq $State.productReuse) {
+        throw 'Product compile receipt missing and PipelineFinalize accepted no baseline product reuse; AppSource gate fails closed.'
+    }
+    return @{
+        baselineWorkflowRunId = [string]$State.productReuse.baselineWorkflowRunId
+        baselineWorkflowSHA = [string]$State.productReuse.baselineWorkflowSHA
+        packageFile = [string]$State.productReuse.packageFile
+        packageSha256 = [string]$State.productReuse.packageSha256
+    }
+}
+
 function Get-ProductReuseRequest {
-    param([string] $RepositoryRoot, $State)
+    param([string] $RepositoryRoot, $State, [switch] $FromAcceptedRecord)
     $hasAppReceipt = $false
     if ($null -ne $State -and $null -ne $State.receipts) {
         $hasAppReceipt = $null -ne $State.receipts.PSObject.Properties['app']
@@ -183,11 +198,17 @@ function Get-ProductReuseRequest {
     if (-not $untouched) {
         return $null
     }
-    $evidence = Get-BaselineProductReuseEvidence -RepositoryRoot $RepositoryRoot
-    if ($null -eq $evidence) {
-        throw 'Product compile receipt missing and baseline product reuse could not be verified from baseline env/Apps; AppSource gate fails closed.'
+    if ($FromAcceptedRecord) {
+        $evidence = Get-AcceptedProductReuseRecord -State $State
+        Write-Host ("AppSource gate: validating the baseline-reused product package Finalize accepted (app/ untouched; baselineRun={0}; baselineSHA={1})." -f $evidence.baselineWorkflowRunId, $evidence.baselineWorkflowSHA)
     }
-    Write-Host ("AppSource gate: accepting baseline-reused product package (app/ untouched; baselineRun={0}; baselineSHA={1})." -f $evidence.baselineWorkflowRunId, $evidence.baselineWorkflowSHA)
+    else {
+        $evidence = Get-BaselineProductReuseEvidence -RepositoryRoot $RepositoryRoot
+        if ($null -eq $evidence) {
+            throw 'Product compile receipt missing and baseline product reuse could not be verified from baseline env/Apps; AppSource gate fails closed.'
+        }
+        Write-Host ("AppSource gate: accepting baseline-reused product package (app/ untouched; baselineRun={0}; baselineSHA={1})." -f $evidence.baselineWorkflowRunId, $evidence.baselineWorkflowSHA)
+    }
     return @{
         allowed = $true
         appFolderUntouched = $true
@@ -508,7 +529,8 @@ if ($Stage -in @('Finalize', 'Pipeline', 'Signed')) {
         throw 'PipelineInitialize receipt missing before finalize/pipeline/signed.'
     }
     $state = Get-Content -LiteralPath $statePath -Raw -Encoding UTF8 | ConvertFrom-Json
-    $reuse = Get-ProductReuseRequest -RepositoryRoot $Root -State $state
+    # Only Finalize reads baseline env/Apps; Pipeline and Signed use the record it accepted (#237).
+    $reuse = Get-ProductReuseRequest -RepositoryRoot $Root -State $state -FromAcceptedRecord:($Stage -ne 'Finalize')
     if ($null -ne $reuse) {
         if ($Stage -eq 'Signed') {
             throw 'Signed stage requires a current-run product compile receipt; baseline reuse is not accepted.'
