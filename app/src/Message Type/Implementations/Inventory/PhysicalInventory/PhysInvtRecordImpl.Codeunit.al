@@ -288,7 +288,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
             'After the count is set Business Central recalculates the adjustment quantity (adjustmentQuantity) and the entry type of the line; result reports before, after, quantityCalculated and adjustmentQuantity per line. ' +
             'Inventory.PhysInventory.RecordCount refuses lineNo and quantity at the top level as unsupported keys. Inventory.PhysInventory.Record adds lineNo, quantity and quantityCalculated of the last counted line to the answer, and answers InvalidParameter for lineNo when data names a template, a batch and a lineNo that do not exist. Any other key is refused. ' +
             'The counts are committed with the answer; under Omit Commit the caller''s transaction commits instead. Under Omit Commit an error is raised to the caller instead of being answered with the error text. ' +
-            'The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs write permission on the Item Journal Line table. Use Inventory.PhysInventory.Calculate first to create the lines and Inventory.PhysInventory.Check afterwards.';
+            'The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as off) and the caller needs write permission on the Item Journal Line table. Use Inventory.PhysInventory.Calculate first to create the lines and Inventory.PhysInventory.Check afterwards.';
         exit(true);
     end;
 }

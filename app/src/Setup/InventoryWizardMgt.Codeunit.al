@@ -25,7 +25,7 @@ codeunit 10076927 "Inventory Wizard Mgt ori"
         exit(true);
     end;
 
-    /// <summary>Reads effective per-company domain states, including the all-enabled missing-row default.</summary>
+    /// <summary>Reads effective per-company domain states, a missing row counts as off.</summary>
     procedure ReadDomain(Domain: Enum "Inventory Domain ori"): Boolean
     var
         Setup: Record "Inventory Setup ori";

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-19) - Inventory domains off by default, Suggest Setup (#267)
+- New codeunit 10076950 `Inventory Suggest Setup ori`. Every Inventory domain switch is now off by default: the setup row (created on company initialization, on opening the page or by install) has every switch off, and a missing row counts as off (it used to count as on). The row no longer derives switches from usage when it is inserted.
+- New **Suggest Setup** action on Inventory Setup and in the setup wizard (domains step). It shows per domain whether the domain would be turned on or left off, with a reason, and applies only after confirmation; it never turns a switch off, so it is repeatable. Rules: Transfer Orders needs an in-transit location and two other locations, Assembly an item BOM component, Item Tracking an item with a tracking code, Item Charge an item charge, Inventory Period an inventory period, every other domain at least one item. Each rule is one filtered `IsEmpty`.
+- Install and upgrade run Suggest Setup once per company behind upgrade tag `Origo.Bifrost.Inventory-SuggestSetup-20261119` (registered in `OnGetPerCompanyUpgradeTags`), without confirmation and only for companies with no setup row; an existing row is never changed. Message types are listed when the switch is on and the user has the table permissions; execution is never refused for a switch (#36).
+- Tests: new codeunit 97900 `Inventory Suggest Setup Tests`; tests that assumed "no row = on" or usage-derived inserts were updated (`Inventory Setup Wizard Tests`, `Item Substitution Tests`, `Inventory Domain Usage Tests`). is-IS translations added. Texts and docs (README, docs/inventory.md) updated.
+
 ### Fixed (2026-11-19) - confirmation boundary costing selection (#36, PR #245)
 - Test codeunit 96978 now supplies an explicitly empty item selection to the AdjustCost and CostToGL boundary requests, which ignore Subject. Preconditions prove that neither an item nor a pending value entry matches the filter. Confirmed requests cannot adjust unrelated demo items on a reused company; the company-wide item-ledger and value-entry no-write assertions remain. No new object or product change.
 ### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)
