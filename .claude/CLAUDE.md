@@ -167,3 +167,8 @@ README "Objects" lists every object with its ID. In short:
 ## PR #238 setup-mode test ID reconciliation
 
 - `Inv Setup Mode Tests` uses codeunit 96929 (moved from 96997); main keeps `Posted Undo MCP Fixture ori` at 96997. Checked merged main and every open Inventory PR head on 17.11.2026. IDs 96924-96926, 96928, 96949, 96981 and 96990 remain reserved by other open PRs.
+
+## Issue 266 help object claims
+
+- Codeunit 10076950 `Phys. Count Record Impl ori` provides a distinct RecordCount description and delegates execution to 10076882. Checked main and open Inventory PRs (none) on 19.11.2026.
+- Test codeunit 97900 `Inv. 266 Help Tests ori`, within the second test range allocated in #261.

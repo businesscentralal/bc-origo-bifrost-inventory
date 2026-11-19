@@ -219,12 +219,14 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select existing line numbers from your own document or worksheet', Comment = 'is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Carry out the accepted New lines on worksheet WEEK',
             '{"type":"Inventory.PlanningWorksheet.CarryOut","subject":"PLAN|WEEK","data":{"expectedCount":1}}',
             '{"status":"Success","templateName":"PLAN","worksheetName":"WEEK","linesConsumed":1,"orders":[{"documentType":"Purchase","documentNo":"106001"}]}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.PlanningWorksheet.CarryOut","subject":"PLAN|WEEK","data":{"expectedCount":1,"lineNos":[10000]}}', '{"status":"Success","templateName":"PLAN","worksheetName":"WEEK","linesConsumed":1,"orders":[{"documentType":"Purchase","documentNo":"106001"}]}'));
         exit(true);
     end;
 

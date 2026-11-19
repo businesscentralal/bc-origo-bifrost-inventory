@@ -273,12 +273,14 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Preview posting of the reclassification batch DEFAULT',
             '{"type":"Inventory.Reclassification.PreviewPost","data":{"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}}',
             '{"status":"Success","rollback":true,"lineCount":1,"lines":[{"lineNo":10000,"itemNo":"1000","quantity":5,"locationCode":"BLUE","newLocationCode":"RED"}],"preview":[{"tableId":32,"entryCount":2,"entries":[]}],"totals":{"totalDebitLCY":0,"totalCreditLCY":0},"entryCount":2,"glEntryCount":0}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Reclassification.PreviewPost","data":{"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT","lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","rollback":true,"lineCount":1,"lines":[{"lineNo":10000,"itemNo":"1000","quantity":5,"locationCode":"BLUE","newLocationCode":"RED"}],"preview":[{"tableId":32,"entryCount":2,"entries":[]}],"totals":{"totalDebitLCY":0,"totalCreditLCY":0},"entryCount":2,"glEntryCount":0}'));
         exit(true);
     end;
 

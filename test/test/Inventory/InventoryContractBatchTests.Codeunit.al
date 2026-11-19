@@ -539,7 +539,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
     begin
         AssertAttributeContract('Inventory.Attribute.Get', Enum::"Message Type ori"::"Inventory.Attribute.Get".AsInteger(),
             'includeUnassigned:boolean:false,attributeNames:array:false,attributeIds:array:false',
-            'status:string,items:array', 'read', true, 5, 3, 1,
+            'status:string,items:array', 'read', true, 5, 3, 3,
             'Reads attribute definitions and assigned values for one or more Items without changing Business Central data.', '');
     end;
 
@@ -1157,7 +1157,7 @@ codeunit 96921 "Inventory Contract Batch Tests"
         RawChanges: JsonToken;
         Expected: Text;
     begin
-        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome. For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.';
+        Expected := 'Posts matching pending value entries to G/L with native per-entry posting. Both filters are applied. Commits the caller transaction before an isolated posting run; Omit Commit does not suppress this posting boundary. postedValueEntryCount and remainingValueEntryCount report the actual selected queue outcome. For named requests, omitting expectedCount returns a confirmation preview only when the company setting Require Irreversible Confirm is enabled. When confirmation is not required, omitting expectedCount runs the operation immediately after normal validation and permission checks. For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.';
         Implementation := "Message Type ori"::"Inventory.CostToGL.Post";
         Implementation.GetEffect(RawEffect);
         RawEffect.Get('changes', RawChanges);
