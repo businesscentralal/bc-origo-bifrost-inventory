@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
+- `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
 ### Fixed - Icelandic release wording (#244)
 
 - Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
