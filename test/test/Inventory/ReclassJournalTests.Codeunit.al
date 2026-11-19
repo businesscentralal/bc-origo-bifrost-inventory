@@ -3,6 +3,7 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Setup;
@@ -472,6 +473,7 @@ codeunit 96925 "Reclass Journal Tests ori"
         JournalLine: Record "Item Journal Line";
     begin
         Clear(Item);
+        RemoveOrphanPostValueEntryToGL();
         LibraryInventory.CreateItem(Item);
         LibraryInventory.CreateItemJournalTemplate(JournalTemplate);
         LibraryInventory.CreateItemJournalBatch(JournalBatch, JournalTemplate.Name);
@@ -480,5 +482,19 @@ codeunit 96925 "Reclass Journal Tests ori"
         JournalLine.Validate("Unit Amount", 12);
         JournalLine.Modify(true);
         LibraryInventory.PostItemJournalLine(JournalTemplate.Name, JournalBatch.Name);
+    end;
+
+    /// <summary>Rerun safety (#246): earlier committed runs can leave Post Value Entry to G/L rows whose Value Entry was rolled back; posting would then reuse that entry number and fail with a duplicate key. Remove only rows with no Value Entry behind them.</summary>
+    local procedure RemoveOrphanPostValueEntryToGL()
+    var
+        PostValueEntryToGL: Record "Post Value Entry to G/L";
+        ValueEntry: Record "Value Entry";
+        LastValueEntryNo: Integer;
+    begin
+        if ValueEntry.FindLast() then
+            LastValueEntryNo := ValueEntry."Entry No.";
+        PostValueEntryToGL.SetFilter("Value Entry No.", '>%1', LastValueEntryNo);
+        if not PostValueEntryToGL.IsEmpty() then
+            PostValueEntryToGL.DeleteAll(false);
     end;
 }
