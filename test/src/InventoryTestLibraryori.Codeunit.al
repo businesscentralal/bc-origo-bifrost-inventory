@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Inventory.Costing;
 using Microsoft.Inventory.Item.Attribute;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -51,6 +53,19 @@ codeunit 96902 "Inventory Test Library ori"
         Setup.InsertIfNotExists();
         Setup.Reservations := true;
         Setup.Modify(true);
+    end;
+
+    /// <summary>Removes cost-posting queue rows whose value entry no longer exists, left committed by earlier runs, so native posting can allocate the next value entry number on a reused company.</summary>
+    procedure RemoveOrphanedPostValueEntries()
+    var
+        Pending: Record "Post Value Entry to G/L";
+        ValueEntry: Record "Value Entry";
+    begin
+        if Pending.FindSet() then
+            repeat
+                if not ValueEntry.Get(Pending."Value Entry No.") then
+                    Pending.Delete();
+            until Pending.Next() = 0;
     end;
 
     /// <summary>Explicitly enables the physical inventory domain for a test of its independent behavior or permissions.</summary>
