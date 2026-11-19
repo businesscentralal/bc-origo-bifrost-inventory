@@ -275,13 +275,15 @@ codeunit 96982 "Standard Cost Tests ori"
     end;
 
     [Test]
-    procedure Scenario_AC04_DisabledDomain_HasNextStep()
+    procedure Scenario_AC04_DisabledDomain_NotRefused()
     var
         Setup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         Management: Codeunit "Std. Cost Management ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
+        Payload: Text;
     begin
-        // Story 121, AC04 | Time: none | Risk: domain gate is evaluated before native writes.
+        // Story 121, AC04, narrowed by the Issue36 ruling (Gunnar 18.11.2026) | Time: none | Risk: validation only, no native writes.
         Initialize();
         Setup.Get();
         Setup.Costing := false;
@@ -290,8 +292,10 @@ codeunit 96982 "Standard Cost Tests ori"
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Insert(true);
         TempArgument."Content Type" := TempArgument.GetContentTypeJson();
-        Assert.IsFalse(Management.ValidateSuggest(TempArgument), 'Domain must refuse.');
-        AssertRefusal(TempArgument.GetResponseJson(), 'InvalidParameter');
+        if not Management.ValidateSuggest(TempArgument) then begin
+            TempArgument.GetResponseJson().WriteTo(Payload);
+            Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), 'No domain-disabled refusal: ' + Payload);
+        end;
     end;
 
     [Test]

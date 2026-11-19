@@ -1021,4 +1021,32 @@ codeunit 96973 "Inv. MCP Fixture ori"
             Error('Owned issue 7 fixtures require the evaluation company and suffix EN or IS.');
     end;
 
+    /// <summary>Issue36 ruling (Gunnar 18.11.2026): a turned-off domain only makes IsEnabled answer false. Execution is never refused for the domain; it continues to its normal licence, permission and validation checks.</summary>
+    procedure AssertDomainOffOnlyHidesType(Implementation: Interface "Msg Interface ori"; var TempArgument: Record "Message Argument ori" temporary)
+    var
+        Response: JsonObject;
+        Payload: Text;
+    begin
+        if Implementation.IsEnabled() then
+            Error('The type must answer IsEnabled false while its domain is off.');
+        if TryExecute(Implementation, TempArgument) then begin
+            Response := TempArgument.GetResponseJson();
+            Response.WriteTo(Payload);
+        end else
+            Payload := GetLastErrorText();
+        if IsDomainRefusal(Payload) then
+            Error('The type must not refuse execution because its domain is off: %1', Payload);
+    end;
+
+    /// <summary>Recognizes the removed domain-disabled refusal texts in en-US and is-IS.</summary>
+    procedure IsDomainRefusal(Payload: Text): Boolean
+    begin
+        exit(Payload.Contains('turned off') or Payload.Contains('slökkt') or Payload.Contains('óvirkt fyrir þetta fyrirtæki') or Payload.Contains('kveikja á sviðinu'));
+    end;
+
+    [TryFunction]
+    local procedure TryExecute(Implementation: Interface "Msg Interface ori"; var TempArgument: Record "Message Argument ori" temporary)
+    begin
+        Implementation.ExecuteBifrostTask(TempArgument);
+    end;
 }

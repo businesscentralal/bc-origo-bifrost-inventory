@@ -120,12 +120,13 @@ codeunit 96930 "Inventory Item Refusal Tests"
     end;
 
     [Test]
-    procedure ReclassificationDomainOff_NextStepIsIcelandicIn1039()
+    procedure ReclassificationDomainOff_NotRefusedIn1039()
     var
         InventorySetup: Record "Inventory Setup ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
+        Payload: Text;
     begin
         if not InventorySetup.Get() then begin
             InventorySetup.Init();
@@ -134,10 +135,9 @@ codeunit 96930 "Inventory Item Refusal Tests"
         InventorySetup.Reclassification := false;
         InventorySetup.Modify();
         Dispatch("Message Type ori"::"Inventory.Reclassification.Post", RequestJson, 1039, ResponseJson);
-        Assert.IsTrue(ResponseJson.Get('code', Token), 'code missing');
-        Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'code');
-        Assert.IsTrue(ResponseJson.Get('nextStep', Token), 'nextStep missing');
-        Assert.AreEqual('Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.', Token.AsValue().AsText(), 'nextStep');
+        ResponseJson.WriteTo(Payload);
+        // Issue36 ruling (Gunnar 18.11.2026): the switch only changes IsEnabled; the dispatched request meets its normal checks instead.
+        Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), 'No domain-disabled refusal: ' + Payload);
     end;
 
     local procedure AssertMissing(MessageType: Enum "Message Type ori"; LanguageId: Integer; ExpectedError: Text; ExpectedExpected: Text; ExpectedNext: Text)

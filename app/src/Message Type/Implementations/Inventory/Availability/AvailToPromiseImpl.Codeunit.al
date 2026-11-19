@@ -363,15 +363,9 @@ codeunit 10077000 "Avail. To Promise Impl ori" implements "Msg Interface ori", "
     local procedure AssertCanRead(var Argument: Record "Message Argument ori"): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
-        DomainDisabledErr: Label 'The Availability domain is turned off for this company.', Comment = 'is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if not InventorySetup.ReadPermission() then begin
             RespondPermission(Argument);
-            exit(false);
-        end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::Availability) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         if CanReadSources() then

@@ -320,17 +320,11 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
         InventorySetup: Record "Inventory Setup ori";
         Item: Record Item;
         ItemReference: Record "Item Reference";
-        DomainDisabledErr: Label 'The Item Reference domain is turned off for this company.', Comment = 'is-IS=Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
         PermissionNextStepLbl: Label 'Assign the Bifrost "Read-Only" permission set with Inventory read permissions and a Business Central permission set that can read these tables.', Comment = 'is-IS=Úthlutaðu heimildasafninu „Lesaðgangur“ í Bifröst með lesheimildum birgða og Business Central heimildasafni sem getur lesið þessar töflur.';
     begin
         if not InventorySetup.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStepLbl);
-            exit(false);
-        end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemReference) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         if ItemReference.ReadPermission() and Item.ReadPermission() then

@@ -14,38 +14,33 @@ codeunit 10076922 "Inventory Domain Gate ori"
     procedure IsEnabled(Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
     var
         InventorySetup: Record "Inventory Setup ori";
-        PostingGate: Codeunit "Inv. Posting Gate ori";
-        RecRef: RecordRef;
     begin
         if not InventorySetup.IsDomainEnabled(Domain) then
             exit(false);
+        exit(HasPermission(FilterTableNo, NeedWrite, NeedPost));
+    end;
+
+    /// <summary>Returns the permission refusal. The company domain switch only changes IsEnabled (Gunnar 18.11.2026, #36); execution is never refused for a turned-off domain.</summary>
+    procedure AssertEnabled(var Argument: Record "Message Argument ori"; Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
+    var
+        PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
+    begin
+        if HasPermission(FilterTableNo, NeedWrite, NeedPost) then
+            exit(true);
+        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', '');
+        exit(false);
+    end;
+
+    local procedure HasPermission(FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
+    var
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        RecRef: RecordRef;
+    begin
         if NeedPost then
             exit(PostingGate.HasPostingPermission());
         RecRef.Open(FilterTableNo);
         if NeedWrite then
             exit(RecRef.WritePermission());
         exit(RecRef.ReadPermission());
-    end;
-
-    /// <summary>Returns the setup or permission refusal; disabled tracking writes use PreconditionFailed.</summary>
-    procedure AssertEnabled(var Argument: Record "Message Argument ori"; Domain: Enum "Inventory Domain ori"; FilterTableNo: Integer; NeedWrite: Boolean; NeedPost: Boolean): Boolean
-    var
-        InventorySetup: Record "Inventory Setup ori";
-        DisabledErrorCode: Enum "Bifrost Error Code ori";
-        DomainDisabledErr: Label 'The %1 domain is turned off for this company. Turn it on from Inventory Setup.', Comment = '%1 = domain, is-IS=%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.';
-        DomainDisabledNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
-        PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-    begin
-        if not InventorySetup.IsDomainEnabled(Domain) then begin
-            DisabledErrorCode := "Bifrost Error Code ori"::InvalidParameter;
-            if (Domain = "Inventory Domain ori"::ItemTracking) and NeedWrite then
-                DisabledErrorCode := "Bifrost Error Code ori"::PreconditionFailed;
-            Argument.RespondWithError(DisabledErrorCode, StrSubstNo(DomainDisabledErr, Format(Domain)), '', '', '', DomainDisabledNextStepLbl);
-            exit(false);
-        end;
-        if IsEnabled(Domain, FilterTableNo, NeedWrite, NeedPost) then
-            exit(true);
-        Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', '', '');
-        exit(false);
     end;
 }

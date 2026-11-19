@@ -216,7 +216,6 @@ codeunit 10077020 "Item Subst. Get Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Validates the request and reads native substitutions.</summary>
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        Setup: Record "Inventory Setup ori";
         Request: JsonObject;
         Token: JsonToken;
         KeyName: Text;
@@ -227,10 +226,6 @@ codeunit 10077020 "Item Subst. Get Impl ori" implements "Msg Interface ori", "Ms
     begin
         if not CanReadTables() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionLbl, 'permissionSet', '', 'BIFROST Read ori', PermissionNextLbl);
-            exit;
-        end;
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::ItemSubstitution) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DisabledLbl, 'domain', '', '', DisabledNextLbl);
             exit;
         end;
         Argument.AssertIsLicensed();

@@ -158,8 +158,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
         TempArgument: Record "Message Argument ori" temporary;
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
         PostingGate: Codeunit "Inv. Posting Gate ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         Impl: Interface "Msg Interface ori";
         MessageType: Enum "Message Type ori";
+        Payload: Text;
         Types: List of [Enum "Message Type ori"];
         Response: JsonObject;
         Token: JsonToken;
@@ -201,8 +203,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
             Impl := MessageType;
             Impl.ExecuteBifrostTask(TempArgument);
             Response := TempArgument.GetResponseJson();
-            Assert.IsTrue(Response.Get('code', Token), 'Implementation must execute its company gate under the real Full role.');
-            Assert.AreEqual('InvalidParameter', Token.AsValue().AsText(), 'Company domain disabled; no native write or posting permission added.');
+            Assert.IsTrue(Response.Get('code', Token), 'Implementation must execute its own gate under the real Full role.');
+            Response.WriteTo(Payload);
+            // Issue36 ruling (Gunnar 18.11.2026): the company domain switch no longer refuses execution.
+            Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), 'No domain-disabled refusal: ' + Payload);
         end;
         LibraryLowerPermissions.AddPermissionSet('BIFROST InvPost ori');
         Setup.Get();

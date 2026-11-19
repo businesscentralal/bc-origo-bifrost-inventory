@@ -19,7 +19,6 @@ codeunit 10077027 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
         PagingNextStepLbl: Label 'Send take as a JSON integer from 1 to 1000 and skip as a JSON integer from 0 to 2147483647.', Comment = 'is-IS=Sendu take sem JSON-heiltölu frá 1 til 1000 og skip sem JSON-heiltölu frá 0 til 2147483647.';
         PermissionErr: Label 'Read permission is required for Item and Value Entry.', Comment = 'is-IS=Lesheimild þarf á vörur og virðisfærslur.';
         PermissionNextStepLbl: Label 'Ask an administrator for read permission on Item and Value Entry.', Comment = 'is-IS=Biddu kerfisstjóra um lesheimild á vörur og virðisfærslur.';
-        DomainErr: Label 'The Costing domain is disabled.', Comment = 'is-IS=Slökkt er á kostnaðarsviðinu.';
         DomainNextStepLbl: Label 'Ask an administrator to enable Costing in Inventory Setup.', Comment = 'is-IS=Biddu kerfisstjóra að virkja kostnaðarsviðið í uppsetningu birgða.';
         DateNextStepLbl: Label 'Send asOfDate as a nonzero ISO date in YYYY-MM-DD format.', Comment = 'is-IS=Sendu asOfDate sem ISO-dagsetningu aðra en núlldagsetningu á sniðinu YYYY-MM-DD.';
 
@@ -76,7 +75,6 @@ codeunit 10077027 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
     var
         Item: Record Item;
         ValueEntry: Record "Value Entry";
-        Setup: Record "Inventory Setup ori";
         TempBuffer: Record "Inventory Valuation Buffer ori" temporary;
         Reader: Codeunit "Request Value Reader ori";
         Request: JsonObject;
@@ -92,10 +90,6 @@ codeunit 10077027 "Valuation Get Impl ori" implements "Msg Interface ori", "Msg 
         Skip: Integer;
         Position: Integer;
     begin
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::Costing) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainErr, '', '', '', DomainNextStepLbl);
-            exit;
-        end;
         if not Item.ReadPermission() or not ValueEntry.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, '', '', '', PermissionNextStepLbl);
             exit;

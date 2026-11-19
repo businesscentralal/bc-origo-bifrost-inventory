@@ -397,50 +397,39 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
 
     /// <summary>Issue152 AC3: a disabled domain directs the caller to its administrator and supported setup page.</summary>
     [Test]
-    procedure Scenario_AC03_DisabledDomain_NamesAdministratorAndPage()
+    procedure Scenario_AC03_DisabledDomain_OnlyHidesType()
     var
         InventorySetup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        Response: JsonObject;
-        NextStep: Text;
         OriginalLanguage: Integer;
+        Pass: Integer;
     begin
-        // Issue152 AC03 | Time: no date dependency | Risk: setup changes are rolled back by the test runner.
+        // Issue152 AC03, narrowed by the Issue36 ruling (Gunnar 18.11.2026): a disabled domain only makes IsEnabled answer false;
+        // the execution gate keeps checking permissions and never refuses for the domain, in 1033 and 1039.
         InventorySetup.InsertIfNotExists();
         InventorySetup.Attributes := false;
         InventorySetup.Modify(true);
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
         OriginalLanguage := GlobalLanguage();
-        GlobalLanguage(1033);
-        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'Disabled domain is refused.');
-        Response := TempArgument.GetResponseJson();
-        NextStep := TextOf(Response, 'nextStep');
-        Assert.IsTrue(NextStep.Contains('administrator'), 'The caller knows who can enable the domain.');
-        Assert.IsTrue(NextStep.Contains('Inv. Posting Gate'), 'The required assignable permission caption is named.');
-        Assert.IsTrue(NextStep.Contains('Inventory Setup page'), 'The supported page is named.');
-        Assert.IsTrue(NextStep.Contains('Data.Records.Set cannot'), 'The protected-table restriction is explicit.');
-        TempArgument.Delete();
-        Clear(TempArgument);
-        Clear(DomainGate);
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
-        GlobalLanguage(1039);
-        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'The same gate applies in Icelandic.');
-        Response := TempArgument.GetResponseJson();
-        NextStep := TextOf(Response, 'nextStep');
-        Assert.IsTrue(NextStep.Contains('kerfisstjóra'), 'The Icelandic response names the administrator.');
-        Assert.IsTrue(NextStep.Contains('Bókunarhlið birgða'), 'The Icelandic permission caption is named.');
-        Assert.IsTrue(NextStep.Contains('Uppsetning birgða'), 'The Icelandic page is named.');
+        for Pass := 1 to 2 do begin
+            if Pass = 1 then
+                GlobalLanguage(1033)
+            else
+                GlobalLanguage(1039);
+            Clear(TempArgument);
+            TempArgument.DeleteAll();
+            TempArgument.Init();
+            TempArgument.Version := "Message Version ori"::"1.0";
+            TempArgument.Insert(true);
+            Assert.IsFalse(DomainGate.IsEnabled("Inventory Domain ori"::Attributes, Database::Item, false, false), 'A disabled domain hides the type.');
+            Assert.IsTrue(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'A disabled domain does not refuse execution.');
+        end;
         GlobalLanguage(OriginalLanguage);
     end;
 
-    /// <summary>Issue36: with every domain off, every Inventory type stays registered and refuses before it does any work.</summary>
+    /// <summary>Issue36 (Gunnar ruling 18.11.2026): with every domain off, every Inventory type stays registered and only answers IsEnabled false; execution is never refused for the domain.</summary>
     [Test]
-    procedure Scenario_Issue36_EveryTypeWithDomainsOff_RefusesBeforeWork()
+    procedure Scenario_Issue36_EveryTypeWithDomainsOff_OnlyIsEnabledChanges()
     var
         Item: Record Item;
         ItemLedgerEntry: Record "Item Ledger Entry";
@@ -449,7 +438,6 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Offenders: Text;
         PinnedCount: Integer;
         GatedCount: Integer;
-        LicenceFirstCount: Integer;
         ItemCount: Integer;
         LedgerCount: Integer;
         TypeCount: Integer;
@@ -463,15 +451,15 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
             if NoDomainTypes().Contains(TypeName) then
                 PinnedCount += 1
             else
-                CheckDomainRefusal(MessageType, TypeName, Offenders, GatedCount, LicenceFirstCount);
+                CheckDomainOnlyHides(MessageType, TypeName, Offenders, GatedCount);
             TypeCount += 1;
         end;
         Assert.AreEqual(NoDomainTypes().Count(), PinnedCount, 'Every type pinned as outside the Issue36 domains still exists.');
-        Assert.AreEqual('', Offenders, 'Every type refuses with the domain-disabled code and names its domain.');
+        Assert.AreEqual('', Offenders, 'Every gated type answers IsEnabled false and is not refused for its domain.');
         Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
-        Assert.IsTrue(GatedCount > LicenceFirstCount, 'Most types answer the domain refusal before the licence check.');
-        Assert.AreEqual(ItemCount, Item.Count(), 'No refused type created or deleted an item.');
-        Assert.AreEqual(LedgerCount, ItemLedgerEntry.Count(), 'No refused type posted an item ledger entry.');
+        Assert.AreEqual(TypeCount - PinnedCount, GatedCount, 'Every type outside the pinned list is checked.');
+        Assert.AreEqual(ItemCount, Item.Count(), 'An empty request created or deleted no item.');
+        Assert.AreEqual(LedgerCount, ItemLedgerEntry.Count(), 'An empty request posted no item ledger entry.');
     end;
 
     /// <summary>Issue36 Setup: the domain switches are stored per company and every switch is a Boolean.</summary>
@@ -828,13 +816,13 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.AttributeDefinition.Create');
     end;
 
-    local procedure CheckDomainRefusal(MessageType: Enum "Message Type ori"; TypeName: Text; var Offenders: Text; var GatedCount: Integer; var LicenceFirstCount: Integer)
+    local procedure CheckDomainOnlyHides(MessageType: Enum "Message Type ori"; TypeName: Text; var Offenders: Text; var GatedCount: Integer)
     var
         TempArgument: Record "Message Argument ori" temporary;
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         Implementation: Interface "Msg Interface ori";
         Request: JsonObject;
-        Response: JsonObject;
-        ErrorCode: Text;
+        Payload: Text;
     begin
         Implementation := MessageType;
         if Implementation.IsEnabled() then
@@ -846,18 +834,14 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         TempArgument.Insert(true);
         Clear(Request);
         TempArgument.SetRequestJson(Request);
-        if not TryExecute(Implementation, TempArgument) then begin
-            // A licence check that precedes the gate also stops before any work; the gate itself is proven licensed through MCP.
-            if not GetLastErrorText().Contains('license') then
-                Offenders += TypeName + ' (error: ' + GetLastErrorText() + '); ';
-            LicenceFirstCount += 1;
-        end else begin
-            Response := TempArgument.GetResponseJson();
-            ErrorCode := TextOf(Response, 'code');
-            if not (ErrorCode in ['InvalidParameter', 'PreconditionFailed']) or not TextOf(Response, 'error').Contains(' domain ') then
-                Offenders += TypeName + ' (' + ErrorCode + ': ' + TextOf(Response, 'error') + '); ';
-            GatedCount += 1;
-        end;
+        // The empty request meets the normal licence, permission or validation checks; none may be a domain-disabled refusal.
+        if TryExecute(Implementation, TempArgument) then
+            TempArgument.GetResponseJson().WriteTo(Payload)
+        else
+            Payload := GetLastErrorText();
+        if DomainCheck.IsDomainRefusal(Payload) then
+            Offenders += TypeName + ' (domain refusal: ' + Payload + '); ';
+        GatedCount += 1;
     end;
 
     /// <summary>Types added after Issue36 that belong to none of its domains; they are not gated by Inventory Setup. A new type must be gated or added here.</summary>

@@ -213,13 +213,15 @@ codeunit 96989 "Inventory Valuation Tests ori"
         GlobalLanguage(OriginalLanguage);
     end;
 
-    /// <summary>Disabling Costing yields a typed refusal with an actionable next step.</summary>
+    /// <summary>Issue36 ruling (Gunnar 18.11.2026): disabling Costing only hides the type; the read is not refused for the domain.</summary>
     [Test]
-    procedure Scenario_AC04_DisabledDomain()
+    procedure Scenario_AC04_DisabledDomain_OnlyHidesType()
     var
         Setup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         Request: JsonObject;
+        Payload: Text;
     begin
         PrepareFixturePermissions();
         Setup.InsertIfNotExists();
@@ -230,7 +232,8 @@ codeunit 96989 "Inventory Valuation Tests ori"
         Request.Add('asOfDate', '2026-01-01');
         TempArgument.SetRequestJson(Request);
         Valuation.ReadValuation(TempArgument);
-        AssertRefusal(TempArgument.GetResponseJson(), 'InvalidParameter');
+        TempArgument.GetResponseJson().WriteTo(Payload);
+        Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), 'No domain-disabled refusal: ' + Payload);
         Assert.IsFalse(Valuation.IsEnabled(), 'Disabled Costing hides the message.');
     end;
 

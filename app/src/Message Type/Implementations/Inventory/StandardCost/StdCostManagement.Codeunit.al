@@ -67,8 +67,6 @@ codeunit 10076934 "Std. Cost Management ori"
         WorksheetCode: Code[10];
         PermissionLbl: Label 'Permission to read or change standard cost data is missing.', Comment = 'is-IS=Heimild til að lesa eða breyta staðalkostnaðargögnum vantar.';
         PermissionNextLbl: Label 'Ask an administrator for BIFROST Full ori and the native worksheet, item, stockkeeping unit and journal permissions needed for this operation.', Comment = 'is-IS=Biddu kerfisstjóra um BIFROST Full ori og nauðsynlegar heimildir fyrir vinnublað, vörur, birgðahaldseiningar og bók fyrir þessa aðgerð.';
-        DomainLbl: Label 'The Costing domain is disabled.', Comment = 'is-IS=Kostnaðarsviðið er óvirkt.';
-        DomainNextLbl: Label 'Enable Costing on Inventory Setup and retry.', Comment = 'is-IS=Virkjaðu kostnaðarsviðið í uppsetningu birgða og reyndu aftur.';
         UnknownLbl: Label 'The request contains an unknown parameter.', Comment = 'is-IS=Beiðnin inniheldur óþekkta færibreytu.';
         UnknownNextLbl: Label 'Remove the parameter and use only parameters listed in help for this message type.', Comment = 'is-IS=Fjarlægðu færibreytuna og notaðu aðeins færibreytur sem hjálp fyrir þessa skilaboðategund tilgreinir.';
         MissingWorksheetLbl: Label 'The standard cost worksheet name does not exist.', Comment = 'is-IS=Heiti staðalkostnaðarvinnublaðsins er ekki til.';
@@ -78,8 +76,6 @@ codeunit 10076934 "Std. Cost Management ori"
             exit(Refuse(Argument, "Bifrost Error Code ori"::PermissionDenied, PermissionLbl, '', PermissionNextLbl));
         if not Setup.ReadPermission() then
             exit(Refuse(Argument, "Bifrost Error Code ori"::PermissionDenied, PermissionLbl, '', PermissionNextLbl));
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::Costing) then
-            exit(Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, DomainLbl, '', DomainNextLbl));
         Request := Argument.GetRequestJson();
         Allowed.Add('worksheetName');
         if Implement then begin

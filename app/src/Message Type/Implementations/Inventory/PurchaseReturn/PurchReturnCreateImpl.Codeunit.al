@@ -389,15 +389,9 @@ codeunit 10076930 "Purch. Return Create Impl ori" implements "Msg Interface ori"
     var
         InventorySetup: Record "Inventory Setup ori";
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        DomainDisabledErr: Label 'The Purchase Returns domain is turned off for this company.', Comment = 'is-IS=Innkaupaskilasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator to turn Purchase Returns on from the Inventory Setup page.', Comment = 'is-IS=Biddu kerfisstjóra að kveikja á innkaupaskilum á síðunni Uppsetning birgða.';
     begin
         if (not InventorySetup.ReadPermission()) or (not CanWriteDocuments()) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStep());
-            exit(false);
-        end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::PurchaseReturns) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         exit(true);

@@ -324,16 +324,16 @@ codeunit 96966 "Assembly Read Tests"
     end;
 
     [Test]
-    procedure Bom_DomainOff_ReturnsIcelandicRefusal()
+    procedure Bom_DomainOff_OnlyHidesType()
     var
         TempArgument: Record "Message Argument ori" temporary;
         InventorySetup: Record "Inventory Setup ori";
         BomImpl: Codeunit "Assembly BOM Get Impl ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
         PreviousLanguage: Integer;
     begin
-        // [SCENARIO AC04] The domain refusal answers its nextStep in is-IS at 1039.
+        // [SCENARIO Issue36 ruling 18.11.2026] Assembly off only hides the type; execution is not refused for the domain, also in is-IS at 1039.
         Initialize();
         InventorySetup.Get();
         InventorySetup.Validate(Assembly, false);
@@ -345,11 +345,8 @@ codeunit 96966 "Assembly Read Tests"
         TempArgument.SetRequestJson(RequestJson);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        BomImpl.ExecuteBifrostTask(TempArgument);
+        DomainCheck.AssertDomainOffOnlyHidesType(BomImpl, TempArgument);
         GlobalLanguage(PreviousLanguage);
-        ResponseJson := TempArgument.GetResponseJson();
-        AssertText(ResponseJson, 'code', 'InvalidParameter');
-        AssertText(ResponseJson, 'nextStep', 'Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.');
     end;
 
     [Test]

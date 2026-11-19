@@ -450,13 +450,19 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure AssertConfirmationBoundary(LanguageId: Integer)
     var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
         Setup: Record "Inventory Setup ori";
         PreviousSetup: Record "Inventory Setup ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         FoundationSetup: RecordRef;
         Implementation: Interface "Msg Contract ori";
         MessageType: Enum "Message Type ori";
         TypeName: Text;
+        ItemLedgerCount: Integer;
+        ValueEntryCount: Integer;
+        Payload: Text;
         PreviousLanguage: Integer;
         Checked: Integer;
         Effect: JsonObject;
@@ -474,8 +480,11 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         ChangedConfirmation: Boolean;
         HadSetup: Boolean;
     begin
-        // [GIVEN] Disabled domains create a safe, observable handler refusal after the confirmation gate.
+        // [GIVEN] Domains are off. Since the Issue36 ruling (Gunnar 18.11.2026) that only hides the types; the handler is not refused for the domain
+        // and stops at its own subject, validation or licence check instead, which the assertions below observe without a domain refusal.
         ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
+        ItemLedgerCount := ItemLedgerEntry.Count();
+        ValueEntryCount := ValueEntry.Count();
         // No business document or ledger entry is created, posted or undone by this boundary test.
         HadSetup := PreviousSetup.Get();
         Setup.InsertIfNotExists();
@@ -528,7 +537,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Clear(Request);
                             // An unnamed request is deliberately left to handler validation by Foundation #1278.
                             Response := DispatchWithSubject(MessageType, '', Request);
-                            AssertText(Response, 'code', 'InvalidParameter');
+                            AssertHandlerRanWithoutDomainRefusal(DomainCheck, Response, TypeName);
                             // [WHEN] A named subject is previewed before the handler or any record lookup.
                             Response := Dispatch(MessageType, Request);
                             if SupportsConfirmation then begin
@@ -546,9 +555,9 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                 Response := Dispatch(MessageType, Request);
                             end;
                             // Legacy Foundation has no confirmation gate; it reaches this same handler directly.
-                            AssertText(Response, 'code', 'InvalidParameter');
-                            Assert.IsTrue(Response.Get('nextStep', Token), 'Handler domain refusal supplies a next action.');
-                            Assert.IsFalse(Token.AsValue().AsText() = '', 'The handler ran after confirmation.');
+                            AssertHandlerRanWithoutDomainRefusal(DomainCheck, Response, TypeName);
+                            Response.WriteTo(Payload);
+                            Assert.IsFalse(Payload.Contains('ConfirmationRequired') or Payload.Contains('ConfirmationMismatch'), TypeName + ': the handler ran after confirmation.');
                         end;
             end;
         GlobalLanguage(PreviousLanguage);
@@ -564,6 +573,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         end else
             Setup.Delete();
         Assert.AreEqual(13, Checked, 'All thirteen app-owned irreversible types must be exercised.');
+        Assert.AreEqual(ItemLedgerCount, ItemLedgerEntry.Count(), 'The boundary requests posted no item ledger entry.');
+        Assert.AreEqual(ValueEntryCount, ValueEntry.Count(), 'The boundary requests posted no value entry.');
         RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
     end;
 
@@ -612,9 +623,17 @@ codeunit 96978 "Inv. Confirmation Tests ori"
     local procedure Dispatch(MessageType: Enum "Message Type ori"; Request: JsonObject) Response: JsonObject
     begin
         // A named target is required: Foundation #1278 sends an unnamed request to normal validation.
-        // Disabled domains guarantee this sentinel never creates, posts or undoes business data.
+        // The callers assert the exact confirmation codes; after confirmation the handler meets the unknown subject.
         Response := DispatchWithSubject(MessageType, 'XCONFIRM-BOUNDARY', Request);
-        AssertText(Response, 'status', 'Error');
+    end;
+
+    local procedure AssertHandlerRanWithoutDomainRefusal(var DomainCheck: Codeunit "Inv. MCP Fixture ori"; Response: JsonObject; TypeName: Text)
+    var
+        Payload: Text;
+    begin
+        Response.WriteTo(Payload);
+        Assert.IsTrue(Payload.Contains('"status":"Error"') or Payload.Contains('"status":"Success"'), TypeName + ' answers a handler status: ' + Payload);
+        Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), TypeName + ' must not refuse because its domain is off: ' + Payload);
     end;
 
     local procedure DispatchWithSubject(MessageType: Enum "Message Type ori"; Subject: Text[250]; Request: JsonObject) Response: JsonObject
