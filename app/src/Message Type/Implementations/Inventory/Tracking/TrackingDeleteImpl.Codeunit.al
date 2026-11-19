@@ -74,9 +74,10 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the parameters chapter of the public tracking contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
     begin
-        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(Parts.TrackingSourceParameter());
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
         Parameters.Add(ContractMgt.Parameter('entryNos', 'array', false, 'Optional 1..200 positive entry numbers from this source. Duplicate numbers are counted once. Omit entryNo and entryNos to remove all unreserved tracking on the source, at most 200 entries. Reserved tracking refuses the whole operation.'));
         Parameters.Add(ContractMgt.Parameter('entryNo', 'integer', false, 'Optional positive entryNo of an unreserved ReservationEntry tracking row returned by Inventory.Tracking.Get for this exact source. Cannot be combined with entryNos.'));
@@ -169,8 +170,10 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Remove selected tracking from a sales line; use your own line GUID and entry numbers', Comment = 'is-IS=Fjarlægja valda rakningu af sölulínu; notaðu eigin GUID-línuauðkenni og færslunúmer';
     begin
         Examples.Add(ContractMgt.Example('Use your own purchase line SystemId and tracking entry', '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNo":210}}', '{"status":"Success","entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"SalesLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNos":[210,211]}}', '{"status":"Success","entriesDeleted":2,"entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
         exit(true);
     end;
 

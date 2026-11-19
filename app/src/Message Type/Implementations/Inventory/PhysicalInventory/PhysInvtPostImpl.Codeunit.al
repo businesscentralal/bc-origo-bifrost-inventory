@@ -220,12 +220,14 @@ codeunit 10076881 "Phys. Invt. Post Impl ori" implements "Msg Interface ori", "M
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post the whole batch DEFAULT',
             '{"type":"Inventory.PhysInventory.Post","subject":"PHYS. INV.|DEFAULT","data":{"expectedCount":1}}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","postedLineCount":1,"itemRegisterNo":1250,"fromEntryNo":8812,"toEntryNo":8812,"fromPhysInventoryEntryNo":410,"toPhysInventoryEntryNo":410,"result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"itemNo":"1000","quantity":2,"locationCode":"","newLocationCode":"","binCode":"","newBinCode":"","lotNo":"","newLotNo":"","serialNo":"","newSerialNo":"","packageNo":"","newPackageNo":"","tracking":[]}]}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.PhysInventory.Post","subject":"PHYS. INV.|DEFAULT","data":{"expectedCount":1,"lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","postedLineCount":1,"itemRegisterNo":1250,"fromEntryNo":8812,"toEntryNo":8812,"fromPhysInventoryEntryNo":410,"toPhysInventoryEntryNo":410,"result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"itemNo":"1000","quantity":2,"locationCode":"","newLocationCode":"","binCode":"","newBinCode":"","lotNo":"","newLotNo":"","serialNo":"","newSerialNo":"","packageNo":"","newPackageNo":"","tracking":[]}]}'));
         exit(true);
     end;
 

@@ -115,9 +115,12 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
         Parts: Codeunit "Inventory Contract Parts ori";
+        ParameterExample1Lbl: Label 'Create a transfer with a line; use your own locations, item and unit of measure', Comment = 'is-IS=Stofna flutning með línu; notaðu eigin birgðageymslur, vöru og mælieiningu';
     begin
         Examples := Parts.GetExamples('Inventory.TransferOrder.Create');
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.TransferOrder.Create","data":{"transferFromCode":"BLUE","transferToCode":"RED","directTransfer":true,"lines":[{"itemNo":"XITEM","quantity":2,"unitOfMeasureCode":"PCS"}]}}', '{"status":"Success","documentNo":"TO000456","statusAfter":"Open"}'));
         exit(Examples.Count() > 0);
     end;
 

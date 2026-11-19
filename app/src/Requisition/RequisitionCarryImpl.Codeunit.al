@@ -152,9 +152,11 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select existing line numbers from your own document or worksheet', Comment = 'is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example('Process one requisition worksheet', '{"type":"Purchase.Requisition.CarryOut","data":{"expectedCount":1,"templateName":"REQ","batchName":"DEFAULT"}}', '{"status":"Success"}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Purchase.Requisition.CarryOut","data":{"expectedCount":1,"templateName":"REQ","batchName":"DEFAULT","lineNos":[10000]}}', '{"status":"Success"}'));
         exit(true);
     end;
 

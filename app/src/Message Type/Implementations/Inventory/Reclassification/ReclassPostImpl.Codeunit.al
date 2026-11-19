@@ -275,12 +275,14 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Post the reclassification batch DEFAULT',
             '{"type":"Inventory.Reclassification.Post","data":{"expectedCount":1,"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}}',
             '{"status":"Success","journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Reclassification.Post","data":{"expectedCount":1,"journalTemplateName":"RECLASS","journalBatchName":"DEFAULT","lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","journalTemplateName":"RECLASS","journalBatchName":"DEFAULT"}'));
         exit(true);
     end;
 

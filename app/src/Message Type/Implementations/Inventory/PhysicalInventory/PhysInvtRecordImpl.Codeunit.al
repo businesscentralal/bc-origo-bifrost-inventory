@@ -260,6 +260,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        LegacyCountsExampleLbl: Label 'Use counts with the legacy Record type; replace the batch and line with your own', Comment = 'is-IS=Nota counts með eldri Record-gerðinni; notaðu eigin keyrslu og línu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
@@ -270,6 +271,9 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
             'Legacy single-line count with Inventory.PhysInventory.Record',
             '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"lineNo":10000,"quantity":0}}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
+        Examples.Add(ContractMgt.Example(LegacyCountsExampleLbl,
+            '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}',
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","linesCounted":1,"result":[{"lineNo":10000,"qtyCounted":0}]}'));
         exit(true);
     end;
 

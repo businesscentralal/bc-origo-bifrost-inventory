@@ -34,6 +34,29 @@ codeunit 10076919 "Inventory Contract Parts ori"
         AssemblyPostNotesLbl: Label 'Requires Inv. Posting Gate in addition to the Bifrost "Full Access" permission set. Optional postingDate replaces the posting date, and quantityToAssemble (used only when greater than zero) is written to the order before posting. The call commits: it commits the transaction before posting starts and Omit Commit is not honoured, so a quantityToAssemble change is kept even when the posting then fails. Use Inventory.AssemblyOrder.PreviewPost first to see the entries.', Comment = 'is-IS=Krefst heimildasafnsins „Bókunarhlið birgða“ auk „Aðgangur að öllum hlutum“ í Bifröst. Valfrjáls postingDate kemur í stað bókunardagsetningar og quantityToAssemble (notað aðeins þegar það er stærra en núll) er vistað á pöntuninni fyrir bókun. Kallið vistar breytingar: það vistar færslu áður en bókun hefst og Omit Commit er ekki virt, svo breyting á quantityToAssemble helst þótt bókunin mistakist. Notaðu Inventory.AssemblyOrder.PreviewPost fyrst til að sjá færslurnar.';
         AssemblyPreviewNotesLbl: Label 'The preview is rolled back and does not create posted documents or ledger entries. postingDate and quantityToAssemble, when sent, are applied inside that preview and roll back with it, so the stored posting date and quantity to assemble stay unchanged.', Comment = 'is-IS=Forskoðun er afturkölluð og stofnar hvorki bókuð skjöl né fjárhags- eða birgðafærslur. postingDate og quantityToAssemble, þegar þau eru send, eru notuð inni í forskoðuninni og afturköllast með henni, svo vistuð bókunardagsetning og magn til samsetningar haldast óbreytt.';
 
+    /// <summary>Describes each field of the existing source-bound tracking selector.</summary>
+    procedure TrackingSourceParameter() Parameter: JsonObject
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Children: JsonArray;
+        SystemIdParameter: JsonObject;
+        DirectionParameter: JsonObject;
+        SourceLbl: Label 'Existing source record selected by its type and SystemId. Send a source object, not top-level sourceType or sourceNo.', Comment = 'is-IS=Fyrirliggjandi upprunafærsla valin með type og SystemId. Sendu source-hlut, ekki sourceType eða sourceNo á efsta stigi.';
+        TypeLbl: Label 'Required source record type: SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine. Use the line SystemId, except AssemblyHeader uses the header SystemId.', Comment = 'is-IS=Áskilin gerð upprunafærslu: SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine eða ItemJournalLine. Notaðu SystemId línunnar, nema AssemblyHeader notar SystemId haussins.';
+        SystemIdLbl: Label 'Required GUID of the existing source record; a document number or item number is not a SystemId. Replace the placeholder GUID in examples with your own record SystemId.', Comment = 'is-IS=Áskilið GUID fyrirliggjandi upprunafærslu; skjalanúmer eða vörunúmer er ekki SystemId. Skiptu út GUID-dæmisauðkenninu fyrir SystemId eigin færslu.';
+        DirectionLbl: Label 'Optional Outbound or Inbound; default Outbound. Selects the shipment or receipt side of TransferLine. Other source types do not use the direction.', Comment = 'is-IS=Valfrjálst Outbound eða Inbound; sjálfgefið Outbound. Velur afhendingar- eða móttökuhlið TransferLine. Aðrar upprunagerðir nota ekki stefnuna.';
+    begin
+        Parameter := ContractMgt.Parameter('source', 'object', true, SourceLbl);
+        Children.Add(ContractMgt.Parameter('type', 'string', true, TypeLbl));
+        SystemIdParameter := ContractMgt.Parameter('systemId', 'string', true, SystemIdLbl);
+        SystemIdParameter.Add('format', 'guid');
+        Children.Add(SystemIdParameter);
+        DirectionParameter := ContractMgt.Parameter('transferDirection', 'string', false, DirectionLbl);
+        DirectionParameter.Add('default', 'Outbound');
+        Children.Add(DirectionParameter);
+        Parameter.Add('children', Children);
+    end;
+
     /// <summary>Builds the existing envelope chapter for matching Inventory and legacy Item helper selectors.</summary>
     procedure GetEnvelope(MessageType: Text): JsonObject
     var

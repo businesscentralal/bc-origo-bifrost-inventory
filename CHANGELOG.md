@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-### Fixed (2026-11-19) - Inventory UAT help corrections (#266)
+### Fixed (2026-11-19) - Inventory UAT help and contract corrections (#266)
+- UAT additions AC07-AC10: Tracking Assign/Delete now declare each `source` field, its required status and transfer direction default, with complete sales-line and purchase-line requests. Audit of all 97 app-owned types found and filled 15 missing object/array examples across 14 types.
+- Added collection examples for `Inventory.Attribute.Get`, `Inventory.PhysInventory.Check`, `Inventory.PhysInventory.Post`, `Inventory.PhysInventory.PreviewPost`, `Inventory.PhysInventory.Record`, `Inventory.PlanningWorksheet.CarryOut`, `Inventory.Reclassification.Check`, `Inventory.Reclassification.Post`, `Inventory.Reclassification.PreviewPost`, `Inventory.Tracking.Assign`, `Inventory.Tracking.Delete`, `Inventory.Transfer.UndoShipment`, `Inventory.TransferOrder.Create`, `Purchase.Requisition.CarryOut`. Test codeunit 97900 now guards all 97 types and all 36 object/array parameters in both languages.
+- CostToGL.Post and AdjustCost.Run now explain that omitted `expectedCount` previews named requests only when the company requires irreversible confirmation; otherwise execution proceeds immediately. Period.Close documents its existing reversible `write` behavior, `endingDate`-only input, immediate execution and lack of confirmation preview. Its effect and behavior are unchanged; the AC10 classification discrepancy needs clarification.
+
 - Physical inventory Record and RecordCount now have distinct English and Icelandic descriptions. New codeunit 10076950 `Phys. Count Record Impl ori` delegates to the existing count execution; the request and response contracts are unchanged.
 - Physical inventory order discovery uses dedicated translated keyword lists instead of splitting description sentences. Existing StandardCost and Tracking discovery translations are retained and covered in both languages.
 - Valuation help explicitly selects items with `itemFilter`, with a one-item example; `itemNo` is a response field. Existing AdjustCost response declarations for `itemsProcessed` and `errors[]` are covered by regression tests.

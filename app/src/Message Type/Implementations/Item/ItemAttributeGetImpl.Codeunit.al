@@ -111,9 +111,14 @@ codeunit 10076916 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
         ContractParts: Codeunit "Inventory Contract Parts ori";
+        ParameterExample1Lbl: Label 'Read named attributes; replace the item and attribute names with your own', Comment = 'is-IS=Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti';
+        ParameterExample2Lbl: Label 'Read attributes by ID; replace the item and attribute IDs with your own', Comment = 'is-IS=Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni';
     begin
         Examples := ContractParts.GetExamples('Inventory.Attribute.Get');
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true,"attributeNames":["Colour"]}}', '{"status":"Success","items":[]}'));
+        Examples.Add(ContractMgt.Example(ParameterExample2Lbl, '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true,"attributeIds":[1]}}', '{"status":"Success","items":[]}'));
         exit(Examples.Count() > 0);
     end;
 
