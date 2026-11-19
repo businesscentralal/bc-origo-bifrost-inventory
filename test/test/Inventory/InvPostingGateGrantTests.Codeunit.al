@@ -23,10 +23,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure AssemblyUndo_WithInvPost_EnforcesGate()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         Header: Record "Posted Assembly Header";
         Impl: Codeunit "Assembly Undo Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         LibraryLowerPermissions.SetOutsideO365Scope();
         DomainSetup.EnableAssembly();
@@ -38,10 +38,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure TransferUndoShipment_WithInvPost_EnforcesGate()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         Header: Record "Transfer Shipment Header";
         Impl: Codeunit "Transfer Undo Shpt Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         LibraryLowerPermissions.SetOutsideO365Scope();
         DomainSetup.EnableTransferOrders();
@@ -53,10 +53,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure TransferPost_WithInvPost_IsEnabled()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         TransferHeader: Record "Transfer Header";
         PostImpl: Codeunit "Transfer Order Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] TransferOrder.Post is enabled when the caller can write the inventory posting token.
         LibraryLowerPermissions.SetOutsideO365Scope();
@@ -69,10 +69,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
     [Test]
     procedure AssemblyPost_WithInvPost_IsEnabled()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         AssemblyHeader: Record "Assembly Header";
         PostImpl: Codeunit "Assembly Order Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] AssemblyOrder.Post is enabled when the caller can write the inventory posting token.
         LibraryLowerPermissions.SetOutsideO365Scope();

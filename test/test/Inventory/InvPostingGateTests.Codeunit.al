@@ -335,10 +335,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPreview_WithoutInvPost_StaysEnabled()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] TransferOrder.PreviewPost stays enabled and does not return the posting-denied error.
         LibraryLowerPermissions.SetOutsideO365Scope();
@@ -355,10 +355,10 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssemblyPreview_WithoutInvPost_StaysEnabled()
     var
-        DomainSetup: Codeunit "Inventory Test Library ori";
         TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] AssemblyOrder.PreviewPost stays enabled and does not return the posting-denied error.
         LibraryLowerPermissions.SetOutsideO365Scope();
