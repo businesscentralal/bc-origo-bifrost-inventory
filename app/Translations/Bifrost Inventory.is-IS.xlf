@@ -1203,18 +1203,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu vöruna í Framboð vöru eftir atburði og leiðréttu upprunagögn eða lesheimildir og reyndu aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType CalculationNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 4269381906 - NamedType 998505471" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Availability domain is disabled.</source>
-          <target>Slökkt er á framboðssviðinu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á framboðssviðinu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType DomainErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 4269381906 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator to enable Availability in Inventory Setup.</source>
-          <target>Biddu stjórnanda um að virkja framboð í birgðauppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda um að virkja framboð í birgðauppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 4269381906 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
           <source>The parameter has an invalid format.</source>
           <target>Færibreytan er á ógildu sniði.</target>
@@ -1472,18 +1460,6 @@
           <target>Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykla; notaðu aðeins itemNo, variant, location, from og to.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method ValidateKeys - NamedType NextStepLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Availability domain is turned off for this company.</source>
-          <target>Framboðssviðið er slökkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1409812153 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
@@ -1850,18 +1826,6 @@
           <target>Notaðu periods frá 1 til 53.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu periods frá 1 til 53.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Period Impl ori - Method ValidatePeriodCount - NamedType CountNextStepLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2482523039 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Availability domain is turned off for this company.</source>
-          <target>Framboðssviðið er slökkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Framboðssviðið er slökkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2482523039 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. To Promise Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2482523039 - Method 1854797735 - NamedType 2685700126" size-unit="char" translate="yes" xml:space="preserve">
           <source>Capable to promise needs an order promising template and worksheet.</source>
@@ -2804,18 +2768,6 @@
           <target>Heimild hafnað fyrir kostnaðargögn vöru.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir kostnaðargögn vöru.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Cost Read ori - NamedType ReadDeniedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The %1 domain is turned off for this company. Turn it on from Inventory Setup.</source>
-          <target>%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = domain, is-IS=%1 sviðið er slökkt fyrir þetta fyrirtæki. Kveiktu á því í uppsetningu birgða.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 1761568649" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Domain Gate ori - Method AssertEnabled - NamedType DomainDisabledNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2425877499 - Method 1513833081 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
@@ -4125,18 +4077,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3279967377 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Category domain is turned off for this company.</source>
-          <target>Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3279967377 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Get Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3279967377 - Method 2979007805 - NamedType 1132247979" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send code or systemId, not both.</source>
           <target>Sendu code eða systemId, ekki bæði.</target>
@@ -4394,18 +4334,6 @@
           <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 790683013 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Category domain is turned off for this company.</source>
-          <target>Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vöruflokkasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 790683013 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Category Set Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 790683013 - Method 3552834713 - NamedType 715105691" size-unit="char" translate="yes" xml:space="preserve">
           <source>Send the attribute name or id.</source>
@@ -5703,18 +5631,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3298073719 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Attributes domain is turned off for this company.</source>
-          <target>Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3298073719 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3298073719 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is longer than %2 characters.</source>
           <target>%1 er lengra en %2 stafir.</target>
@@ -6009,18 +5925,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu referenceType og referenceTypeNo til að þrengja leitina.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AnswerReferences - NamedType AmbiguousNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Reference domain is turned off for this company.</source>
-          <target>Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörutilvísanasviðið er slökkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Resolve Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 556072390 - Method 3638512304 - NamedType 1902290539" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permission denied for this inventory message type.</source>
           <target>Heimild hafnað fyrir þessa birgðaskilaboðategund.</target>
@@ -6302,18 +6206,6 @@
           <target>Úthlutaðu Bifrost Full og Business Central heimildum fyrir vörutilvísanir og tengdar færslur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost Full og Business Central heimildum fyrir vörutilvísanir og tengdar færslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType PermissionNextLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 3379277262" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Reference domain is turned off.</source>
-          <target>Slökkt er á vörutilvísanasviðinu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vörutilvísanasviðinu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType DomainLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3640557848 - Method 3571782927 - NamedType 2340038615" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Enable Item Reference from Inventory Setup.</source>
-          <target>Virkjaðu vörutilvísanir í uppsetningu birgða.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Virkjaðu vörutilvísanir í uppsetningu birgða.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method ExecuteBifrostTask - NamedType DomainNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3640557848 - Method 4077369804 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates or updates an item reference.</source>
@@ -8049,18 +7941,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3401488166 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Catalog Items domain is turned off for this company.</source>
-          <target>Vörulistavörusviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Vörulistavörusviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3401488166 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3401488166 - Method 3303473006 - NamedType 1892115284" size-unit="char" translate="yes" xml:space="preserve">
           <source>Complete the vendor, vendor item number, unit of measure and an existing item template on the Catalog Item Card in Business Central, and send the call again.</source>
           <target>Fylltu út lánardrottin, vörunúmer lánardrottins, mælieiningu og vörusniðmát sem er til á vörulistavöruspjaldinu í Business Central og sendu kallið aftur.</target>
@@ -8348,18 +8228,6 @@
           <target>Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægðu óþekkta lykilinn. Eini leyfði lykillinn er entryNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Nonstock Item Create Impl ori - Method RejectUnknownKeys - NamedType UnknownNextStepLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Reservations domain is turned off for this company.</source>
-          <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method AssertCanRead - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1637251085 - Method 3638512304 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Order Tracking Get Impl ori - Method AssertCanRead - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1637251085 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads the order tracking chain for a line or an item ledger entry.</source>
@@ -10533,18 +10401,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType PermissionDeniedErr</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Purchase Returns domain is turned off for this company.</source>
-          <target>Innkaupaskilasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Innkaupaskilasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3900591428 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator to turn Purchase Returns on from the Inventory Setup page.</source>
-          <target>Biddu kerfisstjóra að kveikja á innkaupaskilum á síðunni Uppsetning birgða.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra að kveikja á innkaupaskilum á síðunni Uppsetning birgða.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Purch. Return Create Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3900591428 - Method 3612920174 - NamedType 3255873965" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is longer than %2 characters.</source>
           <target>%1 er lengra en %2 stafir.</target>
@@ -12182,18 +12038,6 @@
           <target>Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Úthlutaðu Bifrost fullum aðgangi með skrifheimildum birgða og Business Central heimildasafni sem getur breytt þessum töflum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType PermissionNextStepLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Reservations domain is turned off for this company.</source>
-          <target>Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 4208932804 - Method 3658467977 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Impl ori - Method AssertCanRun - NamedType DomainNextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4208932804 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reserves a sales order line from available supply.</source>
@@ -15051,18 +14895,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um BIFROST Full ori og nauðsynlegar heimildir fyrir vinnublað, vörur, birgðahaldseiningar og bók fyrir þessa aðgerð.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType PermissionNextLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 3379277262" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Costing domain is disabled.</source>
-          <target>Kostnaðarsviðið er óvirkt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðarsviðið er óvirkt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType DomainLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 2340038615" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Enable Costing on Inventory Setup and retry.</source>
-          <target>Virkjaðu kostnaðarsviðið í uppsetningu birgða og reyndu aftur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Virkjaðu kostnaðarsviðið í uppsetningu birgða og reyndu aftur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Std. Cost Management ori - Method ValidateCommon - NamedType DomainNextLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 4025035779 - Method 243885405 - NamedType 1773691126" size-unit="char" translate="yes" xml:space="preserve">
           <source>The request contains an unknown parameter.</source>
           <target>Beiðnin inniheldur óþekkta færibreytu.</target>
@@ -15962,12 +15794,6 @@
           <target>Les birgðamagn og áætlað og raunverulegt virði á tilteknum degi.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Les birgðamagn og áætlað og raunverulegt virði á tilteknum degi.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DescriptionLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 650354099 - NamedType 998505471" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Costing domain is disabled.</source>
-          <target>Slökkt er á kostnaðarsviðinu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á kostnaðarsviðinu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType DomainErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ask an administrator to enable Costing in Inventory Setup.</source>

@@ -2,8 +2,10 @@ namespace Origo.Bifrost.Inventory.Test;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Journal;
+using Microsoft.Inventory.Ledger;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
+using System.Reflection;
 using System.TestLibraries.Utilities;
 
 /// <summary>
@@ -395,45 +397,89 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
 
     /// <summary>Issue152 AC3: a disabled domain directs the caller to its administrator and supported setup page.</summary>
     [Test]
-    procedure Scenario_AC03_DisabledDomain_NamesAdministratorAndPage()
+    procedure Scenario_AC03_DisabledDomain_OnlyHidesType()
     var
         InventorySetup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        Response: JsonObject;
-        NextStep: Text;
         OriginalLanguage: Integer;
+        Pass: Integer;
     begin
-        // Issue152 AC03 | Time: no date dependency | Risk: setup changes are rolled back by the test runner.
+        // Issue152 AC03, narrowed by the Issue36 ruling (Gunnar 18.11.2026): a disabled domain only makes IsEnabled answer false;
+        // the execution gate keeps checking permissions and never refuses for the domain, in 1033 and 1039.
         InventorySetup.InsertIfNotExists();
         InventorySetup.Attributes := false;
         InventorySetup.Modify(true);
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
         OriginalLanguage := GlobalLanguage();
-        GlobalLanguage(1033);
-        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'Disabled domain is refused.');
-        Response := TempArgument.GetResponseJson();
-        NextStep := TextOf(Response, 'nextStep');
-        Assert.IsTrue(NextStep.Contains('administrator'), 'The caller knows who can enable the domain.');
-        Assert.IsTrue(NextStep.Contains('Inv. Posting Gate'), 'The required assignable permission caption is named.');
-        Assert.IsTrue(NextStep.Contains('Inventory Setup page'), 'The supported page is named.');
-        Assert.IsTrue(NextStep.Contains('Data.Records.Set cannot'), 'The protected-table restriction is explicit.');
-        TempArgument.Delete();
-        Clear(TempArgument);
-        Clear(DomainGate);
-        TempArgument.Init();
-        TempArgument.Version := "Message Version ori"::"1.0";
-        TempArgument.Insert(true);
-        GlobalLanguage(1039);
-        Assert.IsFalse(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'The same gate applies in Icelandic.');
-        Response := TempArgument.GetResponseJson();
-        NextStep := TextOf(Response, 'nextStep');
-        Assert.IsTrue(NextStep.Contains('kerfisstjóra'), 'The Icelandic response names the administrator.');
-        Assert.IsTrue(NextStep.Contains('Bókunarhlið birgða'), 'The Icelandic permission caption is named.');
-        Assert.IsTrue(NextStep.Contains('Uppsetning birgða'), 'The Icelandic page is named.');
+        for Pass := 1 to 2 do begin
+            if Pass = 1 then
+                GlobalLanguage(1033)
+            else
+                GlobalLanguage(1039);
+            Clear(TempArgument);
+            TempArgument.DeleteAll();
+            TempArgument.Init();
+            TempArgument.Version := "Message Version ori"::"1.0";
+            TempArgument.Insert(true);
+            Assert.IsFalse(DomainGate.IsEnabled("Inventory Domain ori"::Attributes, Database::Item, false, false), 'A disabled domain hides the type.');
+            Assert.IsTrue(DomainGate.AssertEnabled(TempArgument, "Inventory Domain ori"::Attributes, Database::Item, false, false), 'A disabled domain does not refuse execution.');
+        end;
         GlobalLanguage(OriginalLanguage);
+    end;
+
+    /// <summary>Issue36 (Gunnar ruling 18.11.2026): with every domain off, every Inventory type stays registered and only answers IsEnabled false; execution is never refused for the domain.</summary>
+    [Test]
+    procedure Scenario_Issue36_EveryTypeWithDomainsOff_OnlyIsEnabledChanges()
+    var
+        Item: Record Item;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        MessageType: Enum "Message Type ori";
+        TypeName: Text;
+        Offenders: Text;
+        PinnedCount: Integer;
+        GatedCount: Integer;
+        ItemCount: Integer;
+        LedgerCount: Integer;
+        TypeCount: Integer;
+    begin
+        // Issue36 Gate | Time: no date dependency | Risk: setup changes are rolled back by the test runner.
+        DisableEveryDomain();
+        ItemCount := Item.Count();
+        LedgerCount := ItemLedgerEntry.Count();
+        foreach MessageType in InventoryTypes() do begin
+            TypeName := TypeNameOf(MessageType);
+            if NoDomainTypes().Contains(TypeName) then
+                PinnedCount += 1
+            else
+                CheckDomainOnlyHides(MessageType, TypeName, Offenders, GatedCount);
+            TypeCount += 1;
+        end;
+        Assert.AreEqual(NoDomainTypes().Count(), PinnedCount, 'Every type pinned as outside the Issue36 domains still exists.');
+        Assert.AreEqual('', Offenders, 'Every gated type answers IsEnabled false and is not refused for its domain.');
+        Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked.');
+        Assert.AreEqual(TypeCount - PinnedCount, GatedCount, 'Every type outside the pinned list is checked.');
+        Assert.AreEqual(ItemCount, Item.Count(), 'An empty request created or deleted no item.');
+        Assert.AreEqual(LedgerCount, ItemLedgerEntry.Count(), 'An empty request posted no item ledger entry.');
+    end;
+
+    /// <summary>Issue36 Setup: the domain switches are stored per company and every switch is a Boolean.</summary>
+    [Test]
+    procedure Scenario_Issue36_SetupIsPerCompanyBooleanSwitches()
+    var
+        TableMetadata: Record "Table Metadata";
+        Field: Record Field;
+    begin
+        // Issue36 Setup | Time: no date dependency | Risk: read-only metadata check.
+        TableMetadata.Get(Database::"Inventory Setup ori");
+        Assert.IsTrue(TableMetadata.DataPerCompany, 'Inventory Setup is company-scoped.');
+        Field.SetRange(TableNo, Database::"Inventory Setup ori");
+        Field.SetRange("No.", 10, 1999999999);
+        Field.SetFilter(ObsoleteState, '<>%1', Field.ObsoleteState::Removed);
+        Assert.IsTrue(Field.Count() >= 11, 'Every issue domain has a switch.');
+        if Field.FindSet() then
+            repeat
+                Assert.AreEqual(Field.Type::Boolean, Field.Type, Field.FieldName + ' is a domain switch.');
+            until Field.Next() = 0;
     end;
 
     /// <summary>Issue152 AC2: former text-only missing-parameter responses match their help code.</summary>
@@ -768,6 +814,75 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         Names.Add('Inventory.Attribute.Create');
         Names.Add('Inventory.Attribute.Update');
         Names.Add('Inventory.AttributeDefinition.Create');
+    end;
+
+    local procedure CheckDomainOnlyHides(MessageType: Enum "Message Type ori"; TypeName: Text; var Offenders: Text; var GatedCount: Integer)
+    var
+        TempArgument: Record "Message Argument ori" temporary;
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
+        Implementation: Interface "Msg Interface ori";
+        Request: JsonObject;
+        Payload: Text;
+    begin
+        Implementation := MessageType;
+        if Implementation.IsEnabled() then
+            Offenders += TypeName + ' (IsEnabled while every domain is off); ';
+        Clear(TempArgument);
+        TempArgument.DeleteAll();
+        TempArgument.Init();
+        TempArgument.Version := "Message Version ori"::"1.0";
+        TempArgument.Insert(true);
+        Clear(Request);
+        TempArgument.SetRequestJson(Request);
+        // The empty request meets the normal licence, permission or validation checks; none may be a domain-disabled refusal.
+        if TryExecute(Implementation, TempArgument) then
+            TempArgument.GetResponseJson().WriteTo(Payload)
+        else
+            Payload := GetLastErrorText();
+        if DomainCheck.IsDomainRefusal(Payload) then
+            Offenders += TypeName + ' (domain refusal: ' + Payload + '); ';
+        GatedCount += 1;
+    end;
+
+    /// <summary>Types added after Issue36 that belong to none of its domains; they are not gated by Inventory Setup. A new type must be gated or added here.</summary>
+    local procedure NoDomainTypes() Names: List of [Text]
+    begin
+        Names.Add('Inventory.ItemUnitOfMeasure.Create');
+        Names.Add('Inventory.ItemUnitOfMeasure.Get');
+        Names.Add('Inventory.ItemVariant.Create');
+        Names.Add('Inventory.ItemVariant.Get');
+        Names.Add('Purchase.PurchaseInvoice.GetReceiptLines');
+        Names.Add('Purchase.Receipt.Undo');
+        Names.Add('Purchase.Requisition.CarryOut');
+        Names.Add('Purchase.Requisition.Calculate');
+        Names.Add('Sales.ReturnOrder.CreateFromPosted');
+        Names.Add('Sales.SalesInvoice.GetShipmentLines');
+        Names.Add('Sales.Shipment.Undo');
+    end;
+
+    [TryFunction]
+    local procedure TryExecute(Implementation: Interface "Msg Interface ori"; var Argument: Record "Message Argument ori" temporary)
+    begin
+        Implementation.ExecuteBifrostTask(Argument);
+    end;
+
+    local procedure DisableEveryDomain()
+    var
+        InventorySetup: Record "Inventory Setup ori";
+        RecRef: RecordRef;
+        FieldRef: FieldRef;
+        Index: Integer;
+    begin
+        InventorySetup.InsertIfNotExists();
+        RecRef.Open(Database::"Inventory Setup ori");
+        RecRef.FindFirst();
+        for Index := 1 to RecRef.FieldCount() do begin
+            FieldRef := RecRef.FieldIndex(Index);
+            if (FieldRef.Number() >= 10) and (FieldRef.Type() = FieldType::Boolean) then
+                FieldRef.Value := false;
+        end;
+        RecRef.Modify(false);
+        RecRef.Close();
     end;
 
     local procedure TextOf(Source: JsonObject; KeyName: Text): Text

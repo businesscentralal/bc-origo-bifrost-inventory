@@ -18,8 +18,6 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
         NotFoundNextStepLbl: Label 'Check itemNo and any variant or location code, then retry with an existing record.', Comment = 'is-IS=Athugaðu itemNo og afbrigðis- eða staðsetningarkóða og reyndu aftur með færslu sem er til.';
         RangeErr: Label 'from must be on or before to.', Comment = 'is-IS=from verður að vera á undan eða sama dag og to.';
         RangeNextStepLbl: Label 'Send an inclusive date range with from on or before to.', Comment = 'is-IS=Sendu dagsetningabil með báðum endadögum þar sem from er á undan eða sama dag og to.';
-        DomainErr: Label 'The Availability domain is disabled.', Comment = 'is-IS=Slökkt er á framboðssviðinu.';
-        DomainNextStepLbl: Label 'Ask an administrator to enable Availability in Inventory Setup.', Comment = 'is-IS=Biddu stjórnanda um að virkja framboð í birgðauppsetningu.';
         PermissionErr: Label 'Read permission is required.', Comment = 'is-IS=Lesheimild er nauðsynleg.';
         PermissionNextStepLbl: Label 'Ask an administrator for Bifrost Read-Only and Business Central inventory read permissions.', Comment = 'is-IS=Biddu stjórnanda um lesaðgang í Bifröst og lesheimildir á birgðum í Business Central.';
         StockErr: Label 'Availability requires an inventory item.', Comment = 'is-IS=Framboð krefst birgðavöru.';
@@ -241,7 +239,6 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         Item: Record Item;
-        Setup: Record "Inventory Setup ori";
         RequestJson: JsonObject;
         Response: JsonObject;
         ItemNo: Text;
@@ -252,10 +249,6 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
     begin
         if not CanRead() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErr, '', '', '', PermissionNextStepLbl);
-            exit;
-        end;
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::Availability) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainErr, '', '', '', DomainNextStepLbl);
             exit;
         end;
         RequestJson := Argument.GetRequestJson();

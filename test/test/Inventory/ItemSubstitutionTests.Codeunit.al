@@ -241,13 +241,14 @@ codeunit 96993 "Item Substitution Tests ori"
 
     /// <summary>Scenario AC04 DisabledDomain RefusesWithoutWrites.</summary>
     [Test]
-    procedure Scenario_AC04_DisabledDomain_RefusesWithoutWrites()
+    procedure Scenario_AC04_DisabledDomain_OnlyHidesType()
     var
         Setup: Record "Inventory Setup ori";
         TempArgument: Record "Message Argument ori" temporary;
         Impl: Codeunit "Item Subst. Get Impl ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
     begin
-        // Story #118, AC02/AC04 | Time: none; WorkDate ignored | Risk: None
+        // Story #118, AC02/AC04, narrowed by the Issue36 ruling (Gunnar 18.11.2026): the switch only changes IsEnabled | Time: none; WorkDate ignored | Risk: None
         Initialize();
         // [GIVEN] An administrator disables the domain.
         Setup.Get();
@@ -258,9 +259,8 @@ codeunit 96993 "Item Substitution Tests ori"
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
         TempArgument.Insert(true);
-        Impl.ExecuteBifrostTask(TempArgument);
-        // [THEN] Direct execution cannot bypass the domain gate.
-        AssertRefusal(TempArgument.GetResponseJson(), 'InvalidParameter');
+        // [THEN] Direct execution is not refused for the domain.
+        DomainCheck.AssertDomainOffOnlyHidesType(Impl, TempArgument);
     end;
 
     /// <summary>Scenario AC04 HelpAndErrors AreBilingual.</summary>

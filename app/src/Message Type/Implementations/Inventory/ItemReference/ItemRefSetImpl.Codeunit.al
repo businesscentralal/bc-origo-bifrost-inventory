@@ -18,9 +18,16 @@ codeunit 10076954 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
     procedure IsEnabled(): Boolean
     var
         Setup: Record "Inventory Setup ori";
+    begin
+        exit(Setup.IsDomainEnabled("Inventory Domain ori"::ItemReference) and HasNativePermission());
+    end;
+
+    local procedure HasNativePermission(): Boolean
+    var
+        Setup: Record "Inventory Setup ori";
         Reference: Record "Item Reference";
     begin
-        exit(Setup.ReadPermission() and Setup.IsDomainEnabled("Inventory Domain ori"::ItemReference) and Reference.ReadPermission() and Reference.WritePermission());
+        exit(Setup.ReadPermission() and Reference.ReadPermission() and Reference.WritePermission());
     end;
 
     /// <summary>Returns the reference table.</summary>
@@ -234,18 +241,12 @@ codeunit 10076954 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
         NativeExpectedLbl: Label 'Valid item reference and related records.', Comment = 'is-IS=Gild vörutilvísun og tengdar færslur.';
         PermissionLbl: Label 'Permission denied for item reference writes.', Comment = 'is-IS=Heimild hafnað fyrir skrif í vörutilvísanir.';
         PermissionNextLbl: Label 'Assign Bifrost Full and Business Central permissions for item references and their related records.', Comment = 'is-IS=Úthlutaðu Bifrost Full og Business Central heimildum fyrir vörutilvísanir og tengdar færslur.';
-        DomainLbl: Label 'The Item Reference domain is turned off.', Comment = 'is-IS=Slökkt er á vörutilvísanasviðinu.';
-        DomainNextLbl: Label 'Enable Item Reference from Inventory Setup.', Comment = 'is-IS=Virkjaðu vörutilvísanir í uppsetningu birgða.';
     begin
         if not Setup.ReadPermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionLbl, '', '', '', PermissionNextLbl);
             exit;
         end;
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::ItemReference) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainLbl, '', '', '', DomainNextLbl);
-            exit;
-        end;
-        if not IsEnabled() then begin
+        if not HasNativePermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionLbl, '', '', '', PermissionNextLbl);
             exit;
         end;
