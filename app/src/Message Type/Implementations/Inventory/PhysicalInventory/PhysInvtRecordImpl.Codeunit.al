@@ -273,7 +273,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
         Examples.Add(ContractMgt.Example(LegacyCountsExampleLbl,
             '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}',
-            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","linesCounted":1,"result":[{"lineNo":10000,"qtyCounted":0}]}'));
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
         exit(true);
     end;
 

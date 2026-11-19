@@ -173,7 +173,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
         ParameterExample1Lbl: Label 'Remove selected tracking from a sales line; use your own line GUID and entry numbers', Comment = 'is-IS=Fjarlægja valda rakningu af sölulínu; notaðu eigin GUID-línuauðkenni og færslunúmer';
     begin
         Examples.Add(ContractMgt.Example('Use your own purchase line SystemId and tracking entry', '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNo":210}}', '{"status":"Success","entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
-        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"SalesLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNos":[210,211]}}', '{"status":"Success","entriesDeleted":2,"entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Tracking.Delete","data":{"source":{"type":"SalesLine","systemId":"11111111-1111-1111-1111-111111111111"},"entryNos":[210,211]}}', '{"status":"Success","entriesDeleted":2,"entryNo":211,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
         exit(true);
     end;
 
