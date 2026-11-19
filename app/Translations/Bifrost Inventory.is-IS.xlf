@@ -2631,6 +2631,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitRevaluation - NamedType UnitLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read named attributes; replace the item and attribute names with your own</source>
+          <target>Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3255554567 - NamedType 1259707851" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read attributes by ID; replace the item and attribute IDs with your own</source>
+          <target>Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method GetExamples - NamedType ParameterExample2Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
           <target>%1 er nauðsynlegt.</target>
@@ -3836,18 +3848,6 @@
           <target>Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Get Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3712530045 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read named attributes; replace the item and attribute names with your own</source>
-          <target>Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Get Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3712530045 - Method 3255554567 - NamedType 1259707851" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read attributes by ID; replace the item and attribute IDs with your own</source>
-          <target>Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Attribute Get Impl ori - Method GetExamples - NamedType ParameterExample2Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3712530045 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>read item attributes, get item attribute values, inspect item characteristics, list assigned attributes, item metadata</source>

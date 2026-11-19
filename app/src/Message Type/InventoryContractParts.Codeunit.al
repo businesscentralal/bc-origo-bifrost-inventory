@@ -1149,10 +1149,16 @@ codeunit 10076919 "Inventory Contract Parts ori"
     procedure GetExamples(MessageType: Text) Examples: JsonArray
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Read named attributes; replace the item and attribute names with your own', Comment = 'is-IS=Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti';
+        ParameterExample2Lbl: Label 'Read attributes by ID; replace the item and attribute IDs with your own', Comment = 'is-IS=Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni';
     begin
         case MessageType of
             'Item.Attribute.Get', 'Inventory.Attribute.Get':
-                Examples.Add(ContractMgt.Example('Read item attributes', '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
+                begin
+                    Examples.Add(ContractMgt.Example('Read item attributes', '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true}}', '{"status":"Success","items":[]}'));
+                    Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true,"attributeNames":["Colour"]}}', '{"status":"Success","items":[]}'));
+                    Examples.Add(ContractMgt.Example(ParameterExample2Lbl, '{"type":"Inventory.Attribute.Get","subject":"1000","data":{"includeUnassigned":true,"attributeIds":[1]}}', '{"status":"Success","items":[]}'));
+                end;
             'Item.Attribute.Create', 'Inventory.Attribute.Create':
                 Examples.Add(ContractMgt.Example('Assign an attribute', '{"type":"Inventory.Attribute.Create","subject":"1000","data":{"attributes":[{"name":"Finish","value":"Matte","overwrite":false,"createValueIfMissing":false}]}}', '{"status":"Success","itemNo":"1000","results":[{"attributeName":"Finish","value":"Matte","changed":true,"attributeId":2,"valueId":1}]}'));
             'Item.Attribute.Update', 'Inventory.Attribute.Update':
