@@ -12,6 +12,8 @@ permissionset 10076837 "BIFROST InvPost ori"
 
     Permissions =
         page "Inventory Setup Wizard ori" = X,
+        page "Inventory Suggest Setup ori" = X,
+        codeunit "Inventory Suggest Setup ori" = X,
         codeunit "Inventory Wizard Reg. ori" = X,
         codeunit "Inventory Wizard Mgt ori" = X,
         tabledata "Inv. Posting ori" = RIMD,

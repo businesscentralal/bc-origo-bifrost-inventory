@@ -15,6 +15,12 @@ using System.Upgrade;
 codeunit 10076950 "Inventory Suggest Setup ori"
 {
     Access = Internal;
+    Permissions = tabledata Item = R,
+                  tabledata Location = R,
+                  tabledata "BOM Component" = R,
+                  tabledata "Item Charge" = R,
+                  tabledata "Inventory Period" = R,
+                  tabledata "Inventory Setup ori" = RIM;
 
     /// <summary>Gives a new company its Inventory Setup row with every domain off. Suggest Setup turns domains on.</summary>
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Company-Initialize", OnCompanyInitialize, '', false, false)]
