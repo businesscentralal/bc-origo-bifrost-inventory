@@ -88,6 +88,36 @@ codeunit 96902 "Inventory Test Library ori"
         Setup.Modify(true);
     end;
 
+    /// <summary>Explicitly enables the transfer order domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableTransferOrders()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup."Transfer Orders" := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the assembly domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableAssembly()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Assembly := true;
+        Setup.Modify(true);
+    end;
+
+    /// <summary>Explicitly enables the costing domain for a test of its independent behavior or permissions.</summary>
+    procedure EnableCosting()
+    var
+        Setup: Record "Inventory Setup ori";
+    begin
+        Setup.InsertIfNotExists();
+        Setup.Costing := true;
+        Setup.Modify(true);
+    end;
+
     /// <summary>Dispatches a message type via Foundation Dispatcher and returns the response JSON.</summary>
     procedure ExecuteType(MessageType: Enum "Message Type ori"; Subject: Text[250]; RequestJson: JsonObject; OmitCommit: Boolean) ResponseJson: JsonObject
     var

@@ -335,11 +335,14 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure TransferPreview_WithoutInvPost_StaysEnabled()
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Transf Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] TransferOrder.PreviewPost stays enabled and does not return the posting-denied error.
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableTransferOrders();
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Transfer preview should stay enabled without BIFROST InvPost ori');
 
@@ -352,11 +355,14 @@ codeunit 96918 "Inv. Posting Gate Tests"
     [Test]
     procedure AssemblyPreview_WithoutInvPost_StaysEnabled()
     var
+        DomainSetup: Codeunit "Inventory Test Library ori";
         TempArgument: Record "Message Argument ori" temporary;
         PreviewImpl: Codeunit "Asm. Doc Prev. Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
     begin
         // [SCENARIO] AssemblyOrder.PreviewPost stays enabled and does not return the posting-denied error.
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableAssembly();
         LowerToInvWrite(LibraryLowerPermissions);
         Assert.IsTrue(PreviewImpl.IsEnabled(), 'Assembly preview should stay enabled without BIFROST InvPost ori');
 
