@@ -684,11 +684,16 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         NextEntryNo: Integer;
         Offset: Integer;
     begin
+        // Story #251 | Time: WorkDate unchanged | Risk: relation keys can already be occupied on a reused company.
         if Ledger.FindLast() then
             NextEntryNo := Ledger."Entry No.";
         for Offset := 1 to 20 do begin
+            NextEntryNo += 1;
+            // Keep existing leftovers and seed only at free keys above the ledger.
+            while EntryRelation.Get(NextEntryNo) do
+                NextEntryNo += 1;
             EntryRelation.Init();
-            EntryRelation."Item Entry No." := NextEntryNo + Offset;
+            EntryRelation."Item Entry No." := NextEntryNo;
             EntryRelation."Source Type" := Database::"Purch. Rcpt. Line";
             EntryRelation."Source ID" := 'LEFTOVER';
             EntryRelation.Insert();

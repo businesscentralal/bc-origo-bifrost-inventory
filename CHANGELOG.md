@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)
-- `Inv. Source Tracking Tests ori` (96974) clears orphan `Item Entry Relation` rows inside its own rolled-back transaction before posting, so leftovers from earlier suites no longer collide with new ledger entry numbers. New test `RoundTripSurvivesLeftoverEntryRelations`. No app object added; no assertion changed.
+- `Inv. Source Tracking Tests ori` (96974) clears orphan `Item Entry Relation` rows inside its own rolled-back transaction before posting, so leftovers from earlier suites no longer collide with new ledger entry numbers. New test `RoundTripSurvivesLeftoverEntryRelations` seeds only free relation keys, retaining any existing leftovers until transactional cleanup. No app object added; no assertion changed.
 
 ### Fixed - Icelandic release wording (#244)
 
