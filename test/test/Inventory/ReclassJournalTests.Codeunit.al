@@ -19,7 +19,6 @@ codeunit 96925 "Reclass Journal Tests ori"
     var
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
-        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryWarehouse: Codeunit "Library - Warehouse";
         Helper: Codeunit "Assembly Order Test Helper";
 
@@ -449,7 +448,6 @@ codeunit 96925 "Reclass Journal Tests ori"
         Setup.Get();
         Setup.Reclassification := true;
         Setup.Modify(true);
-        ContractLibrary.PrepareNativeEntryNumbers();
     end;
 
     local procedure CreateBatch(var Batch: Record "Item Journal Batch")

@@ -330,7 +330,6 @@ codeunit 96964 "Inv. 186 Blank Line Tests ori"
     var
         JournalTemplate: Record "Item Journal Template";
     begin
-        ContractLibrary.PrepareNativeEntryNumbers();
         LibraryInventory.CreateItemJournalTemplateByType(JournalTemplate, JournalType);
         JournalTemplate.Rename(CopyStr('X' + Format(CreateGuid(), 0, 4), 1, MaxStrLen(JournalTemplate.Name)));
         LibraryInventory.CreateItemJournalBatch(Batch, JournalTemplate.Name);

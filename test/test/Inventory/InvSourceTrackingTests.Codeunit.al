@@ -22,7 +22,6 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
     var
         Assert: Codeunit "Library Assert";
         LibraryInventory: Codeunit "Library - Inventory";
-        ContractLibrary: Codeunit "Inventory Test Library ori";
         LibraryPurchase: Codeunit "Library - Purchase";
 
     /// <summary>Assignment belongs to the source line and never inserts a persistent tracking specification.</summary>
@@ -352,7 +351,6 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
         Header: Record "Purchase Header";
         Response: JsonObject;
     begin
-        ContractLibrary.PrepareNativeEntryNumbers();
         ExecuteTracking(AssignmentRequest(PurchaseLine, 'ROUND-LOT', '', 10), false, Response);
         AssertStatus(Response, 'Success');
         PurchaseLine.Validate("Qty. to Receive", ReceiveQuantity);

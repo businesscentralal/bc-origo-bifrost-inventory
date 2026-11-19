@@ -1,5 +1,6 @@
 namespace Origo.Bifrost.Inventory.Test;
 
+using Microsoft.Foundation.UOM;
 using Microsoft.Inventory.Setup;
 using Microsoft.Assembly.Document;
 using Microsoft.Inventory.Item;
@@ -39,7 +40,7 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
     local procedure CheckItemNoReadRefusals(LanguageId: Integer)
     var
         Item: Record Item;
-        LibraryInventory: Codeunit "Library - Inventory";
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
         MessageTypes: List of [Enum "Message Type ori"];
         MessageType: Enum "Message Type ori";
         BadValues: JsonArray;
@@ -74,12 +75,9 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
         AssertRefusal(Response, 'MissingParameter', 'itemNo');
         Assert.AreEqual('<missing>', TextValue(Response, 'received'), 'Missing selection is explicit.');
         // [GIVEN] An owned numeric item number; legacy JSON numbers remain accepted by both readers.
-        repeat
-            NumericValue := 151000000 + Random(10000000);
-            NumericItemNo := CopyStr(Format(NumericValue, 0, 9), 1, MaxStrLen(NumericItemNo));
-        until IsFreeItemNo(NumericItemNo);
-        LibraryInventory.CreateItem(Item);
-        Item.Rename(NumericItemNo);
+        // Issue248: a key free in Item and Item Unit of Measure, inserted without a rename cascade.
+        NumericItemNo := FindFreeNumericItemNo(NumericValue);
+        InsertOwnedItem(Item, NumericItemNo);
         Clear(Request);
         Request.Add('itemNo', NumericValue);
         foreach MessageType in MessageTypes do begin
@@ -87,19 +85,87 @@ codeunit 96975 "Inv. Typed Refusal Tests ori"
             Assert.AreEqual('Success', TextValue(Response, 'status'), 'Owned numeric itemNo remains compatible.');
         end;
         GlobalLanguage(PreviousLanguage);
+        // [THEN] The owned fixture is removed with its dependent rows.
+        Item.Get(NumericItemNo);
+        Item.Delete(true);
+        ItemUnitOfMeasure.SetRange("Item No.", NumericItemNo);
+        Assert.IsTrue(ItemUnitOfMeasure.IsEmpty(), 'No Item Unit of Measure row of the owned item is left behind.');
     end;
 
-    local procedure IsFreeItemNo(ItemNo: Code[20]): Boolean
+    /// <summary>Issue248: AC01's numeric item key skips a value whose Item Unit of Measure rows outlived their item on a reused company.</summary>
+    [Test]
+    procedure NumericItemNo_SkipsLeftoverUnitOfMeasure_EN()
+    begin
+        CheckNumericItemNoSkipsLeftover(1033);
+    end;
+
+    /// <summary>Issue248: AC01's numeric item key skips a value whose Item Unit of Measure rows outlived their item on a reused company.</summary>
+    [Test]
+    procedure NumericItemNo_SkipsLeftoverUnitOfMeasure_IS()
+    begin
+        CheckNumericItemNoSkipsLeftover(1039);
+    end;
+
+    local procedure CheckNumericItemNoSkipsLeftover(LanguageId: Integer)
+    var
+        Item: Record Item;
+        ItemUnitOfMeasure: Record "Item Unit of Measure";
+        UnitOfMeasure: Record "Unit of Measure";
+        LibraryInventory: Codeunit "Library - Inventory";
+        Request: JsonObject;
+        Response: JsonObject;
+        OccupiedItemNo: Code[20];
+        NumericItemNo: Code[20];
+        NumericValue: Integer;
+        PreviousLanguage: Integer;
+    begin
+        // [GIVEN] The first candidate of a fixed random sequence has a leftover unit-of-measure row and no item.
+        EnableDomains();
+        Randomize(248);
+        OccupiedItemNo := FindFreeNumericItemNo(NumericValue);
+        LibraryInventory.CreateUnitOfMeasureCode(UnitOfMeasure);
+        ItemUnitOfMeasure.Init();
+        ItemUnitOfMeasure."Item No." := OccupiedItemNo;
+        ItemUnitOfMeasure.Code := UnitOfMeasure.Code;
+        ItemUnitOfMeasure."Qty. per Unit of Measure" := 1;
+        ItemUnitOfMeasure.Insert(false);
+        Assert.IsFalse(Item.Get(OccupiedItemNo), 'The leftover row has no item.');
+        // [WHEN] The same sequence picks the key again.
+        Randomize(248);
+        NumericItemNo := FindFreeNumericItemNo(NumericValue);
+        // [THEN] The occupied key is skipped and the owned item is created and read under the free key.
+        Assert.AreNotEqual(OccupiedItemNo, NumericItemNo, 'A key with leftover Item Unit of Measure rows is not reused.');
+        InsertOwnedItem(Item, NumericItemNo);
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Request.Add('itemNo', NumericValue);
+        Response := Library.ExecuteType("Message Type ori"::"Inventory.Cost.Get", '', Request, true);
+        GlobalLanguage(PreviousLanguage);
+        Assert.AreEqual('Success', TextValue(Response, 'status'), 'The owned numeric itemNo is read.');
+        Item.Delete(true);
+        ItemUnitOfMeasure.Delete(false);
+    end;
+
+    local procedure FindFreeNumericItemNo(var NumericValue: Integer) NumericItemNo: Code[20]
     var
         Item: Record Item;
         ItemUnitOfMeasure: Record "Item Unit of Measure";
     begin
-        // The rename also moves the item's units of measure; a leftover unit row under the number
-        // from an earlier run on the same company would collide (inventory#248).
-        if Item.Get(ItemNo) then
-            exit(false);
-        ItemUnitOfMeasure.SetRange("Item No.", ItemNo);
-        exit(ItemUnitOfMeasure.IsEmpty());
+        // Issue248: free in Item and in Item Unit of Measure, so leftover rows from an earlier run cannot collide.
+        repeat
+            NumericValue := 151000000 + Random(10000000);
+            NumericItemNo := CopyStr(Format(NumericValue, 0, 9), 1, MaxStrLen(NumericItemNo));
+            ItemUnitOfMeasure.SetRange("Item No.", NumericItemNo);
+        until (not Item.Get(NumericItemNo)) and ItemUnitOfMeasure.IsEmpty();
+    end;
+
+    local procedure InsertOwnedItem(var Item: Record Item; ItemNo: Code[20])
+    begin
+        // Insert under the free key instead of renaming a library item, so no rename cascade touches other rows.
+        Item.Init();
+        Item."No." := ItemNo;
+        Item.Description := CopyStr('Issue248 ' + ItemNo, 1, MaxStrLen(Item.Description));
+        Item.Insert(true);
     end;
 
     [Test]

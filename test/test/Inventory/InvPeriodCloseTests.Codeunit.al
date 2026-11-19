@@ -42,7 +42,6 @@ codeunit 96979 "Inv. Period Close Tests"
         if StatusToken.AsValue().AsText() = 'Success' then begin
             Assert.IsTrue(InventoryPeriod.Closed, 'A successful platform close sets Closed.');
             Assert.IsFalse(PeriodEntry.IsEmpty(), 'A successful platform close writes a Close inventory period entry.');
-            LeavePeriodOpen(InventoryPeriod);
         end else begin
             Assert.AreEqual('Error', StatusToken.AsValue().AsText(), 'A refused close is an error. ' + ResponseText);
             Assert.IsTrue(StrPos(ResponseText, 'cannot be closed') > 0, 'The refusal must be the platform close text. ' + ResponseText);
@@ -75,7 +74,6 @@ codeunit 96979 "Inv. Period Close Tests"
         Assert.IsTrue(InventoryPeriod.Closed, 'The period stays closed.');
         PeriodEntry.SetRange("Ending Date", InventoryPeriod."Ending Date");
         Assert.IsTrue(PeriodEntry.IsEmpty(), 'The idempotent close must not write an inventory period entry.');
-        LeavePeriodOpen(InventoryPeriod);
     end;
 
     [Test]
@@ -131,15 +129,6 @@ codeunit 96979 "Inv. Period Close Tests"
         Assert.IsTrue(PeriodEntry.IsEmpty(), 'The idempotent reopen must not write an inventory period entry.');
     end;
 
-    local procedure LeavePeriodOpen(var InventoryPeriod: Record "Inventory Period")
-    begin
-        // A closed test period that a platform commit keeps would block every later posting
-        // in the company, so a rerun on the same tenant fails (inventory#249).
-        InventoryPeriod.Get(InventoryPeriod."Ending Date");
-        InventoryPeriod.Closed := false;
-        InventoryPeriod.Modify();
-    end;
-
     local procedure EnablePeriodDomain()
     var
         Setup: Record "Inventory Setup ori";
@@ -151,7 +140,6 @@ codeunit 96979 "Inv. Period Close Tests"
 
     local procedure CreateOpenPeriod(var InventoryPeriod: Record "Inventory Period")
     var
-        PeriodEntry: Record "Inventory Period Entry";
         Candidate: Date;
     begin
         Candidate := DMY2Date(31, 12, 2090);
@@ -159,12 +147,6 @@ codeunit 96979 "Inv. Period Close Tests"
         if InventoryPeriod.FindLast() then
             if InventoryPeriod."Ending Date" >= Candidate then
                 Candidate := CalcDate('<+1Y>', InventoryPeriod."Ending Date");
-        // Skip dates that still carry period entries from an earlier run on the same company (inventory#249).
-        PeriodEntry.SetRange("Ending Date", Candidate);
-        while not PeriodEntry.IsEmpty() do begin
-            Candidate := CalcDate('<+1Y>', Candidate);
-            PeriodEntry.SetRange("Ending Date", Candidate);
-        end;
         InventoryPeriod.Init();
         InventoryPeriod.Validate("Ending Date", Candidate);
         InventoryPeriod.Insert(true);

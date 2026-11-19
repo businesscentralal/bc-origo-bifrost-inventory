@@ -2,18 +2,16 @@
 
 ## [Unreleased]
 
-### Fixed (2026-11-18) - rerun-safe test fixtures on reused tenants (#246-#252, found by #242)
+### Fixed (2026-11-18) - Sales Get Shipment Tests rerun-safe on reused tenants (#252, found by #242)
 
-- New public test helper `Inventory Test Library ori`.`PrepareNativeEntryNumbers()` (codeunit 96902): when `Post Value Entry to G/L` or `Item Entry Relation` keys sit above the last value or item ledger entry, it reserves a zero-value boundary entry above them and clears `Sequence No. Mgt.` state; it never deletes tenant rows. Used by 96925 Reclass Journal Tests ori (#246), 96964 Inv. 186 Blank Line Tests ori (#247) and 96974 Inv. Source Tracking Tests ori (#251).
-- 96975 Inv. Typed Refusal Tests ori: the numeric item number must also be free of leftover `Item Unit of Measure` rows (#248).
-- 96979 Inv. Period Close Tests: the test period skips dates that still carry inventory period entries, and tests that close a period leave it open again, so a committed closed period cannot block later postings (#249).
-- 96939 Inventory Price Write Tests: the restricted-field test reuses the caller's existing `Unit Price` field-access row instead of inserting a duplicate (#250).
-- 96995 Sales Get Shipment Tests: the 20-character invoice and shipment numbers are generated per run instead of fixed (#252).
+- 96995 Sales Get Shipment Tests: the 20-character invoice and shipment numbers are generated per run instead of fixed, so a rerun on the same company no longer collides with the previous run's documents (#252).
 - Test code only. No app object, ID, page or message type changes; no assertion was removed or weakened.
 
 ### Fixed - Icelandic release wording (#244)
 
 - Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
+### Fixed (2026-11-18) - typed-refusal item fixture reruns on a reused company (#248)
+- `Scenario_AC01_ItemNoReadRefusals_EN/_IS` in test codeunit 96975 `Inv. Typed Refusal Tests ori` no longer rename a library item onto the numeric key. They insert the owned item under a key that is free in `Item` and `Item Unit of Measure`, so leftover unit-of-measure rows from an earlier run cannot collide. They also delete the item (and its dependent rows) at the end. All assertions remain. New regressions `NumericItemNo_SkipsLeftoverUnitOfMeasure_EN/_IS` seed a leftover unit-of-measure row on a fixed random sequence and prove the key is skipped. No new object.
 
 ### Changed (2026-11-18) - irreversible Inventory types name what expectedCount counts (#192, core#1365)
 - `Inventory.Revaluation.Post`, `.AssemblyOrder.Post`, `.AdjustCost.Run` and `.CostToGL.Post` keep their `irreversible` effect and now state the count unit in `effect.changes` and on the `expectedCount` parameter, in en-US and is-IS (the other five listed types, including `.TransferOrder.Post`, already did on main). The count is always 1: the one order, batch or run, not lines or entries. Read it without a side effect by sending the request without `expectedCount` and reading `expected`.
