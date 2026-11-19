@@ -246,22 +246,24 @@ codeunit 96934 "Nonstock Item Create Tests"
     end;
 
     [Test]
-    procedure Create_DomainOff_ReturnsInvalidParameter()
+    procedure Create_DomainOff_OnlyHidesType()
     var
         InventorySetup: Record "Inventory Setup ori";
-        Item: Record Item;
+        Impl: Codeunit "Nonstock Item Create Impl ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         ResponseJson: JsonObject;
+        Payload: Text;
         EntryNo: Code[20];
     begin
-        // [SCENARIO AC04] The Catalog Items domain switch turns the type off with a coded refusal.
+        // [SCENARIO Issue36 ruling 18.11.2026] The Catalog Items switch only hides the type; the dispatched request is not refused for the domain.
         EntryNo := CreateCatalogItem(true);
         InventorySetup.Get();
         InventorySetup.Validate("Catalog Items", false);
         InventorySetup.Modify(true);
         ResponseJson := CallRequest(EntryRequest(EntryNo));
-        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreNotEqual('', ReadText(ResponseJson, 'nextStep'), 'nextStep');
-        Assert.IsFalse(Item.Get(EntryNo), 'no item was created');
+        Assert.IsFalse(Impl.IsEnabled(), 'Catalog Items off hides the type.');
+        ResponseJson.WriteTo(Payload);
+        Assert.IsFalse(DomainCheck.IsDomainRefusal(Payload), 'No domain-disabled refusal: ' + Payload);
     end;
 
     [Test]

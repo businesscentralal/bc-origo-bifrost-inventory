@@ -310,15 +310,9 @@ codeunit 10076932 "Item Create Impl ori" implements "Msg Interface ori", "Msg Di
     var
         InventorySetup: Record "Inventory Setup ori";
         PermissionDeniedErr: Label 'Permission denied for this inventory message type.', Comment = 'is-IS=Heimild hafnað fyrir þessa birgðaskilaboðategund.';
-        DomainDisabledErr: Label 'The Attributes domain is turned off for this company.', Comment = 'is-IS=Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if (not InventorySetup.ReadPermission()) or (not CanWriteTables()) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', PermissionSetTok, PermissionNextStep());
-            exit(false);
-        end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::Attributes) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         exit(true);

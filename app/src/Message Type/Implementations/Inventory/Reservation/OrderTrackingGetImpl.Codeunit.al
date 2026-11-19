@@ -281,15 +281,9 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
     var
         InventorySetup: Record "Inventory Setup ori";
         ReservationEntry: Record "Reservation Entry";
-        DomainDisabledErr: Label 'The Reservations domain is turned off for this company.', Comment = 'is-IS=Slökkt er á frátekningasviðinu fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
     begin
         if not InventorySetup.ReadPermission() then begin
             RespondPermissionDenied(Argument);
-            exit(false);
-        end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::Reservations) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
             exit(false);
         end;
         if ReservationEntry.ReadPermission() then

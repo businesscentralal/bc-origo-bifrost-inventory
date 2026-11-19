@@ -341,16 +341,16 @@ codeunit 96926 "Avail. To Promise Tests"
     end;
 
     [Test]
-    procedure DomainOff_ReturnsIcelandicRefusal()
+    procedure DomainOff_OnlyHidesType()
     var
         TempArgument: Record "Message Argument ori" temporary;
         InventorySetup: Record "Inventory Setup ori";
         PromiseImpl: Codeunit "Avail. To Promise Impl ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
         PreviousLanguage: Integer;
     begin
-        // [SCENARIO AC04] An Inventory-owned refusal answers its error and nextStep in is-IS at 1039.
+        // [SCENARIO Issue36 ruling 18.11.2026] Availability off only hides the type; execution is not refused for the domain, also in is-IS at 1039.
         Initialize();
         InventorySetup.Get();
         InventorySetup.Validate(Availability, false);
@@ -364,12 +364,8 @@ codeunit 96926 "Avail. To Promise Tests"
         TempArgument.SetRequestJson(RequestJson);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        PromiseImpl.ExecuteBifrostTask(TempArgument);
+        DomainCheck.AssertDomainOffOnlyHidesType(PromiseImpl, TempArgument);
         GlobalLanguage(PreviousLanguage);
-        ResponseJson := TempArgument.GetResponseJson();
-        AssertText(ResponseJson, 'code', 'InvalidParameter');
-        AssertText(ResponseJson, 'error', 'Framboðssviðið er slökkt fyrir þetta fyrirtæki.');
-        AssertText(ResponseJson, 'nextStep', 'Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.');
     end;
 
     [Test]

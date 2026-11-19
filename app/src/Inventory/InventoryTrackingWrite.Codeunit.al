@@ -34,6 +34,11 @@ codeunit 10076925 "Inventory Tracking Write ori"
     begin
         if not Gate.IsEnabled("Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
             exit(false);
+        exit(HasAnySourceWritePermission());
+    end;
+
+    local procedure HasAnySourceWritePermission(): Boolean
+    begin
         exit(HasSourceWritePermission(Database::"Sales Line") or HasSourceWritePermission(Database::"Purchase Line") or
              HasSourceWritePermission(Database::"Transfer Line") or HasSourceWritePermission(Database::"Assembly Header") or
              HasSourceWritePermission(Database::"Assembly Line") or HasSourceWritePermission(Database::"Item Journal Line"));
@@ -48,7 +53,7 @@ codeunit 10076925 "Inventory Tracking Write ori"
     begin
         if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::ItemTracking, Database::"Reservation Entry", true, false) then
             exit(false);
-        if IsEnabled() then
+        if HasAnySourceWritePermission() then
             exit(true);
         Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, 'source', '', SourceExpectedLbl, PermissionNextStepLbl);
         exit(false);

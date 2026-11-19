@@ -154,16 +154,15 @@ codeunit 96960 "Item Create Tests"
     end;
 
     [Test]
-    procedure Create_DomainOff_IcelandicRefusal()
+    procedure Create_DomainOff_OnlyHidesType()
     var
         TempArgument: Record "Message Argument ori" temporary;
         CreateImpl: Codeunit "Item Create Impl ori";
+        DomainCheck: Codeunit "Inv. MCP Fixture ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
         PreviousLanguage: Integer;
     begin
-        // [SCENARIO AC04] An Inventory-owned refusal answers its error and nextStep in is-IS at 1039. The type is called
-        // directly, as the other Inventory is-IS tests do; with the Attributes domain off it refuses before the licence check.
+        // [SCENARIO Issue36 ruling 18.11.2026] Attributes off only hides the type; execution is not refused for the domain, also in is-IS at 1039.
         DisableAttributes();
         TempArgument.Init();
         TempArgument.Version := "Message Version ori"::"1.0";
@@ -172,12 +171,8 @@ codeunit 96960 "Item Create Tests"
         TempArgument.SetRequestJson(RequestJson);
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1039);
-        CreateImpl.ExecuteBifrostTask(TempArgument);
+        DomainCheck.AssertDomainOffOnlyHidesType(CreateImpl, TempArgument);
         GlobalLanguage(PreviousLanguage);
-        ResponseJson := TempArgument.GetResponseJson();
-        Assert.AreEqual('InvalidParameter', ReadText(ResponseJson, 'code'), 'code');
-        Assert.AreEqual('Eiginleikasviðið er óvirkt fyrir þetta fyrirtæki.', ReadText(ResponseJson, 'error'), 'Icelandic error');
-        Assert.AreEqual('Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.', ReadText(ResponseJson, 'nextStep'), 'Icelandic nextStep');
     end;
 
     [Test]

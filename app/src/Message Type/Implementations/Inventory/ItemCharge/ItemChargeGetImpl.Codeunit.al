@@ -782,10 +782,6 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
             RespondPermissionDenied(Argument, false);
             exit(false);
         end;
-        if not InventorySetup.IsDomainEnabled("Inventory Domain ori"::ItemCharge) then begin
-            RespondDomainDisabled(Argument);
-            exit(false);
-        end;
         exit(true);
     end;
 

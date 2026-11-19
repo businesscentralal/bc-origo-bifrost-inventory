@@ -52,11 +52,17 @@ codeunit 10076983 "Price List Contract ori"
     /// <summary>Checks the company domain and both native table permissions.</summary>
     procedure IsEnabled(): Boolean
     var
-        Header: Record "Price List Header";
-        Line: Record "Price List Line";
         Setup: Record "Inventory Setup ori";
     begin
-        exit(Setup.IsDomainEnabled("Inventory Domain ori"::ItemPrice) and Header.WritePermission() and Line.WritePermission());
+        exit(Setup.IsDomainEnabled("Inventory Domain ori"::ItemPrice) and HasNativePermission());
+    end;
+
+    local procedure HasNativePermission(): Boolean
+    var
+        Header: Record "Price List Header";
+        Line: Record "Price List Line";
+    begin
+        exit(Header.WritePermission() and Line.WritePermission());
     end;
 
     /// <summary>Returns localized discovery text.</summary>
@@ -246,14 +252,9 @@ codeunit 10076983 "Price List Contract ori"
     /// <summary>Checks permissions and licensing, validates inputs, then isolates native writes.</summary>
     procedure Execute(var Argument: Record "Message Argument ori")
     var
-        Setup: Record "Inventory Setup ori";
         Process: Codeunit "Price List Process ori";
     begin
-        if not Setup.IsDomainEnabled("Inventory Domain ori"::ItemPrice) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, PreconditionsLbl, '', '', '', PermissionNextLbl);
-            exit;
-        end;
-        if not IsEnabled() then begin
+        if not HasNativePermission() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionErrLbl, '', '', '', PermissionNextLbl);
             exit;
         end;
