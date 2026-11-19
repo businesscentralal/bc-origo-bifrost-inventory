@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)
+- `Inv. Source Tracking Tests ori` (96974) clears orphan `Item Entry Relation` rows inside its own rolled-back transaction before posting, so leftovers from earlier suites no longer collide with new ledger entry numbers. New test `RoundTripSurvivesLeftoverEntryRelations` seeds only free relation keys, retaining any existing leftovers until transactional cleanup. No app object added; no assertion changed.
+
 ### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
 ### Changed (2026-11-18) - second Inventory test ID block (#261)
