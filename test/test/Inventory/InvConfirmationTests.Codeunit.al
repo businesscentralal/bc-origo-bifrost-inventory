@@ -450,6 +450,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
 
     local procedure AssertConfirmationBoundary(LanguageId: Integer)
     var
+        Item: Record Item;
+        PendingValueEntry: Record "Post Value Entry to G/L";
         ItemLedgerEntry: Record "Item Ledger Entry";
         ValueEntry: Record "Value Entry";
         Setup: Record "Inventory Setup ori";
@@ -482,6 +484,11 @@ codeunit 96978 "Inv. Confirmation Tests ori"
     begin
         // [GIVEN] Domains are off. Since the Issue36 ruling (Gunnar 18.11.2026) that only hides the types; the handler is not refused for the domain
         // and stops at its own subject, validation or licence check instead, which the assertions below observe without a domain refusal.
+        // Batch costing ignores Subject. Keep even confirmed calls away from existing company data.
+        Item.SetRange("No.", 'XCONFIRM-BOUNDARY');
+        Assert.IsTrue(Item.IsEmpty(), 'The boundary costing filter must match no item.');
+        PendingValueEntry.SetRange("Item No.", 'XCONFIRM-BOUNDARY');
+        Assert.IsTrue(PendingValueEntry.IsEmpty(), 'The boundary costing filter must match no pending value entry.');
         ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
         ItemLedgerCount := ItemLedgerEntry.Count();
         ValueEntryCount := ValueEntry.Count();
@@ -535,6 +542,8 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             Assert.AreEqual(SupportsConfirmation or DeclaresConfirmation, AdvertisesConfirmation,
                                 TypeName + ' exposes the deployed Foundation protocol.');
                             Clear(Request);
+                            if TypeName in ['Inventory.AdjustCost.Run', 'Inventory.CostToGL.Post'] then
+                                Request.Add('itemNoFilter', 'XCONFIRM-BOUNDARY');
                             // An unnamed request is deliberately left to handler validation by Foundation #1278.
                             Response := DispatchWithSubject(MessageType, '', Request);
                             AssertHandlerRanWithoutDomainRefusal(DomainCheck, Response, TypeName);
@@ -545,7 +554,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                                 AssertText(Response, 'parameter', 'expectedCount');
                                 AssertText(Response, 'expected', '1');
                                 Assert.IsFalse(Response.Contains('postedDocumentNo'), 'Preview must not post.');
-                                // [THEN] A wrong count is refused; a matching count reaches the real domain gate.
+                                // [THEN] A wrong count is refused; a matching count reaches the handler.
                                 Request.Add('expectedCount', 2);
                                 Response := Dispatch(MessageType, Request);
                                 AssertText(Response, 'code', 'ConfirmationMismatch');

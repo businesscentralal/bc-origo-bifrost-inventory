@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-19) - confirmation boundary costing selection (#36, PR #245)
+- Test codeunit 96978 now supplies an explicitly empty item selection to the AdjustCost and CostToGL boundary requests, which ignore Subject. Preconditions prove that neither an item nor a pending value entry matches the filter. Confirmed requests cannot adjust unrelated demo items on a reused company; the company-wide item-ledger and value-entry no-write assertions remain. No new object or product change.
+
 ### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
 ### Changed (2026-11-18) - second Inventory test ID block (#261)
