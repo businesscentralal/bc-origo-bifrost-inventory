@@ -355,7 +355,9 @@ codeunit 96996 "Purch Get Receipt Tests"
         CreateVendor(Vendor);
         Invoice.Init();
         Invoice."Document Type" := Invoice."Document Type"::Invoice;
-        Invoice."No." := 'X1234567890123456789';
+        // Message execution can commit: each invocation needs its own full-length key.
+        Invoice."No." := NewCode();
+        Assert.AreEqual(20, StrLen(Invoice."No."), 'fixture exercises the exact document-number boundary');
         Invoice.Insert(true);
         Invoice.Validate("Buy-from Vendor No.", Vendor."No.");
         Invoice.Modify(true);
@@ -372,6 +374,34 @@ codeunit 96996 "Purch Get Receipt Tests"
         RequestJson.Add('receiptNos', ReceiptNos);
         AssertRefusal(RequestJson, 'InvalidParameterFormat');
         Assert.AreEqual(0, CountInvoiceLines(Invoice), 'no writes on invalid identifiers');
+        Invoice.Delete(true);
+    end;
+
+    /// <summary>The boundary scenario can repeat on the same company in English.</summary>
+    [Test]
+    procedure Scenario_AC04_BoundaryRerun_EN()
+    begin
+        // Story #263, AC04 | Time: None | Risk: None
+        AssertBoundaryRerun(1033);
+    end;
+
+    /// <summary>The boundary scenario can repeat on the same company in Icelandic.</summary>
+    [Test]
+    procedure Scenario_AC04_BoundaryRerun_IS()
+    begin
+        // Story #263, AC04 | Time: None | Risk: None
+        AssertBoundaryRerun(1039);
+    end;
+
+    local procedure AssertBoundaryRerun(LanguageId: Integer)
+    var
+        PreviousLanguage: Integer;
+    begin
+        PreviousLanguage := GlobalLanguage();
+        GlobalLanguage(LanguageId);
+        Scenario_AC04_DocumentNumberBoundaries_RefusesTruncation();
+        Scenario_AC04_DocumentNumberBoundaries_RefusesTruncation();
+        GlobalLanguage(PreviousLanguage);
     end;
 
     /// <summary>Only the receipt quantity still uninvoiced is copied by the native engine.</summary>

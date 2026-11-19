@@ -20,6 +20,9 @@
 ### Fixed (2026-11-18) - Inv. Period Close Tests rerun on a reused company (#249)
 - Test codeunit 96979 `Inv. Period Close Tests`: the fixture period now takes the first year-end after the existing periods that has neither an inventory period nor an inventory period entry, so committed entries from earlier runs or fixtures no longer break the idempotent close/reopen assertions. All assertions are unchanged.
 - New regression `CreateOpenPeriod_LeftoverPeriodEntry_PicksFreeEndingDate` (rolled back by the test runner). No app object, page or message type changed.
+### Fixed - purchase receipt boundary fixture reruns (#263)
+
+- Test codeunit 96996 `Purch Get Receipt Tests` uses a fresh GUID-based 20-character invoice number and deletes its invoice after the document-number boundary checks. The 20-character success, 21-character refusal, empty-number refusal and over-long receipt-number refusal remain intact. English and Icelandic regressions run the boundary scenario twice on the same company. No object IDs added; no app objects or translations changed.
 
 ### Fixed - Icelandic release wording (#244)
 
