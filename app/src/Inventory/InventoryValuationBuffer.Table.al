@@ -14,11 +14,11 @@ table 10077020 "Inventory Valuation Buffer ori"
         }
         field(2; "Location Code"; Code[10])
         {
-            Caption = 'Location Code', Comment = 'is-IS=Birgðageymslukóti';
+            Caption = 'Location Code', Comment = 'is-IS=Birgðageymslukóði';
         }
         field(3; "Variant Code"; Code[10])
         {
-            Caption = 'Variant Code', Comment = 'is-IS=Afbrigðiskóti';
+            Caption = 'Variant Code', Comment = 'is-IS=Afbrigðiskóði';
         }
         field(4; Quantity; Decimal)
         {
