@@ -7,6 +7,8 @@
 
 ### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
+### Changed (2026-11-18) - second Inventory test ID block (#261)
+- `test/app.json` `idRanges` gains 97900-97999 (block 2, allocated by Claude Code in the object-ID register, row #99009); 96900-96999 is full. No object added or renumbered.
 
 ### Fixed - Icelandic release wording (#244)
 
