@@ -72,7 +72,7 @@ codeunit 10076962 "Phys Order Post Impl ori" implements "Msg Interface ori", "Ms
     var
         Contract: Codeunit "Phys Order Contract ori";
     begin
-        exit(Contract.Description('Post'));
+        exit(Contract.Keywords('Post'));
     end;
 
     /// <summary>Returns the envelope contract chapter.</summary>

@@ -155,8 +155,10 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select existing line numbers from your own document or worksheet', Comment = 'is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði';
     begin
         Examples.Add(ContractMgt.Example('Undo posted transfer shipment 108001', '{"type":"Inventory.Transfer.UndoShipment","data":{"expectedCount":1,"documentNo":"108001"}}', '{"status":"Success","documentNo":"108001"}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Transfer.UndoShipment","data":{"expectedCount":1,"documentNo":"108001","lineNos":[10000]}}', '{"status":"Success","documentNo":"108001"}'));
         exit(true);
     end;
 

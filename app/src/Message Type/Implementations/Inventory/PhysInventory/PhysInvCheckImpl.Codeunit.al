@@ -210,12 +210,14 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Check every line of the batch DEFAULT',
             '{"type":"Inventory.PhysInventory.Check","subject":"PHYS. INV.|DEFAULT"}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","validationResult":"Ready","lineCount":2,"errorCount":0,"warningCount":0,"errors":[],"warnings":[]}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.PhysInventory.Check","subject":"PHYS. INV.|DEFAULT","data":{"lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","validationResult":"Ready","lineCount":1,"errorCount":0,"warningCount":0,"errors":[],"warnings":[]}'));
         exit(true);
     end;
 

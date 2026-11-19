@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-19) - Inventory UAT help and contract corrections (#266)
+- Contract batch tests (96921) retain exact assertions for the expanded three Attribute.Get examples and the new costing confirmation wording. Attribute examples live in the shared contract helper so Inventory and legacy Item selectors retain identical chapters.
+- UAT additions AC07-AC10: Tracking Assign/Delete now declare each `source` field, its required status and transfer direction default, with complete sales-line and purchase-line requests. Audit of all 97 app-owned types found and filled 15 missing object/array examples across 14 types.
+- Added collection examples for `Inventory.Attribute.Get`, `Inventory.PhysInventory.Check`, `Inventory.PhysInventory.Post`, `Inventory.PhysInventory.PreviewPost`, `Inventory.PhysInventory.Record`, `Inventory.PlanningWorksheet.CarryOut`, `Inventory.Reclassification.Check`, `Inventory.Reclassification.Post`, `Inventory.Reclassification.PreviewPost`, `Inventory.Tracking.Assign`, `Inventory.Tracking.Delete`, `Inventory.Transfer.UndoShipment`, `Inventory.TransferOrder.Create`, `Purchase.Requisition.CarryOut`. Test codeunit 97900 now guards all 97 types and all 36 object/array parameters in both languages.
+- CostToGL.Post and AdjustCost.Run now explain that omitted `expectedCount` previews named requests only when the company requires irreversible confirmation; otherwise execution proceeds immediately. Period.Close documents its existing reversible `write` behavior, `endingDate`-only input, immediate execution and lack of confirmation preview. Its effect and behavior are unchanged; the AC10 classification discrepancy needs clarification.
+
+- Physical inventory Record and RecordCount now have distinct English and Icelandic descriptions. New codeunit 10076950 `Phys. Count Record Impl ori` delegates to the existing count execution; the request and response contracts are unchanged.
+- Physical inventory order discovery uses dedicated translated keyword lists instead of splitting description sentences. Existing StandardCost and Tracking discovery translations are retained and covered in both languages.
+- Valuation help explicitly selects items with `itemFilter`, with a one-item example; `itemNo` is a response field. Existing AdjustCost response declarations for `itemsProcessed` and `errors[]` are covered by regression tests.
+- New test codeunit 97900 `Inv. 266 Help Tests ori` covers the bilingual descriptions, discovery, response contract and valuation selector. No posting or journal behavior changes.
+- AC02 (`Inventory.ItemJournal.Update`) belongs to Bifrost Foundation codeunit 10077952 and requires a separate core-repository correction.
+
+
 ### Fixed (2026-11-19) - confirmation boundary costing selection (#36, PR #245)
 - Test codeunit 96978 now supplies an explicitly empty item selection to the AdjustCost and CostToGL boundary requests, which ignore Subject. Preconditions prove that neither an item nor a pending value entry matches the filter. Confirmed requests cannot adjust unrelated demo items on a reused company; the company-wide item-ledger and value-entry no-write assertions remain. No new object or product change.
 ### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)

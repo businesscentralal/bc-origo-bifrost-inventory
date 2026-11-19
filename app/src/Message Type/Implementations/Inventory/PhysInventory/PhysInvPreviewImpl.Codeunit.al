@@ -227,12 +227,14 @@ codeunit 10076885 "Phys. Inv. Preview Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Preview the posting of the batch DEFAULT',
             '{"type":"Inventory.PhysInventory.PreviewPost","subject":"PHYS. INV.|DEFAULT"}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","linesToPost":1,"rollback":true,"preview":[{"tableId":32,"tableName":"Item Ledger Entry","tableCaption":"Item Ledger Entry","entryCount":1,"entries":[{"ItemNo_":"1000"}]}],"totals":{"totalDebitLCY":0,"totalCreditLCY":0},"result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"itemNo":"1000","quantity":2}],"entryCount":1,"glEntryCount":0}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.PhysInventory.PreviewPost","subject":"PHYS. INV.|DEFAULT","data":{"lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","linesToPost":1,"rollback":true,"preview":[{"tableId":32,"tableName":"Item Ledger Entry","tableCaption":"Item Ledger Entry","entryCount":1,"entries":[{"ItemNo_":"1000"}]}],"totals":{"totalDebitLCY":0,"totalCreditLCY":0},"result":[{"systemId":"11111111-1111-1111-1111-111111111111","lineNo":10000,"itemNo":"1000","quantity":2}],"entryCount":1,"glEntryCount":0}'));
         exit(true);
     end;
 
