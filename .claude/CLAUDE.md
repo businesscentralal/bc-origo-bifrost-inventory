@@ -17,7 +17,7 @@ README "Objects" lists every object with its ID. In short:
 - Tables 10076835 `Inv. Posting ori`, 10076836 `Inventory Setup ori`; page 10076835 `Inventory Setup ori`;
   enum 10076835 `Inventory Domain ori`; enum extensions on `Message Type ori` 10076835-10076847 and 10076906;
   permission sets 10076835-10076837 (InvAttrRead, InvAttrWrite, InvPost), extensions 10076835-10076836 (InvRead, InvWrite).
-- Codeunit 10076950 `Inventory Suggest Setup ori` (Suggest Setup rules, install/upgrade run, company-initialize setup row; #267); test codeunit 97900.
+- Codeunit 10076951 `Inventory Suggest Setup ori` (Suggest Setup rules, install/upgrade run, company-initialize setup row; #267); test codeunit 97901.
 - Codeunits 10076835-10076923, grouped by domain (alphabetical by folder): lifecycle 10076835-10076836 and 10076845,
   shared reads/writes 10076837-10076843, write restrictions 10076846-10076848, assembly 10076849-10076856,
   availability 10076857, costing 10076858-10076866, item application 10076867-10076869, item category 10076870-10076872,
