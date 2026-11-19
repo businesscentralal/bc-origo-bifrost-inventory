@@ -17,6 +17,9 @@
 - `test/app.json` `idRanges` gains 97900-97999 (block 2, allocated by Claude Code in the object-ID register, row #99009); 96900-96999 is full. No object added or renumbered.
 ### Fixed (2026-11-18) - price write restriction test reruns on the same tenant (#250)
 - `UpdatePrice_RestrictedField_PreservesPrice` in test codeunit 96939 reuses an existing Field Access row for the user, Item and Unit Price instead of inserting a duplicate key, so the codeunit passes on a tenant that already ran the suite. No new object; the assertions are unchanged.
+### Fixed (2026-11-18) - Inv. Period Close Tests rerun on a reused company (#249)
+- Test codeunit 96979 `Inv. Period Close Tests`: the fixture period now takes the first year-end after the existing periods that has neither an inventory period nor an inventory period entry, so committed entries from earlier runs or fixtures no longer break the idempotent close/reopen assertions. All assertions are unchanged.
+- New regression `CreateOpenPeriod_LeftoverPeriodEntry_PicksFreeEndingDate` (rolled back by the test runner). No app object, page or message type changed.
 
 ### Fixed - Icelandic release wording (#244)
 
