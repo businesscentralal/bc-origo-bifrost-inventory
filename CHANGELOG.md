@@ -5,6 +5,8 @@
 ### Fixed - Icelandic release wording (#244)
 
 - Correct the Icelandic code captions and valuation help, clarify the mutually exclusive AdjustCost filters, and restore the CostToGL `UnknownParameter` outcome and AssemblyOrder `PreviewPost` recommendation. Keep the authoritative AL translation comments and generated is-IS XLF synchronized. No object IDs added; English source strings and message contracts are unchanged.
+### Fixed (2026-11-18) - typed-refusal item fixture reruns on a reused company (#248)
+- `Scenario_AC01_ItemNoReadRefusals_EN/_IS` in test codeunit 96975 `Inv. Typed Refusal Tests ori` no longer rename a library item onto the numeric key. They insert the owned item under a key that is free in `Item` and `Item Unit of Measure`, so leftover unit-of-measure rows from an earlier run cannot collide. They also delete the item (and its dependent rows) at the end. All assertions remain. New regressions `NumericItemNo_SkipsLeftoverUnitOfMeasure_EN/_IS` seed a leftover unit-of-measure row on a fixed random sequence and prove the key is skipped. No new object.
 ### Fixed (2026-11-18) - Reclass Journal Tests rerun on a used company (#246)
 - Test codeunit 96925 `Reclass Journal Tests ori` removes orphaned `Post Value Entry to G/L` rows (no Value Entry behind them) before seeding stock, so the codeunit passes on a rerun. Test-only; no new object, no product change, no assertion weakened.
 
