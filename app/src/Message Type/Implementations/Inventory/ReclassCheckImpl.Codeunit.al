@@ -270,7 +270,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
         Notes := 'Read only: nothing is written or posted. The answer confirms that the template exists and is of type Transfer, and returns the number of selected lines checked as lineCount and the compatibility alias postedLineCount; nothing is posted. ' +
             'The batch must exist. Every selected line is validated with the standard item journal line check; readiness, errors and warnings are returned. An empty batch is NotReady. lineSystemIds optionally selects distinct lines from that batch. templateName and batchName win over the aliases journalTemplateName and journalBatchName when both are sent. ' +
             'A missing name returns MissingParameter, an unknown template RecordNotFound and a non-Transfer template PreconditionFailed; each refusal includes nextStep. ' +
-            'The type requires read permission on the Item Journal Line table, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'The type requires read permission on the Item Journal Line table, and the Reclassification domain turned on in Inventory Setup (a missing setup row counts as off). ' +
             'Use Inventory.Reclassification.PreviewPost to simulate posting and inspect captured ledger entries and Inventory.Reclassification.Post to post.';
         exit(true);
     end;

@@ -59,7 +59,7 @@ page 10076836 "Inventory Setup Wizard ori"
             {
                 Caption = 'Domains', Comment = 'is-IS=Svið';
                 Visible = CurrentStep = 4;
-                InstructionalText = 'Review the enabled Inventory domains for this company. Open Inventory Setup to change them; this guide only reads their status.', Comment = 'is-IS=Farðu yfir virk birgðasvið þessa fyrirtækis. Opnaðu Uppsetningu birgða til að breyta þeim; leiðarvísirinn les aðeins stöðuna.';
+                InstructionalText = 'Review the enabled Inventory domains for this company. Domains are off by default and only decide which message types are listed. Choose Suggest Setup to turn on the domains this company can use after you confirm, or open Inventory Setup to change them yourself.', Comment = 'is-IS=Farðu yfir virk birgðasvið þessa fyrirtækis. Svið eru óvirk sjálfgefið og ráða aðeins hvaða skilaboðategundir eru listaðar. Veldu Tillaga að uppsetningu til að virkja svið sem fyrirtækið getur notað eftir að þú staðfestir, eða opnaðu Uppsetningu birgða og breyttu þeim sjálf.';
                 field(Attributes; DomainEnabled[1])
                 {
                     Caption = 'Attributes', Comment = 'is-IS=Eiginleikar';
@@ -283,6 +283,22 @@ page 10076836 "Inventory Setup Wizard ori"
                 trigger OnAction()
                 begin
                     WizardMgt.OpenPage(Page::"Permission Sets");
+                end;
+            }
+            action(SuggestSetup)
+            {
+                Caption = 'Suggest Setup', Comment = 'is-IS=Tillaga að uppsetningu';
+                ToolTip = 'Reads the Business Central setup, shows which domains this company can use and why, and turns them on after you confirm.', Comment = 'is-IS=Les uppsetningu Business Central, sýnir hvaða svið þetta fyrirtæki getur notað og hvers vegna, og virkjar þau eftir að þú staðfestir.';
+                Image = Setup;
+                InFooterBar = true;
+                Visible = CurrentStep = 4;
+                trigger OnAction()
+                var
+                    InventorySetup: Record "Inventory Setup ori";
+                    InventorySuggestSetup: Codeunit "Inventory Suggest Setup ori";
+                begin
+                    InventorySuggestSetup.RunWithConfirmation(InventorySetup);
+                    RefreshStatus();
                 end;
             }
             action(OpenInventorySetup)

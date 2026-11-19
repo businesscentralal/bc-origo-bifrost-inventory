@@ -13,18 +13,12 @@ codeunit 10076835 "Inventory Install ori"
     trigger OnInstallAppPerCompany()
     var
         InventoryUpgrade: Codeunit "Inventory Upgrade ori";
+        SuggestSetup: Codeunit "Inventory Suggest Setup ori";
     begin
         SetUpgradeTags();
-        InsertSetup();
         InventoryUpgrade.EnableUsedDomains();
         InventoryUpgrade.EnablePlanningDomain();
-    end;
-
-    local procedure InsertSetup()
-    var
-        InventorySetup: Record "Inventory Setup ori";
-    begin
-        InventorySetup.InsertIfNotExists();
+        SuggestSetup.RunOncePerCompany();
     end;
 
     local procedure SetUpgradeTags()
@@ -44,10 +38,12 @@ codeunit 10076835 "Inventory Install ori"
     local procedure RegisterPerCompanyTags(var PerCompanyUpgradeTags: List of [Code[250]])
     var
         InventoryUpgrade: Codeunit "Inventory Upgrade ori";
+        SuggestSetup: Codeunit "Inventory Suggest Setup ori";
     begin
         PerCompanyUpgradeTags.Add(GetInitialReleaseTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetDomainUsageTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetCatalogItemsUsageTag());
         PerCompanyUpgradeTags.Add(InventoryUpgrade.GetPlanningDomainTag());
+        PerCompanyUpgradeTags.Add(SuggestSetup.GetSuggestSetupTag());
     end;
 }

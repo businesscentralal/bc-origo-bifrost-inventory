@@ -26,7 +26,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
         Header: Record "Posted Assembly Header";
         Impl: Codeunit "Assembly Undo Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableAssembly();
         LowerToInvPost(LibraryLowerPermissions);
         Assert.IsTrue(Header.WritePermission(), 'Document access must be present before checking the posting token.');
         Assert.IsTrue(Impl.IsEnabled(), 'Undo posts reversing entries and requires the posting token.');
@@ -38,7 +41,10 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
         Header: Record "Transfer Shipment Header";
         Impl: Codeunit "Transfer Undo Shpt Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableTransferOrders();
         LowerToInvPost(LibraryLowerPermissions);
         Assert.IsTrue(Header.WritePermission(), 'Document access must be present before checking the posting token.');
         Assert.IsTrue(Impl.IsEnabled(), 'Undo posts reversing entries and requires the posting token.');
@@ -50,8 +56,11 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
         TransferHeader: Record "Transfer Header";
         PostImpl: Codeunit "Transfer Order Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] TransferOrder.Post is enabled when the caller can write the inventory posting token.
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableTransferOrders();
         LowerToInvPost(LibraryLowerPermissions);
         Assert.IsTrue(TransferHeader.WritePermission(), 'Transfer Header write must be present so IsEnabled tests the gate');
         Assert.IsTrue(PostImpl.IsEnabled(), 'Transfer post should be enabled with BIFROST InvPost ori');
@@ -63,8 +72,11 @@ codeunit 96919 "Inv. Posting Gate Grant Tests"
         AssemblyHeader: Record "Assembly Header";
         PostImpl: Codeunit "Assembly Order Post Impl ori";
         LibraryLowerPermissions: Codeunit "Library - Lower Permissions";
+        DomainSetup: Codeunit "Inventory Test Library ori";
     begin
         // [SCENARIO] AssemblyOrder.Post is enabled when the caller can write the inventory posting token.
+        LibraryLowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableAssembly();
         LowerToInvPost(LibraryLowerPermissions);
         Assert.IsTrue(AssemblyHeader.WritePermission(), 'Assembly Header write must be present so IsEnabled tests the gate');
         Assert.IsTrue(PostImpl.IsEnabled(), 'Assembly post should be enabled with BIFROST InvPost ori');

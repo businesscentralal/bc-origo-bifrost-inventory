@@ -48,7 +48,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 10, true);
     end;
@@ -62,7 +62,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 10, false);
     end;
@@ -80,7 +80,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         SetField(UsageRecord, 'Use As In-Transit', true);
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 11, true);
     end;
@@ -94,7 +94,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 11, false);
     end;
@@ -112,7 +112,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 12, true);
     end;
@@ -126,7 +126,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 12, false);
     end;
@@ -144,7 +144,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         SetField(UsageRecord, 'Reservation Status', 0);
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 13, true);
     end;
@@ -158,7 +158,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 13, false);
     end;
@@ -176,7 +176,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 14, true);
     end;
@@ -190,7 +190,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 14, false);
     end;
@@ -208,7 +208,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 15, true);
     end;
@@ -222,7 +222,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 15, false);
     end;
@@ -240,7 +240,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 16, true);
     end;
@@ -254,7 +254,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 16, false);
     end;
@@ -272,7 +272,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 17, true);
     end;
@@ -286,7 +286,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 17, false);
     end;
@@ -304,7 +304,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 18, true);
     end;
@@ -318,7 +318,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 18, false);
     end;
@@ -336,7 +336,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 19, true);
     end;
@@ -350,7 +350,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 19, false);
     end;
@@ -368,7 +368,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         SetField(UsageRecord, 'Asset Type', 10);
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 20, true);
     end;
@@ -382,7 +382,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 20, false);
     end;
@@ -400,7 +400,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 21, true);
     end;
@@ -414,7 +414,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 21, false);
     end;
@@ -432,7 +432,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 22, true);
     end;
@@ -446,7 +446,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 22, false);
     end;
@@ -464,7 +464,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 23, true);
     end;
@@ -478,7 +478,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 23, false);
     end;
@@ -496,7 +496,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Only evidence is needed to turn the tested domain on.
         AssertDomain(InventorySetup, 24, true);
     end;
@@ -510,7 +510,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The domain is not enabled without evidence.
         AssertDomain(InventorySetup, 24, false);
     end;
@@ -528,7 +528,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         SetField(UsageRecord, 'Document Type', "Purchase Document Type"::"Return Order");
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row; the table trigger must run.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] A return order is enough to turn Purchase Returns on.
         AssertDomain(InventorySetup, 26, true);
     end;
@@ -542,7 +542,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] Purchase documents, including ordinary orders, are cleared in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without a return order or credit memo.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Purchase Returns stays off. A purchase order is not a signal.
         AssertDomain(InventorySetup, 26, false);
     end;
@@ -562,7 +562,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         SetField(UsageRecord, 'Type', WkshTemplate.Type);
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The planning template enables Planning and leaves the other new switch testable on its own.
         AssertDomain(InventorySetup, 27, true);
     end;
@@ -576,7 +576,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         // [GIVEN] All source tables, including planning worksheet templates, are empty in this transaction.
         ClearUsage();
         // [WHEN] A setup row is created without usage.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Planning stays off.
         AssertDomain(InventorySetup, 27, false);
     end;
@@ -605,7 +605,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearUsage();
         PrepareUsage(UsageRecord, Database::"Item Attribute");
         UsageRecord.Insert(false);
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         BeforeVersion := InventorySetup.SystemRowVersion;
         Assert.IsFalse(InventorySetup.EnableDomainsInUse(), 'Already enabled usage must report no change.');
         InventorySetup.Get();
@@ -650,7 +650,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         PrepareUsage(UsageRecord, Database::"Nonstock Item");
         UsageRecord.Insert(false);
         // [WHEN] A user creates the setup row.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The Catalog Items domain is on.
         AssertDomain(InventorySetup, 28, true);
     end;
@@ -662,7 +662,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
     begin
         // [SCENARIO] Issue119 | Time: none | Risk: isolated company data, rolled back by runner.
         ClearUsage();
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         AssertDomain(InventorySetup, 28, false);
     end;
 
@@ -705,7 +705,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
     end;
 
     [Test]
-    procedure Scenario_AC02_MissingSetup_StaysAbsentAndEnabled()
+    procedure Scenario_AC02_MissingSetup_StaysAbsentAndOff()
     var
         InventorySetup: Record "Inventory Setup ori";
         InventoryUpgrade: Codeunit "Inventory Upgrade ori";
@@ -716,25 +716,25 @@ codeunit 96963 "Inventory Domain Usage Tests"
         UpgradeTagLibrary.DeleteUpgradeTag(InventoryUpgrade.GetDomainUsageTag(), CopyStr(CompanyName(), 1, 30));
         InventoryUpgrade.EnableUsedDomains();
         Assert.IsFalse(InventorySetup.Get(), 'Upgrade must not insert a missing setup.');
-        Assert.IsTrue(InventorySetup.IsDomainEnabled(Enum::"Inventory Domain ori"::ItemReference), 'Absent means enabled.');
+        Assert.IsFalse(InventorySetup.IsDomainEnabled(Enum::"Inventory Domain ori"::ItemReference), 'Absent means off.');
     end;
 
     [Test]
-    procedure Scenario_AC02_SetupPage_CreatesUsageDefaults()
+    procedure Scenario_AC02_SetupPage_OpensWithSwitchesOff()
     var
         InventorySetup: Record "Inventory Setup ori";
         UsageRecord: RecordRef;
         SetupPage: TestPage "Inventory Setup ori";
     begin
-        // [SCENARIO] Issue147 AC02 | Time: none | Risk: prove actual page trigger wiring.
+        // [SCENARIO] Issue267 AC01 | Time: none | Risk: the page no longer derives switches from usage; Suggest Setup does.
         ClearUsage();
         PrepareUsage(UsageRecord, Database::"Item Charge");
         UsageRecord.Insert(false);
         SetupPage.OpenEdit();
-        SetupPage.ItemCharge.AssertEquals(true);
+        SetupPage.ItemCharge.AssertEquals(false);
         SetupPage.Close();
         InventorySetup.Get();
-        Assert.IsTrue(InventorySetup."Item Charge", 'The UI persists usage defaults.');
+        Assert.IsFalse(InventorySetup."Item Charge", 'Opening the page creates a row with every switch off.');
     end;
 
     [Test]
@@ -747,7 +747,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearUsage();
         PrepareUsage(UsageRecord, Database::Location);
         UsageRecord.Insert(false);
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         Assert.IsFalse(InventorySetup."Transfer Orders", 'A normal location is not a transfer signal.');
         Assert.IsTrue(InventorySetup.Reclassification, 'A normal location is a reclassification signal.');
     end;
@@ -764,7 +764,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ReservationEntry."Reservation Status" := ReservationEntry."Reservation Status"::Surplus;
         ReservationEntry."Lot No." := 'ZZTEST';
         ReservationEntry.Insert(false);
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         Assert.IsFalse(InventorySetup.Reservations, 'Surplus is not a reservation.');
         Assert.IsTrue(InventorySetup."Item Tracking", 'Lot tracking enables tracking.');
     end;
@@ -779,7 +779,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         ClearUsage();
         PrepareUsage(UsageRecord, Database::"Production BOM Header");
         UsageRecord.Insert(false);
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         Assert.IsTrue(InventorySetup.Assembly, 'Production BOM is an accepted usage signal.');
     end;
 
@@ -803,7 +803,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         Assert.IsTrue(UpgradeTag.HasUpgradeTag(InventoryUpgrade.GetDomainUsageTag()), 'Company initialization must persist the tag.');
         Location.Code := 'XDOMAIN';
         Location.Insert(false);
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         Assert.IsTrue(InventorySetup.Reclassification, 'New rows still derive defaults from usage.');
         InventorySetup.Reclassification := false;
         InventorySetup.Modify(true);
@@ -861,7 +861,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         InsertLedgerLocation(1, 'XITEM', 'XLOC1');
         InsertLedgerLocation(2, 'XITEM', 'XLOC2');
         // [WHEN] A setup row is created.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] The fallback enables Reclassification.
         Assert.IsTrue(InventorySetup.Reclassification, 'Multiple ledger locations for the same item enable reclassification.');
     end;
@@ -877,7 +877,7 @@ codeunit 96963 "Inventory Domain Usage Tests"
         InsertLedgerLocation(1, 'XITEM1', 'XLOC1');
         InsertLedgerLocation(2, 'XITEM2', 'XLOC2');
         // [WHEN] A setup row is created.
-        InventorySetup.InsertIfNotExists();
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Distinct locations across items do not enable Reclassification.
         Assert.IsFalse(InventorySetup.Reclassification, 'Multiple locations must belong to the same item.');
     end;
@@ -919,17 +919,14 @@ codeunit 96963 "Inventory Domain Usage Tests"
     procedure Scenario_AC05_BlankAndNamedLedgerLocations_EnableReclass()
     var
         InventorySetup: Record "Inventory Setup ori";
-        SetupPage: TestPage "Inventory Setup ori";
     begin
         // [SCENARIO] Issue147 AC05 | Time: none | Risk: the existence filter must not remove blank locations from comparison.
         // [GIVEN] One item uses a blank and a named location, with no Location/Bin/Warehouse rows.
         ClearUsage();
         InsertLedgerLocation(1, 'XITEM', '');
         InsertLedgerLocation(2, 'XITEM', 'XLOC');
-        // [WHEN] Opening setup creates the row through the real page trigger.
-        SetupPage.OpenEdit();
-        SetupPage.Reclassification.AssertEquals(true);
-        SetupPage.Close();
+        // [WHEN] The legacy usage rules run on a new row.
+        InsertSetupFromUsage(InventorySetup);
         // [THEN] Blank and named locations still count as two locations for the same item.
         InventorySetup.Get();
         Assert.IsTrue(InventorySetup.Reclassification, 'The blank location must participate in the comparison.');
@@ -990,6 +987,15 @@ codeunit 96963 "Inventory Domain Usage Tests"
             end;
         end;
         Error('Fixture field not found: %1', FieldName);
+    end;
+
+    /// <summary>Creates the setup row (all switches off) and then applies the legacy usage rules, which the upgrade tags still run on rows that exist.</summary>
+    local procedure InsertSetupFromUsage(var InventorySetup: Record "Inventory Setup ori")
+    begin
+        InventorySetup.InsertIfNotExists();
+        InventorySetup.Get();
+        if InventorySetup.EnableDomainsInUse() then
+            InventorySetup.Modify(true);
     end;
 
     local procedure ClearUsage()

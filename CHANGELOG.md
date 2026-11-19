@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed (2026-11-19) - Inventory domains off by default, Suggest Setup (#267)
+- New codeunit 10076951 `Inventory Suggest Setup ori`. Every Inventory domain switch is now off by default: the setup row (created on company initialization, on opening the page or by install) has every switch off, and a missing row counts as off (it used to count as on). The row no longer derives switches from usage when it is inserted.
+- New **Suggest Setup** action on Inventory Setup and in the setup wizard (domains step). It shows per domain whether the domain would be turned on or left off, with a reason, and applies only after confirmation; it never turns a switch off, so it is repeatable. Rules: Transfer Orders needs an in-transit location and two other locations, Assembly an item BOM component, Item Tracking an item with a tracking code, Item Charge an item charge, Inventory Period an inventory period, every other domain at least one item. Each rule is one filtered `IsEmpty`.
+- Install and upgrade run Suggest Setup once per company behind upgrade tag `Origo.Bifrost.Inventory-SuggestSetup-20261119` (registered in `OnGetPerCompanyUpgradeTags`), without confirmation and only for companies with no setup row; an existing row is never changed. Message types are listed when the switch is on and the user has the table permissions; execution is never refused for a switch (#36).
+- Tests: new codeunit 97901 `Inventory Suggest Setup Tests`; tests that assumed "no row = on" or usage-derived inserts were updated (`Inventory Setup Wizard Tests`, `Item Substitution Tests`, `Inventory Domain Usage Tests`). is-IS translations added. Texts and docs (README, docs/inventory.md) updated.
 ### Fixed (2026-11-19) - Inventory UAT help and contract corrections (#266)
 - Contract batch tests (96921) retain exact assertions for the expanded three Attribute.Get examples and the new costing confirmation wording. Attribute examples live in the shared contract helper so Inventory and legacy Item selectors retain identical chapters.
 - UAT additions AC07-AC10: Tracking Assign/Delete now declare each `source` field, its required status and transfer direction default, with complete sales-line and purchase-line requests. Audit of all 97 app-owned types found and filled 15 missing object/array examples across 14 types.

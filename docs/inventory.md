@@ -73,8 +73,15 @@ An administrator uses **Inventory Setup** in the Business Central Web Client to 
 for the current company. The **Inv. Posting Gate** permission set (Icelandic: **Bókunarhlið birgða**)
 grants access to this page and its settings. `Data.Records.Set` deliberately cannot change this
 protected setup, including with `force`; an integration caller must ask the administrator.
-The usage-based defaults from issue #147 can enable domains when their native data exists,
-including Reclassification. They do not remove an administrator's later opt-out.
+Every domain switch is **off by default**, and a company without a setup row counts as off. The switches only decide which
+message types the MCP server **lists**; a type that is called is never refused because its switch is off, and the existing
+permission checks still apply. Choose **Suggest Setup** on Inventory Setup (or in the setup wizard) to read the Business Central
+setup: it shows per domain whether it would turn the domain on or leave it off, and why, and applies the proposal only after you
+confirm. It never turns a switch off, so running it again gives the same result. Transfer Orders needs an in-transit location
+(Use As In-Transit) and at least two other locations; Assembly an assembly BOM; Item Tracking an item that uses an item tracking
+code; Item Charge an item charge; Inventory Period an inventory period; every other domain needs at least one item. Install and
+upgrade run the same suggestion once per company, without confirmation, and only for a company that has no setup row yet; an
+existing row is never changed.
 
 ## Statistics and counting compatibility
 
